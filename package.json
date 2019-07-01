@@ -3,9 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "latest",
+    "@material-ui/core": "^4.1.2",
+    "date-fns": "next",
+    "final-form": "^4.16.1",
+    "final-form-material-ui": "^0.3.0",
+    "firebase": "^6.2.2",
+    "material-ui-pickers": "^2.2.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-final-form": "^6.3.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "recompose": "^0.30.0"
   },
   "scripts": {
     "start": "react-scripts start",
