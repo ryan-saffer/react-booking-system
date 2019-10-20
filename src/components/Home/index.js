@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { withFirebase } from '../Firebase/context'
 import { TextField, Select } from 'final-form-material-ui';
@@ -106,9 +106,12 @@ const validate = values => {
     return errors;
 };
 
-function HomePage(props) {
+const HomePage = (props) => {
 
     const classes = useStyles()
+    const [result, setResult] = useState(null)
+
+    const { firebase } = props
 
     const onSubmit = async values => {
         
@@ -119,6 +122,21 @@ function HomePage(props) {
         props.firebase.db.collection('bookings').document().set({...values});
         window.alert(JSON.stringify(values, 0, 2));
     };
+
+    const handleTest = () => {
+        const helloWorld = firebase.functions.httpsCallable('helloWorld')
+        helloWorld({ auth: firebase.auth.currentUser.toJSON() })
+            .then(result => {
+                console.log(result.data)
+                setResult(result.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                console.log('finally')
+            })
+    }
 
     return (
         <div className={classes.container}>
@@ -279,6 +297,14 @@ function HomePage(props) {
             </form>
             )}
         />
+        <Button
+            onClick={handleTest}
+        >
+            My Button
+        </Button>
+        <div>
+            {result}
+        </div>
         </div>
     );
 }

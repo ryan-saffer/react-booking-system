@@ -9,6 +9,7 @@
     "final-form": "^4.16.1",
     "final-form-material-ui": "^0.3.0",
     "firebase": "^6.2.2",
+    "googleapis": "^39.2.0",
     "material-ui-pickers": "^2.2.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
