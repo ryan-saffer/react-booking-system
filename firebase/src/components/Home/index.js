@@ -127,8 +127,7 @@ const HomePage = (props) => {
         delete values.date
         delete values.time
 
-        const helloWorld = firebase.functions.httpsCallable('helloWorld')
-        helloWorld({
+        firebase.functions.httpsCallable('createBooking')({
             auth: firebase.auth.currentUser.toJSON(),
             data: JSON.stringify(values)
         }).then(result => {
