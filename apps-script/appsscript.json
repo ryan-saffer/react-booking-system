@@ -1,0 +1,9 @@
+{
+  "timeZone": "Australia/Sydney",
+  "dependencies": {
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "executionApi": {
+    "access": "MYSELF"
+  }
+}

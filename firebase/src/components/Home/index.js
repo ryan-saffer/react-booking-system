@@ -115,27 +115,30 @@ const HomePage = (props) => {
 
     const onSubmit = async values => {
         
-        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-        
-        await sleep(300);
-        console.log(props)
-        props.firebase.db.collection('bookings').document().set({...values});
-        window.alert(JSON.stringify(values, 0, 2));
-    };
+        var dateTime = new Date(
+            values.date.getFullYear(),
+            values.date.getMonth(),
+            values.date.getDate(),
+            values.time.getHours(),
+            values.time.getMinutes(), 0, 0
+        )
 
-    const handleTest = () => {
+        values.dateTime = dateTime
+        delete values.date
+        delete values.time
+
         const helloWorld = firebase.functions.httpsCallable('helloWorld')
-        helloWorld({ auth: firebase.auth.currentUser.toJSON() })
-            .then(result => {
-                console.log(result.data)
-                setResult(result.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-            .finally(() => {
-                console.log('finally')
-            })
+        helloWorld({
+            auth: firebase.auth.currentUser.toJSON(),
+            data: JSON.stringify(values)
+        }).then(result => {
+            console.log(result.data)
+            setResult(result.data)
+        }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            console.log('finally')
+        })
     }
 
     return (
@@ -296,15 +299,10 @@ const HomePage = (props) => {
                 <pre>{JSON.stringify(values, 0, 2)}</pre>
             </form>
             )}
-        />
-        <Button
-            onClick={handleTest}
-        >
-            My Button
-        </Button>
-        <div>
-            {result}
-        </div>
+            />
+            <div>
+                {result}
+            </div>
         </div>
     );
 }
