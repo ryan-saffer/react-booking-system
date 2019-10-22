@@ -1,6 +1,8 @@
 */node_modules/*
 */build/*
 
+*/.firebase/*
+
 */.env
 *credentials.json
 *service-key.json
