@@ -11,6 +11,9 @@ const Navigation = () => (
             <li>
                 <Link to={ROUTES.HOME}>Home</Link>
             </li>
+            <li>
+                <Link to={ROUTES.BOOKINGS}>Bookings</Link>
+            </li>
         </ul>
     </div>
 )
