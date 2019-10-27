@@ -6,3 +6,4 @@
 */.env
 *credentials.json
 *service-key.json
+.vscode/*
