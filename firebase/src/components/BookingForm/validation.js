@@ -58,6 +58,9 @@ export function validateFormOnChange(formValues, field, value) {
             } else if (field === 'location') {
                 formValues.partyLength.error = false
             }
+            break
+        default:
+            break
     }
 
     return formValues
@@ -129,6 +132,7 @@ export function errorFound(formValues) {
  * @return {boolean} whether or not the email is invalid
  */
 function emailIsInvalid(email) {
+    // eslint-disable-next-line
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return !re.test(String(email).toLowerCase());
 }

@@ -71,11 +71,9 @@ const Transition = React.forwardRef((props, ref) => (
     <Slide direction="up" ref={ref} {...props} />
 ))
 
-const HomePage = (props) => {
+const HomePage = props => {
 
     const classes = useStyles()
-
-    const { firebase } = props
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
     // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
