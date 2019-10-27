@@ -78,6 +78,7 @@ const HomePage = (props) => {
     const { firebase } = props
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
+    // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
     const [key, setKey] = useState(0)
 
     const handleOpenNewBooking = () => {
@@ -88,32 +89,6 @@ const HomePage = (props) => {
         console.log(newBookingId)
         setKey(key + 1)
         setOpenNewBooking(false)
-    }
-
-    const onSubmit = async values => {
-        
-        var dateTime = new Date(
-            values.date.getFullYear(),
-            values.date.getMonth(),
-            values.date.getDate(),
-            values.time.getHours(),
-            values.time.getMinutes(), 0, 0
-        )
-
-        values.dateTime = dateTime
-        delete values.date
-        delete values.time
-
-        firebase.functions.httpsCallable('createBooking')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: JSON.stringify(values)
-        }).then(result => {
-            console.log(result.data)
-        }).catch(err => {
-            console.log(err)
-        }).finally(() => {
-            console.log('finally')
-        })
     }
 
     return (

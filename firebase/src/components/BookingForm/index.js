@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+/** Function, not const obj, to avoid mutation. Each call returns an empty form. */
 const getInitialValues = () => (
     {
         parentFirstName: {
@@ -98,6 +99,12 @@ const getInitialValues = () => (
     }
 )
 
+/**
+ * Strips out the error and errorText fields, leaving only the field and value
+ * 
+ * @param {object} formValues - the form values as an object
+ * @return {object} the booking ready to be written to firestore
+ */
 const convertBookingObject = formValues => {
 
     var booking = {}
@@ -114,13 +121,15 @@ const convertBookingObject = formValues => {
 
     return booking
 }
-  
+
+/** The booking form component */
 const BookingForm = props => {
 
     const classes = useStyles()
 
     const [formValues, setFormValues] = useState(getInitialValues)
     const [valid, setValid] = useState(true)
+    // date is done separately from rest of form because of how material-ui handles it
     const [selectedDate, setSelectedDate] = useState(null)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -131,16 +140,11 @@ const BookingForm = props => {
 
         let field = e.target.name
         let value = e.target.value
-        console.log(field)
-        console.log(value)
-
         let tmpValues = { ...formValues }
         tmpValues[field].value = value
-
-        console.log(tmpValues)
-
         tmpValues = validateFormOnChange(tmpValues, field, value)
 
+        // clear the value and errors of the address field if it is no longer required
         if (field === 'location' && value !== 'mobile') {
             tmpValues.address.value = ''
             tmpValues.address.error = false
@@ -162,12 +166,14 @@ const BookingForm = props => {
 
         var tmpFormValues = { ...formValues }
         tmpFormValues = validateFormOnSubmit(tmpFormValues)
+        // if there is an error (fields are empty), update the values and return
         if (tmpFormValues) {
             setValid(false)
             setFormValues(tmpFormValues)
             return
         }
-        console.log(formValues)
+
+        // everything looks good, lets write to firebase and create calendar/send confirmation email
         setLoading(true)
         var booking = convertBookingObject(formValues)
 
@@ -178,7 +184,7 @@ const BookingForm = props => {
             console.log(result.data)
             setLoading(false)
             setSuccess(true)
-            setTimeout(() => {
+            setTimeout(() => { // let user see success for a second, then close the dialog
                 props.onSuccess('1234')
             }, 1000)
         }).catch(err => {
