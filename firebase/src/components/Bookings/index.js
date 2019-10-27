@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withFirebase } from '../Firebase/context';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import queryString from 'query-string'
 
 const BookingsPage = props => {
 
@@ -10,12 +11,29 @@ const BookingsPage = props => {
     const [bookings, setBookings] = useState(null)
     const [selectedDate, setSelectedDate] = useState(new Date())
 
+    useEffect(() => {
+        const values = queryString.parse(props.location.search)
+        if (values.id) {
+            fetchBooking(values.id)
+        } else {
+            fetchBookingsByDate(new Date())
+        }
+    }, [])
+
     const handleDateChange = date => {
         setSelectedDate(date)
-        fetchBookings(date)
+        fetchBookingsByDate(date)
     }
 
-    const fetchBookings = date => {
+    const fetchBooking = id => {
+        firebase.db.collection('bookings').doc(id)
+            .get().then(documentSnapshot => {
+                setBookings([documentSnapshot])
+                setSelectedDate(documentSnapshot.get('dateTime').toDate())
+            })
+    }
+
+    const fetchBookingsByDate = date => {
         date.setHours(0,0,0,0)
         var nextDay = new Date(date.getTime())
         nextDay.setDate(nextDay.getDate() + 1)
@@ -26,16 +44,11 @@ const BookingsPage = props => {
             .get().then(querySnapshot => {
                 var latestBookings = []
                 querySnapshot.forEach(documentSnapshot => {
-                    latestBookings.push(documentSnapshot.data())
+                    latestBookings.push(documentSnapshot)
                 })
                 setBookings(latestBookings)
             })
     }
-
-    useEffect(() => {
-        fetchBookings(new Date())
-    }, [])
-    
 
     return (
         <>
@@ -43,7 +56,7 @@ const BookingsPage = props => {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         disableToolbar
-                        variant="inline"
+                        variant="static"
                         format="dd/MM/yyyy"
                         margin="normal"
                         id="date-picker"
@@ -57,23 +70,15 @@ const BookingsPage = props => {
                 />                       
                 </MuiPickersUtilsProvider>
             </div>
-            {
-                bookings
-                    ? <MatchingBookings bookings={bookings} />
-                    : null
-            }
+            <ul>
+            {bookings ? bookings.map((booking, index) => (
+                <li key={index}>
+                    {booking.id}
+                    {JSON.stringify(booking.data())}
+                </li>
+            )) : null}
+            </ul>
         </>
-    )
-
-}
-
-const MatchingBookings = props => {
-    return (
-        <ul>
-            {props.bookings.map((booking, index) => (
-                <li key={index}>{JSON.stringify(booking)}</li>
-            ))}
-        </ul>
     )
 }
 

@@ -14,6 +14,9 @@ const Navigation = () => (
             <li>
                 <Link to={ROUTES.BOOKINGS}>Bookings</Link>
             </li>
+            <li>
+                <Link to={ROUTES.BOOKINGFORM}>Booking Form</Link>
+            </li>
         </ul>
     </div>
 )
