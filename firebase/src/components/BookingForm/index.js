@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withFirebase } from '../Firebase/context'
+import { withFirebase } from '../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'

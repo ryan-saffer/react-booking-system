@@ -9,7 +9,6 @@ import SignInPage from '../SignIn'
 import HomePage from '../Home'
 import * as ROUTES from '../../constants/routes'
 import BookingsPage from '../Bookings'
-import BookingForm from '../BookingForm'
 
 const App = () => (
   <Router>
@@ -19,7 +18,6 @@ const App = () => (
       <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
-      <Route path={ROUTES.BOOKINGFORM} component={BookingForm} />
     </div>
   </Router>
 );

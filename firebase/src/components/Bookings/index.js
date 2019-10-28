@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { withFirebase } from '../Firebase/context';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import queryString from 'query-string'
+import { withAuthorization } from '../Session';
 
 const BookingsPage = props => {
 
@@ -82,4 +82,4 @@ const BookingsPage = props => {
     )
 }
 
-export default withFirebase(BookingsPage)
+export default withAuthorization(BookingsPage)

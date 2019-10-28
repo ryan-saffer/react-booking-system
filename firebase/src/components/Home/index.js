@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withFirebase } from '../Firebase/context'
+import { withAuthorization } from '../Session'
 import Fab from '@material-ui/core/Fab';
 import AddCircle from '@material-ui/icons/AddCircle'
 import { makeStyles } from '@material-ui/core/styles'
@@ -125,4 +125,4 @@ const HomePage = props => {
     )
 }
 
-export default withFirebase(HomePage)
+export default withAuthorization(HomePage)
