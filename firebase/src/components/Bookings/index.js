@@ -40,7 +40,10 @@ const useStyles = makeStyles(theme => ({
     appBar: {
         zIndex: theme.zIndex.drawer + 1
     },
-    toolbar: theme.mixins.toolbar
+    toolbar: theme.mixins.toolbar,
+    title: {
+        flexGrow: 1
+    }
 }))
 
 const BookingsPage = props => {
@@ -100,8 +103,8 @@ const BookingsPage = props => {
             <CssBaseline />
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar>
-                    <Typography variant="h6" noWrap>
-                        Bookings
+                    <Typography variant="h6" className={classes.title}>
+                        Party Bookings
                     </Typography>
                     <Button color="inherit" onClick={handleLogout}>Logout</Button>
                 </Toolbar>
