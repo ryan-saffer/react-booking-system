@@ -13,8 +13,8 @@ import BookingsPage from '../Bookings'
 const App = () => (
   <Router>
     <div>
-      <Navigation />
-      <hr />
+      {/* <Navigation />
+      <hr /> */}
       <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.BOOKINGS} component={BookingsPage} />

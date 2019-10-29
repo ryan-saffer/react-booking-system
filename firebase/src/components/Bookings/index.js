@@ -1,12 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import PropTypes from 'prop-types';
+import { withAuthorization } from '../Session';
 import DateFnsUtils from '@date-io/date-fns';
 import queryString from 'query-string'
-import { withAuthorization } from '../Session';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import withWidth from '@material-ui/core/withWidth';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer'
+import { compose } from 'recompose';
+import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
+import Button from '@material-ui/core/Button'
+
+const drawerWidth = 320
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex'
+    },
+    list: {
+        padding: theme.spacing(1),
+        margin: theme.spacing(1)
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    content: {
+        flexGrow: 0,
+        backgroundColor: theme.palette.background.default,
+        padding: theme.spacing(3)
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
+    },
+    toolbar: theme.mixins.toolbar
+}))
 
 const BookingsPage = props => {
 
-    const { firebase } = props
+    const classes = useStyles()
+
+    const { firebase, width } = props
 
     const [bookings, setBookings] = useState(null)
     const [selectedDate, setSelectedDate] = useState(new Date())
@@ -23,6 +64,10 @@ const BookingsPage = props => {
     const handleDateChange = date => {
         setSelectedDate(date)
         fetchBookingsByDate(date)
+    }
+
+    const handleLogout = () => {
+        firebase.doSignOut()
     }
 
     const fetchBooking = id => {
@@ -51,35 +96,91 @@ const BookingsPage = props => {
     }
 
     return (
-        <>
-            <div>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        disableToolbar
-                        variant="static"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker"
-                        label="Date picker"
-                        autoOk="true"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                            'aria-lavel': 'change date'
-                        }}
-                />                       
-                </MuiPickersUtilsProvider>
-            </div>
-            <ul>
-            {bookings ? bookings.map((booking, index) => (
-                <li key={index}>
-                    {booking.id}
-                    {JSON.stringify(booking.data())}
-                </li>
-            )) : null}
-            </ul>
-        </>
+        <div className={classes.root}>
+            <CssBaseline />
+            <AppBar className={classes.appBar} position="fixed">
+                <Toolbar>
+                    <Typography variant="h6" noWrap>
+                        Bookings
+                    </Typography>
+                    <Button color="inherit" onClick={handleLogout}>Logout</Button>
+                </Toolbar>
+            </AppBar>
+            <Hidden xsDown>
+                <Drawer
+                    className={classes.drawer}
+                    variant="permanent"
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    anchor="left"
+                >
+                    <div className={classes.toolbar} />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="static"
+                            format="dd/MM/yyyy"
+                            margin="normal"
+                            id="date-picker"
+                            label="Date picker"
+                            autoOk="true"
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            KeyboardButtonProps={{
+                                'aria-lavel': 'change date'
+                            }}
+                        />                       
+                    </MuiPickersUtilsProvider>
+                </Drawer>
+            </Hidden>
+            <Hidden smUp>
+                <div className={classes.inlineDatePicker}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            margin="normal"
+                            id="date-picker"
+                            label="Date picker"
+                            autoOk="true"
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            KeyboardButtonProps={{
+                                'aria-lavel': 'change date'
+                            }}
+                        />                       
+                    </MuiPickersUtilsProvider>
+                </div>
+            </Hidden>
+            
+            <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Grid container spacing={3}>
+                    <Typography variant="subtitle1">Current width: {width}</Typography>
+                        <Grid item xs sm>
+                            <ul>
+                                {bookings ? bookings.map((booking, index) => (
+                                    <li key={index}>
+                                        {booking.id}
+                                        {JSON.stringify(booking.data())}
+                                    </li>
+                                )) : null}
+                            </ul>
+                        </Grid>
+                </Grid>
+            </main>
+            
+        </div>
     )
 }
 
-export default withAuthorization(BookingsPage)
+BookingsPage.propTypes = {
+    width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
+};
+  
+export default compose(
+    withAuthorization,
+    withWidth()
+)(BookingsPage)
