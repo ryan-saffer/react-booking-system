@@ -6,13 +6,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
+import BookingForm from '../BookingForm'
 
 var dateFormat = require('dateformat')
 
 const useStyles = makeStyles(theme => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
-        flexBasis: '33.33%',
+        flexBasis: '20%',
         flexShrink: 0,
     },
     secondaryHeading: {
@@ -44,8 +45,8 @@ const BookingPanel = props => {
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <Grid container spacing={3}>
-                        <Grid item xs={3}>
-                            <Typography>Parent: {data.parentFirstName} {data.parentLastName}</Typography>
+                        <Grid item xs>
+                            <BookingForm booking={data} />
                         </Grid>
                     </Grid>
                 </ExpansionPanelDetails>

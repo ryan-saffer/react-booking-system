@@ -17,6 +17,8 @@ import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from './validation'
 
+const dateFormat = require('dateformat')
+
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
         display: 'flex',
@@ -39,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 /** Function, not const obj, to avoid mutation. Each call returns an empty form. */
-const getInitialValues = () => (
+const getEmptyValues = () => (
     {
         parentFirstName: {
             value: '',
@@ -72,7 +74,7 @@ const getInitialValues = () => (
             errorText: 'Child age cannot be empty'
         },
         date: {
-            value: '',
+            value: null,
             error: false,
             errorText: 'Date cannot be empty'
         },
@@ -122,24 +124,42 @@ const convertBookingObject = formValues => {
     return booking
 }
 
+function mapBookingToFormValues(booking) {
+    var formValues = getEmptyValues()
+
+    for (let field in formValues) {
+        formValues[field].value = booking[field]
+    }
+
+    const dateTime = booking.dateTime.toDate()
+    formValues.date.value = dateTime
+    formValues.time.value = dateFormat(dateTime, "HH:MM")
+
+    return formValues
+}
+
 /** The booking form component */
 const BookingForm = props => {
 
     const classes = useStyles()
 
-    const [formValues, setFormValues] = useState(getInitialValues)
+    const { firebase, booking } = props
+
+    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
+
+    const [formValues, setFormValues] = useState(initialValues)
     const [valid, setValid] = useState(true)
     // date is done separately from rest of form because of how material-ui handles it
     const [selectedDate, setSelectedDate] = useState(null)
+    const [editing, setEditing] = useState(!!booking)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const { firebase } = props
-
     const handleFormChange = e => {
 
-        let field = e.target.name
-        let value = e.target.value
+        const isDateField = e instanceof Date
+        let field = isDateField ? 'date' : e.target.name
+        let value = isDateField ? e : e.target.value
         let tmpValues = { ...formValues }
         tmpValues[field].value = value
         tmpValues = validateFormOnChange(tmpValues, field, value)
@@ -212,6 +232,8 @@ const BookingForm = props => {
                         fullWidth
                         variant="outlined"
                         autoComplete='off'
+                        disabled={editing}
+                        value={formValues.parentFirstName.value}
                         error={formValues.parentFirstName.error}
                         helperText={formValues.parentFirstName.error ? formValues.parentFirstName.errorText : ''}
                         onChange={handleFormChange}
@@ -224,6 +246,8 @@ const BookingForm = props => {
                         label="Parent last name"
                         fullWidth
                         variant="outlined"
+                        disabled={editing}
+                        value={formValues.parentLastName.value}
                         error={formValues.parentLastName.error}
                         helperText={formValues.parentLastName.error ? formValues.parentLastName.errorText : ''}
                         onChange={handleFormChange}
@@ -236,6 +260,8 @@ const BookingForm = props => {
                         label="Parent email"
                         fullWidth
                         variant="outlined"
+                        disabled={editing}
+                        value={formValues.parentEmail.value}
                         error={formValues.parentEmail.error}
                         helperText={formValues.parentEmail.error ? formValues.parentEmail.errorText : ''}
                         onChange={handleFormChange}
@@ -248,6 +274,8 @@ const BookingForm = props => {
                     label="Parent mobile"
                     fullWidth
                     variant="outlined"
+                    disabled={editing}
+                    value={formValues.parentMobile.value}
                     error={formValues.parentMobile.error}
                     helperText={formValues.parentMobile.error ? formValues.parentMobile.errorText : ''}
                     onChange={handleFormChange}
@@ -265,6 +293,8 @@ const BookingForm = props => {
                         label="Child name"
                         fullWidth
                         variant="outlined"
+                        disabled={editing}
+                        value={formValues.childName.value}
                         error={formValues.childName.error}
                         helperText={formValues.childName.error ? formValues.childName.errorText : ''}
                         onChange={handleFormChange}
@@ -277,6 +307,8 @@ const BookingForm = props => {
                         label="Child age"
                         fullWidth
                         variant="outlined"
+                        disabled={editing}
+                        value={formValues.childAge.value}
                         error={formValues.childAge.error}
                         helperText={formValues.childAge.error ? formValues.childAge.errorText : ''}
                         onChange={handleFormChange}
@@ -297,10 +329,11 @@ const BookingForm = props => {
                             id="date"
                             label="Date of party"
                             autoOk="true"
-                            value={selectedDate}
+                            disabled={editing}
+                            value={formValues.date.value}
                             error={formValues.date.error}
                             helperText={formValues.date.error ? formValues.date.errorText : ''}
-                            onChange={handleDateChange}
+                            onChange={handleFormChange}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -314,6 +347,8 @@ const BookingForm = props => {
                         name="time"
                         label="Party time"
                         type="time"
+                        disabled={editing}
+                        value={formValues.time.value}
                         error={formValues.time.error}
                         helperText={formValues.time.error ? formValues.time.errorText : ''}
                         onChange={handleFormChange}
@@ -336,6 +371,7 @@ const BookingForm = props => {
                                 id: 'location',
                                 value: formValues.location.value ? formValues.location.value : ''
                             }}
+                            disabled={editing}
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
@@ -359,6 +395,7 @@ const BookingForm = props => {
                                     id: 'partyLength',
                                     value: formValues.partyLength.value ? formValues.partyLength.value : ''
                                 }}
+                                disabled={editing}
                                 error={formValues.partyLength.error}
                                 onChange={handleFormChange}
                             >
@@ -379,6 +416,8 @@ const BookingForm = props => {
                         label="Address"
                         fullWidth
                         variant="outlined"
+                        disabled={editing}
+                        value={formValues.address.value}
                         error={formValues.address.error}
                         helperText={formValues.address.error ? formValues.address.errorText : ''}
                         onChange={handleFormChange}

@@ -16,6 +16,8 @@ import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
 import BookingPanel from './BookingPanel';
 
+const dateFormat = require('dateformat')
+
 const drawerWidth = 320
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +46,10 @@ const useStyles = makeStyles(theme => ({
     toolbar: theme.mixins.toolbar,
     title: {
         flexGrow: 1
+    },
+    heading: {
+        textAlign: 'center',
+        paddingBottom: theme.spacing(1)
     }
 }))
 
@@ -164,7 +170,7 @@ const BookingsPage = props => {
                 <Hidden xsDown>
                     <div className={classes.toolbar} />
                 </Hidden>
-                    <Typography variant="subtitle1">Current width: {width}</Typography>
+                    <Typography className={classes.heading} variant="h6">{dateFormat(selectedDate, "dddd, mmmm dS, yyyy")}</Typography>
                     <Grid item xs sm>
                         {bookings ? bookings.map((booking, index) => (
                             <BookingPanel key={booking.id} booking={booking} />
