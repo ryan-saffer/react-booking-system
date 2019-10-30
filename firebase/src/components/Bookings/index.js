@@ -14,6 +14,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { compose } from 'recompose';
 import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
 import Button from '@material-ui/core/Button'
+import BookingPanel from './BookingPanel';
 
 const drawerWidth = 320
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme => ({
         width: drawerWidth,
     },
     content: {
-        flexGrow: 0,
+        flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(3)
     },
@@ -137,43 +138,44 @@ const BookingsPage = props => {
                     </MuiPickersUtilsProvider>
                 </Drawer>
             </Hidden>
-            <Hidden smUp>
-                <div className={classes.inlineDatePicker}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker"
-                            label="Date picker"
-                            autoOk="true"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                                'aria-lavel': 'change date'
-                            }}
-                        />                       
-                    </MuiPickersUtilsProvider>
-                </div>
-            </Hidden>
-            
+            <Grid container spacing={3}>
             <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Grid container spacing={3}>
+                <Hidden smUp>
+                    <Grid item xs sm>
+                        <div className={classes.toolbar}/>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="dd/MM/yyyy"
+                                    margin="normal"
+                                    id="date-picker"
+                                    label="Date picker"
+                                    autoOk="true"
+                                    value={selectedDate}
+                                    onChange={handleDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-lavel': 'change date'
+                                    }}
+                                />                       
+                            </MuiPickersUtilsProvider>
+                    </Grid>
+                </Hidden>
+                <Hidden xsDown>
+                    <div className={classes.toolbar} />
+                </Hidden>
                     <Typography variant="subtitle1">Current width: {width}</Typography>
-                        <Grid item xs sm>
-                            <ul>
-                                {bookings ? bookings.map((booking, index) => (
-                                    <li key={index}>
-                                        {booking.id}
-                                        {JSON.stringify(booking.data())}
-                                    </li>
-                                )) : null}
-                            </ul>
-                        </Grid>
+                    <Grid item xs sm>
+                        {bookings ? bookings.map((booking, index) => (
+                            <BookingPanel key={booking.id} booking={booking} />
+                            // <li key={index}>
+                            //     {booking.id}
+                            //     {JSON.stringify(booking.data())}
+                            // </li>
+                        )) : null}
+                    </Grid>
+                </main>
                 </Grid>
-            </main>
             
         </div>
     )
