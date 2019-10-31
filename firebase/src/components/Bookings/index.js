@@ -13,7 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer'
 import { compose } from 'recompose';
 import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import BookingPanel from './BookingPanel';
 
 const dateFormat = require('dateformat')
@@ -61,6 +62,7 @@ const BookingsPage = props => {
 
     const [bookings, setBookings] = useState(null)
     const [selectedDate, setSelectedDate] = useState(new Date())
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const values = queryString.parse(props.location.search)
@@ -81,14 +83,21 @@ const BookingsPage = props => {
     }
 
     const fetchBooking = id => {
+        setLoading(true)
         firebase.db.collection('bookings').doc(id)
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
                 setSelectedDate(documentSnapshot.get('dateTime').toDate())
             })
+        setLoading(false)
     }
 
     const fetchBookingsByDate = date => {
+        // only show loading indicator if taking a while
+        var timeout = setTimeout(() => {
+            setLoading(true)
+        }, 750)
+        
         date.setHours(0,0,0,0)
         var nextDay = new Date(date.getTime())
         nextDay.setDate(nextDay.getDate() + 1)
@@ -102,6 +111,8 @@ const BookingsPage = props => {
                     latestBookings.push(documentSnapshot)
                 })
                 setBookings(latestBookings)
+                clearTimeout(timeout)
+                setLoading(false)
             })
     }
 
@@ -171,6 +182,7 @@ const BookingsPage = props => {
                     <div className={classes.toolbar} />
                 </Hidden>
                     <Typography className={classes.heading} variant="h6">{dateFormat(selectedDate, "dddd, mmmm dS, yyyy")}</Typography>
+                    {loading && <LinearProgress />}
                     <Grid item xs sm>
                         {bookings ? bookings.map((booking, index) => (
                             <BookingPanel key={booking.id} booking={booking} />
