@@ -16,6 +16,7 @@ import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import BookingPanel from './BookingPanel';
+import LocationBooking from './LocationBooking'
 
 const dateFormat = require('dateformat')
 
@@ -51,6 +52,9 @@ const useStyles = makeStyles(theme => ({
     heading: {
         textAlign: 'center',
         paddingBottom: theme.spacing(1)
+    },
+    location: {
+        paddingBottom: '100px'
     }
 }))
 
@@ -60,7 +64,7 @@ const BookingsPage = props => {
 
     const { firebase, width } = props
 
-    const [bookings, setBookings] = useState(null)
+    const [bookings, setBookings] = useState([])
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
 
@@ -184,13 +188,11 @@ const BookingsPage = props => {
                     <Typography className={classes.heading} variant="h6">{dateFormat(selectedDate, "dddd, mmmm dS, yyyy")}</Typography>
                     {loading && <LinearProgress />}
                     <Grid item xs sm>
-                        {bookings ? bookings.map((booking, index) => (
+                        {bookings.length > 0 && <LocationBooking bookings={bookings} location="malvern" />}
+                        {bookings.length > 0 && <LocationBooking bookings={bookings} location="balwyn" />}
+                        {/* {bookings && bookings.map((booking, index) => (
                             <BookingPanel key={booking.id} booking={booking} />
-                            // <li key={index}>
-                            //     {booking.id}
-                            //     {JSON.stringify(booking.data())}
-                            // </li>
-                        )) : null}
+                        ))} */}
                     </Grid>
                 </main>
                 </Grid>

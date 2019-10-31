@@ -27,26 +27,23 @@ const BookingPanel = props => {
     const classes = useStyles()
 
     const { booking } = props
-    const data = booking.data()
-    console.log(data)
 
     return (
             <ExpansionPanel>
                 <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
-                    id={booking.id}
                 >
                     <Typography className={classes.heading}>
-                    {dateFormat(data.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(data.dateTime.toDate(), data.partyLength), "h:MM TT")}
+                    {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
                     </Typography>
                     <Typography className={classes.secondaryHeading}>
-                        {data.parentFirstName} {data.parentLastName}: {data.childName}'s {data.childAge}th
+                        {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
                     </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <Grid container spacing={3}>
                         <Grid item xs>
-                            <BookingForm booking={data} />
+                            <BookingForm booking={booking} />
                         </Grid>
                     </Grid>
                 </ExpansionPanelDetails>
