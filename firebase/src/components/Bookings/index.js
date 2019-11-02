@@ -12,11 +12,18 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer'
 import { compose } from 'recompose';
-import { CssBaseline, AppBar, Toolbar } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline'
+import AppBar from '@material-ui/core/AppBar'
+import Button from '@material-ui/core/Button'
+import Toolbar from '@material-ui/core/Toolbar'
+import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import BookingPanel from './BookingPanel';
-import LocationBooking from './LocationBooking'
+import LocationBookings from './LocationBookings'
+import LocationCheckboxes from './LocationCheckboxes';
+import NavigateBefore from '@material-ui/icons/NavigateBefore'
+import NavigateNext from '@material-ui/icons/NavigateNext'
+import DateNav from './BookingsNav';
 
 const dateFormat = require('dateformat')
 
@@ -49,10 +56,6 @@ const useStyles = makeStyles(theme => ({
     title: {
         flexGrow: 1
     },
-    heading: {
-        textAlign: 'center',
-        paddingBottom: theme.spacing(1)
-    },
     location: {
         paddingBottom: '100px'
     }
@@ -65,8 +68,13 @@ const BookingsPage = props => {
     const { firebase, width } = props
 
     const [bookings, setBookings] = useState([])
-    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
+    const [selectedLocations, setSelectedLocations] = useState({
+        balwyn: true,
+        malvern: true,
+        mobile: true
+    })
 
     useEffect(() => {
         const values = queryString.parse(props.location.search)
@@ -78,12 +86,30 @@ const BookingsPage = props => {
     }, [])
 
     const handleDateChange = date => {
-        setSelectedDate(date)
+        setDate(date)
         fetchBookingsByDate(date)
+    }
+
+    const handleNavigateBefore = () => {
+        var dayBefore = date
+        dayBefore.setDate(dayBefore.getDate() - 1)
+        setDate(dayBefore)
+        fetchBookingsByDate(dayBefore)
+    }
+
+    const handleNavigateNext = () => {
+        var tomorrow = date
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        setDate(tomorrow)
+        fetchBookingsByDate(tomorrow)
     }
 
     const handleLogout = () => {
         firebase.doSignOut()
+    }
+
+    const handleLocationChange = name => e => {
+        setSelectedLocations({ ...selectedLocations, [name]: e.target.checked})
     }
 
     const fetchBooking = id => {
@@ -91,7 +117,7 @@ const BookingsPage = props => {
         firebase.db.collection('bookings').doc(id)
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
-                setSelectedDate(documentSnapshot.get('dateTime').toDate())
+                setDate(documentSnapshot.get('dateTime').toDate())
             })
         setLoading(false)
     }
@@ -150,7 +176,7 @@ const BookingsPage = props => {
                             id="date-picker"
                             label="Date picker"
                             autoOk="true"
-                            value={selectedDate}
+                            value={date}
                             onChange={handleDateChange}
                             KeyboardButtonProps={{
                                 'aria-lavel': 'change date'
@@ -173,7 +199,7 @@ const BookingsPage = props => {
                                     id="date-picker"
                                     label="Date picker"
                                     autoOk="true"
-                                    value={selectedDate}
+                                    value={date}
                                     onChange={handleDateChange}
                                     KeyboardButtonProps={{
                                         'aria-lavel': 'change date'
@@ -184,15 +210,19 @@ const BookingsPage = props => {
                 </Hidden>
                 <Hidden xsDown>
                     <div className={classes.toolbar} />
-                </Hidden>
-                    <Typography className={classes.heading} variant="h6">{dateFormat(selectedDate, "dddd, mmmm dS, yyyy")}</Typography>
+                    </Hidden>
+                    <DateNav
+                        onNavigateBefore={handleNavigateBefore}
+                        onNavigateNext={handleNavigateNext}
+                        date={date}
+                    />
                     {loading && <LinearProgress />}
+                    <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                    <Divider />
                     <Grid item xs sm>
-                        {bookings.length > 0 && <LocationBooking bookings={bookings} location="malvern" />}
-                        {bookings.length > 0 && <LocationBooking bookings={bookings} location="balwyn" />}
-                        {/* {bookings && bookings.map((booking, index) => (
-                            <BookingPanel key={booking.id} booking={booking} />
-                        ))} */}
+                        {selectedLocations.balwyn && <LocationBookings bookings={bookings} location="balwyn" />}
+                        {selectedLocations.malvern && <LocationBookings bookings={bookings} location="malvern" />}
+                        {selectedLocations.mobile && <LocationBookings bookings={bookings} location="mobile" />}
                     </Grid>
                 </main>
                 </Grid>
