@@ -1,31 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withAuthorization } from '../Session';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { withAuthorization } from '../Session'
+import DateFnsUtils from '@date-io/date-fns'
 import queryString from 'query-string'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import withWidth from '@material-ui/core/withWidth';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import Grid from '@material-ui/core/Grid'
+import Hidden from '@material-ui/core/Hidden'
+import withWidth from '@material-ui/core/withWidth'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
-import { compose } from 'recompose';
+import { compose } from 'recompose'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
 import Divider from '@material-ui/core/Divider'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import BookingPanel from './BookingPanel';
+import LinearProgress from '@material-ui/core/LinearProgress'
 import LocationBookings from './LocationBookings'
-import LocationCheckboxes from './LocationCheckboxes';
-import NavigateBefore from '@material-ui/icons/NavigateBefore'
-import NavigateNext from '@material-ui/icons/NavigateNext'
-import DateNav from './BookingsNav';
-
-const dateFormat = require('dateformat')
+import LocationCheckboxes from './LocationCheckboxes'
+import DateNav from './BookingsNav'
 
 const drawerWidth = 320
 
@@ -233,7 +227,7 @@ const BookingsPage = props => {
 
 BookingsPage.propTypes = {
     width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
-};
+}
   
 export default compose(
     withAuthorization,

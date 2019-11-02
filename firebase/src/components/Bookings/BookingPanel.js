@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
-import BookingForm from '../BookingForm'
+import ExistingBookingForm from '../BookingForm/ExistingBookingForm'
 
 var dateFormat = require('dateformat')
 
@@ -43,7 +43,7 @@ const BookingPanel = props => {
                 <ExpansionPanelDetails>
                     <Grid container spacing={3}>
                         <Grid item xs>
-                            <BookingForm booking={booking} />
+                            <ExistingBookingForm booking={booking} />
                         </Grid>
                     </Grid>
                 </ExpansionPanelDetails>
