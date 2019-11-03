@@ -12,7 +12,7 @@ class SignInGoogleBase extends Component {
             .doSignInWithGoogle()
             .then(socialAuthUser => {
                 this.setState({ error: null})
-                this.props.history.push(ROUTES.HOME)
+                this.props.history.push(ROUTES.BOOKINGS)
             })
             .catch(error => {
                 this.setState({ error })
