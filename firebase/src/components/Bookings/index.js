@@ -216,7 +216,7 @@ const BookingsPage = props => {
                         onNavigateNext={handleNavigateNext}
                         date={date}
                     />
-                    {loading && <LinearProgress />}
+                    {loading && <LinearProgress color="secondary" />}
                     <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                     <Divider />
                     <Grid item xs sm>

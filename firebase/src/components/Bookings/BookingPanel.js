@@ -29,25 +29,25 @@ const BookingPanel = props => {
     const { booking } = props
 
     return (
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                >
-                    <Typography className={classes.heading}>
-                    {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
-                    </Typography>
-                    <Typography className={classes.secondaryHeading}>
-                        {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
-                    </Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Grid container spacing={3}>
-                        <Grid item xs>
-                            <BookingForm booking={booking} />
-                        </Grid>
+        <ExpansionPanel>
+            <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+            >
+                <Typography className={classes.heading}>
+                {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
+                </Typography>
+                <Typography className={classes.secondaryHeading}>
+                    {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
+                </Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+                <Grid container spacing={3}>
+                    <Grid item xs>
+                        <BookingForm booking={booking} />
                     </Grid>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
+                </Grid>
+            </ExpansionPanelDetails>
+        </ExpansionPanel>
     )
 }
 
