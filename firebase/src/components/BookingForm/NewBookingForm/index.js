@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { green } from '@material-ui/core/colors'
 import BaseBookingDetails, { handleBaseBookingFormChange } from '../BaseBookingDetails'
 import { validateFormOnSubmit } from '../baseBookingFormValidation'
+import getEmptyValues from '../BaseBookingDetails'
 
 const dateFormat = require('dateformat')
 
@@ -32,67 +33,6 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: green[500]
     }
 }))
-
-/** Function, not const obj, to avoid mutation. Each call returns an empty form. */
-const getEmptyValues = () => (
-    {
-        parentFirstName: {
-            value: '',
-            error: false,
-            errorText: 'First name cannot be empty'
-        },
-        parentLastName: {
-            value: '',
-            error: false,
-            errorText: 'Last name cannot be empty'
-        },
-        parentEmail: {
-            value: '',
-            error: false,
-            errorText: "Email address cannot be empty"
-        },
-        parentMobile: {
-            value: '',
-            error: false,
-            errorText: 'Mobile number cannot be empty'
-        },
-        childName: {
-            value: '',
-            error: false,
-            errorText: 'Child name cannot be empty'
-        },
-        childAge: {
-            value: '',
-            error: false,
-            errorText: 'Child age cannot be empty'
-        },
-        date: {
-            value: null,
-            error: false,
-            errorText: 'Date cannot be empty'
-        },
-        time: {
-            value: '',
-            error: false,
-            errorText: 'Time cannot be empty'
-        },
-        location: {
-            value: '',
-            error: false,
-            errorText: 'Location cannot be empty'
-        },
-        partyLength: {
-            value: '',
-            error: false,
-            errorText: 'Party length cannot be empty'
-        },
-        address: {
-            value: '',
-            error: false,
-            errorText: 'Address cannot be empty'
-        }
-    }
-)
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value

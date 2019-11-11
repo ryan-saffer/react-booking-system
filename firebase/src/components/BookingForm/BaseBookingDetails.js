@@ -10,11 +10,93 @@ import { InputLabel, MenuItem, FormHelperText } from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { validateFormOnChange, errorFound } from './baseBookingFormValidation'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+
+// Function, not const obj, to avoid mutation. Each call returns an empty form
+export function getEmptyValues() {
+    var values = {
+        parentFirstName: {
+            value: '',
+            error: false,
+            errorText: 'First name cannot be empty'
+        },
+        parentLastName: {
+            value: '',
+            error: false,
+            errorText: 'Last name cannot be empty'
+        },
+        parentEmail: {
+            value: '',
+            error: false,
+            errorText: "Email address cannot be empty"
+        },
+        parentMobile: {
+            value: '',
+            error: false,
+            errorText: 'Mobile number cannot be empty'
+        },
+        childName: {
+            value: '',
+            error: false,
+            errorText: 'Child name cannot be empty'
+        },
+        childAge: {
+            value: '',
+            error: false,
+            errorText: 'Child age cannot be empty'
+        },
+        date: {
+            value: null,
+            error: false,
+            errorText: 'Date cannot be empty'
+        },
+        time: {
+            value: '',
+            error: false,
+            errorText: 'Time cannot be empty'
+        },
+        location: {
+            value: '',
+            error: false,
+            errorText: 'Location cannot be empty'
+        },
+        partyLength: {
+            value: '',
+            error: false,
+            errorText: 'Party length cannot be empty'
+        },
+        address: {
+            value: '',
+            error: false,
+            errorText: 'Address cannot be empty'
+        },
+        notes: {
+            value: '',
+            error: false,
+            errorText: ''
+        },
+        sendConfirmationEmail: {
+            value: true,
+            error: false,
+            errorText: ''
+        }
+    }
+        
+    return values
+}
 
 export function handleBaseBookingFormChange(formValues, e) {
     const isDateField = e instanceof Date
     let field = isDateField ? 'date' : e.target.name
-    let value = isDateField ? e : e.target.value
+    let value
+    if (isDateField) {
+        value = e
+    } else if (field == "sendConfirmationEmail") {
+        value = e.target.checked
+    } else {
+        value = e.target.value
+    }
     let tmpValues = { ...formValues }
     tmpValues[field].value = value
     tmpValues = validateFormOnChange(tmpValues, field, value)
@@ -225,22 +307,52 @@ const BaseBookingForm = props => {
                     ) : null}
                     </FormControl>
                 </Grid>
-            {formValues.location.value === 'mobile' ? (
+            {formValues.location.value === 'mobile' &&
+                <Grid item xs={12}>
+                    <TextField
+                        id="address"
+                        name="address"
+                        label="Address"
+                        fullWidth
+                        variant="outlined"
+                        disabled={!editing}
+                        value={formValues.address.value}
+                        error={formValues.address.error}
+                        helperText={formValues.address.error ? formValues.address.errorText : ''}
+                        onChange={handleFormChange(formValues)}
+                    />
+                </Grid>}
+            <Grid item xs={12}>
+                <Typography variant="h6">
+                    Notes
+                </Typography>
+            </Grid>
             <Grid item xs={12}>
                 <TextField
-                    id="address"
-                    name="address"
-                    label="Address"
+                    id="notes"
+                    name="notes"
+                    label="Notes"
                     fullWidth
                     variant="outlined"
+                    multiline
                     disabled={!editing}
-                    value={formValues.address.value}
-                    error={formValues.address.error}
-                    helperText={formValues.address.error ? formValues.address.errorText : ''}
+                    value={formValues.notes.value}
+                    error={formValues.notes.error}
                     onChange={handleFormChange(formValues)}
                 />
             </Grid>
-            ) : null}
+            <Grid item xs={12}>
+                <FormControlLabel
+                    control={<Checkbox
+                                id="sendConfirmationEmail"
+                                color="secondary"
+                                name="sendConfirmationEmail"
+                                checked={formValues.sendConfirmationEmail.value}
+                                value={formValues.sendConfirmationEmail.value}
+                                onChange={handleFormChange(formValues)} />}
+                    label="Send confrimation email"
+                />
+            </Grid>
         </Grid>
     )
 }

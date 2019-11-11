@@ -11,6 +11,7 @@ import AdditionalBookingDetails from '../AdditionalBookingDetails'
 import BaseBookingDetails, { handleBaseBookingFormChange } from '../BaseBookingDetails'
 import { validateFormOnSubmit } from '../baseBookingFormValidation'
 
+
 const dateFormat = require('dateformat')
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +35,6 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-/** Function, not const obj, to avoid mutation. Each call returns an empty form. */
 const getEmptyValues = () => (
     {
         parentFirstName: {
@@ -91,6 +91,16 @@ const getEmptyValues = () => (
             value: '',
             error: false,
             errorText: 'Address cannot be empty'
+        },
+        notes: {
+            value: '',
+            error: false,
+            errorText: ''
+        },
+        sendConfirmationEmail: {
+            value: true,
+            error: false,
+            errorText: ''
         }
     }
 )
@@ -189,12 +199,12 @@ const ExistingBookingForm = props => {
 
     return (
         <>
-        {/* <BaseBookingDetails
+        <BaseBookingDetails
             formValues={formValues}
             editing={editing}
             onFormChange={handleFormChange}
-        /> */}
-            <AdditionalBookingDetails />
+        />
+        <AdditionalBookingDetails />
         <div className={classes.saveButtonDiv}>
             <Fab
                 className={success ? classes.success : classes.saveButton}
