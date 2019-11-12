@@ -95,8 +95,9 @@ function locationAndTimeIsInvalid(formValues) {
 export function validateFormOnSubmit(formValues) {
 
     for (let field in formValues) {
-        if (field !== 'address') { // validate address separately since not always required
-            formValues[field].error = formValues[field].value === ''
+        // notes not required, address only required in some cases
+        if (field !== 'address' && field !== 'notes') {
+            formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
 
