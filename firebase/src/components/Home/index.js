@@ -10,10 +10,10 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
-import BookingForm from '../BookingForm'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Paper from '@material-ui/core/Paper';
 import { grey } from '@material-ui/core/colors'
+import NewBookingForm from '../Forms/NewBookingForm';
 
 const useStyles = makeStyles(theme => ({
     fab: {
@@ -117,7 +117,7 @@ const HomePage = props => {
                 </AppBar>
                 <main key={key} className={classes.layout}>
                     <Paper className={classes.paper}>
-                        <BookingForm onSuccess={handleCloseBooking} />
+                        <NewBookingForm onSuccess={handleCloseBooking} />
                     </Paper>
                 </main>
                 </Dialog>
