@@ -1,3 +1,5 @@
+import { fields } from "../../constants/formValues"
+
 /**
  * Validates the form values, sets any errors and error text messages.
  * 
@@ -10,15 +12,15 @@ export function validateFormOnChange(formValues, field, value) {
 
     switch (field) {
         // all the following only need to check for empty values
-        case 'parentFirstName':
-        case 'parentLastName':
-        case 'childName':
-        case 'childAge':
-        case 'time':
-        case 'address':
+        case [fields.PARENT_FIRST_NAME]:
+        case [fields.PARENT_LAST_NAME]:
+        case [fields.CHILD_NAME]:
+        case [fields.CHILD_AGE]:
+        case [fields.TIME]:
+        case [fields.ADDRESS]:
             formValues[field].error = value === ''
             break
-        case 'parentEmail':
+        case [fields.PARENT_EMAIL]:
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
@@ -31,7 +33,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case 'parentMobile':
+        case [fields.PARENT_MOBILE]:
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
@@ -45,18 +47,18 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case 'location':
-        case 'partyLength':
+        case [fields.LOCATION]:
+        case [fields.PARTY_LENGTH]:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
             if (locationAndTimeIsInvalid(formValues)) {
-                formValues.partyLength.error = true
-                var length = `${formValues.partyLength.value} hour`
-                if (formValues.partyLength.value > 1) length += 's'
-                formValues.partyLength.errorText = `A ${formValues.location.value} party cannot be of length ${length}`
+                formValues[fields.PARTY_LENGTH].error = true
+                var length = `${formValues[fields.PARTY_LENGTH].value} hour`
+                if (formValues[fields.PARTY_LENGTH].value > 1) length += 's'
+                formValues[fields.PARTY_LENGTH].errorText = `A ${formValues[fields.LOCATION].value} party cannot be of length ${length}`
                 break
-            } else if (field === 'location') {
-                formValues.partyLength.error = false
+            } else if (field === fields.LOCATION) {
+                formValues[fields.PARTY_LENGTH].error = false
             }
             break
         default:
@@ -74,8 +76,8 @@ export function validateFormOnChange(formValues, field, value) {
  */
 function locationAndTimeIsInvalid(formValues) {
     var storeLocations = ['malvern', 'balwyn']
-    var location = formValues['location'].value
-    var length = formValues['partyLength'].value
+    var location = formValues[fields.LOCATION].value
+    var length = formValues[fields.PARTY_LENGTH].value
     if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
@@ -96,14 +98,14 @@ export function validateFormOnSubmit(formValues) {
 
     for (let field in formValues) {
         // notes not required, address only required in some cases
-        if (field !== 'address' && field !== 'notes') {
+        if (field !== fields.ADDRESS && field !== fields.NOTES) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
 
     // validate address here
-    if (formValues.location.value === 'mobile') {
-        formValues.address.error = formValues.address.value === ''
+    if (formValues[fields.LOCATION].value === 'mobile') {
+        formValues[fields.ADDRESS].error = formValues[fields.ADDRESS].value === ''
     }
 
     return errorFound(formValues) ? formValues : null
