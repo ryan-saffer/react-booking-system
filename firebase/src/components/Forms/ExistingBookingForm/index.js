@@ -7,15 +7,17 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { InputLabel, MenuItem, FormHelperText, FormControlLabel, Checkbox } from '@material-ui/core'
+import { InputLabel, MenuItem, FormHelperText, FormControlLabel, Checkbox, Button } from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
+import CreateIcon from '@material-ui/icons/Create'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
-import { green } from '@material-ui/core/colors'
+import { green, red } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
+import { additions, creations, creationDisplayValues } from '../../../constants/formValues'
 
 const dateFormat = require('dateformat')
 
@@ -37,6 +39,14 @@ const useStyles = makeStyles(theme => ({
     success: {
         marginTop: theme.spacing(3),
         backgroundColor: green[500]
+    },
+    editButton: {
+        marginTop: theme.spacing(3)
+    },
+    cancelButton: {
+        color: red,
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3)
     }
 }))
 
@@ -117,6 +127,61 @@ const getEmptyValues = () => (
             value: '',
             error: false,
             errorText: ''
+        },
+        [additions.CHICKEN_NUGGETS]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.FAIRY_BREAD]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.FRUIT_PLATTER]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.LOLLY_BAGS]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.SANDWICH_PLATTER]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.VEGGIE_PLATTER]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.WATERMELON_PLATTER]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [additions.WEDGES]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        cake: {
+            value: '',
+            error: false,
+            errorText: ''
+        },
+        cakeFlavour: {
+            value: '',
+            error: false,
+            errorText: ''
+        },
+        questions: {
+            value: '',
+            error: false,
+            errorText: ''
         }
     }
 )
@@ -145,17 +210,20 @@ const convertBookingObject = formValues => {
 }
 
 function mapBookingToFormValues(booking) {
-    var formValues = getEmptyValues()
+    var tmpFormValues = getEmptyValues()
 
-    for (let field in formValues) {
-        formValues[field].value = booking[field]
+    for (let field in tmpFormValues) {
+        const val = booking[field]
+        if (val !== undefined) {
+            tmpFormValues[field].value = val
+        }
     }
 
     const dateTime = booking.dateTime.toDate()
-    formValues.date.value = dateTime
-    formValues.time.value = dateFormat(dateTime, "HH:MM")
+    tmpFormValues.date.value = dateTime
+    tmpFormValues.time.value = dateFormat(dateTime, "HH:MM")
 
-    return formValues
+    return tmpFormValues
 }
 
 const ExistingBookingForm = props => {
@@ -172,13 +240,23 @@ const ExistingBookingForm = props => {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
+    const handleEdit = () => {
+        setEditing(true)
+    }
+
+    const cancelEdit = () => {
+        setFormValues(mapBookingToFormValues(booking))
+        setEditing(false)
+    }
+
     const handleFormChange = e => {
         const isDateField = e instanceof Date
         let field = isDateField ? 'date' : e.target.name
         let value
         if (isDateField) {
             value = e
-        } else if (field == "sendConfirmationEmail") {
+        } else if (field === "sendConfirmationEmail"
+                    || Object.values(additions).includes(field)) {
             value = e.target.checked
         } else {
             value = e.target.value
@@ -212,14 +290,14 @@ const ExistingBookingForm = props => {
         setLoading(true)
         var booking = convertBookingObject(formValues)
 
-        firebase.functions.httpsCallable('createBooking')({
+        firebase.functions.httpsCallable('updateBooking')({
             auth: firebase.auth.currentUser.toJSON(),
             data: JSON.stringify(booking)
         }).then(result => {
             console.log(result.data)
             setLoading(false)
             setSuccess(true)
-            setTimeout(() => { // let user see success for a second, then close the dialog
+            setTimeout(() => { // let user see success for a second, then refesh
                 props.onSuccess('1234')
             }, 1000)
         }).catch(err => {
@@ -247,7 +325,7 @@ const ExistingBookingForm = props => {
                         fullWidth
                         variant="outlined"
                         autoComplete='off'
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.parentFirstName.value}
                         error={formValues.parentFirstName.error}
                         helperText={formValues.parentFirstName.error || ''}
@@ -261,7 +339,7 @@ const ExistingBookingForm = props => {
                         label="Parent last name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.parentLastName.value}
                         error={formValues.parentLastName.error}
                         helperText={formValues.parentLastName.error || ''}
@@ -275,7 +353,7 @@ const ExistingBookingForm = props => {
                         label="Parent email"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.parentEmail.value}
                         error={formValues.parentEmail.error}
                         helperText={formValues.parentEmail.error || ''}
@@ -289,7 +367,7 @@ const ExistingBookingForm = props => {
                     label="Parent mobile"
                     fullWidth
                     variant="outlined"
-                    disabled={editing}
+                    disabled={!editing}
                     value={formValues.parentMobile.value}
                     error={formValues.parentMobile.error}
                     helperText={formValues.parentMobile.error || ''}
@@ -308,7 +386,7 @@ const ExistingBookingForm = props => {
                         label="Child name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.childName.value}
                         error={formValues.childName.error}
                         helperText={formValues.childName.error || ''}
@@ -322,7 +400,7 @@ const ExistingBookingForm = props => {
                         label="Child age"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.childAge.value}
                         error={formValues.childAge.error}
                         helperText={formValues.childAge.error || ''}
@@ -344,7 +422,7 @@ const ExistingBookingForm = props => {
                             id="date"
                             label="Date of party"
                             autoOk="true"
-                            disabled={editing}
+                            disabled={!editing}
                             value={formValues.date.value}
                             error={formValues.date.error}
                             helperText={formValues.date.error || ''}
@@ -362,7 +440,7 @@ const ExistingBookingForm = props => {
                         name="time"
                         label="Party time"
                         type="time"
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.time.value}
                         error={formValues.time.error}
                         helperText={formValues.time.error || ''}
@@ -386,7 +464,7 @@ const ExistingBookingForm = props => {
                                 id: 'location',
                                 value: formValues.location.value || ''
                             }}
-                            disabled={editing}
+                            disabled={!editing}
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
@@ -410,7 +488,7 @@ const ExistingBookingForm = props => {
                                 id: 'partyLength',
                                 value: formValues.partyLength.value || ''
                             }}
-                            disabled={editing}
+                            disabled={!editing}
                             error={formValues.partyLength.error}
                             onChange={handleFormChange}
                         >
@@ -430,7 +508,7 @@ const ExistingBookingForm = props => {
                             label="Address"
                             fullWidth
                             variant="outlined"
-                            disabled={editing}
+                            disabled={!editing}
                             value={formValues.address.value}
                             error={formValues.address.error}
                             helperText={formValues.address.error || ''}
@@ -450,7 +528,7 @@ const ExistingBookingForm = props => {
                         fullWidth
                         variant="outlined"
                         multiline
-                        disabled={editing}
+                        disabled={!editing}
                         value={formValues.notes.value}
                         error={formValues.notes.error}
                         onChange={handleFormChange}
@@ -472,13 +550,13 @@ const ExistingBookingForm = props => {
                                 id: 'creation1',
                                 value: formValues.creation1.value || ''
                             }}
-                            disabled={editing}
+                            disabled={!editing}
                             error={formValues.creation1.error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'fluffy_slime'}>Fluffy Slime</MenuItem>
-                            <MenuItem value={'bath_bombs'}>Bath Bombs</MenuItem>
-                            <MenuItem value={'soap'}>Soap</MenuItem>
+                            {Object.values(creations).map(creation => (
+                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                            ))}
                     </Select>
                     </FormControl>
                 </Grid>
@@ -493,13 +571,13 @@ const ExistingBookingForm = props => {
                                 id: 'creation2',
                                 value: formValues.creation2.value || ''
                             }}
-                            disabled={editing}
+                            disabled={!editing}
                             error={formValues.creation2.error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'fluffy_slime'}>Fluffy Slime</MenuItem>
-                            <MenuItem value={'bath_bombs'}>Bath Bombs</MenuItem>
-                            <MenuItem value={'soap'}>Soap</MenuItem>
+                            {Object.values(creations).map(creation => (
+                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                            ))}
                     </Select>
                     </FormControl>
                 </Grid>
@@ -514,13 +592,13 @@ const ExistingBookingForm = props => {
                                 id: 'creation3',
                                 value: formValues.creation3.value || ''
                             }}
-                            disabled={editing}
+                            disabled={!editing || booking.partyLength !== '2'}
                             error={formValues.creation3.error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'fluffy_slime'}>Fluffy Slime</MenuItem>
-                            <MenuItem value={'bath_bombs'}>Bath Bombs</MenuItem>
-                            <MenuItem value={'soap'}>Soap</MenuItem>
+                            {Object.values(creations).map(creation => (
+                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                            ))}
                     </Select>
                     </FormControl>
                 </Grid>
@@ -532,11 +610,12 @@ const ExistingBookingForm = props => {
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.CHICKEN_NUGGETS}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.CHICKEN_NUGGETS}
+                                    checked={formValues[additions.CHICKEN_NUGGETS].value}
+                                    value={formValues[additions.CHICKEN_NUGGETS].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
                         label="Chicken Nuggets"
                     />
@@ -544,85 +623,92 @@ const ExistingBookingForm = props => {
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.FAIRY_BREAD}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.FAIRY_BREAD}
+                                    checked={formValues[additions.FAIRY_BREAD].value}
+                                    value={formValues[additions.FAIRY_BREAD].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Fairy Bread"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.FRUIT_PLATTER}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.FRUIT_PLATTER}
+                                    checked={formValues[additions.FRUIT_PLATTER].value}
+                                    value={formValues[additions.FRUIT_PLATTER].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Fruit Platter"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.LOLLY_BAGS}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.LOLLY_BAGS}
+                                    checked={formValues[additions.LOLLY_BAGS].value}
+                                    value={formValues[additions.LOLLY_BAGS].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Lolly Bags"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.SANDWICH_PLATTER}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.SANDWICH_PLATTER}
+                                    checked={formValues[additions.SANDWICH_PLATTER].value}
+                                    value={formValues[additions.SANDWICH_PLATTER].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Sandwich Platter"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.VEGGIE_PLATTER}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.VEGGIE_PLATTER}
+                                    checked={formValues[additions.VEGGIE_PLATTER].value}
+                                    value={formValues[additions.VEGGIE_PLATTER].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Veggie Platter"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.WATERMELON_PLATTER}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.WATERMELON_PLATTER}
+                                    checked={formValues[additions.WATERMELON_PLATTER].value}
+                                    value={formValues[additions.WATERMELON_PLATTER].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Watermelon Platter"
                     />
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel
                         control={<Checkbox
-                                    id="chickenNuggets"
+                                    id={additions.WEDGES}
                                     color="secondary"
-                                    name="chickenNuggets"
-                                    checked={false}
-                                    value={''}
+                                    name={additions.WEDGES}
+                                    checked={formValues[additions.WEDGES].value}
+                                    value={formValues[additions.WEDGES].value}
+                                    disabled={!editing}
                                     onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
+                        label="Wedges"
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -637,9 +723,9 @@ const ExistingBookingForm = props => {
                         label="Cake"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
-                        value={formValues.notes.value}
-                        error={formValues.notes.error}
+                        disabled={!editing}
+                        value={formValues.cake.value}
+                        error={formValues.cake.error}
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -652,10 +738,9 @@ const ExistingBookingForm = props => {
                             inputProps={{
                                 name: 'cakeFlavour',
                                 id: 'cakeFlavour',
-                                value: formValues.creation3.value || ''
+                                value: formValues.cakeFlavour.value || ''
                             }}
-                            disabled={editing}
-                            error={formValues.creation3.error}
+                            disabled={!editing}
                             onChange={handleFormChange}
                         >
                             <MenuItem value={'chocolate'}>Chocolate</MenuItem>
@@ -675,24 +760,44 @@ const ExistingBookingForm = props => {
                         label="Questions"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
-                        value={formValues.notes.value}
-                        error={formValues.notes.error}
+                        disabled={!editing}
+                        value={formValues.questions.value}
                         onChange={handleFormChange}
                     />
                 </Grid>
             </Grid>
             <div className={classes.saveButtonDiv}>
-                <Fab
-                    className={success ? classes.success : classes.saveButton}
-                    aria-label="save"
-                    color="primary"
-                    type="submit"
-                    disabled={loading || !valid}
-                    onClick={handleSubmit}
-                >
-                    {success ? <CheckIcon /> : <SaveIcon />}
-                </Fab>
+                {editing ? (
+                    <>
+                        <Button
+                            className={classes.cancelButton}
+                            variant="outlined"
+                            onClick={cancelEdit}
+                        >
+                            Cancel
+                        </Button>
+                    <Fab
+                        className={success ? classes.success : classes.saveButton}
+                        aria-label="save"
+                        color="secondary"
+                        type="submit"
+                        disabled={loading || !valid}
+                        onClick={handleSubmit}
+                    >
+                        {success ? <CheckIcon /> : <SaveIcon />}
+                    </Fab>
+                    </>
+                ) : (
+                    <Fab
+                        className={classes.editButton}
+                        aria-label="edit"
+                        color="primary"
+                        type="submit"
+                        onClick={handleEdit}
+                    >
+                        {<CreateIcon />}
+                    </Fab>
+                )}
                 {loading && <CircularProgress size={68} className={classes.progress} />}
             </div>
         </>

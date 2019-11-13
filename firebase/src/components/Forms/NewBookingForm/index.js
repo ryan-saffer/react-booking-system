@@ -17,8 +17,6 @@ import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 
-const dateFormat = require('dateformat')
-
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
         display: 'flex',
@@ -134,32 +132,15 @@ const convertBookingObject = formValues => {
     return booking
 }
 
-function mapBookingToFormValues(booking) {
-    var formValues = getEmptyValues()
-
-    for (let field in formValues) {
-        formValues[field].value = booking[field]
-    }
-
-    const dateTime = booking.dateTime.toDate()
-    formValues.date.value = dateTime
-    formValues.time.value = dateFormat(dateTime, "HH:MM")
-
-    return formValues
-}
-
 /** The booking form component */
 const NewBookingForm = props => {
 
     const classes = useStyles()
 
-    const { firebase, booking } = props
+    const { firebase } = props
 
-    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
-
-    const [formValues, setFormValues] = useState(initialValues)
+    const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
-    const [editing, setEditing] = useState(!!booking)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
@@ -169,7 +150,7 @@ const NewBookingForm = props => {
         let value
         if (isDateField) {
             value = e
-        } else if (field == "sendConfirmationEmail") {
+        } else if (field === "sendConfirmationEmail") {
             value = e.target.checked
         } else {
             value = e.target.value
@@ -238,7 +219,6 @@ const NewBookingForm = props => {
                         fullWidth
                         variant="outlined"
                         autoComplete='off'
-                        disabled={editing}
                         value={formValues.parentFirstName.value}
                         error={formValues.parentFirstName.error}
                         helperText={formValues.parentFirstName.error ? formValues.parentFirstName.errorText : ''}
@@ -252,7 +232,6 @@ const NewBookingForm = props => {
                         label="Parent last name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.parentLastName.value}
                         error={formValues.parentLastName.error}
                         helperText={formValues.parentLastName.error ? formValues.parentLastName.errorText : ''}
@@ -266,7 +245,6 @@ const NewBookingForm = props => {
                         label="Parent email"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.parentEmail.value}
                         error={formValues.parentEmail.error}
                         helperText={formValues.parentEmail.error ? formValues.parentEmail.errorText : ''}
@@ -280,7 +258,6 @@ const NewBookingForm = props => {
                     label="Parent mobile"
                     fullWidth
                     variant="outlined"
-                    disabled={editing}
                     value={formValues.parentMobile.value}
                     error={formValues.parentMobile.error}
                     helperText={formValues.parentMobile.error ? formValues.parentMobile.errorText : ''}
@@ -299,7 +276,6 @@ const NewBookingForm = props => {
                         label="Child name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.childName.value}
                         error={formValues.childName.error}
                         helperText={formValues.childName.error ? formValues.childName.errorText : ''}
@@ -313,7 +289,6 @@ const NewBookingForm = props => {
                         label="Child age"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.childAge.value}
                         error={formValues.childAge.error}
                         helperText={formValues.childAge.error ? formValues.childAge.errorText : ''}
@@ -335,7 +310,6 @@ const NewBookingForm = props => {
                             id="date"
                             label="Date of party"
                             autoOk="true"
-                            disabled={editing}
                             value={formValues.date.value}
                             error={formValues.date.error}
                             helperText={formValues.date.error ? formValues.date.errorText : ''}
@@ -353,7 +327,6 @@ const NewBookingForm = props => {
                         name="time"
                         label="Party time"
                         type="time"
-                        disabled={editing}
                         value={formValues.time.value}
                         error={formValues.time.error}
                         helperText={formValues.time.error ? formValues.time.errorText : ''}
@@ -377,7 +350,6 @@ const NewBookingForm = props => {
                                 id: 'location',
                                 value: formValues.location.value ? formValues.location.value : ''
                             }}
-                            disabled={editing}
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
@@ -401,7 +373,6 @@ const NewBookingForm = props => {
                                 id: 'partyLength',
                                 value: formValues.partyLength.value ? formValues.partyLength.value : ''
                             }}
-                            disabled={editing}
                             error={formValues.partyLength.error}
                             onChange={handleFormChange}
                         >
@@ -422,7 +393,6 @@ const NewBookingForm = props => {
                             label="Address"
                             fullWidth
                             variant="outlined"
-                            disabled={editing}
                             value={formValues.address.value}
                             error={formValues.address.error}
                             helperText={formValues.address.error ? formValues.address.errorText : ''}
@@ -442,7 +412,6 @@ const NewBookingForm = props => {
                         fullWidth
                         variant="outlined"
                         multiline
-                        disabled={editing}
                         value={formValues.notes.value}
                         error={formValues.notes.error}
                         onChange={handleFormChange}
@@ -465,7 +434,7 @@ const NewBookingForm = props => {
                 <Fab
                     className={success ? classes.success : classes.saveButton}
                     aria-label="save"
-                    color="primary"
+                    color="secondary"
                     type="submit"
                     disabled={loading || !valid}
                     onClick={handleSubmit}
