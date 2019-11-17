@@ -6,7 +6,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
-import BookingForm from '../BookingForm'
+import NewBookingForm from '../Forms/NewBookingForm'
+import ExistingBookingForm from '../Forms/ExistingBookingForm'
 
 var dateFormat = require('dateformat')
 
@@ -29,23 +30,23 @@ const BookingPanel = props => {
     const { booking } = props
 
     return (
-        <ExpansionPanel>
-            <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-            >
-                <Typography className={classes.heading}>
-                {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
-                </Typography>
-                <Typography className={classes.secondaryHeading}>
-                    {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
-                </Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-                <Grid container spacing={3}>
-                    <Grid item xs>
-                        <BookingForm booking={booking} />
+            <ExpansionPanel>
+                <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                >
+                    <Typography className={classes.heading}>
+                    {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
+                    </Typography>
+                    <Typography className={classes.secondaryHeading}>
+                        {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
+                    </Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <Grid container spacing={3}>
+                        <Grid item xs>
+                            <ExistingBookingForm booking={booking} />
+                        </Grid>
                     </Grid>
-                </Grid>
             </ExpansionPanelDetails>
         </ExpansionPanel>
     )

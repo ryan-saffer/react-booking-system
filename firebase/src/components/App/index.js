@@ -18,16 +18,16 @@ const App = () => {
   const theme = createMuiTheme({
     palette: {
       primary: {
-        light: '#f6e0ff',
-        main: '#c3aef4',
-        dark: '#927fc1',
-        contrastText: '#fff',
+        light: '#9be7ff',
+        main: '#64b5f6',
+        dark: '#2286c3',
+        contrastText: '#000000',
       },
       secondary: {
-        light: '#7cffff',
-        main: '#34e4f2',
-        dark: '#00b1bf',
-        contrastText: '#fff',
+        light: '#ffc4ff',
+        main: '#ce93d8',
+        dark: '#9c64a6',
+        contrastText: '#000000',
       }
     },
     overrides: {

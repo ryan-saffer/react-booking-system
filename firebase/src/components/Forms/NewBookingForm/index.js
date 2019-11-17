@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withFirebase } from '../Firebase'
+import { withFirebase } from '../../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { InputLabel, MenuItem, FormHelperText } from '@material-ui/core'
+import { InputLabel, MenuItem, FormHelperText, FormControlLabel, Checkbox } from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import SaveIcon from '@material-ui/icons/Save'
@@ -15,9 +15,7 @@ import CheckIcon from '@material-ui/icons/Check'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
-import { validateFormOnChange, validateFormOnSubmit, errorFound } from './validation'
-
-const dateFormat = require('dateformat')
+import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
@@ -97,6 +95,16 @@ const getEmptyValues = () => (
             value: '',
             error: false,
             errorText: 'Address cannot be empty'
+        },
+        notes: {
+            value: '',
+            error: false,
+            errorText: ''
+        },
+        sendConfirmationEmail: {
+            value: true,
+            error: false,
+            errorText: ''
         }
     }
 )
@@ -124,42 +132,29 @@ const convertBookingObject = formValues => {
     return booking
 }
 
-function mapBookingToFormValues(booking) {
-    var formValues = getEmptyValues()
-
-    for (let field in formValues) {
-        formValues[field].value = booking[field]
-    }
-
-    const dateTime = booking.dateTime.toDate()
-    formValues.date.value = dateTime
-    formValues.time.value = dateFormat(dateTime, "HH:MM")
-
-    return formValues
-}
-
 /** The booking form component */
-const BookingForm = props => {
+const NewBookingForm = props => {
 
     const classes = useStyles()
 
-    const { firebase, booking } = props
+    const { firebase } = props
 
-    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
-
-    const [formValues, setFormValues] = useState(initialValues)
+    const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
-    // date is done separately from rest of form because of how material-ui handles it
-    const [selectedDate, setSelectedDate] = useState(null)
-    const [editing, setEditing] = useState(!!booking)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
     const handleFormChange = e => {
-
         const isDateField = e instanceof Date
         let field = isDateField ? 'date' : e.target.name
-        let value = isDateField ? e : e.target.value
+        let value
+        if (isDateField) {
+            value = e
+        } else if (field === "sendConfirmationEmail") {
+            value = e.target.checked
+        } else {
+            value = e.target.value
+        }
         let tmpValues = { ...formValues }
         tmpValues[field].value = value
         tmpValues = validateFormOnChange(tmpValues, field, value)
@@ -172,14 +167,6 @@ const BookingForm = props => {
 
         setValid(!errorFound(tmpValues))
         setFormValues(tmpValues)
-    }
-
-    const handleDateChange = date => {
-        var tmpFormValues = { ...formValues }
-        tmpFormValues.date.value = date
-        tmpFormValues.date.error = false
-        setFormValues(tmpFormValues)
-        setSelectedDate(date)
     }
 
     const handleSubmit = () => {
@@ -232,7 +219,6 @@ const BookingForm = props => {
                         fullWidth
                         variant="outlined"
                         autoComplete='off'
-                        disabled={editing}
                         value={formValues.parentFirstName.value}
                         error={formValues.parentFirstName.error}
                         helperText={formValues.parentFirstName.error ? formValues.parentFirstName.errorText : ''}
@@ -246,7 +232,6 @@ const BookingForm = props => {
                         label="Parent last name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.parentLastName.value}
                         error={formValues.parentLastName.error}
                         helperText={formValues.parentLastName.error ? formValues.parentLastName.errorText : ''}
@@ -260,7 +245,6 @@ const BookingForm = props => {
                         label="Parent email"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.parentEmail.value}
                         error={formValues.parentEmail.error}
                         helperText={formValues.parentEmail.error ? formValues.parentEmail.errorText : ''}
@@ -274,7 +258,6 @@ const BookingForm = props => {
                     label="Parent mobile"
                     fullWidth
                     variant="outlined"
-                    disabled={editing}
                     value={formValues.parentMobile.value}
                     error={formValues.parentMobile.error}
                     helperText={formValues.parentMobile.error ? formValues.parentMobile.errorText : ''}
@@ -293,7 +276,6 @@ const BookingForm = props => {
                         label="Child name"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.childName.value}
                         error={formValues.childName.error}
                         helperText={formValues.childName.error ? formValues.childName.errorText : ''}
@@ -307,7 +289,6 @@ const BookingForm = props => {
                         label="Child age"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
                         value={formValues.childAge.value}
                         error={formValues.childAge.error}
                         helperText={formValues.childAge.error ? formValues.childAge.errorText : ''}
@@ -329,7 +310,6 @@ const BookingForm = props => {
                             id="date"
                             label="Date of party"
                             autoOk="true"
-                            disabled={editing}
                             value={formValues.date.value}
                             error={formValues.date.error}
                             helperText={formValues.date.error ? formValues.date.errorText : ''}
@@ -347,7 +327,6 @@ const BookingForm = props => {
                         name="time"
                         label="Party time"
                         type="time"
-                        disabled={editing}
                         value={formValues.time.value}
                         error={formValues.time.error}
                         helperText={formValues.time.error ? formValues.time.errorText : ''}
@@ -371,7 +350,6 @@ const BookingForm = props => {
                                 id: 'location',
                                 value: formValues.location.value ? formValues.location.value : ''
                             }}
-                            disabled={editing}
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
@@ -385,51 +363,78 @@ const BookingForm = props => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={3}>
-                        <FormControl
-                            fullWidth
+                    <FormControl
+                        fullWidth
+                    >
+                        <InputLabel>Party length</InputLabel>
+                        <Select
+                            inputProps={{
+                                name: 'partyLength',
+                                id: 'partyLength',
+                                value: formValues.partyLength.value ? formValues.partyLength.value : ''
+                            }}
+                            error={formValues.partyLength.error}
+                            onChange={handleFormChange}
                         >
-                            <InputLabel>Party length</InputLabel>
-                            <Select
-                                inputProps={{
-                                    name: 'partyLength',
-                                    id: 'partyLength',
-                                    value: formValues.partyLength.value ? formValues.partyLength.value : ''
-                                }}
-                                disabled={editing}
-                                error={formValues.partyLength.error}
-                                onChange={handleFormChange}
-                            >
-                                <MenuItem value={'1'}>1 hour</MenuItem>
-                                <MenuItem value={'1.5'}>1.5 hours</MenuItem>
-                                <MenuItem value={'2'}>2 hours</MenuItem>
-                        </Select>
-                        {formValues.partyLength.error ? (
-                            <FormHelperText error={true}>{formValues.partyLength.errorText}</FormHelperText>
-                        ) : null}
-                        </FormControl>
-                    </Grid>
-                {formValues.location.value === 'mobile' ? (
+                            <MenuItem value={'1'}>1 hour</MenuItem>
+                            <MenuItem value={'1.5'}>1.5 hours</MenuItem>
+                            <MenuItem value={'2'}>2 hours</MenuItem>
+                    </Select>
+                    {formValues.partyLength.error ? (
+                        <FormHelperText error={true}>{formValues.partyLength.errorText}</FormHelperText>
+                    ) : null}
+                    </FormControl>
+                </Grid>
+                {formValues.location.value === 'mobile' &&
+                    <Grid item xs={12}>
+                        <TextField
+                            id="address"
+                            name="address"
+                            label="Address"
+                            fullWidth
+                            variant="outlined"
+                            value={formValues.address.value}
+                            error={formValues.address.error}
+                            helperText={formValues.address.error ? formValues.address.errorText : ''}
+                            onChange={handleFormChange}
+                        />
+                    </Grid>}
+                <Grid item xs={12}>
+                <Typography variant="h6">
+                    Notes
+                </Typography>
+                </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        id="address"
-                        name="address"
-                        label="Address"
+                        id="notes"
+                        name="notes"
+                        label="Notes"
                         fullWidth
                         variant="outlined"
-                        disabled={editing}
-                        value={formValues.address.value}
-                        error={formValues.address.error}
-                        helperText={formValues.address.error ? formValues.address.errorText : ''}
+                        multiline
+                        value={formValues.notes.value}
+                        error={formValues.notes.error}
                         onChange={handleFormChange}
                     />
                 </Grid>
-                ) : null}
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={<Checkbox
+                                    id="sendConfirmationEmail"
+                                    color="secondary"
+                                    name="sendConfirmationEmail"
+                                    checked={formValues.sendConfirmationEmail.value}
+                                    value={formValues.sendConfirmationEmail.value}
+                                    onChange={handleFormChange} />}
+                        label="Send confrimation email"
+                    />
+                </Grid>
             </Grid>
             <div className={classes.saveButtonDiv}>
                 <Fab
                     className={success ? classes.success : classes.saveButton}
                     aria-label="save"
-                    color="primary"
+                    color="secondary"
                     type="submit"
                     disabled={loading || !valid}
                     onClick={handleSubmit}
@@ -442,4 +447,4 @@ const BookingForm = props => {
     )
 }
 
-export default withFirebase(BookingForm)
+export default withFirebase(NewBookingForm)
