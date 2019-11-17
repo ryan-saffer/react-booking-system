@@ -16,6 +16,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
+import { locations } from '../../../constants/formValues'
+import { capitalise } from '../../../utilities'
 
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
@@ -353,9 +355,9 @@ const NewBookingForm = props => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'balwyn'}>Balwyn</MenuItem>
-                            <MenuItem value={'malvern'}>Malvern</MenuItem>
-                            <MenuItem value={'mobile'}>Mobile</MenuItem>
+                            {Object.values(locations).map(location => (
+                                <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
+                            ))}
                     </Select>
                     {formValues.location.error ? (
                         <FormHelperText error={true}>{formValues.location.errorText}</FormHelperText>
