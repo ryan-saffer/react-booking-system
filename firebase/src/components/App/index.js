@@ -6,7 +6,6 @@ import {
 
 import Navigation from '../Navigation'
 import SignInPage from '../SignIn'
-import HomePage from '../Home'
 import * as ROUTES from '../../constants/routes'
 import BookingsPage from '../Bookings'
 import { ThemeProvider } from '@material-ui/styles';
@@ -43,7 +42,6 @@ const App = () => {
         <div>
           <Route exact path={ROUTES.LANDING} component={Navigation} />
           <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
-          <Route path={ROUTES.HOME} component={HomePage} />
           <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
         </div>
       </Router>

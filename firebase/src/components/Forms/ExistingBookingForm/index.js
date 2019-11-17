@@ -458,8 +458,8 @@ const ExistingBookingForm = props => {
                     <InputLabel>Location</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.LOCATION],
-                                id: [fields.LOCATION],
+                                name: fields.LOCATION,
+                                id: fields.LOCATION,
                                 value: formValues[fields.LOCATION].value || ''
                             }}
                             disabled={!editing}
@@ -482,8 +482,8 @@ const ExistingBookingForm = props => {
                         <InputLabel>Party length</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.PARTY_LENGTH],
-                                id: [fields.PARTY_LENGTH],
+                                name: fields.PARTY_LENGTH,
+                                id: fields.PARTY_LENGTH,
                                 value: formValues[fields.PARTY_LENGTH].value || ''
                             }}
                             disabled={!editing}
@@ -544,8 +544,8 @@ const ExistingBookingForm = props => {
                         <InputLabel>First Creation</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.CREATION_1],
-                                id: [fields.CREATION_1],
+                                name: fields.CREATION_1,
+                                id: fields.CREATION_1,
                                 value: formValues[fields.CREATION_1].value || ''
                             }}
                             disabled={!editing}
@@ -565,8 +565,8 @@ const ExistingBookingForm = props => {
                         <InputLabel>Second Creation</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.CREATION_2],
-                                id: [fields.CREATION_2],
+                                name: fields.CREATION_2,
+                                id: fields.CREATION_2,
                                 value: formValues[fields.CREATION_2].value || ''
                             }}
                             disabled={!editing}
@@ -586,8 +586,8 @@ const ExistingBookingForm = props => {
                         <InputLabel>Third Creation</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.CREATION_3],
-                                id: [fields.CREATION_3],
+                                name: fields.CREATION_3,
+                                id: fields.CREATION_3,
                                 value: formValues[fields.CREATION_3].value || ''
                             }}
                             disabled={!editing || booking.partyLength !== '2'}
@@ -734,8 +734,8 @@ const ExistingBookingForm = props => {
                         <InputLabel>Cake flavour</InputLabel>
                         <Select
                             inputProps={{
-                                name: [fields.CAKE_FLAVOUR],
-                                id: [fields.CAKE_FLAVOUR],
+                                name: fields.CAKE_FLAVOUR,
+                                id: fields.CAKE_FLAVOUR,
                                 value: formValues[fields.CAKE_FLAVOUR].value || ''
                             }}
                             disabled={!editing}
