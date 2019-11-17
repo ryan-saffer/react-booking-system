@@ -18,12 +18,16 @@ import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
 import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress';
-import BookingPanel from './BookingPanel';
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
-import NavigateBefore from '@material-ui/icons/NavigateBefore'
-import NavigateNext from '@material-ui/icons/NavigateNext'
 import DateNav from './BookingsNav';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { IconButton } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog'
+import Slide from '@material-ui/core/Slide'
+import CloseIcon from '@material-ui/icons/Close'
+import NewBookingForm from '../Forms/NewBookingForm'
+import { grey } from '@material-ui/core/colors'
 
 const dateFormat = require('dateformat')
 
@@ -58,8 +62,38 @@ const useStyles = makeStyles(theme => ({
     },
     location: {
         paddingBottom: '100px'
+    },
+    dialogueAppBar: {
+        position: 'relative'
+    },
+    paper: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+    layout: {
+        width: 'auto',
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up(800 + theme.spacing(2) * 2)]: {
+          width: 800,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        },
+    },
+    dialog: {
+        backgroundColor: grey[200]
     }
 }))
+
+const Transition = React.forwardRef((props, ref) => (
+    <Slide direction="up" ref={ref} {...props} />
+))
 
 const BookingsPage = props => {
 
@@ -75,6 +109,10 @@ const BookingsPage = props => {
         malvern: true,
         mobile: true
     })
+
+    const [openNewBooking, setOpenNewBooking] = useState(false)
+    // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
+    const [key, setKey] = useState(0)
 
     useEffect(() => {
         const values = queryString.parse(props.location.search)
@@ -106,6 +144,16 @@ const BookingsPage = props => {
 
     const handleLogout = () => {
         firebase.doSignOut()
+    }
+
+    const handleOpenNewBooking = () => {
+        setOpenNewBooking(true)
+    }
+
+    const handleCloseBooking = newBookingId => {
+        console.log(newBookingId)
+        setKey(key + 1)
+        setOpenNewBooking(false)
     }
 
     const handleLocationChange = name => e => {
@@ -154,9 +202,37 @@ const BookingsPage = props => {
                     <Typography variant="h6" className={classes.title}>
                         Party Bookings
                     </Typography>
-                    <Button color="inherit" onClick={handleLogout}>Logout</Button>
+                    <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
+                    <IconButton onClick={handleLogout}><ExitToAppIcon /></IconButton>
                 </Toolbar>
             </AppBar>
+            {/* New Booking Dialogue */}
+            <Dialog
+                fullScreen
+                open={openNewBooking}
+                onClose={handleCloseBooking}
+                TransitionComponent={Transition}
+                disableAutoFocus={true}
+                PaperProps={{ classes: { root: classes.dialog } }}
+            >
+            <CssBaseline />
+            <AppBar position='absolute' className={classes.dialogueAppBar}>
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={handleCloseBooking} aria-label="close">
+                        <CloseIcon />
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        New Booking
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <main key={key} className={classes.layout}>
+                <Paper className={classes.paper}>
+                    <NewBookingForm onSuccess={handleCloseBooking} />
+                </Paper>
+            </main>
+            </Dialog>
+            {/* End New Bookings Dialogue */}
             <Hidden xsDown>
                 <Drawer
                     className={classes.drawer}
@@ -210,23 +286,22 @@ const BookingsPage = props => {
                 </Hidden>
                 <Hidden xsDown>
                     <div className={classes.toolbar} />
-                    </Hidden>
-                    <DateNav
-                        onNavigateBefore={handleNavigateBefore}
-                        onNavigateNext={handleNavigateNext}
-                        date={date}
-                    />
-                    {loading && <LinearProgress color="secondary" />}
-                    <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
-                    <Divider />
-                    <Grid item xs sm>
-                        {selectedLocations.balwyn && <LocationBookings bookings={bookings} location="balwyn" />}
-                        {selectedLocations.malvern && <LocationBookings bookings={bookings} location="malvern" />}
-                        {selectedLocations.mobile && <LocationBookings bookings={bookings} location="mobile" />}
-                    </Grid>
-                </main>
+                </Hidden>
+                <DateNav
+                    onNavigateBefore={handleNavigateBefore}
+                    onNavigateNext={handleNavigateNext}
+                    date={date}
+                />
+                {loading && <LinearProgress color="secondary" />}
+                <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                <Divider />
+                <Grid item xs sm>
+                    {selectedLocations.balwyn && <LocationBookings bookings={bookings} location="balwyn" />}
+                    {selectedLocations.malvern && <LocationBookings bookings={bookings} location="malvern" />}
+                    {selectedLocations.mobile && <LocationBookings bookings={bookings} location="mobile" />}
                 </Grid>
-            
+            </main>
+            </Grid>
         </div>
     )
 }
