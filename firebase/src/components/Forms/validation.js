@@ -12,15 +12,15 @@ export function validateFormOnChange(formValues, field, value) {
 
     switch (field) {
         // all the following only need to check for empty values
-        case [fields.PARENT_FIRST_NAME]:
-        case [fields.PARENT_LAST_NAME]:
-        case [fields.CHILD_NAME]:
-        case [fields.CHILD_AGE]:
-        case [fields.TIME]:
-        case [fields.ADDRESS]:
+        case fields.PARENT_FIRST_NAME:
+        case fields.PARENT_LAST_NAME:
+        case fields.CHILD_NAME:
+        case fields.CHILD_AGE:
+        case fields.TIME:
+        case fields.ADDRESS:
             formValues[field].error = value === ''
             break
-        case [fields.PARENT_EMAIL]:
+        case fields.PARENT_EMAIL:
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
@@ -33,7 +33,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case [fields.PARENT_MOBILE]:
+        case fields.PARENT_MOBILE:
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
@@ -47,8 +47,8 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case [fields.LOCATION]:
-        case [fields.PARTY_LENGTH]:
+        case fields.LOCATION:
+        case fields.PARTY_LENGTH:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
             if (locationAndTimeIsInvalid(formValues)) {
