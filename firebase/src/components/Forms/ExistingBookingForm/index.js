@@ -17,7 +17,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green, red } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { additions, creations, creationDisplayValues, fields } from '../../../constants/formValues'
+import { additions, creations, creationDisplayValues, fields, cakeFlavours, locations } from '../../../constants/formValues'
+import { capitalise } from '../../../utilities'
 
 const dateFormat = require('dateformat')
 
@@ -466,9 +467,9 @@ const ExistingBookingForm = props => {
                             error={formValues[fields.LOCATION].error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'balwyn'}>Balwyn</MenuItem>
-                            <MenuItem value={'malvern'}>Malvern</MenuItem>
-                            <MenuItem value={'mobile'}>Mobile</MenuItem>
+                            {Object.values(locations).map(location => (
+                                <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
+                            ))}
                     </Select>
                     {formValues.location.error ? (
                         <FormHelperText error={true}>{formValues[fields.LOCATION].errorText}</FormHelperText>
@@ -741,8 +742,9 @@ const ExistingBookingForm = props => {
                             disabled={!editing}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'chocolate'}>Chocolate</MenuItem>
-                            <MenuItem value={'vanilla'}>Vanilla</MenuItem>
+                            {Object.values(cakeFlavours).map(flavour => (
+                                <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
+                            ))}
                     </Select>
                     </FormControl>
                 </Grid>

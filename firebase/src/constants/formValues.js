@@ -19,6 +19,17 @@ export const fields = {
     QUESTIONS: "questions"
 }
 
+export const locations = {
+    BALWYN: "balwyn",
+    MALVERN: "malvern",
+    MOBILE: "mobile"
+}
+
+export const cakeFlavours = {
+    CHOCOLATE: "chocolate",
+    VANILLA: "vanilla"
+}
+
 export const additions = {
     CHICKEN_NUGGETS: "chickenNuggets",
     FAIRY_BREAD: "fairyBread",
