@@ -200,7 +200,7 @@ const mapFormToBooking = formValues => {
     }
 
     // combine date and time into one
-    var isoString = `${booking.date.toISOString().split('T')[0]}T${booking.time}:00`
+    var isoString = `${booking.date.toISOString().split('T')[0]}T${booking.time}:00+11:00`
     var dateTime = new Date(isoString)
     delete booking.date
     delete booking.time

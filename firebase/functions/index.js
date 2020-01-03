@@ -19,16 +19,35 @@ exports.createBooking = functions.https.onCall((data, context) => {
   return new Promise((resolve, reject) => {
     var partyDetails = JSON.parse(data.data)
     partyDetails.dateTime = admin.firestore.Timestamp.fromDate(new Date(partyDetails.dateTime))
-    db.collection('bookings').doc().set({
+    const doc = db.collection('bookings').doc()
+    doc.set({
       ...partyDetails
     }).then(writeResult => {
       console.log(`Write Result: ${JSON.stringify(writeResult)}`)
-      callAppsScript(resolve, reject, data.data)
+      callAppsScript(doc.id, data.data)
+        .then(appsScriptResult => {
+          appsScriptResult = JSON.parse(appsScriptResult)
+          console.log(appsScriptResult)
+          var eventId = appsScriptResult.response.result
+          if (eventId) {
+            doc.set({ eventId: eventId }, { merge: true })
+            .then(updateResult => {
+              resolve(updateResult)
+            }) 
+          } else {
+            reject(appsScriptResult)
+          }
+        })
+        .catch(err => {
+          reject(err)
+        })
+    }).catch(err => {
+      reject(err)
     })
   })
 })
 
-function callAppsScript(resolve, reject, partyDetails) {
+function callAppsScript(bookingId, booking) {
 
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')
@@ -43,42 +62,45 @@ function callAppsScript(resolve, reject, partyDetails) {
     refresh_token: googleCredentials.refresh_token
   })
 
-  script.scripts.run({
-    auth: oAuth2Client,
-    resource: {
-      function: 'myFunction',
-      parameters: [
-        partyDetails
-      ],
-      devMode: true
-    },
-    scriptId: scriptId
-  }, (err, resp) => {
-    if (err) {
-      // The API encountered a problem before the script started executing
-      console.log('The API returned an error: ' + err);
-      reject(err)
-    }
-    if (resp.error) {
-      // The API executed, but the script returned an error.
-
-      // Extract the first (and only) set of error details. The values of this
-      // object are the script's 'errorMessage' and 'errorType', and an array
-      // of stack trace elements.
-      const error = resp.error.details[0];
-      console.log('Script error message: ' + error.errorMessage);
-      console.log('Script error stacktrace:');
-
-      if (error.scriptStackTraceElements) {
-        // There may not be a stacktrace if the script didn't start executing.
-        for (let i = 0; i < error.scriptStackTraceElements.length; i++) {
-          const trace = error.scriptStackTraceElements[i];
-          console.log('\t%s: %s', trace.function, trace.lineNumber);
-        }
+  return new Promise((resolve, reject) => {
+    script.scripts.run({
+      auth: oAuth2Client,
+      resource: {
+        function: 'createBooking',
+        parameters: [
+          bookingId,
+          booking
+        ],
+        devMode: true
+      },
+      scriptId: scriptId
+    }, (err, resp) => {
+      if (err) {
+        // The API encountered a problem before the script started executing
+        console.log('The API returned an error: ' + err);
+        reject(err)
       }
-      reject(resp.err)
-    } else {
-      resolve(JSON.stringify(resp.data))
-    }
+      if (resp.data.error) {
+        // The API executed, but the script returned an error.
+
+        // Extract the first (and only) set of error details. The values of this
+        // object are the script's 'errorMessage' and 'errorType', and an array
+        // of stack trace elements.
+        const error = resp.data.error.details[0];
+        console.log('Script error message: ' + error.errorMessage);
+        console.log('Script error stacktrace:');
+
+        if (error.scriptStackTraceElements) {
+          // There may not be a stacktrace if the script didn't start executing.
+          for (let i = 0; i < error.scriptStackTraceElements.length; i++) {
+            const trace = error.scriptStackTraceElements[i];
+            console.log('\t%s: %s', trace.function, trace.lineNumber);
+          }
+        }
+        reject(resp.data.error)
+      } else {
+        resolve(JSON.stringify(resp.data))
+      }
+    })
   })
 }

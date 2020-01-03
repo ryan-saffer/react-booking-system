@@ -150,8 +150,10 @@ const BookingsPage = props => {
         setOpenNewBooking(true)
     }
 
-    const handleCloseBooking = newBookingId => {
-        console.log(newBookingId)
+    const handleCloseBooking = date => {
+        console.log(date)
+        setDate(date)
+        fetchBookingsByDate(date)
         setKey(key + 1)
         setOpenNewBooking(false)
     }

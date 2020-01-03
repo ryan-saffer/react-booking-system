@@ -26,7 +26,7 @@ const LocationBookings = props => {
             {filteredBookings.length > 0 ? (
                 filteredBookings.map(booking => <BookingPanel key={booking.id} booking={booking.data()} />)
             ) : (
-                    <Typography variant="overline">Nothing booked in</Typography>
+                    <Typography variant="overline">No bookings</Typography>
             )}
         </div>
     )
