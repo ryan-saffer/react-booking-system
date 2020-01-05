@@ -24,7 +24,7 @@ const LocationBookings = props => {
         <div className={classes.root}>
             <Typography className={classes.heading} variant="h6">{location.charAt(0).toUpperCase() + location.slice(1)}</Typography>
             {filteredBookings.length > 0 ? (
-                filteredBookings.map(booking => <BookingPanel key={booking.id} booking={booking.data()} />)
+                filteredBookings.map(booking => <BookingPanel key={booking.id} onSuccess={props.onSuccess} bookingId={booking.id} booking={booking.data()} />)
             ) : (
                     <Typography variant="overline">No bookings</Typography>
             )}

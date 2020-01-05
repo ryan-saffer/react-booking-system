@@ -17,6 +17,7 @@ export function validateFormOnChange(formValues, field, value) {
         case fields.CHILD_NAME:
         case fields.CHILD_AGE:
         case fields.TIME:
+        case fields.DATE:
         case fields.ADDRESS:
             formValues[field].error = value === ''
             break
@@ -98,7 +99,15 @@ export function validateFormOnSubmit(formValues) {
 
     for (let field in formValues) {
         // notes not required, address only required in some cases
-        if (field !== fields.ADDRESS && field !== fields.NOTES) {
+        // no need to validate creations, cake and questions
+        if (field !== fields.ADDRESS &&
+            field !== fields.NOTES &&
+            field !== fields.CREATION_1 &&
+            field !== fields.CREATION_2 &&
+            field !== fields.CREATION_3 &&
+            field !== fields.CAKE &&
+            field !== fields.CAKE_FLAVOUR &&
+            field !== fields.QUESTIONS) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }

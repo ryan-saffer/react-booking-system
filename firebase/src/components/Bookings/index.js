@@ -28,6 +28,7 @@ import Slide from '@material-ui/core/Slide'
 import CloseIcon from '@material-ui/icons/Close'
 import NewBookingForm from '../Forms/NewBookingForm'
 import { grey } from '@material-ui/core/colors'
+import { locations } from '../../constants/formValues';
 
 const dateFormat = require('dateformat')
 
@@ -298,9 +299,9 @@ const BookingsPage = props => {
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm>
-                    {selectedLocations.balwyn && <LocationBookings bookings={bookings} location="balwyn" />}
-                    {selectedLocations.malvern && <LocationBookings bookings={bookings} location="malvern" />}
-                    {selectedLocations.mobile && <LocationBookings bookings={bookings} location="mobile" />}
+                    {selectedLocations.balwyn && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.BALWYN} />}
+                    {selectedLocations.malvern && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MALVERN} />}
+                    {selectedLocations.mobile && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MOBILE} />}
                 </Grid>
             </main>
             </Grid>

@@ -22,33 +22,62 @@ exports.createBooking = functions.https.onCall((data, context) => {
     const doc = db.collection('bookings').doc()
     doc.set({
       ...partyDetails
-    }).then(writeResult => {
-      console.log(`Write Result: ${JSON.stringify(writeResult)}`)
-      callAppsScript(doc.id, data.data)
-        .then(appsScriptResult => {
-          appsScriptResult = JSON.parse(appsScriptResult)
-          console.log(appsScriptResult)
-          var eventId = appsScriptResult.response.result
-          if (eventId) {
-            doc.set({ eventId: eventId }, { merge: true })
-            .then(updateResult => {
-              resolve(updateResult)
-            }) 
-          } else {
-            reject(appsScriptResult)
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
-    }).catch(err => {
-      reject(err)
     })
+      .then(writeResult => {
+        console.log(`Write Result: ${JSON.stringify(writeResult)}`)
+        runAppsScript('createBooking', data.data)
+          .then(appsScriptResult => {
+            appsScriptResult = JSON.parse(appsScriptResult)
+            console.log(appsScriptResult)
+            var eventId = appsScriptResult.response.result
+            if (eventId) {
+              doc.set({ eventId: eventId }, { merge: true })
+              .then(updateResult => {
+                resolve(updateResult)
+              }) 
+            } else {
+              reject(appsScriptResult)
+            }
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+      .catch(err => {
+        reject(err)
+      })
   })
 })
 
-function callAppsScript(bookingId, booking) {
+exports.updateBooking = functions.https.onCall((data, context) => {
+  console.log(data)
+  console.log(context)
 
+  return new Promise((resolve, reject) => {
+    var partyDetails = JSON.parse(data.data)
+    const bookingId = partyDetails.bookingId
+    const booking = partyDetails.booking
+    booking.dateTime = admin.firestore.Timestamp.fromDate(new Date(booking.dateTime))
+    const documentRef = db.collection('bookings').doc(bookingId)
+    // update calendar event and any generated sheets on apps script
+    runAppsScript('updateBooking', data.data)
+      .then(() => {
+        // then update database
+        documentRef.set({
+            ...booking
+        }).then(writeResult => {
+          resolve(writeResult)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+})
+
+function runAppsScript(functionName, booking) {
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')
 
@@ -66,9 +95,8 @@ function callAppsScript(bookingId, booking) {
     script.scripts.run({
       auth: oAuth2Client,
       resource: {
-        function: 'createBooking',
+        function: functionName,
         parameters: [
-          bookingId,
           booking
         ],
         devMode: true
