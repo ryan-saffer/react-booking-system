@@ -260,7 +260,7 @@ const BookingsPage = props => {
                             value={date}
                             onChange={handleDateChange}
                             KeyboardButtonProps={{
-                                'aria-lavel': 'change date'
+                                'aria-label': 'change date'
                             }}
                         />                       
                     </MuiPickersUtilsProvider>
@@ -283,7 +283,7 @@ const BookingsPage = props => {
                                     value={date}
                                     onChange={handleDateChange}
                                     KeyboardButtonProps={{
-                                        'aria-lavel': 'change date'
+                                        'aria-label': 'change date'
                                     }}
                                 />                       
                             </MuiPickersUtilsProvider>
