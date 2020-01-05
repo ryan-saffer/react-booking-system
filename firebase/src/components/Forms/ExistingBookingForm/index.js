@@ -19,6 +19,8 @@ import { green, red } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { additions, creations, creationDisplayValues, fields, cakeFlavours, locations } from '../../../constants/formValues'
 import { capitalise } from '../../../utilities'
+import { compose } from 'recompose'
+import withErrorDialog from '../../ErrorDialog'
 
 const dateFormat = require('dateformat')
 
@@ -307,6 +309,7 @@ const ExistingBookingForm = props => {
             console.log(err)
             setLoading(false)
             setSuccess(false)
+            props.displayError("Unable to update the booking. Please try again.\nError details: " + err)
         }).finally(() => {
             console.log('finally')
         })
@@ -811,4 +814,7 @@ const ExistingBookingForm = props => {
     )
 }
 
-export default withFirebase(ExistingBookingForm)
+export default compose(
+    withErrorDialog,
+    withFirebase
+)(ExistingBookingForm)

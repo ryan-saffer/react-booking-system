@@ -18,6 +18,8 @@ import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { locations } from '../../../constants/formValues'
 import { capitalise } from '../../../utilities'
+import { compose } from 'recompose'
+import withErrorDialog from '../../ErrorDialog'
 
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
@@ -200,6 +202,7 @@ const NewBookingForm = props => {
             console.log(err)
             setLoading(false)
             setSuccess(false)
+            props.displayError("Party has not been booked in properly. Please try again.\nError details: " + err)
         }).finally(() => {
             console.log('finally')
         })
@@ -449,4 +452,7 @@ const NewBookingForm = props => {
     )
 }
 
-export default withFirebase(NewBookingForm)
+export default compose(
+    withFirebase,
+    withErrorDialog
+)(NewBookingForm)
