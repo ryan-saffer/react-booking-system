@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base target="_top">
+    </head>
+    <body style ="font-family:'trebuchet ms'">
+        Hi <?= parentName ?>,
+        <p>We are delighted to confirm <?= childName ?>'s <?= childAge ?>th Birthday Party at Fizz Kidz! The party will be held on <u><?= startDate ?> from <?= startTime ?> - <?= endTime ?> at <?= address ?>.</u></p>
+        <p>A week before the party we will send an email to confirm the approximate number of guests that will be attending,
+            <? if (location !== "mobile") { ?>
+                which <?= creationCount ?> creations <?= childName ?> would like to make, and whether you would like to order additional party food, including lolly bags or a birthday cake!
+            <? } else if (location == "mobile") { ?>
+                and which <?= creationCount ?> creations <?= childName ?> would like to make.
+            <? } ?></p>
+        <p>Feel free to have a look at <a href="http://www.fizzkidz.com.au/">our website</a> for more information regarding our birthday parties and like our <a href="https://www.instagram.com/fizzkidzz/">Instagram</a> and <a href="https://www.facebook.com/fizzkidz/">Facebook</a> pages to check out more pictures of our creations! Furthermore, our cancellation policy can be <a href="https://www.fizzkidz.com.au/terms-and-conditions">found here.</a></p>
+        <p><a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our awesome printable invitations!</p>
+        <p>Kind regards,</p>
+        <p>Talia and the Fizz Kidz team <img src="https://mail.google.com/mail/e/1f31f" alt="🌟" data-goomoji="1f31f" /></p>
+    </body>
+</html>

@@ -13,6 +13,9 @@ function createBooking(data) {
   console.log(data)
   var booking = JSON.parse(data)
   var eventId = createEvent(booking)
+  if (booking.sendConfirmationEmail) {
+    sendConfirmationEmail(booking)
+  }
   return eventId
 }
 
@@ -131,4 +134,70 @@ function getCalendarId(location) {
     case "mobile":
       return mobilePartiesCalendarID
   }
+}
+
+/**
+* Send booking confirmation email to parent
+* Email is sent as html document, with personalised details injected as variables
+*
+* @param {object} booking the booking object
+*/
+function sendConfirmationEmail(booking) {
+  
+  // Determine the start and end times of the party
+  var startDate = new Date(booking.dateTime)
+  var endDate = getEndDate(startDate, booking.partyLength)
+  
+  // Determine if making one or two creations
+  var creationCount;
+  if (booking.location != "mobile") {
+    switch (booking.partyLength) {
+      case "1.5":
+        creationCount = "two";
+        break;
+      case "2":
+        creationCount = "three";
+        break;
+      default:
+        break;
+    }
+  } else if (booking.location == "mobile") {
+    switch (booking.partyLength) {
+      case "1":
+        creationCount = "two";
+        break;
+      case "1.5":
+        creationCount = "three";
+        break;
+      default:
+        break;
+    }
+  }
+  
+  // Using the HTML email template, inject the variables and get the content
+  var t = HtmlService.createTemplateFromFile('booking_confirmation_email_template');
+  t.parentName = booking.parentFirstName;
+  t.childName = booking.childName;
+  t.childAge = booking.childAge;
+  t.startDate = buildFormattedStartDate(startDate)
+  t.startTime = Utilities.formatDate(startDate, 'Australia/Sydney', 'hh:mm a');
+  t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
+  var address = booking.address;
+  if (booking.location !== "mobile") {
+    address = (booking.location == "malvern") ? "our Malvern store" : "our Balwyn store"
+  }
+  t.address = address;
+  t.location = booking.location;
+  t.creationCount = creationCount;
+  
+  var body = t.evaluate().getContent();
+  var subject = "Party Booking Confirmation";
+  
+  // determine which account to send from
+  var fromAddress = determineFromEmailAddress(booking.location);
+  
+  var signature = getGmailSignature();
+  
+  // Send the confirmation email
+  GmailApp.sendEmail(booking.parentEmail, subject, "", {from: fromAddress, htmlBody: body + signature, name : "Fizz Kidz"});
 }
