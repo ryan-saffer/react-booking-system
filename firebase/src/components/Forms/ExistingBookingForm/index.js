@@ -613,7 +613,7 @@ const ExistingBookingForm = props => {
                         Additions
                     </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.CHICKEN_NUGGETS}
@@ -626,7 +626,7 @@ const ExistingBookingForm = props => {
                         label="Chicken Nuggets"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.FAIRY_BREAD}
@@ -639,7 +639,7 @@ const ExistingBookingForm = props => {
                         label="Fairy Bread"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.FRUIT_PLATTER}
@@ -652,7 +652,7 @@ const ExistingBookingForm = props => {
                         label="Fruit Platter"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.LOLLY_BAGS}
@@ -665,7 +665,7 @@ const ExistingBookingForm = props => {
                         label="Lolly Bags"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.SANDWICH_PLATTER}
@@ -678,7 +678,7 @@ const ExistingBookingForm = props => {
                         label="Sandwich Platter"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.VEGGIE_PLATTER}
@@ -691,7 +691,7 @@ const ExistingBookingForm = props => {
                         label="Veggie Platter"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.WATERMELON_PLATTER}
@@ -704,7 +704,7 @@ const ExistingBookingForm = props => {
                         label="Watermelon Platter"
                     />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4} sm={3}>
                     <FormControlLabel
                         control={<Checkbox
                                     id={additions.WEDGES}
