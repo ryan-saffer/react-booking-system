@@ -467,7 +467,7 @@ const ExistingBookingForm = props => {
                                 id: fields.LOCATION,
                                 value: formValues[fields.LOCATION].value || ''
                             }}
-                            disabled={!editing}
+                            disabled={true}
                             error={formValues[fields.LOCATION].error}
                             onChange={handleFormChange}
                         >
