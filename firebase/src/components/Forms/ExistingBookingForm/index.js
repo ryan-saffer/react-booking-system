@@ -230,7 +230,7 @@ const ExistingBookingForm = props => {
 
     const classes = useStyles()
 
-    const { firebase, booking } = props
+    const { firebase, bookingId, booking } = props
 
     const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
 
@@ -287,17 +287,21 @@ const ExistingBookingForm = props => {
 
         // everything looks good, lets write to firebase and create calendar/send confirmation email
         setLoading(true)
-        var booking = mapFormToBooking(formValues)
+        var bookingCopy = { ...booking }
+        delete bookingCopy.dateTime // dateTime is handled in the mapping, and do not want it overriden in below merge
+        var mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
 
         firebase.functions.httpsCallable('updateBooking')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: JSON.stringify(booking)
+            data: JSON.stringify({bookingId: bookingId, booking: mergedBooking})
         }).then(result => {
             console.log(result.data)
             setLoading(false)
             setSuccess(true)
             setTimeout(() => { // let user see success for a second, then refesh
-                props.onSuccess('1234')
+                setEditing(false)
+                setSuccess(false)
+                props.onSuccess(formValues[fields.DATE].value)
             }, 1000)
         }).catch(err => {
             console.log(err)
@@ -740,12 +744,13 @@ const ExistingBookingForm = props => {
                                 value: formValues[fields.CAKE_FLAVOUR].value || ''
                             }}
                             disabled={!editing}
+                            error={formValues[fields.CAKE_FLAVOUR].error}
                             onChange={handleFormChange}
                         >
                             {Object.values(cakeFlavours).map(flavour => (
                                 <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
                             ))}
-                    </Select>
+                        </Select>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
@@ -761,6 +766,7 @@ const ExistingBookingForm = props => {
                         fullWidth
                         variant="outlined"
                         disabled={!editing}
+                        error={formValues[fields.QUESTIONS].error}
                         value={formValues[fields.QUESTIONS].value}
                         onChange={handleFormChange}
                     />
@@ -773,6 +779,7 @@ const ExistingBookingForm = props => {
                             className={classes.cancelButton}
                             variant="outlined"
                             onClick={cancelEdit}
+                            disabled={loading}
                         >
                             Cancel
                         </Button>

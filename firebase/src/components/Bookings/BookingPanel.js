@@ -6,7 +6,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
-import NewBookingForm from '../Forms/NewBookingForm'
 import ExistingBookingForm from '../Forms/ExistingBookingForm'
 
 var dateFormat = require('dateformat')
@@ -27,7 +26,7 @@ const BookingPanel = props => {
 
     const classes = useStyles()
 
-    const { booking } = props
+    const { bookingId, booking } = props
 
     return (
             <ExpansionPanel>
@@ -35,7 +34,7 @@ const BookingPanel = props => {
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <Typography className={classes.heading}>
-                    {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
+                        {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
                     </Typography>
                     <Typography className={classes.secondaryHeading}>
                         {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
@@ -44,7 +43,7 @@ const BookingPanel = props => {
                 <ExpansionPanelDetails>
                     <Grid container spacing={3}>
                         <Grid item xs>
-                            <ExistingBookingForm booking={booking} />
+                            <ExistingBookingForm onSuccess={props.onSuccess} bookingId={bookingId} booking={booking} />
                         </Grid>
                     </Grid>
             </ExpansionPanelDetails>

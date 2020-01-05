@@ -1,12 +1,34 @@
-function createBooking(bookingId, data) {
-  
-  console.log(bookingId)
+/**
+ * Creates a new booking by:
+ * 1. Creating calendar event
+ * 2. Sending confirmation email
+ *
+ * To be called by firebase cloud function
+ *
+ * @param {object} booking the booking object
+ * @return {string} the event id
+ *
+ */
+function createBooking(data) {
   console.log(data)
   var booking = JSON.parse(data)
-  console.log(booking)
-
-  var eventId = createEvent(bookingId, booking)
+  var eventId = createEvent(booking)
   return eventId
+}
+
+/**
+ * Updates a bookings calendar event, and re-generates the party sheet if required
+ * 
+ * To be called by firebase cloud function
+ *
+ * @param {object} data the booking object
+ */
+function updateBooking(data) {
+  console.log(data)
+  data = JSON.parse(data)
+  const booking = data.booking
+  updateEvent(booking)
+  return
 }
 
 /**
@@ -14,7 +36,7 @@ function createBooking(bookingId, data) {
  * 
  * @param {object} booking the booking object
  */
-function createEvent(bookingId, booking) {
+function createEvent(booking) {
 
   var eventName = booking.parentFirstName + " / " + booking.childName + " " + booking.childAge + "th " + booking.parentMobile
   var startDate = new Date(booking.dateTime)
@@ -25,15 +47,39 @@ function createEvent(bookingId, booking) {
   var calendarId = getCalendarId(booking.location)
 
   var newEvent = CalendarApp.getCalendarById(calendarId).createEvent(eventName, startDate, endDate)
+  newEvent.setLocation(booking.address)
   console.log("New event ID: " + newEvent.getId())
   return newEvent.getId()
 }
 
 /**
-   * Determines the parties end date/time based on starting time and length
-   * 
-   * @returns {Date} the date and time the party ends
-   */
+ * Updates the calendar event
+ *
+ * @param {object} booking the booking object
+ */
+function updateEvent(booking) {
+  
+  var eventName = booking.parentFirstName + " / " + booking.childName + " " + booking.childAge + "th " + booking.parentMobile
+  var startDate = new Date(booking.dateTime)
+
+  var endDate = getEndDate(startDate, booking.partyLength)
+  
+  // determine which calendar to use
+  var calendarId = getCalendarId(booking.location)
+                                    
+  var event = CalendarApp.getCalendarById(calendarId).getEventById(booking.eventId)
+  event.setTitle(eventName)
+  event.setTime(startDate, endDate)
+  event.setLocation(booking.address)
+
+  return
+}
+
+/**
+ * Determines the parties end date/time based on starting time and length
+ * 
+ * @returns {Date} the date and time the party ends
+ */
 function getEndDate(dateTime, partyLength) {
   
     // determine when party ends
