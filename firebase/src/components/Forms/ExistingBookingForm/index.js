@@ -565,7 +565,7 @@ const ExistingBookingForm = props => {
                         name={fields.NOTES}
                         label="Notes"
                         fullWidth
-                        variant="outlined"
+                        variant={formValues[fields.NOTES].value ? 'outlined' : 'filled'}
                         multiline
                         disabled={!editing}
                         value={formValues[fields.NOTES].value}
@@ -581,6 +581,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        variant={formValues[fields.CREATION_1].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>First Creation</InputLabel>
                         <Select
@@ -602,6 +603,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        variant={formValues[fields.CREATION_2].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Second Creation</InputLabel>
                         <Select
@@ -623,6 +625,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        variant={formValues[fields.CREATION_3].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Third Creation</InputLabel>
                         <Select
@@ -761,7 +764,7 @@ const ExistingBookingForm = props => {
                         name={fields.CAKE}
                         label="Cake"
                         fullWidth
-                        variant="outlined"
+                        variant={formValues[fields.CAKE].value ? 'outlined' : 'filled'}
                         disabled={!editing}
                         value={formValues[fields.CAKE].value}
                         error={formValues[fields.CAKE].error}
@@ -771,6 +774,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={6}>
                     <FormControl
                         fullWidth
+                        variant={formValues[fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Cake flavour</InputLabel>
                         <Select
@@ -800,7 +804,7 @@ const ExistingBookingForm = props => {
                         name={fields.QUESTIONS}
                         label="Questions"
                         fullWidth
-                        variant="outlined"
+                        variant={formValues[fields.QUESTIONS].value ? 'standard' : 'filled'}
                         disabled={!editing}
                         error={formValues[fields.QUESTIONS].error}
                         value={formValues[fields.QUESTIONS].value}

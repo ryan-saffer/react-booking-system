@@ -38,10 +38,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex'
     },
-    list: {
-        padding: theme.spacing(1),
-        margin: theme.spacing(1)
-    },
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
@@ -60,6 +56,10 @@ const useStyles = makeStyles(theme => ({
     toolbar: theme.mixins.toolbar,
     title: {
         flexGrow: 1
+    },
+    inlineDatePicker: {
+        marginTop: -10,
+        textAlign: 'center'
     },
     location: {
         paddingBottom: '100px'
@@ -177,9 +177,7 @@ const BookingsPage = props => {
 
     const fetchBookingsByDate = date => {
         // only show loading indicator if taking a while
-        var timeout = setTimeout(() => {
-            setLoading(true)
-        }, 750)
+        setLoading(true)
         
         date.setHours(0,0,0,0)
         var nextDay = new Date(date.getTime())
@@ -194,7 +192,6 @@ const BookingsPage = props => {
                     latestBookings.push(documentSnapshot)
                 })
                 setBookings(latestBookings)
-                clearTimeout(timeout)
                 setLoading(false)
             })
     }
@@ -238,7 +235,7 @@ const BookingsPage = props => {
             </main>
             </Dialog>
             {/* End New Bookings Dialogue */}
-            <Hidden xsDown>
+            <Hidden smDown>
                 <Drawer
                     className={classes.drawer}
                     variant="permanent"
@@ -266,15 +263,17 @@ const BookingsPage = props => {
                     </MuiPickersUtilsProvider>
                 </Drawer>
             </Hidden>
-            <Grid container spacing={3}>
+            <Grid container >
             <main className={classes.content}>
-                <Hidden smUp>
-                    <Grid item xs sm>
-                        <div className={classes.toolbar}/>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Hidden mdUp>
+                    <Grid item xs sm md>
+                            <div className={classes.toolbar} />
+                            <div className={classes.inlineDatePicker}>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
                                     disableToolbar
                                     variant="inline"
+                                    inputVariant="outlined"
                                     format="dd/MM/yyyy"
                                     margin="normal"
                                     id="date-picker"
@@ -286,10 +285,11 @@ const BookingsPage = props => {
                                         'aria-label': 'change date'
                                     }}
                                 />                       
-                            </MuiPickersUtilsProvider>
+                                </MuiPickersUtilsProvider>
+                            </div>
                     </Grid>
                 </Hidden>
-                <Hidden xsDown>
+                <Hidden smDown>
                     <div className={classes.toolbar} />
                 </Hidden>
                 <DateNav
@@ -300,7 +300,7 @@ const BookingsPage = props => {
                 {loading && <LinearProgress color="secondary" />}
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
-                <Grid item xs sm>
+                <Grid item xs sm md>
                     {selectedLocations.balwyn && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.BALWYN} />}
                     {selectedLocations.malvern && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MALVERN} />}
                     {selectedLocations.mobile && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MOBILE} />}
