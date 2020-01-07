@@ -35,6 +35,17 @@ function updateBooking(data) {
 }
 
 /**
+ * Deletes a booking
+ *
+ * To be called by firebase cloud function
+ *
+ * @param {object} data the booking object
+ */
+function deleteBooking(booking) {
+  deleteEvent(booking.eventId, booking.location)
+}
+
+/**
  * Creates a calendar event
  * 
  * @param {object} booking the booking object
@@ -76,6 +87,19 @@ function updateEvent(booking) {
   event.setLocation(booking.address)
 
   return
+}
+
+/**
+ * Deletes an event from google calendar
+ *
+ * @param {string} eventId the id of the event to delete
+ * @param {string} location the location of the booking
+ */
+function deleteEvent(eventId, location) {
+  
+  var calendarId = getCalendarId(location)
+  var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId)
+  event.deleteEvent()
 }
 
 /**

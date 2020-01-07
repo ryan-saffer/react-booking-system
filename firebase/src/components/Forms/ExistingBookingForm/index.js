@@ -13,6 +13,7 @@ import Select from '@material-ui/core/Select'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
 import CreateIcon from '@material-ui/icons/Create'
+import DeleteIcon from '@material-ui/icons/Delete'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green, red } from '@material-ui/core/colors'
@@ -20,7 +21,8 @@ import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../valid
 import { additions, creations, creationDisplayValues, fields, cakeFlavours, locations } from '../../../constants/formValues'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
-import withErrorDialog from '../../ErrorDialog'
+import withErrorDialog from '../../Dialogs/ErrorDialog'
+import withConfirmationDialog from '../../Dialogs/ConfirmationDialog'
 
 const dateFormat = require('dateformat')
 
@@ -31,6 +33,14 @@ const useStyles = makeStyles(theme => ({
     },
     saveButton: {
         marginTop: theme.spacing(3)
+    },
+    deleteButton: {
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        backgroundColor: red[400],
+        "&:hover": {
+            backgroundColor: red[800]
+        }
     },
     progress: {
         color: green[500],
@@ -46,7 +56,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(3)
     },
     cancelButton: {
-        color: red,
         marginTop: theme.spacing(3),
         marginRight: theme.spacing(3)
     }
@@ -310,6 +319,30 @@ const ExistingBookingForm = props => {
             setLoading(false)
             setSuccess(false)
             props.displayError("Unable to update the booking. Please try again.\nError details: " + err)
+        }).finally(() => {
+            console.log('finally')
+        })
+    }
+
+    const handleDeleteBooking = () => {
+        setLoading(true)
+        firebase.functions.httpsCallable('deleteBooking')({
+            auth: firebase.auth.currentUser.toJSON(),
+            data: { bookingId, booking }
+        }).then(result => {
+            console.log(result.data)
+            setLoading(false)
+            setSuccess(true)
+            setTimeout(() => { // let user see success for a second, then refesh
+                setEditing(false)
+                setSuccess(false)
+                props.onSuccess(formValues[fields.DATE].value)
+            }, 1000)
+        }).catch(err => {
+            console.log(err)
+            setLoading(false)
+            setSuccess(false)
+            props.displayError("Unable to delete the booking. Please try again.\nError details: " + err)
         }).finally(() => {
             console.log('finally')
         })
@@ -776,16 +809,32 @@ const ExistingBookingForm = props => {
                 </Grid>
             </Grid>
             <div className={classes.saveButtonDiv}>
+                {!loading && !editing &&
+                    <Fab
+                        className={classes.deleteButton}
+                        aria-label="delete"
+                        onClick={e => {
+                            props.showConfirmationDialog({
+                                title: "Delete Booking",
+                                message: "Are you sure you want to delete this booking?",
+                                confirmButton: "Delete",
+                                onConfirm: handleDeleteBooking
+                            })
+                        }}
+                    >
+                        <DeleteIcon />
+                    </Fab>
+                }
                 {editing ? (
                     <>
-                        <Button
-                            className={classes.cancelButton}
-                            variant="outlined"
-                            onClick={cancelEdit}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </Button>
+                    <Button
+                        className={classes.cancelButton}
+                        variant="outlined"
+                        onClick={cancelEdit}
+                        disabled={loading}
+                    >
+                        Cancel
+                    </Button>
                     <Fab
                         className={success ? classes.success : classes.saveButton}
                         aria-label="save"
@@ -803,6 +852,7 @@ const ExistingBookingForm = props => {
                         aria-label="edit"
                         color="primary"
                         type="submit"
+                        disabled={loading}
                         onClick={handleEdit}
                     >
                         {<CreateIcon />}
@@ -816,5 +866,6 @@ const ExistingBookingForm = props => {
 
 export default compose(
     withErrorDialog,
+    withConfirmationDialog,
     withFirebase
 )(ExistingBookingForm)
