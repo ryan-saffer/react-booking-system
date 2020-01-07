@@ -77,6 +77,31 @@ exports.updateBooking = functions.https.onCall((data, context) => {
   })
 })
 
+exports.deleteBooking = functions.https.onCall((data, context) => {
+  console.log(data)
+  console.log(context)
+
+  return new Promise((resolve, reject) => {
+    const bookingId = data.data.bookingId
+    const booking = data.data.booking
+    const documentRef = db.collection('bookings').doc(bookingId)
+    runAppsScript('deleteBooking', booking)
+      .then(() => {
+        // then update database
+        documentRef.delete()
+          .then(writeResult => {
+            resolve(writeResult)
+          })
+          .catch(err => {
+            reject(err)
+        })
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+})
+
 function runAppsScript(functionName, booking) {
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')

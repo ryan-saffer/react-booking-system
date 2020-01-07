@@ -19,7 +19,7 @@ import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../valid
 import { locations } from '../../../constants/formValues'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
-import withErrorDialog from '../../ErrorDialog'
+import withErrorDialog from '../../Dialogs/ErrorDialog'
 
 const useStyles = makeStyles(theme => ({
     saveButtonDiv: {
