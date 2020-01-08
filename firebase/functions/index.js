@@ -25,7 +25,7 @@ exports.createBooking = functions.https.onCall((data, context) => {
     })
       .then(writeResult => {
         console.log(`Write Result: ${JSON.stringify(writeResult)}`)
-        runAppsScript('createBooking', data.data)
+        runAppsScript('createBooking', [data.data])
           .then(appsScriptResult => {
             appsScriptResult = JSON.parse(appsScriptResult)
             console.log(appsScriptResult)
@@ -60,7 +60,7 @@ exports.updateBooking = functions.https.onCall((data, context) => {
     booking.dateTime = admin.firestore.Timestamp.fromDate(new Date(booking.dateTime))
     const documentRef = db.collection('bookings').doc(bookingId)
     // update calendar event and any generated sheets on apps script
-    runAppsScript('updateBooking', data.data)
+    runAppsScript('updateBooking', [data.data])
       .then(() => {
         // then update database
         documentRef.set({
@@ -85,7 +85,7 @@ exports.deleteBooking = functions.https.onCall((data, context) => {
     const bookingId = data.data.bookingId
     const booking = data.data.booking
     const documentRef = db.collection('bookings').doc(bookingId)
-    runAppsScript('deleteBooking', booking)
+    runAppsScript('deleteBooking', [booking])
       .then(() => {
         // then update database
         documentRef.delete()
@@ -102,7 +102,51 @@ exports.deleteBooking = functions.https.onCall((data, context) => {
   })
 })
 
-function runAppsScript(functionName, booking) {
+exports.sendOutForms = functions.pubsub.schedule('30 8 * * 4')
+  .timeZone('Australia/Victoria')
+  .onRun((context) => {
+    
+    return new Promise((resolve, reject) => {
+      var startDate = new Date()
+      startDate.setDate(startDate.getDate() + ((5 + 7 - startDate.getDay()) % 7) + 7) // will always get second upcoming friday
+      startDate.setHours(0, 0, 0, 0)
+      var endDate = new Date()
+      endDate.setDate(startDate.getDate() + 3)
+      endDate.setHours(0, 0, 0, 0)
+
+      console.log(`Start date: ${startDate}`)
+      console.log(`End date: ${endDate}`)
+      
+      startDate = admin.firestore.Timestamp.fromDate(startDate)
+      endDate = admin.firestore.Timestamp.fromDate(endDate)
+
+      var bookings = []
+
+      db.collection('bookings')
+        .where('dateTime', '>', startDate)
+        .where('dateTime', '<', endDate)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+            var booking = documentSnapshot.data()
+            booking.dateTime = booking.dateTime.toDate()
+            bookings.push(booking)
+          })
+          runAppsScript('sendOutForms', [bookings])
+            .then(() => {
+              resolve()
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  })
+
+function runAppsScript(functionName, parameters) {
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')
 
@@ -121,9 +165,7 @@ function runAppsScript(functionName, booking) {
       auth: oAuth2Client,
       resource: {
         function: functionName,
-        parameters: [
-          booking
-        ],
+        parameters: parameters,
         devMode: true
       },
       scriptId: scriptId
