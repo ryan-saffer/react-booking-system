@@ -14,13 +14,13 @@ const withConfirmationDialog = Component => props => {
 
     const [open, setOpen] = useState(false)
     const [title, setTitle] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const [content, setContent] = useState('')
     const [confirmButton, setConfirmButton] = useState('')
     const [confirmCallback, setConfirmCallback] = useState(null)
 
     const handleShow = ({ title, message, confirmButton, onConfirm }) => {
         setTitle(title)
-        setErrorMessage(message)
+        setContent(message)
         setConfirmButton(confirmButton)
         setConfirmCallback(() => onConfirm)
         setOpen(true)
@@ -43,7 +43,7 @@ const withConfirmationDialog = Component => props => {
             >
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>{errorMessage}</DialogContentText>
+                    <DialogContentText>{content}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleConfirm} color="primary">

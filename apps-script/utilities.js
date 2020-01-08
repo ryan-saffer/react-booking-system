@@ -19,6 +19,42 @@ function determineFromEmailAddress(location) {
 }
 
 /**
+ * Determines the parties end date/time based on starting time and length
+ * 
+ * @returns {Date} the date and time the party ends
+ */
+function getEndDate(dateTime, partyLength) {
+  
+    // determine when party ends
+    var lengthHours = 0;
+    var lengthMinutes = 0;
+    switch (partyLength) {
+        case "1":
+            lengthHours = 1;
+            break;
+        case "1.5":
+            lengthHours = 1;
+            lengthMinutes = 30;
+            break;
+        case "2":
+            lengthHours = 2;
+            break;
+        default:
+            break;
+    }
+    
+    var endDate = new Date(
+        dateTime.getFullYear(),
+        dateTime.getMonth(),
+        dateTime.getDate(),
+        dateTime.getHours() + lengthHours,
+        dateTime.getMinutes() + lengthMinutes
+    )
+    
+    return endDate
+}
+
+/**
  * Gets the correct managers signature depending on who email is being sent from
  * 
  * @returns {String} the signature
@@ -64,4 +100,14 @@ function determineSuffix(day) {
     default:
       return 'th'
    }
+}
+
+/**
+ * Capitalises a given word
+ *
+ * @param {string} string the word to capitalise
+ * @return {string} the word capitalised
+ */
+function capitalise(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }

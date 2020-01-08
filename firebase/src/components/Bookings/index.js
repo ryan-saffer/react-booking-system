@@ -162,7 +162,7 @@ const BookingsPage = props => {
     }
 
     const handleLocationChange = name => e => {
-        setSelectedLocations({ ...selectedLocations, [name]: e.target.checked})
+        setSelectedLocations({ ...selectedLocations, [name]: e.target.checked })
     }
 
     const fetchBooking = id => {
@@ -179,7 +179,7 @@ const BookingsPage = props => {
         // only show loading indicator if taking a while
         setLoading(true)
         
-        date.setHours(0,0,0,0)
+        date.setHours(0, 0, 0, 0)
         var nextDay = new Date(date.getTime())
         nextDay.setDate(nextDay.getDate() + 1)
         
