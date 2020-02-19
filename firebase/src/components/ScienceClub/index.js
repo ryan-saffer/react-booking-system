@@ -204,7 +204,8 @@ const ScienceClubPage = props => {
                     key={client.id}
                     client={client}
                     onClientSelectionChange={handleClientSelectionChange}
-                    expanded={expanded} />
+                    expanded={expanded}
+                />
             ))}
         </div>
     )
