@@ -13,14 +13,12 @@ import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import SignatureDialog from './SignatureDialog';
 
 const useStyles = makeStyles({
     column1: {
         flexBasis: '50.00%',
         flexShrink: 0
-    },
-    test: {
-        justifyContent: 'flex-start'
     },
     childInfo: {
         flexBasis: "20%",
@@ -33,9 +31,6 @@ const useStyles = makeStyles({
     chipCheckedOut: {
         marginLeft: 16,
         marginRight: 16
-    },
-    signInButton: {
-        marginTop: 'auto'
     }
 })
 
@@ -47,11 +42,12 @@ const ChildExpansionPanel = props => {
 
     const [client, setClient] = useState(props.client)
     const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false)
+    const [signature, setSignature] = useState(null)
 
     useEffect(() => {
-        setClient(props.client)
-        setLoading(false)
-    }, [props.client])
+        fetchSignature()
+    }, [])
 
     var formAnswers = client.forms.find(
         form => form.id === 1238061
@@ -62,6 +58,19 @@ const ChildExpansionPanel = props => {
     )
     var childName = formAnswers.values[0].value
     var allergies = formAnswers.values[1].value
+
+    const fetchSignature = () => {
+        firebase.db.collection('scienceClubAppointments').doc(`${client.id}`).get()
+            .then(documentSnapshot => {
+                console.log(documentSnapshot)
+                const sig = documentSnapshot.get('signature')
+                    console.log(sig)
+                    setSignature(sig)
+            })
+            .catch(err => {
+                console.log(`Error getting signature: ${err}`)
+            })
+    }
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -76,33 +85,53 @@ const ChildExpansionPanel = props => {
             setLoading(false)
         }).catch(err => {
             console.error(err)
+            setLoading(false)
         })
     }
 
     const handleSignOutButtonClick = e => {
         e.stopPropagation()
-        setLoading(true)
+        setOpen(true)
+    }
+
+    const handleCloseDialog = () => {
+        setOpen(false)
+    }
+
+    const handleSignOut = dataUrl => {
+        console.log(`DATA URL: ${dataUrl}`)
+
+        // setLoading(true)
 
         firebase.functions.httpsCallable("updateLabel")({
             auth: firebase.auth.currentUser.toJSON(),
             data: { clientId: client.id, label: acuity.LABELS.CHECKED_OUT }
-        }).then(result => {
-            console.log(result)
-            setClient(result.data)
-            setLoading(false)
+        }).then(functionsResult => {
+            console.log(functionsResult)
+            firebase.db.doc(`scienceClubAppointments/${client.id}/`).set({
+                signature: dataUrl,
+                timeStamp: new Date()
+            }).then(firestoreResult => {
+                console.log(`Firestore result: ${firestoreResult}`)
+                setClient(functionsResult.data)
+                setSignature(dataUrl)
+                setLoading(false)
+                setOpen(false)
+            })
         }).catch(err => {
             console.err(err)
+            setLoading(false)
         })
     }
 
     return (
+        <>
         <ExpansionPanel
             key={client.id}
             expanded={expanded === client.id}
-            onChange={() => props.onClientSelectionChange(client.id)}
+            onChange={props.onClientSelectionChange(client.id)}
         >
             <ExpansionPanelSummary
-                className={classes.test}
                 expandIcon={<ExpandMoreIcon />}
             >
                 <Typography className={classes.childInfo}>{childName}</Typography>
@@ -126,14 +155,24 @@ const ChildExpansionPanel = props => {
                     <Typography variant="button">Parent name:</Typography>
                     <Typography variant="body1">{client.firstName} {client.lastName}</Typography>
                     <Typography variant="button">Parent email:</Typography>
-                    <Typography vairant="body1">{client.email}</Typography>
+                    <Typography variant="body1">{client.email}</Typography>
                 </div>
                 <div>
                     <Typography variant="button">Parent mobile:</Typography>
                     <Typography vairant="body1">{client.phone}</Typography>
+                    {signature
+                        ? (
+                            <>
+                                <Typography variant="button">Signature</Typography>
+                                <img src={signature} />
+                            </>
+                        ) : null
+                    }
                 </div>
             </ExpansionPanelDetails>
         </ExpansionPanel>
+        <SignatureDialog open={open} onClose={handleCloseDialog} onSignOut={handleSignOut} />
+        </>    
     )
 }
 
