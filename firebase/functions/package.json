@@ -13,6 +13,7 @@
     "node": "8"
   },
   "dependencies": {
+    "acuityscheduling": "^0.1.9",
     "firebase-admin": "^8.6.1",
     "firebase-functions": "^3.0.0",
     "googleapis": "^41.0.1"

@@ -8,7 +8,7 @@ import * as config from '../../config'
 
 class Firebase {
   constructor() {
-    app.initializeApp(config.firebase)
+    app.initializeApp(process.env.NODE_ENV === 'production' ? config.prodConfig : config.devConfig)
 
     this.auth = app.auth()
     this.db = app.firestore()

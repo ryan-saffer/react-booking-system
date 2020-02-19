@@ -8,9 +8,11 @@ import Navigation from '../Navigation'
 import SignInPage from '../SignIn'
 import * as ROUTES from '../../constants/routes'
 import BookingsPage from '../Bookings'
+import ScienceClubPage from '../ScienceClub'
 import { ThemeProvider } from '@material-ui/styles';
 import { green } from '@material-ui/core/colors'
 import { createMuiTheme } from '@material-ui/core';
+import { withAuthentication } from '../Session'
 
 const App = () => {
 
@@ -38,16 +40,17 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <div>
-          <Route exact path={ROUTES.LANDING} component={Navigation} />
-          <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
-          <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
-        </div>
-      </Router>
+        <Router>
+          <div>
+            <Route exact path={ROUTES.LANDING} component={Navigation} />
+            <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
+            <Route exact path={ROUTES.SCIENCE_CLUB} component={ScienceClubPage} />
+            <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
+          </div>
+        </Router>
     </ThemeProvider>
   )
   
 }
 
-export default App;
+export default withAuthentication(App);
