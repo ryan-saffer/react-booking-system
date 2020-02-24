@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { withAuthorization } from '../Session'
-import ChildExpansionPanel from './ChildExpansionPanel'
+import { withAuthorization } from '../../Session'
+import ChildExpansionPanel from '../ChildExpansionPanel'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,6 +8,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { Button } from '@material-ui/core';
+
+import { compose } from 'recompose';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ScienceClubPage = props => {
+const SelectClassPage = props => {
 
     const cssClasses = useStyles()
 
@@ -30,8 +34,6 @@ const ScienceClubPage = props => {
     const [selectedAppointmentType, setSelectedAppointmentType] = useState('')
     const [classes, setClasses] = useState([])
     const [selectedClass, setSelectedClass] = useState('')
-    const [clients, setClients] = useState([])
-    const [expanded, setExpanded] = useState(false)
     const [labels, setLabels] = useState([])
 
     useEffect(() => {
@@ -59,20 +61,11 @@ const ScienceClubPage = props => {
     }
 
     const handleClassChange = e => {
-        console.log(`Selected class: ${e.target.value}`)
         setSelectedClass(e.target.value)
-        fetchClients(e.target.value)
     }
 
-    const handleClientSelectionChange = panel => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false)
-    }
-
-    const handleClientUpdated = client => {
-        const idx = clients.findIndex(x => x.id === client.id)
-        var tmpClients = clients
-        tmpClients[idx] = client
-        setClients(tmpClients)
+    const handleClassSelection = () => {
+        props.history.push(`/science-club/class?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}`)
     }
 
     const fetchAppointmentTypes = id => {
@@ -110,21 +103,6 @@ const ScienceClubPage = props => {
         }).then(result => {
             console.log(result)
             setClasses(result.data)
-        }).catch(err => {
-            console.error(err)
-        })
-    }
-
-    const fetchClients = mClass => {
-        console.log(mClass)
-        firebase.functions.httpsCallable('getAppointments')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: mClass
-        }).then(result => {
-            console.log(result)
-            setClients(
-                result.data.filter(x => x.classID === mClass.id)
-            )
         }).catch(err => {
             console.error(err)
         })
@@ -198,17 +176,16 @@ const ScienceClubPage = props => {
                 </Select>
             </FormControl>
 
-            <Typography variant='h6'>Children:</Typography>
-            {clients.map(client => (
-                <ChildExpansionPanel
-                    key={client.id}
-                    client={client}
-                    onClientSelectionChange={handleClientSelectionChange}
-                    expanded={expanded}
-                />
-            ))}
+            <Button
+                onClick={handleClassSelection}
+            >
+                Select
+            </Button>
         </div>
     )
 }
 
-export default withAuthorization(ScienceClubPage)
+export default compose(
+    withRouter,
+    withAuthorization,
+)(SelectClassPage)
