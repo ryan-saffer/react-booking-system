@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { withAuthorization } from '../../Session'
-import ChildExpansionPanel from '../ChildExpansionPanel'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,22 +33,35 @@ const SelectClassPage = props => {
     const [selectedAppointmentType, setSelectedAppointmentType] = useState('')
     const [classes, setClasses] = useState([])
     const [selectedClass, setSelectedClass] = useState('')
-    const [labels, setLabels] = useState([])
 
     useEffect(() => {
-        firebase.auth.onAuthStateChanged(authUser => {
-            if (authUser) {
-                fetchCalendars()
-                fetchLabels()
-            }
-        })
-    }, [])
+
+        const fetchCalendars = () => {
+            firebase.functions.httpsCallable('getCalendars')({
+                auth: firebase.auth.currentUser.toJSON(),
+                data: null
+            }).then(result => {
+                console.log(result.data)
+                setCalendars(result.data)
+            }).catch(err => {
+                console.error(err)
+            })
+        }
+        
+        if (firebase.auth.currentUser) {
+            fetchCalendars()
+        }
+
+    }, [firebase.auth.currentUser])
 
     const handleCalendarChange = e => {
         console.log(`Selected calendar: ${e.target.value}`)
         setSelectedCalendar(e.target.value)
         setSelectedAppointmentType('')
         setSelectedClass('')
+        // clear menu items
+        setAppointmentTypes([])
+        setClasses([])
         fetchAppointmentTypes(e.target.value)
     }
 
@@ -57,6 +69,8 @@ const SelectClassPage = props => {
         console.log(`Selected appointment type: ${e.target.value}`)
         setSelectedAppointmentType(e.target.value)
         setSelectedClass('')
+        // clear menu items
+        setClasses([])
         fetchClasses(e.target.value)
     }
 
@@ -83,18 +97,6 @@ const SelectClassPage = props => {
         })
     }
 
-    const fetchCalendars = () => {
-        firebase.functions.httpsCallable('getCalendars')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: null
-        }).then(result => {
-            console.log(result.data)
-            setCalendars(result.data)
-        }).catch(err => {
-            console.error(err)
-        })
-    }
-
     const fetchClasses = id => {
         console.log(id)
         firebase.functions.httpsCallable('getClasses')({
@@ -103,18 +105,6 @@ const SelectClassPage = props => {
         }).then(result => {
             console.log(result)
             setClasses(result.data)
-        }).catch(err => {
-            console.error(err)
-        })
-    }
-
-    const fetchLabels = () => {
-        firebase.functions.httpsCallable('getLabels')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: null
-        }).then(result => {
-            console.log(result.data)
-            setLabels(result.data)
         }).catch(err => {
             console.error(err)
         })
@@ -163,7 +153,7 @@ const SelectClassPage = props => {
                     id="classes-select"
                     value={selectedClass}
                     onChange={handleClassChange}
-                    disabled={classes.length == 0}
+                    disabled={classes.length === 0}
                 >
                     {classes.map(mClass => (
                         <MenuItem key={mClass.id} value={mClass}>

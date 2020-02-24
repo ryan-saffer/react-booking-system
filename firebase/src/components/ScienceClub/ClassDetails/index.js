@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
-
 import queryString from 'query-string'
 import { compose } from 'recompose'
 
@@ -23,31 +22,30 @@ const ClassDetailsPage = props => {
 
     useEffect(() => {
 
-        firebase.auth.onAuthStateChanged(authUser => {
-            if (authUser) {
-                fetchClients({ appointmentTypeID, calendarID })
-            }
-        })
-    }, [])
+        const fetchClients = data => {
+            console.log(data)
+            console.log(classID)
+            firebase.functions.httpsCallable('getAppointments')({
+                auth: firebase.auth.currentUser.toJSON(),
+                data: data
+            }).then(result => {
+                console.log(result)
+                setClients(
+                    result.data.filter(x => x.classID === classID)
+                )
+            }).catch(err => {
+                console.error(err)
+            })
+        }
+        
+        if (firebase.auth.currentUser) {
+            fetchClients({ appointmentTypeID, calendarID })
+        }
+        
+    }, [firebase.auth.currentUser, appointmentTypeID, calendarID])
 
     const handleClientSelectionChange = panel => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false)
-    }
-    
-    const fetchClients = data => {
-        console.log(data)
-        console.log(classID)
-        firebase.functions.httpsCallable('getAppointments')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: data
-        }).then(result => {
-            console.log(result)
-            setClients(
-                result.data.filter(x => x.classID === classID)
-            )
-        }).catch(err => {
-            console.error(err)
-        })
     }
 
     return (
