@@ -5,6 +5,7 @@ const {
 } = require('googleapis');
 
 const googleCredentials = require('./credentials.json')
+const acuityCredentials = require('./acuity_credentials.json')
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
@@ -202,8 +203,8 @@ function runAppsScript(functionName, parameters) {
 
 var Acuity = require('acuityscheduling')
 var acuity = Acuity.basic({
-    userId: 17957624,
-    apiKey: '26fdf4b048db213154ffb7e6cc45d8a7'
+    userId: acuityCredentials.user_id,
+    apiKey: acuityCredentials.api_key
 })
 
 exports.getAppointmentTypes = functions
