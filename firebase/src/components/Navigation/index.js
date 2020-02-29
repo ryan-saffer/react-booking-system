@@ -14,6 +14,9 @@ const Navigation = () => (
                 <Link to={ROUTES.BOOKINGS}>Bookings</Link>
             </li>
             <li>
+                <Link to={ROUTES.SCIENCE_CLUB_SELECT_CLASS}>Science Club</Link>
+            </li>
+            <li>
                 <SignOutButton />
             </li>
         </ul>

@@ -7,11 +7,9 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import withWidth from '@material-ui/core/withWidth';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer'
-import { compose } from 'recompose';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
@@ -29,8 +27,6 @@ import CloseIcon from '@material-ui/icons/Close'
 import NewBookingForm from '../Forms/NewBookingForm'
 import { grey } from '@material-ui/core/colors'
 import { locations } from '../../constants/formValues';
-
-const dateFormat = require('dateformat')
 
 const drawerWidth = 320
 
@@ -100,7 +96,7 @@ const BookingsPage = props => {
 
     const classes = useStyles()
 
-    const { firebase, width } = props
+    const { firebase } = props
 
     const [bookings, setBookings] = useState([])
     const [date, setDate] = useState(new Date())
@@ -315,7 +311,4 @@ BookingsPage.propTypes = {
     width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
 };
   
-export default compose(
-    withAuthorization,
-    withWidth()
-)(BookingsPage)
+export default withAuthorization(BookingsPage)
