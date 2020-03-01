@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-import { withFirebase } from '../Firebase'
-import * as acuity from '../../constants/acuity'
+import { withFirebase } from '../../Firebase'
+import * as acuity from '../../../constants/acuity'
 
 import { makeStyles } from '@material-ui/styles'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -49,15 +49,21 @@ const ChildExpansionPanel = props => {
         fetchSignature()
     }, [])
 
-    var formAnswers = client.forms.find(
-        form => form.id === 1238061
-            || form.id === 1198916
-            || form.id === 1283715
-            || form.id === 1287124
-            || form.id === 1316104
+    const childDetailsForm = client.forms.find(
+        form => form.id === acuity.FORMS.CHILD_DETAILS
     )
-    var childName = formAnswers.values[0].value
-    var allergies = formAnswers.values[1].value
+    const anaphylaxisForm = client.forms.find(
+        form => form.id === acuity.FORMS.ANAPHYLAXIS
+    )
+    const childName = childDetailsForm.values.find(
+        field => field.fieldID === acuity.FORM_FIELDS.CHILD_NAME
+    ).value
+    const hasAllergies = childDetailsForm.values.find(
+        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO
+    ).value === "yes"
+    const isAnaphylactic = anaphylaxisForm.values.find(
+        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC
+    ).value === "yes"
 
     const fetchSignature = () => {
         firebase.db.collection('scienceClubAppointments').doc(`${client.id}`).get()
@@ -149,6 +155,9 @@ const ChildExpansionPanel = props => {
                     )
                 }
                 {loading && <CircularProgress size={24} />}
+                    {hasAllergies && <p>{childDetailsForm.values.find(
+                        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES
+                    ).value}</p>}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <div className={classes.column1}>
