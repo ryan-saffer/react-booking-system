@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { withAuthorization } from '../../Session'
+import { withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,8 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Button } from '@material-ui/core';
 
-import { compose } from 'recompose';
-import { withRouter } from 'react-router-dom';
+import { withAuthorization } from '../../Session'
 
 const useStyles = makeStyles(theme => ({
     root: {

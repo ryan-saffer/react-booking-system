@@ -4,7 +4,7 @@ import queryString from 'query-string'
 import { compose } from 'recompose'
 
 import { withFirebase } from '../../Firebase'
-import ChildExpansionPanel from '../ChildExpansionPanel'
+import ChildExpansionPanel from './ChildExpansionPanel'
 
 import Typography from '@material-ui/core/Typography'
 
