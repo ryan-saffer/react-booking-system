@@ -11,7 +11,14 @@ class SignInGoogleBase extends Component {
         this.props.firebase
             .doSignInWithGoogle()
             .then(socialAuthUser => {
-                this.setState({ error: null})
+                this.setState({ error: null })
+                this.props.firebase.db
+                    .collection("users")
+                    .doc(socialAuthUser.user.uid)
+                    .set(
+                        { email: socialAuthUser.user.email },
+                        { merge: true }
+                    )
                 this.props.history.push(ROUTES.BOOKINGS)
             })
             .catch(error => {
