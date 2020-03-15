@@ -23,6 +23,8 @@ import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
 import withConfirmationDialog from '../../Dialogs/ConfirmationDialog'
+import { AuthUserContext } from '../../Session'
+import * as ROLES from '../../../constants/roles'
 
 const dateFormat = require('dateformat')
 
@@ -812,58 +814,64 @@ const ExistingBookingForm = props => {
                     />
                 </Grid>
             </Grid>
-            <div className={classes.saveButtonDiv}>
-                {!loading && !editing &&
-                    <Fab
-                        className={classes.deleteButton}
-                        aria-label="delete"
-                        onClick={e => {
-                            props.showConfirmationDialog({
-                                title: "Delete Booking",
-                                message: "Are you sure you want to delete this booking?",
-                                confirmButton: "Delete",
-                                onConfirm: handleDeleteBooking
-                            })
-                        }}
-                    >
-                        <DeleteIcon />
-                    </Fab>
-                }
-                {editing ? (
-                    <>
-                    <Button
-                        className={classes.cancelButton}
-                        variant="outlined"
-                        onClick={cancelEdit}
-                        disabled={loading}
-                    >
-                        Cancel
-                    </Button>
-                    <Fab
-                        className={success ? classes.success : classes.saveButton}
-                        aria-label="save"
-                        color="secondary"
-                        type="submit"
-                        disabled={loading || !valid}
-                        onClick={handleSubmit}
-                    >
-                        {success ? <CheckIcon /> : <SaveIcon />}
-                    </Fab>
-                    </>
-                ) : (
-                    <Fab
-                        className={classes.editButton}
-                        aria-label="edit"
-                        color="primary"
-                        type="submit"
-                        disabled={loading}
-                        onClick={handleEdit}
-                    >
-                        {<CreateIcon />}
-                    </Fab>
+            <AuthUserContext.Consumer>
+                {authUser => (
+                    authUser.roles[ROLES.ADMIN]
+                    ? <div className={classes.saveButtonDiv}>
+                        {!loading && !editing &&
+                            <Fab
+                                className={classes.deleteButton}
+                                aria-label="delete"
+                                onClick={e => {
+                                    props.showConfirmationDialog({
+                                        title: "Delete Booking",
+                                        message: "Are you sure you want to delete this booking?",
+                                        confirmButton: "Delete",
+                                        onConfirm: handleDeleteBooking
+                                    })
+                                }}
+                            >
+                                <DeleteIcon />
+                            </Fab>
+                        }
+                        {editing ? (
+                            <>
+                            <Button
+                                className={classes.cancelButton}
+                                variant="outlined"
+                                onClick={cancelEdit}
+                                disabled={loading}
+                            >
+                                Cancel
+                            </Button>
+                            <Fab
+                                className={success ? classes.success : classes.saveButton}
+                                aria-label="save"
+                                color="secondary"
+                                type="submit"
+                                disabled={loading || !valid}
+                                onClick={handleSubmit}
+                            >
+                                {success ? <CheckIcon /> : <SaveIcon />}
+                            </Fab>
+                            </>
+                        ) : (
+                            <Fab
+                                className={classes.editButton}
+                                aria-label="edit"
+                                color="primary"
+                                type="submit"
+                                disabled={loading}
+                                onClick={handleEdit}
+                            >
+                                {<CreateIcon />}
+                            </Fab>
+                        )}
+                        {loading && <CircularProgress size={68} className={classes.progress} />}
+                    </div> : null
                 )}
-                {loading && <CircularProgress size={68} className={classes.progress} />}
-            </div>
+            </AuthUserContext.Consumer>
+        
         </>
     )
 }
