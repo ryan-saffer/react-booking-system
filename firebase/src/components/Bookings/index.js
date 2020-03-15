@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     inlineDatePicker: {
-        marginTop: -10,
+        marginTop: -20,
         textAlign: 'center'
     },
     location: {
@@ -63,6 +63,9 @@ const useStyles = makeStyles(theme => ({
     },
     dialogueAppBar: {
         position: 'relative'
+    },
+    divider: {
+        marginBottom: 5
     },
     paper: {
         marginTop: theme.spacing(3),
@@ -287,6 +290,9 @@ const BookingsPage = props => {
                                     }}
                                 />                       
                                 </MuiPickersUtilsProvider>
+                            </div>
+                            <div className={classes.divider}>
+                                <Divider />
                             </div>
                     </Grid>
                 </Hidden>
