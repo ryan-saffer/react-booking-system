@@ -218,6 +218,7 @@ const SelectClassPage = props => {
                         className={cssClasses.submitButton}
                         variant="contained"
                         color="primary"
+                        disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
                         onClick={handleClassSelection}
                     >
                         Select
