@@ -15,8 +15,9 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-final-form": "^6.3.0",
+    "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^3.4.1",
     "react-signature-canvas": "^1.0.3",
     "recompose": "^0.30.0",
     "typeface-roboto": "0.0.75"
