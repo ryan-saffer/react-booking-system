@@ -1,43 +1,70 @@
-import React, {Component} from 'react'
+import React, { useState } from 'react'
+
 import * as ROUTES from '../../constants/routes'
+import * as SignInGoogleButton from '../../drawables/sign-in-google-btn.png'
 
-class SignInGoogleBase extends Component {
-    constructor(props) {
-        super(props)
-        this.state = { error: null }
+import { makeStyles } from '@material-ui/core/styles'
+import { Snackbar } from '@material-ui/core'
+import { red } from '@material-ui/core/colors'
+
+const useStyles = makeStyles(theme => ({
+    signInButton: {
+        height: 36,
+        marginTop: theme.spacing(2),
+        "&:hover": {
+            cursor: "pointer"
+        }
+    },
+    snackBar: {
+        backgroundColor: red[500]
     }
+}))
 
-    onSubmit = event => {
-        this.props.firebase
+const SignInGoogleBase = props => {
+    
+    const classes = useStyles()
+
+    const [error, setError] = useState(null)
+
+    const handleSubmit = event => {
+        props.firebase
             .doSignInWithGoogle()
             .then(socialAuthUser => {
-                this.setState({ error: null })
-                this.props.firebase.db
+                setError(null)
+                props.firebase.db
                     .collection("users")
                     .doc(socialAuthUser.user.uid)
                     .set(
                         { email: socialAuthUser.user.email },
                         { merge: true }
                     )
-                this.props.history.push(ROUTES.BOOKINGS)
+                props.history.push(ROUTES.LANDING)
             })
             .catch(error => {
-                this.setState({ error })
+                setError(error)
             })
         event.preventDefault()
     }
 
-    render() {
-        const { error } = this.state
+    return (
+        <>
+            <img
+                className={classes.signInButton}
+                onClick={handleSubmit}
+                src={SignInGoogleButton.default}
+                alt="sign in to google"
+            />
 
-        return (
-            <form onSubmit={this.onSubmit}>
-                <button type='submit'>Sign In with Google</button>
-
-                {error && <p>{error.message}</p>}
-            </form>
-        )
-    }
+            <Snackbar
+                ContentProps={{ classes: { root: classes.snackBar } }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                autoHideDuration={4000}
+                open={error}
+                message={error && error.message}
+                onClose={() => setError(null)}
+            />
+        </>
+    )
 }
 
 export default SignInGoogleBase

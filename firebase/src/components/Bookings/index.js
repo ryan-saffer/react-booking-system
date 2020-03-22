@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { withAuthorization, AuthUserContext } from '../Session';
 import DateFnsUtils from '@date-io/date-fns';
 import queryString from 'query-string'

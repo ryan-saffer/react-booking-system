@@ -1,26 +1,78 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import { compose } from 'recompose'
 
-import SignOutButton from '../SignOut'
 import * as ROUTES from '../../constants/routes'
+import { CssBaseline, AppBar, Toolbar, Typography, makeStyles, Paper, Button } from '@material-ui/core'
+import { grey , red } from '@material-ui/core/colors'
+import { withFirebase } from '../Firebase'
+import { withAuthorization } from '../Session'
 
-const Navigation = () => (
-    <div>
-        <ul>
-            <li>
-                <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.BOOKINGS}>Bookings</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.SCIENCE_CLUB_SELECT_CLASS}>Science Club</Link>
-            </li>
-            <li>
-                <SignOutButton />
-            </li>
-        </ul>
-    </div>
-)
+const useStyles = makeStyles(theme => ({
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
+    },
+    main: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        margin: theme.spacing(3),
+    },
+    paper: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        padding: theme.spacing(2),
+        "&:hover": {
+            backgroundColor: grey[100],
+            cursor: "pointer"
+        }
+    },
+    signOutButton: {
+        marginTop: theme.spacing(1),
+        backgroundColor: red[400],
+        "&:hover": {
+            backgroundColor: red[500]
+        }
+    }
+}))
 
-export default Navigation
+const Navigation = props => {
+    
+    const classes = useStyles()
+
+    const { firebase } = props
+
+    const navigateToRoute = route => {
+        props.history.push(route)
+    }
+    
+    return (
+        <>
+            <CssBaseline/>
+            <AppBar position='static' className={classes.appBar}>
+                <Toolbar>
+                    <Typography variant="h6">
+                        Fizz Kidz
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <div className={classes.main}>
+                <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
+                    <Typography>Party Bookings</Typography>
+                </Paper>
+                <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}>
+                    <Typography>After School Science Program</Typography>
+                </Paper>
+                <Button className={classes.signOutButton} variant="contained" onClick={firebase.doSignOut}>
+                    Sign out
+                </Button>
+            </div>
+        </>
+    )
+}
+
+export default compose(
+    withFirebase,
+    withRouter,
+    withAuthorization,
+)(Navigation)
