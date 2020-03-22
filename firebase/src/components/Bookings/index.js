@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withAuthorization } from '../Session';
+import { withAuthorization, AuthUserContext } from '../Session';
 import DateFnsUtils from '@date-io/date-fns';
 import queryString from 'query-string'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
@@ -27,6 +26,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import NewBookingForm from '../Forms/NewBookingForm'
 import { grey } from '@material-ui/core/colors'
 import { locations } from '../../constants/formValues';
+import * as ROLES from '../../constants/roles'
 
 const drawerWidth = 320
 
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     inlineDatePicker: {
-        marginTop: -10,
+        marginTop: -20,
         textAlign: 'center'
     },
     location: {
@@ -62,6 +62,9 @@ const useStyles = makeStyles(theme => ({
     },
     dialogueAppBar: {
         position: 'relative'
+    },
+    divider: {
+        marginBottom: 5
     },
     paper: {
         marginTop: theme.spacing(3),
@@ -200,7 +203,11 @@ const BookingsPage = props => {
                     <Typography variant="h6" className={classes.title}>
                         Party Bookings
                     </Typography>
-                    <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
+                    <AuthUserContext.Consumer>
+                        {authUser => (
+                            authUser.roles[ROLES.ADMIN] && <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
+                        )}
+                    </AuthUserContext.Consumer>
                     <IconButton onClick={handleLogout}><ExitToAppIcon /></IconButton>
                 </Toolbar>
             </AppBar>
@@ -283,6 +290,9 @@ const BookingsPage = props => {
                                 />                       
                                 </MuiPickersUtilsProvider>
                             </div>
+                            <div className={classes.divider}>
+                                <Divider />
+                            </div>
                     </Grid>
                 </Hidden>
                 <Hidden smDown>
@@ -306,9 +316,5 @@ const BookingsPage = props => {
         </div>
     )
 }
-
-BookingsPage.propTypes = {
-    width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']).isRequired,
-};
   
 export default withAuthorization(BookingsPage)
