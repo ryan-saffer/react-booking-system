@@ -5,7 +5,8 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+    "predeploy": "sh ./predeploy.sh"
   },
   "emulators": {
     "functions": {
