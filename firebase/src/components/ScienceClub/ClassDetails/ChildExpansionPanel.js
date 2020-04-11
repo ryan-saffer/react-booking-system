@@ -19,7 +19,7 @@ import { green, red } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SignatureDialog from './SignatureDialog';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     panelSummary: {
         display: 'flex',
         alignItems: 'stretch',
@@ -65,13 +65,21 @@ const useStyles = makeStyles({
         display: 'flex',
         flexDirection: 'column'
     },
+    heading: {
+        marginTop: 8
+    },
+    loading: {
+        marginRight: theme.spacing(1)
+    },
     error: {
-        color: red[500]
+        color: red[500],
+        display: 'flex',
+        flexDirection: 'column'
     },
     signature: {
         width: 'fit-content'
     }
-})
+}))
 
 const ChildExpansionPanel = props => {
 
@@ -124,7 +132,7 @@ const ChildExpansionPanel = props => {
                 const signedBy = documentSnapshot.get('pickupPerson')
                 const timeStamp = documentSnapshot.get('timeStamp')
                 console.log(sig, signedBy, timeStamp)
-                setSignature({sig, signedBy, timeStamp})
+                setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
             })
             .catch(err => {
                 console.log(`Error getting signature: ${err}`)
@@ -172,7 +180,7 @@ const ChildExpansionPanel = props => {
             }).then(firestoreResult => {
                 console.log(`Firestore result: ${firestoreResult}`)
                 setClient(functionsResult.data)
-                setSignature(dataUrl)
+                setSignature({sig: dataUrl, signedBy: pickupPerson, timeStamp: new Date()})
                 setLoading(false)
                 setOpen(false)
                 setKey(key => key + 1)
@@ -205,42 +213,44 @@ const ChildExpansionPanel = props => {
                             ? <Button className={classes.panelSummaryButton} size="small" variant="contained" color="secondary" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>
                             : <Button className={classes.panelSummaryButton} size="small" variant="contained" color="primary" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>
                         }
-                        {loading && <CircularProgress size={24} />}
+                        {loading && <CircularProgress className={classes.loading} size={24} />}
                     </div>
                 </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <div className={classes.column}>
-                    <Typography variant="button">Parent name:</Typography>
+                    <Typography className={classes.heading} variant="button">Parent name:</Typography>
                     <Typography variant="body1">{client.firstName} {client.lastName}</Typography>
-                    <Typography variant="button">Parent mobile:</Typography>
+                    <Typography className={classes.heading} variant="button">Parent mobile:</Typography>
                     <Typography vairant="body1">{client.phone}</Typography>
-                    <Typography variant="button">Parent email:</Typography>
+                    <Typography className={classes.heading} variant="button">Parent email:</Typography>
                     <Typography variant="body1">{client.email}</Typography>
-                    <Typography variant="button">Emergency Contact:</Typography>
+                    <Typography className={classes.heading} variant="button">Emergency Contact:</Typography>
                     <Typography variant="body1">
                         {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME).value} - {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION).value}
                     </Typography>
                     <Typography variant="body1">{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER).value}</Typography>
                 </div>
                 <div className={classes.column}>
-                    <Typography variant="button">Child year level:</Typography>
+                    <Typography className={classes.heading} variant="button">Child year level:</Typography>
                     <Typography variant="body1">{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</Typography>
                     {hasAllergies && (
                         <div className={classes.error}>
-                            <Typography variant="button">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</Typography>
+                            <>
+                            <Typography className={classes.heading} variant="button">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</Typography>
                             <Typography variant="body1">{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value}</Typography>
-                        </div>
+                            </>
+                        </div> 
                     )}
-                        <Typography variant="button">People allowed to pick child up:</Typography>
+                        <Typography className={classes.heading} variant="button">People allowed to pick child up:</Typography>
                         {pickupPeople.map(person => (
                             person.value !== null && <Typography key={person.id} variant="body1">{person.value}</Typography>
                         ))}
                     {signature && signature.sig && (
                         <>
-                            <Typography variant="button">Signature:</Typography>
+                            <Typography className={classes.heading} variant="button">Signature:</Typography>
                             <img className={classes.signature} src={signature.sig} alt="signature"/>
-                            <Typography variant="body1">{signature.signedBy}: {signature.timeStamp.toDate().toLocaleTimeString()}</Typography>
+                            <Typography variant="body1">{signature.signedBy}: {signature.timeStamp.toLocaleTimeString()}</Typography>
                         </>
                     )}
                 </div>
