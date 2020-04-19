@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import moment from 'moment-timezone'
 import { withFirebase } from '../../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
@@ -213,8 +214,13 @@ const mapFormToBooking = formValues => {
     }
 
     // combine date and time into one
-    var isoString = `${booking.date.toISOString().split('T')[0]}T${booking.time}:00+11:00`
-    var dateTime = new Date(isoString)
+    // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
+    var options = { timeZone: "Australia/Melbourne" }
+    var dateTime = moment.tz(
+        `${booking.date.toLocaleDateString('en-au', options)} ${booking.time}}`,
+        "DD/MM/YYYY hh:mm",
+        "Australia/Melbourne"
+    ).toDate()
     delete booking.date
     delete booking.time
     booking['dateTime'] = dateTime
