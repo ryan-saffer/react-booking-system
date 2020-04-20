@@ -61,7 +61,16 @@ function sendConfirmationEmail(booking) {
   var signature = getGmailSignature();
   
   // Send the confirmation email
-  GmailApp.sendEmail(booking.parentEmail, subject, "", {from: fromAddress, htmlBody: body + signature, name : "Fizz Kidz"});
+  GmailApp.sendEmail(
+    booking.parentEmail,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body + signature,
+      name: "Fizz Kidz"
+    }
+  );
 }
 
 /**
@@ -104,7 +113,16 @@ function sendOutForm(booking) {
   var signature = getGmailSignature();
   
   // Send the confirmation email
-  GmailApp.sendEmail(booking.parentEmail, subject, "", {from: fromAddress, htmlBody : body + signature, name : "Fizz Kidz"});
+  GmailApp.sendEmail(
+    booking.parentEmail,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body + signature,
+      name: "Fizz Kidz"
+    }
+  );
 }
 
 /**
@@ -140,7 +158,13 @@ function getPreFilledFormURL(booking) {
     default:
         break;
   }
-  booking.dateTime = new Date(booking.dateTime.getFullYear(), booking.dateTime.getMonth(), booking.dateTime.getDate(), correctedPartyTime, booking.dateTime.getMinutes());
+  booking.dateTime = new Date(
+    booking.dateTime.getFullYear(),
+    booking.dateTime.getMonth(),
+    booking.dateTime.getDate(),
+    correctedPartyTime,
+    booking.dateTime.getMinutes()
+  );
   var response = dateItem.createResponse(booking.dateTime);
   formResponse.withItemResponse(response);
   
