@@ -111,3 +111,25 @@ function determineSuffix(day) {
 function capitalise(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+/**
+ * Gets the Google Calendar ID for this location
+ * 
+ * @returns {String} the ID of the correct Calendar
+ */
+function getCalendarId(location) {
+
+  // event IDs
+  var balwynStorePartiesCalendarID = "fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com"
+  var malvernStorePartiesCalendarID = "fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com"
+  var mobilePartiesCalendarID = "fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com"
+
+  switch (location) {
+    case "balwyn":
+      return balwynStorePartiesCalendarID
+    case "malvern":
+      return malvernStorePartiesCalendarID
+    case "mobile":
+      return mobilePartiesCalendarID
+  }
+}

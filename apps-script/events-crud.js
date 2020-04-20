@@ -5,9 +5,11 @@
  */
 function createEvent(booking) {
 
-  var eventName = booking.parentFirstName + " / " + booking.childName + " " + booking.childAge + "th " + booking.parentMobile
-  var startDate = new Date(booking.dateTime)
+  var eventName =
+    `${booking.parentFirstName} / ${booking.childName}
+     ${booking.childAge}th ${booking.parentMobile}`
   
+  var startDate = new Date(booking.dateTime)
   var endDate = getEndDate(startDate, booking.partyLength)
   
   // determine which calendar to use
@@ -26,9 +28,11 @@ function createEvent(booking) {
  */
 function updateEvent(booking) {
   
-  var eventName = booking.parentFirstName + " / " + booking.childName + " " + booking.childAge + "th " + booking.parentMobile
+  var eventName =
+    `${booking.parentFirstName} / ${booking.childName}
+     ${booking.childAge}th ${booking.parentMobile}`
+  
   var startDate = new Date(booking.dateTime)
-
   var endDate = getEndDate(startDate, booking.partyLength)
   
   // determine which calendar to use
@@ -53,26 +57,4 @@ function deleteEvent(eventId, location) {
   var calendarId = getCalendarId(location)
   var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId)
   event.deleteEvent()
-}
-
-/**
- * Gets the Google Calendar ID for this location
- * 
- * @returns {String} the ID of the correct Calendar
- */
-function getCalendarId(location) {
-
-  // event IDs
-  var balwynStorePartiesCalendarID = "fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com"
-  var malvernStorePartiesCalendarID = "fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com"
-  var mobilePartiesCalendarID = "fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com"
-
-  switch (location) {
-    case "balwyn":
-      return balwynStorePartiesCalendarID
-    case "malvern":
-      return malvernStorePartiesCalendarID
-    case "mobile":
-      return mobilePartiesCalendarID
-  }
 }

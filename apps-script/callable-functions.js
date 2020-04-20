@@ -1,4 +1,11 @@
 /**
+ * All functions in this file are intended to be called externally.
+ * They act as a gateway to call the methods in the other files.
+ *
+ * Currently firebase functions are calling these functions.
+ */
+
+/**
  * Creates a new booking by:
  * 1. Creating calendar event
  * 2. Sending confirmation email
