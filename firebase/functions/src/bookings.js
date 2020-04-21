@@ -122,6 +122,7 @@ exports.sendOutForms = functions.pubsub.schedule('30 8 * * 4')
       db.collection('bookings')
         .where('dateTime', '>', startDate)
         .where('dateTime', '<', endDate)
+        .where('location', 'in', ['malvern', 'balwyn', 'mobile'])
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(documentSnapshot => {

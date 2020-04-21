@@ -370,6 +370,7 @@ const ExistingBookingForm = props => {
                         name={fields.PARENT_FIRST_NAME}
                         label="Parent first name"
                         fullWidth
+                        size="small"
                         variant="outlined"
                         autoComplete='off'
                         disabled={!editing}
@@ -385,6 +386,7 @@ const ExistingBookingForm = props => {
                         name={fields.PARENT_LAST_NAME}
                         label="Parent last name"
                         fullWidth
+                        size="small"
                         variant="outlined"
                         disabled={!editing}
                         value={formValues[fields.PARENT_LAST_NAME].value}
@@ -399,6 +401,7 @@ const ExistingBookingForm = props => {
                         name={fields.PARENT_EMAIL}
                         label="Parent email"
                         fullWidth
+                        size="small"
                         variant="outlined"
                         disabled={!editing}
                         value={formValues[fields.PARENT_EMAIL].value}
@@ -413,6 +416,7 @@ const ExistingBookingForm = props => {
                     name={fields.PARENT_MOBILE}
                     label="Parent mobile"
                     fullWidth
+                    size="small"
                     variant="outlined"
                     disabled={!editing}
                     value={formValues[fields.PARENT_MOBILE].value}
@@ -432,6 +436,7 @@ const ExistingBookingForm = props => {
                         name={fields.CHILD_NAME}
                         label="Child name"
                         fullWidth
+                        size="small"
                         variant="outlined"
                         disabled={!editing}
                         value={formValues[fields.CHILD_NAME].value}
@@ -446,6 +451,7 @@ const ExistingBookingForm = props => {
                         name={fields.CHILD_AGE}
                         label="Child age"
                         fullWidth
+                        size="small"
                         variant="outlined"
                         disabled={!editing}
                         value={formValues[fields.CHILD_AGE].value}
@@ -469,6 +475,7 @@ const ExistingBookingForm = props => {
                             id={fields.DATE}
                             label="Date of party"
                             autoOk="true"
+                            size="small"
                             disabled={!editing}
                             value={formValues[fields.DATE].value}
                             error={formValues[fields.DATE].error}
@@ -487,6 +494,7 @@ const ExistingBookingForm = props => {
                         name={fields.TIME}
                         label="Party time"
                         type="time"
+                        size="small"
                         disabled={!editing}
                         value={formValues[fields.TIME].value}
                         error={formValues[fields.TIME].error}
@@ -503,6 +511,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={6} sm={3}>
                     <FormControl
                         fullWidth
+                        size="small"
                     >
                     <InputLabel>Location</InputLabel>
                         <Select
@@ -527,6 +536,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={6} sm={3}>
                     <FormControl
                         fullWidth
+                        size="small"
                     >
                         <InputLabel>Party length</InputLabel>
                         <Select
@@ -554,6 +564,7 @@ const ExistingBookingForm = props => {
                             name={fields.ADDRESS}
                             label="Address"
                             fullWidth
+                            size="small"
                             variant="outlined"
                             disabled={!editing}
                             value={formValues[fields.ADDRESS].value}
@@ -573,6 +584,7 @@ const ExistingBookingForm = props => {
                         name={fields.NOTES}
                         label="Notes"
                         fullWidth
+                        size="small"
                         variant={formValues[fields.NOTES].value ? 'outlined' : 'filled'}
                         multiline
                         disabled={!editing}
@@ -589,6 +601,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        size="small"
                         variant={formValues[fields.CREATION_1].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>First Creation</InputLabel>
@@ -611,6 +624,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        size="small"
                         variant={formValues[fields.CREATION_2].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Second Creation</InputLabel>
@@ -633,6 +647,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={12} sm={4}>
                     <FormControl
                         fullWidth
+                        size="small"
                         variant={formValues[fields.CREATION_3].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Third Creation</InputLabel>
@@ -772,6 +787,7 @@ const ExistingBookingForm = props => {
                         name={fields.CAKE}
                         label="Cake"
                         fullWidth
+                        size="small"
                         variant={formValues[fields.CAKE].value ? 'outlined' : 'filled'}
                         disabled={!editing}
                         value={formValues[fields.CAKE].value}
@@ -782,6 +798,7 @@ const ExistingBookingForm = props => {
                 <Grid item xs={6}>
                     <FormControl
                         fullWidth
+                        size="small"
                         variant={formValues[fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
                     >
                         <InputLabel>Cake flavour</InputLabel>
@@ -812,6 +829,7 @@ const ExistingBookingForm = props => {
                         name={fields.QUESTIONS}
                         label="Questions"
                         fullWidth
+                        size="small"
                         variant={formValues[fields.QUESTIONS].value ? 'standard' : 'filled'}
                         disabled={!editing}
                         error={formValues[fields.QUESTIONS].error}

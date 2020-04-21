@@ -27,6 +27,12 @@ const LocationCheckboxes = props => {
                 }
                 label="Mobile"
             />
+            <FormControlLabel
+                control={
+                    <Checkbox checked={values.virtual} onChange={handleChange('virtual')} value="virtual" />
+                }
+                label="Virtual"
+            />
         </FormGroup>
     )
 }

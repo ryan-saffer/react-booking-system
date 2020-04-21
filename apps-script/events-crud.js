@@ -5,9 +5,8 @@
  */
 function createEvent(booking) {
 
-  var eventName =
-    `${booking.parentFirstName} / ${booking.childName}
-     ${booking.childAge}th ${booking.parentMobile}`
+  var eventName = booking.parentFirstName + " / " + booking.childName +
+     " " + booking.childAge + "th " + booking.parentMobile
   
   var startDate = new Date(booking.dateTime)
   var endDate = getEndDate(startDate, booking.partyLength)
@@ -28,9 +27,8 @@ function createEvent(booking) {
  */
 function updateEvent(booking) {
   
-  var eventName =
-    `${booking.parentFirstName} / ${booking.childName}
-     ${booking.childAge}th ${booking.parentMobile}`
+  var eventName = booking.parentFirstName + " / " + booking.childName +
+     " " + booking.childAge + "th " + booking.parentMobile
   
   var startDate = new Date(booking.dateTime)
   var endDate = getEndDate(startDate, booking.partyLength)
