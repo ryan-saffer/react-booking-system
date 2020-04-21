@@ -83,6 +83,8 @@ function locationAndTimeIsInvalid(formValues) {
         return true
     } else if (location === 'mobile' && length === '2') {
         return true
+    } else if (location === 'virtual' && (length === '1.5' || length === '2')) {
+        return true
     }
     return false
 }

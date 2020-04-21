@@ -22,7 +22,8 @@ export const fields = {
 export const locations = {
     BALWYN: "balwyn",
     MALVERN: "malvern",
-    MOBILE: "mobile"
+    MOBILE: "mobile",
+    VIRTUAL: "virtual"
 }
 
 export const cakeFlavours = {

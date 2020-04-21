@@ -107,7 +107,8 @@ const BookingsPage = props => {
     const [selectedLocations, setSelectedLocations] = useState({
         balwyn: true,
         malvern: true,
-        mobile: true
+        mobile: true,
+        virtual: true
     })
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
@@ -310,6 +311,7 @@ const BookingsPage = props => {
                     {selectedLocations.balwyn && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.BALWYN} />}
                     {selectedLocations.malvern && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MALVERN} />}
                     {selectedLocations.mobile && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MOBILE} />}
+                    {selectedLocations.virtual && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.VIRTUAL} />}
                 </Grid>
             </main>
             </Grid>
