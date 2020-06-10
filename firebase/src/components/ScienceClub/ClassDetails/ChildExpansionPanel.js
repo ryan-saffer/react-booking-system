@@ -143,9 +143,9 @@ const ChildExpansionPanel = props => {
         e.stopPropagation()
         setLoading(true)
 
-        firebase.functions.httpsCallable('updateLabel')({
+        firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { clientId: client.id, label: acuity.LABELS.CHECKED_IN }
+            data: { method: 'updateLabel', clientId: client.id, label: acuity.LABELS.CHECKED_IN }
         }).then(result => {
             console.log(result)
             setClient(result.data)
@@ -168,9 +168,9 @@ const ChildExpansionPanel = props => {
     const handleSignOut = (pickupPerson, dataUrl) => {
         console.log(`DATA URL: ${dataUrl}`)
 
-        firebase.functions.httpsCallable("updateLabel")({
+        firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { clientId: client.id, label: acuity.LABELS.CHECKED_OUT }
+            data: { method: 'updateLabel', clientId: client.id, label: acuity.LABELS.CHECKED_OUT }
         }).then(functionsResult => {
             console.log(functionsResult)
             firebase.db.doc(`scienceClubAppointments/${client.id}/`).set({

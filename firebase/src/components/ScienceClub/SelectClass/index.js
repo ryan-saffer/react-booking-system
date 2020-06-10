@@ -68,9 +68,9 @@ const SelectClassPage = props => {
     useEffect(() => {
 
         const fetchCalendars = () => {
-            firebase.functions.httpsCallable('getCalendars')({
+            firebase.functions.httpsCallable('acuityClient')({
                 auth: firebase.auth.currentUser.toJSON(),
-                data: null
+                data: {method: 'getCalendars'}
             }).then(result => {
                 console.log(result.data)
                 setCalendars(result.data)
@@ -118,9 +118,9 @@ const SelectClassPage = props => {
     const fetchAppointmentTypes = id => {
         console.log("FETCHING APPOINTMENTS WITH ID: " + id)
         setLoading(true)
-        firebase.functions.httpsCallable('getAppointmentTypes')({
+        firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: null
+            data: {method: "getAppointmentTypes"}
         }).then(result => {
             console.log(result.data)
             setAppointmentTypes(
@@ -136,9 +136,9 @@ const SelectClassPage = props => {
     const fetchClasses = id => {
         console.log(id)
         setLoading(true)
-        firebase.functions.httpsCallable('getClasses')({
+        firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: id
+            data: { method: "getClasses", id }
         }).then(result => {
             console.log(result)
             setClasses(result.data)
