@@ -174,9 +174,20 @@ const SelectClassPage = props => {
                             onChange={handleCalendarChange}
                             disabled={calendars.length === 0}
                         >
-                            {calendars.map(calendar => (
-                                <MenuItem key={calendar.id} value={calendar.id}>{calendar.name}</MenuItem>
-                            ))}
+                            {calendars.map(calendar => {
+                                const menuItem = <MenuItem key={calendar.id} value={calendar.id}>{calendar.name}</MenuItem>
+                                if (process.env.REACT_APP_ENV == 'prod') {
+                                    // only show science club appointments
+                                    if (calendar.name.endsWith("Science Club")) {
+                                        return menuItem
+                                    }
+                                } else {
+                                    // only show test calendar
+                                    if (calendar.name === "TEST CALENDAR") {
+                                        return menuItem
+                                    }
+                                }
+                            })}
                         </Select>
                     </FormControl>
                     
