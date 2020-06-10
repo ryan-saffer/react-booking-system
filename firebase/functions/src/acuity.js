@@ -7,79 +7,114 @@ var acuity = Acuity.basic({
     apiKey: acuityCredentials.api_key
 })
 
-exports.getAppointmentTypes = functions
-  .https.onCall((data, context) => {
+// wrap all functions inside one handler, so coldstart will only occur for first invocation.
+exports.acuityClient = functions.https.onCall((networkData, context) => {
   return new Promise((resolve, reject) => {
-    acuity.request('appointment-types', (err, resp, appointmentTypes) => {
-      if (err) reject(err)
-      resolve(appointmentTypes)
-    })
-  })
-})
-
-exports.getCalendars = functions
-  .https.onCall((data, context) => {
-    return new Promise((resolve, reject) => {
-      acuity.request('calendars', (err, resp, calendars) => {
-        if (err) reject(err)
-        resolve(calendars)
-      })
-    })
-})
-
-exports.getClasses = functions
-  .https.onCall((data, context) => {
-    return new Promise((resolve, reject) => {
-      var id = data.data
-      acuity.request(`/availability/classes?appointmentTypeID=${id}&includeUnavailable=true`, (err, resp, classes) => {
-        if (err) reject(err)
-        resolve(classes)
-      })
-  })
-})
-
-exports.getAppointments = functions
-  .https.onCall((data, context) => {
-    return new Promise((resolve, reject) => {
-      var fields = data.data
-      console.log(fields)
-      acuity.request(
-        `/appointments?appointmentTypeID=${fields.appointmentTypeID}&calendarID=${fields.calendarID}&max=500`,
-        (err, resp, appointments) => {
-          if (err) reject(err)
-          resolve(appointments)
-      })
-    })
-})
-
-exports.getLabels = functions
-  .https.onCall((data, context) => {
-    return new Promise((resolve, reject) => {
-      acuity.request("labels", (err, resp, labels) => {
-        if (err) reject(err)
-        resolve(labels)
-      })
-  })
-  })
-
-exports.updateLabel = functions
-  .https.onCall((data, context) => {
-
-    var clientId = data.data.clientId
-    var label = data.data.label
-    var options = {
-      method: 'PUT',
-      body: {
-        labels: [
-          { id: label }
-        ]
-      }
+    const data = networkData.data
+    if (data == null) {
+      reject(new Error(`data is null: ${networkData}`))
     }
-
-    return new Promise((resolve, reject) => {
-      acuity.request(`/appointments/${clientId}`, options, (err, res, appointment) => {
-        if (err) reject(err)
-        resolve(appointment)
-      })
-    })
+    const method = data.method
+    switch (method) {
+      case 'getAppointmentTypes':
+        getAppointmentTypes(resolve, reject)
+        break
+      case 'getCalendars':
+        getCalendars(resolve, reject)
+        break
+      case 'getClasses':
+        getClasses(data, resolve, reject)
+        break
+      case 'getAppointments':
+        getAppointments(data, resolve, reject)
+        break
+      case 'updateLabel':
+        updateLabel(data, resolve, reject)
+        break
+      case 'getLabels':
+        getLabels(resolve, reject)
+        break
+      default:
+        reject(new Error(`invalid method: ${method}`))
+        break
+    }
   })
+})
+
+function getAppointmentTypes(resolve, reject) {
+  acuity.request('appointment-types', (err, resp, appointmentTypes) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(appointmentTypes)
+  })
+}
+
+function getCalendars(resolve, reject) {
+  acuity.request('calendars', (err, resp, calendars) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(calendars)
+  })
+}
+
+function getClasses(data, resolve, reject) {
+  sanitise("appointmentTypeID", data.id, reject)
+  acuity.request(`/availability/classes?appointmentTypeID=${data.id}&includeUnavailable=true`, (err, resp, classes) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(classes)
+  })
+}
+
+function getAppointments(data, resolve, reject) {
+  sanitise("appointmentTypeID", data.appointmentTypeID, reject)
+  sanitise("calendarID", data.calendarID, reject)
+  acuity.request(
+    `/appointments?appointmentTypeID=${data.appointmentTypeID}&calendarID=${data.calendarID}&max=500`,
+    (err, resp, appointments) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(appointments)
+  })
+}
+
+function updateLabel(data, resolve, reject) {
+  sanitise("clientId", data.clientId, reject)
+  sanitise("label", data.label, reject)
+
+  var options = {
+    method: 'PUT',
+    body: {
+      labels: [
+        { id: data.label }
+      ]
+    }
+  }
+
+  acuity.request(`/appointments/${data.clientId}`, options, (err, res, appointment) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(appointment)
+  })
+}
+
+// not used yet
+function getLabels(resolve, reject) {
+  acuity.request("labels", (err, resp, labels) => {
+    if (err) {
+      reject(err)
+    }
+    resolve(labels)
+  })
+}
+
+function sanitise(field, value, reject) {
+  if (value == null) {
+    reject(new Error(`${field} is null`))
+  }
+}

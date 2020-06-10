@@ -45,9 +45,9 @@ const ClassDetailsPage = props => {
         const fetchClients = data => {
             console.log(data)
             console.log(classID)
-            firebase.functions.httpsCallable('getAppointments')({
+            firebase.functions.httpsCallable('acuityClient')({
                 auth: firebase.auth.currentUser.toJSON(),
-                data: data
+                data: { method: 'getAppointments', ...data }
             }).then(result => {
                 console.log(result)
                 setClients(
