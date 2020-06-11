@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 
 import { withFirebase } from '../../Firebase'
 import * as acuity from '../../../constants/acuity'
-import * as photoIcon from '../../../drawables/camera-icon-24.png'
+import * as bannedPhotoIcon from '../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../drawables/medical-icon-24.png'
-import * as insulinIcon from '../../../drawables/insulin-icon-64.png'
-import * as checkedInIcon from '../../../drawables/tick-box-icon-26.png'
-import * as checkedOutIcon from '../../../drawables/exit-icon-50.png'
+import * as insulinIcon from '../../../drawables/insulin-icon-24.png'
+import * as checkedInIcon from '../../../drawables/tick-box-green-icon-26.png'
+import * as checkedOutIcon from '../../../drawables/tick-box-red-icon-26.png'
+import * as uncheckedIcon from '../../../drawables/unchecked-icon-26.png'
 
 import { makeStyles } from '@material-ui/styles'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -93,6 +94,7 @@ const ChildExpansionPanel = props => {
     const [signature, setSignature] = useState(null)
     const [key, setKey] = useState(0)
 
+    const notSignedIn = client.labels == null
     const isSignedIn = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_IN
     const isSignedOut = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_OUT
 
@@ -201,12 +203,13 @@ const ChildExpansionPanel = props => {
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.panelSummary}>
                     <div className={classes.panelSummaryDetails}>
+                        {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
                         {isSignedIn && <img className={classes.icon} src={checkedInIcon.default} alt="checked in icon"/>}
                         {isSignedOut && <img className={classes.icon} src={checkedOutIcon.default} alt="checked out icon"/>}
                         <Typography variant="button" className={classes.childInfo}>{childName}</Typography>
-                        {permissionToPhotograph && <img className={classes.icon} src={photoIcon.default} alt="camera icon"/>}
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
-                        {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon"/>}                    
+                        {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
+                        {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
                     </div>
                     <div className={classes.panelSummaryButtonDiv}>
                         {isSignedIn
