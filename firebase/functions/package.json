@@ -16,7 +16,8 @@
     "acuityscheduling": "^0.1.9",
     "firebase-admin": "^8.6.1",
     "firebase-functions": "^3.0.0",
-    "googleapis": "^41.0.1"
+    "googleapis": "^41.0.1",
+    "stripe": "^8.62.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.7",
