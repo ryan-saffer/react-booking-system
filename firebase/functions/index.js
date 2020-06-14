@@ -7,3 +7,5 @@ exports.deleteBooking = bookings.deleteBooking
 exports.sendOutForms = bookings.sendOutForms
 
 exports.acuityClient = acuity.acuityClient
+exports.sidebar = acuity.sidebar
+exports.sendInvoice = acuity.sendInvoice
