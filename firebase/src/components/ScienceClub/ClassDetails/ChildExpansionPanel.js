@@ -212,10 +212,8 @@ const ChildExpansionPanel = props => {
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
                     </div>
                     <div className={classes.panelSummaryButtonDiv}>
-                        {isSignedIn
-                            ? <Button className={classes.panelSummaryButton} size="small" variant="contained" color="secondary" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>
-                            : <Button className={classes.panelSummaryButton} size="small" variant="contained" color="primary" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>
-                        }
+                        {isSignedIn && <Button className={classes.panelSummaryButton} size="small" variant="contained" color="secondary" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>}
+                        {notSignedIn && <Button className={classes.panelSummaryButton} size="small" variant="contained" color="primary" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>}
                         {loading && <CircularProgress className={classes.loading} size={24} />}
                     </div>
                 </div>

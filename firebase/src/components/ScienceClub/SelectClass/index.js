@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import LoadingOverlay from 'react-loading-overlay'
+import moment from 'moment'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -217,10 +218,7 @@ const SelectClassPage = props => {
                         >
                             {classes.map(mClass => (
                                 <MenuItem key={mClass.id} value={mClass}>
-                                    {new Date(mClass.time).toLocaleDateString(
-                                        "en-US",
-                                        { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-                                    )}
+                                    {moment(mClass.time).format('dddd, MMMM Do, YYYY')}
                                 </MenuItem>
                             ))}
                         </Select>
