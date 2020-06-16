@@ -846,11 +846,11 @@ const ExistingBookingForm = props => {
                             <Fab
                                 className={classes.deleteButton}
                                 aria-label="delete"
-                                onClick={e => {
+                                onClick={_event => {
                                     props.showConfirmationDialog({
-                                        title: "Delete Booking",
-                                        message: "Are you sure you want to delete this booking?",
-                                        confirmButton: "Delete",
+                                        dialogTitle: "Delete Booking",
+                                        dialogContent: "Are you sure you want to delete this booking?",
+                                        confirmationButtonText: "Delete",
                                         onConfirm: handleDeleteBooking
                                     })
                                 }}
