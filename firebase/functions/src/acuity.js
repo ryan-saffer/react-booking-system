@@ -4,7 +4,7 @@ const stripeConfig = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "book
 const Acuity = require('acuityscheduling')
 const acuityCredentials = require('../credentials/acuity_credentials.json')
 const stripeCredentials = require('../credentials/stripe_credentials.json')
-const stripe = require('stripe')(stripeCredentials.api_key)
+const stripe = require('stripe')(stripeConfig.API_KEY)
 const formFields = require('./constants/acuity')
 
 var acuity = Acuity.basic({
@@ -269,8 +269,9 @@ function createInvoiceItem(customer, invoiceItem, appointmentId, res) {
         .then(invoice => {
           console.log("new invoice created succesfully")
           saveInvoiceToAcuity(invoice, appointmentId)
-            .then(_appointment => {
+            .then(appointment => {
               console.log("invoice successfully saved in acuity")
+              console.log(appointment)
               sendInvoice(invoice, res)
             })
             .catch(error => {
@@ -302,10 +303,10 @@ function saveInvoiceToAcuity(invoice, appointmentId) {
   var options = {
     method: 'PUT',
     body: {
-      "fields": [
+      fields: [
         {
-          "id": formFields.FORM_FIELDS.INVOICE_ID,
-          "value": invoice.id
+          id: formFields.FORM_FIELDS.INVOICE_ID,
+          value: invoice.id
         }
       ]
     }
@@ -313,8 +314,9 @@ function saveInvoiceToAcuity(invoice, appointmentId) {
 
   return new Promise((resolve, reject) => {
     acuity.request(`/appointments/${appointmentId}`, options, (err, _acuityRes, appointment) => {
-      if (err) {
-        reject(err)
+      console.log(err)
+      if (appointment.error) {
+        reject(appointment)
       }
       resolve(appointment)
     })
