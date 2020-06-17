@@ -3,7 +3,6 @@ const stripeConstants = require("./constants/stripe")
 const stripeConfig = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "bookings-prod" ? stripeConstants.PROD_CONFIG : stripeConstants.DEV_CONFIG
 const Acuity = require('acuityscheduling')
 const acuityCredentials = require('../credentials/acuity_credentials.json')
-const stripeCredentials = require('../credentials/stripe_credentials.json')
 const stripe = require('stripe')(stripeConfig.API_KEY)
 const formFields = require('./constants/acuity')
 
@@ -137,29 +136,36 @@ exports.sidebar = functions.https.onRequest((req, res) => {
     const invoiceForm = appointment.forms.find(
       form => form.id === formFields.FORMS.INVOICE
     )
-
     if (invoiceForm === undefined) {
       // form doesn't include invoice, and is therefore not a science club
-      res.status(200).send("<p>This class does not support invoices</p>")
-      return
+      return res.status(200).send("<p>This class does not support invoices</p>")
     }
-
     const invoiceId = invoiceForm.values.find(
       field => field.fieldID === formFields.FORM_FIELDS.INVOICE_ID
     ).value
 
+    const childDetailsForm = appointment.forms.find(
+      form => form.id === formFields.FORMS.CHILD_DETAILS
+    )
+    if (childDetailsForm === undefined) {
+      return res.status(200).send("<p>This class does not support invoices</p>")
+    }
+    const childName = childDetailsForm.values.find(
+      field => field.fieldID === formFields.FORM_FIELDS.CHILD_NAME
+    ).value
+    
     console.log(`Invoice form id: ${invoiceId}`)
+    console.log(`Child name: ${childName}`)
 
     if (invoiceId === "") {
-      const item = encodeURI(appointment.type)
+      const item = encodeURI(`${childName} - ${appointment.type}`)
       const phone = encodeURI(appointment.phone)
-      res.status(200).send(
+      return res.status(200).send(
       `
-        <span class="label label-danger">Invoice not sent/span>
-        <a href="${stripeConfig.SEND_INVOICE_ENDPOINT}/sendInvoice?email=${appointment.email}&name=${appointment.firstName}+${appointment.lastName}&phone=${phone}&appointmentId=${appointment.id}&item=${item}" class="primary-btn">Send invoice</a>
+        <span class="label label-danger">Invoice not sent</span>
+        <a href="${stripeConfig.SEND_INVOICE_ENDPOINT}/sendInvoice?email=${appointment.email}&name=${appointment.firstName}+${appointment.lastName}&phone=${phone}&appointmentId=${appointment.id}&appointmentTypeId=${appointment.appointmentTypeID}&item=${item}&childName=${childName}" class="primary-btn">Send invoice</a>
       `
       )
-      return
     } else {
       // invoice already created... check its status
       stripe.invoices.retrieve(
@@ -171,21 +177,19 @@ exports.sidebar = functions.https.onRequest((req, res) => {
             return
           }
           if (invoice.paid) {
-            res.status(200).send(
+            return res.status(200).send(
               `
               <span class="label green">Invoice paid</span>
               <a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}">View invoice</a>
               `
             )
-            return
           } else {
-            res.status(200).send(
+            return res.status(200).send(
               `
               <span class="label orange">Invoice not yet paid</span>
               <a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}">View invoice</a>
               `
             )
-            return
           }
         }
       )
@@ -198,46 +202,49 @@ exports.sendInvoice = functions.https.onRequest((req, res) => {
   console.log("query parameters:")
   console.log(req.query)
 
-  const email = req.query.email
-  const name = req.query.name
-  const phone = req.query.phone
-  const appointmentId = req.query.appointmentId
-  const invoiceItem = req.query.item
+  const queryParams = {
+    email: req.query.email,
+    name: req.query.name,
+    phone: req.query.phone,
+    appointmentId: req.query.appointmentId,
+    appointmentTypeId: req.query.appointmentTypeId,
+    childName: req.query.childName,
+    invoiceItem: req.query.item
+  }
 
-  if (email === undefined || name === undefined || phone === undefined || invoiceItem === undefined || appointmentId === undefined) {
-    res.status(400).send("email, name, phoneNumber, invoiceItem appointmentId query parameters incorrectly supplied")
-    return
+  for (let key in queryParams) {
+    if (queryParams[key] === undefined) {
+      return res.status(400).send(`${key} query parameter not supplied`)
+    }  
   }
 
   // first search if customer with given email already exists
   stripe.customers.list(
-    { email },
+    { email: queryParams.email },
     (err, customers) => {
       if (err) {
         console.log("error listing stripe customers")
         console.error(err)
-        res.status(err.statusCode).send(err.message)
-        return
+        return res.status(err.statusCode).send(err.message)
       }
 
       if (customers.data.length > 0) {
         // customer exists!
         console.log("customer found in stripe")
         const customer = customers.data[0]
-        createInvoiceItem(customer, invoiceItem, appointmentId, res)
+        createInvoiceItem(customer, queryParams, res)
       } else {
         // customer not found.. create a new one
         console.log("customer not found in stripe")
         createCustomer({ name, email, phone })
           .then(customer => {
             console.log("new customer succesfully created")
-            createInvoiceItem(customer, invoiceItem, appointmentId, res)
+            createInvoiceItem(customer, queryParams, res)
           })
           .catch(err => {
             console.log("error creating customer in stripe")
             console.error(err)
-            resp.status(err.statusCode).send(err.message)
-            return
+            return resp.status(err.statusCode).send(err.message)
           })
       }
     }
@@ -246,21 +253,19 @@ exports.sendInvoice = functions.https.onRequest((req, res) => {
 
 async function createCustomer(data) {
   console.log("creating new customer...")
-  const customer = await stripe.customers.create({ ...data })
-  return customer
+  return await stripe.customers.create({ ...data })
 }
 
-function createInvoiceItem(customer, invoiceItem, appointmentId, res) {
+function createInvoiceItem(customer, queryParams, res) {
   console.log("creating invoice item...")
   
   stripe.invoiceItems.create(
-    { customer: customer.id, description: invoiceItem, price: stripeConfig.PRICE_SCIENCE_CLUB },
+    { customer: customer.id, description: queryParams.invoiceItem, price: stripeConfig.PRICE_SCIENCE_CLUB },
     (err, invoiceItem) => {
       if (err) {
         console.log("error found while creating invoice item")
         console.error(err)
-        res.status(err.statusCode).send(err.message)
-        return
+        return res.status(err.statusCode).send(err.message)
       }
 
       console.log("invoice item created succesfully")
@@ -268,22 +273,21 @@ function createInvoiceItem(customer, invoiceItem, appointmentId, res) {
       createInvoice(customer, invoiceItem.description)
         .then(invoice => {
           console.log("new invoice created succesfully")
-          saveInvoiceToAcuity(invoice, appointmentId)
-            .then(appointment => {
+          saveInvoiceToAcuity(invoice, queryParams)
+            .then(_appointment => {
               console.log("invoice successfully saved in acuity")
-              console.log(appointment)
               sendInvoice(invoice, res)
             })
             .catch(error => {
               console.log("error saving invoice in acuity")
               console.error(error)
-              res.status(error.status_code).send(error.message)
+              return res.status(error.status_code).send(error.message)
             })
         })
         .catch(error => {
           console.log("error creating invoice")
           console.error(error)
-          res.status(error.statusCode).send(error.message)
+          return res.status(error.statusCode).send(error.message)
         })
     }
   )
@@ -291,22 +295,51 @@ function createInvoiceItem(customer, invoiceItem, appointmentId, res) {
 
 async function createInvoice(customer, description) {
   console.log("creating invoice...")
-  const invoice = await stripe.invoices.create(
+  return await stripe.invoices.create(
     { customer: customer.id, description, collection_method: 'send_invoice', days_until_due: 30 }
   )
-  return invoice
 }
 
-function saveInvoiceToAcuity(invoice, appointmentId) {
+function saveInvoiceToAcuity(invoice, queryParams) {
   
   console.log("saving invoice into acuity...")
-  var options = {
+
+  return new Promise((resolve, reject) => {
+    // first get every appointment of this child in this class
+    // use child name, since a parent could have two children in a class
+    // therefore appointmentTypeId and email is not enough
+    acuity.request(
+      `/appointments?email=${queryParams.email}&appointmentTypeID=${queryParams.appointmentTypeId}&field:${formFields.FORM_FIELDS.CHILD_NAME}=${queryParams.childName}`,
+      async function (err, _resp, appointments) {
+        if (err) reject(err)
+        if (appointments.error) reject(appointments)
+
+        // then update each one with the invoice id
+        let promises = []
+        console.log("updating all appointments for this client...")
+        appointments.forEach(appointment => {
+          promises.push(saveInvoiceIdToAppointment(invoice.id, appointment.id))
+        })
+        Promise.all(promises).then(appointments => {
+          console.log("successfully updated all appointments")
+          resolve(appointments)
+        })
+        .catch(error => reject(error))
+      }
+    )
+  })
+}
+
+async function saveInvoiceIdToAppointment(invoiceId, appointmentId) {
+  
+  console.log(`updating single appointment: ${appointmentId}`)
+  const options = {
     method: 'PUT',
     body: {
       fields: [
         {
           id: formFields.FORM_FIELDS.INVOICE_ID,
-          value: invoice.id
+          value: invoiceId
         }
       ]
     }
@@ -314,10 +347,8 @@ function saveInvoiceToAcuity(invoice, appointmentId) {
 
   return new Promise((resolve, reject) => {
     acuity.request(`/appointments/${appointmentId}`, options, (err, _acuityRes, appointment) => {
-      console.log(err)
-      if (appointment.error) {
-        reject(appointment)
-      }
+      if (err) reject(err)
+      if (appointment.error) reject(appointment)
       resolve(appointment)
     })
   })
@@ -333,12 +364,11 @@ function sendInvoice(invoice, res) {
       if (err) {
         console.log("error sending invoice")
         console.log(err)
-        res.status(err.statusCode).send(err.message)
-        return
+        return res.status(err.statusCode).send(err.message)
       }
 
       console.log("invoice sent successfully")
-      res.status(200).send(
+      return res.status(200).send(
       `
         <!DOCTYPE html>
         <html>
