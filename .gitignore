@@ -4,6 +4,6 @@
 */.firebase/*
 
 */.env
-*credentials.json
-*service-key.json
+*credentials.*
+*service-key.*
 .vscode/*
