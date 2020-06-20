@@ -1,4 +1,4 @@
-exports.FORMS = {
+export const FORMS = {
     CHILD_DETAILS: 1337496,
     EMERGENCY_CONTACT: 1349880,
     PICKUP_PERMISSION: 1349877,
@@ -7,7 +7,7 @@ exports.FORMS = {
     INVOICE: 1337930
 }
 
-exports.FORM_FIELDS = {
+export const FORM_FIELDS = {
     CHILD_NAME: 7338245,
     CHILD_AGE: 7338246,
     CHILD_GRADE: 7338247,
