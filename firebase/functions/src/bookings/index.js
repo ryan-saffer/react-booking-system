@@ -4,7 +4,7 @@ const {
   google
 } = require('googleapis');
 
-const googleCredentials = require('../credentials/google-credentials.json')
+const googleCredentials = require('../../credentials/google-credentials.json')
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
