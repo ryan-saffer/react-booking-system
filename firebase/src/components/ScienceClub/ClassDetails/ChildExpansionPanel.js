@@ -121,7 +121,7 @@ const ChildExpansionPanel = props => {
         field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO
     ).value === "yes"
     const isAnaphylactic = anaphylaxisForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC
+        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC_YES_BLANK
     ).value === "yes"
     const permissionToPhotograph = childDetailsForm.values.find(
         field => field.fieldID === acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON
