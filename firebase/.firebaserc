@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "booking-system-6435d",
+    "production": "bookings-prod",
+    "test": "booking-system-6435d"
+  }
+}
