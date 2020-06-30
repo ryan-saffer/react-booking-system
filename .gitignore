@@ -1,6 +1,9 @@
-/node_modules/*
-/build/*
+*/node_modules/*
+*/build/*
 
-/.env
-*credentials.json
-*service-key.json
+*/.firebase/*
+
+*/.env
+*credentials.*
+*service-key.*
+.vscode/*
