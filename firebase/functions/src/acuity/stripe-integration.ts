@@ -115,7 +115,7 @@ type QueryParams = {
   [key: string]: string
 }
 
-export const sendInvoice = functions.https.onRequest((req, res) => {
+export const sendInvoice = functions.https.onRequest((req: functions.Request, res: functions.Response) => {
   console.log("beggining function")
   console.log("query parameters:")
   console.log(req.query)
@@ -131,7 +131,8 @@ export const sendInvoice = functions.https.onRequest((req, res) => {
 
   for (const key in queryParams) {
     if (queryParams[key] === undefined) {
-      return res.status(400).send(`${key} query parameter not supplied`)
+      res.status(400).send(`${key} query parameter not supplied`)
+      return
     }
   }
 

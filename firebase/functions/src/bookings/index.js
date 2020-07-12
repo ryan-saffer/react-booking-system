@@ -3,6 +3,7 @@ const admin = require('firebase-admin')
 const {
   google
 } = require('googleapis');
+var { DateTime } = require('luxon')
 
 const googleCredentials = require('../../credentials/google-credentials.json')
 
@@ -103,44 +104,44 @@ exports.sendOutForms = functions.pubsub.schedule('30 8 * * 4')
   .timeZone('Australia/Victoria')
   .onRun((context) => {
     
+    var startDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
+    startDate.setDate(startDate.getDate() + ((1 + 7 - startDate.getDay()) % 7)) // will always get upcoming Tuesday
+    var endDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
+    endDate.setDate(startDate.getDate() + 7)
+
+    console.log("Start date:")
+    console.log(startDate)
+    console.log("End date:")
+    console.log(endDate)
+
+    var bookings = []
+
     return new Promise((resolve, reject) => {
-      var startDate = new Date()
-      startDate.setDate(startDate.getDate() + ((5 + 7 - startDate.getDay()) % 7) + 7) // will always get second upcoming friday
-      startDate.setHours(0, 0, 0, 0)
-      var endDate = new Date()
-      endDate.setDate(startDate.getDate() + 3)
-      endDate.setHours(0, 0, 0, 0)
-
-      console.log(`Start date: ${startDate}`)
-      console.log(`End date: ${endDate}`)
-      
-      startDate = admin.firestore.Timestamp.fromDate(startDate)
-      endDate = admin.firestore.Timestamp.fromDate(endDate)
-
-      var bookings = []
-
       db.collection('bookings')
-        .where('dateTime', '>', startDate)
-        .where('dateTime', '<', endDate)
-        .where('location', 'in', ['malvern', 'balwyn', 'mobile'])
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(documentSnapshot => {
-            var booking = documentSnapshot.data()
-            booking.dateTime = booking.dateTime.toDate()
-            bookings.push(booking)
+      .where('dateTime', '>', startDate)
+      .where('dateTime', '<', endDate)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+          var booking = documentSnapshot.data()
+          booking.dateTime = booking.dateTime.toDate()
+          bookings.push(booking)
+        })
+        console.log('running apps script...')
+        runAppsScript('sendOutForms', [bookings])
+          .then(() => {
+            console.log('finished apps script')
+            resolve()
           })
-          runAppsScript('sendOutForms', [bookings])
-            .then(() => {
-              resolve()
-            })
-            .catch(err => {
-              reject(err)
-            })
-        })
-        .catch(err => {
-          reject(err)
-        })
+          .catch(err => {
+            console.log("Error running AppsScript")
+            reject(err)
+          })
+      })
+      .catch(err => {
+        console.log("Error fetching bookings from firestore")
+        reject(err)
+      })
     })
   })
 
