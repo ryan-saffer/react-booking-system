@@ -1,22 +1,20 @@
-import app from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
-import 'firebase/functions'
-
 import * as config from '../../config'
-
+const firebase = require('firebase/app')
+require('firebase/auth')
+require('firebase/firestore')
+require('firebase/functions')
 
 class Firebase {
   constructor() {
-    app.initializeApp(process.env.REACT_APP_ENV === 'prod' ? config.prodConfig : config.devConfig)
+    const app = firebase.initializeApp(process.env.REACT_APP_ENV === 'prod' ? config.prodConfig : config.devConfig)
 
     this.auth = app.auth()
     this.db = app.firestore()
-    this.functions = app.functions()
+    this.functions = app.functions("australia-southeast1")
     // if (process.env.NODE_ENV === "development") {
     //   this.functions.useFunctionsEmulator("http://localhost:5001");
     // }
-    this.googleProvider = new app.auth.GoogleAuthProvider()
+    this.googleProvider = new firebase.auth.GoogleAuthProvider()
   }
 
   doCreateUserWithEmailAndPassword = (email, password) => 

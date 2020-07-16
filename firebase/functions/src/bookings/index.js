@@ -10,7 +10,10 @@ const googleCredentials = require('../../credentials/google-credentials.json')
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 
-exports.createBooking = functions.https.onCall((data, context) => {
+exports.createBooking = functions
+  .region('australia-southeast1')
+  .https.onCall((data, context) => {
+    
   console.log(data)
   console.log(context)
 
@@ -47,7 +50,10 @@ exports.createBooking = functions.https.onCall((data, context) => {
   })
 })
 
-exports.updateBooking = functions.https.onCall((data, context) => {
+exports.updateBooking = functions
+  .region('australia-southeast1')
+  .https.onCall((data, context) => {
+    
   console.log(data)
   console.log(context)
 
@@ -75,7 +81,10 @@ exports.updateBooking = functions.https.onCall((data, context) => {
   })
 })
 
-exports.deleteBooking = functions.https.onCall((data, context) => {
+exports.deleteBooking = functions
+  .region('australia-southeast1')
+  .https.onCall((data, context) => {
+    
   console.log(data)
   console.log(context)
 
@@ -100,7 +109,9 @@ exports.deleteBooking = functions.https.onCall((data, context) => {
   })
 })
 
-exports.sendOutForms = functions.pubsub.schedule('30 8 * * 4')
+exports.sendOutForms = functions
+  .region('australia-southeast1')
+  .pubsub.schedule('30 8 * * 4')
   .timeZone('Australia/Victoria')
   .onRun((context) => {
     
