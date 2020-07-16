@@ -145,7 +145,7 @@ exports.sendOutForms = functions.pubsub.schedule('30 8 * * 4')
     })
   })
 
-function runAppsScript(functionName, parameters) {
+export function runAppsScript(functionName, parameters) {
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')
 
