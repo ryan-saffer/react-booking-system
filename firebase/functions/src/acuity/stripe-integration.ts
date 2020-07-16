@@ -19,7 +19,10 @@ function isError(object: any | Acuity.Error): object is Acuity.Error {
     return (object as Acuity.Error).error !== undefined
 }
 
-export const sidebar = functions.https.onRequest((req: functions.Request, res: functions.Response) => {
+export const sidebar = functions
+  .region('australia-southeast1')
+  .https.onRequest((req: functions.Request, res: functions.Response) => {
+    
   console.log("sidebar requested with body params:")
   console.log(req.body)
 
@@ -115,7 +118,10 @@ type QueryParams = {
   [key: string]: string
 }
 
-export const sendInvoice = functions.https.onRequest((req: functions.Request, res: functions.Response) => {
+export const sendInvoice = functions
+  .region('australia-southeast1')
+  .https.onRequest((req: functions.Request, res: functions.Response) => {
+    
   console.log("beggining function")
   console.log("query parameters:")
   console.log(req.query)

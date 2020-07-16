@@ -7,7 +7,9 @@ const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
 
 let isMobile = false // global
-export const onFormSubmit = functions.https.onRequest((req, res) => {
+export const onFormSubmit = functions
+    .region('australia-southeast1')
+    .https.onRequest((req, res) => {
     
     const formResponse = req.body.values as string[]
     isMobile = formResponse.length !== 19

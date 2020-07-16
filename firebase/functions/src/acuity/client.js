@@ -8,7 +8,10 @@ var acuity = Acuity.basic({
 })
 
 // wrap all functions inside one handler, so coldstart will only occur for first invocation.
-exports.client = functions.https.onCall((networkData, _context) => {
+exports.client = functions
+  .region('australia-southeast1')
+  .https.onCall((networkData, _context) => {
+    
   return new Promise((resolve, reject) => {
     const data = networkData.data
     if (data == null) {
