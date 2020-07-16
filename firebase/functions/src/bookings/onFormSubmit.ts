@@ -6,15 +6,13 @@ import { runAppsScript } from './index'
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
 
+let isMobile = false // global
 export const onFormSubmit = functions.https.onRequest((req, res) => {
     
-    const formResponse = req.body.values as [string]
-
-    for (const key in InStoreQuestions) {
-        functions.logger.log(formResponse[InStoreQuestions[key]])
-    }
-
-    const parentName = formResponse[InStoreQuestions.parentName].split(" ")
+    const formResponse = req.body.values as string[]
+    isMobile = formResponse.length !== 19
+    
+    const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
 
     let collectionReference = db.collection('bookings')
         .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
@@ -23,9 +21,9 @@ export const onFormSubmit = functions.https.onRequest((req, res) => {
         collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName[1])
     }
     collectionReference
-        .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[InStoreQuestions.childName])
-        .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[InStoreQuestions.childAge])
-        .where(BookingConstants.fields.LOCATION, '==', formResponse[InStoreQuestions.location].toLowerCase())
+        .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
+        .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
+        .where(BookingConstants.fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
         .where(BookingConstants.fields.DATE_TIME, '>', new Date())
         .get()
         .then(querySnapshot => {
@@ -71,7 +69,7 @@ export const onFormSubmit = functions.https.onRequest((req, res) => {
 
 const isTimestamp = (dateTime: any): dateTime is admin.firestore.Timestamp => true
 
-async function updateBooking(formResponse: [string], booking: Booking, ref: FirebaseFirestore.DocumentReference): Promise<[Booking, Array<string>, Array<string>]> {
+async function updateBooking(formResponse: string[], booking: Booking, ref: FirebaseFirestore.DocumentReference): Promise<[Booking, Array<string>, Array<string>]> {
     const [updatedBooking, creations, additions] = mapFormResponseToBooking(formResponse, booking)
     functions.logger.log("Updated booking:")
     functions.logger.log(updatedBooking)
@@ -80,13 +78,13 @@ async function updateBooking(formResponse: [string], booking: Booking, ref: Fire
     return [updatedBooking, creations, additions]
 }
 
-function mapFormResponseToBooking(formResponse: [string], booking: Booking): [Booking, Array<string>, Array<string>] {
+function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Booking, string[], string[]] {
     // number of children
-    booking.numberOfChildren = formResponse[InStoreQuestions.numberOfChildren]
+    booking.numberOfChildren = formResponse[getIndex(BaseFormQuestion.NumberOfChildren)]
 
     // creations
     const selectedCreations = []
-    for (let i = InStoreQuestions.creations1; i <= InStoreQuestions.creations5; i++) {
+    for (let i = getIndex(BaseFormQuestion.Creations1); i <= getIndex(BaseFormQuestion.Creations5); i++) {
         selectedCreations.push(...formResponse[i].split(/, ?(?=[A-Z])/)) // split by ", [single capital letter]". make sure creations never include this pattern
     }
     console.log("CREATIONS:")
@@ -97,62 +95,107 @@ function mapFormResponseToBooking(formResponse: [string], booking: Booking): [Bo
     booking.creation2 = CreationFormsMap[filteredCreations[1]]
     booking.creation3 = CreationFormsMap[filteredCreations[2]]
 
-    // additions
-    const additions = formResponse[InStoreQuestions.additions].split(/, ?(?=[A-Z])/)
-    console.log(additions)
-    for (const addition of additions) {
-        booking[AdditionsFormMap[addition]] = true
-    }
+    let additions: string[] = []
+    if (!isMobile) {
+        // additions
+        additions = formResponse[getIndex(InStoreAdditionalQuestion.Additions)].split(/, ?(?=[A-Z])/)
+        console.log(additions)
+        for (const addition of additions) {
+            booking[AdditionsFormMap[addition]] = true
+        }
 
-    // cake
-    booking.cake = formResponse[InStoreQuestions.cake]
-    booking.cakeFlavour = formResponse[InStoreQuestions.cakeFlavour].toLowerCase()
+        // cake
+        booking.cake = formResponse[getIndex(InStoreAdditionalQuestion.Cake)]
+        booking.cakeFlavour = formResponse[getIndex(InStoreAdditionalQuestion.CakeFlavour)].toLowerCase()
+    }
     
     // questions
-    booking.questions = formResponse[InStoreQuestions.questions]
+    booking.questions = formResponse[getIndex(BaseFormQuestion.Questions)]
 
     return [booking, filteredCreations, additions]
 }
 
-type Questions = {
-    parentName: number,
-    childName: number,
-    childAge: number,
-    location: number,
-    numberOfChildren: number,
-    creations1: number,
-    creations2: number,
-    creations3: number,
-    creations4: number,
-    creations5: number,
-    additions: number,
-    cakeSelected: number,
-    cake: number,
-    cakeFlavour: number,
-    funFacts: number,
-    questions: number,
-    foundUs: number
-    [key: string]: number
+const isBaseFormQuestion = (question: any): question is BaseFormQuestion => true
+
+/**
+ * Returns the index from the form response string array, and returns the correct value.
+ * Uses the global isMobile property.
+ * NOTE: If requesting an InStoreAdditonalQuestion on a mobile form response array, this function will return undefined.
+ * Any calls to this function when providing an InStoreAddtionalQuestion should be inside an if(!isMobile) {} clause.
+ *
+ * @param question the form question for which an index is required
+ */
+function getIndex(question: BaseFormQuestion | InStoreAdditionalQuestion) {
+    if (isMobile) {
+        if (isBaseFormQuestion(question)) {
+            return MobileQuestions[question]
+        } else {
+            throw new Error(`attempted to access index of MobileQuestions that does not exist. Index: ${question}`)
+        }
+    } else {
+        return InStoreQuestions[question]
+    }
 }
 
-const InStoreQuestions: Questions = {
-    parentName: 2,
-    childName: 3,
-    childAge: 4,
-    location: 5,
-    numberOfChildren: 6,
-    creations1: 7,
-    creations2: 8,
-    creations3: 9,
-    creations4: 10,
-    creations5: 11,
-    additions: 12,
-    cakeSelected: 13,
-    cake: 14,
-    cakeFlavour: 15,
-    funFacts: 16,
-    questions: 17,
-    foundUs: 18
+enum BaseFormQuestion {
+    ParentName = 1,
+    ChildName,
+    ChildAge,
+    NumberOfChildren,
+    Creations1,
+    Creations2,
+    Creations3,
+    Creations4,
+    Creations5,
+    FunFacts,
+    Questions,
+    FoundUs
+}
+
+enum InStoreAdditionalQuestion {
+    Location = 13, // start at 13 so as not to overwrite BaseFormQuestion indexing
+    Additions,
+    CakeSelected,
+    Cake,
+    CakeFlavour,
+}
+
+type MobileQuestionsIndexMap = { [key in BaseFormQuestion]: number }
+type InStoreQuestionsIndexMap = MobileQuestionsIndexMap & { [key in InStoreAdditionalQuestion] : number}
+
+const InStoreQuestions: InStoreQuestionsIndexMap = {
+    [BaseFormQuestion.ParentName]: 2,
+    [BaseFormQuestion.ChildName]: 3,
+    [BaseFormQuestion.ChildAge]: 4,
+    [InStoreAdditionalQuestion.Location]: 5,
+    [BaseFormQuestion.NumberOfChildren]: 6,
+    [BaseFormQuestion.Creations1]: 7,
+    [BaseFormQuestion.Creations2]: 8,
+    [BaseFormQuestion.Creations3]: 9,
+    [BaseFormQuestion.Creations4]: 10,
+    [BaseFormQuestion.Creations5]: 11,
+    [InStoreAdditionalQuestion.Additions]: 12,
+    [InStoreAdditionalQuestion.CakeSelected]: 13,
+    [InStoreAdditionalQuestion.Cake]: 14,
+    [InStoreAdditionalQuestion.CakeFlavour]: 15,
+    [BaseFormQuestion.FunFacts]: 16,
+    [BaseFormQuestion.Questions]: 17,
+    [BaseFormQuestion.FoundUs]: 18
+}
+
+const MobileQuestions: MobileQuestionsIndexMap = {
+    [BaseFormQuestion.ParentName]: 2,
+    [BaseFormQuestion.ChildName]: 3,
+    [BaseFormQuestion.ChildAge]: 4,
+    [BaseFormQuestion.NumberOfChildren]: 5,
+    [BaseFormQuestion.Creations1]: 6,
+    [BaseFormQuestion.Creations2]: 7,
+    [BaseFormQuestion.Creations3]: 8,
+    [BaseFormQuestion.Creations4]: 9,
+    [BaseFormQuestion.Creations5]: 10,
+    [BaseFormQuestion.FunFacts]: 11,
+    [BaseFormQuestion.Questions]: 12,
+    [BaseFormQuestion.FoundUs]: 13
 }
 
 type Booking = {
