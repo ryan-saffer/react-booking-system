@@ -103,6 +103,7 @@ export function validateFormOnSubmit(formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
         if (field !== fields.ADDRESS &&
+            field !== fields.NUMBER_OF_CHILDREN &&
             field !== fields.NOTES &&
             field !== fields.CREATION_1 &&
             field !== fields.CREATION_2 &&

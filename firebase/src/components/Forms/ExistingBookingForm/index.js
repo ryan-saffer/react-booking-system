@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
 import { withFirebase } from '../../Firebase'
 import 'typeface-roboto'
@@ -61,6 +61,11 @@ const useStyles = makeStyles(theme => ({
     cancelButton: {
         marginTop: theme.spacing(3),
         marginRight: theme.spacing(3)
+    },
+    disabled: {
+        "& .Mui-disabled": {
+            color: "rgba(0, 0, 0, 0.87)"
+        }
     }
 }))
 
@@ -121,6 +126,11 @@ const getEmptyValues = () => (
             value: '',
             error: false,
             errorText: 'Address cannot be empty'
+        },
+        [fields.NUMBER_OF_CHILDREN]: {
+            value: '',
+            error: false,
+            errorText: ''
         },
         [fields.NOTES]: {
             value: '',
@@ -251,6 +261,8 @@ const ExistingBookingForm = props => {
 
     const { firebase, bookingId, booking } = props
 
+    const isAdmin = useContext(AuthUserContext).roles[ROLES.ADMIN]
+
     const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
 
     const [formValues, setFormValues] = useState(initialValues)
@@ -258,6 +270,25 @@ const ExistingBookingForm = props => {
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
+    
+    const displayAddress = formValues[fields.LOCATION].value === "mobile"
+    const displayDateTimeLocation = editing
+    const displayDateTimeLocationHeading = displayDateTimeLocation || displayAddress
+    const displayNumberOfChildren = formValues[fields.NUMBER_OF_CHILDREN].value || editing
+    const displayNotes = formValues[fields.NOTES].value || editing
+    const displayCreation1 = formValues[fields.CREATION_1].value || editing
+    const displayCreation2 = formValues[fields.CREATION_2].value || editing
+    const displayCreation3 = formValues[fields.CREATION_3].value || editing
+    const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
+    const displayCake = formValues[fields.CAKE].value || editing
+    const displayQuestions = formValues[fields.QUESTIONS].value || editing
+    var additionSelected = false
+    for (let addition of Object.values(additions)) {
+        if (formValues[addition].value) {
+            additionSelected = true
+        }
+    }
+    const displayAdditions = additionSelected || editing
 
     const handleEdit = () => {
         setEditing(true)
@@ -374,6 +405,7 @@ const ExistingBookingForm = props => {
                         variant="outlined"
                         autoComplete='off'
                         disabled={!editing}
+                        classes={{ root: classes.disabled }}
                         value={formValues[fields.PARENT_FIRST_NAME].value}
                         error={formValues[fields.PARENT_FIRST_NAME].error}
                         helperText={formValues[fields.PARENT_FIRST_NAME].error ? formValues[fields.PARENT_FIRST_NAME].errorText : ''}
@@ -389,6 +421,7 @@ const ExistingBookingForm = props => {
                         size="small"
                         variant="outlined"
                         disabled={!editing}
+                        classes={{ root: classes.disabled }}
                         value={formValues[fields.PARENT_LAST_NAME].value}
                         error={formValues[fields.PARENT_LAST_NAME].error}
                         helperText={formValues[fields.PARENT_LAST_NAME].error ? formValues[fields.PARENT_LAST_NAME].errorText : ''}
@@ -404,6 +437,7 @@ const ExistingBookingForm = props => {
                         size="small"
                         variant="outlined"
                         disabled={!editing}
+                        classes={{ root: classes.disabled }}
                         value={formValues[fields.PARENT_EMAIL].value}
                         error={formValues[fields.PARENT_EMAIL].error}
                         helperText={formValues[fields.PARENT_EMAIL].error ? formValues[fields.PARENT_EMAIL].errorText : ''}
@@ -419,6 +453,7 @@ const ExistingBookingForm = props => {
                     size="small"
                     variant="outlined"
                     disabled={!editing}
+                    classes={{ root: classes.disabled }}
                     value={formValues[fields.PARENT_MOBILE].value}
                     error={formValues[fields.PARENT_MOBILE].error}
                     helperText={formValues[fields.PARENT_MOBILE].error ? formValues[fields.PARENT_MOBILE].errorText : ''}
@@ -439,6 +474,7 @@ const ExistingBookingForm = props => {
                         size="small"
                         variant="outlined"
                         disabled={!editing}
+                        classes={{ root: classes.disabled }}
                         value={formValues[fields.CHILD_NAME].value}
                         error={formValues[fields.CHILD_NAME].error}
                         helperText={formValues[fields.CHILD_NAME].error ? formValues[fields.CHILD_NAME].errorText : ''}
@@ -454,110 +490,121 @@ const ExistingBookingForm = props => {
                         size="small"
                         variant="outlined"
                         disabled={!editing}
+                        classes={{ root: classes.disabled }}
                         value={formValues[fields.CHILD_AGE].value}
                         error={formValues[fields.CHILD_AGE].error}
                         helperText={formValues[fields.CHILD_AGE].error ? formValues[fields.CHILD_AGE].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Date, time & location
-                    </Typography>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
+                {displayDateTimeLocationHeading &&
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Date, time & location
+                        </Typography>
+                    </Grid>
+                }
+                {displayDateTimeLocation &&
+                    <>
+                    <Grid item xs={6} sm={3}>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                fullWidth
+                                disableToolbar
+                                variant="inline"
+                                format="dd/MM/yyyy"
+                                id={fields.DATE}
+                                label="Date of party"
+                                autoOk="true"
+                                size="small"
+                                disabled={!editing}
+                                classes={{ root: classes.disabled }}
+                                value={formValues[fields.DATE].value}
+                                error={formValues[fields.DATE].error}
+                                helperText={formValues[fields.DATE].error ? formValues[fields.DATE].errorText : ''}
+                                onChange={handleFormChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <TextField
                             fullWidth
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            id={fields.DATE}
-                            label="Date of party"
-                            autoOk="true"
+                            id={fields.TIME}
+                            name={fields.TIME}
+                            label="Party time"
+                            type="time"
                             size="small"
                             disabled={!editing}
-                            value={formValues[fields.DATE].value}
-                            error={formValues[fields.DATE].error}
-                            helperText={formValues[fields.DATE].error ? formValues[fields.DATE].errorText : ''}
+                            classes={{ root: classes.disabled }}
+                            value={formValues[fields.TIME].value}
+                            error={formValues[fields.TIME].error}
+                            helperText={formValues[fields.TIME].error ? formValues[fields.TIME].errorText : ''}
                             onChange={handleFormChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            inputProps={{
+                                step: 1800, // 5 min
                             }}
                         />
-                    </MuiPickersUtilsProvider>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <TextField
-                        fullWidth
-                        id={fields.TIME}
-                        name={fields.TIME}
-                        label="Party time"
-                        type="time"
-                        size="small"
-                        disabled={!editing}
-                        value={formValues[fields.TIME].value}
-                        error={formValues[fields.TIME].error}
-                        helperText={formValues[fields.TIME].error ? formValues[fields.TIME].errorText : ''}
-                        onChange={handleFormChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        inputProps={{
-                            step: 1800, // 5 min
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                    >
-                    <InputLabel>Location</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.LOCATION,
-                                id: fields.LOCATION,
-                                value: formValues[fields.LOCATION].value || ''
-                            }}
-                            disabled={true}
-                            error={formValues[fields.LOCATION].error}
-                            onChange={handleFormChange}
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            classes={{ root: classes.disabled }}
                         >
-                            {Object.values(locations).map(location => (
-                                <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
-                            ))}
-                    </Select>
-                    {formValues.location.error ? (
-                        <FormHelperText error={true}>{formValues[fields.LOCATION].errorText}</FormHelperText>
-                    ) : null}
-                    </FormControl>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                    >
-                        <InputLabel>Party length</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.PARTY_LENGTH,
-                                id: fields.PARTY_LENGTH,
-                                value: formValues[fields.PARTY_LENGTH].value || ''
-                            }}
-                            disabled={!editing}
-                            error={formValues[fields.PARTY_LENGTH].error}
-                            onChange={handleFormChange}
+                            <InputLabel>Location</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.LOCATION,
+                                    id: fields.LOCATION,
+                                    value: formValues[fields.LOCATION].value || ''
+                                }}
+                                disabled={true}
+                                error={formValues[fields.LOCATION].error}
+                                onChange={handleFormChange}
+                            >
+                                {Object.values(locations).map(location => (
+                                    <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
+                                ))}
+                            </Select>
+                            {formValues.location.error ? (
+                                <FormHelperText error={true}>{formValues[fields.LOCATION].errorText}</FormHelperText>
+                            ) : null}
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            classes={{ root: classes.disabled }}
                         >
-                            <MenuItem value={'1'}>1 hour</MenuItem>
-                            <MenuItem value={'1.5'}>1.5 hours</MenuItem>
-                            <MenuItem value={'2'}>2 hours</MenuItem>
-                    </Select>
-                    {formValues.partyLength.error &&
-                        <FormHelperText error={true}>{formValues[fields.PARTY_LENGTH].errorText}</FormHelperText>}
-                    </FormControl>
-                </Grid>
-                {formValues.location.value === 'mobile' &&
+                            <InputLabel>Party length</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.PARTY_LENGTH,
+                                    id: fields.PARTY_LENGTH,
+                                    value: formValues[fields.PARTY_LENGTH].value || ''
+                                }}
+                                disabled={!editing}
+                                error={formValues[fields.PARTY_LENGTH].error}
+                                onChange={handleFormChange}
+                            >
+                                <MenuItem value={'1'}>1 hour</MenuItem>
+                                <MenuItem value={'1.5'}>1.5 hours</MenuItem>
+                                <MenuItem value={'2'}>2 hours</MenuItem>
+                            </Select>
+                            {formValues.partyLength.error &&
+                                <FormHelperText error={true}>{formValues[fields.PARTY_LENGTH].errorText}</FormHelperText>}
+                        </FormControl>
+                    </Grid>
+                    </>
+                }
+                {displayAddress &&
                     <Grid item xs={12}>
                         <TextField
                             id={fields.ADDRESS}
@@ -567,335 +614,412 @@ const ExistingBookingForm = props => {
                             size="small"
                             variant="outlined"
                             disabled={!editing}
+                            classes={{ root: classes.disabled }}
                             value={formValues[fields.ADDRESS].value}
                             error={formValues[fields.ADDRESS].error}
                             helperText={formValues[fields.ADDRESS].error ? formValues[fields.ADDRESS].errorText : ''}
                             onChange={handleFormChange}
                         />
-                    </Grid>}
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Notes
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={fields.NOTES}
-                        name={fields.NOTES}
-                        label="Notes"
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.NOTES].value ? 'outlined' : 'filled'}
-                        multiline
-                        disabled={!editing}
-                        value={formValues[fields.NOTES].value}
-                        error={formValues[fields.NOTES].error}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Creations
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.CREATION_1].value ? 'standard' : 'filled'}
-                    >
-                        <InputLabel>First Creation</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.CREATION_1,
-                                id: fields.CREATION_1,
-                                value: formValues[fields.CREATION_1].value || ''
-                            }}
+                    </Grid>
+                }
+                {displayNumberOfChildren &&
+                    <>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                                Number of children
+                        </Typography>
+                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                id={fields.NUMBER_OF_CHILDREN}
+                                name={fields.NUMBER_OF_CHILDREN}
+                                label="Number of children"
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                disabled={!editing}
+                                classes={{ root: classes.disabled }}
+                                value={formValues[fields.NUMBER_OF_CHILDREN].value}
+                                error={formValues[fields.NUMBER_OF_CHILDREN].error}
+                                helperText={formValues[fields.NUMBER_OF_CHILDREN].error ? formValues[fields.NUMBER_OF_CHILDREN].errorText : ''}
+                                onChange={handleFormChange}
+                            />
+                        </Grid>
+                    </>
+                }
+                {displayNotes &&
+                    <>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Notes
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            id={fields.NOTES}
+                            name={fields.NOTES}
+                            label="Notes"
+                            fullWidth
+                            size="small"
+                            variant={(editing || formValues[fields.NOTES].value) ? 'outlined' : 'filled'}
+                            multiline
                             disabled={!editing}
-                            error={formValues[fields.CREATION_1].error}
+                            classes={{ root: classes.disabled }}
+                            value={formValues[fields.NOTES].value}
+                            error={formValues[fields.NOTES].error}
                             onChange={handleFormChange}
+                        />
+                    </Grid>
+                    </>
+                }
+                {displayCreationHeading &&
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Creations
+                        </Typography>
+                    </Grid>
+                }
+                {displayCreation1 &&
+                    <Grid item xs={12} sm={4}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            classes={{ root: classes.disabled }}
+                            variant={formValues[fields.CREATION_1].value ? 'standard' : 'filled'}
                         >
-                            {Object.values(creations).map(creation => (
-                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
-                            ))}
-                    </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.CREATION_2].value ? 'standard' : 'filled'}
-                    >
-                        <InputLabel>Second Creation</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.CREATION_2,
-                                id: fields.CREATION_2,
-                                value: formValues[fields.CREATION_2].value || ''
-                            }}
-                            disabled={!editing}
-                            error={formValues[fields.CREATION_2].error}
-                            onChange={handleFormChange}
+                            <InputLabel>First Creation</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.CREATION_1,
+                                    id: fields.CREATION_1,
+                                    value: formValues[fields.CREATION_1].value || ''
+                                }}
+                                disabled={!editing}
+                                error={formValues[fields.CREATION_1].error}
+                                onChange={handleFormChange}
+                            >
+                                {Object.values(creations).map(creation => (
+                                    <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                }
+                {displayCreation2 &&
+                    <Grid item xs={12} sm={4}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            variant={formValues[fields.CREATION_2].value ? 'standard' : 'filled'}
                         >
-                            {Object.values(creations).map(creation => (
-                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
-                            ))}
-                    </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.CREATION_3].value ? 'standard' : 'filled'}
-                    >
-                        <InputLabel>Third Creation</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.CREATION_3,
-                                id: fields.CREATION_3,
-                                value: formValues[fields.CREATION_3].value || ''
-                            }}
-                            disabled={!editing || booking.partyLength !== '2'}
-                            error={formValues[fields.CREATION_3].error}
-                            onChange={handleFormChange}
+                            <InputLabel>Second Creation</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.CREATION_2,
+                                    id: fields.CREATION_2,
+                                    value: formValues[fields.CREATION_2].value || ''
+                                }}
+                                disabled={!editing}
+                                classes={{ root: classes.disabled }}
+                                error={formValues[fields.CREATION_2].error}
+                                onChange={handleFormChange}
+                            >
+                                {Object.values(creations).map(creation => (
+                                    <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                }
+                {displayCreation3 &&
+                    <Grid item xs={12} sm={4}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            variant={formValues[fields.CREATION_3].value ? 'standard' : 'filled'}
                         >
-                            {Object.values(creations).map(creation => (
-                                <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
-                            ))}
-                    </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Additions
-                    </Typography>
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                            <InputLabel>Third Creation</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.CREATION_3,
+                                    id: fields.CREATION_3,
+                                    value: formValues[fields.CREATION_3].value || ''
+                                }}
+                                disabled={!editing || booking.partyLength !== '2'}
+                                classes={{ root: classes.disabled }}
+                                error={formValues[fields.CREATION_3].error}
+                                onChange={handleFormChange}
+                            >
+                                {Object.values(creations).map(creation => (
+                                    <MenuItem key={creation} value={creation}>{creationDisplayValues[creation]}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                }
+                {displayAdditions &&
+                    <>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Additions
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.CHICKEN_NUGGETS}
                                     color="secondary"
                                     name={additions.CHICKEN_NUGGETS}
                                     checked={formValues[additions.CHICKEN_NUGGETS].value}
                                     value={formValues[additions.CHICKEN_NUGGETS].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Chicken Nuggets"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Chicken Nuggets"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.FAIRY_BREAD}
                                     color="secondary"
                                     name={additions.FAIRY_BREAD}
                                     checked={formValues[additions.FAIRY_BREAD].value}
                                     value={formValues[additions.FAIRY_BREAD].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Fairy Bread"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
-                                    id={additions.FRUIT_PLATTER}
-                                    color="secondary"
-                                    name={additions.FRUIT_PLATTER}
-                                    checked={formValues[additions.FRUIT_PLATTER].value}
-                                    value={formValues[additions.FRUIT_PLATTER].value}
-                                    disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Fruit Platter"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Fairy Bread"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={<Checkbox
+                                id={additions.FRUIT_PLATTER}
+                                color="secondary"
+                                name={additions.FRUIT_PLATTER}
+                                checked={formValues[additions.FRUIT_PLATTER].value}
+                                value={formValues[additions.FRUIT_PLATTER].value}
+                                disabled={!editing}
+                                onChange={handleFormChange} />}
+                            label="Fruit Platter"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.LOLLY_BAGS}
                                     color="secondary"
                                     name={additions.LOLLY_BAGS}
                                     checked={formValues[additions.LOLLY_BAGS].value}
                                     value={formValues[additions.LOLLY_BAGS].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Lolly Bags"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Lolly Bags"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.SANDWICH_PLATTER}
                                     color="secondary"
                                     name={additions.SANDWICH_PLATTER}
                                     checked={formValues[additions.SANDWICH_PLATTER].value}
                                     value={formValues[additions.SANDWICH_PLATTER].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Sandwich Platter"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Sandwich Platter"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.VEGGIE_PLATTER}
                                     color="secondary"
                                     name={additions.VEGGIE_PLATTER}
                                     checked={formValues[additions.VEGGIE_PLATTER].value}
                                     value={formValues[additions.VEGGIE_PLATTER].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Veggie Platter"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Veggie Platter"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.WATERMELON_PLATTER}
                                     color="secondary"
                                     name={additions.WATERMELON_PLATTER}
                                     checked={formValues[additions.WATERMELON_PLATTER].value}
                                     value={formValues[additions.WATERMELON_PLATTER].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Watermelon Platter"
-                    />
-                </Grid>
-                <Grid item xs={4} sm={3}>
-                    <FormControlLabel
-                        control={<Checkbox
+                                    onChange={handleFormChange} />
+                            }
+                            label="Watermelon Platter"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={4} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={additions.WEDGES}
                                     color="secondary"
                                     name={additions.WEDGES}
                                     checked={formValues[additions.WEDGES].value}
                                     value={formValues[additions.WEDGES].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />}
-                        label="Wedges"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Cake
+                                    onChange={handleFormChange} />
+                            }
+                            label="Wedges"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    </>
+                }
+                {displayCake &&
+                    <>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Cake
                     </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        id={fields.CAKE}
-                        name={fields.CAKE}
-                        label="Cake"
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.CAKE].value ? 'outlined' : 'filled'}
-                        disabled={!editing}
-                        value={formValues[fields.CAKE].value}
-                        error={formValues[fields.CAKE].error}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <FormControl
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
-                    >
-                        <InputLabel>Cake flavour</InputLabel>
-                        <Select
-                            inputProps={{
-                                name: fields.CAKE_FLAVOUR,
-                                id: fields.CAKE_FLAVOUR,
-                                value: formValues[fields.CAKE_FLAVOUR].value || ''
-                            }}
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            id={fields.CAKE}
+                            name={fields.CAKE}
+                            label="Cake"
+                            fullWidth
+                            size="small"
+                            variant={(editing || formValues[fields.CAKE].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
-                            error={formValues[fields.CAKE_FLAVOUR].error}
+                            classes={{ root: classes.disabled }}
+                            value={formValues[fields.CAKE].value}
+                            error={formValues[fields.CAKE].error}
                             onChange={handleFormChange}
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            variant={formValues[fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
+                            classes={{ root: classes.disabled }}
                         >
-                            {Object.values(cakeFlavours).map(flavour => (
-                                <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Parent Questions/Comments
-                    </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id={fields.QUESTIONS}
-                        name={fields.QUESTIONS}
-                        label="Questions"
-                        fullWidth
-                        size="small"
-                        variant={formValues[fields.QUESTIONS].value ? 'standard' : 'filled'}
-                        disabled={!editing}
-                        error={formValues[fields.QUESTIONS].error}
-                        value={formValues[fields.QUESTIONS].value}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-            </Grid>
-            <AuthUserContext.Consumer>
-                {authUser => (
-                    authUser.roles[ROLES.ADMIN]
-                    ? <div className={classes.saveButtonDiv}>
-                        {!loading && !editing &&
-                            <Fab
-                                className={classes.deleteButton}
-                                aria-label="delete"
-                                onClick={e => {
-                                    props.showConfirmationDialog({
-                                        title: "Delete Booking",
-                                        message: "Are you sure you want to delete this booking?",
-                                        confirmButton: "Delete",
-                                        onConfirm: handleDeleteBooking
-                                    })
+                            <InputLabel>Cake flavour</InputLabel>
+                            <Select
+                                inputProps={{
+                                    name: fields.CAKE_FLAVOUR,
+                                    id: fields.CAKE_FLAVOUR,
+                                    value: formValues[fields.CAKE_FLAVOUR].value || ''
                                 }}
+                                disabled={!editing}
+                                error={formValues[fields.CAKE_FLAVOUR].error}
+                                onChange={handleFormChange}
                             >
-                                <DeleteIcon />
-                            </Fab>
-                        }
-                        {editing ? (
-                            <>
-                            <Button
-                                className={classes.cancelButton}
-                                variant="outlined"
-                                onClick={cancelEdit}
-                                disabled={loading}
-                            >
-                                Cancel
-                            </Button>
-                            <Fab
-                                className={success ? classes.success : classes.saveButton}
-                                aria-label="save"
-                                color="secondary"
-                                type="submit"
-                                disabled={loading || !valid}
-                                onClick={handleSubmit}
-                            >
-                                {success ? <CheckIcon /> : <SaveIcon />}
-                            </Fab>
-                            </>
-                        ) : (
-                            <Fab
-                                className={classes.editButton}
-                                aria-label="edit"
-                                color="primary"
-                                type="submit"
-                                disabled={loading}
-                                onClick={handleEdit}
-                            >
-                                {<CreateIcon />}
-                            </Fab>
-                        )}
-                        {loading && <CircularProgress size={68} className={classes.progress} />}
-                    </div> : null
-                )}
-            </AuthUserContext.Consumer>
-        
+                                {Object.values(cakeFlavours).map(flavour => (
+                                    <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    </>
+                }
+                {displayQuestions &&
+                    <>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Parent Questions  / Comments / Fun Facts
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            id={fields.QUESTIONS}
+                            name={fields.QUESTIONS}
+                            label="Questions"
+                            fullWidth
+                            multiline
+                            size="small"
+                            variant={(editing || formValues[fields.QUESTIONS].value) ? 'outlined' : 'filled'}
+                            disabled={!editing}
+                            classes={{ root: classes.disabled }}
+                            error={formValues[fields.QUESTIONS].error}
+                            value={formValues[fields.QUESTIONS].value.replace('\\n', String.fromCharCode(13, 10))} // https://stackoverflow.com/a/28106346/7870403
+                            onChange={handleFormChange}
+                        />
+                    </Grid>
+                    </>
+                }
+            </Grid>
+            {isAdmin
+                ? <div className={classes.saveButtonDiv}>
+                    {!loading && !editing &&
+                        <Fab
+                            className={classes.deleteButton}
+                            aria-label="delete"
+                            onClick={e => {
+                                props.showConfirmationDialog({
+                                    title: "Delete Booking",
+                                    message: "Are you sure you want to delete this booking?",
+                                    confirmButton: "Delete",
+                                    onConfirm: handleDeleteBooking
+                                })
+                            }}
+                        >
+                            <DeleteIcon />
+                        </Fab>
+                    }
+                    {editing ? (
+                        <>
+                        <Button
+                            className={classes.cancelButton}
+                            variant="outlined"
+                            onClick={cancelEdit}
+                            disabled={loading}
+                        >
+                            Cancel
+                        </Button>
+                        <Fab
+                            className={success ? classes.success : classes.saveButton}
+                            aria-label="save"
+                            color="secondary"
+                            type="submit"
+                            disabled={loading || !valid}
+                            onClick={handleSubmit}
+                        >
+                            {success ? <CheckIcon /> : <SaveIcon />}
+                        </Fab>
+                        </>
+                    ) : (
+                        <Fab
+                            className={classes.editButton}
+                            aria-label="edit"
+                            color="primary"
+                            type="submit"
+                            disabled={loading}
+                            onClick={handleEdit}
+                        >
+                            {<CreateIcon />}
+                        </Fab>
+                    )}
+                    {loading && <CircularProgress size={68} className={classes.progress} />}
+                </div> : null
+            }
         </>
     )
 }
