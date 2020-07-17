@@ -11,70 +11,83 @@ export const onFormSubmit = functions
     .region('australia-southeast1')
     .https.onRequest((req, res) => {
     
-    const formResponse = req.body.values as string[]
-    isMobile = formResponse.length !== 19
-    
-    const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
+        const formResponse = req.body.values as string[]
+        functions.logger.log(`formResponse: ${formResponse}`)
+        isMobile = formResponse.length !== 19
+        
+        const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
 
-    let collectionReference = db.collection('bookings')
-        .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
-    // search by last name where possible
-    if (parentName.length > 1) {
-        collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName[1])
-    }
-    collectionReference
-        .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
-        .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
-        .where(BookingConstants.fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
-        .where(BookingConstants.fields.DATE_TIME, '>', new Date())
-        .get()
-        .then(querySnapshot => {
-            if (querySnapshot.empty) {
-                functions.logger.log("no booking found")
-                runAppsScript('onFormSubmitBookingNotFound', [formResponse])
-                    .then(_ => res.status(200).send())
-                    .catch(err => {
-                        functions.logger.error(err)
-                        res.status(500).send(err)
-                    })
-            } else {
-                functions.logger.log("Booking found!")
-                const documentSnapshot = querySnapshot.docs[0]
-                const booking = documentSnapshot.data() as Booking
-                functions.logger.log("Existing booking:")
-                functions.logger.log(booking)
-                if (isTimestamp(booking.dateTime)) {
-                    booking.dateTime = booking.dateTime.toDate()
+        let collectionReference = db.collection('bookings')
+            .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
+        // search by last name where possible
+        if (parentName.length > 1) {
+            collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName[1])
+        }
+        collectionReference
+            .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
+            .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
+            .where(BookingConstants.fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
+            .where(BookingConstants.fields.DATE_TIME, '>', new Date())
+            .get()
+            .then(querySnapshot => {
+                if (querySnapshot.empty) {
+                    functions.logger.log("no booking found")
+                    functions.logger.log('calling apps script onFormSubmitBookingNotFound')
+                    runAppsScript('onFormSubmitBookingNotFound', [formResponse])
+                        .then(_ => {
+                            functions.logger.log("onFormSubmitBookingNotFound finished successfully")
+                            res.status(200).send()
+                        })
+                        .catch(err => {
+                            functions.logger.error("error running onFormSubmitBookingNotFound")
+                            functions.logger.error(err)
+                            res.status(500).send(err)
+                        })
+                } else {
+                    functions.logger.log("matching booking successfully found in firestore")
+                    const documentSnapshot = querySnapshot.docs[0]
+                    const booking = documentSnapshot.data() as Booking
+                    functions.logger.log("existing booking:")
+                    functions.logger.log(booking)
+                    if (isTimestamp(booking.dateTime)) {
+                        booking.dateTime = booking.dateTime.toDate()
+                    }
+                    functions.logger.log("mapping form to booking and updating in firestore")
+                    updateBooking(formResponse, booking, documentSnapshot.ref)
+                        .then(([updatedBooking, creations, additions]) => {
+                            functions.logger.log("booking updated successfully")
+                            functions.logger.log("updated booking:")
+                            functions.logger.log(updatedBooking)
+                            functions.logger.log("calling apps script onFormSubmitBookingFound")
+                            runAppsScript('onFormSubmitBookingFound', [updatedBooking, creations, additions])
+                                .then(_ => {
+                                        functions.logger.log("onFormSubmitBookingFound finished successfully")
+                                        res.status(200).send()
+                                })
+                                .catch(err => {
+                                    functions.logger.error("error running onFormSubmitBookingFound")
+                                    functions.logger.error(err)
+                                    res.status(500).send(err)
+                                })
+                        })
+                        .catch(err => {
+                            functions.logger.error("error updating booking")
+                            functions.logger.error(err)
+                            res.status(500).send(err)
+                        })
                 }
-                updateBooking(formResponse, booking, documentSnapshot.ref)
-                    .then(([updatedBooking, creations, additions]) => {
-                        console.log(updatedBooking)
-                        console.log(additions)
-                        runAppsScript('onFormSubmitBookingFound', [updatedBooking, creations, additions])
-                            .then(_ => res.status(200).send())
-                            .catch(err => {
-                                functions.logger.error(err)
-                                res.status(500).send(err)
-                            })
-                    })
-                    .catch(err => {
-                        functions.logger.error(err)
-                        res.status(500).send(err)
-                    })
-            }
-        })
-        .catch(err => {
-            functions.logger.error(err)
-            res.status(500).send(err)
-        })
+            })
+            .catch(err => {
+                functions.logger.error("error querying firestore for booking")
+                functions.logger.error(err)
+                res.status(500).send(err)
+            })
 })
 
 const isTimestamp = (dateTime: any): dateTime is admin.firestore.Timestamp => true
 
 async function updateBooking(formResponse: string[], booking: Booking, ref: FirebaseFirestore.DocumentReference): Promise<[Booking, Array<string>, Array<string>]> {
     const [updatedBooking, creations, additions] = mapFormResponseToBooking(formResponse, booking)
-    functions.logger.log("Updated booking:")
-    functions.logger.log(updatedBooking)
     Object.keys(updatedBooking).forEach(key => updatedBooking[key] === undefined && delete updatedBooking[key])    
     await ref.update(updatedBooking)
     return [updatedBooking, creations, additions]
@@ -89,8 +102,6 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     for (let i = getIndex(BaseFormQuestion.Creations1); i <= getIndex(BaseFormQuestion.Creations5); i++) {
         selectedCreations.push(...formResponse[i].split(/, ?(?=[A-Z])/)) // split by ", [single capital letter]". make sure creations never include this pattern
     }
-    console.log("CREATIONS:")
-    console.log(selectedCreations)
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
     booking.creation1 = CreationFormsMap[filteredCreations[0]]
@@ -101,7 +112,6 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     if (!isMobile) {
         // additions
         additions = formResponse[getIndex(InStoreAdditionalQuestion.Additions)].split(/, ?(?=[A-Z])/)
-        console.log(additions)
         for (const addition of additions) {
             booking[AdditionsFormMap[addition]] = true
         }
