@@ -19,7 +19,10 @@ function isError(object: any | Acuity.Error): object is Acuity.Error {
     return (object as Acuity.Error).error !== undefined
 }
 
-export const sidebar = functions.https.onRequest((req: functions.Request, res: functions.Response) => {
+export const sidebar = functions
+  .region('australia-southeast1')
+  .https.onRequest((req: functions.Request, res: functions.Response) => {
+    
   console.log("sidebar requested with body params:")
   console.log(req.body)
 
@@ -115,55 +118,59 @@ type QueryParams = {
   [key: string]: string
 }
 
-export const sendInvoice = functions.https.onRequest((req, res) => {
-  console.log("beggining function")
-  console.log("query parameters:")
-  console.log(req.query)
+export const sendInvoice = functions
+  .region('australia-southeast1')
+  .https.onRequest((req: functions.Request, res: functions.Response) => {
+    
+    console.log("beggining function")
+    console.log("query parameters:")
+    console.log(req.query)
 
-  const queryParams: QueryParams = {
-    email: req.query.email as string,
-    name: req.query.name as string,
-    phone: req.query.phone as string,
-    appointmentTypeId: req.query.appointmentTypeId as string,
-    childName: req.query.childName as string,
-    invoiceItem: req.query.item as string
-  }
-
-  for (const key in queryParams) {
-    if (queryParams[key] === undefined) {
-      return res.status(400).send(`${key} query parameter not supplied`)
+    const queryParams: QueryParams = {
+      email: req.query.email as string,
+      name: req.query.name as string,
+      phone: req.query.phone as string,
+      appointmentTypeId: req.query.appointmentTypeId as string,
+      childName: req.query.childName as string,
+      invoiceItem: req.query.item as string
     }
-  }
 
-  // first search if customer with given email already exists
-  stripe.customers.list({ email: queryParams.email })
-    .then(customers => {
-      if (customers.data.length > 0) {
-        // customer exists!
-        console.log("customer found in stripe")
-        const customer = customers.data[0]
-        createInvoiceItem(customer, queryParams, res)
-      } else {
-        // customer not found.. create a new one
-        console.log("customer not found in stripe")
-        console.log("creating new customer")
-        stripe.customers.create({ name, email: queryParams.email, phone: queryParams.phone })
-          .then(customer => {
-            console.log("new customer succesfully created")
-            createInvoiceItem(customer, queryParams, res)
-          })
-          .catch(err => {
-            console.log("error creating customer in stripe")
-            console.error(err)
-            return res.status(err.statusCode).send(err.message)
-          })
+    for (const key in queryParams) {
+      if (queryParams[key] === undefined) {
+        res.status(400).send(`${key} query parameter not supplied`)
+        return
       }
-    })
-    .catch(err => {
-      console.log("error listing stripe customers")
-      console.error(err)
-      return res.status(err.statusCode).send(err.message)
-    })
+    }
+
+    // first search if customer with given email already exists
+    stripe.customers.list({ email: queryParams.email })
+      .then(customers => {
+        if (customers.data.length > 0) {
+          // customer exists!
+          console.log("customer found in stripe")
+          const customer = customers.data[0]
+          createInvoiceItem(customer, queryParams, res)
+        } else {
+          // customer not found.. create a new one
+          console.log("customer not found in stripe")
+          console.log("creating new customer")
+          stripe.customers.create({ name, email: queryParams.email, phone: queryParams.phone })
+            .then(customer => {
+              console.log("new customer succesfully created")
+              createInvoiceItem(customer, queryParams, res)
+            })
+            .catch(err => {
+              console.log("error creating customer in stripe")
+              console.error(err)
+              return res.status(err.statusCode).send(err.message)
+            })
+        }
+      })
+      .catch(err => {
+        console.log("error listing stripe customers")
+        console.error(err)
+        return res.status(err.statusCode).send(err.message)
+      })
 })
 
 function createInvoiceItem(customer: Stripe.Customer, queryParams: QueryParams, res: functions.Response<any>) {
