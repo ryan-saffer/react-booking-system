@@ -944,7 +944,7 @@ const ExistingBookingForm = props => {
                     <>
                     <Grid item xs={12}>
                         <Typography variant="h6">
-                            Parent Questions/Comments
+                            Parent Questions  / Comments / Fun Facts
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
@@ -953,12 +953,13 @@ const ExistingBookingForm = props => {
                             name={fields.QUESTIONS}
                             label="Questions"
                             fullWidth
+                            multiline
                             size="small"
-                            variant={(editing || formValues[fields.QUESTIONS].value) ? 'standard' : 'filled'}
+                            variant={(editing || formValues[fields.QUESTIONS].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
                             error={formValues[fields.QUESTIONS].error}
-                            value={formValues[fields.QUESTIONS].value}
+                            value={formValues[fields.QUESTIONS].value.replace('\\n', String.fromCharCode(13, 10))} // https://stackoverflow.com/a/28106346/7870403
                             onChange={handleFormChange}
                         />
                     </Grid>
