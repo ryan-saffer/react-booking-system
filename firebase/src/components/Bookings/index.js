@@ -19,6 +19,7 @@ import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
 import DateNav from './BookingsNav';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { IconButton } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
@@ -27,6 +28,9 @@ import NewBookingForm from '../Forms/NewBookingForm'
 import { grey } from '@material-ui/core/colors'
 import { locations } from '../../constants/formValues';
 import * as ROLES from '../../constants/roles'
+import { compose } from 'recompose';
+import { withRouter } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes'
 
 const drawerWidth = 320
 
@@ -47,12 +51,30 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(3)
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
+        color: 'white',
+    },
+    appBarToolbar: {
+        justifyContent: 'center'
+    },
+    title: {
+        marginRight: 'auto',
+        paddingLeft: '8px'
+    },
+    logo: {
+        height: 50,
+        cursor: 'pointer'
+    },
+    topRight: {
+        marginLeft: 'auto'
+    },
+    logoutIcon: {
+        paddingTop: theme.spacing(1),
+        paddingRight: '0px',
+        paddingBottom: theme.spacing(1),
+        paddingLeft: theme.spacing(1)
     },
     toolbar: theme.mixins.toolbar,
-    title: {
-        flexGrow: 1
-    },
     inlineDatePicker: {
         marginTop: -20,
         textAlign: 'center'
@@ -200,16 +222,26 @@ const BookingsPage = props => {
         <div className={classes.root}>
             <CssBaseline />
             <AppBar className={classes.appBar} position="fixed">
-                <Toolbar>
+                <Toolbar className={classes.appBarToolbar}>
                     <Typography variant="h6" className={classes.title}>
                         Party Bookings
                     </Typography>
-                    <AuthUserContext.Consumer>
-                        {authUser => (
-                            authUser.roles[ROLES.ADMIN] && <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
-                        )}
-                    </AuthUserContext.Consumer>
-                    <IconButton onClick={handleLogout}><ExitToAppIcon /></IconButton>
+                    <img
+                        className={classes.logo}
+                        src={Logo}
+                        onClick={() => props.history.push(ROUTES.LANDING)} />
+                    <div className={classes.topRight}>
+                        <AuthUserContext.Consumer>
+                            {authUser => (
+                                authUser.roles[ROLES.ADMIN] && <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
+                            )}
+                        </AuthUserContext.Consumer>
+                        <IconButton
+                            className={classes.logoutIcon}
+                            onClick={handleLogout}>
+                            <ExitToAppIcon htmlColor={'white'} />
+                        </IconButton>
+                    </div>
                 </Toolbar>
             </AppBar>
             {/* New Booking Dialogue */}
@@ -319,4 +351,7 @@ const BookingsPage = props => {
     )
 }
   
-export default withAuthorization(BookingsPage)
+export default compose(
+    withAuthorization,
+    withRouter
+)(BookingsPage)
