@@ -11,7 +11,6 @@ import BookingsPage from '../Bookings'
 import SelectClassPage from '../ScienceClub/SelectClass'
 import ClassDetailsPage from '../ScienceClub/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles';
-import { green } from '@material-ui/core/colors'
 import { createMuiTheme } from '@material-ui/core';
 import { withAuthentication } from '../Session'
 
@@ -20,21 +19,16 @@ const App = () => {
   const theme = createMuiTheme({
     palette: {
       primary: {
-        light: '#9be7ff',
-        main: '#64b5f6',
-        dark: '#2286c3',
-        contrastText: '#000000',
+        light: '#515051',
+        main: '#292829',
+        dark: '#000000',
+        contrastText: '#ffffff',
       },
       secondary: {
-        light: '#ffc4ff',
-        main: '#ce93d8',
-        dark: '#9c64a6',
-        contrastText: '#000000',
-      }
-    },
-    overrides: {
-      MuiCheckbox: {
-        colorPrimary: green
+        light: '#e576c3',
+        main: '#B14592',
+        dark: '#7f0c64',
+        contrastText: '#FFFFFF',
       }
     }
   })

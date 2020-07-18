@@ -5,12 +5,21 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+    deleteButton: {
+        color: 'red'
+    }    
+}))
 
 /**
  * Higher-order-component that provides a confirmation dialog.
  * Dialog title, message, confirmation button text, and confirm callback are all provided onShow()
  */
 const withConfirmationDialog = Component => props => {
+    
+    const classes = useStyles()
 
     const [open, setOpen] = useState(false)
     const [title, setTitle] = useState('')
@@ -46,7 +55,7 @@ const withConfirmationDialog = Component => props => {
                     <DialogContentText>{content}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleConfirm} color="primary">
+                    <Button onClick={handleConfirm} classes={{ root: classes.deleteButton }}>
                         {confirmButton}
                     </Button>
                     <Button onClick={handleClose} color="primary">

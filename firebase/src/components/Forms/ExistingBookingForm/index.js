@@ -40,7 +40,6 @@ const useStyles = makeStyles(theme => ({
     deleteButton: {
         marginTop: theme.spacing(3),
         marginRight: theme.spacing(3),
-        backgroundColor: red[400],
         "&:hover": {
             backgroundColor: red[800]
         }
@@ -972,6 +971,7 @@ const ExistingBookingForm = props => {
                         <Fab
                             className={classes.deleteButton}
                             aria-label="delete"
+                            color="primary"
                             onClick={e => {
                                 props.showConfirmationDialog({
                                     title: "Delete Booking",
@@ -1009,7 +1009,7 @@ const ExistingBookingForm = props => {
                         <Fab
                             className={classes.editButton}
                             aria-label="edit"
-                            color="primary"
+                            color="secondary"
                             type="submit"
                             disabled={loading}
                             onClick={handleEdit}

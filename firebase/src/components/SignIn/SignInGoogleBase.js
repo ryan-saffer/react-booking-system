@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 
 import * as ROUTES from '../../constants/routes'
 import * as SignInGoogleButton from '../../drawables/sign-in-google-btn.png'
+import * as GoogleLogo from '../../drawables/google-logo.png'
 
 import { makeStyles } from '@material-ui/core/styles'
-import { Snackbar } from '@material-ui/core'
+import { Snackbar, Button } from '@material-ui/core'
 import { red } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
@@ -14,6 +15,13 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             cursor: "pointer"
         }
+    },
+    signInWithGoogleButton: {
+        height: 36,
+        marginTop: theme.spacing(2),
+    },
+    googleLogo: {
+        height: 30
     },
     snackBar: {
         backgroundColor: red[500]
@@ -48,13 +56,15 @@ const SignInGoogleBase = props => {
 
     return (
         <>
-            <img
-                className={classes.signInButton}
+            <Button
+                className={classes.signInWithGoogleButton}
                 onClick={handleSubmit}
-                src={SignInGoogleButton.default}
-                alt="sign in to google"
-            />
-
+                variant="outlined"
+                fullWidth
+                startIcon={<img className={classes.googleLogo} src={GoogleLogo} />}
+            >
+                Sign in with Google
+            </Button>
             <Snackbar
                 ContentProps={{ classes: { root: classes.snackBar } }}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
