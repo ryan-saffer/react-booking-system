@@ -128,9 +128,9 @@ const BookingsPage = props => {
     const [loading, setLoading] = useState(true)
     const [selectedLocations, setSelectedLocations] = useState({
         balwyn: true,
+        essendon: true,
         malvern: true,
-        mobile: true,
-        virtual: true
+        mobile: true
     })
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
@@ -341,9 +341,9 @@ const BookingsPage = props => {
                 <Divider />
                 <Grid item xs sm md>
                     {selectedLocations.balwyn && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.BALWYN} />}
+                    {selectedLocations.essendon && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.ESSENDON} />}
                     {selectedLocations.malvern && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MALVERN} />}
                     {selectedLocations.mobile && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MOBILE} />}
-                    {selectedLocations.virtual && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.VIRTUAL} />}
                 </Grid>
             </main>
             </Grid>

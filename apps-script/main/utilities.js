@@ -1,7 +1,7 @@
 /**
  * Returns the email address that the email should be sent from based on party location
  * If Malvern, send from "malvern@fizzkidz.com.au"
- * If Balwyn or Mobile or Virtual, send from "info@fizzkidz.com.au"
+ * If Balwyn, Essendon or Mobile, send from "info@fizzkidz.com.au"
  * 
  * @param {String} location the location of the store
  * @returns {String} email address to send from
@@ -12,7 +12,7 @@ function determineFromEmailAddress(location) {
     // send from malvern@fizzkidz.com.au
     return "malvern@fizzkidz.com.au";
   }
-  else { // balwyn or mobile or virtual
+  else { // balwyn, essendon or mobile
     // send from info@fizzkidz.com.au
     return "info@fizzkidz.com.au";
   }
@@ -120,19 +120,19 @@ function capitalise(string) {
 function getCalendarId(location) {
 
   // event IDs
-  var balwynStorePartiesCalendarID = "fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com"
-  var malvernStorePartiesCalendarID = "fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com"
-  var mobilePartiesCalendarID = "fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com"
-  var virtualPartiesCalendarID = "fizzkidz.com.au_pj653mtg8t0pth9321cjqu8hbk@group.calendar.google.com"
+  const balwynStorePartiesCalendarID = "fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com"
+  const essendonStorePartiesClaendarID = "c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com"
+  const malvernStorePartiesCalendarID = "fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com"
+  const mobilePartiesCalendarID = "fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com"
 
   switch (location) {
     case "balwyn":
       return balwynStorePartiesCalendarID
+    case "essendon":
+      return essendonStorePartiesClaendarID
     case "malvern":
       return malvernStorePartiesCalendarID
     case "mobile":
       return mobilePartiesCalendarID
-    case "virtual":
-      return virtualPartiesCalendarID
   }
 }

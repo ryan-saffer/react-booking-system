@@ -46,7 +46,7 @@ function sendBookingConfirmationEmail(booking) {
   t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
   var address = booking.address;
   if (booking.location !== "mobile") {
-    address = (booking.location == "malvern") ? "our Malvern store" : "our Balwyn store"
+    address = `our ${capitalise(booking.location)} store`
   }
   t.address = address;
   t.location = booking.location;
@@ -99,7 +99,7 @@ function sendOutForm(booking) {
   // determine location
   var address = booking.address;
   if (booking.location !== "mobile") {
-    address = (booking.location == "malvern") ? "our Malvern store" : "our Balwyn store";
+    address = `our ${capitalise(booking.location)} store`
   }
   t.address = address;
   t.preFilledURL = preFilledURL;
@@ -135,7 +135,7 @@ function getPreFilledFormURL(booking) {
 
   // form IDs
   var inStoreFormId = "1oxkBrs8JCboSG2DwX00QMUGPC8kIG54w7Evn2zvEH9g";
-  var mobileFormId = "17NNqsqsq3EBLGsMOl93neeWXXkcbF4SiJIj-gXDiknM";
+  var mobileFormId = "1Hc9nsAhLcLoOaXfv-vzNhXf1DZ0BUm8dqH2_Q8DsdhY";
   
   // open the correct form, create a response and get the items
   var formID = (booking.location !== "mobile") ? inStoreFormId : mobileFormId;

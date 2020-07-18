@@ -76,14 +76,12 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = ['malvern', 'balwyn']
+    var storeLocations = ['balwyn', 'essendon', 'malvern']
     var location = formValues[fields.LOCATION].value
     var length = formValues[fields.PARTY_LENGTH].value
     if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
-        return true
-    } else if (location === 'virtual' && (length === '1.5' || length === '2')) {
         return true
     }
     return false
