@@ -14,6 +14,6 @@ function onSubmit(e) {
     'payload': JSON.stringify(data)
   }
 
-  const url = "https://australia-southeast1-booking-system-6435d.cloudfunctions.net/onFormSubmit"
+  const url = "https://australia-southeast1-bookings-prod.cloudfunctions.net/onFormSubmit"
   UrlFetchApp.fetch(url, options)
 }
