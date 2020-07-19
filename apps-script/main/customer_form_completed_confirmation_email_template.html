@@ -38,7 +38,7 @@
       <td><?= additions ?></td>
     </tr>
   <? } ?>
-  <? if (cake !== "") { ?>
+  <? if (cake) { ?>
     <tr>
       <th>Chosen Cake:</th>
       <td><?= cakeFlavour ?> <?= cake ?></td>
@@ -46,12 +46,12 @@
   <? } ?>
   </table>
   <p>If anything here is incorrect, or anything changes, please let us know.</p>
-  <? if (questions !== "") { ?>
+  <? if (questions) { ?>
     <p>We can see that you have asked some questions in the form. We will be in touch very soon to answer those questions for you :)</p>
   <? } ?>
   <? if (partyType === "inStore") { ?>
     <p>Payment will be made at the end of the party, and you will only be charged for the number of children that attend on the day, (minimum 12).</p>
-    <? if (cake === "") { ?>
+    <? if (!cake) { ?>
         <p>You are more than welcome to bring your own (nut free) birthday cake, however please remember to also bring along paper plates.</p>
     <? } ?>
     <p>Lastly, please arrive 10 minutes before your party starts, so we can make sure everything is perfect!</p>
