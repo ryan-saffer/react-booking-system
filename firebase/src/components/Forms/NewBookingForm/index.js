@@ -107,7 +107,7 @@ const getEmptyValues = () => (
             errorText: ''
         },
         sendConfirmationEmail: {
-            value: false,
+            value: true,
             error: false,
             errorText: ''
         }

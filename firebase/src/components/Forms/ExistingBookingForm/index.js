@@ -205,6 +205,11 @@ const getEmptyValues = () => (
             value: '',
             error: false,
             errorText: ''
+        },
+        [fields.FUN_FACTS]: {
+            value: '',
+            error: false,
+            errorText: ''
         }
     }
 )
@@ -281,6 +286,8 @@ const ExistingBookingForm = props => {
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
     const displayCake = formValues[fields.CAKE].value || editing
     const displayQuestions = formValues[fields.QUESTIONS].value || editing
+    const displayFunFacts = formValues[fields.FUN_FACTS].value || editing
+    const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     var additionSelected = false
     for (let addition of Object.values(additions)) {
         if (formValues[addition].value) {
@@ -709,6 +716,7 @@ const ExistingBookingForm = props => {
                         <FormControl
                             fullWidth
                             size="small"
+                            classes={{ root: classes.disabled }}
                             variant={formValues[fields.CREATION_2].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Second Creation</InputLabel>
@@ -719,7 +727,6 @@ const ExistingBookingForm = props => {
                                     value: formValues[fields.CREATION_2].value || ''
                                 }}
                                 disabled={!editing}
-                                classes={{ root: classes.disabled }}
                                 error={formValues[fields.CREATION_2].error}
                                 onChange={handleFormChange}
                             >
@@ -735,6 +742,7 @@ const ExistingBookingForm = props => {
                         <FormControl
                             fullWidth
                             size="small"
+                            classes={{ root: classes.disabled }}
                             variant={formValues[fields.CREATION_3].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Third Creation</InputLabel>
@@ -745,7 +753,6 @@ const ExistingBookingForm = props => {
                                     value: formValues[fields.CREATION_3].value || ''
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
-                                classes={{ root: classes.disabled }}
                                 error={formValues[fields.CREATION_3].error}
                                 onChange={handleFormChange}
                             >
@@ -939,13 +946,14 @@ const ExistingBookingForm = props => {
                     </Grid>
                     </>
                 }
-                {displayQuestions &&
-                    <>
+                {displayQuestionsCommentsFunFactsHeading &&
                     <Grid item xs={12}>
                         <Typography variant="h6">
                             Parent Questions  / Comments / Fun Facts
                         </Typography>
                     </Grid>
+                }
+                {displayQuestions &&
                     <Grid item xs={12}>
                         <TextField
                             id={fields.QUESTIONS}
@@ -958,11 +966,28 @@ const ExistingBookingForm = props => {
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
                             error={formValues[fields.QUESTIONS].error}
-                            value={formValues[fields.QUESTIONS].value.replace('\\n', String.fromCharCode(13, 10))} // https://stackoverflow.com/a/28106346/7870403
+                            value={formValues[fields.QUESTIONS].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
-                    </>
+                }
+                {displayFunFacts &&
+                    <Grid item xs={12}>
+                        <TextField
+                            id={fields.FUN_FACTS}
+                            name={fields.FUN_FACTS}
+                            label="Fun Facts"
+                            fullWidth
+                            multiline
+                            size="small"
+                            variant={(editing || formValues[fields.FUN_FACTS].value) ? 'outlined' : 'filled'}
+                            disabled={!editing}
+                            classes={{ root: classes.disabled }}
+                            error={formValues[fields.FUN_FACTS].error}
+                            value={formValues[fields.FUN_FACTS].value}
+                            onChange={handleFormChange}
+                        />
+                    </Grid>
                 }
             </Grid>
             {isAdmin

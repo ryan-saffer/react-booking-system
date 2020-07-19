@@ -108,7 +108,8 @@ export function validateFormOnSubmit(formValues) {
             field !== fields.CREATION_3 &&
             field !== fields.CAKE &&
             field !== fields.CAKE_FLAVOUR &&
-            field !== fields.QUESTIONS) {
+            field !== fields.QUESTIONS &&
+            field !== fields.FUN_FACTS) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }

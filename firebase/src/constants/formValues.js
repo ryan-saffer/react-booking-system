@@ -17,7 +17,8 @@ export const fields = {
     CREATION_3: "creation3",
     CAKE: "cake",
     CAKE_FLAVOUR: "cakeFlavour",
-    QUESTIONS: "questions"
+    QUESTIONS: "questions",
+    FUN_FACTS: "funFacts"
 }
 
 export const locations = {

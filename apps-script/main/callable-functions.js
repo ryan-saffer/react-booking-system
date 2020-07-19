@@ -82,13 +82,13 @@ function onFormSubmitBookingFound(booking, creations, additions) {
   console.log(additions)
 
   // cake notification
-  if (booking.cake !== "") {
+  if (booking.cake) {
     console.log("sending cake notification")
     sendCakeNotification(booking)
   }
 
   // questions notification
-  if (booking.questions !== '') {
+  if (booking.questions) {
     console.log("sending questions notification")
     sendQuestionsNotification(booking)
   }

@@ -125,7 +125,7 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     booking.questions = formResponse[getIndex(BaseFormQuestion.Questions)]
 
     // fun facts
-    booking.questions += `\n\n${formResponse[getIndex(BaseFormQuestion.FunFacts)]}`
+    booking.funFacts = formResponse[getIndex(BaseFormQuestion.FunFacts)]
 
     return [booking, filteredCreations, additions]
 }
@@ -227,6 +227,7 @@ type Booking = {
     eventId: string,
     fairBready?: boolean,
     fruitPlatter?: boolean,
+    funFacts?: string,
     location: string,
     lollyBags?: boolean,
     notes: string,
