@@ -10,9 +10,9 @@ import * as checkedOutIcon from '../../../drawables/tick-box-red-icon-26.png'
 import * as uncheckedIcon from '../../../drawables/unchecked-icon-26.png'
 
 import { makeStyles } from '@material-ui/styles'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Accordion from '@material-ui/core/Accordion';
+import AccordianDetails from '@material-ui/core/AccordionDetails';
+import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { Button } from '@material-ui/core';
@@ -57,9 +57,23 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         direction: 'rtl'
     },
-    panelSummaryButton: {
+    signInButton: {
         width: 'max-content',
-        minWidth: 82
+        minWidth: 82,
+        background: '#4caf50',
+        "&:hover": {
+            background: '#2e7d32',
+            color: 'white'
+        }
+    },
+    signOutButton: {
+        width: 'max-content',
+        minWidth: 82,
+        background: '#e57373',
+        "&:hover": {
+            background: '#b71c1c',
+            color: 'white'
+        }
     },
     column: {
         flexBasis: '50.00%',
@@ -99,8 +113,24 @@ const ChildExpansionPanel = props => {
     const isSignedOut = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_OUT
 
     useEffect(() => {
+        const fetchSignature = () => {
+            firebase.db.collection('scienceClubAppointments').doc(`${client.id}`).get()
+                .then(documentSnapshot => {
+                    const sig = documentSnapshot.get('signature')
+                    const signedBy = documentSnapshot.get('pickupPerson')
+                    const timeStamp = documentSnapshot.get('timeStamp')
+                    console.log(sig, signedBy, timeStamp)
+                    setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
+                })
+                .catch(err => {
+                    console.log(`Error getting signature: ${err}`)
+                })
+        
+        }
+
         fetchSignature()
-    }, [])
+
+    }, [firebase.db, client.id])
 
     const childDetailsForm = client.forms.find(
         form => form.id === acuity.FORMS.CHILD_DETAILS
@@ -126,20 +156,6 @@ const ChildExpansionPanel = props => {
     const permissionToPhotograph = childDetailsForm.values.find(
         field => field.fieldID === acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON
     ).value === acuity.FORM_FIELDS_OPTIONS.CHILD_PHOTOGRAPHY_PERMISSION_YES
-
-    const fetchSignature = () => {
-        firebase.db.collection('scienceClubAppointments').doc(`${client.id}`).get()
-            .then(documentSnapshot => {
-                const sig = documentSnapshot.get('signature')
-                const signedBy = documentSnapshot.get('pickupPerson')
-                const timeStamp = documentSnapshot.get('timeStamp')
-                console.log(sig, signedBy, timeStamp)
-                setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
-            })
-            .catch(err => {
-                console.log(`Error getting signature: ${err}`)
-            })
-    }
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -195,12 +211,12 @@ const ChildExpansionPanel = props => {
 
     return (
         <>
-        <ExpansionPanel
+        <Accordion
             key={client.id}
             expanded={expanded === client.id}
             onChange={props.onClientSelectionChange(client.id)}
         >
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordianSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.panelSummary}>
                     <div className={classes.panelSummaryDetails}>
                         {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
@@ -212,13 +228,13 @@ const ChildExpansionPanel = props => {
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
                     </div>
                     <div className={classes.panelSummaryButtonDiv}>
-                        {isSignedIn && <Button className={classes.panelSummaryButton} size="small" variant="contained" color="secondary" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>}
-                        {notSignedIn && <Button className={classes.panelSummaryButton} size="small" variant="contained" color="primary" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>}
+                        {isSignedIn && <Button className={classes.signOutButton} size="small" variant="contained" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>}
+                        {notSignedIn && <Button className={classes.signInButton} size="small" variant="contained" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>}
                         {loading && <CircularProgress className={classes.loading} size={24} />}
                     </div>
                 </div>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </AccordianSummary>
+            <AccordianDetails>
                 <div className={classes.column}>
                     <Typography className={classes.heading} variant="button">Parent name:</Typography>
                     <Typography variant="body1">{client.firstName} {client.lastName}</Typography>
@@ -255,8 +271,8 @@ const ChildExpansionPanel = props => {
                         </>
                     )}
                 </div>
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
+            </AccordianDetails>
+        </Accordion>
         <SignatureDialog
             key={key}
             pickupPeople={pickupPeople}

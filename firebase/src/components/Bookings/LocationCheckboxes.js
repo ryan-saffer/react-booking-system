@@ -17,6 +17,12 @@ const LocationCheckboxes = props => {
             />
             <FormControlLabel
                 control={
+                    <Checkbox checked={values.essendon} onChange={handleChange('essendon')} value="essendon" />
+                }
+                label="Essendon"
+            />
+            <FormControlLabel
+                control={
                     <Checkbox checked={values.malvern} onChange={handleChange('malvern')} value="malvern" />
                 }
                 label="Malvern"
@@ -26,12 +32,6 @@ const LocationCheckboxes = props => {
                     <Checkbox checked={values.mobile} onChange={handleChange('mobile')} value="mobile" />
                 }
                 label="Mobile"
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox checked={values.virtual} onChange={handleChange('virtual')} value="virtual" />
-                }
-                label="Virtual"
             />
         </FormGroup>
     )

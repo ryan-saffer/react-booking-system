@@ -8,37 +8,40 @@ var acuity = Acuity.basic({
 })
 
 // wrap all functions inside one handler, so coldstart will only occur for first invocation.
-exports.client = functions.https.onCall((networkData, _context) => {
-  return new Promise((resolve, reject) => {
-    const data = networkData.data
-    if (data == null) {
-      reject(new Error(`data is null: ${networkData}`))
-    }
-    const method = data.method
-    switch (method) {
-      case 'getAppointmentTypes':
-        getAppointmentTypes(resolve, reject)
-        break
-      case 'getCalendars':
-        getCalendars(resolve, reject)
-        break
-      case 'getClasses':
-        getClasses(data, resolve, reject)
-        break
-      case 'getAppointments':
-        getAppointments(data, resolve, reject)
-        break
-      case 'updateLabel':
-        updateLabel(data, resolve, reject)
-        break
-      case 'getLabels':
-        getLabels(resolve, reject)
-        break
-      default:
-        reject(new Error(`invalid method: ${method}`))
-        break
-    }
-  })
+exports.client = functions
+  .region('australia-southeast1')
+  .https.onCall((networkData, _context) => {
+    
+    return new Promise((resolve, reject) => {
+      const data = networkData.data
+      if (data == null) {
+        reject(new Error(`data is null: ${networkData}`))
+      }
+      const method = data.method
+      switch (method) {
+        case 'getAppointmentTypes':
+          getAppointmentTypes(resolve, reject)
+          break
+        case 'getCalendars':
+          getCalendars(resolve, reject)
+          break
+        case 'getClasses':
+          getClasses(data, resolve, reject)
+          break
+        case 'getAppointments':
+          getAppointments(data, resolve, reject)
+          break
+        case 'updateLabel':
+          updateLabel(data, resolve, reject)
+          break
+        case 'getLabels':
+          getLabels(resolve, reject)
+          break
+        default:
+          reject(new Error(`invalid method: ${method}`))
+          break
+      }
+    })
 })
 
 function getAppointmentTypes(resolve, reject) {

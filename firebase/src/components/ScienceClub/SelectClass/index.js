@@ -14,8 +14,11 @@ import { Button, Paper } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
+import * as ROUTES from '../../../constants/routes'
 
-import { withAuthorization } from '../../Session'
+import { withAuthorization, AuthUserContext } from '../../Session'
+import { roundToNearestMinutes } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
     loadingOverlay: {
@@ -24,6 +27,21 @@ const useStyles = makeStyles(theme => ({
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1
+    },
+    toolbar: {
+        display: 'flex'
+    },
+    title: {
+        marginRight: 'auto',
+        flex: 1
+    },
+    logo: {
+        height: 50,
+        cursor: 'pointer'
+    },
+    topRight: {
+        marginLeft: 'auto',
+        flex: 1
     },
     paper: {
         margin: theme.spacing(3),
@@ -157,11 +175,16 @@ const SelectClassPage = props => {
             className={cssClasses.loadingOverlay}
         >
             <CssBaseline />
-            <AppBar className={classes.appBar} position="static">
-                <Toolbar>
-                    <Typography variant="h6">
+            <AppBar className={cssClasses.appBar} position="static">
+                <Toolbar className={cssClasses.toolbar}>
+                    <Typography className={cssClasses.title} variant="h6">
                         Select class
                     </Typography>
+                    <img
+                        className={cssClasses.logo}
+                        src={Logo}
+                        onClick={() => props.history.push(ROUTES.LANDING)} />
+                    <div className={cssClasses.topRight} />
                 </Toolbar>
             </AppBar>
             <Paper className={cssClasses.paper}>

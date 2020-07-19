@@ -10,20 +10,22 @@ export const fields = {
     LOCATION: "location",
     PARTY_LENGTH: "partyLength",
     ADDRESS: "address",
+    NUMBER_OF_CHILDREN: "numberOfChildren",
     NOTES: "notes",
     CREATION_1: "creation1",
     CREATION_2: "creation2",
     CREATION_3: "creation3",
     CAKE: "cake",
     CAKE_FLAVOUR: "cakeFlavour",
-    QUESTIONS: "questions"
+    QUESTIONS: "questions",
+    FUN_FACTS: "funFacts"
 }
 
 export const locations = {
     BALWYN: "balwyn",
+    ESSENDON: "essendon",
     MALVERN: "malvern",
-    MOBILE: "mobile",
-    VIRTUAL: "virtual"
+    MOBILE: "mobile"
 }
 
 export const cakeFlavours = {
