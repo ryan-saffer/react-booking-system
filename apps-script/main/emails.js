@@ -4,7 +4,7 @@
 *
 * @param {object} booking the booking object
 */
-function sendConfirmationEmail(booking) {
+function sendBookingConfirmationEmail(booking) {
   
   // Determine the start and end times of the party
   var startDate = new Date(booking.dateTime)
@@ -46,7 +46,7 @@ function sendConfirmationEmail(booking) {
   t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
   var address = booking.address;
   if (booking.location !== "mobile") {
-    address = (booking.location == "malvern") ? "our Malvern store" : "our Balwyn store"
+    address = `our ${capitalise(booking.location)} store`
   }
   t.address = address;
   t.location = booking.location;
@@ -99,7 +99,7 @@ function sendOutForm(booking) {
   // determine location
   var address = booking.address;
   if (booking.location !== "mobile") {
-    address = (booking.location == "malvern") ? "our Malvern store" : "our Balwyn store";
+    address = `our ${capitalise(booking.location)} store`
   }
   t.address = address;
   t.preFilledURL = preFilledURL;
@@ -134,8 +134,8 @@ function sendOutForm(booking) {
 function getPreFilledFormURL(booking) {
 
   // form IDs
-  var inStoreFormId = "1gL6_H4xgpOz_J616DN4HvKMWHfkf6Bdvrbl4-fJtiV0";
-  var mobileFormId = "17NNqsqsq3EBLGsMOl93neeWXXkcbF4SiJIj-gXDiknM";
+  var inStoreFormId = "1oxkBrs8JCboSG2DwX00QMUGPC8kIG54w7Evn2zvEH9g";
+  var mobileFormId = "1Hc9nsAhLcLoOaXfv-vzNhXf1DZ0BUm8dqH2_Q8DsdhY";
   
   // open the correct form, create a response and get the items
   var formID = (booking.location !== "mobile") ? inStoreFormId : mobileFormId;
@@ -170,7 +170,7 @@ function getPreFilledFormURL(booking) {
   
   // second question - parents name
   var parentNameItem = formItems[2].asTextItem();
-  response = parentNameItem.createResponse(booking.parentFirstName);
+  response = parentNameItem.createResponse(`${booking.parentFirstName} ${booking.parentLastName}`);
   formResponse.withItemResponse(response);
   
   // third question - childs name
@@ -191,4 +191,111 @@ function getPreFilledFormURL(booking) {
   }
     
   return formResponse.toPrefilledUrl();
+}
+
+/**
+ * Sends a notification email to info@fizzkidz.com.au that a form was filled in,
+ * but the booking could not be found in firestore 
+ *
+ * @param {string} dateTime the date and time of party
+ * @param {string} parentName the parents name
+ * @param {string} childName the childs name
+ * @param {string} childAge the childs age
+ * @param {string} location location (balwyyn, essendon, malvern, mobile)
+ */
+function sendBookingNotFoundEmail(dateTime, parentName, childName, childAge, location) {
+  
+  // Using the HTML email template, inject the variables and get the content
+  var t = HtmlService.createTemplateFromFile('error_finding_booking_template');
+  t.parentName = parentName;
+  t.childName = childName;
+  t.childAge = childAge;
+  t.dateTime = dateTime;
+  t.location = location;
+  
+  var body = t.evaluate().getContent();
+  var subject = "ERROR: Booking not found!";
+  
+  // Send the confirmation email
+  GmailApp.sendEmail('info@fizzkidz.com.au', subject, "", {htmlBody: body, name : "Fizz Kidz"});
+}
+
+/**
+ * Sends a notification email to info@fizzkidz.com.au detailing the customers cake selection
+ * @param {object} booking the booking objet
+ */
+function sendCakeNotification(booking) {
+  
+  // Using the HTML email template, inject the variables and get the content
+  var t = HtmlService.createTemplateFromFile('cake_ordered_email_template');
+  t.parentName = `${booking.parentFirstName} ${booking.parentLastName}`;
+  t.childName = booking.childName;
+  t.childAge = booking.childAge;
+  t.dateTime = Utilities.formatDate(new Date(booking.dateTime), "Australia/Melbourne", "EEEE, dd MMMM yyyy, HH:mm a")
+  t.selectedCake = booking.cake;
+  t.cakeFlavour = booking.cakeFlavour;
+  t.location = capitalise(booking.location);
+  
+  var body = t.evaluate().getContent();
+  var subject = "Cake Order!";
+  var fromAddress = determineFromEmailAddress(booking.location);
+  
+  // Send the confirmation email
+  GmailApp.sendEmail(fromAddress, subject, "", {from: fromAddress, htmlBody: body, name : "Fizz Kidz"});
+}
+
+/**
+ * Send a notification email to info@fizzkidz.com.au that the parent asked questions in the form
+ *
+ * @param {object} booking the bookect object
+ */
+function sendQuestionsNotification(booking) {
+  
+  // Using the HTML email template, inject the variables and get the content
+  var t = HtmlService.createTemplateFromFile('questions_email_template');
+  t.parentName = `${booking.parentFirstName} ${booking.parentLastName}`;
+  t.childName = booking.childName;
+  t.dateTime = Utilities.formatDate(new Date(booking.dateTime), "Australia/Melbourne", "EEEE, dd MMMM yyyy, HH:mm a")
+  t.location = capitalise(booking.location)
+  t.questions = booking.questions;
+  t.emailAddress = booking.parentEmail
+  
+  var body = t.evaluate().getContent();
+  var subject = "Questions asked in Party Form!";
+  var fromAddress = determineFromEmailAddress(booking.location);
+  
+  // Send the confirmation email
+  GmailApp.sendEmail(fromAddress, subject, "", {from: fromAddress, htmlBody: body, name : "Fizz Kidz"});
+}
+
+/**
+ * Sends the customer a confirmation email detailing their selections
+ * along with information about the party
+ *
+ * @param {object} booking the booking object
+ * @param {[string]} creations the creations selected as displayed on the form
+ * @param {[string]} additions the additions selected as displayed on the form
+ */
+function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
+  
+  var t = HtmlService.createTemplateFromFile('customer_form_completed_confirmation_email_template');
+  t.parentName = booking.parentFirstName;
+  t.numberOfChildren = booking.numberOfChildren;
+  t.creations = creations.join('\n');
+  t.additions = additions.join('\n');
+  t.cake = booking.cake;
+  t.cakeFlavour = booking.cakeFlavour;
+  t.partyType = booking.location === 'mobile' ? 'mobile' : 'inStore';
+  t.questions = booking.questions;
+  
+  var body = t.evaluate().getContent();
+  var subject = "Thank you";
+
+  // determine from address
+  var fromAddress = determineFromEmailAddress(booking.location);
+
+  var signature = getGmailSignature();
+  
+  // Send the confirmation email
+  GmailApp.sendEmail(booking.parentEmail, subject, "", {from: fromAddress, htmlBody: body + signature, name : "Fizz Kidz"});
 }

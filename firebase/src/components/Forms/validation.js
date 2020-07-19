@@ -76,14 +76,12 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = ['malvern', 'balwyn']
+    var storeLocations = ['balwyn', 'essendon', 'malvern']
     var location = formValues[fields.LOCATION].value
     var length = formValues[fields.PARTY_LENGTH].value
     if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
-        return true
-    } else if (location === 'virtual' && (length === '1.5' || length === '2')) {
         return true
     }
     return false
@@ -103,13 +101,15 @@ export function validateFormOnSubmit(formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
         if (field !== fields.ADDRESS &&
+            field !== fields.NUMBER_OF_CHILDREN &&
             field !== fields.NOTES &&
             field !== fields.CREATION_1 &&
             field !== fields.CREATION_2 &&
             field !== fields.CREATION_3 &&
             field !== fields.CAKE &&
             field !== fields.CAKE_FLAVOUR &&
-            field !== fields.QUESTIONS) {
+            field !== fields.QUESTIONS &&
+            field !== fields.FUN_FACTS) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }

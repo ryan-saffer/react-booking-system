@@ -9,10 +9,14 @@ import Container from '@material-ui/core/Container'
 import * as ROUTES from '../../constants/routes'
 import { withFirebase } from '../Firebase'
 import { withAuthorization } from '../Session'
+import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 
 const useStyles = makeStyles(theme => ({
     appBar: {
         zIndex: theme.zIndex.drawer + 1
+    },
+    toolbar: {
+        justifyContent: 'center'
     },
     main: {
         display: 'flex',
@@ -28,6 +32,9 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: grey[100],
             cursor: "pointer"
         }
+    },
+    logo: {
+        height: 50
     },
     signOutButton: {
         width: '100%',
@@ -53,10 +60,8 @@ const Navigation = props => {
         <>
             <CssBaseline/>
             <AppBar position='static' className={classes.appBar}>
-                <Toolbar>
-                    <Typography variant="h6">
-                        Fizz Kidz
-                    </Typography>
+                <Toolbar className={classes.toolbar}>
+                    <img className={classes.logo} src={Logo} />
                 </Toolbar>
             </AppBar>
             <div className={classes.main}>

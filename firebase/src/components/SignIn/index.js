@@ -5,7 +5,7 @@ import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import SignInGoogleBase from './SignInGoogleBase'
 import * as ROUTES from '../../constants/routes'
-import * as FizzLogo from '../../drawables/fizz-logo.png'
+import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline, TextField, Button, Snackbar } from '@material-ui/core'
@@ -18,14 +18,15 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: theme.spacing(8)
+        marginTop: theme.spacing(6)
     },
     logo: {
-        maxWidth: 130,
-        margin: theme.spacing(1)
+        maxWidth: 200,
+        margin: theme.spacing(2)
     },
     submitButton: {
-        marginTop: theme.spacing(1)
+        marginTop: theme.spacing(1),
+        color: 'white'
     },
     snackBar: {
         backgroundColor: red[500]
@@ -54,8 +55,6 @@ const SignInPage = props => {
     }
 
     const handleSubmit = e => {
-        console.log(`username: ${email}`)
-        console.log(`password: ${password}`)
 
         setLoading(true)
 
@@ -71,12 +70,11 @@ const SignInPage = props => {
                         { username: email },
                         { merge: true }
                     )
-                console.log("Done!")
                 setLoading(false)
                 props.history.push(ROUTES.LANDING)
             })
             .catch(err => {
-                console.log(err)
+                console.error(err)
                 setLoading(false)
                 setErrorMessage(err.message)
                 setLoginError(true)
@@ -85,14 +83,13 @@ const SignInPage = props => {
 
     return (
         <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.main}>
-            <img className={classes.logo} src={FizzLogo.default} alt="fizz kidz logo"/>
-            <Typography component="h1" variant="h5">Sign in</Typography>
+            <CssBaseline />
+            <div className={classes.main}>
+                <img className={classes.logo} src={FizzLogo.default} alt="fizz kidz logo" />
+                <Typography component="h1" variant="h5">Sign in</Typography>
                 <TextField
                     variant="outlined"
                     margin="normal"
-                    required
                     fullWidth
                     id="email"
                     label="Email Address"
@@ -102,40 +99,41 @@ const SignInPage = props => {
                     error={emailError}
                     onKeyDown={onKeyDown}
                     onChange={e => { setEmailError(false); setEmail(e.target.value) }}
-            />
-            <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                error={passwordError}
-                onKeyDown={onKeyDown}
-                onChange={e => { setPasswordError(false); setPassword(e.target.value) }}
-            />
-            <Button
-                className={classes.submitButton}
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                onClick={handleSubmit}
-                >Submit</Button>
-            <SignInGoogle />
-            <Snackbar
-                ContentProps={{ classes: { root: classes.snackBar } }}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                autoHideDuration={4000}
-                open={loginError}
-                message={errorMessage}
-                onClose={() => setLoginError(false)}
-            />
-        </div>
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    error={passwordError}
+                    onKeyDown={onKeyDown}
+                    onChange={e => { setPasswordError(false); setPassword(e.target.value) }}
+                />
+                <Button
+                    className={classes.submitButton}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    disabled={loading}
+                    onClick={handleSubmit}
+                >
+                    Sign in
+                </Button>
+                <SignInGoogle />
+                <Snackbar
+                    ContentProps={{ classes: { root: classes.snackBar } }}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    autoHideDuration={4000}
+                    open={loginError}
+                    message={errorMessage}
+                    onClose={() => setLoginError(false)}
+                />
+            </div>
         </Container>
     )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -29,25 +29,25 @@ const BookingPanel = props => {
     const { bookingId, booking } = props
 
     return (
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                >
-                    <Typography className={classes.heading}>
-                        {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
-                    </Typography>
-                    <Typography className={classes.secondaryHeading}>
-                        {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
-                    </Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Grid container spacing={3}>
-                        <Grid item xs>
-                            <ExistingBookingForm onSuccess={props.onSuccess} bookingId={bookingId} booking={booking} />
-                        </Grid>
+        <Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+            >
+                <Typography className={classes.heading}>
+                    {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
+                </Typography>
+                <Typography className={classes.secondaryHeading}>
+                    {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
+                </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid container spacing={3}>
+                    <Grid item xs>
+                        <ExistingBookingForm onSuccess={props.onSuccess} bookingId={bookingId} booking={booking} />
                     </Grid>
-            </ExpansionPanelDetails>
-        </ExpansionPanel>
+                </Grid>
+            </AccordionDetails>
+        </Accordion>
     )
 }
 

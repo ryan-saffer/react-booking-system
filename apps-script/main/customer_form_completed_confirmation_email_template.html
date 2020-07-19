@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        font-family: 'Trebuchet MS';
+        width: 600px;
+      }
+      td, th {
+        font-family: 'Trebuchet MS';
+        font-size: 12px;
+        text-align: left;
+        padding: 6px;
+        white-space: pre;
+      }
+    </style>
+    <base target="_top">
+  </head>
+  <body style ="font-family:'trebuchet ms'">
+  Hi <?= parentName ?>,
+  <p>Thank you for filling out the party details form. Below is a summary of what you have ordered:</p>
+  <table>
+    <colgroup>
+      <col span="1", style="width: 25%;">
+      <col span="1", style="width: 75%;">
+    </colgroup>
+    <tr>
+      <th>Number attending:</th>
+      <td><?= numberOfChildren ?></td>
+    </tr>
+    <tr>
+      <th>Chosen Creations:</th>
+      <td><?= creations ?></td>
+    </tr>
+  <? if (additions != '') { ?>
+    <tr>
+      <th>Additions:</th>
+      <td><?= additions ?></td>
+    </tr>
+  <? } ?>
+  <? if (cake) { ?>
+    <tr>
+      <th>Chosen Cake:</th>
+      <td><?= cakeFlavour ?> <?= cake ?></td>
+    </tr>
+  <? } ?>
+  </table>
+  <p>If anything here is incorrect, or anything changes, please let us know.</p>
+  <? if (questions) { ?>
+    <p>We can see that you have asked some questions in the form. We will be in touch very soon to answer those questions for you :)</p>
+  <? } ?>
+  <? if (partyType === "inStore") { ?>
+    <p>Payment will be made at the end of the party, and you will only be charged for the number of children that attend on the day, (minimum 12).</p>
+    <? if (!cake) { ?>
+        <p>You are more than welcome to bring your own (nut free) birthday cake, however please remember to also bring along paper plates.</p>
+    <? } ?>
+    <p>Lastly, please arrive 10 minutes before your party starts, so we can make sure everything is perfect!</p>
+  <? } else if (partyType == "mobile") { ?>
+    <p>In regards to payment, our staff will count the number of children that attend the party, and we will send you an invoice shortly after. This way we only charge you for the number of children that attend the party. If you prefer to pay for the party in advance, please let us know and we can arrange for an invoice to be sent to you prior.</p>
+    <p>On the day of your party, our fabulous party hosts will arrive 10 minutes before to set up and run the party.</p>
+    <p>We will bring everything we need to run a fizzing party, however we kindly ask you to have a table ready for the children to stand/sit around to make their creations. Our staff will also need access to water for our creations, and a power plug for music!</p>
+  <? } ?>
+  <p>We look forward to seeing you then!</p>
+  <p>Kind regards,</p>
+  <p>Talia and the Fizz Kidz team</p>
+  </body>
+</html>
