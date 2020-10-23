@@ -117,13 +117,25 @@ function capitalise(string) {
  * 
  * @returns {String} the ID of the correct Calendar
  */
-function getCalendarId(location) {
+function getCalendarId(location, environment) {
 
   // event IDs
-  const balwynStorePartiesCalendarID = "fizzkidz.com.au_7vor3m1efd3fqbr0ola2jvglf8@group.calendar.google.com"
-  const essendonStorePartiesClaendarID = "fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com"
-  const malvernStorePartiesCalendarID = "fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com"
-  const mobilePartiesCalendarID = "fizzkidz.com.au_b9aruprq8740cdamu63frgm0ck@group.calendar.google.com"
+  var balwynStorePartiesCalendarID;
+  var essendonStorePartiesClaendarID;
+  var malvernStorePartiesCalendarID;
+  var mobilePartiesCalendarID;
+  
+  if (environment === "prod") {
+    balwynStorePartiesCalendarID = "fizzkidz.com.au_7vor3m1efd3fqbr0ola2jvglf8@group.calendar.google.com"
+    essendonStorePartiesClaendarID = "fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com"
+    malvernStorePartiesCalendarID = "fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com"
+    mobilePartiesCalendarID = "fizzkidz.com.au_b9aruprq8740cdamu63frgm0ck@group.calendar.google.com"
+  } else {
+    balwynStorePartiesCalendarID = "fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com"
+    essendonStorePartiesClaendarID = "c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com"
+    malvernStorePartiesCalendarID = "fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com"
+    mobilePartiesCalendarID = "fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com"
+  }
 
   switch (location) {
     case "balwyn":
