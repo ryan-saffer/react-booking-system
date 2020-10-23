@@ -3,7 +3,7 @@
  * 
  * @param {object} booking the booking object
  */
-function createEvent(booking) {
+function createEvent(booking, environment) {
 
   var eventName = `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`
   
@@ -11,7 +11,7 @@ function createEvent(booking) {
   var endDate = getEndDate(startDate, booking.partyLength)
   
   // determine which calendar to use
-  var calendarId = getCalendarId(booking.location)
+  var calendarId = getCalendarId(booking.location, environment)
 
   var newEvent = CalendarApp.getCalendarById(calendarId).createEvent(eventName, startDate, endDate)
   newEvent.setLocation(booking.address)
@@ -24,7 +24,7 @@ function createEvent(booking) {
  *
  * @param {object} booking the booking object
  */
-function updateEvent(booking) {
+function updateEvent(booking, environment) {
   
   var eventName = `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`
   
@@ -32,7 +32,7 @@ function updateEvent(booking) {
   var endDate = getEndDate(startDate, booking.partyLength)
   
   // determine which calendar to use
-  var calendarId = getCalendarId(booking.location)
+  var calendarId = getCalendarId(booking.location, environment)
                                     
   var event = CalendarApp.getCalendarById(calendarId).getEventById(booking.eventId)
   event.setTitle(eventName)
@@ -48,9 +48,9 @@ function updateEvent(booking) {
  * @param {string} eventId the id of the event to delete
  * @param {string} location the location of the booking
  */
-function deleteEvent(eventId, location) {
+function deleteEvent(eventId, location, environment) {
   
-  var calendarId = getCalendarId(location)
+  var calendarId = getCalendarId(location, environment)
   var event = CalendarApp.getCalendarById(calendarId).getEventById(eventId)
   event.deleteEvent()
 }

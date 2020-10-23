@@ -16,10 +16,11 @@
  * @return {string} the event id
  *
  */
-function createBooking(data) {
+function createBooking(data, environment) {
   console.log(data)
+  console.log(environment)
   var booking = JSON.parse(data)
-  var eventId = createEvent(booking)
+  var eventId = createEvent(booking, environment)
   if (booking.sendConfirmationEmail) {
     sendBookingConfirmationEmail(booking)
   }
@@ -33,11 +34,12 @@ function createBooking(data) {
  *
  * @param {object} data the booking object
  */
-function updateBooking(data) {
+function updateBooking(data, environment) {
   console.log(data)
+  console.log(environment)
   data = JSON.parse(data)
   const booking = data.booking
-  updateEvent(booking)
+  updateEvent(booking, environment)
   return
 }
 
@@ -48,8 +50,10 @@ function updateBooking(data) {
  *
  * @param {object} data the booking object
  */
-function deleteBooking(booking) {
-  deleteEvent(booking.eventId, booking.location)
+function deleteBooking(booking, environment) {
+  console.log(booking)
+  console.log(environment)
+  deleteEvent(booking.eventId, booking.location, environment)
 }
 
 /**
