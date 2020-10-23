@@ -13,9 +13,6 @@ const db = admin.firestore()
 exports.createBooking = functions
   .region('australia-southeast1')
   .https.onCall((data, context) => {
-    
-    console.log(data)
-    console.log(context)
 
     return new Promise((resolve, reject) => {
       var partyDetails = JSON.parse(data.data)
@@ -26,8 +23,10 @@ exports.createBooking = functions
       })
         .then(writeResult => {
           console.log(`Write Result: ${JSON.stringify(writeResult)}`)
+          console.log('running apps script...')
           runAppsScript('createBooking', [data.data])
             .then(appsScriptResult => {
+              console.log('finished apps script')
               appsScriptResult = JSON.parse(appsScriptResult)
               console.log(appsScriptResult)
               var eventId = appsScriptResult.response.result
@@ -41,6 +40,7 @@ exports.createBooking = functions
               }
             })
             .catch(err => {
+              console.log("Error running AppsScript")
               reject(err)
             })
         })
@@ -54,9 +54,6 @@ exports.updateBooking = functions
   .region('australia-southeast1')
   .https.onCall((data, context) => {
     
-    console.log(data)
-    console.log(context)
-
     return new Promise((resolve, reject) => {
       var partyDetails = JSON.parse(data.data)
       const bookingId = partyDetails.bookingId
@@ -64,8 +61,10 @@ exports.updateBooking = functions
       booking.dateTime = admin.firestore.Timestamp.fromDate(new Date(booking.dateTime))
       const documentRef = db.collection('bookings').doc(bookingId)
       // update calendar event and any generated sheets on apps script
+      console.log('running apps script...')
       runAppsScript('updateBooking', [data.data])
         .then(() => {
+          console.log('finished apps script')
           // then update database
           documentRef.set({
               ...booking
@@ -76,6 +75,7 @@ exports.updateBooking = functions
           })
         })
         .catch(err => {
+          console.log("Error running AppsScript")
           reject(err)
         })
     })
@@ -85,15 +85,14 @@ exports.deleteBooking = functions
   .region('australia-southeast1')
   .https.onCall((data, context) => {
     
-    console.log(data)
-    console.log(context)
-
     return new Promise((resolve, reject) => {
       const bookingId = data.data.bookingId
       const booking = data.data.booking
       const documentRef = db.collection('bookings').doc(bookingId)
+      console.log('running apps script...')
       runAppsScript('deleteBooking', [booking])
         .then(() => {
+          console.log('finished apps script')
           // then update database
           documentRef.delete()
             .then(writeResult => {
@@ -104,6 +103,7 @@ exports.deleteBooking = functions
           })
         })
         .catch(err => {
+          console.log("Error running AppsScript")
           reject(err)
         })
     })
@@ -169,6 +169,12 @@ export function runAppsScript(functionName, parameters) {
   oAuth2Client.setCredentials({
     refresh_token: googleCredentials.refresh_token
   })
+
+  // Tell apps-script which environment we are using, in order to use correct calendar ID's
+  // This is shit... and ideally there would be a prod/dev environment for apps script, but this is hard.
+  // More ideally, we would not use apps script at all, and instead call the Gmail/Calendar/Forms APIs directly from here.
+  let environment = process.env.FIREBASE_CONFIG.projectId === "bookings-prod" ? "prod" : "dev"
+  parameters.push(environment)
 
   return new Promise((resolve, reject) => {
     script.scripts.run({
