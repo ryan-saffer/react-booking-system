@@ -173,7 +173,7 @@ export function runAppsScript(functionName, parameters) {
   // Tell apps-script which environment we are using, in order to use correct calendar ID's
   // This is shit... and ideally there would be a prod/dev environment for apps script, but this is hard.
   // More ideally, we would not use apps script at all, and instead call the Gmail/Calendar/Forms APIs directly from here.
-  let environment = process.env.FIREBASE_CONFIG.projectId === "bookings-prod" ? "prod" : "dev"
+  let environment = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "bookings-prod" ? "prod" : "dev"
   parameters.push(environment)
 
   return new Promise((resolve, reject) => {
