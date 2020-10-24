@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { locations } from '../../../constants/formValues'
+import * as FormValues from '../../../constants/FormValues'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
@@ -364,7 +364,7 @@ const NewBookingForm = props => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(locations).map(location => (
+                            {Object.values(FormValues.Locations).map(location => (
                                 <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                             ))}
                     </Select>

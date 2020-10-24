@@ -1,4 +1,4 @@
-import { fields } from "../../constants/formValues"
+import * as FormValues from "../../constants/FormValues"
 
 /**
  * Validates the form values, sets any errors and error text messages.
@@ -12,16 +12,16 @@ export function validateFormOnChange(formValues, field, value) {
 
     switch (field) {
         // all the following only need to check for empty values
-        case fields.PARENT_FIRST_NAME:
-        case fields.PARENT_LAST_NAME:
-        case fields.CHILD_NAME:
-        case fields.CHILD_AGE:
-        case fields.TIME:
-        case fields.DATE:
-        case fields.ADDRESS:
+        case FormValues.Fields.PARENT_FIRST_NAME:
+        case FormValues.Fields.PARENT_LAST_NAME:
+        case FormValues.Fields.CHILD_NAME:
+        case FormValues.Fields.CHILD_AGE:
+        case FormValues.Fields.TIME:
+        case FormValues.Fields.DATE:
+        case FormValues.Fields.ADDRESS:
             formValues[field].error = value === ''
             break
-        case fields.PARENT_EMAIL:
+        case FormValues.Fields.PARENT_EMAIL:
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
@@ -34,7 +34,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case fields.PARENT_MOBILE:
+        case FormValues.Fields.PARENT_MOBILE:
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
@@ -48,18 +48,18 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case fields.LOCATION:
-        case fields.PARTY_LENGTH:
+        case FormValues.Fields.LOCATION:
+        case FormValues.Fields.PARTY_LENGTH:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
             if (locationAndTimeIsInvalid(formValues)) {
-                formValues[fields.PARTY_LENGTH].error = true
-                var length = `${formValues[fields.PARTY_LENGTH].value} hour`
-                if (formValues[fields.PARTY_LENGTH].value > 1) length += 's'
-                formValues[fields.PARTY_LENGTH].errorText = `A ${formValues[fields.LOCATION].value} party cannot be of length ${length}`
+                formValues[FormValues.Fields.PARTY_LENGTH].error = true
+                var length = `${formValues[FormValues.Fields.PARTY_LENGTH].value} hour`
+                if (formValues[FormValues.Fields.PARTY_LENGTH].value > 1) length += 's'
+                formValues[FormValues.Fields.PARTY_LENGTH].errorText = `A ${formValues[FormValues.Fields.LOCATION].value} party cannot be of length ${length}`
                 break
-            } else if (field === fields.LOCATION) {
-                formValues[fields.PARTY_LENGTH].error = false
+            } else if (field === FormValues.Fields.LOCATION) {
+                formValues[FormValues.Fields.PARTY_LENGTH].error = false
             }
             break
         default:
@@ -76,9 +76,9 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = ['balwyn', 'essendon', 'malvern']
-    var location = formValues[fields.LOCATION].value
-    var length = formValues[fields.PARTY_LENGTH].value
+    var storeLocations = Object.values(FormValues.Locations).filter(location => location !== 'mobile')
+    var location = formValues[FormValues.Fields.LOCATION].value
+    var length = formValues[FormValues.Fields.PARTY_LENGTH].value
     if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
@@ -100,23 +100,23 @@ export function validateFormOnSubmit(formValues) {
     for (let field in formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
-        if (field !== fields.ADDRESS &&
-            field !== fields.NUMBER_OF_CHILDREN &&
-            field !== fields.NOTES &&
-            field !== fields.CREATION_1 &&
-            field !== fields.CREATION_2 &&
-            field !== fields.CREATION_3 &&
-            field !== fields.CAKE &&
-            field !== fields.CAKE_FLAVOUR &&
-            field !== fields.QUESTIONS &&
-            field !== fields.FUN_FACTS) {
+        if (field !== FormValues.Fields.ADDRESS &&
+            field !== FormValues.Fields.NUMBER_OF_CHILDREN &&
+            field !== FormValues.Fields.NOTES &&
+            field !== FormValues.Fields.CREATION_1 &&
+            field !== FormValues.Fields.CREATION_2 &&
+            field !== FormValues.Fields.CREATION_3 &&
+            field !== FormValues.Fields.CAKE &&
+            field !== FormValues.Fields.CAKE_FLAVOUR &&
+            field !== FormValues.Fields.QUESTIONS &&
+            field !== FormValues.Fields.FUN_FACTS) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
 
     // validate address here
-    if (formValues[fields.LOCATION].value === 'mobile') {
-        formValues[fields.ADDRESS].error = formValues[fields.ADDRESS].value === ''
+    if (formValues[FormValues.Fields.LOCATION].value === 'mobile') {
+        formValues[FormValues.Fields.ADDRESS].error = formValues[FormValues.Fields.ADDRESS].value === ''
     }
 
     return errorFound(formValues) ? formValues : null
