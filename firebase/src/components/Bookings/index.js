@@ -190,6 +190,10 @@ const BookingsPage = props => {
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
+                let selectedLocations = {}
+                Object.values(FormValues.Locations).forEach(location => selectedLocations[location] = false)
+                selectedLocations[documentSnapshot.get('location')] = true
+                setSelectedLocations(selectedLocations)
             })
         setLoading(false)
     }
