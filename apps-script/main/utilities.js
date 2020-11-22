@@ -148,3 +148,12 @@ function getCalendarId(location, environment) {
       return mobilePartiesCalendarID
   }
 }
+
+/**
+ * Returns the domain of the application depending on the environment
+ * 
+ * @param {string} environment prod or dev
+ */
+function getApplictionDomain(environment) {
+  return environment === "prod" ? "https://bookings.fizzkidz.com.au" : "https://booking-system-6435d.web.app"
+}

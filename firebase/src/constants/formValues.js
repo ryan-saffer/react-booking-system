@@ -1,4 +1,4 @@
-export const fields = {
+export const Fields = {
     PARENT_FIRST_NAME: "parentFirstName",
     PARENT_LAST_NAME: "parentLastName",
     PARENT_EMAIL: "parentEmail",
@@ -21,19 +21,19 @@ export const fields = {
     FUN_FACTS: "funFacts"
 }
 
-export const locations = {
+export const Locations = {
     BALWYN: "balwyn",
     ESSENDON: "essendon",
     MALVERN: "malvern",
     MOBILE: "mobile"
 }
 
-export const cakeFlavours = {
+export const CakeFlavours = {
     CHOCOLATE: "chocolate",
     VANILLA: "vanilla"
 }
 
-export const additions = {
+export const Additions = {
     CHICKEN_NUGGETS: "chickenNuggets",
     FAIRY_BREAD: "fairyBread",
     FRUIT_PLATTER: "fruitPlatter",
@@ -44,7 +44,7 @@ export const additions = {
     LOLLY_BAGS: "lollyBags"
 }
 
-export const creations = {
+export const Creations = {
     FAIRY_BATH_BOMBS: "fairyBathBombs",
     GLITTER_FACE_PAINT: "glitterFacePaint",
     RAINBOW_BATH_CRYSTALS: "rainbowBathCrystals",
@@ -72,30 +72,30 @@ export const creations = {
     EXPERT_GALAXY_BATH_BOMBS: "expertGalaxyBathBombs"
 }
 
-export const creationDisplayValues = {
-    [creations.FAIRY_BATH_BOMBS]: "Fairy Bath-Bombs",
-    [creations.GLITTER_FACE_PAINT]: "Glitter Face Paint",
-    [creations.RAINBOW_BATH_CRYSTALS]: "Rainbow Bath Crystals",
-    [creations.RAINBOW_SOAP]: "Rainbow Soap",
-    [creations.LIP_BALM]: "Sparkling Lip-Balm",
-    [creations.PERFUME]: "Shining Perfume",
-    [creations.SOAP]: "Sparkling Soap",
-    [creations.LAVA_LAMPS]: "Bubbling Lava Lamps",
-    [creations.BUGS_IN_SOAP]: "Bugs in Soap",
-    [creations.BATH_BOMBS]: "Fizzing Bath-Bombs",
-    [creations.GALAXY_SOAP]: "Galaxy Soap",
-    [creations.MONSTER_SLIME]: "Monster Slime",
-    [creations.WOBBLY_SOAP]: "Wobbly Soap",
-    [creations.FLUFFY_SLIME]: "Fluffy Slime",
-    [creations.GALAXY_SLIME]: "Galaxy Slime",
-    [creations.GLITTER_SLIME]: "Glitter Slime",
-    [creations.CRUNCHY_SLIME]: "Crunchy Slime",
-    [creations.FAIRY_SLIME]: "Fairy Slime",
-    [creations.EXPERT_GALAXY_SLIME]: "Expert Galaxy Slime",
-    [creations.EXPERT_RAINBOW_BATH_BOMBS]: "Expert Rainbow Bath-Bombs",
-    [creations.EXPERT_CRUNCHY_SLIME]: "Expert Crunchy Slime",
-    [creations.EXPERT_RAINBOW_SLIME]: "Expert Rainbow Slime",
-    [creations.EXPERT_RAINBOW_SOAP]: "Expert Rainbow Soap",
-    [creations.EXPERT_WATERMELON_BATH_BOMBS]: "Expert Watermelon Bath-Bombs",
-    [creations.EXPERT_GALAXY_BATH_BOMBS]: "Expert Galaxy Bath-Bombs"
+export const CreationDisplayValues = {
+    [Creations.FAIRY_BATH_BOMBS]: "Fairy Bath-Bombs",
+    [Creations.GLITTER_FACE_PAINT]: "Glitter Face Paint",
+    [Creations.RAINBOW_BATH_CRYSTALS]: "Rainbow Bath Crystals",
+    [Creations.RAINBOW_SOAP]: "Rainbow Soap",
+    [Creations.LIP_BALM]: "Sparkling Lip-Balm",
+    [Creations.PERFUME]: "Shining Perfume",
+    [Creations.SOAP]: "Sparkling Soap",
+    [Creations.LAVA_LAMPS]: "Bubbling Lava Lamps",
+    [Creations.BUGS_IN_SOAP]: "Bugs in Soap",
+    [Creations.BATH_BOMBS]: "Fizzing Bath-Bombs",
+    [Creations.GALAXY_SOAP]: "Galaxy Soap",
+    [Creations.MONSTER_SLIME]: "Monster Slime",
+    [Creations.WOBBLY_SOAP]: "Wobbly Soap",
+    [Creations.FLUFFY_SLIME]: "Fluffy Slime",
+    [Creations.GALAXY_SLIME]: "Galaxy Slime",
+    [Creations.GLITTER_SLIME]: "Glitter Slime",
+    [Creations.CRUNCHY_SLIME]: "Crunchy Slime",
+    [Creations.FAIRY_SLIME]: "Fairy Slime",
+    [Creations.EXPERT_GALAXY_SLIME]: "Expert Galaxy Slime",
+    [Creations.EXPERT_RAINBOW_BATH_BOMBS]: "Expert Rainbow Bath-Bombs",
+    [Creations.EXPERT_CRUNCHY_SLIME]: "Expert Crunchy Slime",
+    [Creations.EXPERT_RAINBOW_SLIME]: "Expert Rainbow Slime",
+    [Creations.EXPERT_RAINBOW_SOAP]: "Expert Rainbow Soap",
+    [Creations.EXPERT_WATERMELON_BATH_BOMBS]: "Expert Watermelon Bath-Bombs",
+    [Creations.EXPERT_GALAXY_BATH_BOMBS]: "Expert Galaxy Bath-Bombs"
 }

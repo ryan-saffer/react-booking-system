@@ -26,7 +26,7 @@ import Slide from '@material-ui/core/Slide'
 import CloseIcon from '@material-ui/icons/Close'
 import NewBookingForm from '../Forms/NewBookingForm'
 import { grey } from '@material-ui/core/colors'
-import { locations } from '../../constants/formValues';
+import * as FormValues from '../../constants/FormValues';
 import * as ROLES from '../../constants/roles'
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
@@ -126,12 +126,9 @@ const BookingsPage = props => {
     const [bookings, setBookings] = useState([])
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
-    const [selectedLocations, setSelectedLocations] = useState({
-        balwyn: true,
-        essendon: true,
-        malvern: true,
-        mobile: true
-    })
+    var initialLocations = {}
+    Object.values(FormValues.Locations).forEach(location => initialLocations[location] = true)
+    const [selectedLocations, setSelectedLocations] = useState(initialLocations)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
     // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
@@ -193,6 +190,10 @@ const BookingsPage = props => {
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
+                let selectedLocations = {}
+                Object.values(FormValues.Locations).forEach(location => selectedLocations[location] = false)
+                selectedLocations[documentSnapshot.get('location')] = true
+                setSelectedLocations(selectedLocations)
             })
         setLoading(false)
     }
@@ -340,10 +341,9 @@ const BookingsPage = props => {
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm md>
-                    {selectedLocations.balwyn && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.BALWYN} />}
-                    {selectedLocations.essendon && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.ESSENDON} />}
-                    {selectedLocations.malvern && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MALVERN} />}
-                    {selectedLocations.mobile && <LocationBookings onSuccess={handleCloseBooking} bookings={bookings} location={locations.MOBILE} />}
+                    {Object.values(FormValues.Locations).map(location =>
+                        selectedLocations[location] && <LocationBookings key={location} onSuccess={handleCloseBooking} bookings={bookings} location={location} />
+                    )}
                 </Grid>
             </main>
             </Grid>

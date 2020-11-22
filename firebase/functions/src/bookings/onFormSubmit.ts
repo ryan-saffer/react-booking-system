@@ -21,7 +21,7 @@ export const onFormSubmit = functions
             .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
         // search by last name where possible
         if (parentName.length > 1) {
-            collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName[1])
+            collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName.slice(1).join(" "))
         }
         collectionReference
             .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
