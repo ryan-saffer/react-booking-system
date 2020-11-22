@@ -16,11 +16,11 @@
  * @return {string} the event id
  *
  */
-function createBooking(data, environment) {
+function createBooking(id, data, environment) {
   console.log(data)
   console.log(environment)
   var booking = JSON.parse(data)
-  var eventId = createEvent(booking, environment)
+  var eventId = createEvent(id, booking, environment)
   if (booking.sendConfirmationEmail) {
     sendBookingConfirmationEmail(booking)
   }

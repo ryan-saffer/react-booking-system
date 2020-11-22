@@ -1,19 +1,25 @@
 /**
  * Creates a calendar event
  * 
+ * @param {string} id the id of the booking in firestore
  * @param {object} booking the booking object
+ * @param {string} environment either prod or dev
  */
-function createEvent(booking, environment) {
+function createEvent(id, booking, environment) {
 
-  var eventName = `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`
+  const eventName = `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`
   
-  var startDate = new Date(booking.dateTime)
-  var endDate = getEndDate(startDate, booking.partyLength)
+  const startDate = new Date(booking.dateTime)
+  const endDate = getEndDate(startDate, booking.partyLength)
   
   // determine which calendar to use
-  var calendarId = getCalendarId(booking.location, environment)
-
-  var newEvent = CalendarApp.getCalendarById(calendarId).createEvent(eventName, startDate, endDate)
+  const calendarId = getCalendarId(booking.location, environment)
+  
+  const domain = getApplictionDomain(environment)
+  const options = {
+    description: `${domain}/bookings?id=${id}`
+  }
+  const newEvent = CalendarApp.getCalendarById(calendarId).createEvent(eventName, startDate, endDate, options)
   newEvent.setLocation(booking.address)
   console.log("New event ID: " + newEvent.getId())
   return newEvent.getId()
