@@ -24,7 +24,7 @@ exports.createBooking = functions
         .then(writeResult => {
           console.log(`Write Result: ${JSON.stringify(writeResult)}`)
           console.log('running apps script...')
-          runAppsScript('createBooking', [data.data])
+          runAppsScript('createBooking', [doc.id, data.data])
             .then(appsScriptResult => {
               console.log('finished apps script')
               appsScriptResult = JSON.parse(appsScriptResult)

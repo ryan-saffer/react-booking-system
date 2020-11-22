@@ -2,6 +2,7 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import BookingPanel from './BookingPanel'
+import * as Utilities from '../../utilities'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -22,12 +23,10 @@ const LocationBookings = props => {
 
     return (
         <div className={classes.root}>
-            <Typography className={classes.heading} variant="h6">{location.charAt(0).toUpperCase() + location.slice(1)}</Typography>
-            {filteredBookings.length > 0 ? (
-                filteredBookings.map(booking => <BookingPanel key={booking.id} onSuccess={props.onSuccess} bookingId={booking.id} booking={booking.data()} />)
-            ) : (
-                    <Typography variant="overline">No bookings</Typography>
-            )}
+            <Typography className={classes.heading} variant="h6">{Utilities.capitalise(location)}</Typography>
+            {filteredBookings.length > 0
+                ? filteredBookings.map(booking => <BookingPanel key={booking.id} onSuccess={props.onSuccess} bookingId={booking.id} booking={booking.data()} />)
+                : <Typography variant="overline">No bookings</Typography>}
         </div>
     )
 }
