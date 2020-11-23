@@ -59,20 +59,43 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         marginRight: 'auto',
-        paddingLeft: '8px'
+        paddingLeft: '8px',
     },
     logo: {
         height: 50,
-        cursor: 'pointer'
+        cursor: 'pointer',
+        '@media (max-width: 550px)': {
+            marginLeft: theme.spacing(3)
+        }
+    },
+    topLeft: {
+        flex: '1 1 auto',
+        '@media (max-width: 550px)': {
+            display: 'none'
+        }
+    },
+    topCenter: {
+        flex: "1 0 auto"
     },
     topRight: {
-        marginLeft: 'auto'
+        flex: "0 1 auto"
+    },
+    newBookingButton: {
+        borderColor: 'white',
+        borderStyle: 'solid',
+        borderWidth: 'thin',
+        '@media (max-width: 550px)': {
+            marginRight: theme.spacing(3)
+        }
     },
     logoutIcon: {
         paddingTop: theme.spacing(1),
         paddingRight: '0px',
         paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(1)
+        paddingLeft: theme.spacing(2),
+        '@media (max-width: 550px)': {
+            display: 'none'
+        }
     },
     toolbar: theme.mixins.toolbar,
     inlineDatePicker: {
@@ -224,17 +247,21 @@ const BookingsPage = props => {
             <CssBaseline />
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar className={classes.appBarToolbar}>
-                    <Typography variant="h6" className={classes.title}>
-                        Party Bookings
-                    </Typography>
-                    <img
-                        className={classes.logo}
-                        src={Logo}
-                        onClick={() => props.history.push(ROUTES.LANDING)} />
+                    <div className={classes.topLeft}>
+                        <Typography variant="h6" className={classes.title}>
+                            Party Bookings
+                        </Typography>
+                    </div>
+                    <div className={classes.topCenter}>
+                        <img
+                            className={classes.logo}
+                            src={Logo}
+                            onClick={() => props.history.push(ROUTES.LANDING)} />
+                    </div>
                     <div className={classes.topRight}>
                         <AuthUserContext.Consumer>
                             {authUser => (
-                                authUser.roles[ROLES.ADMIN] && <Button color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
+                                authUser.roles[ROLES.ADMIN] && <Button className={classes.newBookingButton} color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>
                             )}
                         </AuthUserContext.Consumer>
                         <IconButton

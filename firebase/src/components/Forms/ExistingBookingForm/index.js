@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
         color: green[500],
         position: 'absolute',
         marginTop: '18px',
-        marginLeft: '6px'
+        marginRight: '-6px'
     },
     success: {
         marginTop: theme.spacing(3),
