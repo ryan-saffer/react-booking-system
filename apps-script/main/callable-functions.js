@@ -16,10 +16,10 @@
  * @return {string} the event id
  *
  */
-function createBooking(id, data, environment) {
-  console.log(data)
+function createBooking(id, booking, environment) {
+  console.log(booking)
   console.log(environment)
-  var booking = JSON.parse(data)
+  booking = JSON.parse(booking)
   var eventId = createEvent(id, booking, environment)
   if (booking.sendConfirmationEmail) {
     sendBookingConfirmationEmail(booking)
@@ -32,7 +32,7 @@ function createBooking(id, data, environment) {
  * 
  * To be called by firebase cloud function
  *
- * @param {object} data the booking object
+ * @param {object} data the an object containing bookingId and the booking itself
  */
 function updateBooking(data, environment) {
   console.log(data)
@@ -112,4 +112,18 @@ function onFormSubmitBookingNotFound(formValues) {
   console.log(formValues)
   const location = formValues.length === 19 ? formValues[5] : 'Mobile'
   sendBookingNotFoundEmail(formValues[1], formValues[2], formValues[3], formValues[4], location)
+}
+
+/**
+ * Send all provided bookings their 'We hope your enjoyed your party!' email
+ * Email links to the review page for their locations listing
+ * 
+ * @param {Array} bookings array of bookings to send the feedback email to
+ */
+function sendFeedbackEmails(bookings) {
+  console.log(bookings)
+  for(var i = 0; i < bookings.length; i++) {
+    bookings[i].dateTime = new Date(bookings[i].dateTime)
+    sendFeedbackEmail(bookings[i])
+  }
 }
