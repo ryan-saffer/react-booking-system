@@ -28,14 +28,13 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end'
     },
     saveButton: {
-        marginTop: theme.spacing(3),
-        // marginLeft: theme.spacing(3)
+        marginTop: theme.spacing(3)
     },
     progress: {
         color: green[500],
         position: 'absolute',
         marginTop: '18px',
-        marginLeft: '6px'
+        marginRight: '-6px'
     },
     success: {
         marginTop: theme.spacing(3),
