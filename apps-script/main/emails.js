@@ -299,3 +299,31 @@ function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
   // Send the confirmation email
   GmailApp.sendEmail(booking.parentEmail, subject, "", {from: fromAddress, htmlBody: body + signature, name : "Fizz Kidz"});
 }
+
+/**
+ * Sends an email asking for the customer to write a review
+ * 
+ * @param {object} booking the booking object
+ */
+function sendFeedbackEmail(booking) {
+  var t = HtmlService.createTemplateFromFile('feedback_email_template')
+  t.parentName = booking.parentFirstName
+  t.childName = booking.childName
+  t.location = booking.location
+
+  const body = t.evaluate().getContent()
+  const subject = "We hope you enjoyed your party!"
+  const fromAddress = determineFromEmailAddress(booking.location)
+  const signature = getGmailSignature()
+
+  GmailApp.sendEmail(
+    booking.parentEmail,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body + signature,
+      name: "Fizz Kidz"
+    }
+  )
+}
