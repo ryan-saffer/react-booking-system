@@ -23,6 +23,9 @@ import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
 
 const useStyles = makeStyles(theme => ({
+    confirmationEmailCheckbox: {
+        float: 'right'
+    },
     saveButtonDiv: {
         display: 'flex',
         justifyContent: 'flex-end'
@@ -429,6 +432,7 @@ const NewBookingForm = props => {
                 </Grid>
                 <Grid item xs={12}>
                     <FormControlLabel
+                        className={classes.confirmationEmailCheckbox}
                         control={<Checkbox
                                     id="sendConfirmationEmail"
                                     color="secondary"
