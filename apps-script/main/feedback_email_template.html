@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base target="_top">
+    </head>
+    <body style ="font-family:'trebuchet ms'">
+        Hi <?= parentName ?>,
+        <p>We hope <?= childName ?> had a fabulous party at Fizz Kidz yesterday!</p>
+        <p>As we are a growing business we would thoroughly appreciate it if you could write a review about your Fizz Kidz experience by 
+            <? if (location === 'balwyn') { ?>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJRYl9pexB1moR5msbM8SdKVU">clicking on this link.</a>
+            <? } else { ?>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ">clicking on this link.</a>
+            <? } ?>
+        </p>
+        <p>It will just take 10 seconds, we promise :)</p>
+        <p>Thank you so much and we hope you have a fizzing day!</p>
+        <p>Kindest regards,</p>
+        <p>Talia and the Fizz Kidz team</p>
+    </body>
+</html>

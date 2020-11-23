@@ -156,6 +156,52 @@ exports.sendOutForms = functions
     })
   })
 
+exports.sendFeedbackEmails = functions
+  .region('australia-southeast1')
+  .pubsub.schedule('30 8 * * *')
+  .timeZone('Australia/Victoria')
+  .onRun((context) => {
+
+    const startDate = DateTime.fromObject({ zone: 'Australia/Melbourne', hour: 0, minute: 0, second: 0 }).toJSDate()
+    startDate.setDate(startDate.getDate() - 1) // yesterday
+    const endDate = DateTime.fromObject({ zone: 'Australia/Melbourne', hour: 0, minute: 0, second: 0 }).toJSDate() // today
+
+    console.log("Start date:")
+    console.log(startDate)
+    console.log("End date:")
+    console.log(endDate)
+
+    var bookings = []
+
+    return new Promise((resolve, reject) => {
+      db.collection('bookings')
+      .where('dateTime', '>', startDate)
+      .where('dateTime', '<', endDate)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+          var booking = documentSnapshot.data()
+          booking.dateTime = booking.dateTime.toDate()
+          bookings.push(booking)
+        })
+        console.log("running apps script...")
+        runAppsScript('sendFeedbackEmails', [bookings])
+          .then(() => {
+            console.log("finished apps script successfully")
+            resolve()
+          })
+          .catch(err => {
+            console.log("Error running apps script")
+            reject(err)
+          })
+      })
+      .catch(err => {
+        console.log("Error fetching bookings from firestore")
+        reject(err)
+      })
+    })
+  })
+
 export function runAppsScript(functionName, parameters) {
   const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
   const script = google.script('v1')
