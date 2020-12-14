@@ -289,7 +289,7 @@ function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
   t.questions = booking.questions;
   
   var body = t.evaluate().getContent();
-  var subject = "Thank you";
+  var subject = "Your Party Details";
 
   // determine from address
   var fromAddress = determineFromEmailAddress(booking.location);
