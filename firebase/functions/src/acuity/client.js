@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const Acuity = require('acuityscheduling')
-const acuityCredentials = require('../../credentials/acuity_credentials.json')
+const acuityCredentials = require('../../credentials/acuity_credentials.json');
+const { app } = require('firebase-admin');
 
 var acuity = Acuity.basic({
     userId: acuityCredentials.user_id,
@@ -34,6 +35,9 @@ exports.client = functions
         case 'updateLabel':
           updateLabel(data, resolve, reject)
           break
+        case 'markPaid':
+          markPaid(data, resolve, reject)
+          break
         case 'getLabels':
           getLabels(resolve, reject)
           break
@@ -46,29 +50,20 @@ exports.client = functions
 
 function getAppointmentTypes(resolve, reject) {
   acuity.request('appointment-types', (err, _resp, appointmentTypes) => {
-    if (err) {
-      reject(err)
-    }
-    resolve(appointmentTypes)
+    handleResult(err, appointmentTypes, resolve, reject)
   })
 }
 
 function getCalendars(resolve, reject) {
   acuity.request('calendars', (err, _resp, calendars) => {
-    if (err) {
-      reject(err)
-    }
-    resolve(calendars)
+    handleResult(err, calendars, resolve, reject)
   })
 }
 
 function getClasses(data, resolve, reject) {
   sanitise("appointmentTypeID", data.id, reject)
-  acuity.request(`/availability/classes?appointmentTypeID=${data.id}&includeUnavailable=true`, (err, resp, classes) => {
-    if (err) {
-      reject(err)
-    }
-    resolve(classes)
+  acuity.request(`/availability/classes?appointmentTypeID=${data.id}&includeUnavailable=true`, (err, _resp, classes) => {
+    handleResult(err, classes, resolve, reject)
   })
 }
 
@@ -77,11 +72,8 @@ function getAppointments(data, resolve, reject) {
   sanitise("calendarID", data.calendarID, reject)
   acuity.request(
     `/appointments?appointmentTypeID=${data.appointmentTypeID}&calendarID=${data.calendarID}&max=500`,
-    (err, resp, appointments) => {
-      if (err) {
-        reject(err)
-      }
-      resolve(appointments)
+    (err, _resp, appointments) => {
+      handleResult(err, appointments, resolve, reject)
   })
 }
 
@@ -98,26 +90,50 @@ function updateLabel(data, resolve, reject) {
     }
   }
 
-  acuity.request(`/appointments/${data.clientId}`, options, (err, _res, appointment) => {
-    if (err) {
-      reject(err)
+  acuity.request(`/appointments/${data.clientId}`, options, (err, _resp, appointment) => {
+    handleResult(err, appointment, resolve, reject)
+  })
+}
+
+function markPaid(data, resolve, reject) {
+  sanitise('appointmentId', data.appointmentId, reject)
+  sanitise('amount', data.amount, reject)
+
+  const options = {
+    method: 'POST',
+    body: {
+      "source": {
+        "type": "cash"
+      },
+      "amount": data.amount,
+      "notes": "Payment recorded on Fizz Kidz app"
     }
-    resolve(appointment)
+  }
+
+  acuity.request(`/appointments/${data.appointmentId}/payments`, options, (err, _resp, appointment) => {
+    handleResult(err, appointment, resolve, reject)
   })
 }
 
 // not used yet
 function getLabels(resolve, reject) {
   acuity.request("labels", (err, _resp, labels) => {
-    if (err) {
-      reject(err)
-    }
-    resolve(labels)
+    handleResult(err, labels, resolve, reject)
   })
 }
 
 function sanitise(field, value, reject) {
   if (value == null) {
     reject(new Error(`${field} is null`))
+  }
+}
+
+function handleResult(err, result, resolve, reject) {
+  if (err) {
+    reject(err)
+  } else if (result.error) {
+    reject(result)
+  } else {
+    resolve(result)
   }
 }
