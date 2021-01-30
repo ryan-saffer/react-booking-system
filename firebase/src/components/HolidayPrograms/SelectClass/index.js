@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import LoadingOverlay from 'react-loading-overlay'
 import moment from 'moment'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -14,11 +12,11 @@ import { Button, Paper } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import { Skeleton } from '@material-ui/lab'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../constants/routes'
 
-import { withAuthorization, AuthUserContext } from '../../Session'
-import { roundToNearestMinutes } from 'date-fns';
+import { withAuthorization } from '../../Session'
 
 const HolidayProgramSelection = props => {
 
@@ -26,7 +24,7 @@ const HolidayProgramSelection = props => {
 
     const { firebase } = props
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState({ calendar: true, appointmentTypes: false, classes: false })
     const [calendars, setCalendars] = useState([])
     const [selectedCalendar, setSelectedCalendar] = useState('')
     const [appointmentTypes, setAppointmentTypes] = useState([])
@@ -43,10 +41,10 @@ const HolidayProgramSelection = props => {
             }).then(result => {
                 console.log(result.data)
                 setCalendars(result.data)
-                setLoading(false)
+                setLoading({ calendar: false, appointmentTypes: false, classes: false })
             }).catch(err => {
                 console.error(err)
-                setLoading(false)
+                setLoading({ calendar: false, appointmentTypes: false, classes: false })
             })
         }
         
@@ -86,7 +84,12 @@ const HolidayProgramSelection = props => {
 
     const fetchAppointmentTypes = id => {
         console.log("FETCHING APPOINTMENTS WITH ID: " + id)
-        setLoading(true)
+        setLoading(loading => {
+            return {
+                ...loading,
+                appointmentTypes: true
+            }
+        })
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
             data: {method: "getAppointmentTypes"}
@@ -95,124 +98,130 @@ const HolidayProgramSelection = props => {
             setAppointmentTypes(
                 result.data.filter(x => x.calendarIDs.includes(id))
             )
-            setLoading(false)
+            setLoading({ ...loading, appointmentTypes: false, })
         }).catch(err => {
             console.error(err)
-            setLoading(false)
+            setLoading({ ...loading, appointmentTypes: false, })
         })
     }
 
     const fetchClasses = id => {
         console.log(id)
-        setLoading(true)
+        setLoading(loading => {
+            return {
+                ...loading,
+                classes: true
+            }
+        })
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
             data: { method: "getClasses", id }
         }).then(result => {
             console.log(result)
             setClasses(result.data)
-            setLoading(false)
+            setLoading({ ...loading, classes: false })
         }).catch(err => {
             console.error(err)
-            setLoading(false)
+            setLoading({ ...loading, classes: false })
         })
     }
 
     return (
-        <LoadingOverlay
-            active={loading}
-            spinner
-            className={cssClasses.loadingOverlay}
-        >
-            <CssBaseline />
-            <AppBar className={cssClasses.appBar} position="static">
-                <Toolbar className={cssClasses.toolbar}>
-                    <Typography className={cssClasses.title} variant="h6">
-                        Select Program
-                    </Typography>
-                    <img
-                        className={cssClasses.logo}
-                        src={Logo}
-                        onClick={() => props.history.push(ROUTES.LANDING)} />
-                </Toolbar>
-            </AppBar>
-            <Paper className={cssClasses.paper}>
-                <div className={cssClasses.main}>
-                    <Typography className={cssClasses.heading} variant="body1">Select location:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Location</InputLabel>
-                        <Select
-                            id="calendars-select"
-                            value={selectedCalendar}
-                            onChange={handleCalendarChange}
-                            disabled={calendars.length === 0}
-                        >
-                            {calendars.map(calendar => {
-                                const menuItem = <MenuItem key={calendar.id} value={calendar.id}>{calendar.name}</MenuItem>
-                                if (process.env.REACT_APP_ENV == 'prod') {
-                                    // only show science club appointments
-                                    if (calendar.name.endsWith("Store")) {
-                                        return menuItem
-                                    }
-                                } else {
-                                    // only show test calendar
-                                    if (calendar.name === "TEST CALENDAR") {
-                                        return menuItem
-                                    }
-                                }
-                            })}
-                        </Select>
-                    </FormControl>
-                    
-                    <Typography className={cssClasses.heading} variant="body1">Select program:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Program</InputLabel>
-                        <Select
-                            id="programs-select"
-                            value={selectedAppointmentType}
-                            onChange={handleAppointmentTypeChange}
-                            disabled={appointmentTypes.length === 0}
-                        >
-                            {appointmentTypes.map(appointmentType => {
-                                if (appointmentType.name.includes("Holiday Program") || appointmentType.name.includes("Drop-in Session")) {
-                                    return <MenuItem key={appointmentType.id} value={appointmentType.id}>{appointmentType.name}</MenuItem>
-                                }
-                            })}
-                        </Select>
-                    </FormControl>
-                    
-                    <Typography className={cssClasses.heading} variant="body1">Select class:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Class</InputLabel>
-                        <Select
-                            id="classes-select"
-                            value={selectedClass}
-                            onChange={handleClassChange}
-                            disabled={classes.length === 0}
-                        >
-                            {classes.map(mClass => {
-                                const yesterday = new Date()
-                                yesterday.setDate(yesterday.getDate() - 1)
-                                if (new Date(mClass.time) > yesterday) {
-                                 return <MenuItem key={mClass.id} value={mClass}>
-                                    {moment(mClass.time).format('dddd, MMMM Do h:mm A, YYYY')}
-                                </MenuItem>
-                                }
-                            })}
-                        </Select>
-                    </FormControl>
-                    <Button
-                        className={cssClasses.submitButton}
-                        variant="contained"
-                        color="primary"
-                        disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
-                        onClick={handleClassSelection}
+        <>
+        <CssBaseline />
+        <AppBar className={cssClasses.appBar} position="static">
+            <Toolbar className={cssClasses.toolbar}>
+                <Typography className={cssClasses.title} variant="h6">
+                    Select Program
+                </Typography>
+                <img
+                    className={cssClasses.logo}
+                    src={Logo}
+                    onClick={() => props.history.push(ROUTES.LANDING)} />
+            </Toolbar>
+        </AppBar>
+        <Paper className={cssClasses.paper}>
+            <div className={cssClasses.main}>
+                {!loading.calendar ? <>
+                <Typography className={cssClasses.heading} variant="body1">Select location:</Typography>
+                <FormControl className={cssClasses.formControl} variant="outlined">
+                    <Select
+                        id="calendars-select"
+                        value={selectedCalendar}
+                        onChange={handleCalendarChange}
+                        disabled={calendars.length === 0}
                     >
-                        Select
-                    </Button>
-                </div>
-            </Paper>
-        </LoadingOverlay>
+                        {calendars.map(calendar => {
+                            const menuItem = <MenuItem key={calendar.id} value={calendar.id}>{calendar.name}</MenuItem>
+                            if (process.env.REACT_APP_ENV == 'prod') {
+                                // only show science club appointments
+                                if (calendar.name.endsWith("Store")) {
+                                    return menuItem
+                                }
+                            } else {
+                                // only show test calendar
+                                if (calendar.name === "TEST CALENDAR") {
+                                    return menuItem
+                                }
+                            }
+                        })}
+                    </Select>
+                </FormControl>
+                </> : <Skeleton height={80} />}
+                
+                {appointmentTypes.length !== 0 && <>
+                <Typography className={cssClasses.heading} variant="body1">Select program:</Typography>
+                <FormControl className={cssClasses.formControl} variant="outlined">
+                    <Select
+                        id="programs-select"
+                        value={selectedAppointmentType}
+                        onChange={handleAppointmentTypeChange}
+                        disabled={appointmentTypes.length === 0}
+                    >
+                        {appointmentTypes.map(appointmentType => {
+                            if (appointmentType.name.includes("Holiday Program") || appointmentType.name.includes("Drop-in Session")) {
+                                return <MenuItem key={appointmentType.id} value={appointmentType.id}>{appointmentType.name}</MenuItem>
+                            }
+                        })}
+                    </Select>
+                </FormControl>
+                </>}
+                {loading.appointmentTypes && <Skeleton height={80} />}
+                
+                {classes.length !== 0 && <>
+                <Typography className={cssClasses.heading} variant="body1">Select class:</Typography>
+                <FormControl className={cssClasses.formControl} variant="outlined">
+                    <Select
+                        id="classes-select"
+                        value={selectedClass}
+                        onChange={handleClassChange}
+                        disabled={classes.length === 0}
+                    >
+                        {classes.map(mClass => {
+                            const yesterday = new Date()
+                            yesterday.setDate(yesterday.getDate() - 1)
+                            if (new Date(mClass.time) > yesterday) {
+                                return <MenuItem key={mClass.id} value={mClass}>
+                                {moment(mClass.time).format('dddd, MMMM Do h:mm A, YYYY')}
+                            </MenuItem>
+                            }
+                        })}
+                    </Select>
+                </FormControl>
+                <Button
+                    className={cssClasses.submitButton}
+                    variant="contained"
+                    color="primary"
+                    disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
+                    onClick={handleClassSelection}
+                >
+                    Select
+                </Button>
+                </>}
+                {loading.classes && <Skeleton height={80} />}
+            </div>
+        </Paper>
+        </>
     )
 }
 
