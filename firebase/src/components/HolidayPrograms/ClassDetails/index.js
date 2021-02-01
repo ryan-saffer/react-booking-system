@@ -14,6 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import { Skeleton } from '@material-ui/lab'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import SkeletonRows from '../../Shared/SkeletonRows'
 
 const ClassDetailsPage = props => {
     
@@ -83,12 +84,7 @@ const ClassDetailsPage = props => {
                     expanded={expanded}
                 />
             )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
-            {loading && <>
-                <Skeleton className={classes.skeleton} animation="wave" height={64} />
-                <Skeleton className={classes.skeleton} animation="wave" height={64} />
-                <Skeleton className={classes.skeleton} animation="wave" height={64} />
-                <Skeleton className={classes.skeleton} animation="wave" height={64} />
-            </>}
+            {loading && <SkeletonRows />}
         </div>
     )
 }

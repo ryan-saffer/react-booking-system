@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import LoadingOverlay from 'react-loading-overlay'
 import moment from 'moment'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -14,61 +12,11 @@ import { Button, Paper } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import { Skeleton } from '@material-ui/lab'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../constants/routes'
 
 import { withAuthorization, AuthUserContext } from '../../Session'
-import { roundToNearestMinutes } from 'date-fns';
-
-const useStyles = makeStyles(theme => ({
-    loadingOverlay: {
-        position: 'absolute',
-        top: 0, left: 0, right: 0, bottom: 0
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1
-    },
-    toolbar: {
-        display: 'flex'
-    },
-    title: {
-        marginRight: 'auto',
-        flex: 1
-    },
-    logo: {
-        height: 50,
-        cursor: 'pointer'
-    },
-    topRight: {
-        marginLeft: 'auto',
-        flex: 1
-    },
-    paper: {
-        margin: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center'
-    },
-    heading: {
-        width: '30%'
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        marginBottom: 16,
-        minWidth: 120,
-    },
-    submitButton: {
-        marginTop: 16
-    }
-}));
 
 const SelectClassPage = props => {
 
@@ -76,7 +24,7 @@ const SelectClassPage = props => {
 
     const { firebase } = props
 
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState({ calendar: true, appointmentTypes: false, classes: false })
     const [calendars, setCalendars] = useState([])
     const [selectedCalendar, setSelectedCalendar] = useState('')
     const [appointmentTypes, setAppointmentTypes] = useState([])
@@ -93,10 +41,10 @@ const SelectClassPage = props => {
             }).then(result => {
                 console.log(result.data)
                 setCalendars(result.data)
-                setLoading(false)
+                setLoading({ calendar: false, appointmentTypes: false, classes: false })
             }).catch(err => {
                 console.error(err)
-                setLoading(false)
+                setLoading({ calendar: false, appointmentTypes: false, classes: false })
             })
         }
         
@@ -136,7 +84,10 @@ const SelectClassPage = props => {
 
     const fetchAppointmentTypes = id => {
         console.log("FETCHING APPOINTMENTS WITH ID: " + id)
-        setLoading(true)
+        setLoading({
+            ...loading,
+            appointmentTypes: true
+        })
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
             data: {method: "getAppointmentTypes"}
@@ -145,53 +96,63 @@ const SelectClassPage = props => {
             setAppointmentTypes(
                 result.data.filter(x => x.calendarIDs.includes(id))
             )
-            setLoading(false)
+            setLoading({
+                ...loading,
+                appointmentTypes: false
+            })
         }).catch(err => {
             console.error(err)
-            setLoading(false)
+            setLoading({
+                ...loading,
+                appointmentTypes: false
+            })
         })
     }
 
     const fetchClasses = id => {
         console.log(id)
-        setLoading(true)
+        setLoading({
+            ...loading,
+            classes: true
+        })
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
             data: { method: "getClasses", id }
         }).then(result => {
             console.log(result)
             setClasses(result.data)
-            setLoading(false)
+            setLoading({
+                ...loading,
+                classes: false
+            })
         }).catch(err => {
             console.error(err)
-            setLoading(false)
+            setLoading({
+                ...loading,
+                classes: false
+            })
         })
     }
 
     return (
-        <LoadingOverlay
-            active={loading}
-            spinner
-            className={cssClasses.loadingOverlay}
-        >
-            <CssBaseline />
-            <AppBar className={cssClasses.appBar} position="static">
-                <Toolbar className={cssClasses.toolbar}>
-                    <Typography className={cssClasses.title} variant="h6">
-                        Select class
-                    </Typography>
-                    <img
-                        className={cssClasses.logo}
-                        src={Logo}
-                        onClick={() => props.history.push(ROUTES.LANDING)} />
-                    <div className={cssClasses.topRight} />
-                </Toolbar>
-            </AppBar>
-            <Paper className={cssClasses.paper}>
-                <div className={cssClasses.main}>
-                    <Typography className={cssClasses.heading} variant="body1">Select calendar:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Calendar</InputLabel>
+        <>
+        <CssBaseline />
+        <AppBar className={cssClasses.appBar} position="static">
+            <Toolbar className={cssClasses.toolbar}>
+                <Typography className={cssClasses.title} variant="h6">
+                    Sciene Program
+                </Typography>
+                <img
+                    className={cssClasses.logo}
+                    src={Logo}
+                    onClick={() => props.history.push(ROUTES.LANDING)} />
+            </Toolbar>
+        </AppBar>
+        <Paper className={cssClasses.paper}>
+            <div className={cssClasses.main}>
+                {!loading.calendar ? <>
+                    <Typography className={cssClasses.heading} variant="body1">Select location:</Typography>
+                    <FormControl className={cssClasses.formControl} variant="outlined">
                         <Select
                             id="calendars-select"
                             value={selectedCalendar}
@@ -214,10 +175,11 @@ const SelectClassPage = props => {
                             })}
                         </Select>
                     </FormControl>
-                    
+                </> : <Skeleton height={80} />}
+                
+                {appointmentTypes.length !== 0 && <>
                     <Typography className={cssClasses.heading} variant="body1">Select program:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Program</InputLabel>
+                    <FormControl className={cssClasses.formControl} variant="outlined">
                         <Select
                             id="programs-select"
                             value={selectedAppointmentType}
@@ -229,10 +191,12 @@ const SelectClassPage = props => {
                             ))}
                         </Select>
                     </FormControl>
-                    
+                </>}
+                {loading.appointmentTypes && <Skeleton height={80} />}
+                
+                {classes.length !== 0 && <>
                     <Typography className={cssClasses.heading} variant="body1">Select class:</Typography>
-                    <FormControl className={cssClasses.formControl}>
-                        <InputLabel>Class</InputLabel>
+                    <FormControl className={cssClasses.formControl} variant="outlined">
                         <Select
                             id="classes-select"
                             value={selectedClass}
@@ -246,20 +210,66 @@ const SelectClassPage = props => {
                             ))}
                         </Select>
                     </FormControl>
+
                     <Button
-                        className={cssClasses.submitButton}
-                        variant="contained"
-                        color="primary"
-                        disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
-                        onClick={handleClassSelection}
+                    className={cssClasses.submitButton}
+                    variant="contained"
+                    color="primary"
+                    disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
+                    onClick={handleClassSelection}
                     >
                         Select
                     </Button>
-                </div>
-            </Paper>
-        </LoadingOverlay>
+                </>}
+                {loading.classes && <Skeleton height={80} />}
+            </div>
+        </Paper>
+        </>
     )
 }
+
+const useStyles = makeStyles(theme => ({
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
+    },
+    toolbar: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    title: {
+        marginRight: 'auto',
+        flex: 1
+    },
+    logo: {
+        height: 50,
+        cursor: 'pointer'
+    },
+    paper: {
+        margin: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+    main: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+    },
+    heading: {
+        width: '100%'
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        marginBottom: 16,
+        minWidth: 120,
+    },
+    submitButton: {
+        marginTop: 16
+    }
+}));
 
 export default compose(
     withRouter,

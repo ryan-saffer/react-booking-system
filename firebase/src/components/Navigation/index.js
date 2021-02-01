@@ -67,7 +67,7 @@ const Navigation = props => {
             <div className={classes.main}>
                 <Container component="main" maxWidth="sm">
                     <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
-                        <Typography>Party Bookings</Typography>
+                        <Typography>Birthday Parties</Typography>
                     </Paper>
                     <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS)}>
                         <Typography>Holiday Programs</Typography>

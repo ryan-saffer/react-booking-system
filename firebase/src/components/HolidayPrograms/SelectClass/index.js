@@ -132,7 +132,7 @@ const HolidayProgramSelection = props => {
         <AppBar className={cssClasses.appBar} position="static">
             <Toolbar className={cssClasses.toolbar}>
                 <Typography className={cssClasses.title} variant="h6">
-                    Select Program
+                    Holiday Programs
                 </Typography>
                 <img
                     className={cssClasses.logo}
@@ -226,10 +226,6 @@ const HolidayProgramSelection = props => {
 }
 
 const useStyles = makeStyles(theme => ({
-    loadingOverlay: {
-        position: 'absolute',
-        top: 0, left: 0, right: 0, bottom: 0
-    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1
     },
