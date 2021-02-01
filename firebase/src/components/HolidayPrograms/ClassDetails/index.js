@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import { compose } from 'recompose'
-import LoadingOverlay from 'react-loading-overlay'
 
 import { withFirebase } from '../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
@@ -13,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
+import { Skeleton } from '@material-ui/lab'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 const ClassDetailsPage = props => {
@@ -64,31 +64,31 @@ const ClassDetailsPage = props => {
 
     return (
         <div className={classes.main}>
-            <LoadingOverlay
-                active={loading}
-                className={classes.main}
-                spinner
-            >
-                <CssBaseline />
-                <AppBar className={classes.appBar} position="static">
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={navigateBack}>
-                            <ArrowBackIcon />
-                        </IconButton>
-                        <Typography variant="h6">
-                            Children
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                {clients !== null ? clients.map(client => (
-                    <ChildExpansionPanel
-                        key={client.id}
-                        client={client}
-                        onClientSelectionChange={handleClientSelectionChange}
-                        expanded={expanded}
-                    />
-                )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
-            </LoadingOverlay>
+            <CssBaseline />
+            <AppBar className={classes.appBar} position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" onClick={navigateBack}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h6">
+                        Children
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            {clients !== null ? clients.map(client => (
+                <ChildExpansionPanel
+                    key={client.id}
+                    client={client}
+                    onClientSelectionChange={handleClientSelectionChange}
+                    expanded={expanded}
+                />
+            )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
+            {loading && <>
+                <Skeleton className={classes.skeleton} animation="wave" height={64} />
+                <Skeleton className={classes.skeleton} animation="wave" height={64} />
+                <Skeleton className={classes.skeleton} animation="wave" height={64} />
+                <Skeleton className={classes.skeleton} animation="wave" height={64} />
+            </>}
         </div>
     )
 }
@@ -108,6 +108,9 @@ const useStyles = makeStyles( theme => ({
         top: 0, left: 0,
         color: 'grey',
         pointerEvents: 'none'
+    },
+    skeleton: {
+        margin: '0px 24px 0px 24px'
     }
 }))
 
