@@ -12,19 +12,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
-import { Skeleton } from '@material-ui/lab'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import SkeletonRows from '../../Shared/SkeletonRows'
-
-const useStyles = makeStyles( theme => ({
-    main: {
-        position: 'absolute',
-        top: 0, right: 0, bottom: 0, left: 0
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1
-    },
-}))
 
 const ClassDetailsPage = props => {
     
@@ -99,6 +88,16 @@ const ClassDetailsPage = props => {
         </div>
     )
 }
+
+const useStyles = makeStyles(theme => ({
+    main: {
+        position: 'absolute',
+        top: 0, right: 0, bottom: 0, left: 0
+    },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1
+    },
+}))
 
 export default compose(
     withRouter,
