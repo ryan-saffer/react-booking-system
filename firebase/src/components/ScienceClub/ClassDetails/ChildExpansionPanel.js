@@ -43,7 +43,6 @@ const ChildExpansionPanel = props => {
                     const sig = documentSnapshot.get('signature')
                     const signedBy = documentSnapshot.get('pickupPerson')
                     const timeStamp = documentSnapshot.get('timeStamp')
-                    console.log(sig, signedBy, timeStamp)
                     setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
                 })
                 .catch(err => {
@@ -143,10 +142,10 @@ const ChildExpansionPanel = props => {
             <AccordianSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.panelSummary}>
                     <div className={classes.panelSummaryDetails}>
-                        {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
-                        {isSignedIn && <img className={classes.icon} src={checkedInIcon.default} alt="checked in icon"/>}
-                        {isSignedOut && <img className={classes.icon} src={checkedOutIcon.default} alt="checked out icon"/>}
-                        <Typography variant="button" className={classes.childInfo}>{childName}</Typography>
+                        {notSignedIn && <img className={classes.signInStatusIcon} src={uncheckedIcon.default} alt="unchecked icon"/>}
+                        {isSignedIn && <img className={classes.signInStatusIcon} src={checkedInIcon.default} alt="checked in icon"/>}
+                        {isSignedOut && <img className={classes.signInStatusIcon} src={checkedOutIcon.default} alt="checked out icon"/>}
+                        <Typography className={classes.childName} variant="button">{childName}</Typography>
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
                         {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
@@ -160,25 +159,31 @@ const ChildExpansionPanel = props => {
             </AccordianSummary>
             <AccordianDetails>
                 <TableContainer>
-                    <Table>
+                    <Table size="small">
                         <TableBody>
                             <TableRow>
-                                <TableCell className={classes.tableCell} variant="head">Parent name:</TableCell>
-                                <TableCell className={classes.tableCell}>{client.firstName} {client.lastName}</TableCell>
-                                <TableCell className={classes.tableCell} variant="head">Child year level:</TableCell>
-                                <TableCell className={classes.tableCell}>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</TableCell>
+                                <TableCell variant="head">Parent name:</TableCell>
+                                <TableCell>{client.firstName} {client.lastName}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell className={classes.tableCell} variant="head">Parent mobile:</TableCell>
-                                <TableCell className={classes.tableCell}>{client.phone}</TableCell>
-                                <TableCell className={classes.tableCell} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
-                                <TableCell className={classes.tableCell}>{hasAllergies ? childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value : "NONE"}</TableCell>
+                                <TableCell variant="head">Child year level:</TableCell>
+                                <TableCell>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell className={classes.tableCell} variant="head">Parent email:</TableCell>
-                                <TableCell className={classes.tableCell}>{client.email}</TableCell>
-                                <TableCell className={classes.tableCell} variant="head">People allowed to pick child up:</TableCell>
-                                <TableCell className={classes.tableCell}>
+                                <TableCell variant="head">Parent mobile:</TableCell>
+                                <TableCell>{client.phone}</TableCell>
+                            </TableRow>
+                            {hasAllergies && <TableRow>
+                                <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
+                                <TableCell className={classes.allergies}>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value}</TableCell>
+                            </TableRow>}
+                            <TableRow>
+                                <TableCell variant="head">Parent email:</TableCell>
+                                <TableCell>{client.email}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell variant="head">People allowed to pick child up:</TableCell>
+                                <TableCell>
                                     <List>
                                         {pickupPeople.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
                                     </List>
@@ -186,17 +191,19 @@ const ChildExpansionPanel = props => {
                                 </TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell className={classes.tableCell} variant="head">Emergency contact:</TableCell>
-                                <TableCell className={classes.tableCell}>
+                                <TableCell variant="head">Emergency contact:</TableCell>
+                                <TableCell>
                                     <List>
                                         <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME).value} - {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION).value}</ListItem>
                                         <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER).value}</ListItem>
                                     </List>
                                 </TableCell>
+                            </TableRow>
+                            <TableRow>
                                 {signature && signature.sig && (
                                     <>
-                                    <TableCell className={classes.tableCell} variant="head">Signature:</TableCell>
-                                    <TableCell className={classes.tableCell}>
+                                    <TableCell variant="head">Signature:</TableCell>
+                                    <TableCell>
                                         <List>
                                             <ListItem className={classes.listItem}><img className={classes.signature} src={signature.sig} alt="signature"/></ListItem>
                                             <ListItem className={classes.listItem}>{signature.signedBy}: {signature.timeStamp.toLocaleTimeString()}</ListItem>
@@ -232,10 +239,6 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center'
     },
-    childInfo: {
-        flexBasis: "20%",
-        flexShrink: 0
-    },
     chipCheckedIn: {
         marginLeft: 4,
         marginRight: 4,
@@ -246,17 +249,27 @@ const useStyles = makeStyles(theme => ({
         marginRight: 4,
         backgroundColor: red[500]
     },
+    signInStatusIcon: {
+        height: 16,
+        width: 16,
+        margin: 4,
+        marginRight: 24
+    },
     icon: {
         height: 16,
         width: 16,
         margin: 4
+    },
+    childName: {
+        marginRight: 24
     },
     panelSummaryButtonDiv: {
         flexBasis: '30%',
         alignSelf: 'center',
         display: 'flex',
         alignItems: 'center',
-        direction: 'rtl'
+        direction: 'rtl',
+        marginRight: 24
     },
     signInButton: {
         width: 'max-content',
@@ -295,13 +308,11 @@ const useStyles = makeStyles(theme => ({
     signature: {
         width: 'fit-content'
     },
-    tableCell: {
-        paddingTop: 4,
-        paddingBottom: 4
-    },
     listItem: {
-        paddingTop: 0,
-        paddingBottom: 0
+        padding: 0
+    },
+    allergies: {
+        color: 'red'
     }
 }))
 
