@@ -15,86 +15,10 @@ import AccordianDetails from '@material-ui/core/AccordionDetails';
 import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import { Button } from '@material-ui/core';
+import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SignatureDialog from './SignatureDialog';
-
-const useStyles = makeStyles(theme => ({
-    panelSummary: {
-        display: 'flex',
-        alignItems: 'stretch',
-        width: '100%'
-    },
-    panelSummaryDetails: {
-        flexBasis: '70%',
-        display: 'flex',
-        alignItems: 'center'
-    },
-    childInfo: {
-        flexBasis: "20%",
-        flexShrink: 0
-    },
-    chipCheckedIn: {
-        marginLeft: 4,
-        marginRight: 4,
-        backgroundColor: green[500]
-    },
-    chipCheckedOut: {
-        marginLeft: 4,
-        marginRight: 4,
-        backgroundColor: red[500]
-    },
-    icon: {
-        height: 16,
-        width: 16,
-        margin: 4
-    },
-    panelSummaryButtonDiv: {
-        flexBasis: '30%',
-        alignSelf: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        direction: 'rtl'
-    },
-    signInButton: {
-        width: 'max-content',
-        minWidth: 82,
-        background: '#4caf50',
-        "&:hover": {
-            background: '#2e7d32',
-            color: 'white'
-        }
-    },
-    signOutButton: {
-        width: 'max-content',
-        minWidth: 82,
-        background: '#e57373',
-        "&:hover": {
-            background: '#b71c1c',
-            color: 'white'
-        }
-    },
-    column: {
-        flexBasis: '50.00%',
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    heading: {
-        marginTop: 8
-    },
-    loading: {
-        marginRight: theme.spacing(1)
-    },
-    error: {
-        color: red[500],
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    signature: {
-        width: 'fit-content'
-    }
-}))
 
 const ChildExpansionPanel = props => {
 
@@ -119,7 +43,6 @@ const ChildExpansionPanel = props => {
                     const sig = documentSnapshot.get('signature')
                     const signedBy = documentSnapshot.get('pickupPerson')
                     const timeStamp = documentSnapshot.get('timeStamp')
-                    console.log(sig, signedBy, timeStamp)
                     setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
                 })
                 .catch(err => {
@@ -219,10 +142,10 @@ const ChildExpansionPanel = props => {
             <AccordianSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.panelSummary}>
                     <div className={classes.panelSummaryDetails}>
-                        {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
-                        {isSignedIn && <img className={classes.icon} src={checkedInIcon.default} alt="checked in icon"/>}
-                        {isSignedOut && <img className={classes.icon} src={checkedOutIcon.default} alt="checked out icon"/>}
-                        <Typography variant="button" className={classes.childInfo}>{childName}</Typography>
+                        {notSignedIn && <img className={classes.signInStatusIcon} src={uncheckedIcon.default} alt="unchecked icon"/>}
+                        {isSignedIn && <img className={classes.signInStatusIcon} src={checkedInIcon.default} alt="checked in icon"/>}
+                        {isSignedOut && <img className={classes.signInStatusIcon} src={checkedOutIcon.default} alt="checked out icon"/>}
+                        <Typography className={classes.childName} variant="button">{childName}</Typography>
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
                         {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
@@ -235,42 +158,63 @@ const ChildExpansionPanel = props => {
                 </div>
             </AccordianSummary>
             <AccordianDetails>
-                <div className={classes.column}>
-                    <Typography className={classes.heading} variant="button">Parent name:</Typography>
-                    <Typography variant="body1">{client.firstName} {client.lastName}</Typography>
-                    <Typography className={classes.heading} variant="button">Parent mobile:</Typography>
-                    <Typography vairant="body1">{client.phone}</Typography>
-                    <Typography className={classes.heading} variant="button">Parent email:</Typography>
-                    <Typography variant="body1">{client.email}</Typography>
-                    <Typography className={classes.heading} variant="button">Emergency Contact:</Typography>
-                    <Typography variant="body1">
-                        {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME).value} - {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION).value}
-                    </Typography>
-                    <Typography variant="body1">{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER).value}</Typography>
-                </div>
-                <div className={classes.column}>
-                    <Typography className={classes.heading} variant="button">Child year level:</Typography>
-                    <Typography variant="body1">{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</Typography>
-                    {hasAllergies && (
-                        <div className={classes.error}>
-                            <>
-                            <Typography className={classes.heading} variant="button">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</Typography>
-                            <Typography variant="body1">{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value}</Typography>
-                            </>
-                        </div> 
-                    )}
-                        <Typography className={classes.heading} variant="button">People allowed to pick child up:</Typography>
-                        {pickupPeople.map(person => (
-                            person.value !== null && <Typography key={person.id} variant="body1">{person.value}</Typography>
-                        ))}
-                    {signature && signature.sig && (
-                        <>
-                            <Typography className={classes.heading} variant="button">Signature:</Typography>
-                            <img className={classes.signature} src={signature.sig} alt="signature"/>
-                            <Typography variant="body1">{signature.signedBy}: {signature.timeStamp.toLocaleTimeString()}</Typography>
-                        </>
-                    )}
-                </div>
+                <TableContainer>
+                    <Table size="small">
+                        <TableBody>
+                            <TableRow>
+                                <TableCell variant="head">Parent name:</TableCell>
+                                <TableCell>{client.firstName} {client.lastName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell variant="head">Child year level:</TableCell>
+                                <TableCell>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell variant="head">Parent mobile:</TableCell>
+                                <TableCell>{client.phone}</TableCell>
+                            </TableRow>
+                            {hasAllergies && <TableRow>
+                                <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
+                                <TableCell className={classes.allergies}>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value}</TableCell>
+                            </TableRow>}
+                            <TableRow>
+                                <TableCell variant="head">Parent email:</TableCell>
+                                <TableCell>{client.email}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell variant="head">People allowed to pick child up:</TableCell>
+                                <TableCell>
+                                    <List>
+                                        {pickupPeople.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
+                                    </List>
+                                    
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell variant="head">Emergency contact:</TableCell>
+                                <TableCell>
+                                    <List>
+                                        <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME).value} - {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION).value}</ListItem>
+                                        <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER).value}</ListItem>
+                                    </List>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                {signature && signature.sig && (
+                                    <>
+                                    <TableCell variant="head">Signature:</TableCell>
+                                    <TableCell>
+                                        <List>
+                                            <ListItem className={classes.listItem}><img className={classes.signature} src={signature.sig} alt="signature"/></ListItem>
+                                            <ListItem className={classes.listItem}>{signature.signedBy}: {signature.timeStamp.toLocaleTimeString()}</ListItem>
+                                        </List>
+                                    </TableCell>
+                                    </>
+                                )}
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </AccordianDetails>
         </Accordion>
         <SignatureDialog
@@ -283,5 +227,93 @@ const ChildExpansionPanel = props => {
         </>    
     )
 }
+
+const useStyles = makeStyles(theme => ({
+    panelSummary: {
+        display: 'flex',
+        alignItems: 'stretch',
+        width: '100%'
+    },
+    panelSummaryDetails: {
+        flexBasis: '70%',
+        display: 'flex',
+        alignItems: 'center'
+    },
+    chipCheckedIn: {
+        marginLeft: 4,
+        marginRight: 4,
+        backgroundColor: green[500]
+    },
+    chipCheckedOut: {
+        marginLeft: 4,
+        marginRight: 4,
+        backgroundColor: red[500]
+    },
+    signInStatusIcon: {
+        height: 16,
+        width: 16,
+        margin: 4,
+        marginRight: 24
+    },
+    icon: {
+        height: 16,
+        width: 16,
+        margin: 4
+    },
+    childName: {
+        marginRight: 24
+    },
+    panelSummaryButtonDiv: {
+        flexBasis: '30%',
+        alignSelf: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        direction: 'rtl',
+        marginRight: 24
+    },
+    signInButton: {
+        width: 'max-content',
+        minWidth: 82,
+        background: '#4caf50',
+        "&:hover": {
+            background: '#2e7d32',
+            color: 'white'
+        }
+    },
+    signOutButton: {
+        width: 'max-content',
+        minWidth: 82,
+        background: '#e57373',
+        "&:hover": {
+            background: '#b71c1c',
+            color: 'white'
+        }
+    },
+    column: {
+        flexBasis: '50.00%',
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    heading: {
+        marginTop: 8
+    },
+    loading: {
+        marginRight: theme.spacing(1)
+    },
+    error: {
+        color: red[500],
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    signature: {
+        width: 'fit-content'
+    },
+    listItem: {
+        padding: 0
+    },
+    allergies: {
+        color: 'red'
+    }
+}))
 
 export default withFirebase(ChildExpansionPanel)
