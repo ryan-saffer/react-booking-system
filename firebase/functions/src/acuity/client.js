@@ -1,7 +1,6 @@
 const functions = require('firebase-functions');
 const Acuity = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json');
-const { app } = require('firebase-admin');
 
 var acuity = Acuity.basic({
     userId: acuityCredentials.user_id,
