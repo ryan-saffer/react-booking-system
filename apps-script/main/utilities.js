@@ -7,15 +7,7 @@
  * @returns {String} email address to send from
  */
 function determineFromEmailAddress(location) {
-
-  if(location == "malvern") {
-    // send from malvern@fizzkidz.com.au
-    return "malvern@fizzkidz.com.au";
-  }
-  else { // balwyn, essendon or mobile
-    // send from info@fizzkidz.com.au
-    return "info@fizzkidz.com.au";
-  }
+  return location === 'malvern' ? 'malvern@fizzkidz.com.au' : 'info@fizzkidz.com.au';
 }
 
 /**

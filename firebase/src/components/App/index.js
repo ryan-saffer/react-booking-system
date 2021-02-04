@@ -9,7 +9,9 @@ import SignInPage from '../SignIn'
 import * as ROUTES from '../../constants/routes'
 import BookingsPage from '../Bookings'
 import SelectClassPage from '../ScienceClub/SelectClass'
-import ClassDetailsPage from '../ScienceClub/ClassDetails'
+import ScienceClubClassDetails from '../ScienceClub/ClassDetails'
+import HolidayProgramSelection from '../HolidayPrograms/SelectClass'
+import HolidayProgramClassDetails from '../HolidayPrograms/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import { withAuthentication } from '../Session'
@@ -40,7 +42,9 @@ const App = () => {
             <Route exact path={ROUTES.LANDING} component={Navigation} />
             <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_SELECT_CLASS} component={SelectClassPage} />
-            <Route exact path={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} component={ClassDetailsPage} />
+            <Route exact path={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} component={ScienceClubClassDetails} />
+            <Route exact path={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS} component={HolidayProgramSelection} />
+            <Route exact path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS} component={HolidayProgramClassDetails} />
             <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
           </div>
         </Router>

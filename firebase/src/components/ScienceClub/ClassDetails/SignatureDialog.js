@@ -8,31 +8,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import SignatureCanvas from 'react-signature-canvas'
 import { red } from '@material-ui/core/colors';
-
-const useStyles = makeStyles({
-    signatureCanvas: {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: 'fit-content',
-    },
-    heading: {
-        marginBottom: 0
-    },
-    formControl: {
-        minWidth: 165,
-        marginBottom: 8
-    },
-    error: {
-        color: red[500]
-    }
-})
 
 const SignatureDialog = props => {
     
@@ -75,16 +55,16 @@ const SignatureDialog = props => {
             open={props.open}
             disableBackdropClick={true}
         >
-            <DialogTitle>Signature</DialogTitle>
-            <DialogContent>
-                <DialogContentText className={classes.heading}>Who is picking up the child?</DialogContentText>
+            <DialogTitle className={classes.title}>Signature Required</DialogTitle>
+            <DialogContent className={classes.dialogContent}>
+                <DialogContentText className={classes.title}>Who is signing out the child?</DialogContentText>
                 <FormControl className={classes.formControl} required error={guardianError}>
-                <InputLabel>Parent/Guardian</InputLabel>
                 <Select
                     id="parent-guardian-select"
                     value={selectedGuardian}
                     onChange={handleSelectedGuardianChange}
                     disabled={disabled}
+                    variant="outlined"
                 >
                     {pickupPeople.map(person => {
                         if (person.value !== '') {
@@ -93,16 +73,16 @@ const SignatureDialog = props => {
                     })}
                 </Select>
             </FormControl>
-                <DialogContentText className={signatureError ? classes.error : null}>A signature is required to sign out of science club</DialogContentText>
                 <div className={classes.signatureCanvas}>
                     <SignatureCanvas
                         penColor="black"
-                        canvasProps={{ height: 200, width: 600, style: { border: "1px solid #000000" } }}
+                        canvasProps={{ height: 200, width: window.innerWidth * 0.75, style: { border: "1px dashed #000000" } }}
                         ref={(ref) => sigPad = ref}
                     />
                 </div>
+                {signatureError && <DialogContentText className={classes.error}>A signature is required to sign out of science club</DialogContentText>}
             </DialogContent>
-            <DialogActions>
+            <DialogActions className={classes.dialogActions}>
                 <Button onClick={props.onClose} color="primary" disabled={disabled}>
                     Cancel
                 </Button>
@@ -113,5 +93,35 @@ const SignatureDialog = props => {
         </Dialog>
     )
 }
+
+const useStyles = makeStyles({
+    signatureCanvas: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        width: 'fit-content',
+    },
+    title: {
+        textAlign: 'center',
+        marginBottom: 0,
+        paddingBottom: 0
+    },
+    dialogContent: {
+        paddingBottom: 0
+    },
+    formControl: {
+        width: '100%',
+        marginBottom: 8
+    },
+    error: {
+        color: red[500],
+        textAlign: 'right',
+        marginTop: 4,
+        marginBottom: 0
+    },
+    dialogActions: {
+        paddingTop: 0
+    }
+})
 
 export default SignatureDialog
