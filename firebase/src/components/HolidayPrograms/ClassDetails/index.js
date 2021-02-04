@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
+import { Skeleton } from '@material-ui/lab'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import SkeletonRows from '../../Shared/SkeletonRows'
 
@@ -40,9 +41,8 @@ const ClassDetailsPage = props => {
                 data: { method: 'getAppointments', ...data }
             }).then(result => {
                 console.log(result)
-                setClients(
-                    result.data.filter(x => x.classID === classID)
-                )
+                const results = result.data.filter(x => x.classID === classID)
+                setClients(results.length === 0 ? null : results)
                 setLoading(false)
             }).catch(err => {
                 console.error(err)
@@ -76,27 +76,38 @@ const ClassDetailsPage = props => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            {clients.map(client => (
+            {clients !== null ? clients.map(client => (
                 <ChildExpansionPanel
                     key={client.id}
                     client={client}
                     onClientSelectionChange={handleClientSelectionChange}
                     expanded={expanded}
                 />
-            ))}
+            )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
             {loading && <SkeletonRows />}
         </div>
     )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles( theme => ({
     main: {
         position: 'absolute',
         top: 0, right: 0, bottom: 0, left: 0
     },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1
+    noEnrolments: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: 0, left: 0,
+        color: 'grey',
+        pointerEvents: 'none'
     },
+    skeleton: {
+        margin: '0px 24px 0px 24px'
+    }
 }))
 
 export default compose(
