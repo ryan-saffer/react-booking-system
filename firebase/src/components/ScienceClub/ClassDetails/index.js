@@ -6,6 +6,8 @@ import { compose } from 'recompose'
 import { withFirebase } from '../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
+import * as Acuity from '../../../constants/acuity'
+import * as Utilities from '../../../utilities'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -43,8 +45,16 @@ const ClassDetailsPage = props => {
                 data: { method: 'getAppointments', ...data }
             }).then(result => {
                 console.log(result)
+                const filteredResults = result.data.filter(x => x.classID === classID)
+                const sortedResults = filteredResults.sort(
+                    (a,b) => {
+                        const aName = Utilities.retrieveFormAndField(a, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+                        const bName = Utilities.retrieveFormAndField(b, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+                        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+                    }
+                )
                 setClients(
-                    result.data.filter(x => x.classID === classID)
+                    sortedResults
                 )
                 setLoading(false)
             }).catch(err => {
