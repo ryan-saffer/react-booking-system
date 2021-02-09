@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { withFirebase } from '../../Firebase'
 import * as acuity from '../../../constants/acuity'
+import * as Utilities from '../../../utilities'
 import * as bannedPhotoIcon from '../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../drawables/insulin-icon-24.png'
@@ -55,31 +56,15 @@ const ChildExpansionPanel = props => {
 
     }, [firebase.db, client.id])
 
-    const childDetailsForm = client.forms.find(
-        form => form.id === acuity.FORMS.CHILD_DETAILS
-    )
-    const anaphylaxisForm = client.forms.find(
-        form => form.id === acuity.FORMS.ANAPHYLAXIS
-    )
-    const emergencyContactForm = client.forms.find(
-        form => form.id === acuity.FORMS.EMERGENCY_CONTACT
-    )
-    const pickupPeople = client.forms.find(
-        form => form.id === acuity.FORMS.PICKUP_PERMISSION
-    ).values
+    const childDetailsForm = Utilities.retrieveForm(client, acuity.FORMS.CHILD_DETAILS)
+    const anaphylaxisForm = Utilities.retrieveForm(client, acuity.FORMS.ANAPHYLAXIS)
+    const emergencyContactForm = Utilities.retrieveForm(client, acuity.FORMS.EMERGENCY_CONTACT)
+    const pickupPeople = Utilities.retrieveForm(client, acuity.FORMS.PICKUP_PERMISSION)
     const mergedPickupPeople = [{id: client.id, value: `${client.firstName} ${client.lastName}`}, ...pickupPeople]
-    const childName = childDetailsForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILD_NAME
-    ).value
-    const hasAllergies = childDetailsForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO
-    ).value === "yes"
-    const isAnaphylactic = anaphylaxisForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC_YES_BLANK
-    ).value === "yes"
-    const permissionToPhotograph = childDetailsForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON
-    ).value === acuity.FORM_FIELDS_OPTIONS.CHILD_PHOTOGRAPHY_PERMISSION_YES
+    const childName = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_NAME)
+    const hasAllergies = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO) === "yes"
+    const isAnaphylactic = Utilities.retrieveFormField(anaphylaxisForm, acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
+    const permissionToPhotograph = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON) === acuity.FORM_FIELDS_OPTIONS.CHILD_PHOTOGRAPHY_PERMISSION_YES
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -168,7 +153,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Child year level:</TableCell>
-                                <TableCell>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_GRADE).value}</TableCell>
+                                <TableCell>{Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_GRADE)}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Parent mobile:</TableCell>
@@ -176,7 +161,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             {hasAllergies && <TableRow>
                                 <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
-                                <TableCell className={classes.allergies}>{childDetailsForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.CHILD_ALLERGIES).value}</TableCell>
+                                <TableCell className={classes.allergies}>{Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES)}</TableCell>
                             </TableRow>}
                             <TableRow>
                                 <TableCell variant="head">Parent email:</TableCell>
@@ -195,8 +180,8 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">Emergency contact:</TableCell>
                                 <TableCell>
                                     <List>
-                                        <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME).value} - {emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION).value}</ListItem>
-                                        <ListItem className={classes.listItem}>{emergencyContactForm.values.find(field => field.fieldID === acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER).value}</ListItem>
+                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME)} - {Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION)}</ListItem>
+                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER)}</ListItem>
                                     </List>
                                 </TableCell>
                             </TableRow>
