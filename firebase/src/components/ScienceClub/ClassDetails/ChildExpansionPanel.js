@@ -67,6 +67,7 @@ const ChildExpansionPanel = props => {
     const pickupPeople = client.forms.find(
         form => form.id === acuity.FORMS.PICKUP_PERMISSION
     ).values
+    const mergedPickupPeople = [{id: client.id, value: `${client.firstName} ${client.lastName}`}, ...pickupPeople]
     const childName = childDetailsForm.values.find(
         field => field.fieldID === acuity.FORM_FIELDS.CHILD_NAME
     ).value
@@ -185,7 +186,7 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">People allowed to pick child up:</TableCell>
                                 <TableCell>
                                     <List>
-                                        {pickupPeople.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
+                                        {mergedPickupPeople.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
                                     </List>
                                     
                                 </TableCell>
@@ -219,7 +220,7 @@ const ChildExpansionPanel = props => {
         </Accordion>
         <SignatureDialog
             key={key}
-            pickupPeople={pickupPeople}
+            pickupPeople={mergedPickupPeople}
             open={open}
             onClose={handleCloseDialog}
             onSignOut={handleSignOut}

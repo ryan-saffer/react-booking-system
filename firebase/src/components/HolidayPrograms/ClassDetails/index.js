@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 
 import { withFirebase } from '../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
+import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -21,6 +22,8 @@ const ClassDetailsPage = props => {
     const classes = useStyles()
 
     const { firebase } = props
+
+    const { height } = useWindowDimensions()
 
     const [clients, setClients] = useState([])
     const [expanded, setExpanded] = useState(false)
@@ -84,7 +87,7 @@ const ClassDetailsPage = props => {
                     expanded={expanded}
                 />
             )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
-            {loading && <SkeletonRows />}
+            {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
         </div>
     )
 }

@@ -140,7 +140,7 @@ const SelectClassPage = props => {
         <AppBar className={cssClasses.appBar} position="static">
             <Toolbar className={cssClasses.toolbar}>
                 <Typography className={cssClasses.title} variant="h6">
-                    Sciene Program
+                    Science Club
                 </Typography>
                 <img
                     className={cssClasses.logo}
@@ -262,7 +262,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%'
     },
     formControl: {
-        margin: theme.spacing(1),
+        marginTop: theme.spacing(1),
         marginBottom: 16,
         minWidth: 120,
     },
