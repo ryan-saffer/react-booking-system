@@ -154,7 +154,7 @@ export const sendInvoice = functions
           // customer not found.. create a new one
           console.log("customer not found in stripe")
           console.log("creating new customer")
-          stripe.customers.create({ name, email: queryParams.email, phone: queryParams.phone })
+          stripe.customers.create({ name: queryParams.name, email: queryParams.email, phone: queryParams.phone })
             .then(customer => {
               console.log("new customer succesfully created")
               createInvoiceItem(customer, queryParams, res)
