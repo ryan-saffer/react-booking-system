@@ -8,6 +8,9 @@ import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 import * as Acuity from '../../../constants/acuity'
 import * as Utilities from '../../../utilities'
+import * as bannedPhotoIcon from '../../../drawables/banned-camera-icon-24.png'
+import * as medicalIcon from '../../../drawables/medical-icon-24.png'
+import * as insulinIcon from '../../../drawables/insulin-icon-24.png'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -16,7 +19,11 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import SkeletonRows from '../../Shared/SkeletonRows'
+import { Dialog, DialogTitle, List, ListItem } from '@material-ui/core'
+import StarIcon from '@material-ui/icons/StarOutlined'
+import { yellow } from '@material-ui/core/colors'
 
 const ClassDetailsPage = props => {
     
@@ -29,6 +36,7 @@ const ClassDetailsPage = props => {
     const [clients, setClients] = useState([])
     const [expanded, setExpanded] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [showHelpDialog, setShowHelpDialog] = useState(false)
 
     const queries = queryString.parse(props.location.search)
     const appointmentTypeID = queries.appointmentTypeId
@@ -87,6 +95,7 @@ const ClassDetailsPage = props => {
                     <Typography variant="h6">
                         Children
                     </Typography>
+                    <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
             {clients.map(client => (
@@ -98,8 +107,43 @@ const ClassDetailsPage = props => {
                 />
             ))}
             {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
+            <IconsDialog open={showHelpDialog} onClose={() => setShowHelpDialog(false)} />
         </div>
     )
+}
+
+const IconsDialog = props => {
+
+    const classes = useStyles()
+
+    const { open, onClose } = props
+
+    const IconListItem = ({icon, text}) => (
+        <ListItem>
+            <div>
+                <img src={icon} />
+            </div>
+            <Typography>{text}</Typography>
+        </ListItem>
+    )
+
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle className={classes.dialogTitle}>Icons Guide</DialogTitle>
+            <List className={classes.list}>
+                <ListItem>
+                    <div>
+                        <StarIcon style={{ color: yellow[800] }} />
+                    </div>
+                    <Typography>Child is in Prep</Typography>
+                </ListItem>
+                <IconListItem icon={medicalIcon.default} text="Child has allergies" />
+                <IconListItem icon={insulinIcon.default} text="Child is anaphylactic" />
+                <IconListItem icon={bannedPhotoIcon.default} text="Do not photograph child" />
+            </List>
+        </Dialog>
+    )
+
 }
 
 const useStyles = makeStyles(theme => ({
@@ -110,6 +154,23 @@ const useStyles = makeStyles(theme => ({
     appBar: {
         zIndex: theme.zIndex.drawer + 1
     },
+    dialogTitle: {
+        paddingBottom: '0px'
+    },
+    list: {
+        '& li': {
+            display: 'grid',
+            gridTemplateColumns: '1fr 3fr'
+        },
+        '& div': {
+            display: 'flex',
+            justifyContent: 'center'
+        }
+    },
+    helpIcon: {
+        position: 'absolute',
+        right: '24px'
+    }
 }))
 
 export default compose(
