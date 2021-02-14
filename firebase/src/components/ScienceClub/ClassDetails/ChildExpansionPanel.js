@@ -17,8 +17,9 @@ import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody } from '@material-ui/core';
-import { green, red } from '@material-ui/core/colors';
+import { green, red, yellow } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog';
 
 const ChildExpansionPanel = props => {
@@ -62,6 +63,7 @@ const ChildExpansionPanel = props => {
     const pickupPeople = Utilities.retrieveForm(client, acuity.FORMS.PICKUP_PERMISSION)
     const mergedPickupPeople = [{id: client.id, value: `${client.firstName} ${client.lastName}`}, ...pickupPeople]
     const childName = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_NAME)
+    const isInPrep = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_GRADE) === "Prep"
     const hasAllergies = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO) === "yes"
     const isAnaphylactic = Utilities.retrieveFormField(anaphylaxisForm, acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
     const permissionToPhotograph = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON) === acuity.FORM_FIELDS_OPTIONS.CHILD_PHOTOGRAPHY_PERMISSION_YES
@@ -132,6 +134,7 @@ const ChildExpansionPanel = props => {
                         {isSignedIn && <img className={classes.signInStatusIcon} src={checkedInIcon.default} alt="checked in icon"/>}
                         {isSignedOut && <img className={classes.signInStatusIcon} src={checkedOutIcon.default} alt="checked out icon"/>}
                         <Typography className={classes.childName} variant="button">{childName}</Typography>
+                        {isInPrep && <StarIcon style={{ color: yellow[800] }} />}
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
                         {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
@@ -242,8 +245,8 @@ const useStyles = makeStyles(theme => ({
         marginRight: 24
     },
     icon: {
-        height: 16,
-        width: 16,
+        height: 20,
+        width: 20,
         margin: 4
     },
     childName: {
