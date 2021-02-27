@@ -16,7 +16,7 @@ import AccordianDetails from '@material-ui/core/AccordionDetails';
 import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody } from '@material-ui/core';
+import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody, Chip } from '@material-ui/core';
 import { green, red, yellow } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import StarIcon from '@material-ui/icons/Star'
@@ -37,6 +37,7 @@ const ChildExpansionPanel = props => {
     const notSignedIn = client.labels == null
     const isSignedIn = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_IN
     const isSignedOut = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_OUT
+    const notAttending = client.labels !== null && client.labels[0].id === acuity.LABELS.NOT_ATTENDING
 
     useEffect(() => {
         const fetchSignature = () => {
@@ -131,6 +132,7 @@ const ChildExpansionPanel = props => {
                 <div className={classes.panelSummary}>
                     <div className={classes.panelSummaryDetails}>
                         {notSignedIn && <img className={classes.signInStatusIcon} src={uncheckedIcon.default} alt="unchecked icon"/>}
+                        {notAttending && <div className={classes.signInStatusIcon} />}
                         {isSignedIn && <img className={classes.signInStatusIcon} src={checkedInIcon.default} alt="checked in icon"/>}
                         {isSignedOut && <img className={classes.signInStatusIcon} src={checkedOutIcon.default} alt="checked out icon"/>}
                         <Typography className={classes.childName} variant="button">{childName}</Typography>
@@ -138,6 +140,7 @@ const ChildExpansionPanel = props => {
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
                         {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
+                        {notAttending && <Chip className={classes.chip} label="Not Attending" />}
                     </div>
                     <div className={classes.panelSummaryButtonDiv}>
                         {isSignedIn && <Button className={classes.signOutButton} size="small" variant="contained" disabled={loading} onClick={handleSignOutButtonClick}>Sign out</Button>}
@@ -228,15 +231,9 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center'
     },
-    chipCheckedIn: {
-        marginLeft: 4,
-        marginRight: 4,
-        backgroundColor: green[500]
-    },
-    chipCheckedOut: {
-        marginLeft: 4,
-        marginRight: 4,
-        backgroundColor: red[500]
+    chip: {
+      background: red[400],
+      marginLeft: 15
     },
     signInStatusIcon: {
         height: 16,

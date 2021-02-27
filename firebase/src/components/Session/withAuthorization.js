@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 import AuthUserContext from './context'
 import { withFirebase } from '../Firebase/context'
 import * as ROUTES from '../../constants/routes'
+import * as LogoGif from '../../drawables/fizz_logo.gif'
 
 const isLoggedIn = authUser => !!authUser
 
@@ -52,7 +53,7 @@ const withAuthorization = Component => {
             return (
                 <AuthUserContext.Consumer>
                     {authUser => (
-                        isLoggedIn(authUser) ? <Component {...this.props} /> : null
+                        isLoggedIn(authUser) ? <Component {...this.props} /> : <img src={LogoGif.default} style={{position: 'fixed', width: '200px', top: '50%', left: '50%', marginTop: '-200px', marginLeft: '-100px'}} />
                     )}
                 </AuthUserContext.Consumer>
             )
