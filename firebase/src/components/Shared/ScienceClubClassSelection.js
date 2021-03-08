@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React, { useState, useEffect, useContext } from 'react'
 import moment from 'moment'
 
 import Typography from '@material-ui/core/Typography';
@@ -9,20 +7,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { Button, Paper } from '@material-ui/core';
-import CssBaseline from '@material-ui/core/CssBaseline'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
 import { Skeleton } from '@material-ui/lab'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
-import * as ROUTES from '../../../constants/routes'
+import { withRouter } from 'react-router-dom';
+import { FirebaseContext } from '../Firebase';
 
-import { withAuthorization, AuthUserContext } from '../../Session'
-
-const SelectClassPage = props => {
+const ScienceClubClassSelection = props => {
 
     const cssClasses = useStyles()
 
-    const { firebase } = props
+    const { classRoute } = props
+
+    const firebase = useContext(FirebaseContext)
 
     const [loading, setLoading] = useState({ calendar: true, appointmentTypes: false, classes: false })
     const [calendars, setCalendars] = useState([])
@@ -79,7 +74,7 @@ const SelectClassPage = props => {
     }
 
     const handleClassSelection = () => {
-        props.history.push(`/science-club/class?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}`)
+        props.history.push(`${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}`)
     }
 
     const fetchAppointmentTypes = id => {
@@ -135,19 +130,6 @@ const SelectClassPage = props => {
     }
 
     return (
-        <>
-        <CssBaseline />
-        <AppBar className={cssClasses.appBar} position="static">
-            <Toolbar className={cssClasses.toolbar}>
-                <Typography className={cssClasses.title} variant="h6">
-                    Science Club
-                </Typography>
-                <img
-                    className={cssClasses.logo}
-                    src={Logo}
-                    onClick={() => props.history.push(ROUTES.LANDING)} />
-            </Toolbar>
-        </AppBar>
         <Paper className={cssClasses.paper}>
             <div className={cssClasses.main}>
                 {!loading.calendar ? <>
@@ -224,26 +206,10 @@ const SelectClassPage = props => {
                 {loading.classes && <Skeleton height={80} />}
             </div>
         </Paper>
-        </>
     )
 }
 
 const useStyles = makeStyles(theme => ({
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1
-    },
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'space-between'
-    },
-    title: {
-        marginRight: 'auto',
-        flex: 1
-    },
-    logo: {
-        height: 50,
-        cursor: 'pointer'
-    },
     paper: {
         margin: theme.spacing(3),
         padding: theme.spacing(2),
@@ -271,7 +237,4 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default compose(
-    withRouter,
-    withAuthorization,
-)(SelectClassPage)
+export default withRouter(ScienceClubClassSelection)
