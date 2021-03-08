@@ -22,7 +22,7 @@ const ChildExpansionPanel = props => {
 
     const { firebase, expanded } = props 
 
-    const [appointment, setAppointment] = useState(props.client)
+    const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
 
     const notSignedIn = appointment.labels == null
