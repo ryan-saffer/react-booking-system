@@ -81,7 +81,7 @@ const ChildExpansionPanel = props => {
             expanded={expanded === appointment.id}
             onChange={props.onClientSelectionChange(appointment.id)}
         >
-            <AccordianSummary className={classes.accordianSummary} expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}>
+            <AccordianSummary className={classes.accordianSummary} expandIcon={<ExpandMoreIcon />}>
                 <div className={!loading ? classes.panelSummary : classes.invisible}>
                     <div className={classes.checkedInIcon}>
                         {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
