@@ -15,98 +15,84 @@ const acuity = AcuitySdk.basic({
     apiKey: acuityCredentials.api_key
 })
 
-function isError(object: any | Acuity.Error): object is Acuity.Error {
+function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
     return (object as Acuity.Error).error !== undefined
 }
 
-export const sidebar = functions
+enum InvoiceStatus {
+  NOT_SENT = "NOT_SENT",
+  UNPAID = "UNPAID",
+  PAID = "PAID",
+  UNSUPPORTED = "UNSUPPORTED"
+}
+
+type InvoiceStatusResponse = {
+  status: InvoiceStatus,
+  url?: string
+}
+
+export const retrieveInvoiceStatus = functions
   .region('australia-southeast1')
-  .https.onRequest((req: functions.Request, res: functions.Response) => {
+  .https.onCall((data: any, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
+
+    const appointmentId = data.appointmentId
+        
+    return new Promise((
+      resolve: (status: InvoiceStatusResponse) => void,
+      reject: (error: functions.https.HttpsError) => void
+    ) => {
+      acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
+        if (err) {
+          console.log(`internal acuity error while fetching appointment with id: ${appointmentId}`)
+          console.error(err)
+          reject(new functions.https.HttpsError('internal', 'internal error while fetching appointment from acuity', err))
+          return
+        }
+        if (isAcuityError(appointment)) {
+          console.log(`error fetching appointment with id: ${appointmentId}`)
+          console.error(appointment)
+          reject(new functions.https.HttpsError('internal', `error while fetching appointment from acuity`, appointment))
+          return
+        }
     
-  console.log("sidebar requested with body params:")
-  console.log(req.body)
-
-  acuity.request(`appointments/${req.body.id}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
-    if (err) {
-      console.log(`internal acuity error while fetching appointment with id: ${req.body.id}`)
-      console.error(err)
-      return res.status(500).send(err)
-    }
-    if (isError(appointment)) {
-      console.log(`error fetching appointment with id: ${req.body.id}`)
-      console.error(appointment)
-      return res.status(appointment.status_code).send(appointment.message)
-    }
-
-    const invoiceForm = appointment.forms.find(
-      form => form.id === formFields.FORMS.INVOICE
-    )
-    if (invoiceForm === undefined) {
-      // form doesn't include invoice, and is therefore not a science club
-      return res.status(200).send("<p>This class does not support invoices</p>")
-    }
-    const invoiceIdFormValue = invoiceForm.values.find(
-        field => field.fieldID === formFields.FORM_FIELDS.INVOICE_ID
-    )
-    if (invoiceIdFormValue === undefined) {
-      return res.status(200).send("<p>This class does not support invoices</p>")
-    }
-    const invoiceId = invoiceIdFormValue.value
-
-    const childDetailsForm = appointment.forms.find(
-        form => form.id === formFields.FORMS.CHILD_DETAILS
-    )
-    if (childDetailsForm === undefined) {
-      return res.status(200).send("<p>This class does not support invoices</p>")
-    }
-    const childNameFormValue = childDetailsForm.values.find(
-        field => field.fieldID === formFields.FORM_FIELDS.CHILD_NAME
-    )
-    if (childNameFormValue === undefined) {
-      return res.status(200).send("<p>This class does not support invoices</p>")
-    }
-    const childName = childNameFormValue.value
-      
-    console.log(`Invoice form id: ${invoiceId}`)
-    console.log(`Child name: ${childName}`)
-
-    if (invoiceId === "") {
-        const item = encodeURI(`${childName} - ${appointment.type}`)
-        const phone = encodeURI(appointment.phone)
-        return res.status(200).send(
-        `
-        <span class="label label-danger">Invoice not sent</span>
-        <a href="${stripeConfig.SEND_INVOICE_ENDPOINT}/sendInvoice?email=${appointment.email}&name=${appointment.firstName}+${appointment.lastName}&phone=${phone}&appointmentId=${appointment.id}&appointmentTypeId=${appointment.appointmentTypeID}&item=${item}&childName=${childName}" class="primary-btn">Send invoice</a>
-        `
+        const invoiceForm = appointment.forms.find(
+          form => form.id === formFields.FORMS.INVOICE
         )
-    } else {
-        // invoice already created... check its status
-      stripe.invoices.retrieve(invoiceId)
-        .then(invoice => {
-          if (invoice.paid) {
-            return res.status(200).send(
-            `
-            <span class="label green">Invoice paid</span>
-            <a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}">View invoice</a>
-            `
-            )
-          } else {
-            return res.status(200).send(
-            `
-            <span class="label orange">Invoice not yet paid</span>
-            <a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}">View invoice</a>
-            `
-            )
-          }
-        })
-        .catch(error => {
-          console.log('error retrieving invoice')
-          console.error(error)
-          return res.status(500).send(error)
-        })
-    }
+        if (invoiceForm === undefined) {
+          // form doesn't include invoice, and is therefore not a science club
+          resolve({ status: InvoiceStatus.UNSUPPORTED })
+          return
+        }
+        const invoiceId = invoiceForm.values.find(
+            field => field.fieldID === formFields.FORM_FIELDS.INVOICE_ID
+        )?.value ?? ""
+    
+        if (invoiceId === "") {
+            resolve({ status: InvoiceStatus.NOT_SENT })
+            return
+        } else {
+          // invoice already created... check its status
+          stripe.invoices.retrieve(invoiceId)
+            .then(invoice => {
+              const url = `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}`
+              if (invoice.paid) {
+                resolve({ status: InvoiceStatus.PAID, url })
+                return
+              } else {
+                resolve({ status: InvoiceStatus.UNPAID, url })
+                return
+              }
+            })
+            .catch(error => {
+              console.log('error retrieving invoice')
+              console.error(error)
+              reject(new functions.https.HttpsError('internal', 'error retreiving invoice from stripe', error))
+              return
+            })
+        }
+      })
+    })
   })
-})
 
 type QueryParams = {
   email: string,
@@ -267,7 +253,7 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: QueryParams) 
           reject(err)
           return
         }
-        if (isError(appointments)) {
+        if (isAcuityError(appointments)) {
           reject(appointments)
           return
         }
@@ -315,7 +301,7 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
         reject(err)
         return
       }
-      if (isError(appointment)) {
+      if (isAcuityError(appointment)) {
         reject(appointment)
         return
       }
