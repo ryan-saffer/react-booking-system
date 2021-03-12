@@ -26,7 +26,7 @@ const useInvoiceStatus = appointment => {
         })
     }, [])
 
-    return result
+    return [result, setResult]
 }
 
 export default useInvoiceStatus

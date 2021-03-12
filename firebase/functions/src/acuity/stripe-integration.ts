@@ -19,6 +19,10 @@ function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
     return (object as Acuity.Error).error !== undefined
 }
 
+type RetrieveInvoiceParams = {
+  appointmentId: number
+}
+
 enum InvoiceStatus {
   NOT_SENT = "NOT_SENT",
   UNPAID = "UNPAID",
@@ -33,7 +37,7 @@ type InvoiceStatusResponse = {
 
 export const retrieveInvoiceStatus = functions
   .region('australia-southeast1')
-  .https.onCall((data: any, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
+  .https.onCall((data: RetrieveInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
 
     const appointmentId = data.appointmentId
         
@@ -94,79 +98,87 @@ export const retrieveInvoiceStatus = functions
     })
   })
 
-type QueryParams = {
+type SendInvoiceParams = {
   email: string,
   name: string,
   phone: string,
   childName: string
   invoiceItem: string,
-  appointmentTypeId: string,
-  [key: string]: string
+  appointmentTypeId: number,
+  [key: string]: any
 }
+
+type SendInvoiceResolve = (status: InvoiceStatusResponse) => void
+type SendInvoiceReject = (error: functions.https.HttpsError) => void
 
 export const sendInvoice = functions
   .region('australia-southeast1')
-  .https.onRequest((req: functions.Request, res: functions.Response) => {
+  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
     
     console.log("beggining function")
     console.log("query parameters:")
-    console.log(req.query)
+    console.log(data)
 
-    const queryParams: QueryParams = {
-      email: req.query.email as string,
-      name: req.query.name as string,
-      phone: req.query.phone as string,
-      appointmentTypeId: req.query.appointmentTypeId as string,
-      childName: req.query.childName as string,
-      invoiceItem: req.query.item as string
-    }
+    return new Promise<InvoiceStatusResponse>((
+      resolve: SendInvoiceResolve,
+      reject: SendInvoiceReject
+    ) => {
 
-    for (const key in queryParams) {
-      if (queryParams[key] === undefined) {
-        res.status(400).send(`${key} query parameter not supplied`)
-        return
+      for (const key in data) {
+        if (data[key] === undefined) {
+          reject(new functions.https.HttpsError('invalid-argument', `${key} value not supplied`))
+          return
+        }
       }
-    }
 
     // first search if customer with given email already exists
-    stripe.customers.list({ email: queryParams.email })
-      .then(customers => {
-        if (customers.data.length > 0) {
-          // customer exists!
-          console.log("customer found in stripe")
-          const customer = customers.data[0]
-          createInvoiceItem(customer, queryParams, res)
-        } else {
-          // customer not found.. create a new one
-          console.log("customer not found in stripe")
-          console.log("creating new customer")
-          stripe.customers.create({ name: queryParams.name, email: queryParams.email, phone: queryParams.phone })
-            .then(customer => {
-              console.log("new customer succesfully created")
-              createInvoiceItem(customer, queryParams, res)
-            })
-            .catch(err => {
-              console.log("error creating customer in stripe")
-              console.error(err)
-              return res.status(err.statusCode).send(err.message)
-            })
-        }
-      })
-      .catch(err => {
-        console.log("error listing stripe customers")
-        console.error(err)
-        return res.status(err.statusCode).send(err.message)
-      })
+      stripe.customers.list({ email: data.email })
+        .then(customers => {
+          if (customers.data.length > 0) {
+            // customer exists!
+            console.log("customer found in stripe")
+            const customer = customers.data[0]
+            createInvoiceItem(customer, data, resolve, reject)
+          } else {
+            // customer not found.. create a new one
+            console.log("customer not found in stripe")
+            console.log("creating new customer")
+            stripe.customers.create({ name: data.name, email: data.email, phone: data.phone })
+              .then(customer => {
+                console.log("new customer succesfully created")
+                createInvoiceItem(customer, data, resolve, reject)
+              })
+              .catch(err => {
+                console.log("error creating customer in stripe")
+                console.error(err)
+                reject(new functions.https.HttpsError('internal', 'error creationg customer in stripe', err))
+                return
+              })
+          }
+        })
+        .catch(err => {
+          console.log("error listing stripe customers")
+          console.error(err)
+          reject(new functions.https.HttpsError('internal', 'error listing stripe customers', err))
+          return
+        })
+    })
 })
 
-function createInvoiceItem(customer: Stripe.Customer, queryParams: QueryParams, res: functions.Response<any>) {
+function createInvoiceItem(
+  customer: Stripe.Customer,
+  data: SendInvoiceParams,
+  resolve: SendInvoiceResolve,
+  reject: SendInvoiceReject
+) {
   console.log("creating invoice item...")
 
   const params: Stripe.InvoiceItemCreateParams = {
     customer: customer.id,
-    description: queryParams.invoiceItem,
+    description: data.invoiceItem,
     price: stripeConfig.STRIPE_PRICE_SCIENCE_CLUB
   }
+
   stripe.invoiceItems.create(params)
     .then(invoiceItem => {
       console.log("invoice item created succesfully")
@@ -179,66 +191,44 @@ function createInvoiceItem(customer: Stripe.Customer, queryParams: QueryParams, 
       })
         .then(invoice => {
           console.log("new invoice created succesfully")
-          saveInvoiceToAcuity(invoice, queryParams)
+          saveInvoiceToAcuity(invoice, data)
             .then(appointments => {
               if (appointments.length <= 0) {
                 console.log("No appointments found matching email, childName and appointmentTypeId")
                 console.log("Invoice created but not sent")
-                return res.status(200).send(
-                  `
-                  <!DOCTYPE html>
-                  <html>
-                  <title>Invoice Created</title>
-                  <meta name="viewport" content="width=device-width, initial-scale=1">
-                  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-                  <body>
-
-                  <div class="w3-container w3-orange w3-center">
-                  <h1>Invoice created, but not sent</h1>
-                  </div>
-
-                  <div class="w3-container w3-center">
-                  <p>There was a problem with sending the invoice.</p>
-                  <p>The invoice was created, but could not be saved back into Acuity.</p>
-                  </div>
-
-                  <div class="w3-container w3-center w3-text-blue">
-                  <p><a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}" target="_blank">Click here to see the invoice in Stripe</a></p>
-                  </div>
-
-                  <div class="w3-container w3-center">
-                  <p>Screenshot this and show Ryan, and save the invoice link above.</p>
-                  </div>
-
-                  </body>
-                  </html> 
-                  `
-                )
+                reject(new functions.https.HttpsError(
+                  'not-found',
+                  'invoice created, but no appointments found matching email, childName and appointmentTypeId, so invoice not sent',
+                ))
+                return
               } else {
                 console.log("invoice successfully saved in acuity")
-                emailInvoice(invoice, res)
+                emailInvoice(invoice, resolve, reject)
               }
             })
             .catch(error => {
               console.log("error saving invoice in acuity")
               console.error(error)
-              return res.status(error.status_code).send(error.message)
+              reject(new functions.https.HttpsError('internal', 'error saving invoice in acuity', error))
+              return
             })
         })
         .catch(error => {
           console.log("error creating invoice")
           console.error(error)
-          return res.status(error.statusCode).send(error.message)
+          reject(new functions.https.HttpsError('internal', 'error creating invoice', error))
+          return
         })
     })
     .catch(err => {
       console.log("error found while creating invoice item")
       console.error(err)
-      return res.status(err.statusCode).send(err.message)
+      reject(new functions.https.HttpsError('internal', 'error found while creationg invoice item', err))
+      return
     })
 }
 
-function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: QueryParams) {
+function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoiceParams) {
   
   console.log("saving invoice into acuity...")
 
@@ -310,42 +300,20 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
   })
 }
 
-function emailInvoice(invoice: Stripe.Invoice, res: functions.Response<any>) {
+function emailInvoice(invoice: Stripe.Invoice, resolve: SendInvoiceResolve, reject: SendInvoiceReject) {
     
   console.log("sending invoice...")
 
   stripe.invoices.sendInvoice(invoice.id)
     .then(sentInvoice => {
       console.log("invoice sent successfully")
-      return res.status(200).send(
-      `
-      <!DOCTYPE html>
-      <html>
-      <title>Invoice Sent</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-      <body>
-
-      <div class="w3-container w3-teal w3-center">
-      <h1>Invoice successfully sent!</h1>
-      </div>
-
-      <div class="w3-container w3-center w3-text-blue">
-      <p><a href="${stripeConfig.STRIPE_DASHBOARD}/invoices/${sentInvoice.id}" target="_blank">Click here to see the invoice in Stripe</a></p>
-      </div>
-
-      <div class="w3-container w3-center">
-      <p>You can now close this window.</p>
-      </div>
-
-      </body>
-      </html> 
-      `
-      )
+      resolve({ status: InvoiceStatus.UNPAID, url: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${sentInvoice.id}` })
+      return
     })
     .catch(err => {
       console.log("error sending invoice")
       console.log(err)
-      return res.status(err.statusCode).send(err.message)
+      reject(new functions.https.HttpsError('internal', 'error sending invoicing in stripe', err))
+      return
     })
 }
