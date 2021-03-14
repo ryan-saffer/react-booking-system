@@ -80,7 +80,9 @@ const useStyles = makeStyles({
     },
     headerRow: {
         '& th': {
-            textAlign: 'center'
+            textAlign: 'center',
+            paddingLeft: 0,
+            paddingRight: 0
         }
     },
     parentNameCell: {
