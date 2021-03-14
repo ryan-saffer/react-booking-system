@@ -187,7 +187,7 @@ function createInvoiceItem(
         customer: customer.id,
         description: invoiceItem.description ?? undefined,
         collection_method: 'send_invoice',
-        days_until_due: 30
+        days_until_due: 3
       })
         .then(invoice => {
           console.log("new invoice created succesfully")
