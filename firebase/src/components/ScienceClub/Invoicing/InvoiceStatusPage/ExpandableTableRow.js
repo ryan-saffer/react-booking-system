@@ -28,29 +28,25 @@ const ExpandableTableRow = ({ appointment }) => {
         </TableRow>
         {expanded &&
             <>
-            <TableRow className={classes.appointmentDetails}>
-                <TableCell colSpan={4}>
-                    <Table>
-                    <TableHead>
-                        <TableRow className={classes.appointmentDetailsRow}>
-                            <TableCell width="5%" />
-                            <TableCell width="19%">Parent Phone</TableCell>
-                            <TableCell width="19%">Parent Email</TableCell>
-                            <TableCell width="19%">Child Name</TableCell>
-                            <TableCell width="19%">Child Age</TableCell>
-                            <TableCell width="19%">Child Grade</TableCell>
+            <TableRow className={classes.appointmentDetailsRow}>
+                <TableCell className={classes.appointmentDetailsCell} colSpan={4}>
+                    <Table className={classes.appointmentDetailsTable}>
+                        <TableRow className={classes.appointmentDetailsHeaderRow}>
+                            <TableCell variant="head" width="5%" className={classes.paddingCell} />
+                            <TableCell variant="head" width="19%">Parent Phone</TableCell>
+                            <TableCell variant="head" width="19%">Parent Email</TableCell>
+                            <TableCell variant="head" width="19%">Child Name</TableCell>
+                            <TableCell variant="head" width="19%">Child Age</TableCell>
+                            <TableCell variant="head" width="19%">Child Grade</TableCell>
                         </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow className={classes.appointmentDetailsRow}>
-                            <TableCell width="5%" />
+                        <TableRow className={classes.appointmentDetailsContentRow}>
+                            <TableCell className={classes.paddingCell}/>
                             <TableCell>{appointment.phone}</TableCell>
                             <TableCell>{appointment.email}</TableCell>
                             <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)}</TableCell>
                             <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_AGE)}</TableCell>
                             <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_GRADE)}</TableCell>
                         </TableRow>
-                    </TableBody>
                     </Table>
                 </TableCell>
             </TableRow>
@@ -145,7 +141,8 @@ const chipWidth = 140
 const useStyles = makeStyles({
     summaryRow: {
         '& td': {
-            textAlign: 'center'
+            textAlign: 'center',
+            padding: '0px !important'
         }
     },
     parentNameCell: {
@@ -179,18 +176,56 @@ const useStyles = makeStyles({
     redText: {
         color: red[500]
     },
-    appointmentDetails: {
-        background: 'whitesmoke'
-    },
     appointmentDetailsRow: {
-        '& th': {
-            paddingLeft: 0,
-            paddingTop: 0
-        },
+        background: 'whitesmoke',
+    },
+    appointmentDetailsCell: {
+        paddingTop: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+        '@media(max-width: 592px)': {
+            paddingBottom: 0
+        }
+    },
+    appointmentDetailsHeaderRow: {
+        '& td': {
+            paddingLeft: 0
+        }
+    },
+    appointmentDetailsContentRow: {
         '& td': {
             paddingLeft: 0,
             paddingBottom: 0,
             borderBottomWidth: 0
+        },
+        '@media(max-width: 592px)': {
+            '& td': {
+                paddingBottom: 16
+            }
+        }
+    },
+    appointmentDetailsTable: {
+        '@media(max-width: 592px)': {
+            '& tr': {
+                display: 'block',
+                float: 'left',
+                width: '50%'
+            },
+            '& td': {
+                display: 'block',
+                width: '100%',
+                textAlign: 'center',
+                borderBottomWidth: 1,
+                minHeight: 57
+            }
+        }
+    },
+    paddingCell: {
+        '@media(max-width: 592px)': {
+            display: 'none !important'
+        },
+        '@media(max-width: 960px)': {
+            paddingLeft: '32px !important'
         }
     }
 })
