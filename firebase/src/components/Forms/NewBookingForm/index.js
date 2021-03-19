@@ -129,6 +129,12 @@ const mapFormToBooking = formValues => {
         booking[field] = formValues[field].value
     }
 
+    // trim fields
+    booking[FormValues.Fields.PARENT_FIRST_NAME] = booking[FormValues.Fields.PARENT_FIRST_NAME].trim()
+    booking[FormValues.Fields.PARENT_LAST_NAME] = booking[FormValues.Fields.PARENT_LAST_NAME].trim()
+    booking[FormValues.Fields.CHILD_NAME] = booking[FormValues.Fields.CHILD_NAME].trim()
+    booking[FormValues.Fields.CHILD_AGE] = booking[FormValues.Fields.CHILD_AGE].trim()
+
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
     var options = { timeZone: "Australia/Melbourne" }
