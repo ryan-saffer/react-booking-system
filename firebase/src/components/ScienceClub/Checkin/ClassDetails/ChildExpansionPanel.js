@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
-import { withFirebase } from '../../Firebase'
-import * as acuity from '../../../constants/acuity'
-import * as Utilities from '../../../utilities'
-import * as bannedPhotoIcon from '../../../drawables/banned-camera-icon-24.png'
-import * as medicalIcon from '../../../drawables/medical-icon-24.png'
-import * as insulinIcon from '../../../drawables/insulin-icon-24.png'
-import * as checkedInIcon from '../../../drawables/tick-box-green-icon-26.png'
-import * as checkedOutIcon from '../../../drawables/tick-box-red-icon-26.png'
-import * as uncheckedIcon from '../../../drawables/unchecked-icon-26.png'
+import { withFirebase } from '../../../Firebase'
+import * as acuity from '../../../../constants/acuity'
+import * as Utilities from '../../../../utilities'
+import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
+import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
+import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
+import * as checkedInIcon from '../../../../drawables/tick-box-green-icon-26.png'
+import * as checkedOutIcon from '../../../../drawables/tick-box-red-icon-26.png'
+import * as uncheckedIcon from '../../../../drawables/unchecked-icon-26.png'
 
 import { makeStyles } from '@material-ui/styles'
 import Accordion from '@material-ui/core/Accordion';
@@ -28,25 +28,25 @@ const ChildExpansionPanel = props => {
 
     const { firebase, expanded } = props
 
-    const [client, setClient] = useState(props.client)
+    const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [signature, setSignature] = useState(null)
     const [key, setKey] = useState(0)
 
-    const notSignedIn = client.labels == null
-    const isSignedIn = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_IN
-    const isSignedOut = client.labels != null && client.labels[0].id === acuity.LABELS.CHECKED_OUT
-    const notAttending = client.labels !== null && client.labels[0].id === acuity.LABELS.NOT_ATTENDING
+    const notSignedIn = appointment.labels == null
+    const isSignedIn = appointment.labels != null && appointment.labels[0].id === acuity.LABELS.CHECKED_IN
+    const isSignedOut = appointment.labels != null && appointment.labels[0].id === acuity.LABELS.CHECKED_OUT
+    const notAttending = appointment.labels !== null && appointment.labels[0].id === acuity.LABELS.NOT_ATTENDING
 
     useEffect(() => {
         const fetchSignature = () => {
-            firebase.db.collection('scienceClubAppointments').doc(`${client.id}`).get()
+            firebase.db.collection('scienceClubAppointments').doc(`${appointment.id}`).get()
                 .then(documentSnapshot => {
                     const sig = documentSnapshot.get('signature')
                     const signedBy = documentSnapshot.get('pickupPerson')
                     const timeStamp = documentSnapshot.get('timeStamp')
-                    setSignature({sig, signedBy, timeStamp: timeStamp.toDate()})
+                    setSignature({sig, signedBy, timeStamp: timeStamp ? timeStamp.toDate() : ""})
                 })
                 .catch(err => {
                     console.log(`Error getting signature: ${err}`)
@@ -56,13 +56,13 @@ const ChildExpansionPanel = props => {
 
         fetchSignature()
 
-    }, [firebase.db, client.id])
+    }, [firebase.db, appointment.id])
 
-    const childDetailsForm = Utilities.retrieveForm(client, acuity.FORMS.CHILD_DETAILS)
-    const anaphylaxisForm = Utilities.retrieveForm(client, acuity.FORMS.ANAPHYLAXIS)
-    const emergencyContactForm = Utilities.retrieveForm(client, acuity.FORMS.EMERGENCY_CONTACT)
-    const pickupPeople = Utilities.retrieveForm(client, acuity.FORMS.PICKUP_PERMISSION)
-    const mergedPickupPeople = [{id: client.id, value: `${client.firstName} ${client.lastName}`}, ...pickupPeople]
+    const childDetailsForm = Utilities.retrieveForm(appointment, acuity.FORMS.CHILD_DETAILS)
+    const anaphylaxisForm = Utilities.retrieveForm(appointment, acuity.FORMS.ANAPHYLAXIS)
+    const emergencyContactForm = Utilities.retrieveForm(appointment, acuity.FORMS.EMERGENCY_CONTACT)
+    const pickupPeople = Utilities.retrieveForm(appointment, acuity.FORMS.PICKUP_PERMISSION)
+    const mergedPickupPeople = [{id: appointment.id, value: `${appointment.firstName} ${appointment.lastName}`}, ...pickupPeople]
     const childName = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_NAME)
     const isInPrep = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_GRADE) === "Prep"
     const hasAllergies = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO) === "yes"
@@ -75,10 +75,10 @@ const ChildExpansionPanel = props => {
 
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { method: 'updateLabel', clientId: client.id, label: acuity.LABELS.CHECKED_IN }
+            data: { method: 'updateLabel', clientId: appointment.id, label: acuity.LABELS.CHECKED_IN }
         }).then(result => {
             console.log(result)
-            setClient(result.data)
+            setAppointment(result.data)
             setLoading(false)
         }).catch(err => {
             console.error(err)
@@ -100,16 +100,16 @@ const ChildExpansionPanel = props => {
 
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { method: 'updateLabel', clientId: client.id, label: acuity.LABELS.CHECKED_OUT }
+            data: { method: 'updateLabel', clientId: appointment.id, label: acuity.LABELS.CHECKED_OUT }
         }).then(functionsResult => {
             console.log(functionsResult)
-            firebase.db.doc(`scienceClubAppointments/${client.id}/`).set({
+            firebase.db.doc(`scienceClubAppointments/${appointment.id}/`).set({
                 pickupPerson: pickupPerson,
                 signature: dataUrl,
                 timeStamp: new Date()
             }).then(firestoreResult => {
                 console.log(`Firestore result: ${firestoreResult}`)
-                setClient(functionsResult.data)
+                setAppointment(functionsResult.data)
                 setSignature({sig: dataUrl, signedBy: pickupPerson, timeStamp: new Date()})
                 setLoading(false)
                 setOpen(false)
@@ -124,9 +124,9 @@ const ChildExpansionPanel = props => {
     return (
         <>
         <Accordion
-            key={client.id}
-            expanded={expanded === client.id}
-            onChange={props.onClientSelectionChange(client.id)}
+            key={appointment.id}
+            expanded={expanded === appointment.id}
+            onChange={props.onClientSelectionChange(appointment.id)}
         >
             <AccordianSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.panelSummary}>
@@ -155,7 +155,7 @@ const ChildExpansionPanel = props => {
                         <TableBody>
                             <TableRow>
                                 <TableCell variant="head">Parent name:</TableCell>
-                                <TableCell>{client.firstName} {client.lastName}</TableCell>
+                                <TableCell>{appointment.firstName} {appointment.lastName}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Child year level:</TableCell>
@@ -163,7 +163,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Parent mobile:</TableCell>
-                                <TableCell>{client.phone}</TableCell>
+                                <TableCell>{appointment.phone}</TableCell>
                             </TableRow>
                             {hasAllergies && <TableRow>
                                 <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
@@ -171,7 +171,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>}
                             <TableRow>
                                 <TableCell variant="head">Parent email:</TableCell>
-                                <TableCell>{client.email}</TableCell>
+                                <TableCell>{appointment.email}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">People allowed to pick child up:</TableCell>
