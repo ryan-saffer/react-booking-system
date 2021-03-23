@@ -1,0 +1,11 @@
+{
+  "name": "fizz-kidz",
+  "version": "1.0.0",
+  "description": "Shared value and types to be used across React and Functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ryan Saffer",
+  "license": "ISC"
+}

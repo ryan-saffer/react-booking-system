@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as BookingConstants from '../constants/bookings'
 import { runAppsScript } from './index'
+import { CreationDisplayValues, Additions } from '../../shared'
 
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
@@ -99,22 +100,20 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
 
     // creations
     const selectedCreations = []
-    for (let i = getIndex(BaseFormQuestion.Creations1); i <= getIndex(BaseFormQuestion.Creations5); i++) {
+    for (let i = getIndex(BaseFormQuestion.Creations1); i <= getIndex(BaseFormQuestion.Creations6); i++) {
         selectedCreations.push(...formResponse[i].split(/, ?(?=[A-Z])/)) // split by ", [single capital letter]". make sure creations never include this pattern
     }
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
-    booking.creation1 = CreationFormsMap[filteredCreations[0]]
-    booking.creation2 = CreationFormsMap[filteredCreations[1]]
-    booking.creation3 = CreationFormsMap[filteredCreations[2]]
+    booking.creation1 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[0])
+    booking.creation2 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[1])
+    booking.creation3 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[2])
 
     let additions: string[] = []
     if (!isMobile) {
         // additions
         additions = formResponse[getIndex(InStoreAdditionalQuestion.Additions)].split(/, ?(?=[A-Z])/)
-        for (const addition of additions) {
-            booking[AdditionsFormMap[addition]] = true
-        }
+        additions.forEach(addition => booking[AdditionsFormMap[addition]] = true)
 
         // cake
         booking.cake = formResponse[getIndex(InStoreAdditionalQuestion.Cake)]
@@ -154,25 +153,26 @@ function getIndex(question: BaseFormQuestion | InStoreAdditionalQuestion) {
 
 enum BaseFormQuestion {
     ParentName = 1,
-    ChildName,
-    ChildAge,
-    NumberOfChildren,
-    Creations1,
-    Creations2,
-    Creations3,
-    Creations4,
-    Creations5,
-    FunFacts,
-    Questions,
-    FoundUs
+    ChildName = 2,
+    ChildAge = 3,
+    NumberOfChildren = 4,
+    Creations1 = 5,
+    Creations2 = 6,
+    Creations3 = 7,
+    Creations4 = 8,
+    Creations5 = 9,
+    Creations6 = 10,
+    FunFacts = 11,
+    Questions = 12,
+    FoundUs = 13
 }
 
 enum InStoreAdditionalQuestion {
-    Location = 13, // start at 13 so as not to overwrite BaseFormQuestion indexing
-    Additions,
-    CakeSelected,
-    Cake,
-    CakeFlavour,
+    Location = 14, // start at 14 so as not to overwrite BaseFormQuestion indexing
+    Additions = 15,
+    CakeSelected = 16,
+    Cake = 17,
+    CakeFlavour = 18,
 }
 
 type MobileQuestionsIndexMap = { [key in BaseFormQuestion]: number }
@@ -189,13 +189,14 @@ const InStoreQuestions: InStoreQuestionsIndexMap = {
     [BaseFormQuestion.Creations3]: 9,
     [BaseFormQuestion.Creations4]: 10,
     [BaseFormQuestion.Creations5]: 11,
-    [InStoreAdditionalQuestion.Additions]: 12,
-    [InStoreAdditionalQuestion.CakeSelected]: 13,
-    [InStoreAdditionalQuestion.Cake]: 14,
-    [InStoreAdditionalQuestion.CakeFlavour]: 15,
-    [BaseFormQuestion.FunFacts]: 16,
-    [BaseFormQuestion.Questions]: 17,
-    [BaseFormQuestion.FoundUs]: 18
+    [BaseFormQuestion.Creations6]: 12,
+    [InStoreAdditionalQuestion.Additions]: 13,
+    [InStoreAdditionalQuestion.CakeSelected]: 14,
+    [InStoreAdditionalQuestion.Cake]: 15,
+    [InStoreAdditionalQuestion.CakeFlavour]: 16,
+    [BaseFormQuestion.FunFacts]: 17,
+    [BaseFormQuestion.Questions]: 18,
+    [BaseFormQuestion.FoundUs]: 19
 }
 
 const MobileQuestions: MobileQuestionsIndexMap = {
@@ -208,9 +209,10 @@ const MobileQuestions: MobileQuestionsIndexMap = {
     [BaseFormQuestion.Creations3]: 8,
     [BaseFormQuestion.Creations4]: 9,
     [BaseFormQuestion.Creations5]: 10,
-    [BaseFormQuestion.FunFacts]: 11,
-    [BaseFormQuestion.Questions]: 12,
-    [BaseFormQuestion.FoundUs]: 13
+    [BaseFormQuestion.Creations6]: 11,
+    [BaseFormQuestion.FunFacts]: 12,
+    [BaseFormQuestion.Questions]: 13,
+    [BaseFormQuestion.FoundUs]: 14
 }
 
 type Booking = {
@@ -246,46 +248,13 @@ type Booking = {
     [key: string]: any
 }
 
-type StringMap = {
-    [key: string]: string
-}
-
-const CreationFormsMap: StringMap = {
-    "Fairy Bath-Bombs": "fairyBathBombs",
-    "Glitter Face Paint": "glitterFacePaint",
-    "Rainbow Bath Crystals": "rainbowBathCrystals",
-    "Rainbow Soap": "rainbowSoap",
-    "Sparkling Lip-Balm": "lipBalm",
-    "Shining Perfume": "perfume",
-    "Sparkling unicorn, star or heart Glitter Soap": "soap",
-    "Bubbling Lava lamps": "lavaLamps",
-    "Bugs in Soap": "bugsInSoap",
-    "Fizzy Bath-Bombs": "bathBombs",
-    "Galaxy Soap": "galaxySoap",
-    "Monster Slime": "monsterSlime",
-    "Wobbly Soap": "wobblySoap",
-    "Fluffy Slime": "fluffySlime",
-    "Galaxy Slime": "galaxySlime",
-    "Glitter Slime": "glitterSlime",
-    "Fairy Slime": "fairySlime",
-    "Cupcake Bath-Bombs": "bathBombs",
-    "Large Fizzing Bath-Bombs": "bathBombs",
-    "Sparkling Soap - star, heart, flower, unicorn or fish shaped": "soap",
-    "Expert Galaxy Slime": "expertGalaxySlime",
-    "Expert Rainbow Bath-Bombs": "expertRainbowBathBombs",
-    "Expert Rainbow Slime": "expertRainbowSlime",
-    "Expert Rainbow Soap": "expertRainbowSoap",
-    "Expert Watermelon Bath-Bombs": "expertWatermelonBathBombs",
-    "Expert Galaxy Bath-Bombs": "expertGalaxyBathBombs"
-}
-
-const AdditionsFormMap: StringMap = {
-    "Chicken Nuggets - $30": "chickenNuggets",
-    "Fairy Bread - $25": "fairyBread",
-    "Fruit Platter - $40": "fruitPlatter",
-    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": "sandwichPlatter",
-    "Veggie Platter - $30": "veggiePlatter",
-    "Watermelon Platter - $20": "watermelonPlatter",
-    "Wedges - $25": "wedges",
-    "Lolly bags - $2.50 per child": "lollyBags"
+const AdditionsFormMap: { [key: string]: string } = {
+    "Chicken Nuggets - $30": Additions.CHICKEN_NUGGETS,
+    "Fairy Bread - $25": Additions.FAIRY_BREAD,
+    "Fruit Platter - $40": Additions.FRUIT_PLATTER,
+    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Additions.SANDWICH_PLATTER,
+    "Veggie Platter - $30": Additions.VEGGIE_PLATTER,
+    "Watermelon Platter - $20": Additions.WATERMELON_PLATTER,
+    "Wedges - $25": Additions.WEDGES,
+    "Lolly bags - $2.50 per child": Additions.LOLLY_BAGS
 }
