@@ -118,7 +118,7 @@ const HolidayProgramSelection = props => {
             data: { method: "getClasses", id }
         }).then(result => {
             console.log(result)
-            setClasses(result.data)
+            setClasses(result.data.filter(x => x.calendarID === selectedCalendar))
             setLoading({ ...loading, classes: false })
         }).catch(err => {
             console.error(err)
