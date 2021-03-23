@@ -7,14 +7,16 @@ import { CreationDisplayValues, Additions } from '../../shared'
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
 
+const CREATIONS_ADDITIONS_SPLIT_REGEX = /, ?(?=[A-Z])/ // split by ", [single capital letter]". make sure creations/additions never include this pattern
 let isMobile = false // global
+
 export const onFormSubmit = functions
     .region('australia-southeast1')
     .https.onRequest((req, res) => {
     
         const formResponse = req.body.values as string[]
         functions.logger.log(`formResponse: ${formResponse}`)
-        isMobile = formResponse.length !== 19
+        isMobile = formResponse.length !== Object.keys(InStoreQuestions).length + 2 // +2 because InStoreQuestions indexing starts at 2 (Timestamp and party datetime not included)
         
         const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
 
@@ -101,7 +103,7 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     // creations
     const selectedCreations = []
     for (let i = getIndex(BaseFormQuestion.Creations1); i <= getIndex(BaseFormQuestion.Creations6); i++) {
-        selectedCreations.push(...formResponse[i].split(/, ?(?=[A-Z])/)) // split by ", [single capital letter]". make sure creations never include this pattern
+        selectedCreations.push(...formResponse[i].split(CREATIONS_ADDITIONS_SPLIT_REGEX))
     }
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
@@ -112,7 +114,7 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     let additions: string[] = []
     if (!isMobile) {
         // additions
-        additions = formResponse[getIndex(InStoreAdditionalQuestion.Additions)].split(/, ?(?=[A-Z])/)
+        additions = formResponse[getIndex(InStoreAdditionalQuestion.Additions)].split(CREATIONS_ADDITIONS_SPLIT_REGEX)
         additions.forEach(addition => booking[AdditionsFormMap[addition]] = true)
 
         // cake
