@@ -11,15 +11,15 @@ const SkeletonRows = props => {
 
     return (
         <>
-            {[...Array(rowCount)].map((_, i) => <Skeleton className={classes.skeleton} key={i} animation="wave" height={64} />)}
+            {[...Array(rowCount)].map((_, i) => <Skeleton className={classes.skeleton} key={i} animation={i % 2 === 0 ? 'pulse' : 'wave'} height={64} />)}
         </>
     )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
     skeleton: {
         margin: '0px 24px 0px 24px'
     }
-}))
+})
 
 export default SkeletonRows

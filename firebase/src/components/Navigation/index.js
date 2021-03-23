@@ -10,6 +10,7 @@ import * as ROUTES from '../../constants/routes'
 import { withFirebase } from '../Firebase'
 import { withAuthorization } from '../Session'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
+import useAdmin from '../Hooks/UseAdmin'
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -36,6 +37,9 @@ const useStyles = makeStyles(theme => ({
     logo: {
         height: 50
     },
+    adminHeading: {
+        marginTop: 12
+    },
     signOutButton: {
         width: '100%',
         marginTop: theme.spacing(4),
@@ -49,6 +53,8 @@ const useStyles = makeStyles(theme => ({
 const Navigation = props => {
     
     const classes = useStyles()
+
+    const isAdmin = useAdmin()
 
     const { firebase } = props
 
@@ -75,6 +81,13 @@ const Navigation = props => {
                     <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}>
                         <Typography>After School Science Program</Typography>
                     </Paper>
+                    {isAdmin && <>
+                        <Typography className={classes.adminHeading} variant="h6">Admin Tools</Typography>
+                        <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS)}>
+                            <Typography>Invoicing - Science Club</Typography>
+                        </Paper>
+                        </>
+                    }
                     <Button className={classes.signOutButton} variant="contained" onClick={firebase.doSignOut}>
                             Sign out
                     </Button>

@@ -227,6 +227,12 @@ const mapFormToBooking = formValues => {
         booking[field] = formValues[field].value
     }
 
+    // trim fields
+    booking[FormValues.Fields.PARENT_FIRST_NAME] = booking[FormValues.Fields.PARENT_FIRST_NAME].trim()
+    booking[FormValues.Fields.PARENT_LAST_NAME] = booking[FormValues.Fields.PARENT_LAST_NAME].trim()
+    booking[FormValues.Fields.CHILD_NAME] = booking[FormValues.Fields.CHILD_NAME].trim()
+    booking[FormValues.Fields.CHILD_AGE] = booking[FormValues.Fields.CHILD_AGE].trim()
+
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
     var options = { timeZone: "Australia/Melbourne" }
@@ -257,6 +263,10 @@ function mapBookingToFormValues(booking) {
     tmpFormValues[FormValues.Fields.TIME].value = dateFormat(dateTime, "HH:MM")
 
     return tmpFormValues
+}
+
+function createUniqueId(field, id) {
+    return `${field}-${id}`
 }
 
 const ExistingBookingForm = props => {
@@ -403,7 +413,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={FormValues.Fields.PARENT_FIRST_NAME}
+                        id={createUniqueId(FormValues.Fields.PARENT_FIRST_NAME, bookingId)}
                         name={FormValues.Fields.PARENT_FIRST_NAME}
                         label="Parent first name"
                         fullWidth
@@ -420,7 +430,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={FormValues.Fields.PARENT_LAST_NAME}
+                        id={createUniqueId(FormValues.Fields.PARENT_LAST_NAME, bookingId)}
                         name={FormValues.Fields.PARENT_LAST_NAME}
                         label="Parent last name"
                         fullWidth
@@ -436,7 +446,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={FormValues.Fields.PARENT_EMAIL}
+                        id={createUniqueId(FormValues.Fields.PARENT_EMAIL, bookingId)}
                         name={FormValues.Fields.PARENT_EMAIL}
                         label="Parent email"
                         fullWidth
@@ -452,7 +462,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    id={FormValues.Fields.PARENT_MOBILE}
+                    id={createUniqueId(FormValues.Fields.PARENT_MOBILE, bookingId)}
                     name={FormValues.Fields.PARENT_MOBILE}
                     label="Parent mobile"
                     fullWidth
@@ -473,7 +483,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={FormValues.Fields.CHILD_NAME}
+                        id={createUniqueId(FormValues.Fields.CHILD_NAME, bookingId)}
                         name={FormValues.Fields.CHILD_NAME}
                         label="Child name"
                         fullWidth
@@ -489,7 +499,7 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={FormValues.Fields.CHILD_AGE}
+                        id={createUniqueId(FormValues.Fields.CHILD_AGE, bookingId)}
                         name={FormValues.Fields.CHILD_AGE}
                         label="Child age"
                         fullWidth
@@ -519,7 +529,7 @@ const ExistingBookingForm = props => {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                id={FormValues.Fields.DATE}
+                                id={createUniqueId(FormValues.Fields.DATE, bookingId)}
                                 label="Date of party"
                                 autoOk="true"
                                 size="small"
@@ -538,7 +548,7 @@ const ExistingBookingForm = props => {
                     <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
-                            id={FormValues.Fields.TIME}
+                            id={createUniqueId(FormValues.Fields.TIME, bookingId)}
                             name={FormValues.Fields.TIME}
                             label="Party time"
                             type="time"
@@ -613,7 +623,7 @@ const ExistingBookingForm = props => {
                 {displayAddress &&
                     <Grid item xs={12}>
                         <TextField
-                            id={FormValues.Fields.ADDRESS}
+                            id={createUniqueId(FormValues.Fields.ADDRESS, bookingId)}
                             name={FormValues.Fields.ADDRESS}
                             label="Address"
                             fullWidth
@@ -637,7 +647,7 @@ const ExistingBookingForm = props => {
                     </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={FormValues.Fields.NUMBER_OF_CHILDREN}
+                                id={createUniqueId(FormValues.Fields.NUMBER_OF_CHILDREN, bookingId)}
                                 name={FormValues.Fields.NUMBER_OF_CHILDREN}
                                 label="Number of children"
                                 fullWidth
@@ -662,7 +672,7 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            id={FormValues.Fields.NOTES}
+                            id={createUniqueId(FormValues.Fields.NOTES, bookingId)}
                             name={FormValues.Fields.NOTES}
                             label="Notes"
                             fullWidth
@@ -774,7 +784,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.CHICKEN_NUGGETS}
+                                    id={createUniqueId(FormValues.Additions.CHICKEN_NUGGETS, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.CHICKEN_NUGGETS}
                                     checked={formValues[FormValues.Additions.CHICKEN_NUGGETS].value}
@@ -790,7 +800,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.FAIRY_BREAD}
+                                    id={createUniqueId(FormValues.Additions.FAIRY_BREAD, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.FAIRY_BREAD}
                                     checked={formValues[FormValues.Additions.FAIRY_BREAD].value}
@@ -805,7 +815,7 @@ const ExistingBookingForm = props => {
                     <Grid item xs={4} sm={3}>
                         <FormControlLabel
                             control={<Checkbox
-                                id={FormValues.Additions.FRUIT_PLATTER}
+                                id={createUniqueId(FormValues.Additions.FRUIT_PLATTER, bookingId)}
                                 color="secondary"
                                 name={FormValues.Additions.FRUIT_PLATTER}
                                 checked={formValues[FormValues.Additions.FRUIT_PLATTER].value}
@@ -820,7 +830,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.LOLLY_BAGS}
+                                    id={createUniqueId(FormValues.Additions.LOLLY_BAGS, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.LOLLY_BAGS}
                                     checked={formValues[FormValues.Additions.LOLLY_BAGS].value}
@@ -836,7 +846,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.SANDWICH_PLATTER}
+                                    id={createUniqueId(FormValues.Additions.SANDWICH_PLATTER, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.SANDWICH_PLATTER}
                                     checked={formValues[FormValues.Additions.SANDWICH_PLATTER].value}
@@ -852,7 +862,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.VEGGIE_PLATTER}
+                                    id={createUniqueId(FormValues.Additions.VEGGIE_PLATTER, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.VEGGIE_PLATTER}
                                     checked={formValues[FormValues.Additions.VEGGIE_PLATTER].value}
@@ -868,7 +878,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.WATERMELON_PLATTER}
+                                    id={createUniqueId(FormValues.Additions.WATERMELON_PLATTER, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.WATERMELON_PLATTER}
                                     checked={formValues[FormValues.Additions.WATERMELON_PLATTER].value}
@@ -884,7 +894,7 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={FormValues.Additions.WEDGES}
+                                    id={createUniqueId(FormValues.Additions.WEDGES, bookingId)}
                                     color="secondary"
                                     name={FormValues.Additions.WEDGES}
                                     checked={formValues[FormValues.Additions.WEDGES].value}
@@ -907,7 +917,7 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            id={FormValues.Fields.CAKE}
+                            id={createUniqueId(FormValues.Fields.CAKE, bookingId)}
                             name={FormValues.Fields.CAKE}
                             label="Cake"
                             fullWidth
@@ -956,7 +966,7 @@ const ExistingBookingForm = props => {
                 {displayQuestions &&
                     <Grid item xs={12}>
                         <TextField
-                            id={FormValues.Fields.QUESTIONS}
+                            id={createUniqueId(FormValues.Fields.QUESTIONS, bookingId)}
                             name={FormValues.Fields.QUESTIONS}
                             label="Questions"
                             fullWidth
@@ -974,7 +984,7 @@ const ExistingBookingForm = props => {
                 {displayFunFacts &&
                     <Grid item xs={12}>
                         <TextField
-                            id={FormValues.Fields.FUN_FACTS}
+                            id={createUniqueId(FormValues.Fields.FUN_FACTS, bookingId)}
                             name={FormValues.Fields.FUN_FACTS}
                             label="Fun Facts"
                             fullWidth

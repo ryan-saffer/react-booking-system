@@ -3,14 +3,14 @@ import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import { compose } from 'recompose'
 
-import { withFirebase } from '../../Firebase'
+import { withFirebase } from '../../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
-import useWindowDimensions from '../../Hooks/UseWindowDimensions'
-import * as Acuity from '../../../constants/acuity'
-import * as Utilities from '../../../utilities'
-import * as bannedPhotoIcon from '../../../drawables/banned-camera-icon-24.png'
-import * as medicalIcon from '../../../drawables/medical-icon-24.png'
-import * as insulinIcon from '../../../drawables/insulin-icon-24.png'
+import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
+import * as Acuity from '../../../../constants/acuity'
+import * as Utilities from '../../../../utilities'
+import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
+import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
+import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -20,20 +20,18 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
-import SkeletonRows from '../../Shared/SkeletonRows'
+import SkeletonRows from '../../../Shared/SkeletonRows'
 import { Dialog, DialogTitle, List, ListItem } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
+import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
 
-const ClassDetailsPage = props => {
+const ScienceClubCheckinClassDetails = props => {
     
     const classes = useStyles()
 
-    const { firebase } = props
-
     const { height } = useWindowDimensions();
 
-    const [clients, setClients] = useState([])
     const [expanded, setExpanded] = useState(false)
     const [loading, setLoading] = useState(true)
     const [showHelpDialog, setShowHelpDialog] = useState(false)
@@ -43,44 +41,24 @@ const ClassDetailsPage = props => {
     const calendarID = queries.calendarId
     const classID = parseInt(queries.classId)
 
-    useEffect(() => {
+    const sortByChildName = (a, b) => {
+        const aName = Utilities.retrieveFormAndField(a, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+        const bName = Utilities.retrieveFormAndField(b, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+    }
 
-        const fetchClients = data => {
-            console.log(data)
-            console.log(classID)
-            firebase.functions.httpsCallable('acuityClient')({
-                auth: firebase.auth.currentUser.toJSON(),
-                data: { method: 'getAppointments', ...data }
-            }).then(result => {
-                console.log(result)
-                const filteredResults = result.data.filter(x => x.classID === classID)
-                const sortedResults = filteredResults.sort(
-                    (a,b) => {
-                        const aName = Utilities.retrieveFormAndField(a, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
-                        const bName = Utilities.retrieveFormAndField(b, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
-                        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
-                    }
-                )
-                setClients(
-                    sortedResults
-                )
-                setLoading(false)
-            }).catch(err => {
-                console.error(err)
-                setLoading(false)
-            })
-        }
-        
-        if (firebase.auth.currentUser) {
-            fetchClients({ appointmentTypeID, calendarID })
-        }
-        
-    }, [firebase.auth.currentUser, appointmentTypeID, calendarID])
+    const appointments = useFetchAppointments({
+        setLoading,
+        appointmentTypeID,
+        calendarID,
+        classID,
+        sorter: sortByChildName
+    })
 
     const navigateBack = () => {
         props.history.goBack()
     }
-    const handleClientSelectionChange = panel => (event, isExpanded) => {
+    const handleClientSelectionChange = panel => (_, isExpanded) => {
         setExpanded(isExpanded ? panel : false)
     }
 
@@ -98,10 +76,10 @@ const ClassDetailsPage = props => {
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
-            {clients.map(client => (
+            {appointments !== null && appointments.map(appointment => (
                 <ChildExpansionPanel
-                    key={client.id}
-                    client={client}
+                    key={appointment.id}
+                    appointment={appointment}
                     onClientSelectionChange={handleClientSelectionChange}
                     expanded={expanded}
                 />
@@ -176,4 +154,4 @@ const useStyles = makeStyles(theme => ({
 export default compose(
     withRouter,
     withFirebase,
-)(ClassDetailsPage)
+)(ScienceClubCheckinClassDetails)

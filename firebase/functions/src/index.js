@@ -13,3 +13,4 @@ export const onFormSubmit = bookingsFormToSheet.onFormSubmit
 export const acuityClient = acuity.client
 export const sidebar = acuityStripeIntegration.sidebar
 export const sendInvoice = acuityStripeIntegration.sendInvoice
+export const retrieveInvoiceStatus = acuityStripeIntegration.retrieveInvoiceStatus

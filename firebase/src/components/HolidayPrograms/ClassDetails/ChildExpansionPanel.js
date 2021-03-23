@@ -22,7 +22,7 @@ const ChildExpansionPanel = props => {
 
     const { firebase, expanded } = props 
 
-    const [appointment, setAppointment] = useState(props.client)
+    const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
 
     const notSignedIn = appointment.labels == null
@@ -81,7 +81,7 @@ const ChildExpansionPanel = props => {
             expanded={expanded === appointment.id}
             onChange={props.onClientSelectionChange(appointment.id)}
         >
-            <AccordianSummary className={classes.accordianSummary} expandIcon={<ExpandMoreIcon className={classes.expandIcon} />}>
+            <AccordianSummary className={classes.accordianSummary} expandIcon={<ExpandMoreIcon />}>
                 <div className={!loading ? classes.panelSummary : classes.invisible}>
                     <div className={classes.checkedInIcon}>
                         {notSignedIn && <img className={classes.icon} src={uncheckedIcon.default} alt="unchecked icon"/>}
