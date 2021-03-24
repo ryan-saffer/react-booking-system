@@ -35,20 +35,20 @@ function sendBookingConfirmationEmail(booking) {
         break;
     }
   }
+
+  var t = getHtmlTemplateForFile('booking-confirmation-mjml-template')
+  if (t === null) {
+    return
+  }
   
   // Using the HTML email template, inject the variables and get the content
-  var t = HtmlService.createTemplateFromFile('booking_confirmation_email_template');
   t.parentName = booking.parentFirstName;
   t.childName = booking.childName;
   t.childAge = booking.childAge;
   t.startDate = buildFormattedStartDate(startDate)
   t.startTime = Utilities.formatDate(startDate, 'Australia/Sydney', 'hh:mm a');
   t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
-  var address = booking.address;
-  if (booking.location !== "mobile") {
-    address = `our ${capitalise(booking.location)} store`
-  }
-  t.address = address;
+  t.address = getPartyAddress(booking);
   t.location = booking.location;
   t.creationCount = creationCount;
   
@@ -58,8 +58,6 @@ function sendBookingConfirmationEmail(booking) {
   // determine which account to send from
   var fromAddress = determineFromEmailAddress(booking.location);
   
-  var signature = getGmailSignature();
-  
   // Send the confirmation email
   GmailApp.sendEmail(
     booking.parentEmail,
@@ -67,7 +65,7 @@ function sendBookingConfirmationEmail(booking) {
     "",
     {
       from: fromAddress,
-      htmlBody: body + signature,
+      htmlBody: body,
       name: "Fizz Kidz"
     }
   );
