@@ -8,6 +8,7 @@ import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus';
 import { FirebaseContext } from '../../../Firebase'
 import * as Utilities from '../../../../utilities'
 import * as Acuity from '../../../../constants/acuity'
+import withConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
 
 const ExpandableTableRow = ({ appointment }) => {
     
@@ -56,7 +57,7 @@ const ExpandableTableRow = ({ appointment }) => {
     )
 }
 
-const InvoiceStatus = ({ appointment }) => {
+const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDialog }) => {
     
     const classes = useStyles()
 
@@ -126,7 +127,17 @@ const InvoiceStatus = ({ appointment }) => {
                     <Chip className={classes.chipNotSent} label="INVOICE NOT SENT" />
                 </TableCell>
                 <TableCell size="small">
-                    <Button className={classes.sendInvoiceButton} onClick={(event) => sendInvoice(appointment.id, event)}>Send Invoice</Button>
+                    <Button
+                        className={classes.sendInvoiceButton}
+                        onClick={event => showConfirmationDialog({
+                            title: "Send Invoice",
+                            message: `Are you sure you want to send an invoice to ${appointment.firstName}?`,
+                            confirmButton: "Send Invoice",
+                            onConfirm: () => sendInvoice(appointment.id, event)
+                        })}
+                    >
+                        Send Invoice
+                    </Button>
                 </TableCell>
                 </>
             )
@@ -135,7 +146,7 @@ const InvoiceStatus = ({ appointment }) => {
         case "ERROR":
             return <TableCell className={classes.redText} size="small" colSpan={2}>Error while fetching invoice</TableCell>
     }
-}
+})
 
 const chipWidth = 140
 const useStyles = makeStyles({
