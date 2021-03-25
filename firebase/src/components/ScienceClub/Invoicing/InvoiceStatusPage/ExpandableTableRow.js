@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { makeStyles, Button, CircularProgress, Chip, Table, TableBody, TableRow, TableCell, IconButton, TableHead } from '@material-ui/core'
+import { makeStyles, Button, Chip, Table, TableBody, TableRow, TableCell, IconButton, TableHead, LinearProgress } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
@@ -95,7 +95,7 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
         case "LOADING":
             return (
                 <TableCell size="small" colSpan={2}>
-                    <CircularProgress size={24} />
+                    <LinearProgress className={classes.linearProgress} variant="indeterminate"/>
                 </TableCell>
             )
         case "PAID":
@@ -158,6 +158,10 @@ const useStyles = makeStyles({
     },
     parentNameCell: {
         textAlign: 'left !important'
+    },
+    linearProgress: {
+        width: '50%',
+        left: '25%'
     },
     parentName: {
         justifySelf: 'flex-start',
