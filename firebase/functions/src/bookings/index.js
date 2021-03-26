@@ -7,7 +7,6 @@ var { DateTime } = require('luxon')
 
 const googleCredentials = require('../../credentials/google-credentials.json')
 
-admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 
 exports.createBooking = functions
