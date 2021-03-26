@@ -31,3 +31,9 @@ export const FORM_FIELDS_OPTIONS = {
     CHILD_PHOTOGRAPHY_PERMISSION_YES: "Yes - I give permission",
     CHILD_PHOTOGRAPHY_PERMISSION_NO: "No - I don't give permission"
 }
+
+export const LABELS = {
+    CHECKED_IN: 1762118,
+    CHECKED_OUT: 2434276,
+    NOT_ATTENDING: 5576830
+}

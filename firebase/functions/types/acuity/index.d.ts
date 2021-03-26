@@ -8,7 +8,22 @@ declare namespace Acuity {
         phone: string,
         appointmentTypeID: number,
         type: string,
-        forms: Form[]
+        labels: Label[],
+        checkoutPerson: string,
+        checkoutTime: string,
+        forms: Form[],
+        notes: string
+    }
+
+    export interface Label {
+        id: number,
+        name: string
+    }
+
+    export interface AppointmentType {
+        id: number,
+        name: string,
+        category: string
     }
 
     export interface Form {

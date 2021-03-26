@@ -9,15 +9,12 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
 })
 import * as formFields from '../constants/acuity'
 import * as Acuity from '../../types/acuity'
+import { isAcuityError } from './shared'
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
     apiKey: acuityCredentials.api_key
 })
-
-function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
-    return (object as Acuity.Error).error !== undefined
-}
 
 const pricesMap: { [key: string]: string } = {
   '195': stripeConfig.STRIPE_PRICE_195,
