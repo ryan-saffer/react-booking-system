@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import * as FormValues from '../../../constants/FormValues'
+import { Fields, Locations } from 'fizz-kidz'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
@@ -130,10 +130,10 @@ const mapFormToBooking = formValues => {
     }
 
     // trim fields
-    booking[FormValues.Fields.PARENT_FIRST_NAME] = booking[FormValues.Fields.PARENT_FIRST_NAME].trim()
-    booking[FormValues.Fields.PARENT_LAST_NAME] = booking[FormValues.Fields.PARENT_LAST_NAME].trim()
-    booking[FormValues.Fields.CHILD_NAME] = booking[FormValues.Fields.CHILD_NAME].trim()
-    booking[FormValues.Fields.CHILD_AGE] = booking[FormValues.Fields.CHILD_AGE].trim()
+    booking[Fields.PARENT_FIRST_NAME] = booking[Fields.PARENT_FIRST_NAME].trim()
+    booking[Fields.PARENT_LAST_NAME] = booking[Fields.PARENT_LAST_NAME].trim()
+    booking[Fields.CHILD_NAME] = booking[Fields.CHILD_NAME].trim()
+    booking[Fields.CHILD_AGE] = booking[Fields.CHILD_AGE].trim()
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -372,7 +372,7 @@ const NewBookingForm = props => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(FormValues.Locations).map(location => (
+                            {Object.values(Locations).map(location => (
                                 <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                             ))}
                     </Select>
