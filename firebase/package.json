@@ -12,6 +12,7 @@
     "date-fns": "^2.14.0",
     "dateformat": "^3.0.3",
     "firebase": "^7.15.3",
+    "fizz-kidz": "file:functions/shared",
     "googleapis": "^39.2.0",
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.28",
