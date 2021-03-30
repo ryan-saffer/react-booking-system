@@ -13,7 +13,7 @@ import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session';
 import NewBookingForm from '../Forms/NewBookingForm'
-import * as FormValues from '../../constants/FormValues';
+import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
@@ -37,7 +37,7 @@ const BookingsPage = props => {
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
     var initialLocations = {}
-    Object.values(FormValues.Locations).forEach(location => initialLocations[location] = true)
+    Object.values(Locations).forEach(location => initialLocations[location] = true)
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
@@ -101,7 +101,7 @@ const BookingsPage = props => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
                 let selectedLocations = {}
-                Object.values(FormValues.Locations).forEach(location => selectedLocations[location] = false)
+                Object.values(Locations).forEach(location => selectedLocations[location] = false)
                 selectedLocations[documentSnapshot.get('location')] = true
                 setSelectedLocations(selectedLocations)
             })
@@ -251,7 +251,7 @@ const BookingsPage = props => {
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm md>
-                    {Object.values(FormValues.Locations).map(location =>
+                    {Object.values(Locations).map(location =>
                         selectedLocations[location] && <LocationBookings key={location} onSuccess={handleCloseBooking} bookings={bookings} location={location} />
                     )}
                 </Grid>
