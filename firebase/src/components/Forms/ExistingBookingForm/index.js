@@ -269,6 +269,34 @@ function createUniqueId(field, id) {
     return `${field}-${id}`
 }
 
+function getCreationMenuItems() {
+
+    // Sort the creation by their display value
+    // this is particularly difficult, so first invert the CreationDisplayValues object
+    // see https://stackoverflow.com/a/23013726/7870403
+    const invertedCreationDisplayValues = Object.entries(CreationDisplayValues).reduce((ret, entry) => {
+        const [key, value] = entry;
+        ret[value] = key;
+        return ret;
+    }, {});
+
+    // then sort it by key
+    const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
+    creationDisplayValues.sort()
+
+    // then add each creation back into a new object one by one, now that it is sorted
+    const sortedCreations = {}
+    creationDisplayValues.forEach(value => {
+        const creation = invertedCreationDisplayValues[value]
+        sortedCreations[creation] = value
+    })
+
+    // and finally return them as menu items
+    return Object.keys(sortedCreations).map(creation => (
+        <MenuItem key={creation} value={creation}>{sortedCreations[creation]}</MenuItem>
+    ))
+}
+
 const ExistingBookingForm = props => {
 
     const classes = useStyles()
@@ -714,9 +742,7 @@ const ExistingBookingForm = props => {
                                 error={formValues[Fields.CREATION_1].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Creations).map(creation => (
-                                    <MenuItem key={creation} value={creation}>{CreationDisplayValues[creation]}</MenuItem>
-                                ))}
+                                {getCreationMenuItems()}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -740,9 +766,7 @@ const ExistingBookingForm = props => {
                                 error={formValues[Fields.CREATION_2].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Creations).map(creation => (
-                                    <MenuItem key={creation} value={creation}>{CreationDisplayValues[creation]}</MenuItem>
-                                ))}
+                                {getCreationMenuItems()}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -766,9 +790,7 @@ const ExistingBookingForm = props => {
                                 error={formValues[Fields.CREATION_3].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Creations).map(creation => (
-                                    <MenuItem key={creation} value={creation}>{CreationDisplayValues[creation]}</MenuItem>
-                                ))}
+                                {getCreationMenuItems()}
                             </Select>
                         </FormControl>
                     </Grid>
