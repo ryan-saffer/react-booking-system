@@ -7,7 +7,7 @@
  * @returns {String} email address to send from
  */
 function determineFromEmailAddress(location) {
-  return location === 'malvern' ? 'malvern@fizzkidz.com.au' : 'info@fizzkidz.com.au';
+  return 'info@fizzkidz.com.au';
 }
 
 /**
@@ -139,6 +139,62 @@ function getCalendarId(location, environment) {
     case "mobile":
       return mobilePartiesCalendarID
   }
+}
+
+/**
+ * Given a booking, returns the address of the booking.
+ * If not mobile, return the store address, otherwise the address from the booking.
+ * 
+ * @param {object} booking 
+ * @returns {string} the address of the party
+ */
+function getPartyAddress(booking) {
+  if (booking.location === 'mobile') {
+    return booking.address
+  } else {
+    switch(booking.location) {
+      case 'balwyn':
+        return "184 Whitehorse Rd, Balwyn, 3103"
+      case 'essendon':
+        return "75 Raleigh St, Essendon, 3040"
+      case 'malvern':
+        return "20 Glenferrie Rd, Malvern, 3144"
+    }
+  }
+}
+
+/**
+ * Given an mjml template filename, calls the mjml api and returns an HtmlTemplate of the converted html.
+ * 
+ * @param {string} filename the name of the mjml template file
+ * @returns an HtmlTemplate (https://developers.google.com/apps-script/reference/html/html-template) or null if there is an error
+ */
+function getHtmlTemplateForFile(filename) {
+
+  // use mjml API to transform mjml template tp html
+  var rawHtml = HtmlService.createTemplateFromFile(filename).getRawContent()
+
+  const payload = {
+    mjml: rawHtml
+  }
+
+  const options = {
+    headers: {
+      Authorization: 'Basic ZWI1MDNlODYtNzJhMy00MjdkLTlkYmUtYjU4NWQzMzFhN2Y0OmEwYjMzZjVkLTE3NTktNDM5Ni04NDE2LTQyNDI2NTEzMmI4ZA=='
+    },
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  }
+  var response = UrlFetchApp.fetch(`https://api.mjml.io/v1/render`, options)
+  var content = response.getContentText()
+  if (response.getResponseCode() !== 200) {
+    console.error(`error using mjml API: ${JSON.parse(content).message}`)
+    return null
+  }
+  
+  return HtmlService.createTemplate(JSON.parse(content).html);
 }
 
 /**
