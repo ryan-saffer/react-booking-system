@@ -57,6 +57,15 @@ const ExpandableTableRow = ({ appointment }) => {
     )
 }
 
+// prices depend on how many weeks they are attending the program for
+// use this map to include the number of weeks in the invoice
+const PriceWeekMap = {
+    '195': '9',
+    '173': '8',
+    '151': '7',
+    '129': '6'
+}
+
 const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDialog }) => {
     
     const classes = useStyles()
@@ -64,9 +73,7 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
     const firebase = useContext(FirebaseContext)
     const [{ status, url }, setStatus] = useInvoiceStatus(appointment)
 
-    const sendInvoice = (appointmentId, event) => {
-        event.stopPropagation()
-        console.log(appointmentId)
+    const sendInvoice = price => {
         setStatus({ status: "LOADING" })
         const childName = Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
         firebase.functions.httpsCallable('sendInvoice')({
@@ -74,10 +81,11 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
             name: `${appointment.firstName} ${appointment.lastName}`,
             phone: appointment.phone,
             childName: childName,
-            invoiceItem: `${childName} - ${appointment.type}`
+            invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
+            appointmentTypeId: appointment.appointmentTypeID,
+            price: price
         })
         .then(result => {
-            console.log('setting status', result)
             setStatus(result.data)
         })
         .catch(error => {
@@ -129,11 +137,12 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
                 <TableCell size="small">
                     <Button
                         className={classes.sendInvoiceButton}
-                        onClick={event => showConfirmationDialog({
+                        onClick={() => showConfirmationDialog({
                             title: "Send Invoice",
-                            message: `Are you sure you want to send an invoice to ${appointment.firstName}?`,
+                            message: `Select the amount you'd like to invoice ${appointment.firstName}?`,
                             confirmButton: "Send Invoice",
-                            onConfirm: () => sendInvoice(appointment.id, event)
+                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` })) },
+                            onConfirm: selectedPrice => sendInvoice(selectedPrice)
                         })}
                     >
                         Send Invoice
