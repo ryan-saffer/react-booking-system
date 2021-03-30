@@ -19,6 +19,13 @@ function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
     return (object as Acuity.Error).error !== undefined
 }
 
+const pricesMap: { [key: string]: string } = {
+  '195': stripeConfig.STRIPE_PRICE_195,
+  '173': stripeConfig.STRIPE_PRICE_173,
+  '151': stripeConfig.STRIPE_PRICE_151,
+  '129': stripeConfig.STRIPE_PRICE_129
+}
+
 type RetrieveInvoiceParams = {
   appointmentId: number
 }
@@ -105,7 +112,12 @@ type SendInvoiceParams = {
   childName: string
   invoiceItem: string,
   appointmentTypeId: number,
+  price: string
   [key: string]: any
+}
+
+const SendInvoiceParamsValidator: SendInvoiceParams = {
+  email: '', name: '', phone: '', childName: '', invoiceItem: '', appointmentTypeId: 0, price: ''
 }
 
 type SendInvoiceResolve = (status: InvoiceStatusResponse) => void
@@ -124,7 +136,7 @@ export const sendInvoice = functions
       reject: SendInvoiceReject
     ) => {
 
-      for (const key in data) {
+      for (const key in SendInvoiceParamsValidator) {
         if (data[key] === undefined) {
           reject(new functions.https.HttpsError('invalid-argument', `${key} value not supplied`))
           return
@@ -176,7 +188,7 @@ function createInvoiceItem(
   const params: Stripe.InvoiceItemCreateParams = {
     customer: customer.id,
     description: data.invoiceItem,
-    price: stripeConfig.STRIPE_PRICE_SCIENCE_CLUB
+    price: pricesMap[data.price]
   }
 
   stripe.invoiceItems.create(params)

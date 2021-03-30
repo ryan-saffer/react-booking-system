@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { makeStyles, Button, CircularProgress, Chip, Table, TableBody, TableRow, TableCell, IconButton, TableHead } from '@material-ui/core'
+import { makeStyles, Button, Chip, Table, TableBody, TableRow, TableCell, IconButton, TableHead, LinearProgress } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
@@ -8,6 +8,7 @@ import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus';
 import { FirebaseContext } from '../../../Firebase'
 import * as Utilities from '../../../../utilities'
 import * as Acuity from '../../../../constants/acuity'
+import withConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
 
 const ExpandableTableRow = ({ appointment }) => {
     
@@ -56,16 +57,23 @@ const ExpandableTableRow = ({ appointment }) => {
     )
 }
 
-const InvoiceStatus = ({ appointment }) => {
+// prices depend on how many weeks they are attending the program for
+// use this map to include the number of weeks in the invoice
+const PriceWeekMap = {
+    '195': '9',
+    '173': '8',
+    '151': '7',
+    '129': '6'
+}
+
+const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDialog }) => {
     
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext)
     const [{ status, url }, setStatus] = useInvoiceStatus(appointment)
 
-    const sendInvoice = (appointmentId, event) => {
-        event.stopPropagation()
-        console.log(appointmentId)
+    const sendInvoice = price => {
         setStatus({ status: "LOADING" })
         const childName = Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
         firebase.functions.httpsCallable('sendInvoice')({
@@ -73,10 +81,11 @@ const InvoiceStatus = ({ appointment }) => {
             name: `${appointment.firstName} ${appointment.lastName}`,
             phone: appointment.phone,
             childName: childName,
-            invoiceItem: `${childName} - ${appointment.type}`
+            invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
+            appointmentTypeId: appointment.appointmentTypeID,
+            price: price
         })
         .then(result => {
-            console.log('setting status', result)
             setStatus(result.data)
         })
         .catch(error => {
@@ -94,7 +103,7 @@ const InvoiceStatus = ({ appointment }) => {
         case "LOADING":
             return (
                 <TableCell size="small" colSpan={2}>
-                    <CircularProgress size={24} />
+                    <LinearProgress className={classes.linearProgress} variant="indeterminate"/>
                 </TableCell>
             )
         case "PAID":
@@ -126,7 +135,18 @@ const InvoiceStatus = ({ appointment }) => {
                     <Chip className={classes.chipNotSent} label="INVOICE NOT SENT" />
                 </TableCell>
                 <TableCell size="small">
-                    <Button className={classes.sendInvoiceButton} onClick={(event) => sendInvoice(appointment.id, event)}>Send Invoice</Button>
+                    <Button
+                        className={classes.sendInvoiceButton}
+                        onClick={() => showConfirmationDialog({
+                            title: "Send Invoice",
+                            message: `Select the amount you'd like to invoice ${appointment.firstName}?`,
+                            confirmButton: "Send Invoice",
+                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` })) },
+                            onConfirm: selectedPrice => sendInvoice(selectedPrice)
+                        })}
+                    >
+                        Send Invoice
+                    </Button>
                 </TableCell>
                 </>
             )
@@ -135,7 +155,7 @@ const InvoiceStatus = ({ appointment }) => {
         case "ERROR":
             return <TableCell className={classes.redText} size="small" colSpan={2}>Error while fetching invoice</TableCell>
     }
-}
+})
 
 const chipWidth = 140
 const useStyles = makeStyles({
@@ -147,6 +167,10 @@ const useStyles = makeStyles({
     },
     parentNameCell: {
         textAlign: 'left !important'
+    },
+    linearProgress: {
+        width: '50%',
+        left: '25%'
     },
     parentName: {
         justifySelf: 'flex-start',
