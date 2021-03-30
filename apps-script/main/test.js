@@ -51,3 +51,26 @@ function test() {
     }
   );
 }
+
+function testBackupScienceClub(appointmentsMap) {
+
+  console.log(appointmentsMap)
+
+  const spreadsheetId = '1t9R_P-zibGHPS4qYucUpRYMHMiY5a7EMhs5XxaeCMi8'
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId)
+
+  for (const [key, value] of Object.entries(appointmentsMap)) {
+    var sheet = spreadsheet.getSheetByName(key)
+    if (sheet == null) {
+      sheet = spreadsheet.insertSheet(key)
+      sheet.appendRow(['Parent First Name', 'Parent Last Name', 'Parent Phone', 'Parent Email', 'Label', 'Notes', 'Checked Out By', 'Checkout Time'])
+      sheet.setFrozenRows(1)
+    }
+    const date = new Date()
+    sheet.appendRow([date.toLocaleDateString()])
+    value.forEach(appointment => {
+      sheet.appendRow([appointment.parentFirstName, appointment.parentLastName, appointment.parentPhone, appointment.parentEmail, appointment.label, appointment.notes, appointment.checkoutPerson, appointment.checkoutTime])
+    })
+  }
+
+}
