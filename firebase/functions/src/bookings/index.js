@@ -117,7 +117,7 @@ exports.sendOutForms = functions
     
     var startDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
     startDate.setDate(startDate.getDate() + ((1 + 7 - startDate.getDay()) % 7)) // will always get upcoming Tuesday
-    var endDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
+    var endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + 7)
 
     console.log("Start date:")
