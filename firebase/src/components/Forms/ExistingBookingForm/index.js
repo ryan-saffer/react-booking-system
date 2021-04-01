@@ -191,6 +191,16 @@ const getEmptyValues = () => (
             error: false,
             errorText: ''
         },
+        [Additions.GRAZING_PLATTER_MEDIUM]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        [Additions.GRAZING_PLATTER_LARGE]: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
         [Fields.CAKE]: {
             value: '',
             error: false,
