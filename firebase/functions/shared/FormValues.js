@@ -120,7 +120,7 @@ export const CreationDisplayValues = {
     [Creations.GALAXY_SLIME]: "Galaxy Slime",
     [Creations.GLITTER_SLIME]: "Glitter Slime",
     [Creations.CRUNCHY_SLIME]: "Crunchy Slime",
-    [Creations.FAIRY_SLIME]: "Fairy Slime",
+    [Creations.FAIRY_SLIME]: "Fairy Glitter Slime",
     [Creations.EXPERT_GALAXY_SLIME]: "Expert Galaxy Slime",
     [Creations.EXPERT_RAINBOW_BATH_BOMBS]: "Expert Rainbow Bath-Bombs",
     [Creations.EXPERT_CRUNCHY_SLIME]: "Expert Crunchy Slime",
