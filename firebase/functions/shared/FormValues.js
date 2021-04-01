@@ -41,7 +41,9 @@ export const Additions = {
     VEGGIE_PLATTER: "veggiePlatter",
     WATERMELON_PLATTER: "watermelonPlatter",
     WEDGES: "wedges",
-    LOLLY_BAGS: "lollyBags"
+    LOLLY_BAGS: "lollyBags",
+    GRAZING_PLATTER_MEDIUM: "grazingPlatterMedium",
+    GRAZING_PLATTER_LARGE: "grazingPlatterLarge"
 }
 
 export const Creations = {

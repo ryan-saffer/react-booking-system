@@ -232,6 +232,8 @@ type Booking = {
     fairBready?: boolean,
     fruitPlatter?: boolean,
     funFacts?: string,
+    grazingPlatterMedium?: string,
+    grazingPlatterLarge?: string,
     location: string,
     lollyBags?: boolean,
     notes: string,
@@ -258,5 +260,7 @@ const AdditionsFormMap: { [key: string]: string } = {
     "Veggie Platter - $30": Additions.VEGGIE_PLATTER,
     "Watermelon Platter - $20": Additions.WATERMELON_PLATTER,
     "Wedges - $25": Additions.WEDGES,
-    "Lolly bags - $2.50 per child": Additions.LOLLY_BAGS
+    "Lolly bags - $2.50 per child": Additions.LOLLY_BAGS,
+    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Additions.GRAZING_PLATTER_MEDIUM,
+    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Additions.GRAZING_PLATTER_LARGE
 }
