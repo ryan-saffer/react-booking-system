@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as BookingConstants from '../constants/bookings'
 import { runAppsScript } from './index'
-import { CreationDisplayValues, Additions } from '../../shared'
+import { GoogleForm } from 'fizz-kidz'
 
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
@@ -107,9 +107,9 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     }
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
-    booking.creation1 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[0])
-    booking.creation2 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[1])
-    booking.creation3 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[2])
+    booking.creation1 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[0])
+    booking.creation2 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[1])
+    booking.creation3 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[2])
 
     let additions: string[] = []
     if (!isMobile) {
@@ -253,14 +253,14 @@ type Booking = {
 }
 
 const AdditionsFormMap: { [key: string]: string } = {
-    "Chicken Nuggets - $30": Additions.CHICKEN_NUGGETS,
-    "Fairy Bread - $25": Additions.FAIRY_BREAD,
-    "Fruit Platter - $40": Additions.FRUIT_PLATTER,
-    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Additions.SANDWICH_PLATTER,
-    "Veggie Platter - $30": Additions.VEGGIE_PLATTER,
-    "Watermelon Platter - $20": Additions.WATERMELON_PLATTER,
-    "Wedges - $25": Additions.WEDGES,
-    "Lolly bags - $2.50 per child": Additions.LOLLY_BAGS,
-    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Additions.GRAZING_PLATTER_MEDIUM,
-    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Additions.GRAZING_PLATTER_LARGE
+    "Chicken Nuggets - $30": GoogleForm.Additions.CHICKEN_NUGGETS,
+    "Fairy Bread - $25": GoogleForm.Additions.FAIRY_BREAD,
+    "Fruit Platter - $40": GoogleForm.Additions.FRUIT_PLATTER,
+    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": GoogleForm.Additions.SANDWICH_PLATTER,
+    "Veggie Platter - $30": GoogleForm.Additions.VEGGIE_PLATTER,
+    "Watermelon Platter - $20": GoogleForm.Additions.WATERMELON_PLATTER,
+    "Wedges - $25": GoogleForm.Additions.WEDGES,
+    "Lolly bags - $2.50 per child": GoogleForm.Additions.LOLLY_BAGS,
+    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": GoogleForm.Additions.GRAZING_PLATTER_MEDIUM,
+    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": GoogleForm.Additions.GRAZING_PLATTER_LARGE
 }

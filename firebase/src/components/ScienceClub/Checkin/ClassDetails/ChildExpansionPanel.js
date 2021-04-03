@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { withFirebase } from '../../../Firebase'
-import * as acuity from '../../../../constants/acuity'
+import { Acuity } from 'fizz-kidz'
 import * as Utilities from '../../../../utilities'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
@@ -17,7 +17,7 @@ import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody, Chip } from '@material-ui/core';
-import { green, red, yellow } from '@material-ui/core/colors';
+import { red, yellow } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog';
@@ -35,9 +35,9 @@ const ChildExpansionPanel = props => {
     const [key, setKey] = useState(0)
 
     const notSignedIn = appointment.labels == null
-    const isSignedIn = appointment.labels != null && appointment.labels[0].id === acuity.LABELS.CHECKED_IN
-    const isSignedOut = appointment.labels != null && appointment.labels[0].id === acuity.LABELS.CHECKED_OUT
-    const notAttending = appointment.labels !== null && appointment.labels[0].id === acuity.LABELS.NOT_ATTENDING
+    const isSignedIn = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_IN
+    const isSignedOut = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT
+    const notAttending = appointment.labels !== null && appointment.labels[0].id === Acuity.Constants.Labels.NOT_ATTENDING
 
     useEffect(() => {
         const fetchSignature = () => {
@@ -58,16 +58,16 @@ const ChildExpansionPanel = props => {
 
     }, [firebase.db, appointment.id])
 
-    const childDetailsForm = Utilities.retrieveForm(appointment, acuity.FORMS.CHILD_DETAILS)
-    const anaphylaxisForm = Utilities.retrieveForm(appointment, acuity.FORMS.ANAPHYLAXIS)
-    const emergencyContactForm = Utilities.retrieveForm(appointment, acuity.FORMS.EMERGENCY_CONTACT)
-    const pickupPeople = Utilities.retrieveForm(appointment, acuity.FORMS.PICKUP_PERMISSION)
+    const childDetailsForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.CHILD_DETAILS)
+    const anaphylaxisForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.ANAPHYLAXIS)
+    const emergencyContactForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.EMERGENCY_CONTACT)
+    const pickupPeople = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.PICKUP_PERMISSION)
     const mergedPickupPeople = [{id: appointment.id, value: `${appointment.firstName} ${appointment.lastName}`}, ...pickupPeople]
-    const childName = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_NAME)
-    const isInPrep = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_GRADE) === "Prep"
-    const hasAllergies = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES_YES_NO) === "yes"
-    const isAnaphylactic = Utilities.retrieveFormField(anaphylaxisForm, acuity.FORM_FIELDS.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
-    const permissionToPhotograph = Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_PHOTOGRAPHY_PERMISSON) === acuity.FORM_FIELDS_OPTIONS.CHILD_PHOTOGRAPHY_PERMISSION_YES
+    const childName = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_NAME)
+    const isInPrep = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE) === "Prep"
+    const hasAllergies = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES_YES_NO) === "yes"
+    const isAnaphylactic = Utilities.retrieveFormField(anaphylaxisForm, Acuity.Constants.FormFields.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
+    const permissionToPhotograph = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_PHOTOGRAPHY_PERMISSON) === Acuity.Constants.FormFieldOptions.CHILD_PHOTOGRAPHY_PERMISSION_YES
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -75,7 +75,7 @@ const ChildExpansionPanel = props => {
 
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { method: 'updateLabel', clientId: appointment.id, label: acuity.LABELS.CHECKED_IN }
+            data: { method: 'updateLabel', clientId: appointment.id, label: Acuity.Constants.Labels.CHECKED_IN }
         }).then(result => {
             console.log(result)
             setAppointment(result.data)
@@ -100,7 +100,7 @@ const ChildExpansionPanel = props => {
 
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { method: 'updateLabel', clientId: appointment.id, label: acuity.LABELS.CHECKED_OUT }
+            data: { method: 'updateLabel', clientId: appointment.id, label: Acuity.Constants.Labels.CHECKED_OUT }
         }).then(functionsResult => {
             console.log(functionsResult)
             firebase.db.doc(`scienceClubAppointments/${appointment.id}/`).set({
@@ -159,7 +159,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Child year level:</TableCell>
-                                <TableCell>{Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_GRADE)}</TableCell>
+                                <TableCell>{Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Parent mobile:</TableCell>
@@ -167,7 +167,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             {hasAllergies && <TableRow>
                                 <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
-                                <TableCell className={classes.allergies}>{Utilities.retrieveFormField(childDetailsForm, acuity.FORM_FIELDS.CHILD_ALLERGIES)}</TableCell>
+                                <TableCell className={classes.allergies}>{Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES)}</TableCell>
                             </TableRow>}
                             <TableRow>
                                 <TableCell variant="head">Parent email:</TableCell>
@@ -186,8 +186,8 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">Emergency contact:</TableCell>
                                 <TableCell>
                                     <List>
-                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_NAME)} - {Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_RELATION)}</ListItem>
-                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, acuity.FORM_FIELDS.EMERGENCY_CONTACT_NUMBER)}</ListItem>
+                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME)} - {Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_RELATION)}</ListItem>
+                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER)}</ListItem>
                                     </List>
                                 </TableCell>
                             </TableRow>

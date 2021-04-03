@@ -2,10 +2,10 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
-import * as Acuity from '../../types/acuity'
+import * as AcuityDto from '../../types/acuity'
 import { isAcuityError } from './shared'
 import { runAppsScript } from '../bookings'
-import * as AcuityConstants from '../constants/acuity'
+import { Acuity } from 'fizz-kidz'
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
@@ -39,7 +39,7 @@ export const backupScienceClubAppointments = functions
     .region('australia-southeast1')
     .https.onRequest((req, resp) => {
 
-    acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: Acuity.AppointmentType[] | Acuity.Error) => {
+    acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: AcuityDto.AppointmentType[] | AcuityDto.Error) => {
         let appointmentTypes = handleAcuityResult(err, acuityResponse)
 
         let scienceClubAppointmentTypes = appointmentTypes.filter(it => it.category === SCIENCE_CLUB_TAG)
@@ -86,12 +86,12 @@ export const backupScienceClubAppointments = functions
 function fetchAppointments(
     startDate: Date,
     endDate: Date,
-    appointmentType: Acuity.AppointmentType
+    appointmentType: AcuityDto.AppointmentType
 ) {
     return new Promise<MinifiedAppointmentsMap>((resolve, reject) => {
         acuity.request(
             `/appointments?appointmentTypeID=${appointmentType.id}&minDate=${startDate.toISOString()}&maxDate=${endDate.toISOString()}&excludeForms=true`,
-            (err: any, _acuityRes: any, appointments: Acuity.Appointment[] | Acuity.Error) => {
+            (err: any, _acuityRes: any, appointments: AcuityDto.Appointment[] | AcuityDto.Error) => {
 
                 if (err) { reject(err) }
                 else if (isAcuityError(appointments)) { reject(appointments) }
@@ -100,17 +100,17 @@ function fetchAppointments(
                     // the person who check out the child is only recoreded in firestore
                     // so first get all appointments that were checked out and find the value
                     // then merge in back into the appointment
-                    var checkedOutAppointments: Acuity.Appointment[] = []
-                    var restOfAppointments: Acuity.Appointment[] = []
+                    var checkedOutAppointments: AcuityDto.Appointment[] = []
+                    var restOfAppointments: AcuityDto.Appointment[] = []
                     appointments.forEach(appointment => {
-                        if (appointment.labels && appointment.labels[0].id === AcuityConstants.LABELS.CHECKED_OUT) {
+                        if (appointment.labels && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT) {
                             checkedOutAppointments.push(appointment)
                         } else {
                             restOfAppointments.push(appointment)
                         }
                     })
 
-                    const promises: Promise<Acuity.Appointment>[] = []
+                    const promises: Promise<AcuityDto.Appointment>[] = []
                     checkedOutAppointments.forEach(appointment => {
                         promises.push(mergeCheckoutData(appointment))
                     })
@@ -139,7 +139,7 @@ function fetchAppointments(
     })
 }
 
-async function mergeCheckoutData(appointment: Acuity.Appointment) {
+async function mergeCheckoutData(appointment: AcuityDto.Appointment) {
     const doc = await firestore.collection('scienceClubAppointments').doc(appointment.id.toString()).get()
     if (doc.exists) {
         appointment.checkoutPerson = doc.data()?.pickupPerson
@@ -151,7 +151,7 @@ async function mergeCheckoutData(appointment: Acuity.Appointment) {
 
 
 
-function handleAcuityResult<T>(error: any, result: T | Acuity.Error) {
+function handleAcuityResult<T>(error: any, result: T | AcuityDto.Error) {
     if (isAcuityError(result)) {
         console.error('error fetching appointment types:', result.message)
         throw new Error(result.error)

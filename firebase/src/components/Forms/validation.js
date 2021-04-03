@@ -1,4 +1,4 @@
-import { Fields, Locations } from 'fizz-kidz'
+import { GoogleForm } from 'fizz-kidz'
 
 /**
  * Validates the form values, sets any errors and error text messages.
@@ -12,16 +12,16 @@ export function validateFormOnChange(formValues, field, value) {
 
     switch (field) {
         // all the following only need to check for empty values
-        case Fields.PARENT_FIRST_NAME:
-        case Fields.PARENT_LAST_NAME:
-        case Fields.CHILD_NAME:
-        case Fields.CHILD_AGE:
-        case Fields.TIME:
-        case Fields.DATE:
-        case Fields.ADDRESS:
+        case GoogleForm.Fields.PARENT_FIRST_NAME:
+        case GoogleForm.Fields.PARENT_LAST_NAME:
+        case GoogleForm.Fields.CHILD_NAME:
+        case GoogleForm.Fields.CHILD_AGE:
+        case GoogleForm.Fields.TIME:
+        case GoogleForm.Fields.DATE:
+        case GoogleForm.Fields.ADDRESS:
             formValues[field].error = value === ''
             break
-        case Fields.PARENT_EMAIL:
+        case GoogleForm.Fields.PARENT_EMAIL:
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
@@ -34,7 +34,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case Fields.PARENT_MOBILE:
+        case GoogleForm.Fields.PARENT_MOBILE:
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
@@ -48,18 +48,18 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case Fields.LOCATION:
-        case Fields.PARTY_LENGTH:
+        case GoogleForm.Fields.LOCATION:
+        case GoogleForm.Fields.PARTY_LENGTH:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
             if (locationAndTimeIsInvalid(formValues)) {
-                formValues[Fields.PARTY_LENGTH].error = true
-                var length = `${formValues[Fields.PARTY_LENGTH].value} hour`
-                if (formValues[Fields.PARTY_LENGTH].value > 1) length += 's'
-                formValues[Fields.PARTY_LENGTH].errorText = `A ${formValues[Fields.LOCATION].value} party cannot be of length ${length}`
+                formValues[GoogleForm.Fields.PARTY_LENGTH].error = true
+                var length = `${formValues[GoogleForm.Fields.PARTY_LENGTH].value} hour`
+                if (formValues[GoogleForm.Fields.PARTY_LENGTH].value > 1) length += 's'
+                formValues[GoogleForm.Fields.PARTY_LENGTH].errorText = `A ${formValues[GoogleForm.Fields.LOCATION].value} party cannot be of length ${length}`
                 break
-            } else if (field === Fields.LOCATION) {
-                formValues[Fields.PARTY_LENGTH].error = false
+            } else if (field === GoogleForm.Fields.LOCATION) {
+                formValues[GoogleForm.Fields.PARTY_LENGTH].error = false
             }
             break
         default:
@@ -76,10 +76,10 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = Object.values(Locations).filter(location => location !== 'mobile')
-    var location = formValues[Fields.LOCATION].value
-    var length = formValues[Fields.PARTY_LENGTH].value
-    if (storeLocations.includes(location) && length === '1') {
+    var storeLocations = Object.values(GoogleForm.Locations).filter(location => location !== 'mobile')
+    var location = formValues[GoogleForm.Fields.LOCATION].value
+    var length = formValues[GoogleForm.Fields.PARTY_LENGTH].value
+    if (storeLocations.Locations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
         return true
@@ -100,23 +100,23 @@ export function validateFormOnSubmit(formValues) {
     for (let field in formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
-        if (field !== Fields.ADDRESS &&
-            field !== Fields.NUMBER_OF_CHILDREN &&
-            field !== Fields.NOTES &&
-            field !== Fields.CREATION_1 &&
-            field !== Fields.CREATION_2 &&
-            field !== Fields.CREATION_3 &&
-            field !== Fields.CAKE &&
-            field !== Fields.CAKE_FLAVOUR &&
-            field !== Fields.QUESTIONS &&
-            field !== Fields.FUN_FACTS) {
+        if (field !== GoogleForm.Fields.ADDRESS &&
+            field !== GoogleForm.Fields.NUMBER_OF_CHILDREN &&
+            field !== GoogleForm.Fields.NOTES &&
+            field !== GoogleForm.Fields.CREATION_1 &&
+            field !== GoogleForm.Fields.CREATION_2 &&
+            field !== GoogleForm.Fields.CREATION_3 &&
+            field !== GoogleForm.Fields.CAKE &&
+            field !== GoogleForm.Fields.CAKE_FLAVOUR &&
+            field !== GoogleForm.Fields.QUESTIONS &&
+            field !== GoogleForm.Fields.FUN_FACTS) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
 
     // validate address here
-    if (formValues[Fields.LOCATION].value === 'mobile') {
-        formValues[Fields.ADDRESS].error = formValues[Fields.ADDRESS].value === ''
+    if (formValues[GoogleForm.Fields.LOCATION].value === 'mobile') {
+        formValues[GoogleForm.Fields.ADDRESS].error = formValues[GoogleForm.Fields.ADDRESS].value === ''
     }
 
     return errorFound(formValues) ? formValues : null
