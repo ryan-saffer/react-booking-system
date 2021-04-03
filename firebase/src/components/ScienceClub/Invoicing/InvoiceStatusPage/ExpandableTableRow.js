@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus';
 import { FirebaseContext } from '../../../Firebase'
 import * as Utilities from '../../../../utilities'
-import * as Acuity from '../../../../constants/acuity'
+import { Acuity } from 'fizz-kidz'
 import withConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
 
 const ExpandableTableRow = ({ appointment }) => {
@@ -44,9 +44,9 @@ const ExpandableTableRow = ({ appointment }) => {
                             <TableCell className={classes.paddingCell}/>
                             <TableCell>{appointment.phone}</TableCell>
                             <TableCell>{appointment.email}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_AGE)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_GRADE)}</TableCell>
+                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)}</TableCell>
+                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_AGE)}</TableCell>
+                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
                         </TableRow>
                     </Table>
                 </TableCell>
@@ -75,7 +75,7 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
 
     const sendInvoice = price => {
         setStatus({ status: "LOADING" })
-        const childName = Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+        const childName = Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
         firebase.functions.httpsCallable('sendInvoice')({
             email: appointment.email,
             name: `${appointment.firstName} ${appointment.lastName}`,

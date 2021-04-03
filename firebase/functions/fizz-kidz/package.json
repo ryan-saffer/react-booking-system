@@ -1,0 +1,15 @@
+{
+  "name": "fizz-kidz",
+  "version": "1.0.0",
+  "description": "Shared value and types to be used across React and Functions",
+  "main": "lib",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/tsc"
+  },
+  "author": "Ryan Saffer",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.2.3"
+  }
+}
