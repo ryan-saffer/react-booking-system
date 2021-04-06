@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import moment from 'moment'
+import { DateTime } from 'luxon'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -198,11 +198,11 @@ const HolidayProgramSelection = props => {
                         disabled={classes.length === 0}
                     >
                         {classes.map(mClass => {
-                            const yesterday = new Date()
-                            yesterday.setDate(yesterday.getDate() - 1)
-                            if (new Date(mClass.time) > yesterday) {
+                            const yesterday = DateTime.now().minus({ days: 1 })
+                            const classDateTime = DateTime.fromISO(mClass.time)
+                            if (classDateTime > yesterday) {
                                 return <MenuItem key={mClass.id} value={mClass}>
-                                {moment(mClass.time).format('dddd, MMMM Do h:mm A, YYYY')}
+                                {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
                             </MenuItem>
                             }
                         })}

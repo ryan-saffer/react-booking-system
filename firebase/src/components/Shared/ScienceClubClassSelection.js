@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import moment from 'moment'
+import { DateTime } from 'luxon'
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -187,7 +187,7 @@ const ScienceClubClassSelection = props => {
                         >
                             {classes.map(mClass => (
                                 <MenuItem key={mClass.id} value={mClass}>
-                                    {moment(mClass.time).format('dddd, MMMM Do, YYYY')}
+                                    {DateTime.fromISO(mClass.time).toFormat('EEEE MMMM d, h:mm a, yyyy')}
                                 </MenuItem>
                             ))}
                         </Select>
