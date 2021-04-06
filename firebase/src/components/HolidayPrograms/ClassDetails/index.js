@@ -4,6 +4,8 @@ import queryString from 'query-string'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
+import * as Acuity from '../../../constants/acuity'
+import * as Utilities from '../../../utilities'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -29,11 +31,18 @@ const ClassDetailsPage = props => {
     const calendarID = queries.calendarId
     const classID = parseInt(queries.classId)
 
+    const sortByChildName = (a, b) => {
+        const aName = Utilities.retrieveFormAndField(a, Acuity.FORMS.CHILDREN_DETAILS, Acuity.FORM_FIELDS.CHILDREN_NAMES)
+        const bName = Utilities.retrieveFormAndField(b, Acuity.FORMS.CHILDREN_DETAILS, Acuity.FORM_FIELDS.CHILDREN_NAMES)
+        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+    }
+
     const appointments = useFetchAppointments({
         setLoading,
         appointmentTypeID,
         calendarID,
-        classID
+        classID,
+        sorter: sortByChildName
     })
 
     const navigateBack = () => {

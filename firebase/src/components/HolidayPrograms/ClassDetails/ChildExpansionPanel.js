@@ -99,9 +99,6 @@ const ChildExpansionPanel = props => {
                         {notSignedIn && <Button className={classes.signInButton} size="small" variant="contained" disabled={loading} onClick={handleSignInButtonClick}>Sign In</Button>}
                         {!hasPaid && <Button className={classes.recordPaymentButton} size="small" variant="contained" disabled={loading} onClick={handleRecordPayment}>Record Payment</Button>}
                     </div>
-                    <div className={classes.loadingDiv}>
-                        {loading && <CircularProgress className={classes.loading} size={24} />}
-                    </div>
                     {loading && <div className={classes.loading}>
                         <CircularProgress size={24} />
                     </div>}
