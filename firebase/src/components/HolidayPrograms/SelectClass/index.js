@@ -198,9 +198,9 @@ const HolidayProgramSelection = props => {
                         disabled={classes.length === 0}
                     >
                         {classes.map(mClass => {
-                            const yesterday = DateTime.now().minus({ days: 1 })
+                            const midnight = DateTime.now().set({ hour: 0 })
                             const classDateTime = DateTime.fromISO(mClass.time)
-                            if (classDateTime > yesterday) {
+                            if (classDateTime > midnight) {
                                 return <MenuItem key={mClass.id} value={mClass}>
                                 {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
                             </MenuItem>
@@ -255,7 +255,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%'
     },
     formControl: {
-        margin: theme.spacing(1),
+        marginTop: theme.spacing(1),
         marginBottom: 16,
         minWidth: 120,
     },
