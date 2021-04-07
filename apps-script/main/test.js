@@ -61,16 +61,40 @@ function testBackupScienceClub(appointmentsMap) {
 
   for (const [key, value] of Object.entries(appointmentsMap)) {
     var sheet = spreadsheet.getSheetByName(key)
+
+    // check if class already exists (this should only occur on week 1)
     if (sheet == null) {
       sheet = spreadsheet.insertSheet(key)
-      sheet.appendRow(['Parent First Name', 'Parent Last Name', 'Parent Phone', 'Parent Email', 'Label', 'Notes', 'Checked Out By', 'Checkout Time'])
+      sheet.appendRow(['Parent First Name', 'Parent Last Name', 'Parent Phone', 'Parent Email', 'Child Name', 'Child Grade', 'Label', 'Notes', 'Checked Out By', 'Checkout Time'])
+      sheet.getRange('A1:J1').setFontWeight('bold')
       sheet.setFrozenRows(1)
     }
+
+    // merge next row into single cell for the date
+    sheet.getRange(sheet.getLastRow() + 1, 1, 1, 10)
+      .merge()
+      .setFontSize(14)
+      .setFontWeight('bold')
+      .setHorizontalAlignment('center')
+
+    // append date
     const date = new Date()
     sheet.appendRow([date.toLocaleDateString()])
+
+    // append each appointment
     value.forEach(appointment => {
-      sheet.appendRow([appointment.parentFirstName, appointment.parentLastName, appointment.parentPhone, appointment.parentEmail, appointment.label, appointment.notes, appointment.checkoutPerson, appointment.checkoutTime])
+      sheet.appendRow([
+        appointment.parentFirstName,
+        appointment.parentLastName,
+        appointment.parentPhone,
+        appointment.parentEmail,
+        appointment.childName,
+        appointment.childGrade,
+        appointment.label,
+        appointment.notes,
+        appointment.checkoutPerson,
+        appointment.checkoutTime
+      ])
     })
   }
-
 }

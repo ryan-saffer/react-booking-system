@@ -23,21 +23,19 @@ type AppsScriptAppointment = {
     parentLastName: string,
     parentPhone: string,
     parentEmail: string,
+    childName: string,
+    childGrade: string,
     label: string,
     notes: string,
     checkoutPerson: string,
     checkoutTime: string
 }
 
-// exports.sendFeedbackEmails = functions
-//   .region('australia-southeast1')
-//   .pubsub.schedule('30 8 * * *')
-//   .timeZone('Australia/Victoria')
-//   .onRun( _ 
-    
-export const backupScienceClubAppointments = functions
-    .region('australia-southeast1')
-    .https.onRequest((req, resp) => {
+exports.backupScienceClubAppointments = functions
+  .region('australia-southeast1')
+  .pubsub.schedule('30 17 * * 1-5')
+  .timeZone('Australia/Victoria')
+  .onRun( _ => {
 
     acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: AcuityDto.AppointmentType[] | AcuityDto.Error) => {
         let appointmentTypes = handleAcuityResult(err, acuityResponse)
@@ -49,8 +47,6 @@ export const backupScienceClubAppointments = functions
         yesterday.setHours(0)
         yesterday.setMinutes(0)
         yesterday.setSeconds(0)
-        // REMOVE BELOW SINGLE LINE
-        yesterday.setDate(yesterday.getDate() - 1)
         let today = new Date(yesterday)
         today.setDate(yesterday.getDate() + 1)
 
@@ -71,13 +67,13 @@ export const backupScienceClubAppointments = functions
                 }
 
                 runAppsScript('testBackupScienceClub', [masterMap])
-                .then(_ => resp.status(200).send(masterMap))
-                .catch(_ => resp.status(500).send())
+                    .then(_ => { return masterMap })
+                    .catch(error => { throw new functions.https.HttpsError('internal', 'error running apps script testBackupScienceClub', error) })
                 
             })
             .catch(error => {
                 console.log(error)
-                resp.status(500).send()
+                throw new functions.https.HttpsError('internal', 'error fetching acuity appointment', error)
             })
 
   })
@@ -90,7 +86,7 @@ function fetchAppointments(
 ) {
     return new Promise<MinifiedAppointmentsMap>((resolve, reject) => {
         acuity.request(
-            `/appointments?appointmentTypeID=${appointmentType.id}&minDate=${startDate.toISOString()}&maxDate=${endDate.toISOString()}&excludeForms=true`,
+            `/appointments?appointmentTypeID=${appointmentType.id}&minDate=${startDate.toISOString()}&maxDate=${endDate.toISOString()}`,
             (err: any, _acuityRes: any, appointments: AcuityDto.Appointment[] | AcuityDto.Error) => {
 
                 if (err) { reject(err) }
@@ -124,6 +120,8 @@ function fetchAppointments(
                                     parentLastName: appointment.lastName,
                                     parentPhone: appointment.phone,
                                     parentEmail: appointment.email,
+                                    childName: Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME),
+                                    childGrade: Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE),
                                     label: appointment.labels && appointment.labels[0].name,
                                     notes: appointment.notes,
                                     checkoutPerson: appointment.checkoutPerson,
