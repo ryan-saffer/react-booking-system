@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 
 import { withFirebase } from '../../../Firebase'
 import { Acuity } from 'fizz-kidz'
-import * as Utilities from '../../../../utilities'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
@@ -58,16 +57,16 @@ const ChildExpansionPanel = props => {
 
     }, [firebase.db, appointment.id])
 
-    const childDetailsForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.CHILD_DETAILS)
-    const anaphylaxisForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.ANAPHYLAXIS)
-    const emergencyContactForm = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.EMERGENCY_CONTACT)
-    const pickupPeople = Utilities.retrieveForm(appointment, Acuity.Constants.Forms.PICKUP_PERMISSION)
+    const childDetailsForm = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.CHILD_DETAILS)
+    const anaphylaxisForm = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.ANAPHYLAXIS)
+    const emergencyContactForm = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.EMERGENCY_CONTACT)
+    const pickupPeople = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.PICKUP_PERMISSION)
     const mergedPickupPeople = [{id: appointment.id, value: `${appointment.firstName} ${appointment.lastName}`}, ...pickupPeople]
-    const childName = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_NAME)
-    const isInPrep = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE) === "Prep"
-    const hasAllergies = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES_YES_NO) === "yes"
-    const isAnaphylactic = Utilities.retrieveFormField(anaphylaxisForm, Acuity.Constants.FormFields.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
-    const permissionToPhotograph = Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_PHOTOGRAPHY_PERMISSON) === Acuity.Constants.FormFieldOptions.CHILD_PHOTOGRAPHY_PERMISSION_YES
+    const childName = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_NAME)
+    const isInPrep = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE) === "Prep"
+    const hasAllergies = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES_YES_NO) === "yes"
+    const isAnaphylactic = Acuity.Utilities.retrieveFormField(anaphylaxisForm, Acuity.Constants.FormFields.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
+    const permissionToPhotograph = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_PHOTOGRAPHY_PERMISSON) === Acuity.Constants.FormFieldOptions.CHILD_PHOTOGRAPHY_PERMISSION_YES
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -159,7 +158,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Child year level:</TableCell>
-                                <TableCell>{Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
+                                <TableCell>{Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell variant="head">Parent mobile:</TableCell>
@@ -167,7 +166,7 @@ const ChildExpansionPanel = props => {
                             </TableRow>
                             {hasAllergies && <TableRow>
                                 <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
-                                <TableCell className={classes.allergies}>{Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES)}</TableCell>
+                                <TableCell className={classes.allergies}>{Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES)}</TableCell>
                             </TableRow>}
                             <TableRow>
                                 <TableCell variant="head">Parent email:</TableCell>
@@ -186,8 +185,8 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">Emergency contact:</TableCell>
                                 <TableCell>
                                     <List>
-                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME)} - {Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_RELATION)}</ListItem>
-                                        <ListItem className={classes.listItem}>{Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER)}</ListItem>
+                                        <ListItem className={classes.listItem}>{Acuity.Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME)} - {Acuity.Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_RELATION)}</ListItem>
+                                        <ListItem className={classes.listItem}>{Acuity.Utilities.retrieveFormField(emergencyContactForm, Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER)}</ListItem>
                                     </List>
                                 </TableCell>
                             </TableRow>

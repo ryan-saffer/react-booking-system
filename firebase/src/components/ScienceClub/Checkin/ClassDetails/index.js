@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import { compose } from 'recompose'
@@ -7,7 +7,6 @@ import { withFirebase } from '../../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Acuity } from 'fizz-kidz'
-import * as Utilities from '../../../../utilities'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
@@ -42,8 +41,8 @@ const ScienceClubCheckinClassDetails = props => {
     const classID = parseInt(queries.classId)
 
     const sortByChildName = (a, b) => {
-        const aName = Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        const bName = Utilities.retrieveFormAndField(b, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
+        const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
+        const bName = Acuity.Utilities.retrieveFormAndField(b, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
         return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
     }
 

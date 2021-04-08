@@ -1,8 +1,7 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import * as BookingConstants from '../constants/bookings'
 import { runAppsScript } from './index'
-import { GoogleForm, AppsScript } from 'fizz-kidz'
+import { Booking, AppsScript } from 'fizz-kidz'
 
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
@@ -21,16 +20,16 @@ export const onFormSubmit = functions
         const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
 
         let collectionReference = db.collection('bookings')
-            .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
+            .where((Booking.Network.Fields.PARENT_FIRST_NAME), '==', parentName[0])
         // search by last name where possible
         if (parentName.length > 1) {
-            collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName.slice(1).join(" "))
+            collectionReference = collectionReference.where(Booking.Network.Fields.PARENT_LAST_NAME, "==", parentName.slice(1).join(" "))
         }
         collectionReference
-            .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
-            .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
-            .where(BookingConstants.fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
-            .where(BookingConstants.fields.DATE_TIME, '>', new Date())
+            .where(Booking.Network.Fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
+            .where(Booking.Network.Fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
+            .where(Booking.Network.Fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
+            .where(Booking.Network.Fields.DATE_TIME, '>', new Date())
             .get()
             .then(querySnapshot => {
                 if (querySnapshot.empty) {
@@ -107,9 +106,9 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     }
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
-    booking.creation1 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[0])
-    booking.creation2 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[1])
-    booking.creation3 = Object.keys(GoogleForm.CreationDisplayValues).find(key => GoogleForm.CreationDisplayValues[key] === filteredCreations[2])
+    booking.creation1 = Object.keys(Booking.CreationDisplayValues).find(key => Booking.CreationDisplayValues[key] === filteredCreations[0])
+    booking.creation2 = Object.keys(Booking.CreationDisplayValues).find(key => Booking.CreationDisplayValues[key] === filteredCreations[1])
+    booking.creation3 = Object.keys(Booking.CreationDisplayValues).find(key => Booking.CreationDisplayValues[key] === filteredCreations[2])
 
     let additions: string[] = []
     if (!isMobile) {
@@ -253,14 +252,14 @@ type Booking = {
 }
 
 const AdditionsFormMap: { [key: string]: string } = {
-    "Chicken Nuggets - $30": GoogleForm.Additions.CHICKEN_NUGGETS,
-    "Fairy Bread - $25": GoogleForm.Additions.FAIRY_BREAD,
-    "Fruit Platter - $40": GoogleForm.Additions.FRUIT_PLATTER,
-    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": GoogleForm.Additions.SANDWICH_PLATTER,
-    "Veggie Platter - $30": GoogleForm.Additions.VEGGIE_PLATTER,
-    "Watermelon Platter - $20": GoogleForm.Additions.WATERMELON_PLATTER,
-    "Wedges - $25": GoogleForm.Additions.WEDGES,
-    "Lolly bags - $2.50 per child": GoogleForm.Additions.LOLLY_BAGS,
-    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": GoogleForm.Additions.GRAZING_PLATTER_MEDIUM,
-    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": GoogleForm.Additions.GRAZING_PLATTER_LARGE
+    "Chicken Nuggets - $30": Booking.Additions.CHICKEN_NUGGETS,
+    "Fairy Bread - $25": Booking.Additions.FAIRY_BREAD,
+    "Fruit Platter - $40": Booking.Additions.FRUIT_PLATTER,
+    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Booking.Additions.SANDWICH_PLATTER,
+    "Veggie Platter - $30": Booking.Additions.VEGGIE_PLATTER,
+    "Watermelon Platter - $20": Booking.Additions.WATERMELON_PLATTER,
+    "Wedges - $25": Booking.Additions.WEDGES,
+    "Lolly bags - $2.50 per child": Booking.Additions.LOLLY_BAGS,
+    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Booking.Additions.GRAZING_PLATTER_MEDIUM,
+    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Booking.Additions.GRAZING_PLATTER_LARGE
 }

@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions'
-import * as stripeConstants from '../constants/stripe'
-const stripeConfig = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "bookings-prod" ? stripeConstants.PROD_CONFIG : stripeConstants.DEV_CONFIG
+import * as StripeConfig from '../config/stripe'
+const stripeConfig = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "bookings-prod" ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
 import Stripe from 'stripe'
