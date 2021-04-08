@@ -79,7 +79,7 @@ function locationAndTimeIsInvalid(formValues) {
     var storeLocations = Object.values(GoogleForm.Locations).filter(location => location !== 'mobile')
     var location = formValues[GoogleForm.Fields.LOCATION].value
     var length = formValues[GoogleForm.Fields.PARTY_LENGTH].value
-    if (storeLocations.Locations.includes(location) && length === '1') {
+    if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
         return true

@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as BookingConstants from '../constants/bookings'
 import { runAppsScript } from './index'
-import { GoogleForm } from 'fizz-kidz'
+import { GoogleForm, AppsScript } from 'fizz-kidz'
 
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
@@ -35,14 +35,14 @@ export const onFormSubmit = functions
             .then(querySnapshot => {
                 if (querySnapshot.empty) {
                     functions.logger.log("no booking found")
-                    functions.logger.log('calling apps script onFormSubmitBookingNotFound')
-                    runAppsScript('onFormSubmitBookingNotFound', [formResponse])
+                    functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND}`)
+                    runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND, [formResponse])
                         .then(_ => {
-                            functions.logger.log("onFormSubmitBookingNotFound finished successfully")
+                            functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND} finished successfully`)
                             res.status(200).send()
                         })
                         .catch(err => {
-                            functions.logger.error("error running onFormSubmitBookingNotFound")
+                            functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND}`)
                             functions.logger.error(err)
                             res.status(500).send(err)
                         })
@@ -61,14 +61,14 @@ export const onFormSubmit = functions
                             functions.logger.log("booking updated successfully")
                             functions.logger.log("updated booking:")
                             functions.logger.log(updatedBooking)
-                            functions.logger.log("calling apps script onFormSubmitBookingFound")
-                            runAppsScript('onFormSubmitBookingFound', [updatedBooking, creations, additions])
+                            functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
+                            runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND, [updatedBooking, creations, additions])
                                 .then(_ => {
-                                        functions.logger.log("onFormSubmitBookingFound finished successfully")
+                                        functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND} finished successfully`)
                                         res.status(200).send()
                                 })
                                 .catch(err => {
-                                    functions.logger.error("error running onFormSubmitBookingFound")
+                                    functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
                                     functions.logger.error(err)
                                     res.status(500).send(err)
                                 })
