@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { withFirebase } from '../../Firebase'
-import * as acuity from '../../../constants/acuity'
+import { Acuity } from 'fizz-kidz'
 import * as medicalIcon from '../../../drawables/medical-icon-24.png'
 import * as checkedInIcon from '../../../drawables/tick-box-green-icon-26.png'
 import * as uncheckedIcon from '../../../drawables/unchecked-icon-26.png'
@@ -26,16 +26,16 @@ const ChildExpansionPanel = props => {
     const [loading, setLoading] = useState(false)
 
     const notSignedIn = appointment.labels == null
-    const isSignedIn = appointment.labels != null && appointment.labels[0].id === acuity.LABELS.CHECKED_IN
+    const isSignedIn = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_IN
 
     const childrenDetailsForm = appointment.forms.find(
-        form => form.id === acuity.FORMS.CHILDREN_DETAILS
+        form => form.id === Acuity.Constants.Forms.CHILDREN_DETAILS
     )
     const childrenNames = childrenDetailsForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILDREN_NAMES
+        field => field.fieldID === Acuity.Constants.FormFields.CHILDREN_NAMES
     ).value
     const allergies = childrenDetailsForm.values.find(
-        field => field.fieldID === acuity.FORM_FIELDS.CHILDREN_ALLERGIES
+        field => field.fieldID === Acuity.Constants.FormFields.CHILDREN_ALLERGIES
     ).value
     const hasAllergies = allergies !== ""
     const [hasPaid, setHasPaid] = useState(appointment.paid === "yes")
@@ -63,7 +63,7 @@ const ChildExpansionPanel = props => {
 
         firebase.functions.httpsCallable('acuityClient')({
             auth: firebase.auth.currentUser.toJSON(),
-            data: { method: 'updateLabel', clientId: appointment.id, label: acuity.LABELS.CHECKED_IN }
+            data: { method: 'updateLabel', clientId: appointment.id, label: Acuity.Constants.Labels.CHECKED_IN }
         }).then(result => {
             console.log(result)
             setAppointment(result.data)

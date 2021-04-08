@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus';
 import { FirebaseContext } from '../../../Firebase'
 import * as Utilities from '../../../../utilities'
-import * as Acuity from '../../../../constants/acuity'
+import { Acuity } from 'fizz-kidz'
 import withConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
 
 const ExpandableTableRow = ({ appointment }) => {
@@ -32,22 +32,24 @@ const ExpandableTableRow = ({ appointment }) => {
             <TableRow className={classes.appointmentDetailsRow}>
                 <TableCell className={classes.appointmentDetailsCell} colSpan={4}>
                     <Table className={classes.appointmentDetailsTable}>
-                        <TableRow className={classes.appointmentDetailsHeaderRow}>
-                            <TableCell variant="head" width="5%" className={classes.paddingCell} />
-                            <TableCell variant="head" width="19%">Parent Phone</TableCell>
-                            <TableCell variant="head" width="19%">Parent Email</TableCell>
-                            <TableCell variant="head" width="19%">Child Name</TableCell>
-                            <TableCell variant="head" width="19%">Child Age</TableCell>
-                            <TableCell variant="head" width="19%">Child Grade</TableCell>
-                        </TableRow>
-                        <TableRow className={classes.appointmentDetailsContentRow}>
-                            <TableCell className={classes.paddingCell}/>
-                            <TableCell>{appointment.phone}</TableCell>
-                            <TableCell>{appointment.email}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_AGE)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_GRADE)}</TableCell>
-                        </TableRow>
+                        <TableBody>
+                            <TableRow className={classes.appointmentDetailsHeaderRow}>
+                                <TableCell variant="head" width="5%" className={classes.paddingCell} />
+                                <TableCell variant="head" width="19%">Parent Phone</TableCell>
+                                <TableCell variant="head" width="19%">Parent Email</TableCell>
+                                <TableCell variant="head" width="19%">Child Name</TableCell>
+                                <TableCell variant="head" width="19%">Child Age</TableCell>
+                                <TableCell variant="head" width="19%">Child Grade</TableCell>
+                            </TableRow>
+                            <TableRow className={classes.appointmentDetailsContentRow}>
+                                <TableCell className={classes.paddingCell}/>
+                                <TableCell>{appointment.phone}</TableCell>
+                                <TableCell>{appointment.email}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_AGE)}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
+                            </TableRow>
+                        </TableBody>
                     </Table>
                 </TableCell>
             </TableRow>
@@ -75,7 +77,7 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
 
     const sendInvoice = price => {
         setStatus({ status: "LOADING" })
-        const childName = Utilities.retrieveFormAndField(appointment, Acuity.FORMS.CHILD_DETAILS, Acuity.FORM_FIELDS.CHILD_NAME)
+        const childName = Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
         firebase.functions.httpsCallable('sendInvoice')({
             email: appointment.email,
             name: `${appointment.firstName} ${appointment.lastName}`,
