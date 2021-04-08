@@ -12,7 +12,7 @@
     "date-fns": "^2.14.0",
     "dateformat": "^3.0.3",
     "firebase": "^7.15.3",
-    "fizz-kidz": "file:functions/shared",
+    "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
     "luxon": "^1.26.0",
     "moment-timezone": "^0.5.28",
@@ -26,9 +26,10 @@
     "typeface-roboto": "0.0.75"
   },
   "scripts": {
-    "start": "REACT_APP_ENV=dev react-scripts start",
-    "build-prod": "REACT_APP_ENV=prod react-scripts build",
-    "build-dev": "REACT_APP_ENV=dev react-scripts build",
+    "build-fizz-kidz": "npm --prefix functions/fizz-kidz run build",
+    "start": "REACT_APP_ENV=dev npm run build-fizz-kidz && react-scripts start",
+    "build-prod": "REACT_APP_ENV=prod npm run build-fizz-kidz && react-scripts build",
+    "build-dev": "REACT_APP_ENV=dev npm run build-fizz-kidz && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

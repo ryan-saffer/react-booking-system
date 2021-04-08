@@ -4,8 +4,7 @@ import queryString from 'query-string'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
-import * as Acuity from '../../../constants/acuity'
-import * as Utilities from '../../../utilities'
+import { Acuity } from 'fizz-kidz'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -32,8 +31,8 @@ const ClassDetailsPage = props => {
     const classID = parseInt(queries.classId)
 
     const sortByChildName = (a, b) => {
-        const aName = Utilities.retrieveFormAndField(a, Acuity.FORMS.CHILDREN_DETAILS, Acuity.FORM_FIELDS.CHILDREN_NAMES)
-        const bName = Utilities.retrieveFormAndField(b, Acuity.FORMS.CHILDREN_DETAILS, Acuity.FORM_FIELDS.CHILDREN_NAMES)
+        const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILDREN_DETAILS, Acuity.Constants.FormFields.CHILDREN_NAMES)
+        const bName = Acuity.Utilities.retrieveFormAndField(b, Acuity.Constants.Forms.CHILDREN_DETAILS, Acuity.Constants.FormFields.CHILDREN_NAMES)
         return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
     }
 

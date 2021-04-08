@@ -19,7 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green, red } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { Fields, Additions, Locations, Creations, CreationDisplayValues, CakeFlavours } from 'fizz-kidz'
+import { GoogleForm } from 'fizz-kidz'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
@@ -71,152 +71,152 @@ const useStyles = makeStyles(theme => ({
 /** Function, not const obj, to avoid mutation. Each call returns an empty form. */
 const getEmptyValues = () => (
     {
-        [Fields.PARENT_FIRST_NAME]: {
+        [GoogleForm.Fields.PARENT_FIRST_NAME]: {
             value: '',
             error: false,
             errorText: 'First name cannot be empty'
         },
-        [Fields.PARENT_LAST_NAME]: {
+        [GoogleForm.Fields.PARENT_LAST_NAME]: {
             value: '',
             error: false,
             errorText: 'Last name cannot be empty'
         },
-        [Fields.PARENT_EMAIL]: {
+        [GoogleForm.Fields.PARENT_EMAIL]: {
             value: '',
             error: false,
             errorText: "Email address cannot be empty"
         },
-        [Fields.PARENT_MOBILE]: {
+        [GoogleForm.Fields.PARENT_MOBILE]: {
             value: '',
             error: false,
             errorText: 'Mobile number cannot be empty'
         },
-        [Fields.CHILD_NAME]: {
+        [GoogleForm.Fields.CHILD_NAME]: {
             value: '',
             error: false,
             errorText: 'Child name cannot be empty'
         },
-        [Fields.CHILD_AGE]: {
+        [GoogleForm.Fields.CHILD_AGE]: {
             value: '',
             error: false,
             errorText: 'Child age cannot be empty'
         },
-        [Fields.DATE]: {
+        [GoogleForm.Fields.DATE]: {
             value: null,
             error: false,
             errorText: 'Date cannot be empty'
         },
-        [Fields.TIME]: {
+        [GoogleForm.Fields.TIME]: {
             value: '',
             error: false,
             errorText: 'Time cannot be empty'
         },
-        [Fields.LOCATION]: {
+        [GoogleForm.Fields.LOCATION]: {
             value: '',
             error: false,
             errorText: 'Location cannot be empty'
         },
-        [Fields.PARTY_LENGTH]: {
+        [GoogleForm.Fields.PARTY_LENGTH]: {
             value: '',
             error: false,
             errorText: 'Party length cannot be empty'
         },
-        [Fields.ADDRESS]: {
+        [GoogleForm.Fields.ADDRESS]: {
             value: '',
             error: false,
             errorText: 'Address cannot be empty'
         },
-        [Fields.NUMBER_OF_CHILDREN]: {
+        [GoogleForm.Fields.NUMBER_OF_CHILDREN]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.NOTES]: {
+        [GoogleForm.Fields.NOTES]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.CREATION_1]: {
+        [GoogleForm.Fields.CREATION_1]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.CREATION_2]: {
+        [GoogleForm.Fields.CREATION_2]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.CREATION_3]: {
+        [GoogleForm.Fields.CREATION_3]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Additions.CHICKEN_NUGGETS]: {
+        [GoogleForm.Additions.CHICKEN_NUGGETS]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.FAIRY_BREAD]: {
+        [GoogleForm.Additions.FAIRY_BREAD]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.FRUIT_PLATTER]: {
+        [GoogleForm.Additions.FRUIT_PLATTER]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.LOLLY_BAGS]: {
+        [GoogleForm.Additions.LOLLY_BAGS]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.SANDWICH_PLATTER]: {
+        [GoogleForm.Additions.SANDWICH_PLATTER]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.VEGGIE_PLATTER]: {
+        [GoogleForm.Additions.VEGGIE_PLATTER]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.WATERMELON_PLATTER]: {
+        [GoogleForm.Additions.WATERMELON_PLATTER]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.WEDGES]: {
+        [GoogleForm.Additions.WEDGES]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.GRAZING_PLATTER_MEDIUM]: {
+        [GoogleForm.Additions.GRAZING_PLATTER_MEDIUM]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Additions.GRAZING_PLATTER_LARGE]: {
+        [GoogleForm.Additions.GRAZING_PLATTER_LARGE]: {
             value: false,
             error: false,
             errorText: ''
         },
-        [Fields.CAKE]: {
+        [GoogleForm.Fields.CAKE]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.CAKE_FLAVOUR]: {
+        [GoogleForm.Fields.CAKE_FLAVOUR]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.QUESTIONS]: {
+        [GoogleForm.Fields.QUESTIONS]: {
             value: '',
             error: false,
             errorText: ''
         },
-        [Fields.FUN_FACTS]: {
+        [GoogleForm.Fields.FUN_FACTS]: {
             value: '',
             error: false,
             errorText: ''
@@ -238,10 +238,10 @@ const mapFormToBooking = formValues => {
     }
 
     // trim fields
-    booking[Fields.PARENT_FIRST_NAME] = booking[Fields.PARENT_FIRST_NAME].trim()
-    booking[Fields.PARENT_LAST_NAME] = booking[Fields.PARENT_LAST_NAME].trim()
-    booking[Fields.CHILD_NAME] = booking[Fields.CHILD_NAME].trim()
-    booking[Fields.CHILD_AGE] = booking[Fields.CHILD_AGE].trim()
+    booking[GoogleForm.Fields.PARENT_FIRST_NAME] = booking[GoogleForm.Fields.PARENT_FIRST_NAME].trim()
+    booking[GoogleForm.Fields.PARENT_LAST_NAME] = booking[GoogleForm.Fields.PARENT_LAST_NAME].trim()
+    booking[GoogleForm.Fields.CHILD_NAME] = booking[GoogleForm.Fields.CHILD_NAME].trim()
+    booking[GoogleForm.Fields.CHILD_AGE] = booking[GoogleForm.Fields.CHILD_AGE].trim()
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -269,8 +269,8 @@ function mapBookingToFormValues(booking) {
     }
 
     const dateTime = booking.dateTime.toDate()
-    tmpFormValues[Fields.DATE].value = dateTime
-    tmpFormValues[Fields.TIME].value = dateFormat(dateTime, "HH:MM")
+    tmpFormValues[GoogleForm.Fields.DATE].value = dateTime
+    tmpFormValues[GoogleForm.Fields.TIME].value = dateFormat(dateTime, "HH:MM")
 
     return tmpFormValues
 }
@@ -284,7 +284,7 @@ function getCreationMenuItems() {
     // Sort the creation by their display value
     // this is particularly difficult, so first invert the CreationDisplayValues object
     // see https://stackoverflow.com/a/23013726/7870403
-    const invertedCreationDisplayValues = Object.entries(CreationDisplayValues).reduce((ret, entry) => {
+    const invertedCreationDisplayValues = Object.entries(GoogleForm.CreationDisplayValues).reduce((ret, entry) => {
         const [key, value] = entry;
         ret[value] = key;
         return ret;
@@ -323,21 +323,21 @@ const ExistingBookingForm = props => {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     
-    const displayAddress = formValues[Fields.LOCATION].value === "mobile"
+    const displayAddress = formValues[GoogleForm.Fields.LOCATION].value === "mobile"
     const displayDateTimeLocation = editing
     const displayDateTimeLocationHeading = displayDateTimeLocation || displayAddress
-    const displayNumberOfChildren = formValues[Fields.NUMBER_OF_CHILDREN].value || editing
-    const displayNotes = formValues[Fields.NOTES].value || editing
-    const displayCreation1 = formValues[Fields.CREATION_1].value || editing
-    const displayCreation2 = formValues[Fields.CREATION_2].value || editing
-    const displayCreation3 = formValues[Fields.CREATION_3].value || editing
+    const displayNumberOfChildren = formValues[GoogleForm.Fields.NUMBER_OF_CHILDREN].value || editing
+    const displayNotes = formValues[GoogleForm.Fields.NOTES].value || editing
+    const displayCreation1 = formValues[GoogleForm.Fields.CREATION_1].value || editing
+    const displayCreation2 = formValues[GoogleForm.Fields.CREATION_2].value || editing
+    const displayCreation3 = formValues[GoogleForm.Fields.CREATION_3].value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
-    const displayCake = formValues[Fields.CAKE].value || editing
-    const displayQuestions = formValues[Fields.QUESTIONS].value || editing
-    const displayFunFacts = formValues[Fields.FUN_FACTS].value || editing
+    const displayCake = formValues[GoogleForm.Fields.CAKE].value || editing
+    const displayQuestions = formValues[GoogleForm.Fields.QUESTIONS].value || editing
+    const displayFunFacts = formValues[GoogleForm.Fields.FUN_FACTS].value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     var additionSelected = false
-    for (let addition of Object.values(Additions)) {
+    for (let addition of Object.values(GoogleForm.Additions)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -359,7 +359,7 @@ const ExistingBookingForm = props => {
         let value
         if (isDateField) {
             value = e
-        } else if (Object.values(Additions).includes(field)) { // checkboxes
+        } else if (Object.values(GoogleForm.Additions).includes(field)) { // checkboxes
             value = e.target.checked
         } else {
             value = e.target.value
@@ -369,9 +369,9 @@ const ExistingBookingForm = props => {
         tmpValues = validateFormOnChange(tmpValues, field, value)
 
         // clear the value and errors of the address field if it is no longer required
-        if (field === Fields.LOCATION && value !== 'mobile') {
-            tmpValues[Fields.ADDRESS].value = ''
-            tmpValues[Fields.ADDRESS].error = false
+        if (field === GoogleForm.Fields.LOCATION && value !== 'mobile') {
+            tmpValues[GoogleForm.Fields.ADDRESS].value = ''
+            tmpValues[GoogleForm.Fields.ADDRESS].error = false
         }
 
         setValid(!errorFound(tmpValues))
@@ -405,7 +405,7 @@ const ExistingBookingForm = props => {
             setTimeout(() => { // let user see success for a second, then refesh
                 setEditing(false)
                 setSuccess(false)
-                props.onSuccess(formValues[Fields.DATE].value)
+                props.onSuccess(formValues[GoogleForm.Fields.DATE].value)
             }, 1000)
         }).catch(err => {
             console.log(err)
@@ -429,7 +429,7 @@ const ExistingBookingForm = props => {
             setTimeout(() => { // let user see success for a second, then refesh
                 setEditing(false)
                 setSuccess(false)
-                props.onSuccess(formValues[Fields.DATE].value)
+                props.onSuccess(formValues[GoogleForm.Fields.DATE].value)
             }, 1000)
         }).catch(err => {
             console.log(err)
@@ -451,8 +451,8 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Fields.PARENT_FIRST_NAME, bookingId)}
-                        name={Fields.PARENT_FIRST_NAME}
+                        id={createUniqueId(GoogleForm.Fields.PARENT_FIRST_NAME, bookingId)}
+                        name={GoogleForm.Fields.PARENT_FIRST_NAME}
                         label="Parent first name"
                         fullWidth
                         size="small"
@@ -460,57 +460,57 @@ const ExistingBookingForm = props => {
                         autoComplete='off'
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Fields.PARENT_FIRST_NAME].value}
-                        error={formValues[Fields.PARENT_FIRST_NAME].error}
-                        helperText={formValues[Fields.PARENT_FIRST_NAME].error ? formValues[Fields.PARENT_FIRST_NAME].errorText : ''}
+                        value={formValues[GoogleForm.Fields.PARENT_FIRST_NAME].value}
+                        error={formValues[GoogleForm.Fields.PARENT_FIRST_NAME].error}
+                        helperText={formValues[GoogleForm.Fields.PARENT_FIRST_NAME].error ? formValues[GoogleForm.Fields.PARENT_FIRST_NAME].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Fields.PARENT_LAST_NAME, bookingId)}
-                        name={Fields.PARENT_LAST_NAME}
+                        id={createUniqueId(GoogleForm.Fields.PARENT_LAST_NAME, bookingId)}
+                        name={GoogleForm.Fields.PARENT_LAST_NAME}
                         label="Parent last name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Fields.PARENT_LAST_NAME].value}
-                        error={formValues[Fields.PARENT_LAST_NAME].error}
-                        helperText={formValues[Fields.PARENT_LAST_NAME].error ? formValues[Fields.PARENT_LAST_NAME].errorText : ''}
+                        value={formValues[GoogleForm.Fields.PARENT_LAST_NAME].value}
+                        error={formValues[GoogleForm.Fields.PARENT_LAST_NAME].error}
+                        helperText={formValues[GoogleForm.Fields.PARENT_LAST_NAME].error ? formValues[GoogleForm.Fields.PARENT_LAST_NAME].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Fields.PARENT_EMAIL, bookingId)}
-                        name={Fields.PARENT_EMAIL}
+                        id={createUniqueId(GoogleForm.Fields.PARENT_EMAIL, bookingId)}
+                        name={GoogleForm.Fields.PARENT_EMAIL}
                         label="Parent email"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Fields.PARENT_EMAIL].value}
-                        error={formValues[Fields.PARENT_EMAIL].error}
-                        helperText={formValues[Fields.PARENT_EMAIL].error ? formValues[Fields.PARENT_EMAIL].errorText : ''}
+                        value={formValues[GoogleForm.Fields.PARENT_EMAIL].value}
+                        error={formValues[GoogleForm.Fields.PARENT_EMAIL].error}
+                        helperText={formValues[GoogleForm.Fields.PARENT_EMAIL].error ? formValues[GoogleForm.Fields.PARENT_EMAIL].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    id={createUniqueId(Fields.PARENT_MOBILE, bookingId)}
-                    name={Fields.PARENT_MOBILE}
+                    id={createUniqueId(GoogleForm.Fields.PARENT_MOBILE, bookingId)}
+                    name={GoogleForm.Fields.PARENT_MOBILE}
                     label="Parent mobile"
                     fullWidth
                     size="small"
                     variant="outlined"
                     disabled={!editing}
                     classes={{ root: classes.disabled }}
-                    value={formValues[Fields.PARENT_MOBILE].value}
-                    error={formValues[Fields.PARENT_MOBILE].error}
-                    helperText={formValues[Fields.PARENT_MOBILE].error ? formValues[Fields.PARENT_MOBILE].errorText : ''}
+                    value={formValues[GoogleForm.Fields.PARENT_MOBILE].value}
+                    error={formValues[GoogleForm.Fields.PARENT_MOBILE].error}
+                    helperText={formValues[GoogleForm.Fields.PARENT_MOBILE].error ? formValues[GoogleForm.Fields.PARENT_MOBILE].errorText : ''}
                     onChange={handleFormChange}
                     />
                 </Grid>
@@ -521,33 +521,33 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Fields.CHILD_NAME, bookingId)}
-                        name={Fields.CHILD_NAME}
+                        id={createUniqueId(GoogleForm.Fields.CHILD_NAME, bookingId)}
+                        name={GoogleForm.Fields.CHILD_NAME}
                         label="Child name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Fields.CHILD_NAME].value}
-                        error={formValues[Fields.CHILD_NAME].error}
-                        helperText={formValues[Fields.CHILD_NAME].error ? formValues[Fields.CHILD_NAME].errorText : ''}
+                        value={formValues[GoogleForm.Fields.CHILD_NAME].value}
+                        error={formValues[GoogleForm.Fields.CHILD_NAME].error}
+                        helperText={formValues[GoogleForm.Fields.CHILD_NAME].error ? formValues[GoogleForm.Fields.CHILD_NAME].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Fields.CHILD_AGE, bookingId)}
-                        name={Fields.CHILD_AGE}
+                        id={createUniqueId(GoogleForm.Fields.CHILD_AGE, bookingId)}
+                        name={GoogleForm.Fields.CHILD_AGE}
                         label="Child age"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Fields.CHILD_AGE].value}
-                        error={formValues[Fields.CHILD_AGE].error}
-                        helperText={formValues[Fields.CHILD_AGE].error ? formValues[Fields.CHILD_AGE].errorText : ''}
+                        value={formValues[GoogleForm.Fields.CHILD_AGE].value}
+                        error={formValues[GoogleForm.Fields.CHILD_AGE].error}
+                        helperText={formValues[GoogleForm.Fields.CHILD_AGE].error ? formValues[GoogleForm.Fields.CHILD_AGE].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -567,15 +567,15 @@ const ExistingBookingForm = props => {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                id={createUniqueId(Fields.DATE, bookingId)}
+                                id={createUniqueId(GoogleForm.Fields.DATE, bookingId)}
                                 label="Date of party"
                                 autoOk="true"
                                 size="small"
                                 disabled={!editing}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[Fields.DATE].value}
-                                error={formValues[Fields.DATE].error}
-                                helperText={formValues[Fields.DATE].error ? formValues[Fields.DATE].errorText : ''}
+                                value={formValues[GoogleForm.Fields.DATE].value}
+                                error={formValues[GoogleForm.Fields.DATE].error}
+                                helperText={formValues[GoogleForm.Fields.DATE].error ? formValues[GoogleForm.Fields.DATE].errorText : ''}
                                 onChange={handleFormChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
@@ -586,16 +586,16 @@ const ExistingBookingForm = props => {
                     <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
-                            id={createUniqueId(Fields.TIME, bookingId)}
-                            name={Fields.TIME}
+                            id={createUniqueId(GoogleForm.Fields.TIME, bookingId)}
+                            name={GoogleForm.Fields.TIME}
                             label="Party time"
                             type="time"
                             size="small"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Fields.TIME].value}
-                            error={formValues[Fields.TIME].error}
-                            helperText={formValues[Fields.TIME].error ? formValues[Fields.TIME].errorText : ''}
+                            value={formValues[GoogleForm.Fields.TIME].value}
+                            error={formValues[GoogleForm.Fields.TIME].error}
+                            helperText={formValues[GoogleForm.Fields.TIME].error ? formValues[GoogleForm.Fields.TIME].errorText : ''}
                             onChange={handleFormChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -614,20 +614,20 @@ const ExistingBookingForm = props => {
                             <InputLabel>Location</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.LOCATION,
-                                    id: Fields.LOCATION,
-                                    value: formValues[Fields.LOCATION].value || ''
+                                    name: GoogleForm.Fields.LOCATION,
+                                    id: GoogleForm.Fields.LOCATION,
+                                    value: formValues[GoogleForm.Fields.LOCATION].value || ''
                                 }}
                                 disabled={true}
-                                error={formValues[Fields.LOCATION].error}
+                                error={formValues[GoogleForm.Fields.LOCATION].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Locations).map(location => (
+                                {Object.values(GoogleForm.Locations).map(location => (
                                     <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                                 ))}
                             </Select>
                             {formValues.location.error ? (
-                                <FormHelperText error={true}>{formValues[Fields.LOCATION].errorText}</FormHelperText>
+                                <FormHelperText error={true}>{formValues[GoogleForm.Fields.LOCATION].errorText}</FormHelperText>
                             ) : null}
                         </FormControl>
                     </Grid>
@@ -640,12 +640,12 @@ const ExistingBookingForm = props => {
                             <InputLabel>Party length</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.PARTY_LENGTH,
-                                    id: Fields.PARTY_LENGTH,
-                                    value: formValues[Fields.PARTY_LENGTH].value || ''
+                                    name: GoogleForm.Fields.PARTY_LENGTH,
+                                    id: GoogleForm.Fields.PARTY_LENGTH,
+                                    value: formValues[GoogleForm.Fields.PARTY_LENGTH].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Fields.PARTY_LENGTH].error}
+                                error={formValues[GoogleForm.Fields.PARTY_LENGTH].error}
                                 onChange={handleFormChange}
                             >
                                 <MenuItem value={'1'}>1 hour</MenuItem>
@@ -653,7 +653,7 @@ const ExistingBookingForm = props => {
                                 <MenuItem value={'2'}>2 hours</MenuItem>
                             </Select>
                             {formValues.partyLength.error &&
-                                <FormHelperText error={true}>{formValues[Fields.PARTY_LENGTH].errorText}</FormHelperText>}
+                                <FormHelperText error={true}>{formValues[GoogleForm.Fields.PARTY_LENGTH].errorText}</FormHelperText>}
                         </FormControl>
                     </Grid>
                     </>
@@ -661,17 +661,17 @@ const ExistingBookingForm = props => {
                 {displayAddress &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Fields.ADDRESS, bookingId)}
-                            name={Fields.ADDRESS}
+                            id={createUniqueId(GoogleForm.Fields.ADDRESS, bookingId)}
+                            name={GoogleForm.Fields.ADDRESS}
                             label="Address"
                             fullWidth
                             size="small"
                             variant="outlined"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Fields.ADDRESS].value}
-                            error={formValues[Fields.ADDRESS].error}
-                            helperText={formValues[Fields.ADDRESS].error ? formValues[Fields.ADDRESS].errorText : ''}
+                            value={formValues[GoogleForm.Fields.ADDRESS].value}
+                            error={formValues[GoogleForm.Fields.ADDRESS].error}
+                            helperText={formValues[GoogleForm.Fields.ADDRESS].error ? formValues[GoogleForm.Fields.ADDRESS].errorText : ''}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -685,17 +685,17 @@ const ExistingBookingForm = props => {
                     </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={createUniqueId(Fields.NUMBER_OF_CHILDREN, bookingId)}
-                                name={Fields.NUMBER_OF_CHILDREN}
+                                id={createUniqueId(GoogleForm.Fields.NUMBER_OF_CHILDREN, bookingId)}
+                                name={GoogleForm.Fields.NUMBER_OF_CHILDREN}
                                 label="Number of children"
                                 fullWidth
                                 size="small"
                                 variant="outlined"
                                 disabled={!editing}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[Fields.NUMBER_OF_CHILDREN].value}
-                                error={formValues[Fields.NUMBER_OF_CHILDREN].error}
-                                helperText={formValues[Fields.NUMBER_OF_CHILDREN].error ? formValues[Fields.NUMBER_OF_CHILDREN].errorText : ''}
+                                value={formValues[GoogleForm.Fields.NUMBER_OF_CHILDREN].value}
+                                error={formValues[GoogleForm.Fields.NUMBER_OF_CHILDREN].error}
+                                helperText={formValues[GoogleForm.Fields.NUMBER_OF_CHILDREN].error ? formValues[GoogleForm.Fields.NUMBER_OF_CHILDREN].errorText : ''}
                                 onChange={handleFormChange}
                             />
                         </Grid>
@@ -710,17 +710,17 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Fields.NOTES, bookingId)}
-                            name={Fields.NOTES}
+                            id={createUniqueId(GoogleForm.Fields.NOTES, bookingId)}
+                            name={GoogleForm.Fields.NOTES}
                             label="Notes"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Fields.NOTES].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[GoogleForm.Fields.NOTES].value) ? 'outlined' : 'filled'}
                             multiline
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Fields.NOTES].value}
-                            error={formValues[Fields.NOTES].error}
+                            value={formValues[GoogleForm.Fields.NOTES].value}
+                            error={formValues[GoogleForm.Fields.NOTES].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -739,17 +739,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Fields.CREATION_1].value ? 'standard' : 'filled'}
+                            variant={formValues[GoogleForm.Fields.CREATION_1].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>First Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.CREATION_1,
-                                    id: Fields.CREATION_1,
-                                    value: formValues[Fields.CREATION_1].value || ''
+                                    name: GoogleForm.Fields.CREATION_1,
+                                    id: GoogleForm.Fields.CREATION_1,
+                                    value: formValues[GoogleForm.Fields.CREATION_1].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Fields.CREATION_1].error}
+                                error={formValues[GoogleForm.Fields.CREATION_1].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -763,17 +763,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Fields.CREATION_2].value ? 'standard' : 'filled'}
+                            variant={formValues[GoogleForm.Fields.CREATION_2].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Second Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.CREATION_2,
-                                    id: Fields.CREATION_2,
-                                    value: formValues[Fields.CREATION_2].value || ''
+                                    name: GoogleForm.Fields.CREATION_2,
+                                    id: GoogleForm.Fields.CREATION_2,
+                                    value: formValues[GoogleForm.Fields.CREATION_2].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Fields.CREATION_2].error}
+                                error={formValues[GoogleForm.Fields.CREATION_2].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -787,17 +787,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Fields.CREATION_3].value ? 'standard' : 'filled'}
+                            variant={formValues[GoogleForm.Fields.CREATION_3].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Third Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.CREATION_3,
-                                    id: Fields.CREATION_3,
-                                    value: formValues[Fields.CREATION_3].value || ''
+                                    name: GoogleForm.Fields.CREATION_3,
+                                    id: GoogleForm.Fields.CREATION_3,
+                                    value: formValues[GoogleForm.Fields.CREATION_3].value || ''
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
-                                error={formValues[Fields.CREATION_3].error}
+                                error={formValues[GoogleForm.Fields.CREATION_3].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -816,11 +816,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.CHICKEN_NUGGETS, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.CHICKEN_NUGGETS, bookingId)}
                                     color="secondary"
-                                    name={Additions.CHICKEN_NUGGETS}
-                                    checked={formValues[Additions.CHICKEN_NUGGETS].value}
-                                    value={formValues[Additions.CHICKEN_NUGGETS].value}
+                                    name={GoogleForm.Additions.CHICKEN_NUGGETS}
+                                    checked={formValues[GoogleForm.Additions.CHICKEN_NUGGETS].value}
+                                    value={formValues[GoogleForm.Additions.CHICKEN_NUGGETS].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -832,11 +832,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.FAIRY_BREAD, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.FAIRY_BREAD, bookingId)}
                                     color="secondary"
-                                    name={Additions.FAIRY_BREAD}
-                                    checked={formValues[Additions.FAIRY_BREAD].value}
-                                    value={formValues[Additions.FAIRY_BREAD].value}
+                                    name={GoogleForm.Additions.FAIRY_BREAD}
+                                    checked={formValues[GoogleForm.Additions.FAIRY_BREAD].value}
+                                    value={formValues[GoogleForm.Additions.FAIRY_BREAD].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -847,11 +847,11 @@ const ExistingBookingForm = props => {
                     <Grid item xs={4} sm={3}>
                         <FormControlLabel
                             control={<Checkbox
-                                id={createUniqueId(Additions.FRUIT_PLATTER, bookingId)}
+                                id={createUniqueId(GoogleForm.Additions.FRUIT_PLATTER, bookingId)}
                                 color="secondary"
-                                name={Additions.FRUIT_PLATTER}
-                                checked={formValues[Additions.FRUIT_PLATTER].value}
-                                value={formValues[Additions.FRUIT_PLATTER].value}
+                                name={GoogleForm.Additions.FRUIT_PLATTER}
+                                checked={formValues[GoogleForm.Additions.FRUIT_PLATTER].value}
+                                value={formValues[GoogleForm.Additions.FRUIT_PLATTER].value}
                                 disabled={!editing}
                                 onChange={handleFormChange} />}
                             label="Fruit Platter"
@@ -862,11 +862,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.LOLLY_BAGS, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.LOLLY_BAGS, bookingId)}
                                     color="secondary"
-                                    name={Additions.LOLLY_BAGS}
-                                    checked={formValues[Additions.LOLLY_BAGS].value}
-                                    value={formValues[Additions.LOLLY_BAGS].value}
+                                    name={GoogleForm.Additions.LOLLY_BAGS}
+                                    checked={formValues[GoogleForm.Additions.LOLLY_BAGS].value}
+                                    value={formValues[GoogleForm.Additions.LOLLY_BAGS].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -878,11 +878,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.SANDWICH_PLATTER, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.SANDWICH_PLATTER, bookingId)}
                                     color="secondary"
-                                    name={Additions.SANDWICH_PLATTER}
-                                    checked={formValues[Additions.SANDWICH_PLATTER].value}
-                                    value={formValues[Additions.SANDWICH_PLATTER].value}
+                                    name={GoogleForm.Additions.SANDWICH_PLATTER}
+                                    checked={formValues[GoogleForm.Additions.SANDWICH_PLATTER].value}
+                                    value={formValues[GoogleForm.Additions.SANDWICH_PLATTER].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -894,11 +894,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.VEGGIE_PLATTER, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.VEGGIE_PLATTER, bookingId)}
                                     color="secondary"
-                                    name={Additions.VEGGIE_PLATTER}
-                                    checked={formValues[Additions.VEGGIE_PLATTER].value}
-                                    value={formValues[Additions.VEGGIE_PLATTER].value}
+                                    name={GoogleForm.Additions.VEGGIE_PLATTER}
+                                    checked={formValues[GoogleForm.Additions.VEGGIE_PLATTER].value}
+                                    value={formValues[GoogleForm.Additions.VEGGIE_PLATTER].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -910,11 +910,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.WATERMELON_PLATTER, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.WATERMELON_PLATTER, bookingId)}
                                     color="secondary"
-                                    name={Additions.WATERMELON_PLATTER}
-                                    checked={formValues[Additions.WATERMELON_PLATTER].value}
-                                    value={formValues[Additions.WATERMELON_PLATTER].value}
+                                    name={GoogleForm.Additions.WATERMELON_PLATTER}
+                                    checked={formValues[GoogleForm.Additions.WATERMELON_PLATTER].value}
+                                    value={formValues[GoogleForm.Additions.WATERMELON_PLATTER].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -926,11 +926,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Additions.WEDGES, bookingId)}
+                                    id={createUniqueId(GoogleForm.Additions.WEDGES, bookingId)}
                                     color="secondary"
-                                    name={Additions.WEDGES}
-                                    checked={formValues[Additions.WEDGES].value}
-                                    value={formValues[Additions.WEDGES].value}
+                                    name={GoogleForm.Additions.WEDGES}
+                                    checked={formValues[GoogleForm.Additions.WEDGES].value}
+                                    value={formValues[GoogleForm.Additions.WEDGES].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -949,16 +949,16 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            id={createUniqueId(Fields.CAKE, bookingId)}
-                            name={Fields.CAKE}
+                            id={createUniqueId(GoogleForm.Fields.CAKE, bookingId)}
+                            name={GoogleForm.Fields.CAKE}
                             label="Cake"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Fields.CAKE].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[GoogleForm.Fields.CAKE].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Fields.CAKE].value}
-                            error={formValues[Fields.CAKE].error}
+                            value={formValues[GoogleForm.Fields.CAKE].value}
+                            error={formValues[GoogleForm.Fields.CAKE].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -966,21 +966,21 @@ const ExistingBookingForm = props => {
                         <FormControl
                             fullWidth
                             size="small"
-                            variant={formValues[Fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
+                            variant={formValues[GoogleForm.Fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
                             classes={{ root: classes.disabled }}
                         >
                             <InputLabel>Cake flavour</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Fields.CAKE_FLAVOUR,
-                                    id: Fields.CAKE_FLAVOUR,
-                                    value: formValues[Fields.CAKE_FLAVOUR].value || ''
+                                    name: GoogleForm.Fields.CAKE_FLAVOUR,
+                                    id: GoogleForm.Fields.CAKE_FLAVOUR,
+                                    value: formValues[GoogleForm.Fields.CAKE_FLAVOUR].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Fields.CAKE_FLAVOUR].error}
+                                error={formValues[GoogleForm.Fields.CAKE_FLAVOUR].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(CakeFlavours).map(flavour => (
+                                {Object.values(GoogleForm.CakeFlavours).map(flavour => (
                                     <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
                                 ))}
                             </Select>
@@ -998,17 +998,17 @@ const ExistingBookingForm = props => {
                 {displayQuestions &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Fields.QUESTIONS, bookingId)}
-                            name={Fields.QUESTIONS}
+                            id={createUniqueId(GoogleForm.Fields.QUESTIONS, bookingId)}
+                            name={GoogleForm.Fields.QUESTIONS}
                             label="Questions"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Fields.QUESTIONS].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[GoogleForm.Fields.QUESTIONS].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Fields.QUESTIONS].error}
-                            value={formValues[Fields.QUESTIONS].value}
+                            error={formValues[GoogleForm.Fields.QUESTIONS].error}
+                            value={formValues[GoogleForm.Fields.QUESTIONS].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -1016,17 +1016,17 @@ const ExistingBookingForm = props => {
                 {displayFunFacts &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Fields.FUN_FACTS, bookingId)}
-                            name={Fields.FUN_FACTS}
+                            id={createUniqueId(GoogleForm.Fields.FUN_FACTS, bookingId)}
+                            name={GoogleForm.Fields.FUN_FACTS}
                             label="Fun Facts"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Fields.FUN_FACTS].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[GoogleForm.Fields.FUN_FACTS].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Fields.FUN_FACTS].error}
-                            value={formValues[Fields.FUN_FACTS].value}
+                            error={formValues[GoogleForm.Fields.FUN_FACTS].error}
+                            value={formValues[GoogleForm.Fields.FUN_FACTS].value}
                             onChange={handleFormChange}
                         />
                     </Grid>

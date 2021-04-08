@@ -4,10 +4,10 @@ const {
   google
 } = require('googleapis');
 var { DateTime } = require('luxon')
+import { AppsScript } from 'fizz-kidz'
 
 const googleCredentials = require('../../credentials/google-credentials.json')
 
-admin.initializeApp(functions.config().firebase)
 const db = admin.firestore()
 
 exports.createBooking = functions
@@ -24,7 +24,7 @@ exports.createBooking = functions
         .then(writeResult => {
           console.log(`Write Result: ${JSON.stringify(writeResult)}`)
           console.log('running apps script...')
-          runAppsScript('createBooking', [doc.id, data.data])
+          runAppsScript(AppsScript.Functions.CREATE_BOOKING, [doc.id, data.data])
             .then(appsScriptResult => {
               console.log('finished apps script')
               appsScriptResult = JSON.parse(appsScriptResult)
@@ -62,7 +62,7 @@ exports.updateBooking = functions
       const documentRef = db.collection('bookings').doc(bookingId)
       // update calendar event and any generated sheets on apps script
       console.log('running apps script...')
-      runAppsScript('updateBooking', [data.data])
+      runAppsScript(AppsScript.Functions.UPDATE_BOOKING, [data.data])
         .then(() => {
           console.log('finished apps script')
           // then update database
@@ -90,7 +90,7 @@ exports.deleteBooking = functions
       const booking = data.data.booking
       const documentRef = db.collection('bookings').doc(bookingId)
       console.log('running apps script...')
-      runAppsScript('deleteBooking', [booking])
+      runAppsScript(AppsScript.Functions.DELETE_BOOKING, [booking])
         .then(() => {
           console.log('finished apps script')
           // then update database
@@ -139,7 +139,7 @@ exports.sendOutForms = functions
           bookings.push(booking)
         })
         console.log('running apps script...')
-        runAppsScript('sendOutForms', [bookings])
+        runAppsScript(AppsScript.Functions.SEND_OUT_FORMS, [bookings])
           .then(() => {
             console.log('finished apps script')
             resolve()
@@ -185,7 +185,7 @@ exports.sendFeedbackEmails = functions
           bookings.push(booking)
         })
         console.log("running apps script...")
-        runAppsScript('sendFeedbackEmails', [bookings])
+        runAppsScript(AppsScript.Functions.SEND_FEEDBACK_EMAILS, [bookings])
           .then(() => {
             console.log("finished apps script successfully")
             resolve()
