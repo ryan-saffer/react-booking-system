@@ -38,16 +38,16 @@ exports.backupScienceClubAppointments = functions
   .onRun( _context => {
 
     acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: AcuityDto.AppointmentType[] | AcuityDto.Error) => {
-        let appointmentTypes = handleAcuityResult(err, acuityResponse)
+        const appointmentTypes = handleAcuityResult(err, acuityResponse)
 
-        let scienceClubAppointmentTypes = appointmentTypes.filter(it => it.category === SCIENCE_CLUB_TAG)
+        const scienceClubAppointmentTypes = appointmentTypes.filter(it => it.category === SCIENCE_CLUB_TAG)
 
         // get all appointments for each type that occured yesterday
-        let yesterday = new Date()
+        const yesterday = new Date()
         yesterday.setHours(0)
         yesterday.setMinutes(0)
         yesterday.setSeconds(0)
-        let today = new Date(yesterday)
+        const today = new Date(yesterday)
         today.setDate(yesterday.getDate() + 1)
 
         const promises: Promise<MinifiedAppointmentsMap>[] = []
@@ -58,7 +58,7 @@ exports.backupScienceClubAppointments = functions
         Promise.all(promises)
             .then(result => {
                 // merge array of objects into one object
-                let masterMap: MinifiedAppointmentsMap = Object.assign({}, ...result)
+                const masterMap: MinifiedAppointmentsMap = Object.assign({}, ...result)
 
                 for (const [key, value] of Object.entries(masterMap)) {
                     if (value.length === 0) {
@@ -96,8 +96,8 @@ function fetchAppointments(
                     // the person who check out the child is only recoreded in firestore
                     // so first get all appointments that were checked out and find the value
                     // then merge in back into the appointment
-                    var checkedOutAppointments: AcuityDto.Appointment[] = []
-                    var restOfAppointments: AcuityDto.Appointment[] = []
+                    const checkedOutAppointments: AcuityDto.Appointment[] = []
+                    const restOfAppointments: AcuityDto.Appointment[] = []
                     appointments.forEach(appointment => {
                         if (appointment.labels && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT) {
                             checkedOutAppointments.push(appointment)

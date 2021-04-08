@@ -1,4 +1,6 @@
-export const fields = {
+import { BookingFirestore } from '../booking'
+
+export const Fields: BookingFirestore = {
     PARENT_FIRST_NAME: "parentFirstName",
     PARENT_LAST_NAME: "parentLastName",
     PARENT_EMAIL: "parentEmail",
