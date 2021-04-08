@@ -127,3 +127,56 @@ function sendFeedbackEmails(bookings) {
     sendFeedbackEmail(bookings[i])
   }
 }
+
+/**
+ * Copies all appointments provided into a Google Spreadsheet, for record keeping.
+ * Once backed up, the appointment can be safely deleted from acuity, and allow people to book into the series.
+ * 
+ * @param {Object} appointmentsMap map of each science club appointment type as the key, and array of appointments as the value
+ */
+function backupScienceClub(appointmentsMap) {
+
+  console.log(appointmentsMap)
+
+  const spreadsheetId = '1t9R_P-zibGHPS4qYucUpRYMHMiY5a7EMhs5XxaeCMi8'
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId)
+
+  for (const [key, value] of Object.entries(appointmentsMap)) {
+    var sheet = spreadsheet.getSheetByName(key)
+
+    // check if class already exists (this should only occur on week 1)
+    if (sheet == null) {
+      sheet = spreadsheet.insertSheet(key)
+      sheet.appendRow(['Parent First Name', 'Parent Last Name', 'Parent Phone', 'Parent Email', 'Child Name', 'Child Grade', 'Label', 'Notes', 'Checked Out By', 'Checkout Time'])
+      sheet.getRange('A1:J1').setFontWeight('bold')
+      sheet.setFrozenRows(1)
+    }
+
+    // merge next row into single cell for the date
+    sheet.getRange(sheet.getLastRow() + 1, 1, 1, 10)
+      .merge()
+      .setFontSize(14)
+      .setFontWeight('bold')
+      .setHorizontalAlignment('center')
+
+    // append date
+    const date = new Date()
+    sheet.appendRow([date.toLocaleDateString()])
+
+    // append each appointment
+    value.forEach(appointment => {
+      sheet.appendRow([
+        appointment.parentFirstName,
+        appointment.parentLastName,
+        appointment.parentPhone,
+        appointment.parentEmail,
+        appointment.childName,
+        appointment.childGrade,
+        appointment.label,
+        appointment.notes,
+        appointment.checkoutPerson,
+        appointment.checkoutTime
+      ])
+    })
+  }
+}

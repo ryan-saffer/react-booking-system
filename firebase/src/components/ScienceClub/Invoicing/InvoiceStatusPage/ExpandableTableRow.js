@@ -32,22 +32,24 @@ const ExpandableTableRow = ({ appointment }) => {
             <TableRow className={classes.appointmentDetailsRow}>
                 <TableCell className={classes.appointmentDetailsCell} colSpan={4}>
                     <Table className={classes.appointmentDetailsTable}>
-                        <TableRow className={classes.appointmentDetailsHeaderRow}>
-                            <TableCell variant="head" width="5%" className={classes.paddingCell} />
-                            <TableCell variant="head" width="19%">Parent Phone</TableCell>
-                            <TableCell variant="head" width="19%">Parent Email</TableCell>
-                            <TableCell variant="head" width="19%">Child Name</TableCell>
-                            <TableCell variant="head" width="19%">Child Age</TableCell>
-                            <TableCell variant="head" width="19%">Child Grade</TableCell>
-                        </TableRow>
-                        <TableRow className={classes.appointmentDetailsContentRow}>
-                            <TableCell className={classes.paddingCell}/>
-                            <TableCell>{appointment.phone}</TableCell>
-                            <TableCell>{appointment.email}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_AGE)}</TableCell>
-                            <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
-                        </TableRow>
+                        <TableBody>
+                            <TableRow className={classes.appointmentDetailsHeaderRow}>
+                                <TableCell variant="head" width="5%" className={classes.paddingCell} />
+                                <TableCell variant="head" width="19%">Parent Phone</TableCell>
+                                <TableCell variant="head" width="19%">Parent Email</TableCell>
+                                <TableCell variant="head" width="19%">Child Name</TableCell>
+                                <TableCell variant="head" width="19%">Child Age</TableCell>
+                                <TableCell variant="head" width="19%">Child Grade</TableCell>
+                            </TableRow>
+                            <TableRow className={classes.appointmentDetailsContentRow}>
+                                <TableCell className={classes.paddingCell}/>
+                                <TableCell>{appointment.phone}</TableCell>
+                                <TableCell>{appointment.email}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_AGE)}</TableCell>
+                                <TableCell>{Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE)}</TableCell>
+                            </TableRow>
+                        </TableBody>
                     </Table>
                 </TableCell>
             </TableRow>

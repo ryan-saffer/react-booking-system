@@ -5,7 +5,7 @@ const acuityCredentials = require('../../credentials/acuity_credentials.json')
 import * as AcuityDto from '../../types/acuity'
 import { isAcuityError } from './shared'
 import { runAppsScript } from '../bookings'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, AppsScript } from 'fizz-kidz'
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
@@ -35,7 +35,7 @@ exports.backupScienceClubAppointments = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 17 * * 1-5')
   .timeZone('Australia/Victoria')
-  .onRun( _ => {
+  .onRun( _context => {
 
     acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: AcuityDto.AppointmentType[] | AcuityDto.Error) => {
         let appointmentTypes = handleAcuityResult(err, acuityResponse)
@@ -66,9 +66,9 @@ exports.backupScienceClubAppointments = functions
                     }
                 }
 
-                runAppsScript('testBackupScienceClub', [masterMap])
-                    .then(_ => { return masterMap })
-                    .catch(error => { throw new functions.https.HttpsError('internal', 'error running apps script testBackupScienceClub', error) })
+                runAppsScript(AppsScript.Functions.BACKUP_SCIENCE_CLUB, [masterMap])
+                    .then(() => { return masterMap })
+                    .catch(error => { throw new functions.https.HttpsError('internal', `error running apps script ${AppsScript.Functions.BACKUP_SCIENCE_CLUB}`, error) })
                 
             })
             .catch(error => {
