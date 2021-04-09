@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus';
 import { FirebaseContext } from '../../../Firebase'
 import { Acuity } from 'fizz-kidz'
-import withConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '../../../Dialogs/ConfirmationDialog'
 
 const ExpandableTableRow = ({ appointment }) => {
     
@@ -67,7 +67,7 @@ const PriceWeekMap = {
     '129': '6'
 }
 
-const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDialog }) => {
+const InvoiceStatus = WithConfirmationDialog(({ appointment, showConfirmationDialog }) => {
     
     const classes = useStyles()
 
@@ -139,10 +139,10 @@ const InvoiceStatus = withConfirmationDialog(({ appointment, showConfirmationDia
                     <Button
                         className={classes.sendInvoiceButton}
                         onClick={() => showConfirmationDialog({
-                            title: "Send Invoice",
-                            message: `Select the amount you'd like to invoice ${appointment.firstName}?`,
-                            confirmButton: "Send Invoice",
-                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` })) },
+                            dialogTitle: "Send Invoice",
+                            dialogContent: `Select the amount you'd like to invoice ${appointment.firstName}`,
+                            confirmationButtonText: "Send Invoice",
+                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` }))},
                             onConfirm: selectedPrice => sendInvoice(selectedPrice)
                         })}
                     >

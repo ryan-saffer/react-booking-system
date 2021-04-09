@@ -23,7 +23,7 @@ import { Booking } from 'fizz-kidz'
 import { capitalise } from '../../../utilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
-import withConfirmationDialog from '../../Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '../../Dialogs/ConfirmationDialog'
 import { AuthUserContext } from '../../Session'
 import * as ROLES from '../../../constants/roles'
 
@@ -1041,9 +1041,9 @@ const ExistingBookingForm = props => {
                             color="primary"
                             onClick={e => {
                                 props.showConfirmationDialog({
-                                    title: "Delete Booking",
-                                    message: "Are you sure you want to delete this booking?",
-                                    confirmButton: "Delete",
+                                    dialogTitle: "Delete Booking",
+                                    dialogContent: "Are you sure you want to delete this booking?",
+                                    confirmationButtonText: "Delete",
                                     onConfirm: handleDeleteBooking
                                 })
                             }}
@@ -1093,6 +1093,6 @@ const ExistingBookingForm = props => {
 
 export default compose(
     withErrorDialog,
-    withConfirmationDialog,
+    WithConfirmationDialog,
     withFirebase
 )(ExistingBookingForm)
