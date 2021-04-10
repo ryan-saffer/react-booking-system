@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import { compose } from 'recompose'
 
-import { withFirebase } from '../../../Firebase'
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Acuity } from 'fizz-kidz'
@@ -152,5 +151,4 @@ const useStyles = makeStyles(theme => ({
 
 export default compose(
     withRouter,
-    withFirebase,
 )(ScienceClubCheckinClassDetails)

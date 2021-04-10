@@ -1,10 +1,16 @@
 import * as config from '../../config'
-const firebase = require('firebase/app')
+import firebase from 'firebase/app'
 require('firebase/auth')
 require('firebase/firestore')
 require('firebase/functions')
 
 class Firebase {
+
+  auth: firebase.auth.Auth
+  db: firebase.firestore.Firestore
+  functions: firebase.functions.Functions
+  googleProvider: firebase.auth.GoogleAuthProvider
+
   constructor() {
     const app = firebase.initializeApp(process.env.REACT_APP_ENV === 'prod' ? config.prodConfig : config.devConfig)
 
@@ -17,10 +23,10 @@ class Firebase {
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
   }
 
-  doCreateUserWithEmailAndPassword = (email, password) => 
+  doCreateUserWithEmailAndPassword = (email: string, password: string) => 
     this.auth.createUserWithEmailAndPassword(email, password)
   
-  doSignInWithEmailAndPassword = (email, password) =>
+  doSignInWithEmailAndPassword = (email: string, password: string) =>
     this.auth.signInWithEmailAndPassword(email, password)
 
   doSignInWithGoogle = () =>
