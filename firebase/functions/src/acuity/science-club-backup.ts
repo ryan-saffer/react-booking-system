@@ -2,7 +2,6 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
-import * as AcuityDto from '../../types/acuity'
 import { isAcuityError } from './shared'
 import { runAppsScript } from '../bookings'
 import { Acuity, AppsScript } from 'fizz-kidz'
@@ -37,7 +36,7 @@ exports.backupScienceClubAppointments = functions
   .timeZone('Australia/Victoria')
   .onRun( _context => {
 
-    acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: AcuityDto.AppointmentType[] | AcuityDto.Error) => {
+    acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: Acuity.AppointmentType[] | Acuity.Error) => {
         const appointmentTypes = handleAcuityResult(err, acuityResponse)
 
         const scienceClubAppointmentTypes = appointmentTypes.filter(it => it.category === SCIENCE_CLUB_TAG)
@@ -82,12 +81,12 @@ exports.backupScienceClubAppointments = functions
 function fetchAppointments(
     startDate: Date,
     endDate: Date,
-    appointmentType: AcuityDto.AppointmentType
+    appointmentType: Acuity.AppointmentType
 ) {
     return new Promise<MinifiedAppointmentsMap>((resolve, reject) => {
         acuity.request(
             `/appointments?appointmentTypeID=${appointmentType.id}&minDate=${startDate.toISOString()}&maxDate=${endDate.toISOString()}`,
-            (err: any, _acuityRes: any, appointments: AcuityDto.Appointment[] | AcuityDto.Error) => {
+            (err: any, _acuityRes: any, appointments: Acuity.Appointment[] | Acuity.Error) => {
 
                 if (err) { reject(err) }
                 else if (isAcuityError(appointments)) { reject(appointments) }
@@ -96,24 +95,24 @@ function fetchAppointments(
                     // the person who check out the child is only recoreded in firestore
                     // so first get all appointments that were checked out and find the value
                     // then merge in back into the appointment
-                    const checkedOutAppointments: AcuityDto.Appointment[] = []
-                    const restOfAppointments: AcuityDto.Appointment[] = []
+                    const checkedOutAppointments: Acuity.MergedAppointment[] = []
+                    const restOfAppointments: Acuity.Appointment[] = []
                     appointments.forEach(appointment => {
                         if (appointment.labels && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT) {
-                            checkedOutAppointments.push(appointment)
+                            checkedOutAppointments.push(appointment as Acuity.MergedAppointment)
                         } else {
                             restOfAppointments.push(appointment)
                         }
                     })
 
-                    const promises: Promise<AcuityDto.Appointment>[] = []
+                    const promises: Promise<Acuity.MergedAppointment>[] = []
                     checkedOutAppointments.forEach(appointment => {
                         promises.push(mergeCheckoutData(appointment))
                     })
 
                     Promise.all(promises)
-                        .then(mergedAppointments => {
-                            const masterMap = [...mergedAppointments, ...restOfAppointments]
+                        .then(MergedApppointments => {
+                            const masterMap = [...MergedApppointments, ...restOfAppointments]
                             const cleanedResults = masterMap.map<AppsScriptAppointment>(appointment => {
                                 return {
                                     parentFirstName: appointment.firstName,
@@ -124,8 +123,8 @@ function fetchAppointments(
                                     childGrade: Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_GRADE),
                                     label: appointment.labels && appointment.labels[0].name,
                                     notes: appointment.notes,
-                                    checkoutPerson: appointment.checkoutPerson,
-                                    checkoutTime: appointment.checkoutTime
+                                    checkoutPerson: (appointment as Acuity.MergedAppointment).checkoutPerson,
+                                    checkoutTime: (appointment as Acuity.MergedAppointment).checkoutTime
                                 }
                             })
                             resolve({ [appointmentType.name]: cleanedResults })
@@ -137,7 +136,7 @@ function fetchAppointments(
     })
 }
 
-async function mergeCheckoutData(appointment: AcuityDto.Appointment) {
+async function mergeCheckoutData(appointment: Acuity.MergedAppointment) {
     const doc = await firestore.collection('scienceClubAppointments').doc(appointment.id.toString()).get()
     if (doc.exists) {
         appointment.checkoutPerson = doc.data()?.pickupPerson
@@ -149,7 +148,7 @@ async function mergeCheckoutData(appointment: AcuityDto.Appointment) {
 
 
 
-function handleAcuityResult<T>(error: any, result: T | AcuityDto.Error) {
+function handleAcuityResult<T>(error: any, result: T | Acuity.Error) {
     if (isAcuityError(result)) {
         console.error('error fetching appointment types:', result.message)
         throw new Error(result.error)

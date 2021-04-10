@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
  * Higher-order-component that provides a confirmation dialog.
  * Dialog title, message, confirmation button text and list items and confirm callback are all provided onShow()
  */
-
 export interface ConfirmationDialogProps {
     showConfirmationDialog: (params: ShowDialogParams) => void
 }
@@ -40,9 +39,12 @@ export interface ListItems {
     items: Array<{ key: string, value: string}>
 }
 
-const WithConfirmationDialog = <P extends ConfirmationDialogProps>(Component: React.ComponentType<P>) => {
+// see https://stackoverflow.com/a/51084259
+const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
+    Component: React.ComponentType<P>
+): React.FC<Omit<P, keyof ConfirmationDialogProps>> => {
     
-    const ComponentWithConfirmationDialog = (props: P) => {
+    const ComponentWithConfirmationDialog = (props: Omit<P, keyof ConfirmationDialogProps>) => {
         
         const classes = useStyles()
 
@@ -109,7 +111,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(Component: Re
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Component { ...props } showConfirmationDialog={handleShow} />
+                <Component { ...props as P } showConfirmationDialog={handleShow} />
             </>
         )
     }
