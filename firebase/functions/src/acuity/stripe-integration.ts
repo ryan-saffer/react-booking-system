@@ -7,8 +7,7 @@ import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
-import { Acuity } from 'fizz-kidz'
-import * as AcuityDto from '../../types/acuity'
+import { Acuity, RetrieveInvoiceStatusParams, RetrieveInvoiceStatusResult, InvoiceStatus } from 'fizz-kidz'
 import { isAcuityError } from './shared'
 
 const acuity = AcuitySdk.basic({
@@ -23,33 +22,17 @@ const pricesMap: { [key: string]: string } = {
   '129': stripeConfig.STRIPE_PRICE_129
 }
 
-type RetrieveInvoiceParams = {
-  appointmentId: number
-}
-
-enum InvoiceStatus {
-  NOT_SENT = "NOT_SENT",
-  UNPAID = "UNPAID",
-  PAID = "PAID",
-  UNSUPPORTED = "UNSUPPORTED"
-}
-
-type InvoiceStatusResponse = {
-  status: InvoiceStatus,
-  url?: string
-}
-
 export const retrieveInvoiceStatus = functions
   .region('australia-southeast1')
-  .https.onCall((data: RetrieveInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
+  .https.onCall((data: RetrieveInvoiceStatusParams, _context: functions.https.CallableContext): Promise<RetrieveInvoiceStatusResult> => {
 
     const appointmentId = data.appointmentId
         
     return new Promise((
-      resolve: (status: InvoiceStatusResponse) => void,
+      resolve: (status: RetrieveInvoiceStatusResult) => void,
       reject: (error: functions.https.HttpsError) => void
     ) => {
-      acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: AcuityDto.Appointment | AcuityDto.Error) => {
+      acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
         if (err) {
           console.log(`internal acuity error while fetching appointment with id: ${appointmentId}`)
           console.error(err)
@@ -117,18 +100,18 @@ const SendInvoiceParamsValidator: SendInvoiceParams = {
   email: '', name: '', phone: '', childName: '', invoiceItem: '', appointmentTypeId: 0, price: ''
 }
 
-type SendInvoiceResolve = (status: InvoiceStatusResponse) => void
+type SendInvoiceResolve = (status: RetrieveInvoiceStatusResult) => void
 type SendInvoiceReject = (error: functions.https.HttpsError) => void
 
 export const sendInvoice = functions
   .region('australia-southeast1')
-  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusResponse> => {
+  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<RetrieveInvoiceStatusResult> => {
     
     console.log("beggining function")
     console.log("query parameters:")
     console.log(data)
 
-    return new Promise<InvoiceStatusResponse>((
+    return new Promise<RetrieveInvoiceStatusResult>((
       resolve: SendInvoiceResolve,
       reject: SendInvoiceReject
     ) => {
@@ -241,13 +224,13 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoicePa
   
   console.log("saving invoice into acuity...")
 
-  return new Promise<AcuityDto.Appointment[]>((resolve, reject) => {
+  return new Promise<Acuity.Appointment[]>((resolve, reject) => {
     // first get every appointment of this child in this class
     // use child name, since a parent could have two children in a class
     // therefore appointmentTypeId and email is not enough
     acuity.request(
       `/appointments?email=${queryParams.email}&appointmentTypeID=${queryParams.appointmentTypeId}&field:${Acuity.Constants.FormFields.CHILD_NAME}=${queryParams.childName}`,
-      function (err: any, _resp: any, appointments: AcuityDto.Appointment[] | AcuityDto.Error) {
+      function (err: any, _resp: any, appointments: Acuity.Appointment[] | Acuity.Error) {
         if (err) {
           reject(err)
           return
@@ -263,7 +246,7 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoicePa
         }
 
         // then update each one with the invoice id
-        const promises: Promise<AcuityDto.Appointment>[] = []
+        const promises: Promise<Acuity.Appointment>[] = []
         console.log("updating all appointments for this client...")
         appointments.forEach(appointment => {
           promises.push(saveInvoiceIdToAppointment(invoice.id, appointment.id))
@@ -294,8 +277,8 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
     }
   }
 
-  return new Promise<AcuityDto.Appointment>((resolve, reject) => {
-    acuity.request(`/appointments/${appointmentId}`, options, (err: any, _acuityRes: any, appointment: AcuityDto.Appointment | AcuityDto.Error) => {
+  return new Promise<Acuity.Appointment>((resolve, reject) => {
+    acuity.request(`/appointments/${appointmentId}`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
       if (err) {
         reject(err)
         return
