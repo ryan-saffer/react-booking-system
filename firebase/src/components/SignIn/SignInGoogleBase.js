@@ -64,7 +64,7 @@ const SignInGoogleBase = props => {
                 onClick={handleSubmit}
                 variant="outlined"
                 fullWidth
-                startIcon={<img className={classes.googleLogo} src={GoogleLogo} />}
+                startIcon={<img className={classes.googleLogo} src={GoogleLogo.default} />}
             >
                 Sign in with Google
             </Button>

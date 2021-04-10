@@ -67,7 +67,7 @@ const Navigation = props => {
             <CssBaseline/>
             <AppBar position='static' className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    <img className={classes.logo} src={Logo} />
+                    <img className={classes.logo} src={Logo.default} />
                 </Toolbar>
             </AppBar>
             <div className={classes.main}>
