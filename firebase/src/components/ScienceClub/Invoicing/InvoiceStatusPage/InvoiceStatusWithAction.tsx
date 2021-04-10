@@ -55,7 +55,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
     }
 
     switch (status) {
-        case "LOADING":
+        case InvoiceStatus.LOADING:
             return (
                 <>
                 <TableCell size="small" colSpan={2}>
@@ -63,7 +63,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
                 </TableCell>
                 </>
             )
-        case "PAID":
+        case InvoiceStatus.PAID:
             return (
                 <>
                 <TableCell size="small">
@@ -74,7 +74,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
                 </TableCell>
                 </>
             )
-        case "UNPAID":
+        case InvoiceStatus.UNPAID:
             return (
                 <>
                 <TableCell size="small">
@@ -85,7 +85,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
                 </TableCell>
                 </>
             )
-        case "NOT_SENT":
+        case InvoiceStatus.NOT_SENT:
             return (
                 <>
                 <TableCell size="small">
@@ -107,12 +107,10 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
                 </TableCell>
                 </>
             )
-        case "UNSUPPORTED":
+        case InvoiceStatus.UNSUPPORTED:
             return <TableCell size='small' colSpan={2}>This class does not support invoices</TableCell>
-        case "ERROR":
+        case InvoiceStatus.ERROR:
             return <TableCell className={classes.redText} size="small" colSpan={2}>Error while fetching invoice</TableCell>
-        default:
-            return null
     }
 }
 
