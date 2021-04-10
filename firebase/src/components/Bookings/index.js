@@ -142,7 +142,7 @@ const BookingsPage = props => {
                     <div className={classes.topCenter}>
                         <img
                             className={classes.logo}
-                            src={Logo}
+                            src={Logo.default}
                             onClick={() => props.history.push(ROUTES.LANDING)} />
                     </div>
                     <div className={isAdmin ? classes.authTopRight : classes.noAuthTopRight}>
