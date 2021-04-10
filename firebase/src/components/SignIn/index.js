@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
-import { withFirebase } from '../Firebase'
 import SignInGoogleBase from './SignInGoogleBase'
 import * as ROUTES from '../../constants/routes'
 import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
@@ -12,6 +11,7 @@ import { CssBaseline, TextField, Button, Snackbar } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import Container from '@material-ui/core/Container'
 import { red } from '@material-ui/core/colors'
+import { FirebaseContext } from '../Firebase'
 
 const useStyles = makeStyles(theme => ({
     main: {
@@ -37,6 +37,8 @@ const SignInPage = props => {
 
     const classes = useStyles()
 
+    const firebase = useContext(FirebaseContext)
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [emailError, setEmailError] = useState(false)
@@ -61,9 +63,9 @@ const SignInPage = props => {
         if (email === "") { setEmailError(true); setLoading(false); return }
         if (password === "") { setPasswordError(true); setLoading(false); return }
 
-        props.firebase.doSignInWithEmailAndPassword(email, password)
+        firebase.doSignInWithEmailAndPassword(email, password)
             .then(authUser => {
-                props.firebase.db
+                firebase.db
                     .collection("users")
                     .doc(authUser.user.uid)
                     .set(
@@ -140,8 +142,7 @@ const SignInPage = props => {
 
 const SignInGoogle = compose(
     withRouter,
-    withFirebase,
 )(SignInGoogleBase)
 
-export default withFirebase(SignInPage)
+export default SignInPage
 export { SignInPage, SignInGoogle }
