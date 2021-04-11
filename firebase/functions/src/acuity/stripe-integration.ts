@@ -7,7 +7,7 @@ import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
-import { Acuity, RetrieveInvoiceStatusParams, RetrieveInvoiceStatusResult, InvoiceStatus } from 'fizz-kidz'
+import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus } from 'fizz-kidz'
 import { isAcuityError } from './shared'
 
 const acuity = AcuitySdk.basic({
@@ -24,12 +24,12 @@ const pricesMap: { [key: string]: string } = {
 
 export const retrieveInvoiceStatus = functions
   .region('australia-southeast1')
-  .https.onCall((data: RetrieveInvoiceStatusParams, _context: functions.https.CallableContext): Promise<RetrieveInvoiceStatusResult> => {
+  .https.onCall((data: RetrieveInvoiceStatusParams, _context: functions.https.CallableContext): Promise<InvoiceStatusWithUrl> => {
 
     const appointmentId = data.appointmentId
         
     return new Promise((
-      resolve: (status: RetrieveInvoiceStatusResult) => void,
+      resolve: (status: InvoiceStatusWithUrl) => void,
       reject: (error: functions.https.HttpsError) => void
     ) => {
       acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
@@ -100,18 +100,18 @@ const SendInvoiceParamsValidator: SendInvoiceParams = {
   email: '', name: '', phone: '', childName: '', invoiceItem: '', appointmentTypeId: 0, price: ''
 }
 
-type SendInvoiceResolve = (status: RetrieveInvoiceStatusResult) => void
+type SendInvoiceResolve = (status: InvoiceStatusWithUrl) => void
 type SendInvoiceReject = (error: functions.https.HttpsError) => void
 
 export const sendInvoice = functions
   .region('australia-southeast1')
-  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<RetrieveInvoiceStatusResult> => {
+  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusWithUrl> => {
     
     console.log("beggining function")
     console.log("query parameters:")
     console.log(data)
 
-    return new Promise<RetrieveInvoiceStatusResult>((
+    return new Promise<InvoiceStatusWithUrl>((
       resolve: SendInvoiceResolve,
       reject: SendInvoiceReject
     ) => {

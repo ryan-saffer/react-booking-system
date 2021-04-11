@@ -1,8 +1,8 @@
 export interface RetrieveInvoiceStatusParams {
     appointmentId: number
-  }
+}
 
-export interface RetrieveInvoiceStatusResult {
+export interface InvoiceStatusWithUrl {
     status: InvoiceStatus,
     url?: string
 }
@@ -14,4 +14,9 @@ export enum InvoiceStatus {
     UNSUPPORTED = "UNSUPPORTED",
     LOADING = "LOADING",
     ERROR = "ERROR"
+}
+
+export interface SendInvoiceParams {
+    firstName: string,
+    email: string
 }

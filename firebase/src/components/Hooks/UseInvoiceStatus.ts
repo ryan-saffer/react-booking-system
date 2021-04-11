@@ -1,33 +1,25 @@
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
 import Firebase, { FirebaseContext } from '../Firebase'
 
-import { Acuity, InvoiceStatus, RetrieveInvoiceStatusResult } from 'fizz-kidz'
-import { FunctionsResult } from '../../utilities/firebase/functions'
+import { Acuity, InvoiceStatus, InvoiceStatusWithUrl } from 'fizz-kidz'
+import { callFirebaseFunction } from '../../utilities/firebase/functions'
 
 
-const useInvoiceStatus = (appointment: Acuity.Appointment): [RetrieveInvoiceStatusResult, Dispatch<SetStateAction<RetrieveInvoiceStatusResult>>] => {
+const useInvoiceStatus = (appointment: Acuity.Appointment): [InvoiceStatusWithUrl, Dispatch<SetStateAction<InvoiceStatusWithUrl>>] => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [result, setResult] = useState<RetrieveInvoiceStatusResult>({ status: InvoiceStatus.LOADING })
+    const [result, setResult] = useState<InvoiceStatusWithUrl>({ status: InvoiceStatus.LOADING })
 
     useEffect(() => {
         console.log('running retrieveInvoiceStatus')
-        firebase.functions.httpsCallable('retrieveInvoiceStatus')({
-            appointmentId: appointment.id
-        })
-        .then((result: FunctionsResult<RetrieveInvoiceStatusResult>) => {
-            setResult(result.data)
-        })
-        .catch(err => {
-            console.error(
-                'error running :retrieveInvoiceStatus:',
-                '--statusCode:', err.code,
-                '--message:', err.message,
-                '--details:', err.details
-            )
-            setResult({ status: InvoiceStatus.ERROR })
-        })
+        callFirebaseFunction('retrieveInvoiceStatus', firebase)({ appointmentId: appointment.id })
+            .then(result => {
+                setResult(result.data)
+            })
+            .catch(() => {
+                setResult({ status: InvoiceStatus.ERROR })
+            })
     }, [])
 
     return [result, setResult]
