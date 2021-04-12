@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
-import { withFirebase } from '../../../Firebase'
+import { FirebaseContext, withFirebase } from '../../../Firebase'
 import { Acuity } from 'fizz-kidz'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
@@ -25,7 +25,9 @@ const ChildExpansionPanel = props => {
 
     const classes = useStyles()
 
-    const { firebase, expanded } = props
+    const { expanded } = props
+
+    const firebase = useContext(FirebaseContext)
 
     const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
@@ -301,4 +303,4 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default withFirebase(ChildExpansionPanel)
+export default ChildExpansionPanel

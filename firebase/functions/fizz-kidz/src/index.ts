@@ -1,3 +1,4 @@
+//#region Bookings
 import { Locations } from './booking/locations'
 import { CakeFlavours } from './booking/cakeFlavours'
 import { Additions } from './booking/additions'
@@ -15,5 +16,20 @@ export const Booking = {
     Creations,
     CreationDisplayValues,
 }
+//#endregion 
+
+//#region Acuity
 export * as Acuity from './acuity'
+//#endregion
+
+//#region Apps Script
 export * as AppsScript from './appsscript'
+//#endregion
+
+//#region Science Club
+export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from './scienceclub/invoicing'
+//#endregion
+
+//#region Firebase
+export { FirebaseFunctions } from './firebase/functions'
+//#endregion

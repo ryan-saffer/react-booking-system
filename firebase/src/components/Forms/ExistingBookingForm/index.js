@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
-import { withFirebase } from '../../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -20,12 +19,13 @@ import Fab from '@material-ui/core/Fab'
 import { green, red } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { Booking } from 'fizz-kidz'
-import { capitalise } from '../../../utilities'
+import { capitalise } from '../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
-import withConfirmationDialog from '../../Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '../../Dialogs/ConfirmationDialog'
 import { AuthUserContext } from '../../Session'
 import * as ROLES from '../../../constants/roles'
+import { FirebaseContext } from '../../Firebase'
 
 const dateFormat = require('dateformat')
 
@@ -310,8 +310,10 @@ function getCreationMenuItems() {
 const ExistingBookingForm = props => {
 
     const classes = useStyles()
-
-    const { firebase, bookingId, booking } = props
+    
+    const { bookingId, booking } = props
+    
+    const firebase = useContext(FirebaseContext)
 
     const isAdmin = useContext(AuthUserContext).roles[ROLES.ADMIN]
 
@@ -1041,9 +1043,9 @@ const ExistingBookingForm = props => {
                             color="primary"
                             onClick={e => {
                                 props.showConfirmationDialog({
-                                    title: "Delete Booking",
-                                    message: "Are you sure you want to delete this booking?",
-                                    confirmButton: "Delete",
+                                    dialogTitle: "Delete Booking",
+                                    dialogContent: "Are you sure you want to delete this booking?",
+                                    confirmationButtonText: "Delete",
                                     onConfirm: handleDeleteBooking
                                 })
                             }}
@@ -1093,6 +1095,5 @@ const ExistingBookingForm = props => {
 
 export default compose(
     withErrorDialog,
-    withConfirmationDialog,
-    withFirebase
+    WithConfirmationDialog
 )(ExistingBookingForm)

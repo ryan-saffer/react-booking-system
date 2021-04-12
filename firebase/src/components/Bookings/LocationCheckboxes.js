@@ -3,7 +3,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Booking } from 'fizz-kidz'
-import * as Utilities from '../../utilities'
+import * as Utilities from '../../utilities/stringUtilities'
 
 const LocationCheckboxes = props => {
 
