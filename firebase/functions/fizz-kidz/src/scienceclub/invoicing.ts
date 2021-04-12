@@ -17,6 +17,12 @@ export enum InvoiceStatus {
 }
 
 export interface SendInvoiceParams {
-    firstName: string,
-    email: string
-}
+    email: string,
+    name: string,
+    phone: string,
+    childName: string
+    invoiceItem: string,
+    appointmentTypeId: number,
+    price: string,
+    [key: string]: string | number
+  }

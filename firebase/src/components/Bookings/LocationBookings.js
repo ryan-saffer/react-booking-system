@@ -2,7 +2,7 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import BookingPanel from './BookingPanel'
-import * as Utilities from '../../utilities'
+import * as Utilities from '../../utilities/stringUtilities'
 
 const useStyles = makeStyles(theme => ({
     root: {

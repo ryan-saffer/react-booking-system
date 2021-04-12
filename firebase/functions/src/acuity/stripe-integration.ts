@@ -7,7 +7,7 @@ import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
-import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus } from 'fizz-kidz'
+import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from 'fizz-kidz'
 import { isAcuityError } from './shared'
 
 const acuity = AcuitySdk.basic({
@@ -84,17 +84,6 @@ export const retrieveInvoiceStatus = functions
       })
     })
   })
-
-type SendInvoiceParams = {
-  email: string,
-  name: string,
-  phone: string,
-  childName: string
-  invoiceItem: string,
-  appointmentTypeId: number,
-  price: string
-  [key: string]: any
-}
 
 const SendInvoiceParamsValidator: SendInvoiceParams = {
   email: '', name: '', phone: '', childName: '', invoiceItem: '', appointmentTypeId: 0, price: ''

@@ -18,7 +18,7 @@ import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { Booking } from 'fizz-kidz'
-import { capitalise } from '../../../utilities'
+import { capitalise } from '../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
 
