@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 
-import { withFirebase } from '../../Firebase'
 import { Acuity } from 'fizz-kidz'
 import * as medicalIcon from '../../../drawables/medical-icon-24.png'
 import * as checkedInIcon from '../../../drawables/tick-box-green-icon-26.png'
@@ -15,12 +14,15 @@ import Typography from '@material-ui/core/Typography';
 import { Button, Chip, Table, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { green, red, blue, purple } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { FirebaseContext } from '../../Firebase'
 
 const ChildExpansionPanel = props => {
 
     const classes = useStyles()
 
-    const { firebase, expanded } = props 
+    const { expanded } = props
+
+    const firebase = useContext(FirebaseContext)
 
     const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
@@ -229,4 +231,4 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default withFirebase(ChildExpansionPanel)
+export default ChildExpansionPanel

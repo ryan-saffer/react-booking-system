@@ -9,7 +9,7 @@ import Select from '@material-ui/core/Select';
 import { Button, Paper } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab'
 import { withRouter } from 'react-router-dom';
-import { FirebaseContext } from '../Firebase';
+import { FirebaseContext } from '../../Firebase';
 
 const ScienceClubClassSelection = props => {
 

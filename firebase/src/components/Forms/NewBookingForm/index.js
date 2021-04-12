@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
-import { withFirebase } from '../../Firebase'
+import { FirebaseContext } from '../../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -18,7 +18,7 @@ import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { Booking } from 'fizz-kidz'
-import { capitalise } from '../../../utilities'
+import { capitalise } from '../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
 
@@ -155,7 +155,7 @@ const NewBookingForm = props => {
 
     const classes = useStyles()
 
-    const { firebase } = props
+    const firebase = useContext(FirebaseContext)
 
     const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
@@ -468,6 +468,5 @@ const NewBookingForm = props => {
 }
 
 export default compose(
-    withFirebase,
     withErrorDialog
 )(NewBookingForm)
