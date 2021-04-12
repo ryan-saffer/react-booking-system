@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import Firebase from "../../../components/Firebase";
+import Firebase from "../../components/Firebase";
 import { FirebaseFunctions } from 'fizz-kidz'
 
 export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, firebase: Firebase) {

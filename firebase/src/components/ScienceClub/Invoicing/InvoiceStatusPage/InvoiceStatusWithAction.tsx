@@ -7,6 +7,7 @@ import { Acuity, InvoiceStatus } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus'
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 // prices depend on how many weeks they are attending the program for
 // use this map to include the number of weeks in the invoice
@@ -31,7 +32,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
     const sendInvoice = (price: string) => {
         setStatus({ status: InvoiceStatus.LOADING })
         const childName = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        firebase.functions.httpsCallable('sendInvoice')({
+        callFirebaseFunction('sendInvoice', firebase)({
             email: appointment.email,
             name: `${appointment.firstName} ${appointment.lastName}`,
             phone: appointment.phone,
@@ -39,12 +40,9 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
             invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
             appointmentTypeId: appointment.appointmentTypeID,
             price: price
-        })
-        .then(result => {
+        }).then(result => {
             setStatus(result.data)
-        })
-        .catch(error => {
-            console.error(error)
+        }).catch(() => {
             setStatus({ status: InvoiceStatus.ERROR })
         })
     }
