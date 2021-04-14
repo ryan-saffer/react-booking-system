@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
-import queryString from 'query-string'
+import { withRouter, useHistory } from 'react-router-dom'
 import { makeStyles, CssBaseline, AppBar, Toolbar, IconButton, Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
@@ -8,8 +7,16 @@ import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
 import ExpandableTableRow from './ExpandableTableRow'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
+import useQueryParam from '../../../Hooks/UseQueryParam'
+import { Acuity } from 'fizz-kidz'
 
-const ScienceClubInvoicingStatus = props => {
+interface QueryParams {
+    appointmentTypeId: string,
+    calendarId: string,
+    classId: string
+}
+
+const ScienceClubInvoicingStatus = () => {
 
     const classes = useStyles()
 
@@ -17,12 +24,13 @@ const ScienceClubInvoicingStatus = props => {
 
     const [loading, setLoading] = useState(true)
 
-    const queries = queryString.parse(props.location.search)
-    const appointmentTypeID = queries.appointmentTypeId
-    const calendarID = queries.calendarId
-    const classID = parseInt(queries.classId)
+    const history = useHistory()
 
-    const sortByParentName = (a, b) => {
+    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
+    const calendarId = parseInt(useQueryParam<QueryParams>('calendarId') as string)
+    const classId = parseInt(useQueryParam<QueryParams>('classId') as string)
+
+    const sortByParentName = (a: Acuity.Appointment, b: Acuity.Appointment) => {
         const aName = a.firstName
         const bName = b.firstName
         return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
@@ -30,14 +38,14 @@ const ScienceClubInvoicingStatus = props => {
 
     const appointments = useFetchAppointments({
         setLoading,
-        appointmentTypeID,
-        calendarID,
-        classID,
+        appointmentTypeId,
+        calendarId,
+        classId,
         sorter: sortByParentName
     })
 
     const navigateBack = () => {
-        props.history.goBack()
+        history.goBack()
     }
 
     return (
@@ -86,7 +94,7 @@ const useStyles = makeStyles({
         }
     },
     parentNameCell: {
-        textAlign: 'left !important'
+        textAlign: 'left !important' as 'left'
     }
 })
 
