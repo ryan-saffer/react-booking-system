@@ -5,6 +5,7 @@ export interface Appointment {
     lastName: string,
     phone: string,
     appointmentTypeID: number,
+    classID: number,
     type: string,
     labels: Label[],
     forms: Form[],

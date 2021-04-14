@@ -24,3 +24,5 @@ export {
     FormValue,
     Error
 }
+
+export * as Client from './client'
