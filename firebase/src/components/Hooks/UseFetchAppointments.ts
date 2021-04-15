@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react
 import { Acuity } from 'fizz-kidz'
 
 import Firebase, { FirebaseContext } from '../Firebase'
+import { callAcuityClient } from '../../utilities/firebase/functions'
 
 interface UseFetchAppointmentProps {
     setLoading: Dispatch<SetStateAction<boolean>>,
@@ -28,21 +29,18 @@ const useFetchAppointments = (props: UseFetchAppointmentProps) => {
     useEffect(
         () => {
             const fetchClients = (data: Acuity.Client.FetchAppointmentsParams) => {
-                firebase.functions.httpsCallable('acuityClient')({
-                    auth: firebase.auth.currentUser?.toJSON(),
-                    data: { method: 'getAppointments', ...data }
-                }).then(result => {
-                    const appointments = result.data as Acuity.Appointment[]
-                    var results = appointments.filter(x => x.classID === classId)
-                    if (sorter) {
-                        results = results.sort(sorter)
-                    }
-                    setAppointments(results.length === 0 ? null : results)
-                    setLoading(false)
-                }).catch(err => {
-                    console.error(err)
-                    setLoading(false)
-                })
+                callAcuityClient('getAppointments', firebase)({ ...data })
+                    .then(result => {
+                        let filteredResults = result.data.filter(x => x.classID === classId)
+                        if (sorter) {
+                            filteredResults = filteredResults.sort(sorter)
+                        }
+                        setAppointments(filteredResults.length === 0 ? null : filteredResults)
+                        setLoading(false)
+                    })
+                    .catch(() => {
+                        setLoading(false)
+                    })
             }
 
             if (firebase.auth.currentUser) {

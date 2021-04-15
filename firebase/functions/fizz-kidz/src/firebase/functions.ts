@@ -5,7 +5,7 @@ export interface FirebaseFunctions {
     sendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
 }
 
-type Function<Input, Result> = {
+export type Function<Input, Result> = {
     input: Input,
     result: FunctionsResult<Result>
 }
