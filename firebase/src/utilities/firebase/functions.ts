@@ -1,6 +1,6 @@
 import firebase from "firebase";
 import Firebase from "../../components/Firebase";
-import { FirebaseFunctions } from 'fizz-kidz'
+import { FirebaseFunctions, Acuity } from 'fizz-kidz'
 
 export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, firebase: Firebase) {
     return function (input: FirebaseFunctions[K]['input']): Promise<FirebaseFunctions[K]['result']> {
@@ -8,19 +8,20 @@ export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, f
             firebase.functions.httpsCallable(fn)(input)
                 .then(result => resolve(result))
                 .catch(error => {
-                    if (isFunctionsError(error)) {
-                        console.error(
-                            `error running '${fn}'`,
-                            '--statusCode:', `'${error.code}'`,
-                            '--message:', `'${error.message}'`,
-                            '--details:', `'${error.details}'`
-                        )
-                    } else {
-                        console.error(
-                            `error running '${fn}'`,
-                            '--errorObject:', `'${error}'`
-                        )
-                    }
+                    logError(error, fn)
+                    reject(error)
+                })
+        })
+    }
+}
+
+export function callAcuityClient<K extends keyof Acuity.Client.AcuityFunctions>(fn: K, firebase: Firebase) {
+    return function(input: Acuity.Client.AcuityFunctions[K]['input']): Promise<Acuity.Client.AcuityFunctions[K]['result']> {
+        return new Promise((resolve, reject) => {
+            firebase.functions.httpsCallable('acuityClient')({ data: { method: fn, ...input } })
+                .then(result => resolve(result))
+                .catch(error => {
+                    logError(error, fn)
                     reject(error)
                 })
         })
@@ -33,4 +34,20 @@ function isFunctionsError(err: any): err is firebase.functions.HttpsError {
     return  error.code !== undefined && 
             error.message !== undefined && 
             error.name !== undefined
+}
+
+function logError(error: any, fn: string) {
+    if (isFunctionsError(error)) {
+        console.error(
+            `error running '${fn}'`,
+            '--statusCode:', `'${error.code}'`,
+            '--message:', `'${error.message}'`,
+            '--details:', `'${error.details}'`
+        )
+    } else {
+        console.error(
+            `error running '${fn}'`,
+            '--errorObject:', `'${error}'`
+        )
+    }
 }
