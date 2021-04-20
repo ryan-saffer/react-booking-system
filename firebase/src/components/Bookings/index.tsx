@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState, useEffect, useContext, ReactElement, Ref } from 'react';
+import { useHistory, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import DateFnsUtils from '@date-io/date-fns';
-import queryString from 'query-string'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import {
     Paper, Grid, Hidden, Typography, makeStyles, Drawer, CssBaseline, AppBar,
@@ -13,47 +12,61 @@ import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session';
 import NewBookingForm from '../Forms/NewBookingForm'
-import { Booking } from 'fizz-kidz'
+import { Bookings } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
 import DateNav from './BookingsNav';
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import useAdmin from '../Hooks/UseAdmin';
+import { TransitionProps } from '@material-ui/core/transitions';
+import Firebase, { FirebaseContext } from '../Firebase';
+import useQueryParam from '../Hooks/UseQueryParam';
+import firebase from 'firebase';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
-const Transition = React.forwardRef((props, ref) => (
+interface QueryParams {
+    id: string
+}
+
+const Transition = React.forwardRef((
+    props: TransitionProps & { children?: ReactElement<any, any> },
+    ref: Ref<unknown>
+) => (
     <Slide direction="up" ref={ref} {...props} />
 ))
 
-const BookingsPage = props => {
+const BookingsPage = () => {
 
     const classes = useStyles()
 
-    const { firebase } = props
+    const firebase = useContext(FirebaseContext) as Firebase
 
     const isAdmin = useAdmin()
 
-    const [bookings, setBookings] = useState([])
+    const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
-    var initialLocations = {}
-    Object.values(Booking.Locations).forEach(location => initialLocations[location] = true)
+    let initialLocations: { [key in Bookings.Location]?: boolean } = {}
+    Object.values(Bookings.Location).forEach(location => initialLocations[location] = true)
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
     // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
     const [key, setKey] = useState(0)
+    const id = useQueryParam<QueryParams>('id')
+
+    let history = useHistory()
 
     useEffect(() => {
-        const values = queryString.parse(props.location.search)
-        if (values.id) {
-            fetchBooking(values.id)
+        if (id) {
+            fetchBooking(id)
         } else {
             fetchBookingsByDate(new Date())
         }
     }, [])
 
-    const handleDateChange = date => {
+    const handleDateChange = (date: Date) => {
         setDate(date)
         fetchBookingsByDate(date)
     }
@@ -80,7 +93,7 @@ const BookingsPage = props => {
         setOpenNewBooking(true)
     }
 
-    const handleCloseBooking = date => {
+    const handleCloseBooking = (date?: Date) => {
         console.log(date)
         if (date instanceof Date) {
             setDate(date)
@@ -90,25 +103,25 @@ const BookingsPage = props => {
         setOpenNewBooking(false)
     }
 
-    const handleLocationChange = name => e => {
+    const handleLocationChange = (name: any) => (e: any) => {
         setSelectedLocations({ ...selectedLocations, [name]: e.target.checked })
     }
 
-    const fetchBooking = id => {
+    const fetchBooking = (id: any) => {
         setLoading(true)
         firebase.db.collection('bookings').doc(id)
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
-                let selectedLocations = {}
-                Object.values(Booking.Locations).forEach(location => selectedLocations[location] = false)
-                selectedLocations[documentSnapshot.get('location')] = true
+                let selectedLocations: { [key in Bookings.Location]?: boolean} = {}
+                Object.values(Bookings.Location).forEach(location => selectedLocations[location] = false)
+                selectedLocations[documentSnapshot.get('location') as 'balwyn' | 'essendon' | 'malvern' | 'mobile'] = true
                 setSelectedLocations(selectedLocations)
             })
         setLoading(false)
     }
 
-    const fetchBookingsByDate = date => {
+    const fetchBookingsByDate = (date: Date) => {
         // only show loading indicator if taking a while
         setLoading(true)
         
@@ -120,7 +133,7 @@ const BookingsPage = props => {
             .where('dateTime', '>', date)
             .where('dateTime', '<', nextDay)
             .get().then(querySnapshot => {
-                var latestBookings = []
+                var latestBookings: firebase.firestore.DocumentSnapshot[] = []
                 querySnapshot.forEach(documentSnapshot => {
                     latestBookings.push(documentSnapshot)
                 })
@@ -135,7 +148,7 @@ const BookingsPage = props => {
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar className={classes.appBarToolbar}>
                     <div className={classes.topLeft}>
-                        <Typography variant="h6" className={classes.title}>
+                        <Typography variant="h6">
                             Party Bookings
                         </Typography>
                     </div>
@@ -143,7 +156,7 @@ const BookingsPage = props => {
                         <img
                             className={classes.logo}
                             src={Logo.default}
-                            onClick={() => props.history.push(ROUTES.LANDING)} />
+                            onClick={() => history.push(ROUTES.LANDING)} />
                     </div>
                     <div className={isAdmin ? classes.authTopRight : classes.noAuthTopRight}>
                         {isAdmin && <Button className={classes.newBookingButton} color="inherit" onClick={handleOpenNewBooking}>New Booking</Button>}
@@ -159,7 +172,7 @@ const BookingsPage = props => {
             <Dialog
                 fullScreen
                 open={openNewBooking}
-                onClose={handleCloseBooking}
+                onClose={() => handleCloseBooking()}
                 TransitionComponent={Transition}
                 disableAutoFocus={true}
                 PaperProps={{ classes: { root: classes.dialog } }}
@@ -167,10 +180,10 @@ const BookingsPage = props => {
             <CssBaseline />
             <AppBar position='absolute' className={classes.dialogueAppBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={handleCloseBooking} aria-label="close">
+                    <IconButton edge="start" color="inherit" onClick={() => handleCloseBooking()} aria-label="close">
                         <CloseIcon />
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6">
                         New Booking
                     </Typography>
                 </Toolbar>
@@ -200,9 +213,9 @@ const BookingsPage = props => {
                             margin="normal"
                             id="date-picker"
                             label="Date picker"
-                            autoOk="true"
+                            autoOk={true}
                             value={date}
-                            onChange={handleDateChange}
+                            onChange={date => handleDateChange(new Date(date?.toISOString() ?? ""))}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date'
                             }}
@@ -225,9 +238,9 @@ const BookingsPage = props => {
                                     margin="normal"
                                     id="date-picker"
                                     label="Date picker"
-                                    autoOk="true"
+                                    autoOk={true}
                                     value={date}
-                                    onChange={handleDateChange}
+                                    onChange={date => handleDateChange(new Date(date?.toISOString() ?? ""))}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date'
                                     }}
@@ -251,7 +264,7 @@ const BookingsPage = props => {
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm md>
-                    {Object.values(Booking.Locations).map(location =>
+                    {Object.values(Bookings.Location).map(location =>
                         selectedLocations[location] && <LocationBookings key={location} onSuccess={handleCloseBooking} bookings={bookings} location={location} />
                     )}
                 </Grid>

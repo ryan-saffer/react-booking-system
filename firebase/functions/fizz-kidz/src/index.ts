@@ -1,20 +1,22 @@
 //#region Bookings
-import { Locations } from './booking/locations'
-import { CakeFlavours } from './booking/cakeFlavours'
-import { Additions } from './booking/additions'
-import { Creations } from './booking/creations'
-import { CreationDisplayValues } from './booking/creationDisplayValues'
-import * as Domain from './booking/domain'
-import * as Network from './booking/network'
+import { Location as _Location } from './booking/Location'
+import * as Booking from './booking/Booking'
+import { Creation as _Creation } from './booking/Creation'
+import * as _CreationDisplayValues from './booking/CreationDisplayValuesMap'
+import { Addition as _Addition } from './booking/Addition'
+import { CakeFlavour as _CakeFlavour } from './booking/CakeFlavour'
 
-export const Booking = {
-    Domain,
-    Network,
-    Locations,
-    CakeFlavours,
-    Additions,
-    Creations,
-    CreationDisplayValues,
+export namespace Bookings {
+    export import BaseBooking = Booking.BaseBooking
+    export import DomainBooking = Booking.DomainBooking
+    export import FirestoreBooking = Booking.FirestoreBooking
+    export import DomainBookingFields = Booking.DomainBookingFields
+    export import Location = _Location
+    export import CreationKeyMap = _CreationDisplayValues.CreationKeyMap
+    export import CreationDisplayValuesMap = _CreationDisplayValues.CreationDisplayValuesMap
+    export import Creation = _Creation
+    export import Addition = _Addition
+    export import CakeFlavour = _CakeFlavour
 }
 //#endregion 
 
