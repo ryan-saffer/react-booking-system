@@ -53,6 +53,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.7"
+    "@types/dateformat": "^3.0.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/recompose": "^0.30.7"
   }
 }

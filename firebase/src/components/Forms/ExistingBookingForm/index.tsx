@@ -1,31 +1,30 @@
 import React, { useState, useContext } from 'react'
-import moment from 'moment-timezone'
 import 'typeface-roboto'
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
-import { InputLabel, MenuItem, FormHelperText, FormControlLabel, Checkbox, Button } from '@material-ui/core'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
+import { makeStyles, Grid, Typography, TextField, InputLabel, MenuItem, FormHelperText, FormControlLabel,
+Select, CircularProgress, Fab, Checkbox, Button, FormControl } from '@material-ui/core'
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
 import CreateIcon from '@material-ui/icons/Create'
 import DeleteIcon from '@material-ui/icons/Delete'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Fab from '@material-ui/core/Fab'
 import { green, red } from '@material-ui/core/colors'
+
+import { Bookings } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { Booking } from 'fizz-kidz'
 import { capitalise } from '../../../utilities/stringUtilities'
-import { compose } from 'recompose'
 import withErrorDialog from '../../Dialogs/ErrorDialog'
 import WithConfirmationDialog from '../../Dialogs/ConfirmationDialog'
 import { AuthUserContext } from '../../Session'
 import * as ROLES from '../../../constants/roles'
-import { FirebaseContext } from '../../Firebase'
+import Firebase, { FirebaseContext } from '../../Firebase'
+import { ExistingBookingFormFields } from './types'
+import { mapFormToBooking, mapBookingToFormValues, getEmptyValues } from '../../../utilities/bookingUtilities'
+import useAdmin from '../../Hooks/UseAdmin'
+import { Creation } from 'fizz-kidz/lib/booking/Creation'
+
+type BookingFields = keyof Bookings.DomainBooking
 
 const dateFormat = require('dateformat')
 
@@ -68,214 +67,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-/** Function, not const obj, to avoid mutation. Each call returns an empty form. */
-const getEmptyValues = () => (
-    {
-        [Booking.Domain.Fields.PARENT_FIRST_NAME]: {
-            value: '',
-            error: false,
-            errorText: 'First name cannot be empty'
-        },
-        [Booking.Domain.Fields.PARENT_LAST_NAME]: {
-            value: '',
-            error: false,
-            errorText: 'Last name cannot be empty'
-        },
-        [Booking.Domain.Fields.PARENT_EMAIL]: {
-            value: '',
-            error: false,
-            errorText: "Email address cannot be empty"
-        },
-        [Booking.Domain.Fields.PARENT_MOBILE]: {
-            value: '',
-            error: false,
-            errorText: 'Mobile number cannot be empty'
-        },
-        [Booking.Domain.Fields.CHILD_NAME]: {
-            value: '',
-            error: false,
-            errorText: 'Child name cannot be empty'
-        },
-        [Booking.Domain.Fields.CHILD_AGE]: {
-            value: '',
-            error: false,
-            errorText: 'Child age cannot be empty'
-        },
-        [Booking.Domain.Fields.DATE]: {
-            value: null,
-            error: false,
-            errorText: 'Date cannot be empty'
-        },
-        [Booking.Domain.Fields.TIME]: {
-            value: '',
-            error: false,
-            errorText: 'Time cannot be empty'
-        },
-        [Booking.Domain.Fields.LOCATION]: {
-            value: '',
-            error: false,
-            errorText: 'Location cannot be empty'
-        },
-        [Booking.Domain.Fields.PARTY_LENGTH]: {
-            value: '',
-            error: false,
-            errorText: 'Party length cannot be empty'
-        },
-        [Booking.Domain.Fields.ADDRESS]: {
-            value: '',
-            error: false,
-            errorText: 'Address cannot be empty'
-        },
-        [Booking.Domain.Fields.NUMBER_OF_CHILDREN]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.NOTES]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.CREATION_1]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.CREATION_2]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.CREATION_3]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.CHICKEN_NUGGETS]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.FAIRY_BREAD]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.FRUIT_PLATTER]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.LOLLY_BAGS]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.SANDWICH_PLATTER]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.VEGGIE_PLATTER]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.WATERMELON_PLATTER]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.WEDGES]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.GRAZING_PLATTER_MEDIUM]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Additions.GRAZING_PLATTER_LARGE]: {
-            value: false,
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.CAKE]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.CAKE_FLAVOUR]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.QUESTIONS]: {
-            value: '',
-            error: false,
-            errorText: ''
-        },
-        [Booking.Domain.Fields.FUN_FACTS]: {
-            value: '',
-            error: false,
-            errorText: ''
-        }
-    }
-)
-
-/**
- * Strips out the error and errorText fields, leaving only the field and value
- * 
- * @param {object} formValues - the form values as an object
- * @return {object} the booking ready to be written to firestore
- */
-const mapFormToBooking = formValues => {
-
-    var booking = {}
-    for (let field in formValues) {
-        booking[field] = formValues[field].value
-    }
-
-    // trim fields
-    booking[Booking.Domain.Fields.PARENT_FIRST_NAME] = booking[Booking.Domain.Fields.PARENT_FIRST_NAME].trim()
-    booking[Booking.Domain.Fields.PARENT_LAST_NAME] = booking[Booking.Domain.Fields.PARENT_LAST_NAME].trim()
-    booking[Booking.Domain.Fields.CHILD_NAME] = booking[Booking.Domain.Fields.CHILD_NAME].trim()
-    booking[Booking.Domain.Fields.CHILD_AGE] = booking[Booking.Domain.Fields.CHILD_AGE].trim()
-
-    // combine date and time into one
-    // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
-    var options = { timeZone: "Australia/Melbourne" }
-    var dateTime = moment.tz(
-        `${booking.date.toLocaleDateString('en-au', options)} ${booking.time}}`,
-        "DD/MM/YYYY hh:mm",
-        "Australia/Melbourne"
-    ).toDate()
-    delete booking.date
-    delete booking.time
-    booking[Booking.Network.Fields.DATE_TIME] = dateTime
-
-    return booking
-}
-
-function mapBookingToFormValues(booking) {
-    var tmpFormValues = getEmptyValues()
-
-    for (let field in tmpFormValues) {
-        const val = booking[field]
-        if (val !== undefined) {
-            tmpFormValues[field].value = val
-        }
-    }
-
-    const dateTime = booking.dateTime.toDate()
-    tmpFormValues[Booking.Domain.Fields.DATE].value = dateTime
-    tmpFormValues[Booking.Domain.Fields.TIME].value = dateFormat(dateTime, "HH:MM")
-
-    return tmpFormValues
-}
-
-function createUniqueId(field, id) {
+function createUniqueId(field: any, id: any) {
     return `${field}-${id}`
 }
 
@@ -284,18 +76,21 @@ function getCreationMenuItems() {
     // Sort the creation by their display value
     // this is particularly difficult, so first invert the CreationDisplayValues object
     // see https://stackoverflow.com/a/23013726/7870403
-    const invertedCreationDisplayValues = Object.entries(Booking.CreationDisplayValues).reduce((ret, entry) => {
-        const [key, value] = entry;
-        ret[value] = key;
-        return ret;
-    }, {});
+    const invertedCreationDisplayValues = Object.entries(Bookings.CreationDisplayValuesMap).reduce(
+        (ret: { [key: string]: any }, entry) => {
+            const [key, value] = entry;
+            ret[value] = key;
+            return ret;
+        },
+        {}
+    );
 
     // then sort it by key
     const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
     creationDisplayValues.sort()
 
     // then add each creation back into a new object one by one, now that it is sorted
-    const sortedCreations = {}
+    const sortedCreations: { [key: string]: any } = {}
     creationDisplayValues.forEach(value => {
         const creation = invertedCreationDisplayValues[value]
         sortedCreations[creation] = value
@@ -307,17 +102,17 @@ function getCreationMenuItems() {
     ))
 }
 
-const ExistingBookingForm = props => {
+const ExistingBookingForm = (props: any) => {
 
     const classes = useStyles()
     
     const { bookingId, booking } = props
     
-    const firebase = useContext(FirebaseContext)
+    const firebase = useContext(FirebaseContext) as Firebase
 
-    const isAdmin = useContext(AuthUserContext).roles[ROLES.ADMIN]
+    const isAdmin = useAdmin()
 
-    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues
+    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues()
 
     const [formValues, setFormValues] = useState(initialValues)
     const [valid, setValid] = useState(true)
@@ -325,21 +120,21 @@ const ExistingBookingForm = props => {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     
-    const displayAddress = formValues[Booking.Domain.Fields.LOCATION].value === "mobile"
+    const displayAddress = formValues.location.value === "mobile"
     const displayDateTimeLocation = editing
     const displayDateTimeLocationHeading = displayDateTimeLocation || displayAddress
-    const displayNumberOfChildren = formValues[Booking.Domain.Fields.NUMBER_OF_CHILDREN].value || editing
-    const displayNotes = formValues[Booking.Domain.Fields.NOTES].value || editing
-    const displayCreation1 = formValues[Booking.Domain.Fields.CREATION_1].value || editing
-    const displayCreation2 = formValues[Booking.Domain.Fields.CREATION_2].value || editing
-    const displayCreation3 = formValues[Booking.Domain.Fields.CREATION_3].value || editing
+    const displayNumberOfChildren = formValues.numberOfChildren.value || editing
+    const displayNotes = formValues.notes.value || editing
+    const displayCreation1 = formValues.creation1.value || editing
+    const displayCreation2 = formValues.creation2.value || editing
+    const displayCreation3 = formValues.creation3.value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
-    const displayCake = formValues[Booking.Domain.Fields.CAKE].value || editing
-    const displayQuestions = formValues[Booking.Domain.Fields.QUESTIONS].value || editing
-    const displayFunFacts = formValues[Booking.Domain.Fields.FUN_FACTS].value || editing
+    const displayCake = formValues.cake.value || editing
+    const displayQuestions = formValues.questions.value || editing
+    const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     var additionSelected = false
-    for (let addition of Object.values(Booking.Additions)) {
+    for (let addition of Object.values(Bookings.Addition)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -355,25 +150,25 @@ const ExistingBookingForm = props => {
         setEditing(false)
     }
 
-    const handleFormChange = e => {
+    const handleFormChange = (e: any) => {
         const isDateField = e instanceof Date
         let field = isDateField ? 'date' : e.target.name
         let value
         if (isDateField) {
             value = e
-        } else if (Object.values(Booking.Additions).includes(field)) { // checkboxes
+        } else if (Object.values(Bookings.Addition).includes(field)) { // checkboxes
             value = e.target.checked
         } else {
             value = e.target.value
         }
         let tmpValues = { ...formValues }
         tmpValues[field].value = value
-        tmpValues = validateFormOnChange(tmpValues, field, value)
+        tmpValues = validateFormOnChange(tmpValues, field, value) as ExistingBookingFormFields
 
         // clear the value and errors of the address field if it is no longer required
-        if (field === Booking.Domain.Fields.LOCATION && value !== 'mobile') {
-            tmpValues[Booking.Domain.Fields.ADDRESS].value = ''
-            tmpValues[Booking.Domain.Fields.ADDRESS].error = false
+        if (field === Bookings.DomainBookingFields.location && value !== 'mobile') {
+            tmpValues.address.value = ''
+            tmpValues.address.error = false
         }
 
         setValid(!errorFound(tmpValues))
@@ -383,7 +178,7 @@ const ExistingBookingForm = props => {
     const handleSubmit = () => {
 
         var tmpFormValues = { ...formValues }
-        tmpFormValues = validateFormOnSubmit(tmpFormValues)
+        tmpFormValues = validateFormOnSubmit(tmpFormValues) as ExistingBookingFormFields
         // if there is an error (fields are empty), update the values and return
         if (tmpFormValues) {
             setValid(false)
@@ -395,10 +190,10 @@ const ExistingBookingForm = props => {
         setLoading(true)
         var bookingCopy = { ...booking }
         delete bookingCopy.dateTime // dateTime is handled in the mapping, and do not want it overriden in below merge
-        var mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
+        var mergedBooking = { ...bookingCopy, ...mapFormToBooking(booking) }
 
         firebase.functions.httpsCallable('updateBooking')({
-            auth: firebase.auth.currentUser.toJSON(),
+            auth: firebase.auth.currentUser?.toJSON(),
             data: JSON.stringify({bookingId: bookingId, booking: mergedBooking})
         }).then(result => {
             console.log(result.data)
@@ -407,7 +202,7 @@ const ExistingBookingForm = props => {
             setTimeout(() => { // let user see success for a second, then refesh
                 setEditing(false)
                 setSuccess(false)
-                props.onSuccess(formValues[Booking.Domain.Fields.DATE].value)
+                props.onSuccess(formValues.date.value)
             }, 1000)
         }).catch(err => {
             console.log(err)
@@ -422,7 +217,7 @@ const ExistingBookingForm = props => {
     const handleDeleteBooking = () => {
         setLoading(true)
         firebase.functions.httpsCallable('deleteBooking')({
-            auth: firebase.auth.currentUser.toJSON(),
+            auth: firebase.auth.currentUser?.toJSON(),
             data: { bookingId, booking }
         }).then(result => {
             console.log(result.data)
@@ -431,7 +226,7 @@ const ExistingBookingForm = props => {
             setTimeout(() => { // let user see success for a second, then refesh
                 setEditing(false)
                 setSuccess(false)
-                props.onSuccess(formValues[Booking.Domain.Fields.DATE].value)
+                props.onSuccess(formValues.date.value)
             }, 1000)
         }).catch(err => {
             console.log(err)
@@ -453,8 +248,8 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Booking.Domain.Fields.PARENT_FIRST_NAME, bookingId)}
-                        name={Booking.Domain.Fields.PARENT_FIRST_NAME}
+                        id={createUniqueId(Bookings.DomainBookingFields.parentFirstName, bookingId)}
+                        name={Bookings.DomainBookingFields.parentFirstName}
                         label="Parent first name"
                         fullWidth
                         size="small"
@@ -462,57 +257,57 @@ const ExistingBookingForm = props => {
                         autoComplete='off'
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Booking.Domain.Fields.PARENT_FIRST_NAME].value}
-                        error={formValues[Booking.Domain.Fields.PARENT_FIRST_NAME].error}
-                        helperText={formValues[Booking.Domain.Fields.PARENT_FIRST_NAME].error ? formValues[Booking.Domain.Fields.PARENT_FIRST_NAME].errorText : ''}
+                        value={formValues[Bookings.DomainBookingFields.parentFirstName].value}
+                        error={formValues[Bookings.DomainBookingFields.parentFirstName].error}
+                        helperText={formValues[Bookings.DomainBookingFields.parentFirstName].error ? formValues[Bookings.DomainBookingFields.parentFirstName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Booking.Domain.Fields.PARENT_LAST_NAME, bookingId)}
-                        name={Booking.Domain.Fields.PARENT_LAST_NAME}
+                        id={createUniqueId(Bookings.DomainBookingFields.parentLastName, bookingId)}
+                        name={Bookings.DomainBookingFields.parentLastName}
                         label="Parent last name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Booking.Domain.Fields.PARENT_LAST_NAME].value}
-                        error={formValues[Booking.Domain.Fields.PARENT_LAST_NAME].error}
-                        helperText={formValues[Booking.Domain.Fields.PARENT_LAST_NAME].error ? formValues[Booking.Domain.Fields.PARENT_LAST_NAME].errorText : ''}
+                        value={formValues[Bookings.DomainBookingFields.parentLastName].value}
+                        error={formValues[Bookings.DomainBookingFields.parentLastName].error}
+                        helperText={formValues[Bookings.DomainBookingFields.parentLastName].error ? formValues[Bookings.DomainBookingFields.parentLastName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Booking.Domain.Fields.PARENT_EMAIL, bookingId)}
-                        name={Booking.Domain.Fields.PARENT_EMAIL}
+                        id={createUniqueId(Bookings.DomainBookingFields.parentEmail, bookingId)}
+                        name={Bookings.DomainBookingFields.parentEmail}
                         label="Parent email"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Booking.Domain.Fields.PARENT_EMAIL].value}
-                        error={formValues[Booking.Domain.Fields.PARENT_EMAIL].error}
-                        helperText={formValues[Booking.Domain.Fields.PARENT_EMAIL].error ? formValues[Booking.Domain.Fields.PARENT_EMAIL].errorText : ''}
+                        value={formValues[Bookings.DomainBookingFields.parentEmail].value}
+                        error={formValues[Bookings.DomainBookingFields.parentEmail].error}
+                        helperText={formValues[Bookings.DomainBookingFields.parentEmail].error ? formValues[Bookings.DomainBookingFields.parentEmail].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    id={createUniqueId(Booking.Domain.Fields.PARENT_MOBILE, bookingId)}
-                    name={Booking.Domain.Fields.PARENT_MOBILE}
+                    id={createUniqueId(Bookings.DomainBookingFields.parentMobile, bookingId)}
+                    name={Bookings.DomainBookingFields.parentMobile}
                     label="Parent mobile"
                     fullWidth
                     size="small"
                     variant="outlined"
                     disabled={!editing}
                     classes={{ root: classes.disabled }}
-                    value={formValues[Booking.Domain.Fields.PARENT_MOBILE].value}
-                    error={formValues[Booking.Domain.Fields.PARENT_MOBILE].error}
-                    helperText={formValues[Booking.Domain.Fields.PARENT_MOBILE].error ? formValues[Booking.Domain.Fields.PARENT_MOBILE].errorText : ''}
+                    value={formValues[Bookings.DomainBookingFields.parentMobile].value}
+                    error={formValues[Bookings.DomainBookingFields.parentMobile].error}
+                    helperText={formValues[Bookings.DomainBookingFields.parentMobile].error ? formValues[Bookings.DomainBookingFields.parentMobile].errorText : ''}
                     onChange={handleFormChange}
                     />
                 </Grid>
@@ -523,33 +318,33 @@ const ExistingBookingForm = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Booking.Domain.Fields.CHILD_NAME, bookingId)}
-                        name={Booking.Domain.Fields.CHILD_NAME}
+                        id={createUniqueId(Bookings.DomainBookingFields.childName, bookingId)}
+                        name={Bookings.DomainBookingFields.childName}
                         label="Child name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Booking.Domain.Fields.CHILD_NAME].value}
-                        error={formValues[Booking.Domain.Fields.CHILD_NAME].error}
-                        helperText={formValues[Booking.Domain.Fields.CHILD_NAME].error ? formValues[Booking.Domain.Fields.CHILD_NAME].errorText : ''}
+                        value={formValues[Bookings.DomainBookingFields.childName].value}
+                        error={formValues[Bookings.DomainBookingFields.childName].error}
+                        helperText={formValues[Bookings.DomainBookingFields.childName].error ? formValues[Bookings.DomainBookingFields.childName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Booking.Domain.Fields.CHILD_AGE, bookingId)}
-                        name={Booking.Domain.Fields.CHILD_AGE}
+                        id={createUniqueId(Bookings.DomainBookingFields.childAge, bookingId)}
+                        name={Bookings.DomainBookingFields.childAge}
                         label="Child age"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Booking.Domain.Fields.CHILD_AGE].value}
-                        error={formValues[Booking.Domain.Fields.CHILD_AGE].error}
-                        helperText={formValues[Booking.Domain.Fields.CHILD_AGE].error ? formValues[Booking.Domain.Fields.CHILD_AGE].errorText : ''}
+                        value={formValues[Bookings.DomainBookingFields.childAge].value}
+                        error={formValues[Bookings.DomainBookingFields.childAge].error}
+                        helperText={formValues[Bookings.DomainBookingFields.childAge].error ? formValues[Bookings.DomainBookingFields.childAge].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -569,15 +364,15 @@ const ExistingBookingForm = props => {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                id={createUniqueId(Booking.Domain.Fields.DATE, bookingId)}
+                                id={createUniqueId(Bookings.DomainBookingFields.date, bookingId)}
                                 label="Date of party"
-                                autoOk="true"
+                                autoOk={true}
                                 size="small"
                                 disabled={!editing}
-                                classes={{ root: classes.disabled }}
-                                value={formValues[Booking.Domain.Fields.DATE].value}
-                                error={formValues[Booking.Domain.Fields.DATE].error}
-                                helperText={formValues[Booking.Domain.Fields.DATE].error ? formValues[Booking.Domain.Fields.DATE].errorText : ''}
+                                // classes={{ root: classes.disabled }}
+                                value={formValues[Bookings.DomainBookingFields.date].value}
+                                error={formValues[Bookings.DomainBookingFields.date].error}
+                                helperText={formValues[Bookings.DomainBookingFields.date].error ? formValues[Bookings.DomainBookingFields.date].errorText : ''}
                                 onChange={handleFormChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
@@ -588,16 +383,16 @@ const ExistingBookingForm = props => {
                     <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
-                            id={createUniqueId(Booking.Domain.Fields.TIME, bookingId)}
-                            name={Booking.Domain.Fields.TIME}
+                            id={createUniqueId(Bookings.DomainBookingFields.time, bookingId)}
+                            name={Bookings.DomainBookingFields.time}
                             label="Party time"
                             type="time"
                             size="small"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Booking.Domain.Fields.TIME].value}
-                            error={formValues[Booking.Domain.Fields.TIME].error}
-                            helperText={formValues[Booking.Domain.Fields.TIME].error ? formValues[Booking.Domain.Fields.TIME].errorText : ''}
+                            value={formValues[Bookings.DomainBookingFields.time].value}
+                            error={formValues[Bookings.DomainBookingFields.time].error}
+                            helperText={formValues[Bookings.DomainBookingFields.time].error ? formValues[Bookings.DomainBookingFields.time].errorText : ''}
                             onChange={handleFormChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -616,20 +411,20 @@ const ExistingBookingForm = props => {
                             <InputLabel>Location</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.LOCATION,
-                                    id: Booking.Domain.Fields.LOCATION,
-                                    value: formValues[Booking.Domain.Fields.LOCATION].value || ''
+                                    name: Bookings.DomainBookingFields.location,
+                                    id: Bookings.DomainBookingFields.location,
+                                    value: formValues[Bookings.DomainBookingFields.location].value || ''
                                 }}
                                 disabled={true}
-                                error={formValues[Booking.Domain.Fields.LOCATION].error}
+                                error={formValues[Bookings.DomainBookingFields.location].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Booking.Locations).map(location => (
+                                {Object.values(Bookings.Location).map(location => (
                                     <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                                 ))}
                             </Select>
                             {formValues.location.error ? (
-                                <FormHelperText error={true}>{formValues[Booking.Domain.Fields.LOCATION].errorText}</FormHelperText>
+                                <FormHelperText error={true}>{formValues[Bookings.DomainBookingFields.location].errorText}</FormHelperText>
                             ) : null}
                         </FormControl>
                     </Grid>
@@ -642,12 +437,12 @@ const ExistingBookingForm = props => {
                             <InputLabel>Party length</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.PARTY_LENGTH,
-                                    id: Booking.Domain.Fields.PARTY_LENGTH,
-                                    value: formValues[Booking.Domain.Fields.PARTY_LENGTH].value || ''
+                                    name: Bookings.DomainBookingFields.partyLength,
+                                    id: Bookings.DomainBookingFields.partyLength,
+                                    value: formValues[Bookings.DomainBookingFields.partyLength].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Booking.Domain.Fields.PARTY_LENGTH].error}
+                                error={formValues[Bookings.DomainBookingFields.partyLength].error}
                                 onChange={handleFormChange}
                             >
                                 <MenuItem value={'1'}>1 hour</MenuItem>
@@ -655,7 +450,7 @@ const ExistingBookingForm = props => {
                                 <MenuItem value={'2'}>2 hours</MenuItem>
                             </Select>
                             {formValues.partyLength.error &&
-                                <FormHelperText error={true}>{formValues[Booking.Domain.Fields.PARTY_LENGTH].errorText}</FormHelperText>}
+                                <FormHelperText error={true}>{formValues[Bookings.DomainBookingFields.partyLength].errorText}</FormHelperText>}
                         </FormControl>
                     </Grid>
                     </>
@@ -663,17 +458,17 @@ const ExistingBookingForm = props => {
                 {displayAddress &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Booking.Domain.Fields.ADDRESS, bookingId)}
-                            name={Booking.Domain.Fields.ADDRESS}
+                            id={createUniqueId(Bookings.DomainBookingFields.address, bookingId)}
+                            name={Bookings.DomainBookingFields.address}
                             label="Address"
                             fullWidth
                             size="small"
                             variant="outlined"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Booking.Domain.Fields.ADDRESS].value}
-                            error={formValues[Booking.Domain.Fields.ADDRESS].error}
-                            helperText={formValues[Booking.Domain.Fields.ADDRESS].error ? formValues[Booking.Domain.Fields.ADDRESS].errorText : ''}
+                            value={formValues[Bookings.DomainBookingFields.address].value}
+                            error={formValues[Bookings.DomainBookingFields.address].error}
+                            helperText={formValues[Bookings.DomainBookingFields.address].error ? formValues[Bookings.DomainBookingFields.address].errorText : ''}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -687,17 +482,17 @@ const ExistingBookingForm = props => {
                     </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={createUniqueId(Booking.Domain.Fields.NUMBER_OF_CHILDREN, bookingId)}
-                                name={Booking.Domain.Fields.NUMBER_OF_CHILDREN}
+                                id={createUniqueId(Bookings.DomainBookingFields.numberOfChildren, bookingId)}
+                                name={Bookings.DomainBookingFields.numberOfChildren}
                                 label="Number of children"
                                 fullWidth
                                 size="small"
                                 variant="outlined"
                                 disabled={!editing}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[Booking.Domain.Fields.NUMBER_OF_CHILDREN].value}
-                                error={formValues[Booking.Domain.Fields.NUMBER_OF_CHILDREN].error}
-                                helperText={formValues[Booking.Domain.Fields.NUMBER_OF_CHILDREN].error ? formValues[Booking.Domain.Fields.NUMBER_OF_CHILDREN].errorText : ''}
+                                value={formValues[Bookings.DomainBookingFields.numberOfChildren].value}
+                                error={formValues[Bookings.DomainBookingFields.numberOfChildren].error}
+                                helperText={formValues[Bookings.DomainBookingFields.numberOfChildren].error ? formValues[Bookings.DomainBookingFields.numberOfChildren].errorText : ''}
                                 onChange={handleFormChange}
                             />
                         </Grid>
@@ -712,17 +507,17 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Booking.Domain.Fields.NOTES, bookingId)}
-                            name={Booking.Domain.Fields.NOTES}
+                            id={createUniqueId(Bookings.DomainBookingFields.notes, bookingId)}
+                            name={Bookings.DomainBookingFields.notes}
                             label="Notes"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Booking.Domain.Fields.NOTES].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[Bookings.DomainBookingFields.notes].value) ? 'outlined' : 'filled'}
                             multiline
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Booking.Domain.Fields.NOTES].value}
-                            error={formValues[Booking.Domain.Fields.NOTES].error}
+                            value={formValues[Bookings.DomainBookingFields.notes].value}
+                            error={formValues[Bookings.DomainBookingFields.notes].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -741,17 +536,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Booking.Domain.Fields.CREATION_1].value ? 'standard' : 'filled'}
+                            variant={formValues[Bookings.DomainBookingFields.creation1].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>First Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.CREATION_1,
-                                    id: Booking.Domain.Fields.CREATION_1,
-                                    value: formValues[Booking.Domain.Fields.CREATION_1].value || ''
+                                    name: Bookings.DomainBookingFields.creation1,
+                                    id: Bookings.DomainBookingFields.creation1,
+                                    value: formValues[Bookings.DomainBookingFields.creation1].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Booking.Domain.Fields.CREATION_1].error}
+                                error={formValues[Bookings.DomainBookingFields.creation1].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -765,17 +560,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Booking.Domain.Fields.CREATION_2].value ? 'standard' : 'filled'}
+                            variant={formValues[Bookings.DomainBookingFields.creation2].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Second Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.CREATION_2,
-                                    id: Booking.Domain.Fields.CREATION_2,
-                                    value: formValues[Booking.Domain.Fields.CREATION_2].value || ''
+                                    name: Bookings.DomainBookingFields.creation2,
+                                    id: Bookings.DomainBookingFields.creation2,
+                                    value: formValues[Bookings.DomainBookingFields.creation2].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Booking.Domain.Fields.CREATION_2].error}
+                                error={formValues[Bookings.DomainBookingFields.creation2].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -789,17 +584,17 @@ const ExistingBookingForm = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Booking.Domain.Fields.CREATION_3].value ? 'standard' : 'filled'}
+                            variant={formValues[Bookings.DomainBookingFields.creation3].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Third Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.CREATION_3,
-                                    id: Booking.Domain.Fields.CREATION_3,
-                                    value: formValues[Booking.Domain.Fields.CREATION_3].value || ''
+                                    name: Bookings.DomainBookingFields.creation3,
+                                    id: Bookings.DomainBookingFields.creation3,
+                                    value: formValues[Bookings.DomainBookingFields.creation3].value || ''
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
-                                error={formValues[Booking.Domain.Fields.CREATION_3].error}
+                                error={formValues[Bookings.DomainBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -818,11 +613,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.CHICKEN_NUGGETS, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.chickenNuggets, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.CHICKEN_NUGGETS}
-                                    checked={formValues[Booking.Additions.CHICKEN_NUGGETS].value}
-                                    value={formValues[Booking.Additions.CHICKEN_NUGGETS].value}
+                                    name={Bookings.DomainBookingFields.chickenNuggets}
+                                    checked={formValues[Bookings.DomainBookingFields.chickenNuggets].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.chickenNuggets].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -834,11 +629,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.FAIRY_BREAD, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.fairyBread, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.FAIRY_BREAD}
-                                    checked={formValues[Booking.Additions.FAIRY_BREAD].value}
-                                    value={formValues[Booking.Additions.FAIRY_BREAD].value}
+                                    name={Bookings.DomainBookingFields.fairyBread}
+                                    checked={formValues[Bookings.DomainBookingFields.fairyBread].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.fairyBread].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -849,11 +644,11 @@ const ExistingBookingForm = props => {
                     <Grid item xs={4} sm={3}>
                         <FormControlLabel
                             control={<Checkbox
-                                id={createUniqueId(Booking.Additions.FRUIT_PLATTER, bookingId)}
+                                id={createUniqueId(Bookings.DomainBookingFields.fruitPlatter, bookingId)}
                                 color="secondary"
-                                name={Booking.Additions.FRUIT_PLATTER}
-                                checked={formValues[Booking.Additions.FRUIT_PLATTER].value}
-                                value={formValues[Booking.Additions.FRUIT_PLATTER].value}
+                                name={Bookings.DomainBookingFields.fruitPlatter}
+                                checked={formValues[Bookings.DomainBookingFields.fruitPlatter].value ?? undefined}
+                                value={formValues[Bookings.DomainBookingFields.fruitPlatter].value}
                                 disabled={!editing}
                                 onChange={handleFormChange} />}
                             label="Fruit Platter"
@@ -864,11 +659,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.LOLLY_BAGS, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.lollyBags, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.LOLLY_BAGS}
-                                    checked={formValues[Booking.Additions.LOLLY_BAGS].value}
-                                    value={formValues[Booking.Additions.LOLLY_BAGS].value}
+                                    name={Bookings.DomainBookingFields.lollyBags}
+                                    checked={formValues[Bookings.DomainBookingFields.lollyBags].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.lollyBags].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -880,11 +675,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.SANDWICH_PLATTER, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.sandwichPlatter, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.SANDWICH_PLATTER}
-                                    checked={formValues[Booking.Additions.SANDWICH_PLATTER].value}
-                                    value={formValues[Booking.Additions.SANDWICH_PLATTER].value}
+                                    name={Bookings.DomainBookingFields.sandwhichPlatter}
+                                    checked={formValues[Bookings.DomainBookingFields.sandwichPlatter].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.sandwichPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -896,11 +691,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.VEGGIE_PLATTER, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.veggiePlatter, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.VEGGIE_PLATTER}
-                                    checked={formValues[Booking.Additions.VEGGIE_PLATTER].value}
-                                    value={formValues[Booking.Additions.VEGGIE_PLATTER].value}
+                                    name={Bookings.DomainBookingFields.veggiePlatter}
+                                    checked={formValues[Bookings.DomainBookingFields.veggiePlatter].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.veggiePlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -912,11 +707,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.WATERMELON_PLATTER, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.watermelonPlatter, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.WATERMELON_PLATTER}
-                                    checked={formValues[Booking.Additions.WATERMELON_PLATTER].value}
-                                    value={formValues[Booking.Additions.WATERMELON_PLATTER].value}
+                                    name={Bookings.DomainBookingFields.watermelonPlatter}
+                                    checked={formValues[Bookings.DomainBookingFields.watermelonPlatter].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.watermelonPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -928,11 +723,11 @@ const ExistingBookingForm = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Booking.Additions.WEDGES, bookingId)}
+                                    id={createUniqueId(Bookings.DomainBookingFields.wedges, bookingId)}
                                     color="secondary"
-                                    name={Booking.Additions.WEDGES}
-                                    checked={formValues[Booking.Additions.WEDGES].value}
-                                    value={formValues[Booking.Additions.WEDGES].value}
+                                    name={Bookings.DomainBookingFields.wedges}
+                                    checked={formValues[Bookings.DomainBookingFields.wedges].value ?? undefined}
+                                    value={formValues[Bookings.DomainBookingFields.wedges].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
                             }
@@ -951,16 +746,16 @@ const ExistingBookingForm = props => {
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            id={createUniqueId(Booking.Domain.Fields.CAKE, bookingId)}
-                            name={Booking.Domain.Fields.CAKE}
+                            id={createUniqueId(Bookings.DomainBookingFields.cake, bookingId)}
+                            name={Bookings.DomainBookingFields.cake}
                             label="Cake"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Booking.Domain.Fields.CAKE].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[Bookings.DomainBookingFields.cake].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Booking.Domain.Fields.CAKE].value}
-                            error={formValues[Booking.Domain.Fields.CAKE].error}
+                            value={formValues[Bookings.DomainBookingFields.cake].value}
+                            error={formValues[Bookings.DomainBookingFields.cake].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -968,21 +763,21 @@ const ExistingBookingForm = props => {
                         <FormControl
                             fullWidth
                             size="small"
-                            variant={formValues[Booking.Domain.Fields.CAKE_FLAVOUR].value ? 'standard' : 'filled'}
+                            variant={formValues[Bookings.DomainBookingFields.cake_FLAVOUR].value ? 'standard' : 'filled'}
                             classes={{ root: classes.disabled }}
                         >
                             <InputLabel>Cake flavour</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Booking.Domain.Fields.CAKE_FLAVOUR,
-                                    id: Booking.Domain.Fields.CAKE_FLAVOUR,
-                                    value: formValues[Booking.Domain.Fields.CAKE_FLAVOUR].value || ''
+                                    name: Bookings.DomainBookingFields.cake_FLAVOUR,
+                                    id: Bookings.DomainBookingFields.cake_FLAVOUR,
+                                    value: formValues[Bookings.DomainBookingFields.cake_FLAVOUR].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Booking.Domain.Fields.CAKE_FLAVOUR].error}
+                                error={formValues[Bookings.DomainBookingFields.cake_FLAVOUR].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Booking.CakeFlavours).map(flavour => (
+                                {Object.values(Bookings.CakeFlavour).map(flavour => (
                                     <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
                                 ))}
                             </Select>
@@ -1000,17 +795,17 @@ const ExistingBookingForm = props => {
                 {displayQuestions &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Booking.Domain.Fields.QUESTIONS, bookingId)}
-                            name={Booking.Domain.Fields.QUESTIONS}
+                            id={createUniqueId(Bookings.DomainBookingFields.questions, bookingId)}
+                            name={Bookings.DomainBookingFields.questions}
                             label="Questions"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Booking.Domain.Fields.QUESTIONS].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[Bookings.DomainBookingFields.questions].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Booking.Domain.Fields.QUESTIONS].error}
-                            value={formValues[Booking.Domain.Fields.QUESTIONS].value}
+                            error={formValues[Bookings.DomainBookingFields.questions].error}
+                            value={formValues[Bookings.DomainBookingFields.questions].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -1018,17 +813,17 @@ const ExistingBookingForm = props => {
                 {displayFunFacts &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Booking.Domain.Fields.FUN_FACTS, bookingId)}
-                            name={Booking.Domain.Fields.FUN_FACTS}
+                            id={createUniqueId(Bookings.DomainBookingFields.funFacts, bookingId)}
+                            name={Bookings.DomainBookingFields.funFacts}
                             label="Fun Facts"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Booking.Domain.Fields.FUN_FACTS].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[Bookings.DomainBookingFields.funFacts].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Booking.Domain.Fields.FUN_FACTS].error}
-                            value={formValues[Booking.Domain.Fields.FUN_FACTS].value}
+                            error={formValues[Bookings.DomainBookingFields.funFacts].error}
+                            value={formValues[Bookings.DomainBookingFields.funFacts].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
