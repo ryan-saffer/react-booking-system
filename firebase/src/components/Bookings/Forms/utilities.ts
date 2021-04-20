@@ -1,6 +1,6 @@
 import moment from "moment"
 import { Bookings } from "fizz-kidz"
-import { ExistingBookingFormFields } from "../components/Forms/ExistingBookingForm/types"
+import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
 import firebase from "firebase"
 import dateFormat from 'dateformat'
 
@@ -46,7 +46,7 @@ function convertDomainBookingToFirestoreBooking(domainBooking: Bookings.DomainBo
 
 export function mapBookingToFormValues(firestoreBooking: Bookings.FirestoreBooking): ExistingBookingFormFields {
 
-    const domainBooking = convertFirestoreBookingToDomainBooking(firestoreBooking)
+    const domainBooking = convertFirestoreBookingToDomainBooking({ ...firestoreBooking }) // copy so as not to mutate original value
     let formValues = getEmptyValues()
 
     for (let field in formValues) {
@@ -71,7 +71,7 @@ function convertFirestoreBookingToDomainBooking(firestoreBooking: Bookings.Fires
 
     const domainBooking = booking as Bookings.DomainBooking
     domainBooking.date = dateTime
-    domainBooking.time = dateTime
+    domainBooking.time = dateFormat(dateTime, "HH:MM")
 
     return domainBooking
 }
@@ -115,7 +115,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Date cannot be empty'
         },
         time: {
-            value: new Date(),
+            value: '',
             error: false,
             errorText: 'Time cannot be empty'
         },
@@ -130,102 +130,102 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Party length cannot be empty'
         },
         address: {
-            value: null,
+            value: '',
             error: false,
             errorText: 'Address cannot be empty'
         },
         numberOfChildren: {
-            value: null,
+            value: '',
             error: false,
             errorText: ''
         },
         notes: {
-            value: null,
+            value: '',
             error: false,
             errorText: ''
         },
         creation1: {
-            value: null,
+            value: undefined,
             error: false,
             errorText: ''
         },
         creation2: {
-            value: null,
+            value: undefined,
             error: false,
             errorText: ''
         },
         creation3: {
-            value: null,
+            value: undefined,
             error: false,
             errorText: ''
         },
         chickenNuggets: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         fairyBread: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         fruitPlatter: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         lollyBags: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         sandwichPlatter: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         veggiePlatter: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         watermelonPlatter: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         wedges: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         grazingPlatterMedium: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         grazingPlatterLarge: {
-            value: null,
+            value: false,
             error: false,
             errorText: ''
         },
         cake: {
-            value: null,
+            value: '',
             error: false,
             errorText: ''
         },
         cakeFlavour: {
-            value: null,
+            value: undefined,
             error: false,
             errorText: ''
         },
         questions: {
-            value: null,
+            value: '',
             error: false,
             errorText: ''
         },
         funFacts: {
-            value: null,
+            value: '',
             error: false,
             errorText: ''
         }
@@ -242,27 +242,27 @@ function getEmptyDomainBooking(): Bookings.DomainBooking {
         childAge: '',
         location: Bookings.Location.BALWYN,
         date: new Date(),
-        time: new Date(),
+        time: '',
         partyLength: '1',
-        address: null,
-        numberOfChildren: null,
-        notes: null,
-        creation1: null,
-        creation2: null,
-        creation3: null,
-        cake: null,
-        cakeFlavour: null,
-        funFacts: null,
-        questions: null,
-        chickenNuggets: null,
-        fairyBread: null,
-        fruitPlatter: null,
-        veggiePlatter: null,
-        watermelonPlatter: null,
-        wedges: null,
-        sandwichPlatter: null,
-        lollyBags: null,
-        grazingPlatterMedium: null,
-        grazingPlatterLarge: null
+        address: '',
+        numberOfChildren: '',
+        notes: '',
+        creation1: undefined,
+        creation2: undefined,
+        creation3: undefined,
+        cake: '',
+        cakeFlavour: undefined,
+        funFacts: '',
+        questions: '',
+        chickenNuggets: false,
+        fairyBread: false,
+        fruitPlatter: false,
+        veggiePlatter: false,
+        watermelonPlatter: false,
+        wedges: false,
+        sandwichPlatter: false,
+        lollyBags: false,
+        grazingPlatterMedium: false,
+        grazingPlatterLarge: false
     }
 }

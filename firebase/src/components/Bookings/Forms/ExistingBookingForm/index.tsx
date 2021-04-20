@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect, useMemo } from 'react'
 import 'typeface-roboto'
 import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
@@ -13,16 +13,13 @@ import { green, red } from '@material-ui/core/colors'
 
 import { Bookings } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { capitalise } from '../../../utilities/stringUtilities'
-import withErrorDialog from '../../Dialogs/ErrorDialog'
-import WithConfirmationDialog from '../../Dialogs/ConfirmationDialog'
-import { AuthUserContext } from '../../Session'
-import * as ROLES from '../../../constants/roles'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import { capitalise } from '../../../../utilities/stringUtilities'
+import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
+import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
+import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
-import { mapFormToBooking, mapBookingToFormValues, getEmptyValues } from '../../../utilities/bookingUtilities'
-import useAdmin from '../../Hooks/UseAdmin'
-import { Creation } from 'fizz-kidz/lib/booking/Creation'
+import { mapFormToBooking, mapBookingToFormValues, getEmptyValues } from '../utilities'
+import useAdmin from '../../../Hooks/UseAdmin'
 
 type BookingFields = keyof Bookings.DomainBooking
 
@@ -102,7 +99,13 @@ function getCreationMenuItems() {
     ))
 }
 
-const ExistingBookingForm = (props: any) => {
+interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
+    bookingId: string,
+    booking: Bookings.FirestoreBooking,
+    onSuccess: (data: any) => void
+}
+
+const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
 
     const classes = useStyles()
     
@@ -112,9 +115,10 @@ const ExistingBookingForm = (props: any) => {
 
     const isAdmin = useAdmin()
 
-    const initialValues = booking ? mapBookingToFormValues(booking) : getEmptyValues()
+    console.log(`rendering existing booking form for:`, booking)
+    const bookingAsForm = useMemo(() => mapBookingToFormValues(booking), [])
+    const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
 
-    const [formValues, setFormValues] = useState(initialValues)
     const [valid, setValid] = useState(true)
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -153,10 +157,11 @@ const ExistingBookingForm = (props: any) => {
     const handleFormChange = (e: any) => {
         const isDateField = e instanceof Date
         let field = isDateField ? 'date' : e.target.name
+        console.log('field', field)
         let value
         if (isDateField) {
             value = e
-        } else if (Object.values(Bookings.Addition).includes(field)) { // checkboxes
+        } else if (Object.keys(Bookings.Addition).includes(field)) { // checkboxes
             value = e.target.checked
         } else {
             value = e.target.value
@@ -172,7 +177,7 @@ const ExistingBookingForm = (props: any) => {
         }
 
         setValid(!errorFound(tmpValues))
-        setFormValues(tmpValues)
+        setFormValues(formValues => ({ ...formValues, ...tmpValues }))
     }
 
     const handleSubmit = () => {
@@ -188,13 +193,14 @@ const ExistingBookingForm = (props: any) => {
 
         // everything looks good, lets write to firebase and create calendar/send confirmation email
         setLoading(true)
-        var bookingCopy = { ...booking }
-        delete bookingCopy.dateTime // dateTime is handled in the mapping, and do not want it overriden in below merge
-        var mergedBooking = { ...bookingCopy, ...mapFormToBooking(booking) }
+        // var bookingCopy = { ...booking }
+        // delete bookingCopy.dateTime // dateTime is handled in the mapping, and do not want it overriden in below merge
+        // var mergedBooking = { ...bookingCopy, ...mapFormToBooking(booking) }
+        const booking = mapFormToBooking(formValues)
 
         firebase.functions.httpsCallable('updateBooking')({
             auth: firebase.auth.currentUser?.toJSON(),
-            data: JSON.stringify({bookingId: bookingId, booking: mergedBooking})
+            data: JSON.stringify({bookingId: bookingId, booking: booking})
         }).then(result => {
             console.log(result.data)
             setLoading(false)
@@ -616,7 +622,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.chickenNuggets, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.chickenNuggets}
-                                    checked={formValues[Bookings.DomainBookingFields.chickenNuggets].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.chickenNuggets].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.chickenNuggets].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -632,7 +638,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.fairyBread, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.fairyBread}
-                                    checked={formValues[Bookings.DomainBookingFields.fairyBread].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.fairyBread].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.fairyBread].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -647,7 +653,7 @@ const ExistingBookingForm = (props: any) => {
                                 id={createUniqueId(Bookings.DomainBookingFields.fruitPlatter, bookingId)}
                                 color="secondary"
                                 name={Bookings.DomainBookingFields.fruitPlatter}
-                                checked={formValues[Bookings.DomainBookingFields.fruitPlatter].value ?? undefined}
+                                checked={formValues[Bookings.DomainBookingFields.fruitPlatter].value ?? false}
                                 value={formValues[Bookings.DomainBookingFields.fruitPlatter].value}
                                 disabled={!editing}
                                 onChange={handleFormChange} />}
@@ -662,7 +668,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.lollyBags, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.lollyBags}
-                                    checked={formValues[Bookings.DomainBookingFields.lollyBags].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.lollyBags].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.lollyBags].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -677,8 +683,8 @@ const ExistingBookingForm = (props: any) => {
                                 <Checkbox
                                     id={createUniqueId(Bookings.DomainBookingFields.sandwichPlatter, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.sandwhichPlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.sandwichPlatter].value ?? undefined}
+                                    name={Bookings.DomainBookingFields.sandwichPlatter}
+                                    checked={formValues[Bookings.DomainBookingFields.sandwichPlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.sandwichPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -694,7 +700,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.veggiePlatter, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.veggiePlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.veggiePlatter].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.veggiePlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.veggiePlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -710,7 +716,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.watermelonPlatter, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.watermelonPlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.watermelonPlatter].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.watermelonPlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.watermelonPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -726,7 +732,7 @@ const ExistingBookingForm = (props: any) => {
                                     id={createUniqueId(Bookings.DomainBookingFields.wedges, bookingId)}
                                     color="secondary"
                                     name={Bookings.DomainBookingFields.wedges}
-                                    checked={formValues[Bookings.DomainBookingFields.wedges].value ?? undefined}
+                                    checked={formValues[Bookings.DomainBookingFields.wedges].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.wedges].value}
                                     disabled={!editing}
                                     onChange={handleFormChange} />
@@ -763,18 +769,18 @@ const ExistingBookingForm = (props: any) => {
                         <FormControl
                             fullWidth
                             size="small"
-                            variant={formValues[Bookings.DomainBookingFields.cake_FLAVOUR].value ? 'standard' : 'filled'}
+                            variant={formValues[Bookings.DomainBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
                             classes={{ root: classes.disabled }}
                         >
                             <InputLabel>Cake flavour</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.cake_FLAVOUR,
-                                    id: Bookings.DomainBookingFields.cake_FLAVOUR,
-                                    value: formValues[Bookings.DomainBookingFields.cake_FLAVOUR].value || ''
+                                    name: Bookings.DomainBookingFields.cakeFlavour,
+                                    id: Bookings.DomainBookingFields.cakeFlavour,
+                                    value: formValues[Bookings.DomainBookingFields.cakeFlavour].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Bookings.DomainBookingFields.cake_FLAVOUR].error}
+                                error={formValues[Bookings.DomainBookingFields.cakeFlavour].error}
                                 onChange={handleFormChange}
                             >
                                 {Object.values(Bookings.CakeFlavour).map(flavour => (
@@ -888,7 +894,4 @@ const ExistingBookingForm = (props: any) => {
     )
 }
 
-export default compose(
-    withErrorDialog,
-    WithConfirmationDialog
-)(ExistingBookingForm)
+export default WithErrorDialog(WithConfirmationDialog(ExistingBookingForm))

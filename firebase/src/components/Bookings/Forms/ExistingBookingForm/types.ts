@@ -1,4 +1,3 @@
-import firebase from 'firebase'
 import { Bookings } from 'fizz-kidz'
 
 export type ExistingBookingFormFields = {
