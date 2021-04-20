@@ -11,7 +11,7 @@ import { ExitToApp as ExitToAppIcon, Close as CloseIcon } from '@material-ui/ico
 import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session';
-import NewBookingForm from '../Forms/NewBookingForm'
+import NewBookingForm from './Forms/NewBookingForm'
 import { Bookings } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'

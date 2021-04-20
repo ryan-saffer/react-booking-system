@@ -6,7 +6,7 @@ import { CakeFlavour } from "./CakeFlavour";
 import { Addition } from './Addition'
 
 type AdditionKeys = keyof typeof Addition
-type AdditionKeyValues = { [key in AdditionKeys]: boolean | null }
+type AdditionKeyValues = { [key in AdditionKeys]: boolean }
 
 export interface BaseBooking extends AdditionKeyValues {
     parentFirstName: string,
@@ -17,17 +17,17 @@ export interface BaseBooking extends AdditionKeyValues {
     childAge: string,
     location: Location,
     partyLength: "1" | "1.5" | "2",
-    address: string | null,
-    numberOfChildren: string | null,
-    notes: string | null,
-    creation1: Creation | null,
-    creation2: Creation | null,
-    creation3: Creation | null,
-    cake: string | null,
-    cakeFlavour: CakeFlavour | null,
-    questions: string | null,
-    funFacts: string | null,
-    [key: string]: string | boolean | Date | firestore.Timestamp | null
+    address: string,
+    numberOfChildren: string,
+    notes: string,
+    creation1: Creation | undefined,
+    creation2: Creation | undefined,
+    creation3: Creation | undefined,
+    cake: string,
+    cakeFlavour: CakeFlavour | undefined,
+    questions: string,
+    funFacts: string,
+    [key: string]: string | boolean | Date | firestore.Timestamp | undefined
 }
 
 export interface FirestoreBooking extends BaseBooking {
@@ -36,7 +36,7 @@ export interface FirestoreBooking extends BaseBooking {
 
 export interface DomainBooking extends BaseBooking {
     date: Date,
-    time: Date,
+    time: string,
 }
 
 type BookingKeys = { [K in keyof DomainBooking]: K }
