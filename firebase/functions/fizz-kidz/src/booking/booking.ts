@@ -26,8 +26,7 @@ export interface BaseBooking extends AdditionKeyValues {
     cake: string,
     cakeFlavour: CakeFlavour | undefined,
     questions: string,
-    funFacts: string,
-    [key: string]: string | boolean | Date | firestore.Timestamp | undefined
+    funFacts: string
 }
 
 export interface FirestoreBooking extends BaseBooking {

@@ -3,9 +3,9 @@ import { Bookings } from 'fizz-kidz'
 /**
  * Validates the form values, sets any errors and error text messages.
  * 
- * @param {object} formValues - the formValues object reperesenting the form
- * @param {string} field - the field name that was changed
- * @param {string} value - the value form value that was changed
+ * @param formValues - the formValues object reperesenting the form
+ * @param field - the field name that was changed
+ * @param value - the value form value that was changed
  * @return {object} the updated form values object
  */
 export function validateFormOnChange(formValues, field, value) {
