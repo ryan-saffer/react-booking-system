@@ -1,11 +1,11 @@
 /// <reference lib="dom" />
 import firebase, { firestore } from 'firebase' // https://stackoverflow.com/a/51275905/7870403
-import { Location } from "./Location";
-import { Creation } from './Creation'
-import { CakeFlavour } from "./CakeFlavour";
-import { Addition } from './Addition'
+import { Locations } from "./Locations";
+import { Creations } from './Creations'
+import { CakeFlavours } from "./CakeFlavours";
+import { Additions } from './Additions'
 
-type AdditionKeys = keyof typeof Addition
+type AdditionKeys = keyof typeof Additions
 type AdditionKeyValues = { [key in AdditionKeys]: boolean }
 
 export interface BaseBooking extends AdditionKeyValues {
@@ -15,16 +15,16 @@ export interface BaseBooking extends AdditionKeyValues {
     parentMobile: string,
     childName: string,
     childAge: string,
-    location: Location,
+    location: Locations,
     partyLength: "1" | "1.5" | "2",
     address: string,
     numberOfChildren: string,
     notes: string,
-    creation1: Creation | undefined,
-    creation2: Creation | undefined,
-    creation3: Creation | undefined,
+    creation1: Creations | undefined,
+    creation2: Creations | undefined,
+    creation3: Creations | undefined,
     cake: string,
-    cakeFlavour: CakeFlavour | undefined,
+    cakeFlavour: CakeFlavours | undefined,
     questions: string,
     funFacts: string
 }

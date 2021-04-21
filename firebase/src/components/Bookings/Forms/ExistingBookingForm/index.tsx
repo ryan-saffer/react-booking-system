@@ -11,7 +11,7 @@ import CreateIcon from '@material-ui/icons/Create'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { green, red } from '@material-ui/core/colors'
 
-import { Bookings, DomainBooking } from 'fizz-kidz'
+import { Additions, DomainBookingFields, Locations, DomainBooking, FirestoreBooking, CakeFlavours, CreationDisplayValuesMap } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
@@ -24,7 +24,7 @@ import { isObjKey } from '../../../../utilities/typescriptUtilities'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string,
-    booking: Bookings.FirestoreBooking,
+    booking: FirestoreBooking,
     onSuccess: (data: any) => void
 }
 
@@ -60,7 +60,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
     const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     var additionSelected = false
-    for (let addition of Object.values(Bookings.Addition)) {
+    for (let addition of Object.values(Additions)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -100,7 +100,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
             formCopy = validateFormOnChange(formCopy, field, value) as ExistingBookingFormFields
 
             // clear the value and errors of the address field if it is no longer required
-            if (field === Bookings.DomainBookingFields.location && value !== 'mobile') {
+            if (field === DomainBookingFields.location && value !== 'mobile') {
                 formCopy.address.value = ''
                 formCopy.address.error = false
             }
@@ -184,8 +184,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Bookings.DomainBookingFields.parentFirstName, bookingId)}
-                        name={Bookings.DomainBookingFields.parentFirstName}
+                        id={createUniqueId(DomainBookingFields.parentFirstName, bookingId)}
+                        name={DomainBookingFields.parentFirstName}
                         label="Parent first name"
                         fullWidth
                         size="small"
@@ -193,57 +193,57 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         autoComplete='off'
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Bookings.DomainBookingFields.parentFirstName].value}
-                        error={formValues[Bookings.DomainBookingFields.parentFirstName].error}
-                        helperText={formValues[Bookings.DomainBookingFields.parentFirstName].error ? formValues[Bookings.DomainBookingFields.parentFirstName].errorText : ''}
+                        value={formValues[DomainBookingFields.parentFirstName].value}
+                        error={formValues[DomainBookingFields.parentFirstName].error}
+                        helperText={formValues[DomainBookingFields.parentFirstName].error ? formValues[DomainBookingFields.parentFirstName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Bookings.DomainBookingFields.parentLastName, bookingId)}
-                        name={Bookings.DomainBookingFields.parentLastName}
+                        id={createUniqueId(DomainBookingFields.parentLastName, bookingId)}
+                        name={DomainBookingFields.parentLastName}
                         label="Parent last name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Bookings.DomainBookingFields.parentLastName].value}
-                        error={formValues[Bookings.DomainBookingFields.parentLastName].error}
-                        helperText={formValues[Bookings.DomainBookingFields.parentLastName].error ? formValues[Bookings.DomainBookingFields.parentLastName].errorText : ''}
+                        value={formValues[DomainBookingFields.parentLastName].value}
+                        error={formValues[DomainBookingFields.parentLastName].error}
+                        helperText={formValues[DomainBookingFields.parentLastName].error ? formValues[DomainBookingFields.parentLastName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Bookings.DomainBookingFields.parentEmail, bookingId)}
-                        name={Bookings.DomainBookingFields.parentEmail}
+                        id={createUniqueId(DomainBookingFields.parentEmail, bookingId)}
+                        name={DomainBookingFields.parentEmail}
                         label="Parent email"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Bookings.DomainBookingFields.parentEmail].value}
-                        error={formValues[Bookings.DomainBookingFields.parentEmail].error}
-                        helperText={formValues[Bookings.DomainBookingFields.parentEmail].error ? formValues[Bookings.DomainBookingFields.parentEmail].errorText : ''}
+                        value={formValues[DomainBookingFields.parentEmail].value}
+                        error={formValues[DomainBookingFields.parentEmail].error}
+                        helperText={formValues[DomainBookingFields.parentEmail].error ? formValues[DomainBookingFields.parentEmail].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    id={createUniqueId(Bookings.DomainBookingFields.parentMobile, bookingId)}
-                    name={Bookings.DomainBookingFields.parentMobile}
+                    id={createUniqueId(DomainBookingFields.parentMobile, bookingId)}
+                    name={DomainBookingFields.parentMobile}
                     label="Parent mobile"
                     fullWidth
                     size="small"
                     variant="outlined"
                     disabled={!editing}
                     classes={{ root: classes.disabled }}
-                    value={formValues[Bookings.DomainBookingFields.parentMobile].value}
-                    error={formValues[Bookings.DomainBookingFields.parentMobile].error}
-                    helperText={formValues[Bookings.DomainBookingFields.parentMobile].error ? formValues[Bookings.DomainBookingFields.parentMobile].errorText : ''}
+                    value={formValues[DomainBookingFields.parentMobile].value}
+                    error={formValues[DomainBookingFields.parentMobile].error}
+                    helperText={formValues[DomainBookingFields.parentMobile].error ? formValues[DomainBookingFields.parentMobile].errorText : ''}
                     onChange={handleFormChange}
                     />
                 </Grid>
@@ -254,33 +254,33 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Bookings.DomainBookingFields.childName, bookingId)}
-                        name={Bookings.DomainBookingFields.childName}
+                        id={createUniqueId(DomainBookingFields.childName, bookingId)}
+                        name={DomainBookingFields.childName}
                         label="Child name"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Bookings.DomainBookingFields.childName].value}
-                        error={formValues[Bookings.DomainBookingFields.childName].error}
-                        helperText={formValues[Bookings.DomainBookingFields.childName].error ? formValues[Bookings.DomainBookingFields.childName].errorText : ''}
+                        value={formValues[DomainBookingFields.childName].value}
+                        error={formValues[DomainBookingFields.childName].error}
+                        helperText={formValues[DomainBookingFields.childName].error ? formValues[DomainBookingFields.childName].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(Bookings.DomainBookingFields.childAge, bookingId)}
-                        name={Bookings.DomainBookingFields.childAge}
+                        id={createUniqueId(DomainBookingFields.childAge, bookingId)}
+                        name={DomainBookingFields.childAge}
                         label="Child age"
                         fullWidth
                         size="small"
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[Bookings.DomainBookingFields.childAge].value}
-                        error={formValues[Bookings.DomainBookingFields.childAge].error}
-                        helperText={formValues[Bookings.DomainBookingFields.childAge].error ? formValues[Bookings.DomainBookingFields.childAge].errorText : ''}
+                        value={formValues[DomainBookingFields.childAge].value}
+                        error={formValues[DomainBookingFields.childAge].error}
+                        helperText={formValues[DomainBookingFields.childAge].error ? formValues[DomainBookingFields.childAge].errorText : ''}
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -300,15 +300,15 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 disableToolbar
                                 variant="inline"
                                 format="dd/MM/yyyy"
-                                id={createUniqueId(Bookings.DomainBookingFields.date, bookingId)}
+                                id={createUniqueId(DomainBookingFields.date, bookingId)}
                                 label="Date of party"
                                 autoOk={true}
                                 size="small"
                                 disabled={!editing}
                                 // classes={{ root: classes.disabled }}
-                                value={formValues[Bookings.DomainBookingFields.date].value}
-                                error={formValues[Bookings.DomainBookingFields.date].error}
-                                helperText={formValues[Bookings.DomainBookingFields.date].error ? formValues[Bookings.DomainBookingFields.date].errorText : ''}
+                                value={formValues[DomainBookingFields.date].value}
+                                error={formValues[DomainBookingFields.date].error}
+                                helperText={formValues[DomainBookingFields.date].error ? formValues[DomainBookingFields.date].errorText : ''}
                                 onChange={handleFormDateChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
@@ -319,16 +319,16 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
-                            id={createUniqueId(Bookings.DomainBookingFields.time, bookingId)}
-                            name={Bookings.DomainBookingFields.time}
+                            id={createUniqueId(DomainBookingFields.time, bookingId)}
+                            name={DomainBookingFields.time}
                             label="Party time"
                             type="time"
                             size="small"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Bookings.DomainBookingFields.time].value}
-                            error={formValues[Bookings.DomainBookingFields.time].error}
-                            helperText={formValues[Bookings.DomainBookingFields.time].error ? formValues[Bookings.DomainBookingFields.time].errorText : ''}
+                            value={formValues[DomainBookingFields.time].value}
+                            error={formValues[DomainBookingFields.time].error}
+                            helperText={formValues[DomainBookingFields.time].error ? formValues[DomainBookingFields.time].errorText : ''}
                             onChange={handleFormChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -347,20 +347,20 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             <InputLabel>Location</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.location,
-                                    id: Bookings.DomainBookingFields.location,
-                                    value: formValues[Bookings.DomainBookingFields.location].value || ''
+                                    name: DomainBookingFields.location,
+                                    id: DomainBookingFields.location,
+                                    value: formValues[DomainBookingFields.location].value || ''
                                 }}
                                 disabled={true}
-                                error={formValues[Bookings.DomainBookingFields.location].error}
+                                error={formValues[DomainBookingFields.location].error}
                                 onChange={handleFormChange}
                             >
-                                {Object.values(Bookings.Location).map(location => (
+                                {Object.values(Locations).map(location => (
                                     <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                                 ))}
                             </Select>
                             {formValues.location.error ? (
-                                <FormHelperText error={true}>{formValues[Bookings.DomainBookingFields.location].errorText}</FormHelperText>
+                                <FormHelperText error={true}>{formValues[DomainBookingFields.location].errorText}</FormHelperText>
                             ) : null}
                         </FormControl>
                     </Grid>
@@ -373,12 +373,12 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             <InputLabel>Party length</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.partyLength,
-                                    id: Bookings.DomainBookingFields.partyLength,
-                                    value: formValues[Bookings.DomainBookingFields.partyLength].value || ''
+                                    name: DomainBookingFields.partyLength,
+                                    id: DomainBookingFields.partyLength,
+                                    value: formValues[DomainBookingFields.partyLength].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Bookings.DomainBookingFields.partyLength].error}
+                                error={formValues[DomainBookingFields.partyLength].error}
                                 onChange={handleFormChange}
                             >
                                 <MenuItem value={'1'}>1 hour</MenuItem>
@@ -386,7 +386,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 <MenuItem value={'2'}>2 hours</MenuItem>
                             </Select>
                             {formValues.partyLength.error &&
-                                <FormHelperText error={true}>{formValues[Bookings.DomainBookingFields.partyLength].errorText}</FormHelperText>}
+                                <FormHelperText error={true}>{formValues[DomainBookingFields.partyLength].errorText}</FormHelperText>}
                         </FormControl>
                     </Grid>
                     </>
@@ -394,17 +394,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 {displayAddress &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Bookings.DomainBookingFields.address, bookingId)}
-                            name={Bookings.DomainBookingFields.address}
+                            id={createUniqueId(DomainBookingFields.address, bookingId)}
+                            name={DomainBookingFields.address}
                             label="Address"
                             fullWidth
                             size="small"
                             variant="outlined"
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Bookings.DomainBookingFields.address].value}
-                            error={formValues[Bookings.DomainBookingFields.address].error}
-                            helperText={formValues[Bookings.DomainBookingFields.address].error ? formValues[Bookings.DomainBookingFields.address].errorText : ''}
+                            value={formValues[DomainBookingFields.address].value}
+                            error={formValues[DomainBookingFields.address].error}
+                            helperText={formValues[DomainBookingFields.address].error ? formValues[DomainBookingFields.address].errorText : ''}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -418,17 +418,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={createUniqueId(Bookings.DomainBookingFields.numberOfChildren, bookingId)}
-                                name={Bookings.DomainBookingFields.numberOfChildren}
+                                id={createUniqueId(DomainBookingFields.numberOfChildren, bookingId)}
+                                name={DomainBookingFields.numberOfChildren}
                                 label="Number of children"
                                 fullWidth
                                 size="small"
                                 variant="outlined"
                                 disabled={!editing}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[Bookings.DomainBookingFields.numberOfChildren].value}
-                                error={formValues[Bookings.DomainBookingFields.numberOfChildren].error}
-                                helperText={formValues[Bookings.DomainBookingFields.numberOfChildren].error ? formValues[Bookings.DomainBookingFields.numberOfChildren].errorText : ''}
+                                value={formValues[DomainBookingFields.numberOfChildren].value}
+                                error={formValues[DomainBookingFields.numberOfChildren].error}
+                                helperText={formValues[DomainBookingFields.numberOfChildren].error ? formValues[DomainBookingFields.numberOfChildren].errorText : ''}
                                 onChange={handleFormChange}
                             />
                         </Grid>
@@ -443,17 +443,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Bookings.DomainBookingFields.notes, bookingId)}
-                            name={Bookings.DomainBookingFields.notes}
+                            id={createUniqueId(DomainBookingFields.notes, bookingId)}
+                            name={DomainBookingFields.notes}
                             label="Notes"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Bookings.DomainBookingFields.notes].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[DomainBookingFields.notes].value) ? 'outlined' : 'filled'}
                             multiline
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Bookings.DomainBookingFields.notes].value}
-                            error={formValues[Bookings.DomainBookingFields.notes].error}
+                            value={formValues[DomainBookingFields.notes].value}
+                            error={formValues[DomainBookingFields.notes].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -472,17 +472,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Bookings.DomainBookingFields.creation1].value ? 'standard' : 'filled'}
+                            variant={formValues[DomainBookingFields.creation1].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>First Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.creation1,
-                                    id: createUniqueId(Bookings.DomainBookingFields.creation1, bookingId),
-                                    value: formValues[Bookings.DomainBookingFields.creation1].value || ''
+                                    name: DomainBookingFields.creation1,
+                                    id: createUniqueId(DomainBookingFields.creation1, bookingId),
+                                    value: formValues[DomainBookingFields.creation1].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Bookings.DomainBookingFields.creation1].error}
+                                error={formValues[DomainBookingFields.creation1].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -496,17 +496,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Bookings.DomainBookingFields.creation2].value ? 'standard' : 'filled'}
+                            variant={formValues[DomainBookingFields.creation2].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Second Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.creation2,
-                                    id: createUniqueId(Bookings.DomainBookingFields.creation2, bookingId),
-                                    value: formValues[Bookings.DomainBookingFields.creation2].value || ''
+                                    name: DomainBookingFields.creation2,
+                                    id: createUniqueId(DomainBookingFields.creation2, bookingId),
+                                    value: formValues[DomainBookingFields.creation2].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Bookings.DomainBookingFields.creation2].error}
+                                error={formValues[DomainBookingFields.creation2].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -520,17 +520,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             fullWidth
                             size="small"
                             classes={{ root: classes.disabled }}
-                            variant={formValues[Bookings.DomainBookingFields.creation3].value ? 'standard' : 'filled'}
+                            variant={formValues[DomainBookingFields.creation3].value ? 'standard' : 'filled'}
                         >
                             <InputLabel>Third Creation</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.creation3,
-                                    id: createUniqueId(Bookings.DomainBookingFields.creation3, bookingId),
-                                    value: formValues[Bookings.DomainBookingFields.creation3].value || ''
+                                    name: DomainBookingFields.creation3,
+                                    id: createUniqueId(DomainBookingFields.creation3, bookingId),
+                                    value: formValues[DomainBookingFields.creation3].value || ''
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
-                                error={formValues[Bookings.DomainBookingFields.creation3].error}
+                                error={formValues[DomainBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >
                                 {getCreationMenuItems()}
@@ -549,11 +549,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.chickenNuggets, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.chickenNuggets, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.chickenNuggets}
-                                    checked={formValues[Bookings.DomainBookingFields.chickenNuggets].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.chickenNuggets].value}
+                                    name={DomainBookingFields.chickenNuggets}
+                                    checked={formValues[DomainBookingFields.chickenNuggets].value ?? false}
+                                    value={formValues[DomainBookingFields.chickenNuggets].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -565,11 +565,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.fairyBread, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.fairyBread, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.fairyBread}
-                                    checked={formValues[Bookings.DomainBookingFields.fairyBread].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.fairyBread].value}
+                                    name={DomainBookingFields.fairyBread}
+                                    checked={formValues[DomainBookingFields.fairyBread].value ?? false}
+                                    value={formValues[DomainBookingFields.fairyBread].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -580,11 +580,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     <Grid item xs={4} sm={3}>
                         <FormControlLabel
                             control={<Checkbox
-                                id={createUniqueId(Bookings.DomainBookingFields.fruitPlatter, bookingId)}
+                                id={createUniqueId(DomainBookingFields.fruitPlatter, bookingId)}
                                 color="secondary"
-                                name={Bookings.DomainBookingFields.fruitPlatter}
-                                checked={formValues[Bookings.DomainBookingFields.fruitPlatter].value ?? false}
-                                value={formValues[Bookings.DomainBookingFields.fruitPlatter].value}
+                                name={DomainBookingFields.fruitPlatter}
+                                checked={formValues[DomainBookingFields.fruitPlatter].value ?? false}
+                                value={formValues[DomainBookingFields.fruitPlatter].value}
                                 disabled={!editing}
                                 onChange={handleFormCheckboxChange} />}
                             label="Fruit Platter"
@@ -595,11 +595,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.lollyBags, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.lollyBags, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.lollyBags}
-                                    checked={formValues[Bookings.DomainBookingFields.lollyBags].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.lollyBags].value}
+                                    name={DomainBookingFields.lollyBags}
+                                    checked={formValues[DomainBookingFields.lollyBags].value ?? false}
+                                    value={formValues[DomainBookingFields.lollyBags].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -611,11 +611,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.sandwichPlatter, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.sandwichPlatter, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.sandwichPlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.sandwichPlatter].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.sandwichPlatter].value}
+                                    name={DomainBookingFields.sandwichPlatter}
+                                    checked={formValues[DomainBookingFields.sandwichPlatter].value ?? false}
+                                    value={formValues[DomainBookingFields.sandwichPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -627,11 +627,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.veggiePlatter, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.veggiePlatter, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.veggiePlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.veggiePlatter].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.veggiePlatter].value}
+                                    name={DomainBookingFields.veggiePlatter}
+                                    checked={formValues[DomainBookingFields.veggiePlatter].value ?? false}
+                                    value={formValues[DomainBookingFields.veggiePlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -643,11 +643,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.watermelonPlatter, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.watermelonPlatter, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.watermelonPlatter}
-                                    checked={formValues[Bookings.DomainBookingFields.watermelonPlatter].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.watermelonPlatter].value}
+                                    name={DomainBookingFields.watermelonPlatter}
+                                    checked={formValues[DomainBookingFields.watermelonPlatter].value ?? false}
+                                    value={formValues[DomainBookingFields.watermelonPlatter].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -659,11 +659,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    id={createUniqueId(Bookings.DomainBookingFields.wedges, bookingId)}
+                                    id={createUniqueId(DomainBookingFields.wedges, bookingId)}
                                     color="secondary"
-                                    name={Bookings.DomainBookingFields.wedges}
-                                    checked={formValues[Bookings.DomainBookingFields.wedges].value ?? false}
-                                    value={formValues[Bookings.DomainBookingFields.wedges].value}
+                                    name={DomainBookingFields.wedges}
+                                    checked={formValues[DomainBookingFields.wedges].value ?? false}
+                                    value={formValues[DomainBookingFields.wedges].value}
                                     disabled={!editing}
                                     onChange={handleFormCheckboxChange} />
                             }
@@ -682,16 +682,16 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            id={createUniqueId(Bookings.DomainBookingFields.cake, bookingId)}
-                            name={Bookings.DomainBookingFields.cake}
+                            id={createUniqueId(DomainBookingFields.cake, bookingId)}
+                            name={DomainBookingFields.cake}
                             label="Cake"
                             fullWidth
                             size="small"
-                            variant={(editing || formValues[Bookings.DomainBookingFields.cake].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[DomainBookingFields.cake].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            value={formValues[Bookings.DomainBookingFields.cake].value}
-                            error={formValues[Bookings.DomainBookingFields.cake].error}
+                            value={formValues[DomainBookingFields.cake].value}
+                            error={formValues[DomainBookingFields.cake].error}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -699,21 +699,21 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControl
                             fullWidth
                             size="small"
-                            variant={formValues[Bookings.DomainBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
+                            variant={formValues[DomainBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
                             classes={{ root: classes.disabled }}
                         >
                             <InputLabel>Cake flavour</InputLabel>
                             <Select
                                 inputProps={{
-                                    name: Bookings.DomainBookingFields.cakeFlavour,
-                                    id: Bookings.DomainBookingFields.cakeFlavour,
-                                    value: formValues[Bookings.DomainBookingFields.cakeFlavour].value || ''
+                                    name: DomainBookingFields.cakeFlavour,
+                                    id: DomainBookingFields.cakeFlavour,
+                                    value: formValues[DomainBookingFields.cakeFlavour].value || ''
                                 }}
                                 disabled={!editing}
-                                error={formValues[Bookings.DomainBookingFields.cakeFlavour].error}
+                                error={formValues[DomainBookingFields.cakeFlavour].error}
                                 onChange={e => handleFormChange(e)}
                             >
-                                {Object.values(Bookings.CakeFlavour).map(flavour => (
+                                {Object.values(CakeFlavours).map(flavour => (
                                     <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
                                 ))}
                             </Select>
@@ -731,17 +731,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 {displayQuestions &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Bookings.DomainBookingFields.questions, bookingId)}
-                            name={Bookings.DomainBookingFields.questions}
+                            id={createUniqueId(DomainBookingFields.questions, bookingId)}
+                            name={DomainBookingFields.questions}
                             label="Questions"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Bookings.DomainBookingFields.questions].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[DomainBookingFields.questions].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Bookings.DomainBookingFields.questions].error}
-                            value={formValues[Bookings.DomainBookingFields.questions].value}
+                            error={formValues[DomainBookingFields.questions].error}
+                            value={formValues[DomainBookingFields.questions].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -749,17 +749,17 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 {displayFunFacts &&
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(Bookings.DomainBookingFields.funFacts, bookingId)}
-                            name={Bookings.DomainBookingFields.funFacts}
+                            id={createUniqueId(DomainBookingFields.funFacts, bookingId)}
+                            name={DomainBookingFields.funFacts}
                             label="Fun Facts"
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[Bookings.DomainBookingFields.funFacts].value) ? 'outlined' : 'filled'}
+                            variant={(editing || formValues[DomainBookingFields.funFacts].value) ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
-                            error={formValues[Bookings.DomainBookingFields.funFacts].error}
-                            value={formValues[Bookings.DomainBookingFields.funFacts].value}
+                            error={formValues[DomainBookingFields.funFacts].error}
+                            value={formValues[DomainBookingFields.funFacts].value}
                             onChange={handleFormChange}
                         />
                     </Grid>
@@ -833,7 +833,7 @@ function getCreationMenuItems() {
     // Sort the creation by their display value
     // this is particularly difficult, so first invert the CreationDisplayValues object
     // see https://stackoverflow.com/a/23013726/7870403
-    const invertedCreationDisplayValues = Object.entries(Bookings.CreationDisplayValuesMap).reduce(
+    const invertedCreationDisplayValues = Object.entries(CreationDisplayValuesMap).reduce(
         (ret: { [key: string]: any }, entry) => {
             const [key, value] = entry;
             ret[value] = key;

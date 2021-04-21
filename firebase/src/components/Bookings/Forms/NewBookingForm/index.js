@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { Bookings } from 'fizz-kidz'
+import { DomainBookingFields, Locations } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
@@ -130,10 +130,10 @@ const mapFormToBooking = formValues => {
     }
 
     // trim fields
-    booking[Bookings.DomainBookingFields.parentFirstName] = booking[Bookings.DomainBookingFields.parentFirstName].trim()
-    booking[Bookings.DomainBookingFields.parentLastName] = booking[Bookings.DomainBookingFields.parentLastName].trim()
-    booking[Bookings.DomainBookingFields.childName] = booking[Bookings.DomainBookingFields.childName].trim()
-    booking[Bookings.DomainBookingFields.childAge] = booking[Bookings.DomainBookingFields.childAge].trim()
+    booking[DomainBookingFields.parentFirstName] = booking[DomainBookingFields.parentFirstName].trim()
+    booking[DomainBookingFields.parentLastName] = booking[DomainBookingFields.parentLastName].trim()
+    booking[DomainBookingFields.childName] = booking[DomainBookingFields.childName].trim()
+    booking[DomainBookingFields.childAge] = booking[DomainBookingFields.childAge].trim()
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -372,7 +372,7 @@ const NewBookingForm = props => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(Bookings.Location).map(location => (
+                            {Object.values(Locations).map(location => (
                                 <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                             ))}
                     </Select>

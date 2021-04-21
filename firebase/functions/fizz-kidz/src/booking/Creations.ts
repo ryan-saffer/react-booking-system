@@ -1,4 +1,4 @@
-export enum Creation {
+export enum Creations {
     fairyBathBombs = "fairyBathBombs",
     glitterFacePaint = "glitterFacePaint",
     rainbowBathCrystals = "rainbowBathCrystals",

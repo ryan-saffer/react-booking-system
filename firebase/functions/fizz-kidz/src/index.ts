@@ -1,23 +1,10 @@
 //#region Bookings
-import { Location as _Location } from './booking/Location'
-import * as Booking from './booking/Booking'
-import { Creation as _Creation } from './booking/Creation'
-import * as _CreationDisplayValues from './booking/CreationDisplayValuesMap'
-import { Addition as _Addition } from './booking/Addition'
-import { CakeFlavour as _CakeFlavour } from './booking/CakeFlavour'
-
-export namespace Bookings {
-    export import BaseBooking = Booking.BaseBooking
-    export import DomainBooking = Booking.DomainBooking
-    export import FirestoreBooking = Booking.FirestoreBooking
-    export import DomainBookingFields = Booking.DomainBookingFields
-    export import Location = _Location
-    export import CreationKeyMap = _CreationDisplayValues.CreationKeyMap
-    export import CreationDisplayValuesMap = _CreationDisplayValues.CreationDisplayValuesMap
-    export import Creation = _Creation
-    export import Addition = _Addition
-    export import CakeFlavour = _CakeFlavour
-}
+export { Additions } from './booking/Additions'
+export { CakeFlavours } from './booking/CakeFlavours'
+export { Creations } from './booking/Creations'
+export { CreationDisplayValuesMap } from './booking/CreationDisplayValuesMap'
+export { Locations } from './booking/Locations'
+export { DomainBooking, FirestoreBooking, DomainBookingFields } from './booking/Booking'
 //#endregion 
 
 //#region Acuity
