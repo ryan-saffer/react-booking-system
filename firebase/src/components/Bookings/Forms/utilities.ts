@@ -1,8 +1,9 @@
+import firebase from "firebase"
 import moment from "moment"
+import dateFormat from 'dateformat'
 import { Bookings } from "fizz-kidz"
 import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
-import firebase from "firebase"
-import dateFormat from 'dateformat'
+import { isObjKey } from "../../../utilities/typescriptUtilities"
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value
@@ -13,7 +14,11 @@ import dateFormat from 'dateformat'
  export function mapFormToBooking(formValues: ExistingBookingFormFields): Bookings.FirestoreBooking {
 
     let booking = getEmptyDomainBooking()
-    Object.keys(booking).forEach(key => booking[key] = formValues[key].value)
+    Object.keys(booking).forEach(key => {
+        if (isObjKey(key, booking)) {
+            booking[key] = formValues[key].value as never // safe given we know key is a keyof DomainBooking
+        }
+    })
 
     // trim fields
     booking.parentFirstName = booking.parentFirstName.trim()
@@ -35,7 +40,9 @@ function convertDomainBookingToFirestoreBooking(domainBooking: Bookings.DomainBo
         "Australia/Melbourne"
     ).toDate()
 
-    let booking = domainBooking as Bookings.BaseBooking
+    // downcast to any, since we know deleting date and time is safe.
+    // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
+    let booking = domainBooking as any
     delete booking.date
     delete booking.time
 
@@ -50,9 +57,11 @@ export function mapBookingToFormValues(firestoreBooking: Bookings.FirestoreBooki
     let formValues = getEmptyValues()
 
     for (let field in formValues) {
-        const val = domainBooking[field]
-        if (val) {
-            formValues[field].value = val
+        if (isObjKey(field, formValues)) {
+            const val = domainBooking[field]
+            if (val) {
+                formValues[field].value = val
+            }
         }
     }
 
@@ -66,7 +75,9 @@ function convertFirestoreBookingToDomainBooking(firestoreBooking: Bookings.Fires
 
     const dateTime = firestoreBooking.dateTime.toDate()
 
-    const booking = firestoreBooking as Bookings.BaseBooking
+    // downcast to any, since we know deleting dateTime is safe.
+    // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
+    const booking = firestoreBooking as any
     delete booking.dateTime
 
     const domainBooking = booking as Bookings.DomainBooking

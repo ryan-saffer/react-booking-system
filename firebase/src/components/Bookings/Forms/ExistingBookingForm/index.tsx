@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useMemo } from 'react'
+import React, { useState, useContext, useMemo, FormEvent, ChangeEvent, ChangeEventHandler } from 'react'
 import 'typeface-roboto'
 import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
@@ -11,93 +11,16 @@ import CreateIcon from '@material-ui/icons/Create'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { green, red } from '@material-ui/core/colors'
 
-import { Bookings } from 'fizz-kidz'
+import { Bookings, DomainBooking } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
-import { mapFormToBooking, mapBookingToFormValues, getEmptyValues } from '../utilities'
+import { mapFormToBooking, mapBookingToFormValues } from '../utilities'
 import useAdmin from '../../../Hooks/UseAdmin'
-
-type BookingFields = keyof Bookings.DomainBooking
-
-const dateFormat = require('dateformat')
-
-const useStyles = makeStyles(theme => ({
-    saveButtonDiv: {
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
-    saveButton: {
-        marginTop: theme.spacing(3)
-    },
-    deleteButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        "&:hover": {
-            backgroundColor: red[800]
-        }
-    },
-    progress: {
-        color: green[500],
-        position: 'absolute',
-        marginTop: '18px',
-        marginRight: '-6px'
-    },
-    success: {
-        marginTop: theme.spacing(3),
-        backgroundColor: green[500]
-    },
-    editButton: {
-        marginTop: theme.spacing(3)
-    },
-    cancelButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3)
-    },
-    disabled: {
-        "& .Mui-disabled": {
-            color: "rgba(0, 0, 0, 0.87)"
-        }
-    }
-}))
-
-function createUniqueId(field: any, id: any) {
-    return `${field}-${id}`
-}
-
-function getCreationMenuItems() {
-
-    // Sort the creation by their display value
-    // this is particularly difficult, so first invert the CreationDisplayValues object
-    // see https://stackoverflow.com/a/23013726/7870403
-    const invertedCreationDisplayValues = Object.entries(Bookings.CreationDisplayValuesMap).reduce(
-        (ret: { [key: string]: any }, entry) => {
-            const [key, value] = entry;
-            ret[value] = key;
-            return ret;
-        },
-        {}
-    );
-
-    // then sort it by key
-    const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
-    creationDisplayValues.sort()
-
-    // then add each creation back into a new object one by one, now that it is sorted
-    const sortedCreations: { [key: string]: any } = {}
-    creationDisplayValues.forEach(value => {
-        const creation = invertedCreationDisplayValues[value]
-        sortedCreations[creation] = value
-    })
-
-    // and finally return them as menu items
-    return Object.keys(sortedCreations).map(creation => (
-        <MenuItem key={creation} value={creation}>{sortedCreations[creation]}</MenuItem>
-    ))
-}
+import { isObjKey } from '../../../../utilities/typescriptUtilities'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string,
@@ -115,7 +38,6 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
 
     const isAdmin = useAdmin()
 
-    console.log(`rendering existing booking form for:`, booking)
     const bookingAsForm = useMemo(() => mapBookingToFormValues(booking), [])
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
 
@@ -154,30 +76,38 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
         setEditing(false)
     }
 
-    const handleFormChange = (e: any) => {
-        const isDateField = e instanceof Date
-        let field = isDateField ? 'date' : e.target.name
-        console.log('field', field)
-        let value
-        if (isDateField) {
-            value = e
-        } else if (Object.keys(Bookings.Addition).includes(field)) { // checkboxes
-            value = e.target.checked
-        } else {
-            value = e.target.value
+    const handleFormChange = (e: ChangeEvent<any>) => {
+        if (isObjKey(e.target.name, formValues)) {
+            updateFormValues(e.target.name, e.target.value)
         }
-        let tmpValues = { ...formValues }
-        tmpValues[field].value = value
-        tmpValues = validateFormOnChange(tmpValues, field, value) as ExistingBookingFormFields
+    }
 
-        // clear the value and errors of the address field if it is no longer required
-        if (field === Bookings.DomainBookingFields.location && value !== 'mobile') {
-            tmpValues.address.value = ''
-            tmpValues.address.error = false
+    const handleFormDateChange = (date: Date | null) => {
+        updateFormValues('date', date)
+    }
+
+    const handleFormCheckboxChange = (e: ChangeEvent<any>) => {
+        if (isObjKey(e.target.name, formValues)) {
+            updateFormValues(e.target.name, e.target.checked)
         }
+    }
 
-        setValid(!errorFound(tmpValues))
-        setFormValues(formValues => ({ ...formValues, ...tmpValues }))
+    function updateFormValues<K extends keyof DomainBooking>(field: K, value: string | Date | boolean | null) {
+
+        if (value !== null) {
+            let formCopy = { ...formValues }
+            formCopy[field].value = value
+            formCopy = validateFormOnChange(formCopy, field, value) as ExistingBookingFormFields
+
+            // clear the value and errors of the address field if it is no longer required
+            if (field === Bookings.DomainBookingFields.location && value !== 'mobile') {
+                formCopy.address.value = ''
+                formCopy.address.error = false
+            }
+
+            setValid(!errorFound(formCopy))
+            setFormValues(formCopy)
+        }
     }
 
     const handleSubmit = () => {
@@ -379,7 +309,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 value={formValues[Bookings.DomainBookingFields.date].value}
                                 error={formValues[Bookings.DomainBookingFields.date].error}
                                 helperText={formValues[Bookings.DomainBookingFields.date].error ? formValues[Bookings.DomainBookingFields.date].errorText : ''}
-                                onChange={handleFormChange}
+                                onChange={handleFormDateChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
@@ -548,7 +478,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             <Select
                                 inputProps={{
                                     name: Bookings.DomainBookingFields.creation1,
-                                    id: Bookings.DomainBookingFields.creation1,
+                                    id: createUniqueId(Bookings.DomainBookingFields.creation1, bookingId),
                                     value: formValues[Bookings.DomainBookingFields.creation1].value || ''
                                 }}
                                 disabled={!editing}
@@ -572,7 +502,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             <Select
                                 inputProps={{
                                     name: Bookings.DomainBookingFields.creation2,
-                                    id: Bookings.DomainBookingFields.creation2,
+                                    id: createUniqueId(Bookings.DomainBookingFields.creation2, bookingId),
                                     value: formValues[Bookings.DomainBookingFields.creation2].value || ''
                                 }}
                                 disabled={!editing}
@@ -596,7 +526,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             <Select
                                 inputProps={{
                                     name: Bookings.DomainBookingFields.creation3,
-                                    id: Bookings.DomainBookingFields.creation3,
+                                    id: createUniqueId(Bookings.DomainBookingFields.creation3, bookingId),
                                     value: formValues[Bookings.DomainBookingFields.creation3].value || ''
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
@@ -625,7 +555,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.chickenNuggets].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.chickenNuggets].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Chicken Nuggets"
                             classes={{ root: classes.disabled }}
@@ -641,7 +571,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.fairyBread].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.fairyBread].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Fairy Bread"
                             classes={{ root: classes.disabled }}
@@ -656,7 +586,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 checked={formValues[Bookings.DomainBookingFields.fruitPlatter].value ?? false}
                                 value={formValues[Bookings.DomainBookingFields.fruitPlatter].value}
                                 disabled={!editing}
-                                onChange={handleFormChange} />}
+                                onChange={handleFormCheckboxChange} />}
                             label="Fruit Platter"
                             classes={{ root: classes.disabled }}
                         />
@@ -671,7 +601,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.lollyBags].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.lollyBags].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Lolly Bags"
                             classes={{ root: classes.disabled }}
@@ -687,7 +617,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.sandwichPlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.sandwichPlatter].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Sandwich Platter"
                             classes={{ root: classes.disabled }}
@@ -703,7 +633,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.veggiePlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.veggiePlatter].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Veggie Platter"
                             classes={{ root: classes.disabled }}
@@ -719,7 +649,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.watermelonPlatter].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.watermelonPlatter].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Watermelon Platter"
                             classes={{ root: classes.disabled }}
@@ -735,7 +665,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                     checked={formValues[Bookings.DomainBookingFields.wedges].value ?? false}
                                     value={formValues[Bookings.DomainBookingFields.wedges].value}
                                     disabled={!editing}
-                                    onChange={handleFormChange} />
+                                    onChange={handleFormCheckboxChange} />
                             }
                             label="Wedges"
                             classes={{ root: classes.disabled }}
@@ -781,7 +711,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 }}
                                 disabled={!editing}
                                 error={formValues[Bookings.DomainBookingFields.cakeFlavour].error}
-                                onChange={handleFormChange}
+                                onChange={e => handleFormChange(e)}
                             >
                                 {Object.values(Bookings.CakeFlavour).map(flavour => (
                                     <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
@@ -894,4 +824,81 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
     )
 }
 
-export default WithErrorDialog(WithConfirmationDialog(ExistingBookingForm))
+function createUniqueId(field: string, id: string) {
+    return `${field}-${id}`
+}
+
+function getCreationMenuItems() {
+
+    // Sort the creation by their display value
+    // this is particularly difficult, so first invert the CreationDisplayValues object
+    // see https://stackoverflow.com/a/23013726/7870403
+    const invertedCreationDisplayValues = Object.entries(Bookings.CreationDisplayValuesMap).reduce(
+        (ret: { [key: string]: any }, entry) => {
+            const [key, value] = entry;
+            ret[value] = key;
+            return ret;
+        },
+        {}
+    );
+
+    // then sort it by key
+    const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
+    creationDisplayValues.sort()
+
+    // then add each creation back into a new object one by one, now that it is sorted
+    const sortedCreations: { [key: string]: any } = {}
+    creationDisplayValues.forEach(value => {
+        const creation = invertedCreationDisplayValues[value]
+        sortedCreations[creation] = value
+    })
+
+    // and finally return them as menu items
+    return Object.keys(sortedCreations).map(creation => (
+        <MenuItem key={creation} value={creation}>{sortedCreations[creation]}</MenuItem>
+    ))
+}
+
+const useStyles = makeStyles(theme => ({
+    saveButtonDiv: {
+        display: 'flex',
+        justifyContent: 'flex-end'
+    },
+    saveButton: {
+        marginTop: theme.spacing(3)
+    },
+    deleteButton: {
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        "&:hover": {
+            backgroundColor: red[800]
+        }
+    },
+    progress: {
+        color: green[500],
+        position: 'absolute',
+        marginTop: '18px',
+        marginRight: '-6px'
+    },
+    success: {
+        marginTop: theme.spacing(3),
+        backgroundColor: green[500]
+    },
+    editButton: {
+        marginTop: theme.spacing(3)
+    },
+    cancelButton: {
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3)
+    },
+    disabled: {
+        "& .Mui-disabled": {
+            color: "rgba(0, 0, 0, 0.87)"
+        }
+    }
+}))
+
+export default compose<ExistingBookingFormProps, {}>(
+    WithErrorDialog,
+    WithConfirmationDialog
+)(ExistingBookingForm)
