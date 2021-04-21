@@ -2,7 +2,7 @@ import React from 'react'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Bookings } from 'fizz-kidz'
+import { Locations } from 'fizz-kidz'
 import * as Utilities from '../../utilities/stringUtilities'
 
 const LocationCheckboxes = props => {
@@ -11,7 +11,7 @@ const LocationCheckboxes = props => {
 
     return (
         <FormGroup row>
-            {Object.values(Bookings.Location).map(location =>
+            {Object.values(Locations).map(location =>
                 <FormControlLabel
                     key={location}
                     control={

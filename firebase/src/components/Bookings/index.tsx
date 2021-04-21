@@ -12,7 +12,7 @@ import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session';
 import NewBookingForm from './Forms/NewBookingForm'
-import { Bookings } from 'fizz-kidz'
+import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
@@ -47,8 +47,8 @@ const BookingsPage = () => {
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
-    let initialLocations: { [key in Bookings.Location]?: boolean } = {}
-    Object.values(Bookings.Location).forEach(location => initialLocations[location] = true)
+    let initialLocations: { [key in Locations]?: boolean } = {}
+    Object.values(Locations).forEach(location => initialLocations[location] = true)
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
@@ -113,8 +113,8 @@ const BookingsPage = () => {
             .get().then(documentSnapshot => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
-                let selectedLocations: { [key in Bookings.Location]?: boolean} = {}
-                Object.values(Bookings.Location).forEach(location => selectedLocations[location] = false)
+                let selectedLocations: { [key in Locations]?: boolean} = {}
+                Object.values(Locations).forEach(location => selectedLocations[location] = false)
                 selectedLocations[documentSnapshot.get('location') as 'balwyn' | 'essendon' | 'malvern' | 'mobile'] = true
                 setSelectedLocations(selectedLocations)
             })
@@ -264,7 +264,7 @@ const BookingsPage = () => {
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm md>
-                    {Object.values(Bookings.Location).map(location =>
+                    {Object.values(Locations).map(location =>
                         selectedLocations[location] && <LocationBookings key={location} onSuccess={handleCloseBooking} bookings={bookings} location={location} />
                     )}
                 </Grid>

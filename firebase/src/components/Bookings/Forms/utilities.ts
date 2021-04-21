@@ -1,7 +1,7 @@
 import firebase from "firebase"
 import moment from "moment"
 import dateFormat from 'dateformat'
-import { Bookings } from "fizz-kidz"
+import { DomainBooking, FirestoreBooking, Locations } from "fizz-kidz"
 import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
 import { isObjKey } from "../../../utilities/typescriptUtilities"
 
@@ -11,7 +11,7 @@ import { isObjKey } from "../../../utilities/typescriptUtilities"
  * @param {object} formValues - the form values as an object
  * @return {object} the booking ready to be written to firestore
  */
- export function mapFormToBooking(formValues: ExistingBookingFormFields): Bookings.FirestoreBooking {
+ export function mapFormToBooking(formValues: ExistingBookingFormFields): FirestoreBooking {
 
     let booking = getEmptyDomainBooking()
     Object.keys(booking).forEach(key => {
@@ -29,7 +29,7 @@ import { isObjKey } from "../../../utilities/typescriptUtilities"
     return convertDomainBookingToFirestoreBooking(booking)
 }
 
-function convertDomainBookingToFirestoreBooking(domainBooking: Bookings.DomainBooking): Bookings.FirestoreBooking {
+function convertDomainBookingToFirestoreBooking(domainBooking: DomainBooking): FirestoreBooking {
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -46,12 +46,12 @@ function convertDomainBookingToFirestoreBooking(domainBooking: Bookings.DomainBo
     delete booking.date
     delete booking.time
 
-    let firestoreBooking = booking as Bookings.FirestoreBooking
+    let firestoreBooking = booking as FirestoreBooking
     firestoreBooking.dateTime = firebase.firestore.Timestamp.fromDate(dateTime)
     return firestoreBooking
 }
 
-export function mapBookingToFormValues(firestoreBooking: Bookings.FirestoreBooking): ExistingBookingFormFields {
+export function mapBookingToFormValues(firestoreBooking: FirestoreBooking): ExistingBookingFormFields {
 
     const domainBooking = convertFirestoreBookingToDomainBooking({ ...firestoreBooking }) // copy so as not to mutate original value
     let formValues = getEmptyValues()
@@ -71,7 +71,7 @@ export function mapBookingToFormValues(firestoreBooking: Bookings.FirestoreBooki
     return formValues
 }
 
-function convertFirestoreBookingToDomainBooking(firestoreBooking: Bookings.FirestoreBooking): Bookings.DomainBooking {
+function convertFirestoreBookingToDomainBooking(firestoreBooking: FirestoreBooking): DomainBooking {
 
     const dateTime = firestoreBooking.dateTime.toDate()
 
@@ -80,7 +80,7 @@ function convertFirestoreBookingToDomainBooking(firestoreBooking: Bookings.Fires
     const booking = firestoreBooking as any
     delete booking.dateTime
 
-    const domainBooking = booking as Bookings.DomainBooking
+    const domainBooking = booking as DomainBooking
     domainBooking.date = dateTime
     domainBooking.time = dateFormat(dateTime, "HH:MM")
 
@@ -131,7 +131,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Time cannot be empty'
         },
         location: {
-            value: Bookings.Location.BALWYN,
+            value: Locations.BALWYN,
             error: false,
             errorText: 'Location cannot be empty'
         },
@@ -243,7 +243,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
     }
 }
 
-function getEmptyDomainBooking(): Bookings.DomainBooking {
+function getEmptyDomainBooking(): DomainBooking {
     return { 
         parentFirstName: '',
         parentLastName: '',
@@ -251,7 +251,7 @@ function getEmptyDomainBooking(): Bookings.DomainBooking {
         parentMobile: '',
         childName: '',
         childAge: '',
-        location: Bookings.Location.BALWYN,
+        location: Locations.BALWYN,
         date: new Date(),
         time: '',
         partyLength: '1',

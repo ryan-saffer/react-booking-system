@@ -1,4 +1,4 @@
-export enum Addition {
+export enum Additions {
     chickenNuggets = "chickenNuggets",
     fairyBread = "fairyBread",
     fruitPlatter = "fruitPlatter",

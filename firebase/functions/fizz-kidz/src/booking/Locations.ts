@@ -1,4 +1,4 @@
-export enum Location {
+export enum Locations {
     BALWYN = "balwyn",
     ESSENDON = "essendon",
     MALVERN = "malvern",
