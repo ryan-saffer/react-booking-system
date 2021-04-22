@@ -1,8 +1,8 @@
-import { DomainBooking } from 'fizz-kidz'
+import { FormBooking } from 'fizz-kidz'
 
 export type ExistingBookingFormFields = {
-    [K in keyof DomainBooking]: {
-        value: DomainBooking[K]
+    [K in keyof FormBooking]: {
+        value: FormBooking[K]
         error: boolean,
         errorText: string
     }
