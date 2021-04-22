@@ -1,27 +1,27 @@
-import { Booking } from 'fizz-kidz'
+import { FormBookingFields, Locations } from 'fizz-kidz'
 
 /**
  * Validates the form values, sets any errors and error text messages.
  * 
- * @param {object} formValues - the formValues object reperesenting the form
- * @param {string} field - the field name that was changed
- * @param {string} value - the value form value that was changed
+ * @param formValues - the formValues object reperesenting the form
+ * @param field - the field name that was changed
+ * @param value - the value form value that was changed
  * @return {object} the updated form values object
  */
 export function validateFormOnChange(formValues, field, value) {
 
     switch (field) {
         // all the following only need to check for empty values
-        case Booking.Domain.Fields.PARENT_FIRST_NAME:
-        case Booking.Domain.Fields.PARENT_LAST_NAME:
-        case Booking.Domain.Fields.CHILD_NAME:
-        case Booking.Domain.Fields.CHILD_AGE:
-        case Booking.Domain.Fields.TIME:
-        case Booking.Domain.Fields.DATE:
-        case Booking.Domain.Fields.ADDRESS:
+        case FormBookingFields.parentFirstName:
+        case FormBookingFields.parentLastName:
+        case FormBookingFields.childName:
+        case FormBookingFields.childAge:
+        case FormBookingFields.time:
+        case FormBookingFields.date:
+        case FormBookingFields.address:
             formValues[field].error = value === ''
             break
-        case Booking.Domain.Fields.PARENT_EMAIL:
+        case FormBookingFields.parentEmail:
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
@@ -34,7 +34,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case Booking.Domain.Fields.PARENT_MOBILE:
+        case FormBookingFields.parentMobile:
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
@@ -48,18 +48,18 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case Booking.Domain.Fields.LOCATION:
-        case Booking.Domain.Fields.PARTY_LENGTH:
+        case FormBookingFields.location:
+        case FormBookingFields.partyLength:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
             if (locationAndTimeIsInvalid(formValues)) {
-                formValues[Booking.Domain.Fields.PARTY_LENGTH].error = true
-                var length = `${formValues[Booking.Domain.Fields.PARTY_LENGTH].value} hour`
-                if (formValues[Booking.Domain.Fields.PARTY_LENGTH].value > 1) length += 's'
-                formValues[Booking.Domain.Fields.PARTY_LENGTH].errorText = `A ${formValues[Booking.Domain.Fields.LOCATION].value} party cannot be of length ${length}`
+                formValues[FormBookingFields.partyLength].error = true
+                var length = `${formValues[FormBookingFields.partyLength].value} hour`
+                if (formValues[FormBookingFields.partyLength].value > 1) length += 's'
+                formValues[FormBookingFields.partyLength].errorText = `A ${formValues[FormBookingFields.location].value} party cannot be of length ${length}`
                 break
-            } else if (field === Booking.Domain.Fields.LOCATION) {
-                formValues[Booking.Domain.Fields.PARTY_LENGTH].error = false
+            } else if (field === FormBookingFields.location) {
+                formValues[FormBookingFields.partyLength].error = false
             }
             break
         default:
@@ -76,9 +76,9 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = Object.values(Booking.Locations).filter(location => location !== 'mobile')
-    var location = formValues[Booking.Domain.Fields.LOCATION].value
-    var length = formValues[Booking.Domain.Fields.PARTY_LENGTH].value
+    var storeLocations = Object.values(Locations).filter(location => location !== 'mobile')
+    var location = formValues[FormBookingFields.location].value
+    var length = formValues[FormBookingFields.partyLength].value
     if (storeLocations.includes(location) && length === '1') {
         return true
     } else if (location === 'mobile' && length === '2') {
@@ -100,23 +100,23 @@ export function validateFormOnSubmit(formValues) {
     for (let field in formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
-        if (field !== Booking.Domain.Fields.ADDRESS &&
-            field !== Booking.Domain.Fields.NUMBER_OF_CHILDREN &&
-            field !== Booking.Domain.Fields.NOTES &&
-            field !== Booking.Domain.Fields.CREATION_1 &&
-            field !== Booking.Domain.Fields.CREATION_2 &&
-            field !== Booking.Domain.Fields.CREATION_3 &&
-            field !== Booking.Domain.Fields.CAKE &&
-            field !== Booking.Domain.Fields.CAKE_FLAVOUR &&
-            field !== Booking.Domain.Fields.QUESTIONS &&
-            field !== Booking.Domain.Fields.FUN_FACTS) {
+        if (field !== FormBookingFields.address &&
+            field !== FormBookingFields.numberOfChildren &&
+            field !== FormBookingFields.notes &&
+            field !== FormBookingFields.creation1 &&
+            field !== FormBookingFields.creation2 &&
+            field !== FormBookingFields.creation3 &&
+            field !== FormBookingFields.cake &&
+            field !== FormBookingFields.cakeFlavour &&
+            field !== FormBookingFields.questions &&
+            field !== FormBookingFields.funFacts) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
 
     // validate address here
-    if (formValues[Booking.Domain.Fields.LOCATION].value === 'mobile') {
-        formValues[Booking.Domain.Fields.ADDRESS].error = formValues[Booking.Domain.Fields.ADDRESS].value === ''
+    if (formValues[FormBookingFields.location].value === 'mobile') {
+        formValues[FormBookingFields.address].error = formValues[FormBookingFields.address].value === ''
     }
 
     return errorFound(formValues) ? formValues : null

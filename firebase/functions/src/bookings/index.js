@@ -58,7 +58,7 @@ exports.updateBooking = functions
       var partyDetails = JSON.parse(data.data)
       const bookingId = partyDetails.bookingId
       const booking = partyDetails.booking
-      booking.dateTime = admin.firestore.Timestamp.fromDate(new Date(booking.dateTime))
+      booking.dateTime = new Date(booking.dateTime)
       const documentRef = db.collection('bookings').doc(bookingId)
       // update calendar event and any generated sheets on apps script
       console.log('running apps script...')

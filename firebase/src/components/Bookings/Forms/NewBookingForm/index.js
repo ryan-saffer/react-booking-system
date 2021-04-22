@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import moment from 'moment-timezone'
-import { FirebaseContext } from '../../Firebase'
+import { FirebaseContext } from '../../../Firebase'
 import 'typeface-roboto'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -17,10 +17,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { Booking } from 'fizz-kidz'
-import { capitalise } from '../../../utilities/stringUtilities'
+import { FormBookingFields, Locations } from 'fizz-kidz'
+import { capitalise } from '../../../../utilities/stringUtilities'
 import { compose } from 'recompose'
-import withErrorDialog from '../../Dialogs/ErrorDialog'
+import WithErrorDialog from '../../../Dialogs/ErrorDialog'
 
 const useStyles = makeStyles(theme => ({
     confirmationEmailCheckbox: {
@@ -130,10 +130,10 @@ const mapFormToBooking = formValues => {
     }
 
     // trim fields
-    booking[Booking.Domain.Fields.PARENT_FIRST_NAME] = booking[Booking.Domain.Fields.PARENT_FIRST_NAME].trim()
-    booking[Booking.Domain.Fields.PARENT_LAST_NAME] = booking[Booking.Domain.Fields.PARENT_LAST_NAME].trim()
-    booking[Booking.Domain.Fields.CHILD_NAME] = booking[Booking.Domain.Fields.CHILD_NAME].trim()
-    booking[Booking.Domain.Fields.CHILD_AGE] = booking[Booking.Domain.Fields.CHILD_AGE].trim()
+    booking[FormBookingFields.parentFirstName] = booking[FormBookingFields.parentFirstName].trim()
+    booking[FormBookingFields.parentLastName] = booking[FormBookingFields.parentLastName].trim()
+    booking[FormBookingFields.childName] = booking[FormBookingFields.childName].trim()
+    booking[FormBookingFields.childAge] = booking[FormBookingFields.childAge].trim()
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -372,7 +372,7 @@ const NewBookingForm = props => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(Booking.Locations).map(location => (
+                            {Object.values(Locations).map(location => (
                                 <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
                             ))}
                     </Select>
@@ -468,5 +468,5 @@ const NewBookingForm = props => {
 }
 
 export default compose(
-    withErrorDialog
+    WithErrorDialog
 )(NewBookingForm)

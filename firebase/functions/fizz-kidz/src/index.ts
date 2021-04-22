@@ -1,21 +1,10 @@
 //#region Bookings
-import { Locations } from './booking/locations'
-import { CakeFlavours } from './booking/cakeFlavours'
-import { Additions } from './booking/additions'
-import { Creations } from './booking/creations'
-import { CreationDisplayValues } from './booking/creationDisplayValues'
-import * as Domain from './booking/domain'
-import * as Network from './booking/network'
-
-export const Booking = {
-    Domain,
-    Network,
-    Locations,
-    CakeFlavours,
-    Additions,
-    Creations,
-    CreationDisplayValues,
-}
+export { Additions } from './booking/Additions'
+export { CakeFlavours } from './booking/CakeFlavours'
+export { Creations } from './booking/Creations'
+export { CreationDisplayValuesMap } from './booking/CreationDisplayValuesMap'
+export { Locations } from './booking/Locations'
+export { Booking, FormBooking, FirestoreBooking, FormBookingFields, BookingFields } from './booking/Booking'
 //#endregion 
 
 //#region Acuity
@@ -32,4 +21,8 @@ export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendI
 
 //#region Firebase
 export { FirebaseFunctions } from './firebase/functions'
+//#endregion
+
+//#region Utilities
+export * as Utilities from './utilities'
 //#endregion
