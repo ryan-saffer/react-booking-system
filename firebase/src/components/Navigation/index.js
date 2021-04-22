@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
@@ -7,10 +7,10 @@ import { grey, red } from '@material-ui/core/colors'
 import Container from '@material-ui/core/Container'
 
 import * as ROUTES from '../../constants/routes'
-import { withFirebase } from '../Firebase'
 import { withAuthorization } from '../Session'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import useAdmin from '../Hooks/UseAdmin'
+import { FirebaseContext } from '../Firebase'
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -56,7 +56,7 @@ const Navigation = props => {
 
     const isAdmin = useAdmin()
 
-    const { firebase } = props
+    const firebase = useContext(FirebaseContext)
 
     const navigateToRoute = route => {
         props.history.push(route)
@@ -67,7 +67,7 @@ const Navigation = props => {
             <CssBaseline/>
             <AppBar position='static' className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
-                    <img className={classes.logo} src={Logo} />
+                    <img className={classes.logo} src={Logo.default} />
                 </Toolbar>
             </AppBar>
             <div className={classes.main}>
@@ -98,7 +98,6 @@ const Navigation = props => {
 }
 
 export default compose(
-    withFirebase,
     withRouter,
     withAuthorization,
 )(Navigation)
