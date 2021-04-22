@@ -1,9 +1,7 @@
-import firebase from "firebase"
 import moment from "moment"
 import dateFormat from 'dateformat'
-import { DomainBooking, FirestoreBooking, Locations } from "fizz-kidz"
+import { Booking, FirestoreBooking, FormBooking, Locations, Utilities } from "fizz-kidz"
 import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
-import { isObjKey } from "../../../utilities/typescriptUtilities"
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value
@@ -11,12 +9,12 @@ import { isObjKey } from "../../../utilities/typescriptUtilities"
  * @param {object} formValues - the form values as an object
  * @return {object} the booking ready to be written to firestore
  */
- export function mapFormToBooking(formValues: ExistingBookingFormFields): FirestoreBooking {
+ export function mapFormToBooking(formValues: ExistingBookingFormFields): Booking {
 
     let booking = getEmptyDomainBooking()
     Object.keys(booking).forEach(key => {
-        if (isObjKey(key, booking)) {
-            booking[key] = formValues[key].value as never // safe given we know key is a keyof DomainBooking
+        if (Utilities.isObjKey(key, booking)) {
+            booking[key] = formValues[key]?.value as never // safe given we know key is a keyof DomainBooking
         }
     })
 
@@ -26,41 +24,42 @@ import { isObjKey } from "../../../utilities/typescriptUtilities"
     booking.childName = booking.childName.trim()
     booking.childAge = booking.childAge.trim()
 
-    return convertDomainBookingToFirestoreBooking(booking)
+    return convertFormBookingToBooking(booking)
 }
 
-function convertDomainBookingToFirestoreBooking(domainBooking: DomainBooking): FirestoreBooking {
+function convertFormBookingToBooking(formBooking: FormBooking): Booking {
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
-    var options = { timeZone: "Australia/Melbourne" }
-    var dateTime = moment.tz(
-        `${domainBooking.date.toLocaleDateString('en-au', options)} ${domainBooking.time}}`,
+    let options = { timeZone: "Australia/Melbourne" }
+    let dateTime = moment.tz(
+        `${formBooking.date.toLocaleDateString('en-au', options)} ${formBooking.time}}`,
         "DD/MM/YYYY hh:mm",
         "Australia/Melbourne"
     ).toDate()
 
     // downcast to any, since we know deleting date and time is safe.
     // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
-    let booking = domainBooking as any
-    delete booking.date
-    delete booking.time
+    let temp = formBooking as any
+    delete temp.date
+    delete temp.time
 
-    let firestoreBooking = booking as FirestoreBooking
-    firestoreBooking.dateTime = firebase.firestore.Timestamp.fromDate(dateTime)
-    return firestoreBooking
+    let booking = temp as Booking
+    booking.dateTime = dateTime
+    return booking
 }
 
-export function mapBookingToFormValues(firestoreBooking: FirestoreBooking): ExistingBookingFormFields {
+export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooking): ExistingBookingFormFields {
 
-    const domainBooking = convertFirestoreBookingToDomainBooking({ ...firestoreBooking }) // copy so as not to mutate original value
+    const domainBooking = convertFirestoreBookingToFormBooking({ ...firestoreBooking }) // copy so as not to mutate original value
     let formValues = getEmptyValues()
 
     for (let field in formValues) {
-        if (isObjKey(field, formValues)) {
+        if (Utilities.isObjKey(field, formValues)) {
             const val = domainBooking[field]
             if (val) {
-                formValues[field].value = val
+                const prop = formValues[field]
+                if (prop) prop.value = val
             }
         }
     }
@@ -71,7 +70,7 @@ export function mapBookingToFormValues(firestoreBooking: FirestoreBooking): Exis
     return formValues
 }
 
-function convertFirestoreBookingToDomainBooking(firestoreBooking: FirestoreBooking): DomainBooking {
+function convertFirestoreBookingToFormBooking(firestoreBooking: FirestoreBooking): FormBooking {
 
     const dateTime = firestoreBooking.dateTime.toDate()
 
@@ -80,11 +79,11 @@ function convertFirestoreBookingToDomainBooking(firestoreBooking: FirestoreBooki
     const booking = firestoreBooking as any
     delete booking.dateTime
 
-    const domainBooking = booking as DomainBooking
-    domainBooking.date = dateTime
-    domainBooking.time = dateFormat(dateTime, "HH:MM")
+    const formBooking = booking as FormBooking
+    formBooking.date = dateTime
+    formBooking.time = dateFormat(dateTime, "HH:MM")
 
-    return domainBooking
+    return formBooking
 }
 
 /** Function, not const obj, to avoid mutation. Each call returns an empty form. */
@@ -243,7 +242,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
     }
 }
 
-function getEmptyDomainBooking(): DomainBooking {
+function getEmptyDomainBooking(): FormBooking {
     return { 
         parentFirstName: '',
         parentLastName: '',

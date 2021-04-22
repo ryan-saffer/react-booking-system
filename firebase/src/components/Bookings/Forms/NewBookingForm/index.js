@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { DomainBookingFields, Locations } from 'fizz-kidz'
+import { FormBookingFields, Locations } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
@@ -130,10 +130,10 @@ const mapFormToBooking = formValues => {
     }
 
     // trim fields
-    booking[DomainBookingFields.parentFirstName] = booking[DomainBookingFields.parentFirstName].trim()
-    booking[DomainBookingFields.parentLastName] = booking[DomainBookingFields.parentLastName].trim()
-    booking[DomainBookingFields.childName] = booking[DomainBookingFields.childName].trim()
-    booking[DomainBookingFields.childAge] = booking[DomainBookingFields.childAge].trim()
+    booking[FormBookingFields.parentFirstName] = booking[FormBookingFields.parentFirstName].trim()
+    booking[FormBookingFields.parentLastName] = booking[FormBookingFields.parentLastName].trim()
+    booking[FormBookingFields.childName] = booking[FormBookingFields.childName].trim()
+    booking[FormBookingFields.childAge] = booking[FormBookingFields.childAge].trim()
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world

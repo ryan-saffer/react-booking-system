@@ -4,7 +4,7 @@ export { CakeFlavours } from './booking/CakeFlavours'
 export { Creations } from './booking/Creations'
 export { CreationDisplayValuesMap } from './booking/CreationDisplayValuesMap'
 export { Locations } from './booking/Locations'
-export { DomainBooking, FirestoreBooking, DomainBookingFields } from './booking/Booking'
+export { Booking, FormBooking, FirestoreBooking, FormBookingFields, BookingFields } from './booking/Booking'
 //#endregion 
 
 //#region Acuity
@@ -21,4 +21,8 @@ export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendI
 
 //#region Firebase
 export { FirebaseFunctions } from './firebase/functions'
+//#endregion
+
+//#region Utilities
+export * as Utilities from './utilities'
 //#endregion
