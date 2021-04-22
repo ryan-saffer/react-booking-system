@@ -671,6 +671,38 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             classes={{ root: classes.disabled }}
                         />
                     </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={createUniqueId(FormBookingFields.grazingPlatterMedium, bookingId)}
+                                    color="secondary"
+                                    name={FormBookingFields.grazingPlatterMedium}
+                                    checked={formValues[FormBookingFields.grazingPlatterMedium].value ?? false}
+                                    value={formValues[FormBookingFields.grazingPlatterMedium].value}
+                                    disabled={!editing}
+                                    onChange={handleFormCheckboxChange} />
+                            }
+                            label="Grazing Platter - Medium"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={createUniqueId(FormBookingFields.grazingPlatterLarge, bookingId)}
+                                    color="secondary"
+                                    name={FormBookingFields.grazingPlatterLarge}
+                                    checked={formValues[FormBookingFields.grazingPlatterLarge].value ?? false}
+                                    value={formValues[FormBookingFields.grazingPlatterLarge].value}
+                                    disabled={!editing}
+                                    onChange={handleFormCheckboxChange} />
+                            }
+                            label="Grazing Platter - Large"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
                     </>
                 }
                 {displayCake &&
