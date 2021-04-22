@@ -115,7 +115,7 @@ const BookingsPage = () => {
                 setDate(documentSnapshot.get('dateTime').toDate())
                 let selectedLocations: { [key in Locations]?: boolean} = {}
                 Object.values(Locations).forEach(location => selectedLocations[location] = false)
-                selectedLocations[documentSnapshot.get('location') as 'balwyn' | 'essendon' | 'malvern' | 'mobile'] = true
+                selectedLocations[documentSnapshot.get('location') as Locations] = true
                 setSelectedLocations(selectedLocations)
             })
         setLoading(false)
