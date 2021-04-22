@@ -53,7 +53,9 @@ const withAuthorization = Component => {
             return (
                 <AuthUserContext.Consumer>
                     {authUser => (
-                        isLoggedIn(authUser) ? <Component {...this.props} /> : <img src={LogoGif.default} style={{position: 'fixed', width: '200px', top: '50%', left: '50%', marginTop: '-200px', marginLeft: '-100px'}} />
+                        isLoggedIn(authUser) 
+                            ? <Component {...this.props} />
+                            : <img src={LogoGif.default} style={{position: 'fixed', width: '200px', top: '50%', left: '50%', marginTop: '-200px', marginLeft: '-100px'}} />
                     )}
                 </AuthUserContext.Consumer>
             )

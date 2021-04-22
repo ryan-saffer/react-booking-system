@@ -1,8 +1,7 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import * as BookingConstants from '../constants/bookings'
 import { runAppsScript } from './index'
-import { CreationDisplayValues, Additions } from '../../shared'
+import { BookingFields, AppsScript, CreationDisplayValuesMap, Utilities, Additions } from 'fizz-kidz'
 
 const db = admin.firestore()
 db.settings({ignoreUndefinedProperties: true})
@@ -21,28 +20,28 @@ export const onFormSubmit = functions
         const parentName = formResponse[getIndex(BaseFormQuestion.ParentName)].split(" ")
 
         let collectionReference = db.collection('bookings')
-            .where(BookingConstants.fields.PARENT_FIRST_NAME, '==', parentName[0])
+            .where((BookingFields.parentFirstName), '==', parentName[0])
         // search by last name where possible
         if (parentName.length > 1) {
-            collectionReference = collectionReference.where(BookingConstants.fields.PARENT_LAST_NAME, "==", parentName.slice(1).join(" "))
+            collectionReference = collectionReference.where(BookingFields.parentLastName, "==", parentName.slice(1).join(" "))
         }
         collectionReference
-            .where(BookingConstants.fields.CHILD_NAME, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
-            .where(BookingConstants.fields.CHILD_AGE, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
-            .where(BookingConstants.fields.LOCATION, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
-            .where(BookingConstants.fields.DATE_TIME, '>', new Date())
+            .where(BookingFields.childName, '==', formResponse[getIndex(BaseFormQuestion.ChildName)])
+            .where(BookingFields.childAge, '==', formResponse[getIndex(BaseFormQuestion.ChildAge)])
+            .where(BookingFields.location, '==', isMobile ? 'mobile' : formResponse[getIndex(InStoreAdditionalQuestion.Location)].toLowerCase())
+            .where(BookingFields.dateTime, '>', new Date())
             .get()
             .then(querySnapshot => {
                 if (querySnapshot.empty) {
                     functions.logger.log("no booking found")
-                    functions.logger.log('calling apps script onFormSubmitBookingNotFound')
-                    runAppsScript('onFormSubmitBookingNotFound', [formResponse])
+                    functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND}`)
+                    runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND, [formResponse])
                         .then(_ => {
-                            functions.logger.log("onFormSubmitBookingNotFound finished successfully")
+                            functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND} finished successfully`)
                             res.status(200).send()
                         })
                         .catch(err => {
-                            functions.logger.error("error running onFormSubmitBookingNotFound")
+                            functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_NOT_FOUND}`)
                             functions.logger.error(err)
                             res.status(500).send(err)
                         })
@@ -61,14 +60,14 @@ export const onFormSubmit = functions
                             functions.logger.log("booking updated successfully")
                             functions.logger.log("updated booking:")
                             functions.logger.log(updatedBooking)
-                            functions.logger.log("calling apps script onFormSubmitBookingFound")
-                            runAppsScript('onFormSubmitBookingFound', [updatedBooking, creations, additions])
+                            functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
+                            runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND, [updatedBooking, creations, additions])
                                 .then(_ => {
-                                        functions.logger.log("onFormSubmitBookingFound finished successfully")
+                                        functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND} finished successfully`)
                                         res.status(200).send()
                                 })
                                 .catch(err => {
-                                    functions.logger.error("error running onFormSubmitBookingFound")
+                                    functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
                                     functions.logger.error(err)
                                     res.status(500).send(err)
                                 })
@@ -107,9 +106,9 @@ function mapFormResponseToBooking(formResponse: string[], booking: Booking): [Bo
     }
     const filteredCreations = selectedCreations.filter(x => x !== '')
     filteredCreations.length = 3 // parent may have chosen more than 3 (max) creations.. use first 3
-    booking.creation1 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[0])
-    booking.creation2 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[1])
-    booking.creation3 = Object.keys(CreationDisplayValues).find(key => CreationDisplayValues[key] === filteredCreations[2])
+    booking.creation1 = Object.keys(CreationDisplayValuesMap).find(key => { if(Utilities.isObjKey(key, CreationDisplayValuesMap)) { return CreationDisplayValuesMap[key] === filteredCreations[0] }})
+    booking.creation2 = Object.keys(CreationDisplayValuesMap).find(key => { if(Utilities.isObjKey(key, CreationDisplayValuesMap)) { return CreationDisplayValuesMap[key] === filteredCreations[1] }})
+    booking.creation3 = Object.keys(CreationDisplayValuesMap).find(key => { if(Utilities.isObjKey(key, CreationDisplayValuesMap)) { return CreationDisplayValuesMap[key] === filteredCreations[2] }})
 
     let additions: string[] = []
     if (!isMobile) {
@@ -253,14 +252,14 @@ type Booking = {
 }
 
 const AdditionsFormMap: { [key: string]: string } = {
-    "Chicken Nuggets - $30": Additions.CHICKEN_NUGGETS,
-    "Fairy Bread - $25": Additions.FAIRY_BREAD,
-    "Fruit Platter - $40": Additions.FRUIT_PLATTER,
-    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Additions.SANDWICH_PLATTER,
-    "Veggie Platter - $30": Additions.VEGGIE_PLATTER,
-    "Watermelon Platter - $20": Additions.WATERMELON_PLATTER,
-    "Wedges - $25": Additions.WEDGES,
-    "Lolly bags - $2.50 per child": Additions.LOLLY_BAGS,
-    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Additions.GRAZING_PLATTER_MEDIUM,
-    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Additions.GRAZING_PLATTER_LARGE
+    "Chicken Nuggets - $30": Additions.chickenNuggets,
+    "Fairy Bread - $25": Additions.fairyBread,
+    "Fruit Platter - $40": Additions.fruitPlatter,
+    "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Additions.sandwichPlatter,
+    "Veggie Platter - $30": Additions.veggiePlatter,
+    "Watermelon Platter - $20": Additions.watermelonPlatter,
+    "Wedges - $25": Additions.wedges,
+    "Lolly bags - $2.50 per child": Additions.lollyBags,
+    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Additions.grazingPlatterMedium,
+    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Additions.grazingPlatterLarge
 }

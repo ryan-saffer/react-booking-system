@@ -136,7 +136,7 @@ const HolidayProgramSelection = props => {
                 </Typography>
                 <img
                     className={cssClasses.logo}
-                    src={Logo}
+                    src={Logo.default}
                     onClick={() => props.history.push(ROUTES.LANDING)} />
             </Toolbar>
         </AppBar>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 
 import * as ROUTES from '../../constants/routes'
 import * as SignInGoogleButton from '../../drawables/sign-in-google-btn.png'
@@ -7,6 +7,7 @@ import * as GoogleLogo from '../../drawables/google-logo.png'
 import { makeStyles } from '@material-ui/core/styles'
 import { Snackbar, Button } from '@material-ui/core'
 import { red } from '@material-ui/core/colors'
+import { FirebaseContext } from '../Firebase'
 
 const useStyles = makeStyles(theme => ({
     signInButton: {
@@ -32,14 +33,16 @@ const SignInGoogleBase = props => {
     
     const classes = useStyles()
 
+    const firebase = useContext(FirebaseContext)
+
     const [error, setError] = useState(null)
 
     const handleSubmit = event => {
-        props.firebase
+        firebase
             .doSignInWithGoogle()
             .then(socialAuthUser => {
                 setError(null)
-                props.firebase.db
+                firebase.db
                     .collection("users")
                     .doc(socialAuthUser.user.uid)
                     .set(
@@ -61,7 +64,7 @@ const SignInGoogleBase = props => {
                 onClick={handleSubmit}
                 variant="outlined"
                 fullWidth
-                startIcon={<img className={classes.googleLogo} src={GoogleLogo} />}
+                startIcon={<img className={classes.googleLogo} src={GoogleLogo.default} />}
             >
                 Sign in with Google
             </Button>

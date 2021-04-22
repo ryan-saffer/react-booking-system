@@ -1,7 +1,22 @@
+// firebase initialisation
+const admin = require('firebase-admin')
+const environment = JSON.parse(process.env.FIREBASE_CONFIG).projectId === "bookings-prod" ? "prod" : "dev"
+const databaseUrl = environment === "prod" ? "https://bookings-prod.firebaseio.com" : "https://booking-system-6435d.firebaseio.com"
+admin.initializeApp({
+  credential: admin.credential.cert(require(`../credentials/${environment}_service_account_credentials.json`)),
+  databaseURL: databaseUrl
+})
+
+// import credentials here to force typescript to compile the json files
+// see https://stackoverflow.com/a/59419449/7870403
+import * as prodConfig from '../credentials/prod_service_account_credentials.json'
+import * as devConfig from '../credentials/dev_service_account_credentials.json'
+
 import * as bookings from './bookings'
 import * as bookingsFormToSheet from './bookings/onFormSubmit'
 import * as acuity from './acuity/client'
 import * as acuityStripeIntegration from './acuity/stripe-integration'
+import * as scienceClubBackup from './acuity/science-club-backup'
 
 export const createBooking = bookings.createBooking
 export const updateBooking = bookings.updateBooking
@@ -14,3 +29,4 @@ export const acuityClient = acuity.client
 export const sidebar = acuityStripeIntegration.sidebar
 export const sendInvoice = acuityStripeIntegration.sendInvoice
 export const retrieveInvoiceStatus = acuityStripeIntegration.retrieveInvoiceStatus
+export const backupScienceClubAppointments = scienceClubBackup.backupScienceClubAppointments

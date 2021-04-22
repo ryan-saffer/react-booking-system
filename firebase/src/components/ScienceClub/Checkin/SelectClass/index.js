@@ -7,7 +7,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../../constants/routes'
-import ScienceClubClassSelection from '../../../Shared/ScienceClubClassSelection'
+import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
 import { withAuthorization } from '../../../Session'
 
@@ -25,7 +25,7 @@ const ScienceClubCheckinClassSelection = props => {
                 </Typography>
                 <img
                     className={cssClasses.logo}
-                    src={Logo}
+                    src={Logo.default}
                     onClick={() => props.history.push(ROUTES.LANDING)} />
             </Toolbar>
         </AppBar>

@@ -8,11 +8,14 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
+    "@types/node": "^14.14.37",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
     "autoprefixer": "9.8.0",
     "date-fns": "^2.14.0",
     "dateformat": "^3.0.3",
     "firebase": "^7.15.3",
-    "fizz-kidz": "file:functions/shared",
+    "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
     "luxon": "^1.26.0",
     "moment-timezone": "^0.5.28",
@@ -20,15 +23,17 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^4.0.1",
     "react-signature-canvas": "^1.0.3",
     "recompose": "^0.30.0",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "typescript": "^4.2.4"
   },
   "scripts": {
-    "start": "REACT_APP_ENV=dev react-scripts start",
-    "build-prod": "REACT_APP_ENV=prod react-scripts build",
-    "build-dev": "REACT_APP_ENV=dev react-scripts build",
+    "build-fizz-kidz": "npm --prefix functions/fizz-kidz run build",
+    "start": "REACT_APP_ENV=dev npm run build-fizz-kidz && react-scripts start",
+    "build-prod": "REACT_APP_ENV=prod npm run build-fizz-kidz && react-scripts build",
+    "build-dev": "REACT_APP_ENV=dev npm run build-fizz-kidz && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -46,5 +51,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/dateformat": "^3.0.1",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/recompose": "^0.30.7"
   }
 }
