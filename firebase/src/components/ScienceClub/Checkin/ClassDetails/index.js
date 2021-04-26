@@ -9,6 +9,7 @@ import { Acuity } from 'fizz-kidz'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
+import * as noteIcon from '../../../../drawables/note-icon-24.png'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Typography from '@material-ui/core/Typography'
@@ -23,6 +24,7 @@ import { Dialog, DialogTitle, List, ListItem } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
 import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
+import { NotListedLocation } from '@material-ui/icons'
 
 const ScienceClubCheckinClassDetails = props => {
     
@@ -35,9 +37,9 @@ const ScienceClubCheckinClassDetails = props => {
     const [showHelpDialog, setShowHelpDialog] = useState(false)
 
     const queries = queryString.parse(props.location.search)
-    const appointmentTypeID = queries.appointmentTypeId
-    const calendarID = queries.calendarId
-    const classID = parseInt(queries.classId)
+    const appointmentTypeId = queries.appointmentTypeId
+    const calendarId = queries.calendarId
+    const classId = parseInt(queries.classId)
 
     const sortByChildName = (a, b) => {
         const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
@@ -47,9 +49,9 @@ const ScienceClubCheckinClassDetails = props => {
 
     const appointments = useFetchAppointments({
         setLoading,
-        appointmentTypeID,
-        calendarID,
-        classID,
+        appointmentTypeId,
+        calendarId,
+        classId,
         sorter: sortByChildName
     })
 
@@ -115,6 +117,7 @@ const IconsDialog = props => {
                 </ListItem>
                 <IconListItem icon={medicalIcon.default} text="Child has allergies" />
                 <IconListItem icon={insulinIcon.default} text="Child is anaphylactic" />
+                <IconListItem icon={noteIcon.default} text="Child has notes" />
                 <IconListItem icon={bannedPhotoIcon.default} text="Do not photograph child" />
             </List>
         </Dialog>

@@ -8,6 +8,7 @@ import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
 import * as checkedInIcon from '../../../../drawables/tick-box-green-icon-26.png'
 import * as checkedOutIcon from '../../../../drawables/tick-box-red-icon-26.png'
 import * as uncheckedIcon from '../../../../drawables/unchecked-icon-26.png'
+import * as noteIcon from '../../../../drawables/note-icon-24.png'
 
 import { makeStyles } from '@material-ui/styles'
 import Accordion from '@material-ui/core/Accordion';
@@ -16,7 +17,7 @@ import AccordianSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { Button, TableContainer, Table, TableRow, TableCell, List, ListItem, TableBody, Chip } from '@material-ui/core';
-import { red, yellow } from '@material-ui/core/colors';
+import { red, yellow, blue } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog';
@@ -69,6 +70,7 @@ const ChildExpansionPanel = props => {
     const hasAllergies = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES_YES_NO) === "yes"
     const isAnaphylactic = Acuity.Utilities.retrieveFormField(anaphylaxisForm, Acuity.Constants.FormFields.CHILD_ANAPHYLACTIC_YES_BLANK) === "yes"
     const permissionToPhotograph = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_PHOTOGRAPHY_PERMISSON) === Acuity.Constants.FormFieldOptions.CHILD_PHOTOGRAPHY_PERMISSION_YES
+    const hasNotes = appointment.notes ? true : false
 
     const handleSignInButtonClick = e => {
         e.stopPropagation()
@@ -140,6 +142,7 @@ const ChildExpansionPanel = props => {
                         {isInPrep && <StarIcon style={{ color: yellow[800] }} />}
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}
                         {isAnaphylactic && <img className={classes.icon} src={insulinIcon.default} alt="insulin icon" />}
+                        {hasNotes && <img className={classes.icon} src={noteIcon.default} alt="notes icon" />}
                         {!permissionToPhotograph && <img className={classes.icon} src={bannedPhotoIcon.default} alt="banned camera icon"/>}
                         {notAttending && <Chip className={classes.chip} label="Not Attending" />}
                     </div>
@@ -166,6 +169,10 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">Parent mobile:</TableCell>
                                 <TableCell>{appointment.phone}</TableCell>
                             </TableRow>
+                            {hasNotes && <TableRow>
+                                <TableCell className={classes.notes} variant='head'>Notes:</TableCell>
+                                <TableCell className={classes.notes}>{appointment.notes}</TableCell>
+                            </TableRow>}
                             {hasAllergies && <TableRow>
                                 <TableCell className={classes.allergies} variant="head">Allergies: {isAnaphylactic && "(ANAPHYLACTIC)"}</TableCell>
                                 <TableCell className={classes.allergies}>{Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES)}</TableCell>
@@ -300,6 +307,9 @@ const useStyles = makeStyles(theme => ({
     },
     allergies: {
         color: 'red'
+    },
+    notes: {
+        color: blue[500]
     }
 }))
 

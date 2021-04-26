@@ -26,9 +26,9 @@ const ClassDetailsPage = props => {
     const [loading, setLoading] = useState(true)
 
     const queries = queryString.parse(props.location.search)
-    const appointmentTypeID = queries.appointmentTypeId
-    const calendarID = queries.calendarId
-    const classID = parseInt(queries.classId)
+    const appointmentTypeId = queries.appointmentTypeId
+    const calendarId = queries.calendarId
+    const classId = parseInt(queries.classId)
 
     const sortByChildName = (a, b) => {
         const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILDREN_DETAILS, Acuity.Constants.FormFields.CHILDREN_NAMES)
@@ -38,9 +38,9 @@ const ClassDetailsPage = props => {
 
     const appointments = useFetchAppointments({
         setLoading,
-        appointmentTypeID,
-        calendarID,
-        classID,
+        appointmentTypeId,
+        calendarId,
+        classId,
         sorter: sortByChildName
     })
 
