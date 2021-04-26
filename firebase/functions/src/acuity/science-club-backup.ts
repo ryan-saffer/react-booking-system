@@ -140,7 +140,7 @@ async function mergeCheckoutData(appointment: Acuity.MergedAppointment) {
     const doc = await firestore.collection('scienceClubAppointments').doc(appointment.id.toString()).get()
     if (doc.exists) {
         appointment.checkoutPerson = doc.data()?.pickupPerson
-        appointment.checkoutTime = doc.data()?.timeStamp
+        appointment.checkoutTime = doc.data()?.timeStamp.toDate()
         return appointment
     }
     return appointment

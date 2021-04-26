@@ -175,7 +175,7 @@ function backupScienceClub(appointmentsMap) {
         appointment.label,
         appointment.notes,
         appointment.checkoutPerson,
-        appointment.checkoutTime
+        appointment.checkoutTime ? Utilities.formatDate(new Date(appointment.checkoutTime), 'Australia/Melbourne', 'h:m a') : ''
       ])
     })
   }
