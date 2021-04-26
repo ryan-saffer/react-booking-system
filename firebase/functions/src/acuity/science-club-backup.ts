@@ -54,7 +54,7 @@ exports.backupScienceClubAppointments = functions
             promises.push(fetchAppointments(yesterday, today, appointmentType))
         })
 
-        Promise.all(promises)
+        return Promise.all(promises)
             .then(result => {
                 // merge array of objects into one object
                 const masterMap: MinifiedAppointmentsMap = Object.assign({}, ...result)
