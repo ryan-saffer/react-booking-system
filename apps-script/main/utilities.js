@@ -7,7 +7,7 @@
  * @returns {String} email address to send from
  */
 function determineFromEmailAddress(location) {
-  return 'parties@fizzkidz.com.au';
+  return 'bookings@fizzkidz.com.au';
 }
 
 /**
