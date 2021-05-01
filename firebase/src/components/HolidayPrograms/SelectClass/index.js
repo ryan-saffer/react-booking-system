@@ -179,7 +179,7 @@ const HolidayProgramSelection = props => {
                         disabled={appointmentTypes.length === 0}
                     >
                         {appointmentTypes.map(appointmentType => {
-                            if (appointmentType.name.includes("Holiday Program") || appointmentType.name.includes("Drop-in Session")) {
+                            if (appointmentType.name.includes("Holiday Program") || appointmentType.name.includes("Reopening Session")) {
                                 return <MenuItem key={appointmentType.id} value={appointmentType.id}>{appointmentType.name}</MenuItem>
                             }
                         })}

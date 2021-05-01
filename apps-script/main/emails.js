@@ -263,7 +263,30 @@ function sendQuestionsNotification(booking) {
   var fromAddress = determineFromEmailAddress(booking.location);
   
   // Send the confirmation email
-  GmailApp.sendEmail(fromAddress, subject, "", {from: fromAddress, htmlBody: body, name : "Fizz Kidz"});
+  GmailApp.sendEmail('info@fizzkidz.com.au', subject, "", {from: fromAddress, htmlBody: body, name : "Fizz Kidz"});
+}
+
+/**
+ * Send a notifcation to Mattan that a grazing platter has been ordered
+ * 
+ * @param {object} booking the booking object
+ */
+function sendGrazingPlatterNotification(booking) {
+
+   var t = HtmlService.createTemplateFromFile('grazing_platter_email_template')
+   t.parentName = `${booking.parentFirstName} ${booking.parentLastName}`
+   t.dateTime = Utilities.formatDate(new Date(booking.dateTime), "Australia/Melbourne", "EEEE, dd MMMM yyyy, HH:mm a")
+   t.location = capitalise(booking.location)
+   t.mobile = booking.parentMobile
+   t.email = booking.parentEmail
+   t.largePlatter = booking.grazingPlatterLarge
+   t.mediumPlatter = booking.grazingPlatterMedium
+
+   var body = t.evaluate().getContent()
+   var subject = "Grazing platter order"
+   
+   // send
+   GmailApp.sendEmail('thekitchencornerau@gmail.com', subject, "", { from: 'info@fizzkidz.com.au', htmlBody: body, name: "Fizz Kidz", cc: 'info@fizzkidz.com.au' })
 }
 
 /**

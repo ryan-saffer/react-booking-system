@@ -96,6 +96,12 @@ function onFormSubmitBookingFound(booking, creations, additions) {
     console.log("sending questions notification")
     sendQuestionsNotification(booking)
   }
+  
+  // grazing platter notification
+  if (booking.grazingPlatterMedium || booking.grazingPlatterLarge) {
+    console.log("sending grazing platter notification")
+    sendGrazingPlatterNotification(booking)
+  }
 
   console.log("sending confirmation email")
   sendOnFormSubmitConfirmationEmail(booking, creations, additions)
