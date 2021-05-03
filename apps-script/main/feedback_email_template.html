@@ -9,8 +9,10 @@
         <p>As we are a growing business we would thoroughly appreciate it if you could write a review about your Fizz Kidz experience by 
             <? if (location === 'balwyn') { ?>
                 <a href="https://search.google.com/local/writereview?placeid=ChIJRYl9pexB1moR5msbM8SdKVU">clicking on this link.</a>
-            <? } else { ?>
+            <? } else if (location === 'essendon') { ?>
                 <a href="https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ">clicking on this link.</a>
+            <? } else { ?>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo">clicking on this link.</a>
             <? } ?>
         </p>
         <p>It will just take 10 seconds, we promise :)</p>
