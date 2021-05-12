@@ -60,17 +60,25 @@ export const onFormSubmit = functions
                             functions.logger.log("booking updated successfully")
                             functions.logger.log("updated booking:")
                             functions.logger.log(updatedBooking)
-                            functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
-                            runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND, [updatedBooking, creations, additions])
-                                .then(_ => {
-                                        functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND} finished successfully`)
-                                        res.status(200).send()
-                                })
-                                .catch(err => {
-                                    functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
-                                    functions.logger.error(err)
-                                    res.status(500).send(err)
-                                })
+
+                            // only trigger confirmation emails (apps script booking found) if its the first time the form has been filled out
+                            // decide this based on creation1. if creations were null previously, this must be the first time filling in the form
+                            if (!booking.creation1) {
+                                functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
+                                runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND, [updatedBooking, creations, additions])
+                                    .then(_ => {
+                                            functions.logger.log(`${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND} finished successfully`)
+                                            res.status(200).send()
+                                    })
+                                    .catch(err => {
+                                        functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
+                                        functions.logger.error(err)
+                                        res.status(500).send(err)
+                                    })
+                            } else {
+                                functions.logger.log("form filled out previously, no need to send confirmation emails")
+                                res.status(200).send()
+                            }
                         })
                         .catch(err => {
                             functions.logger.error("error updating booking")
