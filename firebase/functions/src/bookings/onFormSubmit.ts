@@ -54,6 +54,12 @@ export const onFormSubmit = functions
                     if (isTimestamp(booking.dateTime)) {
                         booking.dateTime = booking.dateTime.toDate()
                     }
+                    
+                    // determine if its the first time the form has been submitted or not
+                    // if filled in previously, creation 1 will always be not null
+                    // determine this now, because `updateBooking` will mutate the booking
+                    const isFirstTimeSubmittingForm = !booking.creation1
+
                     functions.logger.log("mapping form to booking and updating in firestore")
                     updateBooking(formResponse, booking, documentSnapshot.ref)
                         .then(([updatedBooking, creations, additions]) => {
@@ -62,8 +68,7 @@ export const onFormSubmit = functions
                             functions.logger.log(updatedBooking)
 
                             // only trigger confirmation emails (apps script booking found) if its the first time the form has been filled out
-                            // decide this based on creation1. if creations were null previously, this must be the first time filling in the form
-                            if (!booking.creation1) {
+                            if (isFirstTimeSubmittingForm) {
                                 functions.logger.log(`calling apps script ${AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND}`)
                                 runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT_BOOKING_FOUND, [updatedBooking, creations, additions])
                                     .then(_ => {
