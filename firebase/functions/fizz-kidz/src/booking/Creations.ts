@@ -35,6 +35,7 @@ export enum Creations {
     unicornSlime = "unicornSlime",
     rainbowSlime = "rainbowSlime",
     frozenSparkleSlime = "frozenSparkleSlime",
+    animalSoap = "animalSoap",
     animalsInSoap = "animalsInSoap",
     lavaBathCrystals = "lavaBathCrystals",
     magicQuickSand = "magicQuickSand",
