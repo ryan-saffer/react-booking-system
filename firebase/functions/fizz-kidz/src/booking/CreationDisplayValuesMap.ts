@@ -39,6 +39,7 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.unicornSlime]: "Unicorn Slime",
     [Creations.rainbowSlime]: "Rainbow Slime",
     [Creations.frozenSparkleSlime]: "Frozen Sparkle Slime",
+    [Creations.animalSoap]: "Animal Soap",
     [Creations.animalsInSoap]: "Animals in Soap",
     [Creations.lavaBathCrystals]: "Lava Bath Crystals",
     [Creations.magicQuickSand]: "Magic Quick Sand",

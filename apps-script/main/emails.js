@@ -66,7 +66,8 @@ function sendBookingConfirmationEmail(booking) {
     {
       from: fromAddress,
       htmlBody: body,
-      name: "Fizz Kidz"
+      name: "Fizz Kidz",
+      bcc: 'bookings@fizzkidz.com.au'
     }
   );
 }
