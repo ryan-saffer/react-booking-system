@@ -4,7 +4,7 @@ import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../Firebase'
 import { callAcuityClient } from '../../utilities/firebase/functions'
 
-interface UseFetchAppointmentProps {
+interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>,
     appointmentTypeId: number,
     calendarId: number,
@@ -12,7 +12,7 @@ interface UseFetchAppointmentProps {
     sorter?: (a: Acuity.Appointment, b: Acuity.Appointment) => 0 | 1 | -1
 }
 
-const useFetchAppointments = (props: UseFetchAppointmentProps) => {
+const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
 
     const {
         setLoading,
