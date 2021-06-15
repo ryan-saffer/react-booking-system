@@ -2,10 +2,7 @@ import React from 'react'
 import { Acuity } from 'fizz-kidz'
 import useUpdateScienceEnrolment from '../../Hooks/UseUpdateScienceEnrolment'
 import useQueryParam from '../../Hooks/UseQueryParam'
-import { CircularProgress, Container, Divider, Grid, IconButton, makeStyles, Paper, Typography } from '@material-ui/core'
-import CheckCircleTwoTone from '@material-ui/icons/CheckCircleTwoTone'
-import LanguageIcon from '@material-ui/icons/Language'
-import InstagramIcon from '@material-ui/icons/Instagram'
+import { Divider, makeStyles } from '@material-ui/core'
 
 import * as logo from '../../../drawables/fizz-logo.png'
 import Loading from './Loading'
@@ -16,10 +13,13 @@ const EnrolmentPage = () => {
 
     const classes = useStyles()
 
-    const email = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('email') as string
-    const appointmentTypeId = parseInt(useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('appointmentTypeId') as string)
-    const childName = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('childName') as string
-    const continuing = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('continuing') as Acuity.Client.ContinuingOptions
+    const base64String = window.location.search
+    let queryParams = Buffer.from(base64String, 'base64').toString('utf8')
+
+    const email = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('email', queryParams) as string
+    const appointmentTypeId = parseInt(useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('appointmentTypeId', queryParams) as string)
+    const childName = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('childName', queryParams) as string
+    const continuing = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('continuing', queryParams) as Acuity.Client.ContinuingOptions
 
     const service = useUpdateScienceEnrolment({
         email,
