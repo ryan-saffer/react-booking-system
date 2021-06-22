@@ -11,9 +11,19 @@ interface MenuWithActionsProps extends ConfirmationDialogProps, ErrorDialogProps
     appointment: Acuity.Appointment,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
+    setIsDeleted: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const MenuWithActions: React.FC<MenuWithActionsProps> = ({ appointment, setLoading, setEmailSent, showConfirmationDialog, displayError }) => {
+const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
+
+    const {
+        appointment,
+        setLoading,
+        setEmailSent,
+        setIsDeleted,
+        showConfirmationDialog,
+        displayError
+    } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
 
@@ -25,7 +35,6 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = ({ appointment, setLoadi
 
     const sendTermContinuationEmail = async () => {
 
-        setMenuAnchorEl(null)
         setLoading(true)
 
         try {
@@ -43,6 +52,21 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = ({ appointment, setLoadi
             console.error('error sending term continuation email')
             setLoading(false)
             displayError("There was an error sending the email. Make sure all fields are correctly supplied in the appointment within Acuity.")
+        }
+    }
+
+    const unenrollChildFromTerm = async () => {
+
+        setLoading(true)
+
+        try {
+            await callAcuityClientV2('unenrollChildFromTerm', firebase)({ appointmentId: appointment.id })
+            setIsDeleted(true)
+            setLoading(false)
+        } catch (error) {
+            console.error(`error canceling all appointments for child with id ${appointment.id}`)
+            setLoading(false)
+            displayError('There was an error unenrolling this child from the term.')
         }
     }
 
@@ -72,7 +96,19 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = ({ appointment, setLoadi
                 >
                     Send Enrolment Email
                     </MenuItem>
-                <MenuItem>Unenrol from term</MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        setMenuAnchorEl(null)
+                        showConfirmationDialog({
+                            dialogTitle: `Unenroll ${appointment.firstName} from the term`,
+                            dialogContent: `This will completely unenroll ${appointment.firstName} from the term, and delete all of their information. This cannot be undone.`,
+                            confirmationButtonText: 'Unenroll from term',
+                            onConfirm: unenrollChildFromTerm
+                        })
+                    }}    
+                >
+                    Unenroll from term
+                </MenuItem>
             </Menu>
         </>
     )

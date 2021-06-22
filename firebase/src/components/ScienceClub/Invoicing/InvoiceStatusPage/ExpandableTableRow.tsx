@@ -21,12 +21,15 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
 
     const [expanded, setExpanded] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [isDeleted, setIsDeleted] = useState(false)
 
     const enrolmentStatus: Acuity.Client.ContinuingOption = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CONTINUING_WITH_TERM, Acuity.Constants.FormFields.CONTINUING_WITH_TERM)
     const continuingEmailSent = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CONTINUING_WITH_TERM, Acuity.Constants.FormFields.CONTINUING_WITH_TERM_EMAIL_SENT) === "yes"
     const [emailSent, setEmailSent] = useState(continuingEmailSent)
 
-    if (loading) {
+    if (isDeleted) {
+        return null
+    } else if (loading) {
         return (
             <TableRow>
                 <TableCell className={classes.loadingCell} size="small" colSpan={7}>
@@ -44,7 +47,13 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                         </IconButton>
                     </TableCell>
                     <TableCell size="small">
-                        <MenuWithActions appointment={appointment} setLoading={setLoading} setEmailSent={setEmailSent} displayError={displayError}/>
+                        <MenuWithActions
+                            appointment={appointment}
+                            setLoading={setLoading}
+                            setEmailSent={setEmailSent}
+                            setIsDeleted={setIsDeleted}
+                            displayError={displayError}
+                        />
                     </TableCell>
                     <TableCell className={classes.parentNameCell} size="small">{appointment.firstName} {appointment.lastName}</TableCell>
                     <TableCell size="small">

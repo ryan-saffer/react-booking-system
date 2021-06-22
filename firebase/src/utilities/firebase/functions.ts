@@ -1,7 +1,6 @@
 import firebase from "firebase";
 import Firebase from "../../components/Firebase";
 import { FirebaseFunctions, Acuity } from 'fizz-kidz'
-import { Types } from "fizz-kidz";
 
 export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, firebase: Firebase) {
     return function (input: FirebaseFunctions[K]['input']): Promise<FirebaseFunctions[K]['result']> {
