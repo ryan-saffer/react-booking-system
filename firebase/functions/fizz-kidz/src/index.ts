@@ -17,7 +17,6 @@ export * as AppsScript from './appsscript'
 
 //#region Science Club
 export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from './scienceclub/invoicing'
-export { SendTermContinuationEmailParams } from './scienceclub/continuationEmail'
 //#endregion
 
 //#region Firebase

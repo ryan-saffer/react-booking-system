@@ -1,4 +1,3 @@
-import { SendTermContinuationEmailParams } from './../scienceclub/continuationEmail';
 import { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, SendInvoiceParams } from '../scienceclub/invoicing'
 import { Appointment } from '../acuity';
 

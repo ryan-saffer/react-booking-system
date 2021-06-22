@@ -15,10 +15,14 @@ export const client = functions
     .region('australia-southeast1')
     .https.onCall((data: AcuityClientParams, _context: functions.https.CallableContext) => {
 
+        let input
         switch (data.method) {
             case 'updateEnrolment':
-                const input = data.input as Acuity.Client.AcuityFunctions['updateEnrolment']['input']
+                input = data.input as Acuity.Client.AcuityFunctions['updateEnrolment']['input']
                 return updateEnrolment(input)
+            case 'unenrollChildFromTerm':
+                input = data.input as Acuity.Client.AcuityFunctions['unenrollChildFromTerm']['input']
+                return unenrollChildFromTerm(input)
         }
     })
 
@@ -94,6 +98,25 @@ function updateAppointmentFormField(appointmentId: number, fieldId: number, valu
 
     return new Promise<Acuity.Appointment>((resolve, reject) => {
         acuity.request(`/appointments/${appointmentId}`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
+
+            if (hasError(err, appointment)) {
+                reject(err ?? appointment)
+                return
+            }
+
+            resolve(appointment)
+        })
+    })
+}
+
+function unenrollChildFromTerm(params: Acuity.Client.UnenrollChildFromTermParams) {
+
+    const options = {
+        method: 'PUT'
+    }
+
+    return new Promise<Acuity.Appointment>((resolve, reject) => {
+        acuity.request(`/appointments/${params.appointmentId}/cancel`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
 
             if (hasError(err, appointment)) {
                 reject(err ?? appointment)

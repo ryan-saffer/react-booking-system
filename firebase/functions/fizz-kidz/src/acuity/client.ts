@@ -4,6 +4,7 @@ import { Appointment } from ".";
 export interface AcuityFunctions {
     getAppointments: Function<FetchAppointmentsParams, Appointment[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
+    unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
 }
 
 export interface FetchAppointmentsParams {
@@ -22,4 +23,8 @@ export interface UpdateScienceEnrolmentParams {
     childName: string
     fieldId: number
     value: FormValue
+}
+
+export interface UnenrollChildFromTermParams {
+    appointmentId: number
 }
