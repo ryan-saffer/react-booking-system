@@ -47,21 +47,43 @@ export const Error = () => (
 )
 
 interface SuccessProps {
+    continuing: Acuity.Client.ContinuingOption
     appointments: Acuity.Appointment[]
 }
 
-export const Success: React.FC<SuccessProps> = ({ appointments }) => {
+export const Success: React.FC<SuccessProps> = ({ continuing, appointments }) => {
 
     const appointment = appointments[0]
     const childName = retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
 
+    function renderContinuingCopy() {
+        return (
+            <>
+                <Typography variant="h5" gutterBottom>Hi {appointment.firstName},</Typography>
+                <Typography variant="body1" gutterBottom >{childName}'s enrolment in the term has been confirmed.</Typography>
+                <Typography variant="body1" gutterBottom>{childName} can continue coming every week, and we will send you an invoice for the term.</Typography>
+                <Typography variant="body1" gutterBottom>We can't wait to continue the science adventure!</Typography>
+                <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
+            </>
+        )
+    }
+
+    function renderNotContinuingCopy() {
+        return (
+            <>
+                <Typography variant="h5" gutterBottom>Hi {appointment.firstName},</Typography>
+                <Typography variant="body1" gutterBottom>We are sad to see {childName} go!</Typography>
+                <Typography variant="body1" gutterBottom>{childName} will be completely unenrolled from the term.</Typography>
+                <Typography variant="body1" gutterBottom>We hope to see you again soon!</Typography>
+                <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
+            </>
+        )
+    }
+
     return (
         <Result label="Confirmed" resultType="success">
-            <Typography variant="h5" gutterBottom>Hi {appointment.firstName},</Typography>
-            <Typography variant="body1" gutterBottom >{childName}'s enrolment in the term has been confirmed.</Typography>
-            <Typography variant="body1" gutterBottom>{childName} can continue coming every week, and we will send you an invoice for the term.</Typography>
-            <Typography variant="body1" gutterBottom>We can't wait to continue the science adventure!</Typography>
-            <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
+            {continuing === 'yes' && renderContinuingCopy()}
+            {continuing === 'no' && renderNotContinuingCopy()}
         </Result>
     )
 }

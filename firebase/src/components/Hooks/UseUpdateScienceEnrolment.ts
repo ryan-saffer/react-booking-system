@@ -6,13 +6,6 @@ import { callAcuityClientV2 } from '../../utilities/firebase/functions'
 
 const useUpdateScienceClubEnrolment = (props: Acuity.Client.UpdateScienceEnrolmentParams): Types.Functions.Service<Acuity.Appointment[]> => {
 
-    const {
-        email,
-        appointmentTypeId,
-        childName,
-        continuing,
-    } = props
-
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [service, setService] = useState<Types.Functions.Service<Acuity.Appointment[]>>({ status: 'loading' })
@@ -28,7 +21,7 @@ const useUpdateScienceClubEnrolment = (props: Acuity.Client.UpdateScienceEnrolme
                         setService({ status: 'error', error })
                     })
             }
-            updateEnrolment({ email, appointmentTypeId, childName, continuing })
+            updateEnrolment({ ...props })
         },
         []
     )

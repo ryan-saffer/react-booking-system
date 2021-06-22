@@ -7,8 +7,17 @@ import { Divider, makeStyles } from '@material-ui/core'
 import * as logo from '../../../drawables/fizz-logo.png'
 import Loading from './Loading'
 import Footer from './Footer'
-import { Success, Error } from './Result'
+import { Success, Error as ErrorResult } from './Result'
 
+
+/**
+ * Page requires 4 URL query params:
+ * 
+ * @param appointmentTypeId the id of the science class
+ * @param email email of the parent
+ * @param chilName childs name
+ * @param continuing either 'yes' if they want to continue with the term, or ''
+ */
 const EnrolmentPage = () => {
 
     const classes = useStyles()
@@ -19,13 +28,14 @@ const EnrolmentPage = () => {
     const email = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('email', queryParams) as string
     const appointmentTypeId = parseInt(useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('appointmentTypeId', queryParams) as string)
     const childName = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('childName', queryParams) as string
-    const continuing = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('continuing', queryParams) as Acuity.Client.ContinuingOptions
+    const continuing = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
 
     const service = useUpdateScienceEnrolment({
         email,
         appointmentTypeId,
         childName,
-        continuing
+        fieldId: Acuity.Constants.FormFields.CONTINUING_WITH_TERM,
+        value: continuing
     })
 
     return (
@@ -33,8 +43,8 @@ const EnrolmentPage = () => {
             <img className={classes.logo} src={logo.default} />
             <Divider className={classes.divider} />
             {service.status === "loading" && <Loading />}
-            {service.status === "loaded" && <Success appointments={service.result} />}
-            {service.status === "error" && <Error />}
+            {service.status === "loaded" && <Success continuing={continuing} appointments={service.result} />}
+            {service.status === "error" && <ErrorResult />}
             <Footer />
         </div>
     )
@@ -57,8 +67,8 @@ const useStyles = makeStyles({
         marginBottom: 40,
         width: '80%'
     },
-    loading: {
-
+    sendEmailButton: {
+        alignSelf: 'center',
     }
 })
 
