@@ -358,3 +358,25 @@ function sendFeedbackEmail(booking) {
     }
   )
 }
+
+function sendTermContinuationEmail(appointment) {
+
+  var t = HtmlService.createTemplateFromFile('test_science_club_email')
+  t.parentName = appointment.parentName
+  t.childName = appointment.childName
+
+  const body = t.evaluate().getContent()
+  const subject = "Free Trial is Over"
+  const fromAddress = 'info@fizzkidz.com.au'
+
+  GmailApp.sendEmail(
+    appointment.email,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body,
+      name: "Fizz Kidz"
+    }
+  )
+}
