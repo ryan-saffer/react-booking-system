@@ -11,11 +11,15 @@ export interface FetchAppointmentsParams {
     calendarID: number
 }
 
-export type ContinuingOptions = 'yes' | 'no' | ''
+export type ContinuingOption = 'yes' | 'no' | ''
+export type CheckboxValue = 'yes' | ''
+
+export type FormValue = ContinuingOption | CheckboxValue
 
 export interface UpdateScienceEnrolmentParams {
     email: string
     appointmentTypeId: number
     childName: string
-    continuing: ContinuingOptions
+    fieldId: number
+    value: FormValue
 }

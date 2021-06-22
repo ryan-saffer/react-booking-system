@@ -25,25 +25,21 @@ export const client = functions
 async function updateEnrolment(input: Acuity.Client.AcuityFunctions['updateEnrolment']['input']): Promise<Acuity.Appointment[]> {
 
     try {
-        return await updateAllScienceAppointmentsForChild(
-            input.email,
-            input.appointmentTypeId,
-            input.childName,
-            Acuity.Constants.FormFields.CONTINUING_WITH_TERM,
-            input.continuing
-        )
+        return await updateAllScienceAppointmentsForChild(input)
     } catch (error) {
         throw new functions.https.HttpsError('internal', 'error updating all science club appointments', error)
     }
 }
 
-function updateAllScienceAppointmentsForChild(
-    email: string,
-    appointmentTypeId: number,
-    childName: string,
-    fieldId: number,
-    value: string,
-) {
+function updateAllScienceAppointmentsForChild(params: Acuity.Client.UpdateScienceEnrolmentParams) {
+
+    const {
+        email,
+        appointmentTypeId,
+        childName,
+        fieldId,
+        value
+    } = params
 
     return new Promise<Acuity.Appointment[]>((resolve, reject) => {
 
