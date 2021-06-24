@@ -359,17 +359,27 @@ function sendFeedbackEmail(booking) {
   )
 }
 
+/**
+ * Send an email to a parent asking if their child would like to continue with the term.
+ * Provides two buttons, each with a link with encoded URL query params, which will update
+ * their appointment with their selected choice.
+ * 
+ * @param {object} appointment a custom appointment object, not an Acuity appointment
+ */
 function sendTermContinuationEmail(appointment) {
 
-  var t = HtmlService.createTemplateFromFile('test_science_club_email')
+  var t = createHtmlFromMjmlFile('science_club_term_enrolment_email')
   t.parentName = appointment.parentName
   t.childName = appointment.childName
+  t.className = appointment.className
+  t.continueUrl = appointment.continueUrl
+  t.unenrollUrl = appointment.unenrollUrl
 
   const body = t.evaluate().getContent()
-  const subject = "Free Trial is Over"
+  const subject = "Thanks for coming to your free trial!"
   const fromAddress = 'info@fizzkidz.com.au'
 
-  GmailApp.sendEmail(
+  MailApp.sendEmail(
     appointment.email,
     subject,
     "",

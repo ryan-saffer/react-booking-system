@@ -260,6 +260,14 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
         {
           id: Acuity.Constants.FormFields.INVOICE_ID,
           value: invoiceId
+        },
+        {
+          id: Acuity.Constants.FormFields.CONTINUING_WITH_TERM,
+          value: "yes"
+        },
+        {
+          id: Acuity.Constants.FormFields.CONTINUING_WITH_TERM_EMAIL_SENT,
+          value: "yes"
         }
       ]
     }
