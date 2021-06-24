@@ -112,7 +112,7 @@ exports.deleteBooking = functions
 exports.sendOutForms = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 8 * * 4')
-  .timeZone('Australia/Victoria')
+  .timeZone('Australia/Melbourne')
   .onRun((context) => {
     
     var startDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
@@ -159,7 +159,7 @@ exports.sendOutForms = functions
 exports.sendFeedbackEmails = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 8 * * *')
-  .timeZone('Australia/Victoria')
+  .timeZone('Australia/Melbourne')
   .onRun((context) => {
 
     const startDate = DateTime.fromObject({ zone: 'Australia/Melbourne', hour: 0, minute: 0, second: 0 }).toJSDate()
