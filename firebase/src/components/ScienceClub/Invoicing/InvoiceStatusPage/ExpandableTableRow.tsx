@@ -23,7 +23,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
     const [loading, setLoading] = useState(false)
     const [isDeleted, setIsDeleted] = useState(false)
 
-    const enrolmentStatus: Acuity.Client.ContinuingOption = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CONTINUING_WITH_TERM, Acuity.Constants.FormFields.CONTINUING_WITH_TERM)
+    const [enrolmentStatus, setEnrolmentStatus] = useState<Acuity.Client.ContinuingOption>(Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CONTINUING_WITH_TERM, Acuity.Constants.FormFields.CONTINUING_WITH_TERM))
     const continuingEmailSent = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CONTINUING_WITH_TERM, Acuity.Constants.FormFields.CONTINUING_WITH_TERM_EMAIL_SENT) === "yes"
     const [emailSent, setEmailSent] = useState(continuingEmailSent)
 
@@ -64,7 +64,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                         }
                     </TableCell>
                     <EnrolmentStatusCell status={enrolmentStatus} />
-                    <InvoiceStatusWithAction appointment={appointment} />
+                    <InvoiceStatusWithAction appointment={appointment} setEnrolmentStatus={setEnrolmentStatus} setEmailSent={setEmailSent} />
                 </TableRow>
                 {expanded &&
                     <>
