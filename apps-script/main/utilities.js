@@ -169,7 +169,7 @@ function getPartyAddress(booking) {
  * @param {string} filename the name of the mjml template file
  * @returns an HtmlTemplate (https://developers.google.com/apps-script/reference/html/html-template) or null if there is an error
  */
-function getHtmlTemplateForFile(filename) {
+function createHtmlFromMjmlFile(filename) {
 
   // use mjml API to transform mjml template tp html
   var rawHtml = HtmlService.createTemplateFromFile(filename).getRawContent()

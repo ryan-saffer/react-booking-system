@@ -1,6 +1,6 @@
 function test() {
 
-  var rawHtml = HtmlService.createTemplateFromFile('test-email').getRawContent()
+  var rawHtml = HtmlService.createTemplateFromFile('party_form_mjml_template').getRawContent()
 
   const payload = {
     mjml: rawHtml
@@ -31,13 +31,17 @@ function test() {
   t.endTime = "4:00 pm"
   t.address = "20 Glenferrie Rd, Malvern, 3144";
   t.location = "Malvern"
-  t.creationCount = "3";
+  // t.creationCount = "3";
+  t.preFilledUrl = "https://www.google.com"
   
   var body = t.evaluate().getContent();
-  var subject = "Party Booking Confirmation";
+  var subject = "Lucy's party is coming up!";
   
   // determine which account to send from
   var fromAddress = "info@fizzkidz.com.au"
+
+  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
+  // let essendonPhoto = DriveApp.getFileById('1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g')
   
   // Send the confirmation email
   GmailApp.sendEmail(
@@ -47,7 +51,11 @@ function test() {
     {
       from: fromAddress,
       htmlBody: body,
-      name: "Fizz Kidz"
+      name: "Fizz Kidz",
+      attachments: [
+        faqs.getBlob(),
+        // essendonPhoto.getBlob()
+      ]
     }
   );
 }

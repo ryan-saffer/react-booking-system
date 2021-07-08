@@ -5,7 +5,7 @@
   "main": "lib",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/.bin/tsc"
+    "build": "tsc"
   },
   "author": "Ryan Saffer",
   "license": "ISC",

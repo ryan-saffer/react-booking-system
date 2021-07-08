@@ -33,7 +33,7 @@ type AppsScriptAppointment = {
 exports.backupScienceClubAppointments = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 17 * * 1-5')
-  .timeZone('Australia/Victoria')
+  .timeZone('Australia/Melbourne')
   .onRun( _context => {
 
     acuity.request('appointment-types', (err: any, _resp: any, acuityResponse: Acuity.AppointmentType[] | Acuity.Error) => {

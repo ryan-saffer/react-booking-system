@@ -20,9 +20,18 @@ const PriceWeekMap: { [key: string]: string } = {
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {
     appointment: Acuity.Appointment
+    setEnrolmentStatus: React.Dispatch<React.SetStateAction<Acuity.Client.ContinuingOption>>
+    setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, showConfirmationDialog }) => {
+const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
+
+    const {
+        appointment,
+        setEnrolmentStatus,
+        setEmailSent,
+        showConfirmationDialog
+    } = props
 
     const classes = useStyles()
 
@@ -42,6 +51,8 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = ({ appointment, sh
             price: price
         }).then(result => {
             setStatus(result.data)
+            setEmailSent(true)
+            setEnrolmentStatus('yes')
         }).catch(() => {
             setStatus({ status: InvoiceStatus.ERROR })
         })

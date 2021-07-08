@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const Acuity = require('acuityscheduling')
-const acuityCredentials = require('../../credentials/acuity_credentials.json');
+const acuityCredentials = require('../../../../credentials/acuity_credentials.json');
 
 var acuity = Acuity.basic({
     userId: acuityCredentials.user_id,
@@ -31,6 +31,9 @@ exports.client = functions
         case 'getAppointments':
           getAppointments(data, resolve, reject)
           break
+        case 'updateEnrolment':
+          updateEnrolment(data, resolve, reject)
+          break;
         case 'updateLabel':
           updateLabel(data, resolve, reject)
           break
@@ -74,6 +77,17 @@ function getAppointments(data, resolve, reject) {
     (err, _resp, appointments) => {
       handleResult(err, appointments, resolve, reject)
   })
+}
+
+function updateEnrolment(data, resolve, reject) {
+  sanitise("appointmentId", data.appointmentId, reject)
+  sanitise("continuing", data.continuing, reject)
+  acuity.request(
+    `/appointments/${data.appointmentId}`,
+    (err, _resp, appointment) => {
+      handleResult(err, appointment, resolve, reject)
+    }
+  )
 }
 
 function updateLabel(data, resolve, reject) {

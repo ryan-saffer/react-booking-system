@@ -8,7 +8,7 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
 import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from 'fizz-kidz'
-import { isAcuityError } from './shared'
+import { hasError } from './shared'
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
@@ -33,17 +33,19 @@ export const retrieveInvoiceStatus = functions
       reject: (error: functions.https.HttpsError) => void
     ) => {
       acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
-        if (err) {
-          console.log(`internal acuity error while fetching appointment with id: ${appointmentId}`)
-          console.error(err)
-          reject(new functions.https.HttpsError('internal', 'internal error while fetching appointment from acuity', err))
-          return
-        }
-        if (isAcuityError(appointment)) {
-          console.log(`error fetching appointment with id: ${appointmentId}`)
-          console.error(appointment)
-          reject(new functions.https.HttpsError('internal', `error while fetching appointment from acuity`, appointment))
-          return
+        
+        if (hasError(err, appointment)) {
+          if (err) {
+            console.log(`internal acuity error while fetching appointment with id: ${appointmentId}`)
+            console.error(err)
+            reject(new functions.https.HttpsError('internal', 'internal error while fetching appointment from acuity', err))
+            return
+          } else {
+            console.log(`error fetching appointment with id: ${appointmentId}`)
+            console.error(appointment)
+            reject(new functions.https.HttpsError('internal', `error while fetching appointment from acuity`, appointment))
+            return
+          }
         }
     
         const invoiceForm = appointment.forms.find(
@@ -220,14 +222,11 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoicePa
     acuity.request(
       `/appointments?email=${queryParams.email}&appointmentTypeID=${queryParams.appointmentTypeId}&field:${Acuity.Constants.FormFields.CHILD_NAME}=${queryParams.childName}`,
       function (err: any, _resp: any, appointments: Acuity.Appointment[] | Acuity.Error) {
-        if (err) {
-          reject(err)
+
+        if (hasError(err, appointments)) {
+          reject(err ? err : appointments)
           return
-        }
-        if (isAcuityError(appointments)) {
-          reject(appointments)
-          return
-        }
+        } 
         
         if (appointments.length <= 0) {
           resolve(appointments)
@@ -261,6 +260,14 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
         {
           id: Acuity.Constants.FormFields.INVOICE_ID,
           value: invoiceId
+        },
+        {
+          id: Acuity.Constants.FormFields.CONTINUING_WITH_TERM,
+          value: "yes"
+        },
+        {
+          id: Acuity.Constants.FormFields.CONTINUING_WITH_TERM_EMAIL_SENT,
+          value: "yes"
         }
       ]
     }
@@ -268,14 +275,11 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
 
   return new Promise<Acuity.Appointment>((resolve, reject) => {
     acuity.request(`/appointments/${appointmentId}`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
-      if (err) {
-        reject(err)
+      if(hasError(err, appointment)) {
+        reject(err ? err : appointment)
         return
       }
-      if (isAcuityError(appointment)) {
-        reject(appointment)
-        return
-      }
+
       resolve(appointment)
     })
   })

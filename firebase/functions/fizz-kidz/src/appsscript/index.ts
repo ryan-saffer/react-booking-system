@@ -7,4 +7,5 @@ export const Functions = {
     ON_FORM_SUBMIT_BOOKING_NOT_FOUND: "onFormSubmitBookingNotFound",
     SEND_FEEDBACK_EMAILS: "sendFeedbackEmails",
     BACKUP_SCIENCE_CLUB: "backupScienceClub",
+    SEND_TERM_CONTINUATION_EMAIL: "requestTermEnrolmentFromParent"
 }

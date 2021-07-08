@@ -1,0 +1,92 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+            color: #5e6ebf
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+            color: #888888
+            }
+        </mj-style>
+
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" weight="bold" color="white" align="center" font-size="30px"
+                    line-height="40px">
+                    We hope
+                    <?= childName ?> enjoyed their Science Club free trial!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        Hi
+                        <?= parentName ?>,
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        We had such a fantastic time during the first week of Science Club, and we really hope that
+                        <?= childName ?> did too!
+                        Just to confirm, below are the details of the class:
+                    </mj-text>
+                    <mj-text align="center" color="#212b35" font-size="12px" text-transform="uppercase"
+                        font-weight="bold" padding-bottom="20">
+                        <?= className ?>
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        We are reaching out to know if you would like to continue
+                        <?= childName ?>'s enrolment in the rest of the term, in which case we will send you out an
+                        invoice. Otherwise, if you would prefer not to continue, we will go ahead an unenroll
+                        <?= childName ?> from the class. Please make your choice by clicking on one of the buttons
+                        below.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Clicking a button will open a link in a new tab. Please wait for that page to load completely.
+                        🙂
+                    </mj-text>
+                    <mj-button background-color="#85b629" align="center" color="#ffffff" font-size="17px"
+                        font-weight="bold" href="<?= continueUrl ?>" width="300px">
+                        CONTINUE WITH THE TERM ↗️
+                    </mj-button>
+                    <mj-button background-color="#db0f32" align="center" color="#ffffff" font-size="17px"
+                        font-weight="bold" href="<?= unenrollUrl ?>" width="300px">
+                        UNENROLL FROM THE TERM ↗️
+                    </mj-button>
+                    <mj-text color="#637381" font-size="16px">
+                        Thanks so much, and we hope you have a fizzing day!
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Talia and the Fizz Kidz team 🌟
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link"
+                                href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

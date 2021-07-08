@@ -186,3 +186,14 @@ function backupScienceClub(appointmentsMap) {
     })
   }
 }
+
+/**
+ * A simple wrapper function for sending the term continuation email.
+ * Since all external apps should only call functions within this file, its been added
+ * to follow that pattern.
+ * 
+ * @param {object} appointment custom appointment object, not an Acuity appointment object
+ */
+function requestTermEnrolmentFromParent(appointment) {
+  sendTermContinuationEmail(appointment)
+}
