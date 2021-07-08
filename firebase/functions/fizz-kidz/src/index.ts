@@ -21,6 +21,11 @@ export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendI
 
 //#region Firebase
 export { FirebaseFunctions } from './firebase/functions'
+
+import * as result from './firebase/service'
+export namespace Types {
+    export import Functions = result
+}
 //#endregion
 
 //#region Utilities

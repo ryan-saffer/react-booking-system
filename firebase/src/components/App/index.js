@@ -17,6 +17,7 @@ import HolidayProgramClassDetails from '../HolidayPrograms/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import { withAuthentication } from '../Session'
+import EnrolmentPage from '../ScienceClub/Enrolment';
 
 const App = () => {
 
@@ -50,6 +51,7 @@ const App = () => {
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS} component={HolidayProgramSelection} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS} component={HolidayProgramClassDetails} />
             <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
+            <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT} component={EnrolmentPage} />
           </div>
         </Router>
     </ThemeProvider>

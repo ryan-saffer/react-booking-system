@@ -65,9 +65,12 @@ const ScienceClubInvoicingStatus = () => {
                 <TableHead>
                     <TableRow className={classes.headerRow}>
                         <TableCell width="5%" />
-                        <TableCell width="45%" className={classes.parentNameCell}>Parent Name</TableCell>
-                        <TableCell width="25%">Invoice Status</TableCell>
-                        <TableCell width="25%">Action</TableCell>
+                        <TableCell width="5%" />
+                        <TableCell width="15%" className={classes.parentNameCell}>Parent Name</TableCell>
+                        <TableCell width="15%">Email Sent?</TableCell>
+                        <TableCell width="20%">Enrolment Status</TableCell>
+                        <TableCell width="20%">Invoice Status</TableCell>
+                        <TableCell width="20%">Action</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

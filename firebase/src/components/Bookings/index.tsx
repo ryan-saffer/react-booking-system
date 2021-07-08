@@ -260,7 +260,7 @@ const BookingsPage = () => {
                     onNavigateNext={handleNavigateNext}
                     date={date}
                 />
-                {loading && <LinearProgress color="secondary" />}
+                <LinearProgress className={loading ? "" : classes.linearProgressHidden} color="secondary" />
                 <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                 <Divider />
                 <Grid item xs sm md>
@@ -385,6 +385,9 @@ const useStyles = makeStyles(theme => ({
     },
     dialog: {
         backgroundColor: grey[200]
+    },
+    linearProgressHidden: {
+        visibility: 'hidden'
     }
 }))
   

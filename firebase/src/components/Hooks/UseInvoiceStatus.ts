@@ -11,7 +11,13 @@ const useInvoiceStatus = (appointment: Acuity.Appointment): [InvoiceStatusWithUr
 
     const [result, setResult] = useState<InvoiceStatusWithUrl>({ status: InvoiceStatus.LOADING })
 
+    const invoiceId = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.INVOICE, Acuity.Constants.FormFields.INVOICE_ID)
+
     useEffect(() => {
+        if (invoiceId === "") {
+            setResult({ status: InvoiceStatus.NOT_SENT })
+            return
+        }
         console.log('running retrieveInvoiceStatus')
         callFirebaseFunction('retrieveInvoiceStatus', firebase)({ appointmentId: appointment.id })
             .then(result => {

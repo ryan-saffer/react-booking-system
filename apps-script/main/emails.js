@@ -36,7 +36,7 @@ function sendBookingConfirmationEmail(booking) {
     }
   }
 
-  var t = getHtmlTemplateForFile('booking-confirmation-mjml-template')
+  var t = createHtmlFromMjmlFile('booking-confirmation-mjml-template')
   if (t === null) {
     return
   }
@@ -57,6 +57,9 @@ function sendBookingConfirmationEmail(booking) {
   
   // determine which account to send from
   var fromAddress = determineFromEmailAddress(booking.location);
+
+  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
+  let essendonPhoto = DriveApp.getFileById('1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g')
   
   // Send the confirmation email
   GmailApp.sendEmail(
@@ -67,7 +70,11 @@ function sendBookingConfirmationEmail(booking) {
       from: fromAddress,
       htmlBody: body,
       name: "Fizz Kidz",
-      bcc: 'bookings@fizzkidz.com.au'
+      bcc: 'bookings@fizzkidz.com.au',
+      attachments: [
+        faqs.getBlob(),
+        essendonPhoto.getBlob()
+      ]
     }
   );
 }
@@ -84,32 +91,31 @@ function sendOutForm(booking) {
   var endDate = getEndDate(startDate, booking.partyLength);
   
   // create a pre-filled form URL
-  var preFilledURL = getPreFilledFormURL(booking);
+  var preFilledUrl = getPreFilledFormURL(booking);
   
   // Using the HTML email template, inject the variables and get the content
-  var t = HtmlService.createTemplateFromFile('party_form_email_template');
+  var t = createHtmlFromMjmlFile('party_form_mjml_template')
+  if (t === null) {
+    return
+  }
+
   t.parentName = booking.parentFirstName;
   t.childName = booking.childName;
   t.childAge = booking.childAge;
   t.startDate = buildFormattedStartDate(startDate)
   t.startTime = Utilities.formatDate(startDate, 'Australia/Sydney', 'hh:mm a');
   t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
-  
-  // determine location
-  var address = booking.address;
-  if (booking.location !== "mobile") {
-    address = `our ${capitalise(booking.location)} store`
-  }
-  t.address = address;
-  t.preFilledURL = preFilledURL;
+  t.address = getPartyAddress(booking);
+  t.location = booking.location;
+  t.preFilledUrl = preFilledUrl;
   
   var body = t.evaluate().getContent();
-  var subject = "Information regarding your upcoming party!";
+  var subject = `${booking.childName}'s party is coming up!`
 
   // determine the from email address
   var fromAddress = determineFromEmailAddress(booking.location);
 
-  var signature = getGmailSignature();
+  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
   
   // Send the confirmation email
   GmailApp.sendEmail(
@@ -118,8 +124,11 @@ function sendOutForm(booking) {
     "",
     {
       from: fromAddress,
-      htmlBody: body + signature,
-      name: "Fizz Kidz"
+      htmlBody: body,
+      name: "Fizz Kidz",
+      attachments: [
+        faqs.getBlob()
+      ]
     }
   );
 }
@@ -345,6 +354,38 @@ function sendFeedbackEmail(booking) {
     {
       from: fromAddress,
       htmlBody: body + signature,
+      name: "Fizz Kidz"
+    }
+  )
+}
+
+/**
+ * Send an email to a parent asking if their child would like to continue with the term.
+ * Provides two buttons, each with a link with encoded URL query params, which will update
+ * their appointment with their selected choice.
+ * 
+ * @param {object} appointment a custom appointment object, not an Acuity appointment
+ */
+function sendTermContinuationEmail(appointment) {
+
+  var t = createHtmlFromMjmlFile('science_club_term_enrolment_email')
+  t.parentName = appointment.parentName
+  t.childName = appointment.childName
+  t.className = appointment.className
+  t.continueUrl = appointment.continueUrl
+  t.unenrollUrl = appointment.unenrollUrl
+
+  const body = t.evaluate().getContent()
+  const subject = "Thanks for coming to your free trial!"
+  const fromAddress = 'info@fizzkidz.com.au'
+
+  MailApp.sendEmail(
+    appointment.email,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body,
       name: "Fizz Kidz"
     }
   )
