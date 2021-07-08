@@ -14,9 +14,11 @@ import * as devConfig from '../credentials/dev_service_account_credentials.json'
 
 import * as bookings from './bookings'
 import * as bookingsFormToSheet from './bookings/onFormSubmit'
-import * as acuity from './acuity/client'
-import * as acuityStripeIntegration from './acuity/stripe-integration'
+import * as acuity from './acuity/client/v1/client.js'
+import * as acuityV2 from './acuity/client/v2/client'
+import * as acuityStripeIntegration from './acuity/stripe'
 import * as scienceClubBackup from './acuity/science-club-backup'
+import * as emails from './acuity/emails'
 
 export const createBooking = bookings.createBooking
 export const updateBooking = bookings.updateBooking
@@ -26,7 +28,9 @@ export const sendFeedbackEmails = bookings.sendFeedbackEmails
 export const onFormSubmit = bookingsFormToSheet.onFormSubmit
 
 export const acuityClient = acuity.client
+export const acuityClientV2 = acuityV2.client
 export const sidebar = acuityStripeIntegration.sidebar
 export const sendInvoice = acuityStripeIntegration.sendInvoice
 export const retrieveInvoiceStatus = acuityStripeIntegration.retrieveInvoiceStatus
 export const backupScienceClubAppointments = scienceClubBackup.backupScienceClubAppointments
+export const sendTermContinuationEmail = emails.sendScienceClubContinuationEmail

@@ -11,11 +11,8 @@ const Constants = {
 }
 
 import * as Utilities from './utilities'
-import { Appointment, MergedAppointment, Label, AppointmentType, Form, FormValue, Error } from './types'
 
-export {
-    Constants,
-    Utilities,
+export type { 
     Appointment,
     MergedAppointment,
     Label,
@@ -23,6 +20,11 @@ export {
     Form,
     FormValue,
     Error
+} from './types'
+
+export {
+    Constants,
+    Utilities,
 }
 
 export * as Client from './client'
