@@ -15,7 +15,12 @@ const PriceWeekMap: { [key: string]: string } = {
     '195': '9',
     '173': '8',
     '151': '7',
-    '129': '6'
+    '129': '6',
+    '107': '5',
+    '85': '4',
+    '63': '3',
+    '40': '2',
+    '20': '1'
 }
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {

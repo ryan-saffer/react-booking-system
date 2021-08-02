@@ -38,7 +38,7 @@ const Result: React.FC<ResultProps> = ({ label, resultType, children }) => {
 }
 
 export const Error = () => (
-    <Result label="Whoopsies... 🤦‍♀️" resultType="error">
+    <Result label="Whoopsy daisy... 🤦‍♀️" resultType="error">
         <Typography variant="h5" gutterBottom>Something went wrong</Typography>
         <Typography variant="body1" gutterBottom >It looks like we had a problem processing your request.</Typography>
         <Typography variant="body1" gutterBottom>Please either reply to our email, or call to let us know if you would like to continue with the term.</Typography>
@@ -60,9 +60,8 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointments }) =>
         return (
             <>
                 <Typography variant="h5" gutterBottom>Hi {appointment.firstName},</Typography>
-                <Typography variant="body1" gutterBottom >{childName}'s enrolment in the term has been confirmed.</Typography>
-                <Typography variant="body1" gutterBottom>{childName} can continue coming every week, and we will send you an invoice for the term.</Typography>
-                <Typography variant="body1" gutterBottom>We can't wait to continue the science adventure!</Typography>
+                <Typography variant="body1" gutterBottom>{childName}'s enrolment in the term has been confirmed.</Typography>
+                <Typography variant="body1" gutterBottom>We are thrilled to have {childName} part of the science program! We will send you an invoice for the term shortly.</Typography>
                 <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
             </>
         )
@@ -72,8 +71,8 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointments }) =>
         return (
             <>
                 <Typography variant="h5" gutterBottom>Hi {appointment.firstName},</Typography>
-                <Typography variant="body1" gutterBottom>We are sad to see {childName} go!</Typography>
-                <Typography variant="body1" gutterBottom>{childName} will be completely unenrolled from the term.</Typography>
+                <Typography variant="body1" gutterBottom>We're sad to see {childName} go!</Typography>
+                <Typography variant="body1" gutterBottom>{childName} will be unenrolled from the term program.</Typography>
                 <Typography variant="body1" gutterBottom>We hope to see you again soon!</Typography>
                 <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
             </>
