@@ -19,7 +19,12 @@ const pricesMap: { [key: string]: string } = {
   '195': stripeConfig.STRIPE_PRICE_195,
   '173': stripeConfig.STRIPE_PRICE_173,
   '151': stripeConfig.STRIPE_PRICE_151,
-  '129': stripeConfig.STRIPE_PRICE_129
+  '129': stripeConfig.STRIPE_PRICE_129,
+  '107': stripeConfig.STRIPE_PRICE_107,
+  '85': stripeConfig.STRIPE_PRICE_85,
+  '63': stripeConfig.STRIPE_PRICE_63,
+  '40': stripeConfig.STRIPE_PRICE_40,
+  '20': stripeConfig.STRIPE_PRICE_20
 }
 
 export const retrieveInvoiceStatus = functions
