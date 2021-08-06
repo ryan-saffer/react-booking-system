@@ -5,14 +5,14 @@ const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
 import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
+  apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
 import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from 'fizz-kidz'
 import { hasError } from './shared'
 
 const acuity = AcuitySdk.basic({
-    userId: acuityCredentials.user_id,
-    apiKey: acuityCredentials.api_key
+  userId: acuityCredentials.user_id,
+  apiKey: acuityCredentials.api_key
 })
 
 const pricesMap: { [key: string]: string } = {
@@ -32,13 +32,13 @@ export const retrieveInvoiceStatus = functions
   .https.onCall((data: RetrieveInvoiceStatusParams, _context: functions.https.CallableContext): Promise<InvoiceStatusWithUrl> => {
 
     const appointmentId = data.appointmentId
-        
+
     return new Promise((
       resolve: (status: InvoiceStatusWithUrl) => void,
       reject: (error: functions.https.HttpsError) => void
     ) => {
       acuity.request(`appointments/${appointmentId}`, (err: any, _resp: any, appointment: Acuity.Appointment | Acuity.Error) => {
-        
+
         if (hasError(err, appointment)) {
           if (err) {
             console.log(`internal acuity error while fetching appointment with id: ${appointmentId}`)
@@ -52,7 +52,7 @@ export const retrieveInvoiceStatus = functions
             return
           }
         }
-    
+
         const invoiceForm = appointment.forms.find(
           form => form.id === Acuity.Constants.Forms.INVOICE
         )
@@ -62,12 +62,12 @@ export const retrieveInvoiceStatus = functions
           return
         }
         const invoiceId = invoiceForm.values.find(
-            field => field.fieldID === Acuity.Constants.FormFields.INVOICE_ID
+          field => field.fieldID === Acuity.Constants.FormFields.INVOICE_ID
         )?.value ?? ""
-    
+
         if (invoiceId === "") {
-            resolve({ status: InvoiceStatus.NOT_SENT })
-            return
+          resolve({ status: InvoiceStatus.NOT_SENT })
+          return
         } else {
           // invoice already created... check its status
           stripe.invoices.retrieve(invoiceId)
@@ -102,7 +102,7 @@ type SendInvoiceReject = (error: functions.https.HttpsError) => void
 export const sendInvoice = functions
   .region('australia-southeast1')
   .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusWithUrl> => {
-    
+
     console.log("beggining function")
     console.log("query parameters:")
     console.log(data)
@@ -119,39 +119,109 @@ export const sendInvoice = functions
         }
       }
 
-    // first search if customer with given email already exists
-      stripe.customers.list({ email: data.email })
-        .then(customers => {
-          if (customers.data.length > 0) {
-            // customer exists!
-            console.log("customer found in stripe")
-            const customer = customers.data[0]
-            createInvoiceItem(customer, data, resolve, reject)
-          } else {
-            // customer not found.. create a new one
-            console.log("customer not found in stripe")
-            console.log("creating new customer")
-            stripe.customers.create({ name: data.name, email: data.email, phone: data.phone })
-              .then(customer => {
-                console.log("new customer succesfully created")
-                createInvoiceItem(customer, data, resolve, reject)
-              })
-              .catch(err => {
-                console.log("error creating customer in stripe")
-                console.error(err)
-                reject(new functions.https.HttpsError('internal', 'error creationg customer in stripe', err))
-                return
-              })
-          }
-        })
-        .catch(err => {
-          console.log("error listing stripe customers")
-          console.error(err)
-          reject(new functions.https.HttpsError('internal', 'error listing stripe customers', err))
+      _sendInvoice(data, resolve, reject)
+
+    })
+  })
+
+export const voidAndResendInvoice = functions
+  .region('australia-southeast1')
+  .https.onCall((data: SendInvoiceParams, _context: functions.https.CallableContext): Promise<InvoiceStatusWithUrl> => {
+
+    /**
+     * Send client a new invoice by:
+     * 1. Get existing invoice
+     * 2. Void invoice
+     * 3. Send new invoice
+     */
+
+    console.log("beggining function")
+    console.log("query parameters:")
+    console.log(data)
+
+    return new Promise<InvoiceStatusWithUrl>((
+      resolve: SendInvoiceResolve,
+      reject: SendInvoiceReject
+    ) => {
+
+      for (const key in SendInvoiceParamsValidator) {
+        if (data[key] === undefined) {
+          reject(new functions.https.HttpsError('invalid-argument', `${key} value not supplied`))
           return
+        }
+      }
+
+      // 1. Get existing invoice
+      acuity.request(
+        `/appointments?email=${data.email}&appointmentTypeID=${data.appointmentTypeId}&field:${Acuity.Constants.FormFields.CHILD_NAME}=${data.childName}`,
+        async function (err: any, _resp: any, appointments: Acuity.Appointment[] | Acuity.Error) {
+
+          if (hasError(err, appointments)) {
+            reject(err ? err : appointments)
+            return
+          }
+
+          if (appointments.length <= 0) {
+            console.log("No appointments found matching email, childName and appointmentTypeId")
+            console.log("Unable to retrieve existing invoice")
+            reject(new functions.https.HttpsError(
+              'not-found',
+              'No appointments found matching email, childName and appointmentTypeId, so unable to retrieve existing invoice',
+            ))
+            return
+          }
+
+          const invoiceId = Acuity.Utilities.retrieveFormAndField(appointments[0], Acuity.Constants.Forms.INVOICE, Acuity.Constants.FormFields.INVOICE_ID)
+          
+          // 2. Void invoice
+          try {
+            await stripe.invoices.voidInvoice(invoiceId)
+          } catch(error) {
+            console.log("error voiding invoice")
+            reject(new functions.https.HttpsError('internal', "error voiding invoice", error))
+            return
+          }
+
+          // 3. Send new invoice
+          _sendInvoice(data, resolve, reject)
         })
     })
-})
+  })
+
+function _sendInvoice(data: SendInvoiceParams, resolve: SendInvoiceResolve, reject: SendInvoiceReject) {
+
+  // first search if customer with given email already exists
+  stripe.customers.list({ email: data.email })
+    .then(customers => {
+      if (customers.data.length > 0) {
+        // customer exists!
+        console.log("customer found in stripe")
+        const customer = customers.data[0]
+        createInvoiceItem(customer, data, resolve, reject)
+      } else {
+        // customer not found.. create a new one
+        console.log("customer not found in stripe")
+        console.log("creating new customer")
+        stripe.customers.create({ name: data.name, email: data.email, phone: data.phone })
+          .then(customer => {
+            console.log("new customer succesfully created")
+            createInvoiceItem(customer, data, resolve, reject)
+          })
+          .catch(err => {
+            console.log("error creating customer in stripe")
+            console.error(err)
+            reject(new functions.https.HttpsError('internal', 'error creationg customer in stripe', err))
+            return
+          })
+      }
+    })
+    .catch(err => {
+      console.log("error listing stripe customers")
+      console.error(err)
+      reject(new functions.https.HttpsError('internal', 'error listing stripe customers', err))
+      return
+    })
+}
 
 function createInvoiceItem(
   customer: Stripe.Customer,
@@ -217,7 +287,7 @@ function createInvoiceItem(
 }
 
 function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoiceParams) {
-  
+
   console.log("saving invoice into acuity...")
 
   return new Promise<Acuity.Appointment[]>((resolve, reject) => {
@@ -231,8 +301,8 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoicePa
         if (hasError(err, appointments)) {
           reject(err ? err : appointments)
           return
-        } 
-        
+        }
+
         if (appointments.length <= 0) {
           resolve(appointments)
           return
@@ -256,7 +326,7 @@ function saveInvoiceToAcuity(invoice: Stripe.Invoice, queryParams: SendInvoicePa
 }
 
 function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
-  
+
   console.log(`updating single appointment: ${appointmentId}`)
   const options = {
     method: 'PUT',
@@ -280,7 +350,7 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
 
   return new Promise<Acuity.Appointment>((resolve, reject) => {
     acuity.request(`/appointments/${appointmentId}`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
-      if(hasError(err, appointment)) {
+      if (hasError(err, appointment)) {
         reject(err ? err : appointment)
         return
       }
@@ -291,7 +361,7 @@ function saveInvoiceIdToAppointment(invoiceId: string, appointmentId: number) {
 }
 
 function emailInvoice(invoice: Stripe.Invoice, resolve: SendInvoiceResolve, reject: SendInvoiceReject) {
-    
+
   console.log("sending invoice...")
 
   stripe.invoices.sendInvoice(invoice.id)
