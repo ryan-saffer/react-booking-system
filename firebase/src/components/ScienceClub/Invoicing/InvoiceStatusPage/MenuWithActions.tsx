@@ -12,6 +12,7 @@ interface MenuWithActionsProps extends ConfirmationDialogProps, ErrorDialogProps
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
     setIsDeleted: React.Dispatch<React.SetStateAction<boolean>>
+    forceRerenderExpandableRow: () => void
 }
 
 const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
@@ -22,7 +23,8 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
         setEmailSent,
         setIsDeleted,
         showConfirmationDialog,
-        displayError
+        displayError,
+        forceRerenderExpandableRow
     } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -70,6 +72,29 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
         }
     }
 
+    const resendInvoice = async () => {
+
+        setLoading(true)
+
+        try {
+            await callFirebaseFunction('voidAndResendInvoice', firebase)({
+                email: "ryansaffer@gmail.com",
+                name: "Ryan Saffer",
+                phone: "0413892120",
+                childName: "Jimmy",
+                invoiceItem: "Test Invoice Item",
+                appointmentTypeId: 13146784,
+                price: '195'
+            })
+            setLoading(false)
+            forceRerenderExpandableRow()
+        } catch (error) {
+            console.error("error resending invoice")
+            setLoading(false)
+            displayError("There was an error resending the invoice")
+        }
+    }
+
     return (
         <>
             <IconButton onClick={handleMenuButtonClick}>
@@ -95,7 +120,7 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                     }}
                 >
                     Send Enrolment Email
-                    </MenuItem>
+                </MenuItem>
                 <MenuItem
                     onClick={() => {
                         setMenuAnchorEl(null)
@@ -105,9 +130,16 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                             confirmationButtonText: 'Unenroll from term',
                             onConfirm: unenrollChildFromTerm
                         })
-                    }}    
+                    }}
                 >
                     Unenroll from term
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        setMenuAnchorEl(null)
+                        resendInvoice()
+                    }}>
+                    Resend Invoice
                 </MenuItem>
             </Menu>
         </>

@@ -10,6 +10,7 @@ import InvoiceStatusWithAction from './InvoiceStatusWithAction'
 import EnrolmentStatusCell from './EnrolmentStatusCell'
 import MenuWithActions from './MenuWithActions'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
+import useForceRerenderComponent from '../../../Hooks/UseForceRerenderComponent'
 
 interface ExpandableTableRowPros extends ErrorDialogProps {
     appointment: Acuity.Appointment
@@ -18,6 +19,8 @@ interface ExpandableTableRowPros extends ErrorDialogProps {
 const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, displayError }) => {
 
     const classes = useStyles()
+
+    const forceRerenderExpandableRow = useForceRerenderComponent()
 
     const [expanded, setExpanded] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -53,6 +56,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                             setEmailSent={setEmailSent}
                             setIsDeleted={setIsDeleted}
                             displayError={displayError}
+                            forceRerenderExpandableRow={forceRerenderExpandableRow}
                         />
                     </TableCell>
                     <TableCell className={classes.parentNameCell} size="small">{appointment.firstName} {appointment.lastName}</TableCell>
