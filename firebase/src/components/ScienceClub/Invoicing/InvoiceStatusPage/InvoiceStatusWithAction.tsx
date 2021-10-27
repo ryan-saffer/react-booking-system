@@ -3,25 +3,11 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import { TableCell, LinearProgress, Chip, Button, makeStyles } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 
-import { Acuity, InvoiceStatus } from 'fizz-kidz'
+import { Acuity, InvoiceStatus, PriceWeekMap } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-
-// prices depend on how many weeks they are attending the program for
-// use this map to include the number of weeks in the invoice
-const PriceWeekMap: { [key: string]: string } = {
-    '195': '9',
-    '173': '8',
-    '151': '7',
-    '129': '6',
-    '107': '5',
-    '85': '4',
-    '63': '3',
-    '40': '2',
-    '20': '1'
-}
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {
     appointment: Acuity.Appointment
