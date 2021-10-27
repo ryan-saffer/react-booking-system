@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, PriceWeekMap } from 'fizz-kidz'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
@@ -12,6 +12,7 @@ interface MenuWithActionsProps extends ConfirmationDialogProps, ErrorDialogProps
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
     setIsDeleted: React.Dispatch<React.SetStateAction<boolean>>
+    forceRerenderExpandableRow: () => void
 }
 
 const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
@@ -22,7 +23,8 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
         setEmailSent,
         setIsDeleted,
         showConfirmationDialog,
-        displayError
+        displayError,
+        forceRerenderExpandableRow
     } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -70,6 +72,31 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
         }
     }
 
+    const voidAndResendInvoice = async (price: string) => {
+
+        setLoading(true)
+
+        let childName = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
+
+        try {
+            await callFirebaseFunction('voidAndResendInvoice', firebase)({
+                email: appointment.email,
+                name: `${appointment.firstName} ${appointment.lastName}`,
+                phone: appointment.phone,
+                childName: childName,
+                invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
+                appointmentTypeId: 13146784,
+                price: price
+            })
+            setLoading(false)
+            forceRerenderExpandableRow()
+        } catch (error) {
+            console.error("error resending invoice")
+            setLoading(false)
+            displayError("There was an error resending the invoice")
+        }
+    }
+
     return (
         <>
             <IconButton onClick={handleMenuButtonClick}>
@@ -95,7 +122,7 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                     }}
                 >
                     Send Enrolment Email
-                    </MenuItem>
+                </MenuItem>
                 <MenuItem
                     onClick={() => {
                         setMenuAnchorEl(null)
@@ -105,9 +132,22 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                             confirmationButtonText: 'Unenroll from term',
                             onConfirm: unenrollChildFromTerm
                         })
-                    }}    
+                    }}
                 >
                     Unenroll from term
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        setMenuAnchorEl(null)
+                        showConfirmationDialog({
+                            dialogTitle: "Send Invoice",
+                            dialogContent: `This will void the existing invoice and issue a new one.Select the amount you'd like to invoice ${appointment.firstName}.`,
+                            confirmationButtonText: "Send Invoice",
+                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` }))},
+                            onConfirm: selectedPrice => voidAndResendInvoice(selectedPrice)
+                        })
+                    }}>
+                    Resend Invoice
                 </MenuItem>
             </Menu>
         </>
