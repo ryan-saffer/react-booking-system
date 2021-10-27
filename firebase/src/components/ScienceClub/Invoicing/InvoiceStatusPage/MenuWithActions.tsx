@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, PriceWeekMap } from 'fizz-kidz'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
@@ -72,19 +72,21 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
         }
     }
 
-    const resendInvoice = async () => {
+    const voidAndResendInvoice = async (price: string) => {
 
         setLoading(true)
 
+        let childName = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
+
         try {
             await callFirebaseFunction('voidAndResendInvoice', firebase)({
-                email: "ryansaffer@gmail.com",
-                name: "Ryan Saffer",
-                phone: "0413892120",
-                childName: "Jimmy",
-                invoiceItem: "Test Invoice Item",
+                email: appointment.email,
+                name: `${appointment.firstName} ${appointment.lastName}`,
+                phone: appointment.phone,
+                childName: childName,
+                invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
                 appointmentTypeId: 13146784,
-                price: '195'
+                price: price
             })
             setLoading(false)
             forceRerenderExpandableRow()
@@ -137,7 +139,13 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                 <MenuItem
                     onClick={() => {
                         setMenuAnchorEl(null)
-                        resendInvoice()
+                        showConfirmationDialog({
+                            dialogTitle: "Send Invoice",
+                            dialogContent: `This will void the existing invoice and issue a new one.Select the amount you'd like to invoice ${appointment.firstName}.`,
+                            confirmationButtonText: "Send Invoice",
+                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` }))},
+                            onConfirm: selectedPrice => voidAndResendInvoice(selectedPrice)
+                        })
                     }}>
                     Resend Invoice
                 </MenuItem>
