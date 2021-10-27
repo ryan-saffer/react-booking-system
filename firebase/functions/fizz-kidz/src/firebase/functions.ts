@@ -4,6 +4,7 @@ import { Appointment } from '../acuity';
 export interface FirebaseFunctions {
     retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatusWithUrl>
     sendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
+    voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
     sendTermContinuationEmail: Function<Appointment, null>
 }
 
