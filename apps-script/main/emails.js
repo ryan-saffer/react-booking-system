@@ -308,11 +308,14 @@ function sendGrazingPlatterNotification(booking) {
  * @param {[string]} additions the additions selected as displayed on the form
  */
 function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
+
+  const isTieDyeParty = creations.find(it => it.includes("Tie Dye")) !== undefined
   
   var t = HtmlService.createTemplateFromFile('customer_form_completed_confirmation_email_template');
   t.parentName = booking.parentFirstName;
   t.numberOfChildren = booking.numberOfChildren;
   t.creations = creations.join('\n');
+  t.isTieDyeParty = isTieDyeParty;
   t.additions = additions.join('\n');
   t.cake = booking.cake;
   t.cakeFlavour = booking.cakeFlavour;
