@@ -74,9 +74,9 @@ const ScienceClubInvoicingStatus = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {appointments !== null && appointments.map(appointment => (
+                    {appointments !== null ? appointments.map(appointment => (
                         <ExpandableTableRow key={appointment.id} appointment={appointment} />
-                    ))}
+                    )) : <TableRow><TableCell className={classes.noEnrolments}>No one is enrolled</TableCell></TableRow>}
                 </TableBody>
             </Table>
             {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
@@ -98,6 +98,19 @@ const useStyles = makeStyles({
     },
     parentNameCell: {
         textAlign: 'left !important' as 'left'
+    },
+    noEnrolments: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: 0, left: 0,
+        color: 'grey',
+        pointerEvents: 'none',
+        borderBottom: 0,
+        fontSize: '1.5rem'
     }
 })
 

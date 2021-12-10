@@ -76,14 +76,14 @@ const ScienceClubCheckinClassDetails = props => {
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
-            {appointments !== null && appointments.map(appointment => (
+            {appointments !== null ? appointments.map(appointment => (
                 <ChildExpansionPanel
                     key={appointment.id}
                     appointment={appointment}
                     onClientSelectionChange={handleClientSelectionChange}
                     expanded={expanded}
                 />
-            ))}
+            )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
             {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
             <IconsDialog open={showHelpDialog} onClose={() => setShowHelpDialog(false)} />
         </div>
@@ -149,6 +149,17 @@ const useStyles = makeStyles(theme => ({
     helpIcon: {
         position: 'absolute',
         right: '24px'
+    },
+    noEnrolments: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: 0, left: 0,
+        color: 'grey',
+        pointerEvents: 'none'
     }
 }))
 
