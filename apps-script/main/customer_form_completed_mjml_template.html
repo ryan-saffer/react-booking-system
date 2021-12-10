@@ -1,0 +1,149 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+            color: #5e6ebf
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+            color: #888888
+            }
+        </mj-style>
+
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" weight="bold" color="white" align="center" font-size="30px"
+                    line-height="40px">
+                    Party Details Confirmed
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        Hi
+                        <?= parentName ?>,
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Thank you for filling out the party details form. Below is a summary of what you have ordered:
+                    </mj-text>
+                    <mj-wrapper padding-top='10px' padding-bottom='10px'>
+                        <mj-column width="100%">
+                            <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                                padding-bottom="0">
+                                Number Attending
+                            </mj-text>
+                            <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+                                <?= numberOfChildren ?>
+                            </mj-text>
+                        </mj-column>
+                        <mj-column width="100%">
+                            <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                                padding-bottom="0">
+                                Chosen Creations
+                            </mj-text>
+                            <mj-text color="#637381" font-size="14px" padding-top="0">
+                                <?= creations ?>
+                            </mj-text>
+                        </mj-column>
+                        <? if (additions != '') { ?>
+                        <mj-column width="100%">
+                            <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                                padding-bottom="0">
+                                Additions
+                            </mj-text>
+                            <mj-text color="#637381" font-size="14px" padding-top="0">
+                                <?= creations ?>
+                            </mj-text>
+                        </mj-column>
+                        <? } ?>
+                    </mj-wrapper>
+                    <mj-text color="#637381" font-size="16px">
+                        If anything here is incorrect, or anything changes, please let us know.
+                    </mj-text>
+                    <? if (isTieDyeParty) { ?>
+                    <mj-text color="#637381" font-size="16px">
+                        We use high quality, non-toxic tie dye. As the dye is of a high quality your kids will make
+                        amazing Tie Dye items during their upcoming party! That said, it will also
+                        unfortunately stain whatever material it lands on. While the kids will be wearing smocks and
+                        gloves, accidents can happen and we suggest kids wear clothes they won't mind accidentally
+                        staining.
+                    </mj-text>
+                    <? } ?>
+                    <? if (questions) { ?>
+                    <mj-text color="#637381" font-size="16px">
+                        We can see that you have asked some questions in the form. We will be in touch very soon to
+                        answer those questions for you!
+                    </mj-text>
+                    <? } ?>
+                    <? if (partyType === "inStore") { ?>
+                    <mj-text color="#637381" font-size="16px">
+                        Payment will be made at the end of the party, and you will only be charged for the number of
+                        children that attend on the day, (minimum 10).
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        You are more than welcome to bring your own (nut free) birthday cake, however please remember to
+                        also bring along paper plates.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Lastly, please arrive 10 minutes before your party starts, so we can make sure everything is
+                        perfect!
+                    </mj-text>
+                    <? } else if (partyType == "mobile") { ?>
+                    <mj-text color="#637381" font-size="16px">
+                        In regards to payment, our staff will count the number of children that attend the party, and we
+                        will send you an invoice shortly after. This way we only charge you for the number of children
+                        that attend the party. If you prefer to pay for the party in advance, please let us know and we
+                        can arrange for an invoice to be sent to you prior.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        On the day of your party, our fabulous party hosts will arrive 10 minutes before to set up and
+                        run the party.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        We will bring everything we need to run a fizzing party, however we kindly ask you to have a
+                        table ready for the children to stand/sit around to make their creations. Our staff will also
+                        need access to water for our creations, and a power plug for music!
+                    </mj-text>
+                    <? } ?>
+                    <mj-text color="#637381" font-size="16px">
+                        We look forward to seeing you then.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Kind regards,
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Lami and the Fizz Kidz team <img src="https://mail.google.com/mail/e/1f31f" alt="🌟"
+                            data-goomoji="1f31f" />
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link"
+                                href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>
