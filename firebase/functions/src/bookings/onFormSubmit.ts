@@ -273,6 +273,6 @@ const AdditionsFormMap: { [key: string]: string } = {
     "Watermelon Platter - $20": Additions.watermelonPlatter,
     "Wedges - $25": Additions.wedges,
     "Lolly bags - $2.50 per child": Additions.lollyBags,
-    "Grazing Platter for Parents (Medium: 10-15 ppl) - $90": Additions.grazingPlatterMedium,
-    "Grazing Platter for Parents (Large: 15-25 ppl) - $135": Additions.grazingPlatterLarge
+    "Grazing Platter for Parents (Medium: 10-15 ppl) - $98": Additions.grazingPlatterMedium,
+    "Grazing Platter for Parents (Large: 15-25 ppl) - $148": Additions.grazingPlatterLarge
 }
