@@ -17,7 +17,7 @@
     "firebase": "^7.15.3",
     "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
-    "luxon": "^1.26.0",
+    "luxon": "^2.1.1",
     "moment-timezone": "^0.5.28",
     "query-string": "^6.8.3",
     "react": "^16.10.2",

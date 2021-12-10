@@ -21,6 +21,7 @@ import { red, yellow, blue } from '@material-ui/core/colors';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog';
+import { DateTime } from 'luxon'
 
 const ChildExpansionPanel = props => {
 
@@ -64,7 +65,7 @@ const ChildExpansionPanel = props => {
     const anaphylaxisForm = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.ANAPHYLAXIS)
     const emergencyContactForm = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.EMERGENCY_CONTACT)
     const pickupPeople = Acuity.Utilities.retrieveForm(appointment, Acuity.Constants.Forms.PICKUP_PERMISSION)
-    const mergedPickupPeople = [{id: appointment.id, value: `${appointment.firstName} ${appointment.lastName}`}, ...pickupPeople]
+    const mergedPickupPeople = [{id: appointment.id, value: `${appointment.firstName} ${appointment.lastName}`}, ...pickupPeople || []]
     const childName = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_NAME)
     const isInPrep = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_GRADE) === "Prep"
     const hasAllergies = Acuity.Utilities.retrieveFormField(childDetailsForm, Acuity.Constants.FormFields.CHILD_ALLERGIES_YES_NO) === "yes"
@@ -91,7 +92,13 @@ const ChildExpansionPanel = props => {
 
     const handleSignOutButtonClick = e => {
         e.stopPropagation()
-        setOpen(true)
+        // check here for lunchtime classes, which don't require a sign out
+        let dateTime = DateTime.fromISO(appointment.datetime)
+        if (dateTime.c.hour < 14) { // class starts before 2pm, ie lunchtime class
+            handleSignOut("N/A - Lunchtime class", "")
+        } else {
+            setOpen(true)
+        }
     }
 
     const handleCloseDialog = () => {
@@ -185,7 +192,7 @@ const ChildExpansionPanel = props => {
                                 <TableCell variant="head">People allowed to pick child up:</TableCell>
                                 <TableCell>
                                     <List>
-                                        {mergedPickupPeople.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
+                                        {mergedPickupPeople?.map((person, i) => person.value !== null && <ListItem className={classes.listItem} key={i}>{person.value}</ListItem>)}
                                     </List>
                                     
                                 </TableCell>
