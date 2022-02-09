@@ -7,3 +7,5 @@
 *credentials.*
 *service-key.*
 .vscode/*
+
+/scripts/bookings-prod-8ce541a294f6.json
