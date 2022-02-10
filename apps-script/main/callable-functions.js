@@ -167,7 +167,7 @@ function backupScienceClub(appointmentsMap) {
 
     // append date
     const date = new Date()
-    sheet.appendRow([date.toLocaleDateString()])
+    sheet.appendRow([date.toLocaleDateString('en-AU')])
 
     // append each appointment
     value.forEach(appointment => {
