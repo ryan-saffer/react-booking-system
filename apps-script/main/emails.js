@@ -377,6 +377,7 @@ function sendTermContinuationEmail(appointment) {
   t.className = appointment.className
   t.continueUrl = appointment.continueUrl
   t.unenrollUrl = appointment.unenrollUrl
+  t.termFee = appointment.price
 
   const body = t.evaluate().getContent()
   const subject = "Thanks for coming to your free trial!"

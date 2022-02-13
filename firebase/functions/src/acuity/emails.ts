@@ -24,6 +24,7 @@ export const sendScienceClubContinuationEmail = functions
             parentName: appointment.firstName,
             email: appointment.email,
             className: appointment.type,
+            price: appointment.price,
             childName: childName,
             continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
             unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`

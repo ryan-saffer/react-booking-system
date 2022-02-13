@@ -85,7 +85,7 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                 phone: appointment.phone,
                 childName: childName,
                 invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
-                appointmentTypeId: 13146784,
+                appointmentTypeId: appointment.appointmentTypeID,
                 price: price
             })
             setLoading(false)

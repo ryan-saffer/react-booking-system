@@ -16,15 +16,15 @@ const acuity = AcuitySdk.basic({
 })
 
 const pricesMap: { [key: string]: string } = {
-  '195': stripeConfig.STRIPE_PRICE_195,
-  '173': stripeConfig.STRIPE_PRICE_173,
-  '151': stripeConfig.STRIPE_PRICE_151,
-  '129': stripeConfig.STRIPE_PRICE_129,
-  '107': stripeConfig.STRIPE_PRICE_107,
-  '85': stripeConfig.STRIPE_PRICE_85,
+  '189': stripeConfig.STRIPE_PRICE_189,
+  '168': stripeConfig.STRIPE_PRICE_168,
+  '147': stripeConfig.STRIPE_PRICE_147,
+  '126': stripeConfig.STRIPE_PRICE_126,
+  '105': stripeConfig.STRIPE_PRICE_105,
+  '84': stripeConfig.STRIPE_PRICE_84,
   '63': stripeConfig.STRIPE_PRICE_63,
-  '40': stripeConfig.STRIPE_PRICE_40,
-  '20': stripeConfig.STRIPE_PRICE_20
+  '42': stripeConfig.STRIPE_PRICE_42,
+  '21': stripeConfig.STRIPE_PRICE_21
 }
 
 export const retrieveInvoiceStatus = functions
