@@ -7,6 +7,7 @@ export interface Appointment {
     appointmentTypeID: number,
     classID: number,
     type: string,
+    price: string,
     labels: Label[],
     forms: Form[],
     notes: string
