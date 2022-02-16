@@ -117,7 +117,7 @@ function unenrollChildFromTerm(params: Acuity.Client.UnenrollChildFromTermParams
     }
 
     return new Promise<Acuity.Appointment>((resolve, reject) => {
-        acuity.request(`/appointments/${params.appointmentId}/cancel`, options, async (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
+        acuity.request(`/appointments/${params.appointmentId}/cancel?admin=true`, options, async (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
 
             if (hasError(err, appointment)) {
                 reject(err ?? appointment)
