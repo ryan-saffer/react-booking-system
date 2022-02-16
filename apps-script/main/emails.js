@@ -394,3 +394,37 @@ function sendTermContinuationEmail(appointment) {
     }
   )
 }
+
+/**
+ * Send confirmation of unenrolment from science club
+ * 
+ * @param {object} appointment simplified appointment (not acuity)
+ *  * includes:
+ *  - parentName
+ *  - email
+ *  - className
+ *  - childName
+ */
+function _sendUnenrolmentConfirmation(appointment) {
+
+  var t = createHtmlFromMjmlFile('science_club_unenrolment_confirmation_email')
+  t.parentName = appointment.parentName
+  t.childName = appointment.childName
+  t.className = appointment.className
+
+  const body = t.evaluate().getContent()
+  const subject = "Unenrolment Confirmation"
+  const fromAddress = 'info@fizzkidz.com.au'
+
+  MailApp.sendEmail(
+    appointment.email,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body,
+      name: "Fizz Kidz"
+    }
+  )
+
+}

@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, AppsScript } from 'fizz-kidz'
+import { runAppsScript } from '../../../bookings'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../../credentials/acuity_credentials.json')
 import { hasError } from '../../shared'
@@ -116,12 +117,21 @@ function unenrollChildFromTerm(params: Acuity.Client.UnenrollChildFromTermParams
     }
 
     return new Promise<Acuity.Appointment>((resolve, reject) => {
-        acuity.request(`/appointments/${params.appointmentId}/cancel`, options, (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
+        acuity.request(`/appointments/${params.appointmentId}/cancel`, options, async (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
 
             if (hasError(err, appointment)) {
                 reject(err ?? appointment)
                 return
             }
+
+            const appsScriptAppointment = {
+                parentName: appointment.firstName,
+                email: appointment.email,
+                className: appointment.type,
+                childName: Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
+            }
+
+            await runAppsScript(AppsScript.Functions.SEND_TERM_UNENROLMENT_CONFIRMATION_EMAIL, [appsScriptAppointment])
 
             resolve(appointment)
         })

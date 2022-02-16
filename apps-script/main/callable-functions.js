@@ -197,3 +197,17 @@ function backupScienceClub(appointmentsMap) {
 function requestTermEnrolmentFromParent(appointment) {
   sendTermContinuationEmail(appointment)
 }
+
+/**
+ * Send email to parent confirming the unenrolment of the child from the term
+ * 
+ * @param {object} appointment simplified appointment (not acuity appointment)
+ * includes:
+ *  - parentName
+ *  - email
+ *  - className
+ *  - childName
+ */
+function sendUnenrolmentConfirmation(appointment) {
+  _sendUnenrolmentConfirmation(appointment)
+}
