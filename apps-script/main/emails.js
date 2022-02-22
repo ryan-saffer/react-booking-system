@@ -320,6 +320,7 @@ function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
   t.cake = booking.cake;
   t.cakeFlavour = booking.cakeFlavour;
   t.partyType = booking.location === 'mobile' ? 'mobile' : 'inStore';
+  t.location = booking.location;
   t.questions = booking.questions;
   
   var body = t.evaluate().getContent();
