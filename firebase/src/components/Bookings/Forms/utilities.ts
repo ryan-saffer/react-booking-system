@@ -199,6 +199,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: ''
         },
+        vegetarianQuiche: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
         watermelonPlatter: {
             value: false,
             error: false,
@@ -268,6 +273,7 @@ function getEmptyDomainBooking(): FormBooking {
         fairyBread: false,
         fruitPlatter: false,
         veggiePlatter: false,
+        vegetarianQuiche: false,
         watermelonPlatter: false,
         wedges: false,
         sandwichPlatter: false,
