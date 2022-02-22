@@ -270,6 +270,7 @@ const AdditionsFormMap: { [key: string]: string } = {
     "Fruit Platter - $40": Additions.fruitPlatter,
     "Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $30": Additions.sandwichPlatter,
     "Veggie Platter - $30": Additions.veggiePlatter,
+    "Vegetarian Quiches - $30": Additions.vegetarianQuiche,
     "Watermelon Platter - $20": Additions.watermelonPlatter,
     "Wedges - $25": Additions.wedges,
     "Lolly bags - $2.50 per child": Additions.lollyBags,

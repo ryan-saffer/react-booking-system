@@ -643,6 +643,22 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         <FormControlLabel
                             control={
                                 <Checkbox
+                                    id={createUniqueId(FormBookingFields.vegetarianQuiche, bookingId)}
+                                    color="secondary"
+                                    name={FormBookingFields.vegetarianQuiche}
+                                    checked={formValues[FormBookingFields.vegetarianQuiche].value ?? false}
+                                    value={formValues[FormBookingFields.vegetarianQuiche].value}
+                                    disabled={!editing}
+                                    onChange={handleFormCheckboxChange} />
+                            }
+                            label="Vegetarian Quiches"
+                            classes={{ root: classes.disabled }}
+                        />
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
                                     id={createUniqueId(FormBookingFields.watermelonPlatter, bookingId)}
                                     color="secondary"
                                     name={FormBookingFields.watermelonPlatter}
