@@ -13,7 +13,8 @@ import { Acuity } from 'fizz-kidz'
 interface QueryParams {
     appointmentTypeId: string,
     calendarId: string,
-    classId: string
+    classId: string,
+    calendarName: string
 }
 
 const ScienceClubInvoicingStatus = () => {
@@ -29,6 +30,7 @@ const ScienceClubInvoicingStatus = () => {
     const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
     const calendarId = parseInt(useQueryParam<QueryParams>('calendarId') as string)
     const classId = parseInt(useQueryParam<QueryParams>('classId') as string)
+    const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName') ?? '')
 
     const sortByParentName = (a: Acuity.Appointment, b: Acuity.Appointment) => {
         const aName = a.firstName
@@ -48,18 +50,6 @@ const ScienceClubInvoicingStatus = () => {
         history.goBack()
     }
 
-    const renderCalendarName = () => {
-        let calendar = appointments && appointments[0] ? appointments[0].calendar : "Loading..."
-        return (
-            <>
-            <Typography variant='h6' className={classes.calendarName}>
-                {calendar}
-            </Typography>
-            <Divider />
-            </>
-        )
-    }
-
     return (
         <div className={classes.main}>
             <CssBaseline />
@@ -73,7 +63,10 @@ const ScienceClubInvoicingStatus = () => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            {renderCalendarName()}
+            <Typography variant='h6' className={classes.calendarName}>
+                {calendarName}
+            </Typography>
+            <Divider />
             <Table>
                 <TableHead>
                     <TableRow className={classes.headerRow}>
@@ -127,8 +120,8 @@ const useStyles = makeStyles({
     },
     calendarName: {
         textAlign: 'center',
-        marginTop: 5,
-        marginBottom: 5
+        marginTop: 10,
+        marginBottom: 10
     }
 })
 
