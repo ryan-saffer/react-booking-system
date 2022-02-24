@@ -10,7 +10,8 @@ export interface Appointment {
     price: string,
     labels: Label[],
     forms: Form[],
-    notes: string
+    notes: string,
+    calendar: string
 }
 
 export interface MergedAppointment extends Appointment {

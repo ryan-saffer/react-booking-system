@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { withRouter, useHistory } from 'react-router-dom'
-import { makeStyles, CssBaseline, AppBar, Toolbar, IconButton, Typography, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
+import { makeStyles, CssBaseline, AppBar, Toolbar, IconButton, Typography, Table, TableHead, TableRow, TableCell, TableBody, Divider } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
@@ -48,6 +48,18 @@ const ScienceClubInvoicingStatus = () => {
         history.goBack()
     }
 
+    const renderCalendarName = () => {
+        let calendar = appointments && appointments[0] ? appointments[0].calendar : "Loading..."
+        return (
+            <>
+            <Typography variant='h6' className={classes.calendarName}>
+                {calendar}
+            </Typography>
+            <Divider />
+            </>
+        )
+    }
+
     return (
         <div className={classes.main}>
             <CssBaseline />
@@ -61,6 +73,7 @@ const ScienceClubInvoicingStatus = () => {
                     </Typography>
                 </Toolbar>
             </AppBar>
+            {renderCalendarName()}
             <Table>
                 <TableHead>
                     <TableRow className={classes.headerRow}>
@@ -111,6 +124,11 @@ const useStyles = makeStyles({
         pointerEvents: 'none',
         borderBottom: 0,
         fontSize: '1.5rem'
+    },
+    calendarName: {
+        textAlign: 'center',
+        marginTop: 5,
+        marginBottom: 5
     }
 })
 
