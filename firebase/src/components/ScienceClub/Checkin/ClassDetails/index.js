@@ -20,11 +20,10 @@ import IconButton from '@material-ui/core/IconButton'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import SkeletonRows from '../../../Shared/SkeletonRows'
-import { Dialog, DialogTitle, List, ListItem } from '@material-ui/core'
+import { Dialog, DialogTitle, List, ListItem, Divider } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
 import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
-import { NotListedLocation } from '@material-ui/icons'
 
 const ScienceClubCheckinClassDetails = props => {
     
@@ -40,6 +39,7 @@ const ScienceClubCheckinClassDetails = props => {
     const appointmentTypeId = queries.appointmentTypeId
     const calendarId = queries.calendarId
     const classId = parseInt(queries.classId)
+    const calendarName = decodeURIComponent(queries.calendarName)
 
     const sortByChildName = (a, b) => {
         const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
@@ -76,6 +76,10 @@ const ScienceClubCheckinClassDetails = props => {
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
+            <Typography variant='h6' className={classes.calendarName}>
+                {calendarName}
+            </Typography>
+            <Divider />
             {appointments !== null ? appointments.map(appointment => (
                 <ChildExpansionPanel
                     key={appointment.id}
@@ -160,6 +164,11 @@ const useStyles = makeStyles(theme => ({
         top: 0, left: 0,
         color: 'grey',
         pointerEvents: 'none'
+    },
+    calendarName: {
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 10
     }
 }))
 

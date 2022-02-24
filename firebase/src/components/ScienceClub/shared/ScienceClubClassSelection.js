@@ -74,7 +74,8 @@ const ScienceClubClassSelection = props => {
     }
 
     const handleClassSelection = () => {
-        props.history.push(`${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}`)
+        let calendar = calendars.find(cal => cal.id === selectedCalendar)
+        props.history.push(`${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}&calendarName=${encodeURIComponent(calendar.name)}`)
     }
 
     const fetchAppointmentTypes = id => {
