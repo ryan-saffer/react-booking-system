@@ -9,8 +9,9 @@ import Container from '@material-ui/core/Container'
 import * as ROUTES from '../../constants/routes'
 import { withAuthorization } from '../Session'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import useAdmin from '../Hooks/UseAdmin'
+import useRole from '../Hooks/UseRole'
 import { FirebaseContext } from '../Firebase'
+import { Roles } from '../../constants/roles'
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -54,7 +55,9 @@ const Navigation = props => {
     
     const classes = useStyles()
 
-    const isAdmin = useAdmin()
+    const role = useRole()
+    const isAdmin = role === Roles.ADMIN
+    const isRestricted = role === Roles.RESTRICTED
 
     const firebase = useContext(FirebaseContext)
 
@@ -75,12 +78,16 @@ const Navigation = props => {
                     <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
                         <Typography>Birthday Parties</Typography>
                     </Paper>
-                    <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS)}>
-                        <Typography>Holiday Programs</Typography>
-                    </Paper>
-                    <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}>
-                        <Typography>After School Science Program</Typography>
-                    </Paper>
+                    {!isRestricted &&
+                        <>
+                            <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS)}>
+                                <Typography>Holiday Programs</Typography>
+                            </Paper>
+                            <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}>
+                                <Typography>After School Science Program</Typography>
+                            </Paper>
+                        </>
+                    }
                     {isAdmin && <>
                         <Typography className={classes.adminHeading} variant="h6">Admin Tools</Typography>
                         <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS)}>

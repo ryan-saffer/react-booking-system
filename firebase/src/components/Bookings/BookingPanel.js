@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
 import ExistingBookingForm from './Forms/ExistingBookingForm'
 import { mapFirestoreBookingToFormValues } from './Forms/utilities'
+import useRole from '../Hooks/UseRole'
+import { Roles } from '../../constants/roles'
 
 var dateFormat = require('dateformat')
 
@@ -27,6 +29,8 @@ const BookingPanel = props => {
 
     const classes = useStyles()
 
+    const isRestricted = useRole() === Roles.RESTRICTED
+
     const { bookingId, booking } = props
 
     return (
@@ -38,7 +42,7 @@ const BookingPanel = props => {
                     {dateFormat(booking.dateTime.toDate(), "h:MM TT")} - {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), "h:MM TT")}
                 </Typography>
                 <Typography className={classes.secondaryHeading}>
-                    {booking.parentFirstName} {booking.parentLastName}: {booking.childName}'s {booking.childAge}th
+                    {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName}: {booking.childName}'s {booking.childAge}th
                 </Typography>
             </AccordionSummary>
             <AccordionDetails>

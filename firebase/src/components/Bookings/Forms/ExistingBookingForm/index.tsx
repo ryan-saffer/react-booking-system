@@ -19,7 +19,8 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
 import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
-import useAdmin from '../../../Hooks/UseAdmin'
+import useRole from '../../../Hooks/UseRole'
+import { Roles } from '../../../../constants/roles'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string,
@@ -35,7 +36,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
     
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const isAdmin = useAdmin()
+    const role = useRole()
+    const isAdmin = role === Roles.ADMIN
+    const isRestricted = role === Roles.RESTRICTED
+    const MASK = 'xxxxx'
 
     const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [])
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
@@ -209,7 +213,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[FormBookingFields.parentLastName].value}
+                        value={isRestricted ? MASK : formValues[FormBookingFields.parentLastName].value}
                         error={formValues[FormBookingFields.parentLastName].error}
                         helperText={formValues[FormBookingFields.parentLastName].error ? formValues[FormBookingFields.parentLastName].errorText : ''}
                         onChange={handleFormChange}
@@ -225,7 +229,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         variant="outlined"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
-                        value={formValues[FormBookingFields.parentEmail].value}
+                        value={isRestricted ? MASK : formValues[FormBookingFields.parentEmail].value}
                         error={formValues[FormBookingFields.parentEmail].error}
                         helperText={formValues[FormBookingFields.parentEmail].error ? formValues[FormBookingFields.parentEmail].errorText : ''}
                         onChange={handleFormChange}
@@ -241,7 +245,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                     variant="outlined"
                     disabled={!editing}
                     classes={{ root: classes.disabled }}
-                    value={formValues[FormBookingFields.parentMobile].value}
+                    value={isRestricted ? MASK : formValues[FormBookingFields.parentMobile].value}
                     error={formValues[FormBookingFields.parentMobile].error}
                     helperText={formValues[FormBookingFields.parentMobile].error ? formValues[FormBookingFields.parentMobile].errorText : ''}
                     onChange={handleFormChange}
