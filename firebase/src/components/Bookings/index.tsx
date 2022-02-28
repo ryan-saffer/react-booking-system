@@ -18,12 +18,13 @@ import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes';
 import DateNav from './BookingsNav';
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import useAdmin from '../Hooks/UseAdmin';
+import useRole from '../Hooks/UseRole';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Firebase, { FirebaseContext } from '../Firebase';
 import useQueryParam from '../Hooks/UseQueryParam';
 import firebase from 'firebase';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { Roles } from '../../constants/roles';
 
 interface QueryParams {
     id: string
@@ -42,7 +43,7 @@ const BookingsPage = () => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const isAdmin = useAdmin()
+    const isAdmin = useRole() === Roles.ADMIN
 
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
     const [date, setDate] = useState(new Date())
