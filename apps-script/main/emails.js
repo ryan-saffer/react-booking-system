@@ -59,7 +59,11 @@ function sendBookingConfirmationEmail(booking) {
   var fromAddress = determineFromEmailAddress(booking.location);
 
   let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
-  let essendonPhoto = DriveApp.getFileById('1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g')
+
+  const balwynPhotoId = '14mqrG74qkbE43FGqexGS1_zfb11mOONy'
+  const essendonPhotoId = '1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g'
+  
+  const photo = DriveApp.getFileById(booking.location === 'balwyn' ? balwynPhotoId : essendonPhotoId)
   
   // Send the confirmation email
   GmailApp.sendEmail(
@@ -73,7 +77,7 @@ function sendBookingConfirmationEmail(booking) {
       bcc: 'bookings@fizzkidz.com.au',
       attachments: [
         faqs.getBlob(),
-        essendonPhoto.getBlob()
+        photo.getBlob()
       ]
     }
   );
