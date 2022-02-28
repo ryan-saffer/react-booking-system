@@ -56,7 +56,9 @@ export const onFormSubmit = functions
                     }
                     
                     // determine if its the first time the form has been submitted or not
-                    // if filled in previously, creation 1 will always be not null
+                    // if filled in previously, creation 1 will always be not null.
+                    // This has been added due to google forms issue, where iOS users can resubmit
+                    // the form if reopening the (now submitted) form url after some time (ie returning to safari).
                     // determine this now, because `updateBooking` will mutate the booking
                     const isFirstTimeSubmittingForm = !booking.creation1
 
