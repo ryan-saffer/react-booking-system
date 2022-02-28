@@ -91,7 +91,7 @@
             Vaccinations and check in procedure
           </mj-text>
           <mj-text color="#637381" font-size="16px">
-            All Fizz Kidz staff are vaccinated. Anyone over the age of 12 will need to be vaccinated (show
+            All Fizz Kidz staff are vaccinated. Anyone over the age of 18 will need to be vaccinated (show
             their vaccination passport) and check-in upon arrival in order to come inside a Fizz Kidz venue.
           </mj-text>
           <mj-text color="#637381" font-size="16px">
@@ -102,9 +102,13 @@
             our creations!
           </mj-text>
           <mj-text color="#637381" font-size="16px">
-            We have attached a photo of the Essendon Fizz Kidz store as well as a list of frequently asked
-            questions
-            that may help you when party planning!
+            We have attached a photo of the
+            <? if (location === 'balwyn') { ?>
+            Balwyn
+            <? } else { ?>
+            Essendon
+            <? } ?>
+            Fizz Kidz store as well as a list of frequently asked questions that may help you when party planning!
           </mj-text>
           <mj-text color="#637381" font-size="16px">
             <a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our
