@@ -7,7 +7,7 @@
  * @returns {String} email address to send from
  */
 function determineFromEmailAddress(location) {
-  return 'bookings@fizzkidz.com.au';
+  return location === 'malvern' ? 'michaela@fizzkidz.com.au' : 'bonnie@fizzkidz.com.au'
 }
 
 /**
@@ -51,9 +51,8 @@ function getEndDate(dateTime, partyLength) {
  * 
  * @returns {String} the signature
  */
-function getGmailSignature() {
-  
-  var draft = GmailApp.search("subject:talia-signature label:draft", 0, 1);
+function getGmailSignature(person) {
+  var draft = GmailApp.search(`subject:${person}-signature label:draft`, 0, 1);
   return draft[0].getMessages()[0].getBody();
 }
 
@@ -166,16 +165,13 @@ function getPartyAddress(booking) {
 /**
  * Given an mjml template filename, calls the mjml api and returns an HtmlTemplate of the converted html.
  * 
- * @param {string} filename the name of the mjml template file
- * @returns an HtmlTemplate (https://developers.google.com/apps-script/reference/html/html-template) or null if there is an error
+ * @param {string} mjml the raw mjml content
+ * @returns mjml as html (string) (https://developers.google.com/apps-script/reference/html/html-template) or null if there is an error
  */
-function createHtmlFromMjmlFile(filename) {
-
-  // use mjml API to transform mjml template tp html
-  var rawHtml = HtmlService.createTemplateFromFile(filename).getRawContent()
+function createHtmlFromMjmlFile(mjml) {
 
   const payload = {
-    mjml: rawHtml
+    mjml: mjml
   }
 
   const options = {
@@ -194,7 +190,7 @@ function createHtmlFromMjmlFile(filename) {
     return null
   }
   
-  return HtmlService.createTemplate(JSON.parse(content).html);
+  return JSON.parse(content).html
 }
 
 /**
