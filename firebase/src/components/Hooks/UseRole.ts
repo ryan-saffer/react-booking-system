@@ -4,9 +4,7 @@ import { Roles } from '../../constants/roles'
 import { AuthUser, AuthUserContext } from '../Session'
 
 const useRole = () => {
-
     const authUser = useContext<AuthUser>(AuthUserContext)
-
         if (authUser.roles["ADMIN"]) {
             return Roles.ADMIN
         } else if (authUser.roles["RESTRICTED"]) {
@@ -15,6 +13,5 @@ const useRole = () => {
             return Roles.BASIC
         }
 }
-
 
 export default useRole
