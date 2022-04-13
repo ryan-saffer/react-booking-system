@@ -11,9 +11,7 @@ export enum InvoiceStatus {
     NOT_SENT = "NOT_SENT",
     UNPAID = "UNPAID",
     PAID = "PAID",
-    UNSUPPORTED = "UNSUPPORTED",
-    LOADING = "LOADING",
-    ERROR = "ERROR"
+    UNSUPPORTED = "UNSUPPORTED"
 }
 
 export interface SendInvoiceParams {

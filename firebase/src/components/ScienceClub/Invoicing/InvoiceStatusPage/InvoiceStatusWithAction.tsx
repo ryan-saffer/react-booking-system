@@ -27,10 +27,10 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
-    const [{ status, url }, setStatus] = useInvoiceStatus(appointment)
+    const [service, setService] = useInvoiceStatus(appointment)
 
     const sendInvoice = (price: string) => {
-        setStatus({ status: InvoiceStatus.LOADING })
+        setService({ status: 'loading' })
         const childName = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
         callFirebaseFunction('sendInvoice', firebase)({
             email: appointment.email,
@@ -41,11 +41,11 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
             appointmentTypeId: appointment.appointmentTypeID,
             price: price
         }).then(result => {
-            setStatus(result.data)
+            setService({ status: 'loaded', result: result.data })
             setEmailSent(true)
             setEnrolmentStatus('yes')
-        }).catch(() => {
-            setStatus({ status: InvoiceStatus.ERROR })
+        }).catch((error) => {
+            setService({ status: 'error', error })
         })
     }
 
@@ -54,63 +54,67 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
         window.open(url, "_blank")
     }
 
-    switch (status) {
-        case InvoiceStatus.LOADING:
-            return (
-                <>
+    if (service.status === 'loading') {
+        return (
+            <>
                 <TableCell size="small" colSpan={2}>
                     <LinearProgress className={classes.linearProgress} variant="indeterminate"/>
                 </TableCell>
-                </>
-            )
-        case InvoiceStatus.PAID:
-            return (
-                <>
-                <TableCell size="small">
-                    <Chip className={classes.chipPaid} label="PAID" /> 
-                </TableCell>
-                <TableCell size="small">
-                    <Button className={classes.viewInvoiceButton} onClick={(event) => openUrl(url, event)}>View Invoice</Button>
-                </TableCell>
-                </>
-            )
-        case InvoiceStatus.UNPAID:
-            return (
-                <>
-                <TableCell size="small">
-                    <Chip className={classes.chipUnpaid} label="NOT PAID" />
-                </TableCell>
-                <TableCell size="small">
-                    <Button className={classes.viewInvoiceButton} onClick={(event) => openUrl(url, event)}>View Invoice</Button>
-                </TableCell>
-                </>
-            )
-        case InvoiceStatus.NOT_SENT:
-            return (
-                <>
-                <TableCell size="small">
-                    <Chip className={classes.chipNotSent} label="INVOICE NOT SENT" />
-                </TableCell>
-                <TableCell size="small">
-                    <Button
-                        className={classes.sendInvoiceButton}
-                        onClick={() => showConfirmationDialog({
-                            dialogTitle: "Send Invoice",
-                            dialogContent: `Select the amount you'd like to invoice ${appointment.firstName}`,
-                            confirmationButtonText: "Send Invoice",
-                            listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` }))},
-                            onConfirm: selectedPrice => sendInvoice(selectedPrice)
-                        })}
-                    >
-                        Send Invoice
-                    </Button>
-                </TableCell>
-                </>
-            )
-        case InvoiceStatus.UNSUPPORTED:
-            return <TableCell size='small' colSpan={2}>This class does not support invoices</TableCell>
-        case InvoiceStatus.ERROR:
-            return <TableCell className={classes.redText} size="small" colSpan={2}>Error while fetching invoice</TableCell>
+            </>
+        )
+    }
+
+    if (service.status === 'loaded') {
+        switch(service.result.status) {
+            case InvoiceStatus.PAID:
+                return (
+                    <>
+                        <TableCell size="small">
+                            <Chip className={classes.chipPaid} label="PAID" /> 
+                        </TableCell>
+                        <TableCell size="small">
+                            <Button className={classes.viewInvoiceButton} onClick={(event) => openUrl(service.result.url, event)}>View Invoice</Button>
+                        </TableCell>
+                    </>
+                )
+            case InvoiceStatus.UNPAID:
+                return (
+                    <>
+                        <TableCell size="small">
+                            <Chip className={classes.chipUnpaid} label="NOT PAID" />
+                        </TableCell>
+                        <TableCell size="small">
+                            <Button className={classes.viewInvoiceButton} onClick={(event) => openUrl(service.result.url, event)}>View Invoice</Button>
+                        </TableCell>
+                    </>
+                )
+            case InvoiceStatus.NOT_SENT:
+                return (
+                    <>
+                        <TableCell size="small">
+                            <Chip className={classes.chipNotSent} label="INVOICE NOT SENT" />
+                        </TableCell>
+                        <TableCell size="small">
+                            <Button
+                                className={classes.sendInvoiceButton}
+                                onClick={() => showConfirmationDialog({
+                                    dialogTitle: "Send Invoice",
+                                    dialogContent: `Select the amount you'd like to invoice ${appointment.firstName}`,
+                                    confirmationButtonText: "Send Invoice",
+                                    listItems: { title: "Invoice Price", items: Object.entries(PriceWeekMap).map(([key, value]) => ({ key, value: `$${key} (${value} weeks)` }))},
+                                    onConfirm: selectedPrice => sendInvoice(selectedPrice)
+                                })}
+                            >
+                                Send Invoice
+                            </Button>
+                        </TableCell>
+                    </>
+                )
+            case InvoiceStatus.UNSUPPORTED:
+                return <TableCell size='small' colSpan={2}>This class does not support invoices</TableCell>
+        }
+    } else {
+        return <TableCell className={classes.redText} size="small" colSpan={2}>Error while fetching invoice</TableCell>
     }
 }
 
