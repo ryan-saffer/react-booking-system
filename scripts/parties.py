@@ -12,7 +12,7 @@ firebase_admin.initialize_app(cred, {
 
 db = firestore.client()
 
-users_ref = db.collection(u'bookings').where(u'dateTime', u'>=', datetime.datetime(2021, 6 , 1)).where(u'dateTime', '<=', datetime.datetime(2021, 12, 15))
+users_ref = db.collection(u'bookings').where(u'dateTime', u'>=', datetime.datetime(2021, 12, 16)).where(u'dateTime', '<=', datetime.datetime(2022, 6, 1))
 
 output = users_ref.stream()
 
