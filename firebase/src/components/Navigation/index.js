@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 import { CssBaseline, AppBar, Toolbar, Typography, makeStyles, Paper, Button } from '@material-ui/core'
 import { grey, red } from '@material-ui/core/colors'
 import Container from '@material-ui/core/Container'
+import LaunchIcon from '@material-ui/icons/Launch';
 
 import * as ROUTES from '../../constants/routes'
 import { withAuthorization } from '../Session'
@@ -33,12 +34,14 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             backgroundColor: grey[100],
             cursor: "pointer"
-        }
+        },
+        display: 'flex',
+        justifyContent: 'space-between'
     },
     logo: {
         height: 50
     },
-    adminHeading: {
+    heading: {
         marginTop: 12
     },
     signOutButton: {
@@ -75,6 +78,7 @@ const Navigation = props => {
             </AppBar>
             <div className={classes.main}>
                 <Container component="main" maxWidth="sm">
+                    <Typography className={classes.heading} variant="h6">Programs</Typography>
                     <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
                         <Typography>Birthday Parties</Typography>
                     </Paper>
@@ -88,8 +92,13 @@ const Navigation = props => {
                             </Paper>
                         </>
                     }
+                    <Typography className={classes.heading} variant="h6">Useful Links</Typography>
+                    <Paper className={classes.paper} onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform', '_blank')}>
+                        <Typography>Incident Reporting</Typography>
+                        <LaunchIcon />
+                    </Paper>
                     {isAdmin && <>
-                        <Typography className={classes.adminHeading} variant="h6">Admin Tools</Typography>
+                        <Typography className={classes.heading} variant="h6">Admin</Typography>
                         <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS)}>
                             <Typography>Invoicing - Science Club</Typography>
                         </Paper>
