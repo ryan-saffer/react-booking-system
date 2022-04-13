@@ -446,7 +446,7 @@ const NewBookingForm = props => {
                                     checked={formValues.sendConfirmationEmail.value}
                                     value={formValues.sendConfirmationEmail.value}
                                     onChange={handleFormChange} />}
-                        label="Send confrimation email"
+                        label="Send confirmation email"
                     />
                 </Grid>
             </Grid>
