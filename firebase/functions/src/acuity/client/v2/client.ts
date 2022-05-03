@@ -19,11 +19,14 @@ export const client = functions
         let input
         switch (data.method) {
             case 'updateEnrolment':
-                input = data.input as Acuity.Client.AcuityFunctions['updateEnrolment']['input']
+                input = data.input as Acuity.Client.UpdateScienceEnrolmentParams
                 return updateEnrolment(input)
             case 'unenrollChildFromTerm':
-                input = data.input as Acuity.Client.AcuityFunctions['unenrollChildFromTerm']['input']
+                input = data.input as Acuity.Client.UnenrollChildFromTermParams
                 return unenrollChildFromTerm(input)
+            case 'updateLabel':
+                input = data.input as Acuity.Client.UpdateLabelParams
+                return updateLabel(input)
         }
     })
 
@@ -138,7 +141,26 @@ function unenrollChildFromTerm(params: Acuity.Client.UnenrollChildFromTermParams
     })
 }
 
+function updateLabel(data: Acuity.Client.UpdateLabelParams) {
 
+    const options = {
+        method: 'PUT',
+        body: {
+          labels: [
+            { id: data.label }
+          ]
+        }
+      }
 
+    return new Promise((resolve, reject) => {
+        acuity.request(`/appointments/${data.appointmentId}`, options, (err: any, _acuityResult: any, appointment: Acuity.Appointment | Acuity.Error) => {
+            
+            if (hasError(err, appointment)) {
+                reject(err ?? appointment)
+                return
+            }
 
-
+            resolve(appointment)
+          })
+    })
+}

@@ -22,6 +22,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog';
 import { DateTime } from 'luxon'
+import MenuWithActions from './MenuWithActions'
+import useForceRerenderComponent from '../../../Hooks/UseForceRerenderComponent'
 
 const ChildExpansionPanel = props => {
 
@@ -31,16 +33,18 @@ const ChildExpansionPanel = props => {
 
     const firebase = useContext(FirebaseContext)
 
+    const rerender = useForceRerenderComponent()
+
     const [appointment, setAppointment] = useState(props.appointment)
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
     const [signature, setSignature] = useState(null)
     const [key, setKey] = useState(0)
 
-    const notSignedIn = appointment.labels == null
     const isSignedIn = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_IN
     const isSignedOut = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT
-    const notAttending = appointment.labels !== null && appointment.labels[0].id === Acuity.Constants.Labels.NOT_ATTENDING
+    const [notAttending, setNotAttending] = useState(appointment.labels !== null && appointment.labels[0].id === Acuity.Constants.Labels.NOT_ATTENDING)
+    const notSignedIn = appointment.labels == null && !notAttending
 
     useEffect(() => {
         const fetchSignature = () => {
@@ -145,6 +149,11 @@ const ChildExpansionPanel = props => {
                         {notAttending && <div className={classes.signInStatusIcon} />}
                         {isSignedIn && <img className={classes.signInStatusIcon} src={checkedInIcon.default} alt="checked in icon"/>}
                         {isSignedOut && <img className={classes.signInStatusIcon} src={checkedOutIcon.default} alt="checked out icon"/>}
+                        <MenuWithActions 
+                            appointment={appointment}
+                            setLoading={setLoading}
+                            setNotAttending={setNotAttending}
+                        />
                         <Typography className={classes.childName} variant="button">{childName}</Typography>
                         {isInPrep && <StarIcon style={{ color: yellow[800] }} />}
                         {hasAllergies && <img className={classes.icon} src={medicalIcon.default} alt="medical icon"/>}

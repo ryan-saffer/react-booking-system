@@ -2,7 +2,11 @@
 
 First export the variable inside `.env` to your path:
 ```sh
+# prod
 export GOOGLE_APPLICATION_CREDENTIALS="/Users/rsaffer/workspace/react-booking-system/scripts/bookings-prod-8ce541a294f6.json"
+
+# dev
+export GOOGLE_APPLICATION_CREDENTIALS="/Users/rsaffer/workspace/react-booking-system/scripts/booking-system-6435d-firebase-adminsdk-km04g-9bdbdeb0e2.json"
 ```
 > The file has been excluded from git. If lost, regenerate it from Firebase Console (choose python) - https://console.firebase.google.com/u/1/project/bookings-prod/settings/serviceaccounts/adminsdk
 
