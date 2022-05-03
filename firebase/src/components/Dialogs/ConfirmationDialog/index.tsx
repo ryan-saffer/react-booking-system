@@ -71,7 +71,9 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             setFormError(false)
         }
 
-        const handleConfirm = () => {
+        const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+            console.log(e)
+            e.stopPropagation()
             if (listItems && !selectedListItem) {
                 setFormError(true)
             } else {
@@ -80,7 +82,8 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             }
         }
 
-        const handleClose = () => {
+        const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation()
             setOpen(false)
         }
 
@@ -103,10 +106,10 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                         }
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleConfirm} classes={{ root: classes.deleteButton }}>
+                        <Button onClick={e => handleConfirm(e)} classes={{ root: classes.deleteButton }}>
                             {confirmButton}
                         </Button>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={e => handleClose(e)} color="primary">
                             Cancel
                         </Button>
                     </DialogActions>

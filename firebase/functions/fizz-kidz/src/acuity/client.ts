@@ -1,10 +1,12 @@
 import { Function } from '../firebase/functions'
 import { Appointment } from ".";
+import { Acuity } from '..';
 
 export interface AcuityFunctions {
     getAppointments: Function<FetchAppointmentsParams, Appointment[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
+    updateLabel: Function<UpdateLabelParams, Appointment>
 }
 
 export interface FetchAppointmentsParams {
@@ -27,4 +29,9 @@ export interface UpdateScienceEnrolmentParams {
 
 export interface UnenrollChildFromTermParams {
     appointmentId: number
+}
+
+export interface UpdateLabelParams {
+    appointmentId: number
+    label: number // Acuity.Constants.Labels
 }
