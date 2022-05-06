@@ -144,7 +144,7 @@ function backupScienceClub(appointmentsMap) {
 
   console.log(appointmentsMap)
 
-  const spreadsheetId = '1W_bAFFSQUG2Eo8iufVj3xpAIDxUcR4G2pgSRWHtFONI'
+  const spreadsheetId = '1EIPPf4QWxpU0eixiBbuT99wjyX9XhZAmhI8LYNZZ9uI'
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId)
 
   for (const [key, value] of Object.entries(appointmentsMap)) {
