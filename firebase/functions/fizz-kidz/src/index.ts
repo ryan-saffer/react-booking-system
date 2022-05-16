@@ -3,6 +3,7 @@ export { Additions } from './booking/Additions'
 export { CakeFlavours } from './booking/CakeFlavours'
 export { Creations } from './booking/Creations'
 export { CreationDisplayValuesMap } from './booking/CreationDisplayValuesMap'
+export { AdditionsDisplayValuesMap } from './booking/AdditionsDisplayValuesMap'
 export { Locations } from './booking/Locations'
 export { Booking, FormBooking, FirestoreBooking, FormBookingFields, BookingFields } from './booking/Booking'
 //#endregion 
