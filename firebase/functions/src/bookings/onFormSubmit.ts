@@ -4,8 +4,6 @@ import { runAppsScript } from './index'
 import { BookingFields, AppsScript, CreationDisplayValuesMap, Utilities, Additions } from 'fizz-kidz'
 import { db } from '../index'
 
-db.settings({ignoreUndefinedProperties: true})
-
 const CREATIONS_ADDITIONS_SPLIT_REGEX = /, ?(?=[A-Z])/ // split by ", [single capital letter]". make sure creations/additions never include this pattern
 let isMobile = false // global
 

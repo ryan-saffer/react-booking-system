@@ -8,6 +8,7 @@ admin.initializeApp({
 })
 
 export const db = admin.firestore()
+db.settings({ignoreUndefinedProperties: true})
 
 // import credentials here to force typescript to compile the json files
 // see https://stackoverflow.com/a/59419449/7870403

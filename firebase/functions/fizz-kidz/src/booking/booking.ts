@@ -80,7 +80,11 @@ export const FormBookingFields: FormBookingKeys = {
     wedges: 'wedges',
     lollyBags: 'lollyBags',
     grazingPlatterMedium: 'grazingPlatterMedium',
-    grazingPlatterLarge: 'grazingPlatterLarge'
+    grazingPlatterLarge: 'grazingPlatterLarge',
+    volcanoPartyPack: 'volcanoPartyPack',
+    lipBalmPartyPack: 'lipBalmPartyPack',
+    dinosaurBathBombPartyPack: 'dinosaurBathBombPartyPack',
+    slimePartyPack: 'slimePartyPack'
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K}
@@ -115,5 +119,9 @@ export const BookingFields: BookingKeys = {
     wedges: 'wedges',
     lollyBags: 'lollyBags',
     grazingPlatterMedium: 'grazingPlatterMedium',
-    grazingPlatterLarge: 'grazingPlatterLarge'
+    grazingPlatterLarge: 'grazingPlatterLarge',
+    volcanoPartyPack: 'volcanoPartyPack',
+    lipBalmPartyPack: 'lipBalmPartyPack',
+    dinosaurBathBombPartyPack: 'dinosaurBathBombPartyPack',
+    slimePartyPack: 'slimePartyPack'
 }

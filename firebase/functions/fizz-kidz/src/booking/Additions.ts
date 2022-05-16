@@ -10,4 +10,8 @@ export enum Additions {
     lollyBags = "lollyBags",
     grazingPlatterMedium = "grazingPlatterMedium",
     grazingPlatterLarge = "grazingPlatterLarge",
+    volcanoPartyPack = "volcanoPartyPack",
+    lipBalmPartyPack = "lipBalmPartyPack",
+    dinosaurBathBombPartyPack = "dinosaurBathBombPartyPack",
+    slimePartyPack = "slimePartyPack"
 }
