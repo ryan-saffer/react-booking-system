@@ -224,6 +224,26 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: ''
         },
+        volcanoPartyPack: {
+            value: false,
+            error: false,
+            errorText:''
+        },
+        lipBalmPartyPack: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        dinosaurBathBombPartyPack: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
+        slimePartyPack: {
+            value: false,
+            error: false,
+            errorText: ''
+        },
         cake: {
             value: '',
             error: false,
@@ -279,6 +299,10 @@ function getEmptyDomainBooking(): FormBooking {
         sandwichPlatter: false,
         lollyBags: false,
         grazingPlatterMedium: false,
-        grazingPlatterLarge: false
+        grazingPlatterLarge: false,
+        volcanoPartyPack: false,
+        lipBalmPartyPack: false,
+        dinosaurBathBombPartyPack: false,
+        slimePartyPack: false
     }
 }

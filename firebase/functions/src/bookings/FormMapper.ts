@@ -1,5 +1,5 @@
 import { PFProduct, PFQuestion, Questions } from "./types";
-import { Additions, Booking, CreationDisplayValuesMap, Creations, Locations, AdditionsDisplayValuesMap } from 'fizz-kidz'
+import { Additions, Booking, CreationDisplayValuesMap, Creations, Locations, AdditionsDisplayValuesMapPrices } from 'fizz-kidz'
 import { AdditionsFormMap } from "./utils";
 
 export class FormMapper {
@@ -45,13 +45,20 @@ export class FormMapper {
 
     getAdditionDisplayValues() {
         let additionKeys = this.getQuestionValue('additions')
-        let additions: string[] = []
+        let displayValues: string[] = []
         additionKeys.forEach(addition => {
             if (this.isValidAddition(addition)) {
-                additions.push(AdditionsDisplayValuesMap[addition])
+                displayValues.push(AdditionsDisplayValuesMapPrices[addition])
             }
         });
-        return additions
+
+        let partyPackKeys = this.mapProductToSku(this.getQuestionValue('party_packs'))
+        partyPackKeys.forEach(pack => {
+            if (this.isValidAddition(pack)) {
+                displayValues.push(AdditionsDisplayValuesMapPrices[pack])
+            }
+        })
+        return displayValues
     }
 
     /**

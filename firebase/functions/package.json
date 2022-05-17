@@ -30,6 +30,7 @@
     "typescript": "^3.9.5"
   },
   "devDependencies": {
+    "@types/luxon": "^2.3.2",
     "firebase-functions-test": "^0.1.7",
     "mocha": "^6.2.2"
   },

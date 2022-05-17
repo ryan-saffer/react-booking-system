@@ -40,7 +40,7 @@ function test() {
   // determine which account to send from
   var fromAddress = "info@fizzkidz.com.au"
 
-  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
+  let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
   // let essendonPhoto = DriveApp.getFileById('1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g')
   
   // Send the confirmation email
