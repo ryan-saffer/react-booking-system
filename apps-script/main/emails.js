@@ -56,7 +56,7 @@ function sendBookingConfirmationEmail(booking) {
   var body = createHtmlFromMjmlFile(mjml);
   var subject = "Party Booking Confirmation";
 
-  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
+  let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
 
   const balwynPhotoId = '14mqrG74qkbE43FGqexGS1_zfb11mOONy'
   const essendonPhotoId = '1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g'
@@ -128,7 +128,7 @@ function sendOutForm(booking) {
   // determine the from email address
   var fromAddress = determineFromEmailAddress(booking.location);
 
-  let faqs = DriveApp.getFileById('1vIpyXiwDbfiDOBUkClB33r5eeOeX8Eyx')
+  let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
   
   // Send the confirmation email
   GmailApp.sendEmail(
@@ -144,6 +144,72 @@ function sendOutForm(booking) {
       ]
     }
   );
+}
+
+function sendOutFormV2(booking) {
+  // Determine the start and end times of the party
+  var startDate = new Date(booking.dateTime)
+  var endDate = getEndDate(startDate, booking.partyLength);
+  
+  // create a pre-filled form URL
+  var preFilledUrl = getPreFilledFormUrlV2(booking);
+  
+  // Using the HTML email template, inject the variables and get the content
+  var t = HtmlService.createTemplateFromFile('party_form_mjml_template')
+  if (t === null) {
+    return
+  }
+
+  t.parentName = booking.parentFirstName;
+  t.childName = booking.childName;
+  t.childAge = booking.childAge;
+  t.startDate = buildFormattedStartDate(startDate)
+  t.startTime = Utilities.formatDate(startDate, 'Australia/Sydney', 'hh:mm a');
+  t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
+  t.address = getPartyAddress(booking);
+  t.location = booking.location;
+  t.preFilledUrl = preFilledUrl;
+  
+  var mjml = t.evaluate().getContent();
+  var body = createHtmlFromMjmlFile(mjml)
+  var subject = `${booking.childName}'s party is coming up!`
+
+  // determine the from email address
+  var fromAddress = determineFromEmailAddress(booking.location);
+
+  let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
+  
+  // Send the confirmation email
+  GmailApp.sendEmail(
+    booking.parentEmail,
+    subject,
+    "",
+    {
+      from: fromAddress,
+      htmlBody: body,
+      name: "Fizz Kidz",
+      attachments: [
+        faqs.getBlob()
+      ]
+    }
+  );
+}
+
+function getPreFilledFormUrlV2(booking) {
+  let url = `https://fizzkidz.paperform.co/?location=${booking.location}&id=${booking.id}`
+
+  let encodedParams = {
+    parent_first_name: encodeURIComponent(booking.parentFirstName),
+    parent_last_name: encodeURIComponent(booking.parentLastName),
+    child_name: encodeURIComponent(booking.childName),
+    child_age: encodeURIComponent(booking.childAge),
+  }
+
+  Object.keys(encodedParams).forEach(key => {
+    url += `&${key}=${encodedParams[key]}`
+  })
+
+  return url
 }
 
 /**
@@ -286,7 +352,7 @@ function sendQuestionsNotification(booking) {
   var fromAddress = determineFromEmailAddress(booking.location);
   
   // Send the confirmation email
-  GmailApp.sendEmail(fromAddress, subject, "", {from: "info@fizzkidz.com.au", htmlBody: body, name : "Fizz Kidz"});
+  GmailApp.sendEmail(fromAddress, subject, "", {from: "info@fizzkidz.com.au", htmlBody: body, name : "Fizz Kidz", replyTo: booking.parentEmail });
 }
 
 /**
