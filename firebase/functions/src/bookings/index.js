@@ -6,9 +6,9 @@ const {
 var { DateTime } = require('luxon')
 import { AppsScript } from 'fizz-kidz'
 
-const googleCredentials = require('../../credentials/google-credentials.json')
+import { db } from '../index'
 
-const db = admin.firestore()
+const googleCredentials = require('../../credentials/google-credentials.json')
 
 exports.createBooking = functions
   .region('australia-southeast1')

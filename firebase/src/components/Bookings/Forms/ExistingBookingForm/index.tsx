@@ -11,7 +11,7 @@ import CreateIcon from '@material-ui/icons/Create'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { green, red } from '@material-ui/core/colors'
 
-import { Additions, FormBookingFields, Locations, FirestoreBooking, CakeFlavours, CreationDisplayValuesMap, FormBooking, Utilities } from 'fizz-kidz'
+import { Additions, FormBookingFields, Locations, FirestoreBooking, CakeFlavours, CreationDisplayValuesMap, FormBooking, Utilities, AdditionsDisplayValuesMap } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
@@ -176,6 +176,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
         }).finally(() => {
             console.log('finally')
         })
+    }
+
+    const isAddition = (key: string): key is Additions => {
+        return Object.keys(Additions).includes(key)
     }
 
     return (
@@ -544,185 +548,33 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 }
                 {displayAdditions &&
                     <>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Additions
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.chickenNuggets, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.chickenNuggets}
-                                    checked={formValues[FormBookingFields.chickenNuggets].value ?? false}
-                                    value={formValues[FormBookingFields.chickenNuggets].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
+                        <Grid item xs={12}>
+                            <Typography variant="h6">
+                                Additions
+                            </Typography>
+                        </Grid>
+                        {Object.keys(Additions).map(addition => {
+                            if (isAddition(addition)) {
+                                return (
+                                    <Grid item xs={6} sm={3}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                id={createUniqueId(FormBookingFields[addition], bookingId)}
+                                                color="secondary"
+                                                name={FormBookingFields[addition]}
+                                                checked={formValues[FormBookingFields[addition]].value ?? false}
+                                                value={formValues[FormBookingFields[addition]].value}
+                                                disabled={!editing}
+                                                onChange={handleFormCheckboxChange} />
+                                        }
+                                        label={AdditionsDisplayValuesMap[addition]}
+                                        classes={{ root: classes.disabled }}
+                                    />
+                                    </Grid>
+                                )
                             }
-                            label="Chicken Nuggets"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.fairyBread, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.fairyBread}
-                                    checked={formValues[FormBookingFields.fairyBread].value ?? false}
-                                    value={formValues[FormBookingFields.fairyBread].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Fairy Bread"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={<Checkbox
-                                id={createUniqueId(FormBookingFields.fruitPlatter, bookingId)}
-                                color="secondary"
-                                name={FormBookingFields.fruitPlatter}
-                                checked={formValues[FormBookingFields.fruitPlatter].value ?? false}
-                                value={formValues[FormBookingFields.fruitPlatter].value}
-                                disabled={!editing}
-                                onChange={handleFormCheckboxChange} />}
-                            label="Fruit Platter"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.lollyBags, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.lollyBags}
-                                    checked={formValues[FormBookingFields.lollyBags].value ?? false}
-                                    value={formValues[FormBookingFields.lollyBags].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Lolly Bags"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.sandwichPlatter, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.sandwichPlatter}
-                                    checked={formValues[FormBookingFields.sandwichPlatter].value ?? false}
-                                    value={formValues[FormBookingFields.sandwichPlatter].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Sandwich Platter"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.veggiePlatter, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.veggiePlatter}
-                                    checked={formValues[FormBookingFields.veggiePlatter].value ?? false}
-                                    value={formValues[FormBookingFields.veggiePlatter].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Veggie Platter"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.vegetarianQuiche, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.vegetarianQuiche}
-                                    checked={formValues[FormBookingFields.vegetarianQuiche].value ?? false}
-                                    value={formValues[FormBookingFields.vegetarianQuiche].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Vegetarian Quiches"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.watermelonPlatter, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.watermelonPlatter}
-                                    checked={formValues[FormBookingFields.watermelonPlatter].value ?? false}
-                                    value={formValues[FormBookingFields.watermelonPlatter].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Watermelon Platter"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.wedges, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.wedges}
-                                    checked={formValues[FormBookingFields.wedges].value ?? false}
-                                    value={formValues[FormBookingFields.wedges].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Wedges"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.grazingPlatterMedium, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.grazingPlatterMedium}
-                                    checked={formValues[FormBookingFields.grazingPlatterMedium].value ?? false}
-                                    value={formValues[FormBookingFields.grazingPlatterMedium].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Grazing Platter - Medium"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id={createUniqueId(FormBookingFields.grazingPlatterLarge, bookingId)}
-                                    color="secondary"
-                                    name={FormBookingFields.grazingPlatterLarge}
-                                    checked={formValues[FormBookingFields.grazingPlatterLarge].value ?? false}
-                                    value={formValues[FormBookingFields.grazingPlatterLarge].value}
-                                    disabled={!editing}
-                                    onChange={handleFormCheckboxChange} />
-                            }
-                            label="Grazing Platter - Large"
-                            classes={{ root: classes.disabled }}
-                        />
-                    </Grid>
+                        })}
                     </>
                 }
                 {displayCake &&

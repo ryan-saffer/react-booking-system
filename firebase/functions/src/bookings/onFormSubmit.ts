@@ -2,9 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import { runAppsScript } from './index'
 import { BookingFields, AppsScript, CreationDisplayValuesMap, Utilities, Additions } from 'fizz-kidz'
-
-const db = admin.firestore()
-db.settings({ignoreUndefinedProperties: true})
+import { db } from '../index'
 
 const CREATIONS_ADDITIONS_SPLIT_REGEX = /, ?(?=[A-Z])/ // split by ", [single capital letter]". make sure creations/additions never include this pattern
 let isMobile = false // global
