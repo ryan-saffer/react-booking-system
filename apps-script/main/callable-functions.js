@@ -71,6 +71,18 @@ function sendOutForms(bookings) {
 }
 
 /**
+ * 
+ * @param {Booking[]} bookings - array of bookings, however includes id field
+ */
+function sendOutFormsV2(bookings) {
+  console.log(bookings)
+  for(var i = 0; i < bookings.length; i++) {
+    bookings[i].dateTime = new Date(bookings[i].dateTime)
+    sendOutFormV2(bookings[i])
+  }
+}
+
+/**
  * Called when a form is submitted, and a matching booking is succesfully found.
  * Sends confirmation email to parent, along with cake/question notifications to info@fizzkidz.com.au 
  *
