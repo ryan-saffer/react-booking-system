@@ -379,6 +379,27 @@ function sendGrazingPlatterNotification(booking) {
 }
 
 /**
+ * 
+ * @param {Booking} booking 
+ * @param {string[]} partyPacks 
+ */
+function sendPartyPacksNotification(booking, partyPacks) {
+  var t = HtmlService.createTemplateFromFile('party_pack_email_template')
+  t.parentName = `${booking.parentFirstName} ${booking.parentLastName}`
+  t.dateTime = Utilities.formatDate(new Date(booking.dateTime), "Australia/Melbourne", "EEEE, dd MMMM yyyy, HH:mm a")
+  t.location = capitalise(booking.location)
+  t.mobile = booking.parentMobile
+  t.email = booking.parentEmail
+  t.partyPacks = partyPacks.join('\n')
+
+  var body = t.evaluate().getContent()
+  var subject = "Party Packs ordered!!"
+  
+  // send
+  GmailApp.sendEmail('info@fizzkidz.com.au', subject, "", { from: 'info@fizzkidz.com.au', htmlBody: body, name: "Fizz Kidz" })
+}
+
+/**
  * Sends the customer a confirmation email detailing their selections
  * along with information about the party
  *
