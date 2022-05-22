@@ -115,6 +115,12 @@ function onFormSubmitBookingFound(booking, creations, additions) {
     sendGrazingPlatterNotification(booking)
   }
 
+  // party pack order notification
+  let partyPacks = additions.filter(addition => addition.includes("Party Pack"))
+  if (partyPacks.length !== 0) {
+    sendPartyPacksNotification(booking, partyPacks)
+  }
+
   console.log("sending confirmation email")
   sendOnFormSubmitConfirmationEmail(booking, creations, additions)
 }
