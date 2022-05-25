@@ -2,12 +2,14 @@ import FormFieldOptions from './constants/formFieldOptions'
 import FormFields from './constants/formFields'
 import Forms from './constants/forms'
 import Labels from './constants/labels'
+import AppointmentTypes from './constants/appointmentTypes'
 
 const Constants = {
     FormFieldOptions,
     FormFields,
     Forms,
-    Labels
+    Labels,
+    AppointmentTypes
 }
 
 import * as Utilities from './utilities'
@@ -19,7 +21,8 @@ export type {
     AppointmentType,
     Form,
     FormValue,
-    Error
+    Error,
+    Payment
 } from './types'
 
 export {
