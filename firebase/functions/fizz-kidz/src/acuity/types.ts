@@ -11,7 +11,8 @@ export interface Appointment {
     labels: Label[],
     forms: Form[],
     notes: string,
-    calendar: string
+    calendar: string,
+    paid: "yes" | "no"
 }
 
 export interface MergedAppointment extends Appointment {
@@ -47,4 +48,8 @@ export interface Error {
     status_code: number,
     message: string,
     error: string
+}
+
+export interface Payment {
+    transactionID: string
 }
