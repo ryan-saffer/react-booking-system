@@ -105,7 +105,7 @@ export class FormMapper {
             childAge: this.getQuestionValue('child_age'),
             creation1: creations.length > 0 ? creations[0] : undefined,
             creation2: creations.length > 1 ? creations[1] : undefined,
-            creation3: creations.length > 3 ? creations[2] : undefined,
+            creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: this.getQuestionValue('fun_facts'),
             questions: this.getQuestionValue('questions'),
             ...this.getPartyPacks()
