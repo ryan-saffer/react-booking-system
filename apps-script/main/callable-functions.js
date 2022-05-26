@@ -79,6 +79,7 @@ function sendOutFormsV2(bookings) {
   for(var i = 0; i < bookings.length; i++) {
     bookings[i].dateTime = new Date(bookings[i].dateTime)
     sendOutFormV2(bookings[i])
+    Utilities.sleep(1000) // used to avoid overloading the MJML API
   }
 }
 
