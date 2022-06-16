@@ -25,6 +25,7 @@ import * as acuityStripeIntegration from './acuity/stripe'
 import * as scienceClubBackup from './acuity/science-club-backup'
 import * as emails from './acuity/emails'
 import * as acuityWebhook from './acuity/webhook'
+import * as mjmlService from './mjml'
 
 export const createBooking = bookings.createBooking
 export const updateBooking = bookings.updateBooking
@@ -44,3 +45,4 @@ export const retrieveInvoiceStatus = acuityStripeIntegration.retrieveInvoiceStat
 export const backupScienceClubAppointments = scienceClubBackup.backupScienceClubAppointments
 export const sendTermContinuationEmail = emails.sendScienceClubContinuationEmail
 export const asWebhook = acuityWebhook.webhook
+export const mjml = mjmlService.mjml

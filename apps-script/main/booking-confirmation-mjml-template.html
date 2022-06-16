@@ -21,162 +21,167 @@
     <mj-section background-color="#eec73b" padding-bottom='0px'>
       <mj-column width="100%">
         <mj-spacer height="30px" />
-        <mj-text font-family="Trebuchet MS" weight="bold" color="white" align="center" font-size="30px"
-          line-height="40px">
+        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
           <?= childName ?>'s party is booked in!
         </mj-text>
       </mj-column>
     </mj-section>
     <mj-section background-color="#ffffff" padding-top="0">
-      <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
+      <mj-column>
+        <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
+      </mj-column>
     </mj-section>
-    <mj-wrapper padding-top="0" padding-bottom="0">
-      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
-        <mj-column width="100%">
-          <mj-text color="#637381" font-size="16px">
-            Hi
-            <?= parentName ?>,
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            We're delighted to confirm
-            <?= childName ?>'s
-            <?= childAge ?>th Birthday Party at Fizz Kidz! We're so excited.
-          </mj-text>
-          <mj-wrapper padding-top='10px' padding-bottom='10px'>
-            <mj-column width="50%">
-              <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
-                padding-bottom="0">
-                Where
-              </mj-text>
-              <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-                <? if (location !== 'mobile') { ?>
-                Fizz Kidz
-                <?= location ?>
-                <br />
-                <? } ?>
-                <?= address ?>
-              </mj-text>
-            </mj-column>
-            <mj-column width="50%">
-              <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
-                padding-bottom="0">
-                When
-              </mj-text>
-              <mj-text color="#637381" font-size="14px" padding-top="0">
-                <?= startDate ?>
-                <br />
-                <?= startTime ?> -
-                <?= endTime ?>
-              </mj-text>
-            </mj-column>
-            <mj-column width="100%">
-              <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
-                padding-bottom="0">
-                Contact
-              </mj-text>
-              <mj-text color="#637381" font-size="14px" padding-top="0">
-              <? if (location === 'balwyn') { ?>
-                  Going forward, your best point of contact is our wonderful Balwyn store manager, Bonnie.
-                  She will oversee the planning and running of <?= childName ?>'s fabulous party!
-                  You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
-                  You can also just reply to this email directly :)
-              <? } else if (location === 'essendon') { ?>
-                  Going forward, your best point of contact is our wonderful Essendon store manager, Bonnie.
-                  She will oversee the planning and running of <?= childName ?>'s fabulous party!
-                  You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
-                  You can also just reply to this email directly :)
-              <? } else if (location === 'malvern') { ?>
-                  Going forward, your best point of contact is our wonderful Malvern store manager, Michaela.
-                  She will oversee the planning and running of <?= childName ?>'s fabulous party!
-                  You can contact Michaela on 0424 498 100 or email her at michaela@fizzkidz.com.au.
-                  You can also just reply to this email directly :)
-              <? } else if (location === 'mobile') { ?>
-                  Going forward, your best point of contact is our wonderful mobile party manager, Bonnie.
-                  She will oversee the planning and running of <?= childName ?>'s fabulous party!
-                  You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
-                  You can also just reply to this email directly :)
-              <? } ?>
-              </mj-text>
-            </mj-column>
-          </mj-wrapper>
-          <mj-text color="#637381" font-size="16px">
-            <b>A week before the party</b>
-            <? if (location === 'balwyn' || location === 'essendon' || location === 'mobile')  { ?>
-              Bonnie
-            <? } else if (location === 'malvern') { ?>
-              Michaela
+    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+      <mj-column width="100%">
+        <mj-text color="#637381" font-size="16px">
+          Hi
+          <?= parentName ?>,
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          We're delighted to confirm
+          <?= childName ?>'s
+          <?= childAge ?>th Birthday Party at Fizz Kidz! We're so excited.
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Where
+        </mj-text>
+        <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+          <? if (location !== 'mobile') { ?>
+          Fizz Kidz
+          <?= location ?>
+          <br />
+          <? } ?>
+          <?= address ?>
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          When
+        </mj-text>
+        <mj-text color="#637381" font-size="14px" padding-top="0">
+          <?= startDate ?>
+          <br />
+          <?= startTime ?> -
+          <?= endTime ?>
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Contact
+        </mj-text>
+        <mj-text color="#637381" font-size="14px" padding-top="0">
+          <? if (location === 'balwyn') { ?>
+          Going forward, your best point of contact is our wonderful Balwyn store manager, Bonnie.
+          She will oversee the planning and running of
+          <?= childName ?>'s fabulous party!
+          You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
+          You can also just reply to this email directly :)
+          <? } else if (location === 'essendon') { ?>
+          Going forward, your best point of contact is our wonderful Essendon store manager, Bonnie.
+          She will oversee the planning and running of
+          <?= childName ?>'s fabulous party!
+          You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
+          You can also just reply to this email directly :)
+          <? } else if (location === 'malvern') { ?>
+          Going forward, your best point of contact is our wonderful Malvern store manager, Michaela.
+          She will oversee the planning and running of
+          <?= childName ?>'s fabulous party!
+          You can contact Michaela on 0424 498 100 or email her at michaela@fizzkidz.com.au.
+          You can also just reply to this email directly :)
+          <? } else if (location === 'mobile') { ?>
+          Going forward, your best point of contact is our wonderful mobile party manager, Bonnie.
+          She will oversee the planning and running of
+          <?= childName ?>'s fabulous party!
+          You can contact Bonnie on 0413 268 795 or email her at bonnie@fizzkidz.com.au.
+          You can also just reply to this email directly :)
+          <? } ?>
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="100%">
+        <mj-text color="#637381" font-size="16px">
+          <b>A week before the party</b>
+          <? if (location === 'balwyn' || location === 'essendon' || location === 'mobile')  { ?>
+          Bonnie
+          <? } else if (location === 'malvern') { ?>
+          Michaela
+          <? } ?>
+          will email you a personalised online party form to fill out.
+          The form will
+          ask for:
+          <ul style="margin-bottom:0px">
+            <li>The approximate number of guests that will be attending</li>
+            <li>The
+              <?= creationCount ?> creations that
+              <?= childName ?> would like to make
+            </li>
+            <li>Some super fun facts about the birthday child themselves
+            </li>
+            <? if (location !== 'mobile') { ?>
+            <li>Which party food you would like to have at
+              <?= childName ?>’s party
+            </li>
             <? } ?>
-            will email you a personalised online party form to fill out.
-            The form will
-            ask for:
-            <ul style="margin-bottom:0px">
-              <li>The approximate number of guests that will be attending</li>
-              <li>The
-                <?= creationCount ?> creations that
-                <?= childName ?> would like to make
-              </li>
-              <li>Some super fun facts about the birthday child themselves
-              </li>
-              <? if (location !== 'mobile') { ?>
-                <li>Which party food you would like to have at
-                  <?= childName ?>’s party
-                </li>
-              <? } ?>
-              <li>Opportunity to add take home Fizz Kidz Activity Party Pack's for your guests. Read the attached FAQ's for more details!</li>
-            </ul>
-          </mj-text>
-          <? if (location !== 'mobile') { ?>
-              <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-                Things to keep in mind
-              </mj-text>
-              <mj-text color="#637381" font-size="16px">
-                <ul style="margin-bottom:0px;margin-top:0px">
-                  <li>
-                    Maximum numbers of kids
-                    <ul>
-                      <li>4 and 5 years old - max 24 kids</li>
-                      <li>6 years plus - max 30 kids</li>
-                    </ul>
-                  </li>
-                  <li>You're welcome to bring your own nut free cake, however please just remember to bring along some paper plates and spoons too!</li>
-                  <li>On the day, please arrive 10 minutes before the party starts, so we have enough time to make sure the venue is perfect for you.</li>
-                </ul>
-              </mj-text>
+            <li>Opportunity to add take home Fizz Kidz Activity Party Pack's for your guests. Read the attached FAQ's
+              for more details!</li>
+          </ul>
+        </mj-text>
+        <? if (location !== 'mobile') { ?>
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Things to keep in mind
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          <ul style="margin-bottom:0px;margin-top:0px">
+            <li>
+              Maximum numbers of kids
+              <ul>
+                <li>4 and 5 years old - max 24 kids</li>
+                <li>6 years plus - max 30 kids</li>
+              </ul>
+            </li>
+            <li>You're welcome to bring your own nut free cake, however please just remember to bring along some paper
+              plates and spoons too!</li>
+            <li>On the day, please arrive 10 minutes before the party starts, so we have enough time to make sure the
+              venue is perfect for you.</li>
+          </ul>
+        </mj-text>
+        <? } ?>
+        <mj-text color="#637381" font-size="16px">
+          Feel free to have a look at <a href="http://www.fizzkidz.com.au/">our website</a> for more
+          information
+          regarding our birthday parties and like our <a href="https://www.instagram.com/fizzkidzz/">Instagram</a> and
+          <a href="https://www.facebook.com/fizzkidz/">Facebook</a> pages to check out more pictures of
+          our creations!
+        </mj-text>
+        <? if (location !== 'mobile') { ?>
+        <mj-text color="#637381" font-size="16px">
+          We have attached a photo of the
+          <? if (location === 'balwyn') { ?>
+          Balwyn
+          <? } else if (location === 'essendon') { ?>
+          Essendon
+          <? } else if (location === 'malvern') { ?>
+          Malvern
           <? } ?>
-          <mj-text color="#637381" font-size="16px">
-            Feel free to have a look at <a href="http://www.fizzkidz.com.au/">our website</a> for more
-            information
-            regarding our birthday parties and like our <a href="https://www.instagram.com/fizzkidzz/">Instagram</a> and
-            <a href="https://www.facebook.com/fizzkidz/">Facebook</a> pages to check out more pictures of
-            our creations!
-          </mj-text>
-          <? if (location !== 'mobile') { ?>
-            <mj-text color="#637381" font-size="16px">
-              We have attached a photo of the
-              <? if (location === 'balwyn') { ?>
-                Balwyn
-              <? } else if (location === 'essendon') { ?>
-                Essendon
-              <? } else if (location === 'malvern') { ?>
-                Malvern
-              <? } ?>
-              Fizz Kidz store as well as a list of frequently asked questions that may help you when party planning!
-            </mj-text>
-          <? } ?>
-          <mj-text color="#637381" font-size="16px">
-            <a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our
-            awesome printable
-            invitations!
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            We can't wait to PARTY with you soon,
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            Lami and the Fizz Kidz team <img src="https://mail.google.com/mail/e/1f31f" alt="🌟" data-goomoji="1f31f" />
-          </mj-text>
-        </mj-column>
-      </mj-section>
-    </mj-wrapper>
+          Fizz Kidz store as well as a list of frequently asked questions that may help you when party planning!
+        </mj-text>
+        <? } ?>
+        <mj-text color="#637381" font-size="16px">
+          <a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our
+          awesome printable
+          invitations!
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          We can't wait to PARTY with you soon,
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          Lami and the Fizz Kidz team <img src="https://mail.google.com/mail/e/1f31f" alt="🌟" data-goomoji="1f31f" />
+        </mj-text>
+      </mj-column>
+    </mj-section>
     <mj-wrapper full-width="full-width">
       <mj-section padding-top="0">
         <mj-group>

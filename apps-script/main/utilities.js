@@ -168,29 +168,30 @@ function getPartyAddress(booking) {
  * @param {string} mjml the raw mjml content
  * @returns mjml as html (string) (https://developers.google.com/apps-script/reference/html/html-template) or null if there is an error
  */
-function createHtmlFromMjmlFile(mjml) {
+function createHtmlFromMjmlFile(mjml, environment) {
 
-  const payload = {
-    mjml: mjml
-  }
+  const prodUrl = "https://australia-southeast1-bookings-prod.cloudfunctions.net"
+  const devUrl  = "https://australia-southeast1-booking-system-6435d.cloudfunctions.net"
+  const baseUrl = environment === 'prod' ? prodUrl : devUrl
+
+  const payload = { mjml: mjml }
 
   const options = {
-    headers: {
-      Authorization: 'Basic ZWI1MDNlODYtNzJhMy00MjdkLTlkYmUtYjU4NWQzMzFhN2Y0OmEwYjMzZjVkLTE3NTktNDM5Ni04NDE2LTQyNDI2NTEzMmI4ZA=='
-    },
     method: 'post',
     contentType: 'application/json',
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
+    muteHttpExceptions: true,
+    payload: JSON.stringify(payload)
   }
-  var response = UrlFetchApp.fetch(`https://api.mjml.io/v1/render`, options)
+
+  var response = UrlFetchApp.fetch(`${baseUrl}/mjml`, options)
   var content = response.getContentText()
   if (response.getResponseCode() !== 200) {
-    console.error(`error using mjml API: ${JSON.parse(content).message}`)
-    return null
+    let errorMessage = `error using mjml API: ${content}`
+    console.error(errorMessage)
+    throw new Error(`error using mjml API: ${errorMessage}`)
   }
   
-  return JSON.parse(content).html
+  return content
 }
 
 /**
