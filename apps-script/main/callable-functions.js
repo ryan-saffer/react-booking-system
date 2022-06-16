@@ -58,39 +58,28 @@ function deleteBooking(booking, environment) {
 
 /**
  * Sends all provided bookings their 'Information about your party' email
- * Email includes a pre-filled Google Forms URL where they select creations etc.
+ * Email includes a pre-filled Paperform where they select creations etc.
  * 
- * @param {Array} bookings array of bookings to send a form to
+ * @param {Booking[]} bookings - array of bookings, however includes id field
+ * @param {string} environment - 'dev' or 'prod'
  */
 function sendOutForms(bookings, environment) {
   console.log(bookings)
   for(var i = 0; i < bookings.length; i++) {
     bookings[i].dateTime = new Date(bookings[i].dateTime)
-    sendOutForm(bookings[i], environment)
-  }
-}
-
-/**
- * 
- * @param {Booking[]} bookings - array of bookings, however includes id field
- */
-function sendOutFormsV2(bookings, environment) {
-  console.log(bookings)
-  for(var i = 0; i < bookings.length; i++) {
-    bookings[i].dateTime = new Date(bookings[i].dateTime)
-    sendOutFormV2(bookings[i], environment)
+    _sendOutForm(bookings[i], environment)
     Utilities.sleep(1000) // used to avoid overloading the MJML API
   }
 }
 
 /**
  * Called when a form is submitted, and a matching booking is succesfully found.
- * Sends confirmation email to parent, along with cake/question notifications to info@fizzkidz.com.au 
+ * Sends confirmation email to parent, along with cake/question notifications
  *
  * @param {object} booking the firestore booking object, with dateTime as a JSDate
  * @param {[string]} additions array of all selected additions
  */
-function onFormSubmitBookingFound(booking, creations, additions) {
+function onFormSubmit(booking, creations, additions) {
   console.log("booking:")
   console.log(booking)
   console.log("creations")
@@ -124,19 +113,6 @@ function onFormSubmitBookingFound(booking, creations, additions) {
 
   console.log("sending confirmation email")
   sendOnFormSubmitConfirmationEmail(booking, creations, additions)
-}
-
-/**
- * Called when a form is submitted, and a matching booking could not be found.
- * Sends a notification email to info@fizzkidz.com.au with details. 
- *
- * @param {[string]} formValues the values from the form that the parent filled in
- */
-function onFormSubmitBookingNotFound(formValues) {
-  console.log('form values:')
-  console.log(formValues)
-  const location = formValues.length === 19 ? formValues[5] : 'Mobile'
-  sendBookingNotFoundEmail(formValues[1], formValues[2], formValues[3], formValues[4], location)
 }
 
 /**

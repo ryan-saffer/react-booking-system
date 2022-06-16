@@ -109,53 +109,6 @@ exports.deleteBooking = functions
     })
 })
 
-exports.sendOutForms = functions
-  .region('australia-southeast1')
-  .pubsub.schedule('30 8 * * 4')
-  .timeZone('Australia/Melbourne')
-  .onRun((context) => {
-    
-    var startDate = DateTime.fromObject({ zone: "Australia/Melbourne", hour: 0, minute: 0, second: 0 }).toJSDate()
-    startDate.setDate(startDate.getDate() + ((1 + 7 - startDate.getDay()) % 7)) // will always get upcoming Tuesday
-    var endDate = new Date(startDate)
-    endDate.setDate(startDate.getDate() + 7)
-
-    console.log("Start date:")
-    console.log(startDate)
-    console.log("End date:")
-    console.log(endDate)
-
-    var bookings = []
-
-    return new Promise((resolve, reject) => {
-      db.collection('bookings')
-      .where('dateTime', '>', startDate)
-      .where('dateTime', '<', endDate)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-          var booking = documentSnapshot.data()
-          booking.dateTime = booking.dateTime.toDate()
-          bookings.push(booking)
-        })
-        console.log('running apps script...')
-        runAppsScript(AppsScript.Functions.SEND_OUT_FORMS, [bookings])
-          .then(() => {
-            console.log('finished apps script')
-            resolve()
-          })
-          .catch(err => {
-            console.log("Error running AppsScript")
-            reject(err)
-          })
-      })
-      .catch(err => {
-        console.log("Error fetching bookings from firestore")
-        reject(err)
-      })
-    })
-  })
-
 exports.sendFeedbackEmails = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 8 * * *')
