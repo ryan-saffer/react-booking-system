@@ -95,15 +95,15 @@ function sendBookingConfirmationEmail(booking, environment) {
  * Sends out a pre-filled party form to the parent
  *
  * @param {object} booking the booking object
+ * @param {string} environment 'prod' or 'dev'
  */
-function sendOutForm(booking, environment) {
-  
+function _sendOutForm(booking, environment) {
   // Determine the start and end times of the party
   var startDate = new Date(booking.dateTime)
   var endDate = getEndDate(startDate, booking.partyLength);
   
   // create a pre-filled form URL
-  var preFilledUrl = getPreFilledFormURL(booking);
+  var preFilledUrl = getPreFilledFormUrl(booking);
   
   // Using the HTML email template, inject the variables and get the content
   var t = HtmlService.createTemplateFromFile('party_form_mjml_template')
@@ -146,56 +146,13 @@ function sendOutForm(booking, environment) {
   );
 }
 
-function sendOutFormV2(booking, environment) {
-  // Determine the start and end times of the party
-  var startDate = new Date(booking.dateTime)
-  var endDate = getEndDate(startDate, booking.partyLength);
-  
-  // create a pre-filled form URL
-  var preFilledUrl = getPreFilledFormUrlV2(booking);
-  
-  // Using the HTML email template, inject the variables and get the content
-  var t = HtmlService.createTemplateFromFile('party_form_mjml_template')
-  if (t === null) {
-    return
-  }
-
-  t.parentName = booking.parentFirstName;
-  t.childName = booking.childName;
-  t.childAge = booking.childAge;
-  t.startDate = buildFormattedStartDate(startDate)
-  t.startTime = Utilities.formatDate(startDate, 'Australia/Sydney', 'hh:mm a');
-  t.endTime = Utilities.formatDate(endDate, 'Australia/Sydney', 'hh:mm a');
-  t.address = getPartyAddress(booking);
-  t.location = booking.location;
-  t.preFilledUrl = preFilledUrl;
-  
-  var mjml = t.evaluate().getContent();
-  var body = createHtmlFromMjmlFile(mjml, environment)
-  var subject = `${booking.childName}'s party is coming up!`
-
-  // determine the from email address
-  var fromAddress = determineFromEmailAddress(booking.location);
-
-  let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
-  
-  // Send the confirmation email
-  GmailApp.sendEmail(
-    booking.parentEmail,
-    subject,
-    "",
-    {
-      from: fromAddress,
-      htmlBody: body,
-      name: "Fizz Kidz",
-      attachments: [
-        faqs.getBlob()
-      ]
-    }
-  );
-}
-
-function getPreFilledFormUrlV2(booking) {
+/**
+ * Creates a pre-filled URL for the party form
+ *
+ * @param {object} booking the booking object
+ * @return {string} URL the url of the pre-filled form
+ */
+function getPreFilledFormUrl(booking) {
   let url = `https://fizzkidz.paperform.co/?location=${booking.location}&id=${booking.id}`
 
   let encodedParams = {
@@ -210,101 +167,6 @@ function getPreFilledFormUrlV2(booking) {
   })
 
   return url
-}
-
-/**
- * Creates a pre-filled URL for the party form
- *
- * @param {object} booking the booking object
- * @return {string} URL the url of the pre-filled form
- */
-function getPreFilledFormURL(booking) {
-
-  // form IDs
-  var inStoreFormId = "1QSnxLYZG-wI3nO83WnKBkW2JNiIZx_cLyiOW-iXFC5U";
-  var mobileFormId = "1aUNrC_IlDU6aeMna3VaG3eBXjJ_X8qMeSV1vaQtKjU8";
-  
-  // open the correct form, create a response and get the items
-  var formID = (booking.location !== "mobile") ? inStoreFormId : mobileFormId;
-  var form = FormApp.openById(formID);
-  var formResponse = form.createResponse();
-  var formItems = form.getItems();
-  
-  // first question - date and time
-  var dateItem = formItems[1].asDateTimeItem();
-  
-  // due to strange time formatting behaviour, update the time to (time + 10) or (time + 11) depending on daylight savings
-  var correctedPartyTime = 0;
-  switch (booking.dateTime.getTimezoneOffset()) {
-    case -600: // GMT + 10
-      correctedPartyTime = booking.dateTime.getHours() + 10;
-      break;
-    case -660: // GMT + 11
-      correctedPartyTime = booking.dateTime.getHours() + 11;
-      break;
-    default:
-        break;
-  }
-  booking.dateTime = new Date(
-    booking.dateTime.getFullYear(),
-    booking.dateTime.getMonth(),
-    booking.dateTime.getDate(),
-    correctedPartyTime,
-    booking.dateTime.getMinutes()
-  );
-  var response = dateItem.createResponse(booking.dateTime);
-  formResponse.withItemResponse(response);
-  
-  // second question - parents name
-  var parentNameItem = formItems[2].asTextItem();
-  response = parentNameItem.createResponse(`${booking.parentFirstName} ${booking.parentLastName}`);
-  formResponse.withItemResponse(response);
-  
-  // third question - childs name
-  var childNameItem = formItems[3].asTextItem();
-  response = childNameItem.createResponse(booking.childName);
-  formResponse.withItemResponse(response);
-  
-  // fourth question - childs age
-  var childAgeItem = formItems[4].asTextItem();
-  response = childAgeItem.createResponse(booking.childAge);
-  formResponse.withItemResponse(response);
-
-  // fifth question - location - only if in-store
-  if (booking.location !== "mobile") {
-    var locationItem = formItems[5].asListItem();
-    response = locationItem.createResponse(capitalise(booking.location));
-    formResponse.withItemResponse(response);
-  }
-    
-  return formResponse.toPrefilledUrl();
-}
-
-/**
- * Sends a notification email to info@fizzkidz.com.au that a form was filled in,
- * but the booking could not be found in firestore 
- *
- * @param {string} dateTime the date and time of party
- * @param {string} parentName the parents name
- * @param {string} childName the childs name
- * @param {string} childAge the childs age
- * @param {string} location location (balwyyn, essendon, malvern, mobile)
- */
-function sendBookingNotFoundEmail(dateTime, parentName, childName, childAge, location) {
-  
-  // Using the HTML email template, inject the variables and get the content
-  var t = HtmlService.createTemplateFromFile('error_finding_booking_template');
-  t.parentName = parentName;
-  t.childName = childName;
-  t.childAge = childAge;
-  t.dateTime = dateTime;
-  t.location = location;
-  
-  var body = t.evaluate().getContent();
-  var subject = "ERROR: Booking not found!";
-  
-  // Send the confirmation email
-  GmailApp.sendEmail('info@fizzkidz.com.au', subject, "", {htmlBody: body, name : "Fizz Kidz"});
 }
 
 /**

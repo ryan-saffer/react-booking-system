@@ -4,11 +4,11 @@ import { DateTime } from 'luxon'
 import { runAppsScript } from '.'
 import { db } from '../index'
 
-export const sendOutFormsV2 = functions
+export const sendOutForms = functions
   .region('australia-southeast1')
   .pubsub.schedule('30 8 * * 4')
   .timeZone('Australia/Melbourne')
-  .onRun((context) => {
+  .onRun((_context) => {
     
     var startDate = DateTime.fromObject({ hour: 0, minute: 0, second: 0 }, { zone: "Australia/Melbourne" }).toJSDate()
     startDate.setDate(startDate.getDate() + ((1 + 7 - startDate.getDay()) % 7)) // will always get upcoming Tuesday
@@ -35,7 +35,7 @@ export const sendOutFormsV2 = functions
           bookings.push(booking)
         })
         console.log('running apps script...')
-        runAppsScript(AppsScript.Functions.SEND_OUT_FORMS_V2, [bookings])
+        runAppsScript(AppsScript.Functions.SEND_OUT_FORMS, [bookings])
           .then(() => {
             console.log('finished apps script')
             resolve()
