@@ -22,7 +22,7 @@ function createBooking(id, booking, environment) {
   booking = JSON.parse(booking)
   var eventId = createEvent(id, booking, environment)
   if (booking.sendConfirmationEmail) {
-    sendBookingConfirmationEmail(booking)
+    sendBookingConfirmationEmail(booking, environment)
   }
   return eventId
 }
@@ -62,11 +62,11 @@ function deleteBooking(booking, environment) {
  * 
  * @param {Array} bookings array of bookings to send a form to
  */
-function sendOutForms(bookings) {
+function sendOutForms(bookings, environment) {
   console.log(bookings)
   for(var i = 0; i < bookings.length; i++) {
     bookings[i].dateTime = new Date(bookings[i].dateTime)
-    sendOutForm(bookings[i])
+    sendOutForm(bookings[i], environment)
   }
 }
 
@@ -74,11 +74,11 @@ function sendOutForms(bookings) {
  * 
  * @param {Booking[]} bookings - array of bookings, however includes id field
  */
-function sendOutFormsV2(bookings) {
+function sendOutFormsV2(bookings, environment) {
   console.log(bookings)
   for(var i = 0; i < bookings.length; i++) {
     bookings[i].dateTime = new Date(bookings[i].dateTime)
-    sendOutFormV2(bookings[i])
+    sendOutFormV2(bookings[i], environment)
     Utilities.sleep(1000) // used to avoid overloading the MJML API
   }
 }
@@ -213,8 +213,8 @@ function backupScienceClub(appointmentsMap) {
  * 
  * @param {object} appointment custom appointment object, not an Acuity appointment object
  */
-function requestTermEnrolmentFromParent(appointment) {
-  sendTermContinuationEmail(appointment)
+function requestTermEnrolmentFromParent(appointment, environment) {
+  sendTermContinuationEmail(appointment, environment)
 }
 
 /**
@@ -227,6 +227,6 @@ function requestTermEnrolmentFromParent(appointment) {
  *  - className
  *  - childName
  */
-function sendUnenrolmentConfirmation(appointment) {
-  _sendUnenrolmentConfirmation(appointment)
+function sendUnenrolmentConfirmation(appointment, environment) {
+  _sendUnenrolmentConfirmation(appointment, environment)
 }

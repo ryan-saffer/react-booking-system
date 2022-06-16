@@ -4,7 +4,7 @@
 *
 * @param {object} booking the booking object
 */
-function sendBookingConfirmationEmail(booking) {
+function sendBookingConfirmationEmail(booking, environment) {
   
   // Determine the start and end times of the party
   var startDate = new Date(booking.dateTime)
@@ -53,7 +53,7 @@ function sendBookingConfirmationEmail(booking) {
   t.creationCount = creationCount;
   
   var mjml = t.evaluate().getContent();
-  var body = createHtmlFromMjmlFile(mjml);
+  var body = createHtmlFromMjmlFile(mjml, environment);
   var subject = "Party Booking Confirmation";
 
   let faqs = DriveApp.getFileById('1MRGm2RvtoskEFjfnQ1UJuxARvngl4ghw')
@@ -96,7 +96,7 @@ function sendBookingConfirmationEmail(booking) {
  *
  * @param {object} booking the booking object
  */
-function sendOutForm(booking) {
+function sendOutForm(booking, environment) {
   
   // Determine the start and end times of the party
   var startDate = new Date(booking.dateTime)
@@ -122,7 +122,7 @@ function sendOutForm(booking) {
   t.preFilledUrl = preFilledUrl;
   
   var mjml = t.evaluate().getContent();
-  var body = createHtmlFromMjmlFile(mjml)
+  var body = createHtmlFromMjmlFile(mjml, environment)
   var subject = `${booking.childName}'s party is coming up!`
 
   // determine the from email address
@@ -146,7 +146,7 @@ function sendOutForm(booking) {
   );
 }
 
-function sendOutFormV2(booking) {
+function sendOutFormV2(booking, environment) {
   // Determine the start and end times of the party
   var startDate = new Date(booking.dateTime)
   var endDate = getEndDate(startDate, booking.partyLength);
@@ -171,7 +171,7 @@ function sendOutFormV2(booking) {
   t.preFilledUrl = preFilledUrl;
   
   var mjml = t.evaluate().getContent();
-  var body = createHtmlFromMjmlFile(mjml)
+  var body = createHtmlFromMjmlFile(mjml, environment)
   var subject = `${booking.childName}'s party is coming up!`
 
   // determine the from email address
@@ -469,7 +469,7 @@ function sendFeedbackEmail(booking) {
  * 
  * @param {object} appointment a custom appointment object, not an Acuity appointment
  */
-function sendTermContinuationEmail(appointment) {
+function sendTermContinuationEmail(appointment, environment) {
 
   var t = HtmlService.createTemplateFromFile('science_club_term_enrolment_email')
   t.parentName = appointment.parentName
@@ -480,7 +480,7 @@ function sendTermContinuationEmail(appointment) {
   t.termFee = appointment.price
 
   const mjml = t.evaluate().getContent()
-  const body = createHtmlFromMjmlFile(mjml)
+  const body = createHtmlFromMjmlFile(mjml, environment)
   const subject = "Thanks for coming to your free trial!"
   const fromAddress = 'info@fizzkidz.com.au'
 
@@ -506,7 +506,7 @@ function sendTermContinuationEmail(appointment) {
  *  - className
  *  - childName
  */
-function _sendUnenrolmentConfirmation(appointment) {
+function _sendUnenrolmentConfirmation(appointment, environment) {
 
   var t = HtmlService.createTemplateFromFile('science_club_unenrolment_confirmation_email')
   t.parentName = appointment.parentName
@@ -514,7 +514,7 @@ function _sendUnenrolmentConfirmation(appointment) {
   t.className = appointment.className
 
   const mjml = t.evaluate().getContent()
-  const body = createHtmlFromMjmlFile(mjml)
+  const body = createHtmlFromMjmlFile(mjml, environment)
   const subject = "Unenrolment Confirmation"
   const fromAddress = 'info@fizzkidz.com.au'
 

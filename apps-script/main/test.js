@@ -1,28 +1,11 @@
 function test() {
 
-  var rawHtml = HtmlService.createTemplateFromFile('party_form_mjml_template').getRawContent()
-
-  const payload = {
-    mjml: rawHtml
-  }
-
-  const options = {
-    headers: {
-      Authorization: 'Basic ZWI1MDNlODYtNzJhMy00MjdkLTlkYmUtYjU4NWQzMzFhN2Y0OmEwYjMzZjVkLTE3NTktNDM5Ni04NDE2LTQyNDI2NTEzMmI4ZA=='
-    },
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  }
-  var response = UrlFetchApp.fetch(`https://api.mjml.io/v1/render`, options)
-  var content = response.getContentText()
-  if (response.getResponseCode() !== 200) {
-    console.error(`error using mjml API: ${JSON.parse(content).message}`)
+  var t = HtmlService.createTemplateFromFile('booking-confirmation-mjml-template')
+  if (t === null) {
     return
   }
   
-  var t = HtmlService.createTemplate(JSON.parse(content).html);
+  // Using the HTML email template, inject the variables and get the content
   t.parentName = "Talia";
   t.childName = "Lucy";
   t.childAge = "8";
@@ -31,10 +14,16 @@ function test() {
   t.endTime = "4:00 pm"
   t.address = "20 Glenferrie Rd, Malvern, 3144";
   t.location = "Malvern"
-  // t.creationCount = "3";
-  t.preFilledUrl = "https://www.google.com"
+  t.creationCount = "3";
+  // t.preFilledUrl = "https://www.google.com"
   
-  var body = t.evaluate().getContent();
+  var mjml = t.evaluate().getContent();
+  var body = createHtmlFromMjmlFile(mjml, 'dev');
+  
+  console.log('recieved result:')
+  console.log(body)
+  
+  // var body = t.evaluate().getContent();
   var subject = "Lucy's party is coming up!";
   
   // determine which account to send from

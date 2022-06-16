@@ -21,14 +21,15 @@
         <mj-section background-color="#4bc5d9" padding-bottom='0px'>
             <mj-column width="100%">
                 <mj-spacer height="30px" />
-                <mj-text font-family="Trebuchet MS" weight="bold" color="white" align="center" font-size="30px"
-                    line-height="40px">
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
                     Welcome to the science adventure!
                 </mj-text>
             </mj-column>
         </mj-section>
         <mj-section background-color="#ffffff" padding-top="0">
-            <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
         </mj-section>
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
@@ -38,17 +39,23 @@
                         <?= parentName ?>,
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        We had such a fantastic time during the first week of Science Club, and we hope that <?= childName ?> did too!
+                        We had such a fantastic time during the first week of Science Club, and we hope that
+                        <?= childName ?> did too!
                         Just to confirm, below are the details of the class:
                     </mj-text>
                     <mj-text align="center" color="#212b35" font-size="12px" text-transform="uppercase"
-                        font-weight="bold" padding-bottom="20">
+                        font-weight="bold" padding-bottom="20px">
                         <?= className ?>
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        We would love for <?= childName ?> to join us for the term program! Please let us know if <?= childName ?> would like to continue, in which case we will see <?= childName ?> next week!<br/><br/>
-                        The fee for the term is $<?= termFee ?>.<br/><br/>
-                        Otherwise, if you would prefer not to continue, we will unenroll <?= childName ?> from the class.
+                        We would love for
+                        <?= childName ?> to join us for the term program! Please let us know if
+                        <?= childName ?> would like to continue, in which case we will see
+                        <?= childName ?> next week!<br /><br />
+                        The fee for the term is $
+                        <?= termFee ?>.<br /><br />
+                        Otherwise, if you would prefer not to continue, we will unenroll
+                        <?= childName ?> from the class.
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
                         Please let us know by clicking below.
