@@ -18,6 +18,7 @@ import * as devConfig from '../credentials/dev_service_account_credentials.json'
 import * as bookings from './bookings'
 import * as formSubmission from './bookings/onFormSubmit'
 import * as forms from './bookings/sendOutForms'
+import * as singleForm from './bookings/sendOutSingleForm'
 import * as acuity from './acuity/client/v1/client.js'
 import * as acuityV2 from './acuity/client/v2/client'
 import * as acuityStripeIntegration from './acuity/stripe'
@@ -30,6 +31,7 @@ export const createBooking = bookings.createBooking
 export const updateBooking = bookings.updateBooking
 export const deleteBooking = bookings.deleteBooking
 export const sendOutForms = forms.sendOutForms
+export const sendOutSingleForm = singleForm.sendOutSingleForm
 export const sendFeedbackEmails = bookings.sendFeedbackEmails
 export const onFormSubmit = formSubmission.onFormSubmit
 
