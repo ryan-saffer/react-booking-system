@@ -14,16 +14,7 @@ const Constants = {
 
 import * as Utilities from './utilities'
 
-export type { 
-    Appointment,
-    MergedAppointment,
-    Label,
-    AppointmentType,
-    Form,
-    FormValue,
-    Error,
-    Payment
-} from './types'
+export * from './types'
 
 export {
     Constants,

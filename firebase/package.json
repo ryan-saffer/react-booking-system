@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@date-io/date-fns": "^1.3.11",
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
@@ -11,13 +12,14 @@
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "antd": "^4.21.4",
     "autoprefixer": "9.8.0",
     "date-fns": "^2.14.0",
     "dateformat": "^3.0.3",
     "firebase": "^7.15.3",
     "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
-    "luxon": "^2.1.1",
+    "luxon": "^2.4.0",
     "moment-timezone": "^0.5.28",
     "query-string": "^6.8.3",
     "react": "^16.10.2",
@@ -54,6 +56,7 @@
   },
   "devDependencies": {
     "@types/dateformat": "^3.0.1",
+    "@types/luxon": "^2.3.2",
     "@types/react-router-dom": "^5.1.7",
     "@types/recompose": "^0.30.7"
   }

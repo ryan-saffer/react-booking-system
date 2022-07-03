@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import * as functions from 'firebase-functions'
 import { Acuity, AppsScript } from 'fizz-kidz'
 import { runAppsScript } from '../../../bookings'
@@ -27,6 +28,10 @@ export const client = functions
             case 'updateLabel':
                 input = data.input as Acuity.Client.UpdateLabelParams
                 return updateLabel(input)
+            case 'classAvailability':
+                input = data.input as Acuity.Client.ClassAvailabilityParams
+                return getClassAvailability(input)
+
         }
     })
 
@@ -162,5 +167,24 @@ function updateLabel(data: Acuity.Client.UpdateLabelParams) {
 
             resolve(appointment)
           })
+    })
+}
+
+async function getClassAvailability({ appointmentTypeId }: Acuity.Client.ClassAvailabilityParams) {
+
+    console.log(appointmentTypeId)
+    const date = encodeURIComponent(DateTime.now().toISO())
+    console.log(date)
+
+    return new Promise((resolve, reject) => {
+        acuity.request(`/availability/classes?appointmentTypeID=${appointmentTypeId}&minDate=${date}&includeUnavailable=true`, (err: any, _acuityResult: any, classes: Acuity.Class | Acuity.Error) => {
+            
+            if (hasError(err, classes)) {
+                reject(err ?? classes)
+                return
+            }
+
+            resolve(classes)
+        })
     })
 }

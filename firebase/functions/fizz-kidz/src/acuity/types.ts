@@ -53,3 +53,10 @@ export interface Error {
 export interface Payment {
     transactionID: string
 }
+
+export type Class = {
+    id: number
+    calendar: string
+    slotsAvailable: number
+    time: string
+}
