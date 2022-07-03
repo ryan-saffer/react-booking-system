@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, FormListFieldData, Input } from 'antd'
+import { Form, FormListFieldData, Input, Space } from 'antd'
 import { MinusCircleOutlined } from '@ant-design/icons'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 const ChildForm: React.FC<Props> = ({ field, remove }) => {
 
     return (
-        <>
+        <Space align='baseline'>
             <Form.Item
                 {...field}
                 name={[field.name, 'childName']}
@@ -19,7 +19,7 @@ const ChildForm: React.FC<Props> = ({ field, remove }) => {
                 <Input placeholder="Child name" />
             </Form.Item>
             <MinusCircleOutlined onClick={() => remove(field.name)} />
-        </>
+        </Space>
     )
 }
 

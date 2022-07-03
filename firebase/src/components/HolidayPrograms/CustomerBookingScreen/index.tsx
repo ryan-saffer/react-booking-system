@@ -1,13 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.css'
 import Step1 from './Step1'
-import { Form, Button, Steps } from 'antd'
+import { Form, Button, Steps, Divider, Row } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import Step2 from './Step2'
 import Step3 from './Step3'
+import { makeStyles } from '@material-ui/core'
+import * as Logo from '../../../drawables/fizz-logo.png'
 const { Step } = Steps
 
 
@@ -16,6 +18,8 @@ const CustomerBookingScreen = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [form] = Form.useForm()
+
+    const styles = useStyles()
 
     const [loading, setLoading] = useState(true)
     const [selectedStore, setSelectedStore] = useState('')
@@ -79,7 +83,7 @@ const CustomerBookingScreen = () => {
         }
 
         return (
-            <Form form={form} initialValues={{ prefix: '61' }}>
+            <Form form={form} initialValues={{ prefix: '61' }} layout="vertical">
                 {renderStep()}
             </Form>
         )
@@ -87,13 +91,15 @@ const CustomerBookingScreen = () => {
 
     const renderBackButton = () => {
         if (step > 1) {
-            return <Button onClick={() => setStep(step - 1)}>Go back</Button>
+            return <Button type="primary" block onClick={() => setStep(step - 1)}>Go back</Button>
         }
     }
 
     const renderForwardButton = () => {
         if (step < 3) {
             return <Button
+                type="primary"
+                block
                 disabled={selectedClasses.length === 0}
                 onClick={async () => {
                     await form.validateFields()
@@ -105,17 +111,44 @@ const CustomerBookingScreen = () => {
 
     return (
         <>
-            <Steps current={step - 1}>
-                <Step title="Select classes" description="Description" />
-                <Step title="Your informaton" description="Description" />
-                <Step title="Payment" description="Description" />
-            </Steps>
-            {renderForm()}
-            <div>
-                {renderBackButton()}
-                {renderForwardButton()}
+            <div className={styles.logoWrapper}>
+                <img className={styles.logo} src={Logo.default} />
             </div>
+            <Divider>Holiday Program Booking Form</Divider>
+            <Row justify='center'>
+                <div className={styles.form}>
+                    <Steps current={step - 1} style={{ marginBottom: 24 }}>
+                        <Step title="Select classes" />
+                        <Step title="Your informaton" />
+                        <Step title="Payment" />
+                    </Steps>
+                    {renderForm()}
+                    <div>
+                        {renderBackButton()}
+                        {renderForwardButton()}
+                    </div>
+                </div>
+            </Row>
         </>
     )
 }
+
+const useStyles = makeStyles({
+    logoWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    logo: {
+        marginTop: 10,
+        maxWidth: 200
+    },
+    form: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '100%',
+        maxWidth: 600
+    }
+})
 export default CustomerBookingScreen
