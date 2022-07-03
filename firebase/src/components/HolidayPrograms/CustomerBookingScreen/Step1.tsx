@@ -26,13 +26,15 @@ const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onCl
 
     return (
         <>
-            <Select value={selectedStore} onChange={store => setSelectedStore(store)}>
-                {Object.values(Locations).map(location => {
-                    if (location !== Locations.MOBILE) {
-                        return <Option value={location} key={location}>{capitalise(location)}</Option>
-                    }
-                })}
-            </Select>
+            <Form.Item name="store" label="Which store do you want to book for?">
+                <Select value={selectedStore} onChange={store => setSelectedStore(store)}>
+                    {Object.values(Locations).map(location => {
+                        if (location !== Locations.MOBILE) {
+                            return <Option value={location} key={location}>{capitalise(location)}</Option>
+                        }
+                    })}
+                </Select>
+            </Form.Item>
             {filteredClasses?.map(klass => {
                 let name = `${klass.id}-checkbox`
                 return (
