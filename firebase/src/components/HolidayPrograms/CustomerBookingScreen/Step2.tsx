@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Select, Button } from 'antd'
+import { Form, Input, Select, Button, Divider } from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
 import ChildForm from './ChildForm';
 const { Option } = Select
@@ -20,6 +20,7 @@ const Step2: React.FC<Props> = () => {
 
     return (
         <>
+            <Divider>Parent details</Divider>
             <Form.Item
                 label="Parent First Name"
                 name="parentFirstName"
@@ -52,7 +53,10 @@ const Step2: React.FC<Props> = () => {
                 {(fields, { add, remove }) => (
                     <>
                         {fields.map(field => (
-                            <ChildForm key={field.key} field={field} remove={remove} />
+                            <>
+                                <Divider>Child #{field.key + 1}</Divider>
+                                <ChildForm key={field.key} field={field} remove={remove} />
+                            </>
                         ))}
                         <Form.Item>
                             <Button type="dashed" size="large" onClick={() => add()} block icon={<PlusOutlined />}>
