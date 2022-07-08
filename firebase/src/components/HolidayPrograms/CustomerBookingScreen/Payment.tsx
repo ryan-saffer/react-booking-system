@@ -1,13 +1,5 @@
 import React, { useContext, useState } from 'react'
-import {
-    Button,
-    Checkbox,
-    Form as AntForm,
-    FormInstance,
-    Modal,
-    Spin,
-    Typography,
-} from 'antd'
+import { Button, Checkbox, FormInstance, Modal, Spin, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity } from 'fizz-kidz'
 import { Form } from '.'
@@ -103,18 +95,18 @@ const Payment: React.FC<Props> = ({ form, selectedClasses }) => {
         <>
             <PaymentElement />
             <div style={{ display: 'flex', marginTop: 16 }}>
-            <Checkbox
-                checked={termsChecked}
-                onChange={(e) => {
-                    setTermsChecked(e.target.checked)
-                    setShowTermsWarning(false)
-                }}
-            >
-                I have read and agreed to the{' '}
-                <Typography.Link onClick={() => setShowTermsModal(true)}>
-                    Terms and Conditions
-                </Typography.Link>
-            </Checkbox>
+                <Checkbox
+                    checked={termsChecked}
+                    onChange={(e) => {
+                        setTermsChecked(e.target.checked)
+                        setShowTermsWarning(false)
+                    }}
+                >
+                    I have read and agreed to the{' '}
+                    <Typography.Link onClick={() => setShowTermsModal(true)}>
+                        Terms and Conditions
+                    </Typography.Link>
+                </Checkbox>
             </div>
             {showTermsWarning && (
                 <Typography.Text type="danger">
@@ -123,7 +115,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses }) => {
             )}
             <Button
                 block
-                type={submitting ? "default" : "primary"}
+                type={submitting ? 'default' : 'primary'}
                 size="large"
                 onClick={handleSubmit}
                 style={{ marginBottom: 12, marginTop: 16 }}
