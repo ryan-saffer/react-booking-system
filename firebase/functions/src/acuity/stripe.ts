@@ -394,6 +394,7 @@ export const createPaymentIntent = functions
       amount: data.amount,
       currency: 'aud',
       payment_method_types: ['card'],
+      description: data.description
     });
 
     if (paymentIntent.client_secret) {

@@ -103,7 +103,6 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
             </Form.Item>
             <Form.List name="children">
                 {(fields, { add, remove }) => {
-                    console.log(fields)
                     return (
                     <>
                         {fields.map((field, index) => (

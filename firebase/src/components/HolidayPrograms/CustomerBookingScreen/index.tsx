@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
 import Step1 from './Step1'
-import { Form, Button, Steps, Divider, Row, Modal } from 'antd'
+import { Form, Button, Steps, Divider, Row, Modal, Spin } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
@@ -12,9 +12,24 @@ import { makeStyles } from '@material-ui/core'
 import * as Logo from '../../../drawables/fizz-logo.png'
 const { Step } = Steps
 
+export type Form = {
+    store: string
+    parentFirstName: string
+    parentLastName: string
+    children: {
+        childName: string
+        childAge: string
+        hasAllergies: boolean
+        allergies: string
+    }[]
+}
+
+export const PROGRAM_PRICE = 45
+
 const CustomerBookingScreen = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
+    const [formValues, setFormValues] = useState({})
     const [form] = Form.useForm()
 
     const styles = useStyles()
@@ -51,10 +66,6 @@ const CustomerBookingScreen = () => {
         fetchAvailableSlots()
     }, [])
 
-    useEffect(() => {
-        console.log(selectedClasses)
-    }, [selectedClasses])
-
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         const selectedClass = classes.filter(
             (it) => it.id === e.target.value
@@ -78,7 +89,6 @@ const CustomerBookingScreen = () => {
             case 1:
                 return (
                     <Step1
-                        form={form}
                         classes={classes}
                         selectedStore={selectedStore}
                         setSelectedStore={setSelectedStore}
@@ -88,19 +98,26 @@ const CustomerBookingScreen = () => {
             case 2:
                 return <Step2 selectedClasses={selectedClasses} />
             case 3:
-                return <Step3 form={form} />
+                return (
+                    <Step3
+                        form={formValues as Form}
+                        formInstance={form}
+                        selectedClasses={selectedClasses}
+                    />
+                )
         }
     }
 
     const renderForm = () => {
         if (loading) {
-            return <div>Loading...</div>
+            return <Spin style={{ marginBottom: 24 }} />
         }
 
         return (
             <Form
                 form={form}
                 initialValues={{ prefix: '61' }}
+                onValuesChange={(_, values) => setFormValues(values)}
                 layout="vertical"
             >
                 {renderStep()}
@@ -111,7 +128,12 @@ const CustomerBookingScreen = () => {
     const renderBackButton = () => {
         if (step > 1) {
             return (
-                <Button block type="default" onClick={() => setStep(step - 1)}>
+                <Button
+                    block
+                    type="default"
+                    size="large"
+                    onClick={() => setStep(step - 1)}
+                >
                     Go back
                 </Button>
             )
@@ -124,6 +146,7 @@ const CustomerBookingScreen = () => {
                 <Button
                     block
                     type="primary"
+                    size="large"
                     style={{ marginBottom: 12 }}
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {

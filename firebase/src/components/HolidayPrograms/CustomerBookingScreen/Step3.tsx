@@ -1,20 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, FormInstance } from 'antd'
-import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Payment from './Payment'
+import BookingSummary from './BookingSummary'
+import { Acuity } from 'fizz-kidz'
+import { Form, PROGRAM_PRICE } from '.'
+import { FormInstance, Spin } from 'antd'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe('pk_test_zVaqwCZ8oI0LXs2CfbGFkZWn')
 
 type Props = {
-    form: FormInstance
+    form: Form
+    formInstance: FormInstance
+    selectedClasses: Acuity.Class[]
 }
 
-const Step3: React.FC<Props> = ({ form }) => {
+const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses }) => {
     const firebase = useContext(FirebaseContext) as Firebase
     const [clientSecret, setClientSecret] = useState('')
 
@@ -23,6 +28,8 @@ const Step3: React.FC<Props> = ({ form }) => {
         clientSecret: clientSecret,
     }
 
+    const totalPrice = selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
+
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             let result = await callFirebaseFunction(
@@ -30,24 +37,29 @@ const Step3: React.FC<Props> = ({ form }) => {
                 firebase
             )({
                 amount: amount,
+                description: `${form.store} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
             })
             console.log(result)
             setClientSecret(result.data)
         }
-        console.log(form.getFieldValue('phone'))
-        createPaymentIntent(100)
+        createPaymentIntent(totalPrice)
     }, [])
 
-    
-
     if (clientSecret === '') {
-        return <div>Loading...</div>
+        return <Spin style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }} />
     }
 
     return (
-        <Elements stripe={stripePromise} options={options}>
-            <Payment />
-        </Elements>
+        <>
+            <BookingSummary
+                form={form}
+                selectedClasses={selectedClasses}
+                total={totalPrice}
+            />
+            <Elements stripe={stripePromise} options={options}>
+                <Payment form={form} formInstance={formInstance} />
+            </Elements>
+        </>
     )
 }
 

@@ -1,13 +1,14 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
-import {
-    CardElement,
-    PaymentElement,
-    useElements,
-    useStripe,
-} from '@stripe/react-stripe-js'
+import { Button, FormInstance } from 'antd'
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Form } from '.'
 
-const Payment = () => {
+type Props = {
+    form: Form
+    formInstance: FormInstance
+}
+
+const Payment: React.FC<Props> = () => {
     const stripe = useStripe()
     const elements = useElements()
 
@@ -22,7 +23,7 @@ const Payment = () => {
             //`Elements` instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: 'https://example.com/order/123/complete'
+                return_url: 'https://example.com/order/123/complete',
             },
         })
 
@@ -39,7 +40,15 @@ const Payment = () => {
     return (
         <>
             <PaymentElement />
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button
+                block
+                type="primary"
+                size='large'
+                onClick={handleSubmit}
+                style={{ marginBottom: 12, marginTop: 16 }}
+            >
+                <strong>Confirm and pay</strong>
+            </Button>
         </>
     )
 }
