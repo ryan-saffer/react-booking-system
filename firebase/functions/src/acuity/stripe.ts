@@ -7,7 +7,7 @@ import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
   apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
 })
-import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from 'fizz-kidz'
+import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams, CreatePaymentIntentParams } from 'fizz-kidz'
 import { hasError } from './shared'
 
 const acuity = AcuitySdk.basic({
@@ -385,3 +385,20 @@ function emailInvoice(invoice: Stripe.Invoice, resolve: SendInvoiceResolve, reje
       return
     })
 }
+
+export const createPaymentIntent = functions
+  .region('australia-southeast1')
+  .https.onCall(async (data: CreatePaymentIntentParams, _context: functions.https.CallableContext): Promise<string> => {
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: data.amount,
+      currency: 'aud',
+      payment_method_types: ['card'],
+    });
+
+    if (paymentIntent.client_secret) {
+      return paymentIntent.client_secret
+    } else {
+      throw new Error("payment intent failed to create")
+    }
+})
