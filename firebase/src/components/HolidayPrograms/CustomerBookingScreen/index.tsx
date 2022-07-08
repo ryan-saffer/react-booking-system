@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import './AntD.css'
+import './AntD.less'
 import Step1 from './Step1'
 import { Form, Button, Steps, Divider, Row } from 'antd'
 import { Acuity } from 'fizz-kidz'
@@ -22,7 +22,7 @@ const CustomerBookingScreen = () => {
     const [loading, setLoading] = useState(true)
     const [selectedStore, setSelectedStore] = useState('')
     const [classes, setClasses] = useState<Acuity.Class[]>([])
-    const [selectedClasses, setSelectedClasses] = useState<number[]>([])
+    const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
     const [step, setStep] = useState(1)
 
     useEffect(() => {
@@ -56,13 +56,15 @@ const CustomerBookingScreen = () => {
 
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         console.log(e.target.value)
+        const selectedClass = classes.filter(it => it.id === e.target.value)[0]
+        const classAlreadySelected = selectedClasses.filter(it => it.id === e.target.value).length === 1
         if (e.target.checked) {
-            if (selectedClasses.indexOf(e.target.value) === -1) {
-                setSelectedClasses([...selectedClasses, e.target.value])
+            if (!classAlreadySelected) {
+                setSelectedClasses([...selectedClasses, selectedClass])
             }
         } else {
             setSelectedClasses(
-                selectedClasses.filter((it) => it !== e.target.value)
+                selectedClasses.filter(it => it.id !== e.target.value)
             )
         }
     }
@@ -80,7 +82,7 @@ const CustomerBookingScreen = () => {
                     />
                 )
             case 2:
-                return <Step2 />
+                return <Step2 selectedClasses={selectedClasses} />
             case 3:
                 return <Step3 form={form} />
         }
@@ -118,6 +120,7 @@ const CustomerBookingScreen = () => {
                 <Button
                     block
                     type="primary"
+                    style={{ marginBottom: 12 }}
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         await form.validateFields()
@@ -178,6 +181,7 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         width: '80%',
         maxWidth: 500,
+        marginBottom: 36
     },
 })
 export default CustomerBookingScreen

@@ -1,25 +1,51 @@
-import React from 'react'
-import { Form, FormListFieldData, Input, Space } from 'antd'
+import React, { useState } from 'react'
+import { Form, Checkbox, Input } from 'antd'
 import { MinusCircleOutlined } from '@ant-design/icons'
+const { TextArea } = Input
 
 type Props = {
-    field: FormListFieldData
+    childNumber: number
     remove: (index: number | number[]) => void
 }
 
-const ChildForm: React.FC<Props> = ({ field, remove }) => {
+const ChildForm: React.FC<Props> = ({ childNumber, remove }) => {
+
+    const [hasAllergies, setHasAllergies] = useState(false)
 
     return (
-        <Space align='baseline'>
+        // <Space align='baseline' style={{ width: '100%'}}>
+        <>
             <Form.Item
-                {...field}
-                name={[field.name, 'childName']}
-                rules={[{ required: true, message: 'Missing child name' }]}
+                name={[childNumber, 'childName']}
+                label="Child's name"
+                rules={[{ required: true, message: "Please input child's name" }]}
             >
-                <Input placeholder="Child name" />
+                <Input />
             </Form.Item>
-            <MinusCircleOutlined onClick={() => remove(field.name)} />
-        </Space>
+            <Form.Item
+                name={[childNumber, 'childAge']}
+                label="Child's age"
+                rules={[{ required: true, message: "Please input child's age" }]}
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item
+                name={[childNumber, 'hasAllergies']}
+                valuePropName="checked"
+            >
+                <Checkbox onChange={e => setHasAllergies(e.target.checked)}>This child has allergies</Checkbox>
+            </Form.Item>
+            {hasAllergies && <Form.Item
+                    name={[childNumber, 'allergies']}
+                    label="Please enter the allergies here"
+                    rules={[{ required: true, message: "Please input child's allergies" }]}
+                >
+                    <TextArea rows={3} />
+                </Form.Item>
+            }
+            {/* <MinusCircleOutlined onClick={() => remove(childNumber)} /> */}
+        {/* </Space> */}
+        </>
     )
 }
 
