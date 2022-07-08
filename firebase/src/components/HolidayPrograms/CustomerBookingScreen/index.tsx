@@ -5,16 +5,14 @@ import { Form, Button, Steps, Divider, Row } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
-import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import { makeStyles } from '@material-ui/core'
 import * as Logo from '../../../drawables/fizz-logo.png'
 const { Step } = Steps
 
-
 const CustomerBookingScreen = () => {
-
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [form] = Form.useForm()
@@ -29,17 +27,24 @@ const CustomerBookingScreen = () => {
 
     useEffect(() => {
         const fetchAvailableSlots = async () => {
-            callAcuityClientV2('classAvailability', firebase)({
-                appointmentTypeId: Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-            }).then(result => {
-                console.log('succeeded')
-                console.log(result.data)
-                setClasses(result.data)
-            }).catch(err => {
-                console.log('failed')
-            }).finally(() => {
-                setLoading(false)
+            callAcuityClientV2(
+                'classAvailability',
+                firebase
+            )({
+                appointmentTypeId:
+                    Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM,
             })
+                .then((result) => {
+                    console.log('succeeded')
+                    console.log(result.data)
+                    setClasses(result.data)
+                })
+                .catch((err) => {
+                    console.log('failed')
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
         }
 
         fetchAvailableSlots()
@@ -56,24 +61,28 @@ const CustomerBookingScreen = () => {
                 setSelectedClasses([...selectedClasses, e.target.value])
             }
         } else {
-            setSelectedClasses(selectedClasses.filter(it => it !== e.target.value))
+            setSelectedClasses(
+                selectedClasses.filter((it) => it !== e.target.value)
+            )
         }
     }
 
     const renderStep = () => {
-        switch(step) {
+        switch (step) {
             case 1:
-                return <Step1
-                    form={form}
-                    classes={classes}
-                    selectedStore={selectedStore}
-                    setSelectedStore={setSelectedStore}
-                    onClassSelectionChange={handleClassSelectionChange}
-                />
+                return (
+                    <Step1
+                        form={form}
+                        classes={classes}
+                        selectedStore={selectedStore}
+                        setSelectedStore={setSelectedStore}
+                        onClassSelectionChange={handleClassSelectionChange}
+                    />
+                )
             case 2:
                 return <Step2 />
             case 3:
-                return <Step3 form={form}/>
+                return <Step3 form={form} />
         }
     }
 
@@ -83,7 +92,11 @@ const CustomerBookingScreen = () => {
         }
 
         return (
-            <Form form={form} initialValues={{ prefix: '61' }} layout="vertical">
+            <Form
+                form={form}
+                initialValues={{ prefix: '61' }}
+                layout="vertical"
+            >
                 {renderStep()}
             </Form>
         )
@@ -91,21 +104,29 @@ const CustomerBookingScreen = () => {
 
     const renderBackButton = () => {
         if (step > 1) {
-            return <Button type="primary" block onClick={() => setStep(step - 1)}>Go back</Button>
+            return (
+                <Button block type="default" onClick={() => setStep(step - 1)}>
+                    Go back
+                </Button>
+            )
         }
     }
 
     const renderForwardButton = () => {
         if (step < 3) {
-            return <Button
-                type="primary"
-                block
-                disabled={selectedClasses.length === 0}
-                onClick={async () => {
-                    await form.validateFields()
-                    setStep(step + 1)
-                }}
-            >Continue</Button>
+            return (
+                <Button
+                    block
+                    type="primary"
+                    disabled={selectedClasses.length === 0}
+                    onClick={async () => {
+                        await form.validateFields()
+                        setStep(step + 1)
+                    }}
+                >
+                    Continue
+                </Button>
+            )
         }
     }
 
@@ -114,8 +135,10 @@ const CustomerBookingScreen = () => {
             <div className={styles.logoWrapper}>
                 <img className={styles.logo} src={Logo.default} />
             </div>
-            <Divider>Holiday Program Booking Form</Divider>
-            <Row justify='center'>
+            <Divider className={styles.divider}>
+                Holiday Program Booking Form
+            </Divider>
+            <Row justify="center">
                 <div className={styles.form}>
                     <Steps current={step - 1} style={{ marginBottom: 24 }}>
                         <Step title="Select classes" />
@@ -124,8 +147,8 @@ const CustomerBookingScreen = () => {
                     </Steps>
                     {renderForm()}
                     <div>
-                        {renderBackButton()}
                         {renderForwardButton()}
+                        {renderBackButton()}
                     </div>
                 </div>
             </Row>
@@ -137,18 +160,24 @@ const useStyles = makeStyles({
     logoWrapper: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     logo: {
         marginTop: 10,
-        maxWidth: 200
+        maxWidth: 200,
+    },
+    divider: {
+        fontSize: '24px !important',
+        fontWeight: 300,
+        marginTop: '24px !important',
+        marginBottom: '24px !important',
     },
     form: {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        width: '100%',
-        maxWidth: 600
-    }
+        width: '80%',
+        maxWidth: 500,
+    },
 })
 export default CustomerBookingScreen
