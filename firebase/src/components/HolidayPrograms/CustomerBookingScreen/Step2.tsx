@@ -148,7 +148,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 }}
             </Form.List>
             <Modal
-                title="Not enough room"
+                title="Not enough spots"
                 visible={showModal}
                 footer={[
                     <Button

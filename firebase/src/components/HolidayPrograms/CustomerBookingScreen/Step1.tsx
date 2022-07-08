@@ -27,11 +27,17 @@ const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onCl
         <>
             <Form.Item name="store" label="Which store do you want to book for?">
                 <Select value={selectedStore} onChange={store => setSelectedStore(store)}>
-                    {Object.values(Locations).map(location => {
-                        if (location !== Locations.MOBILE) {
-                            return <Option value={location} key={location}>{capitalise(location)}</Option>
+                    {(() => {
+                        if(process.env.REACT_APP_ENV === 'prod') {
+                            return Object.values(Locations).map(location => {
+                                if (location !== Locations.MOBILE) {
+                                    return <Option value={location} key={location}>{capitalise(location)}</Option>
+                                }
+                            })
+                        } else {
+                            return <Option value="test" key="test">Test</Option>
                         }
-                    })}
+                    })()}
                 </Select>
             </Form.Item>
             {filteredClasses?.map(klass => {

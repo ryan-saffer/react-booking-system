@@ -8,6 +8,7 @@ export interface AcuityFunctions {
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
+    scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
 }
 
 export interface FetchAppointmentsParams {
@@ -39,4 +40,18 @@ export interface UpdateLabelParams {
 
 export type ClassAvailabilityParams = {
     appointmentTypeId: number
+}
+
+export type HolidayProgramBooking = {
+    appointmentTypeId: number
+    dateTime: string
+    parentFirstName: string
+    parentLastName: string
+    parentEmail: string
+    parentPhone: string
+    emergencyContactName: string
+    emergencyContactPhone: string
+    childName: string
+    childAge: string
+    childAllergies?: string
 }
