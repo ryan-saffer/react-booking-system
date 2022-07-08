@@ -20,7 +20,7 @@ const ScienceClubCheckinClassSelection = props => {
         <CssBaseline />
         <AppBar className={cssClasses.appBar} position="static">
             <Toolbar className={cssClasses.toolbar}>
-                <Typography className={cssClasses.title} variant="h6">
+                <Typography className={cssClasses.title} variant="h6" color='inherit'>
                     Science Club
                 </Typography>
                 <img

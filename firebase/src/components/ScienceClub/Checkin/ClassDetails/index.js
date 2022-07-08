@@ -70,7 +70,7 @@ const ScienceClubCheckinClassDetails = props => {
                     <IconButton edge="start" color="inherit" onClick={navigateBack}>
                         <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" color='inherit'>
                         Children
                     </Typography>
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
