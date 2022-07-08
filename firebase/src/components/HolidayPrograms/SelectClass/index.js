@@ -131,7 +131,7 @@ const HolidayProgramSelection = props => {
         <CssBaseline />
         <AppBar className={cssClasses.appBar} position="static">
             <Toolbar className={cssClasses.toolbar}>
-                <Typography className={cssClasses.title} variant="h6">
+                <Typography className={cssClasses.title} variant="h6" color='inherit'>
                     Holiday Programs
                 </Typography>
                 <img
