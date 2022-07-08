@@ -104,46 +104,45 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
             <Form.List name="children">
                 {(fields, { add, remove }) => {
                     return (
-                    <>
-                        {fields.map((field, index) => (
-                            <Fragment key={field.key}>
-                                <Divider>Child #{index + 1}</Divider>
-                                
-                                <ChildForm
-                                    childNumber={index}
-                                    remove={remove}
-                                />
-                            </Fragment>
-                        ))}
-                        <Form.Item key="addChild">
-                            <Button
-                                type="dashed"
-                                size="large"
-                                onClick={() => {
-                                    // check if there is enough room for an additional child in every class
-                                    let canAdd = true
-                                    selectedClasses.forEach((klass) => {
-                                        // +1 for the one we are adding now
-                                        if (
-                                            fields.length + 1 >
-                                            klass.slotsAvailable
-                                        ) {
-                                            setShowModal(true)
-                                            canAdd = false
+                        <>
+                            {fields.map((field, index) => (
+                                <Fragment key={field.key}>
+                                    <Divider>Child #{index + 1}</Divider>
+                                    <ChildForm
+                                        childNumber={index}
+                                        remove={remove}
+                                    />
+                                </Fragment>
+                            ))}
+                            <Form.Item key="addChild">
+                                <Button
+                                    type="dashed"
+                                    size="large"
+                                    block
+                                    icon={<PlusOutlined />}
+                                    onClick={() => {
+                                        // check if there is enough room for an additional child in every class
+                                        let canAdd = true
+                                        selectedClasses.forEach((klass) => {
+                                            // +1 for the one we are adding now
+                                            if (
+                                                fields.length + 1 >
+                                                klass.slotsAvailable
+                                            ) {
+                                                setShowModal(true)
+                                                canAdd = false
+                                            }
+                                        })
+                                        if (canAdd) {
+                                            console.log('adding')
+                                            add()
                                         }
-                                    })
-                                    if (canAdd) {
-                                        console.log('adding')
-                                        add()
-                                    }
-                                }}
-                                block
-                                icon={<PlusOutlined />}
-                            >
-                                Add child
-                            </Button>
-                        </Form.Item>
-                    </>
+                                    }}
+                                >
+                                    Add child
+                                </Button>
+                            </Form.Item>
+                        </>
                     )
                 }}
             </Form.List>
