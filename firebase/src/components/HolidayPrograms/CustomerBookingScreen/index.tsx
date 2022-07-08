@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
 import Step1 from './Step1'
-import { Form, Button, Steps, Divider, Row, Modal, Spin } from 'antd'
+import { Form, Button, Steps, Divider, Row, Modal, Spin, Card } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
@@ -16,6 +16,10 @@ export type Form = {
     store: string
     parentFirstName: string
     parentLastName: string
+    parentEmail: string
+    phone: string
+    emergencyContact: string
+    emergencyPhone: string
     children: {
         childName: string
         childAge: string
@@ -35,6 +39,7 @@ const CustomerBookingScreen = () => {
     const styles = useStyles()
 
     const [loading, setLoading] = useState(true)
+    const [noUpcomingPrograms, setNoUpcomingPrograms] = useState(false)
     const [selectedStore, setSelectedStore] = useState('')
     const [classes, setClasses] = useState<Acuity.Class[]>([])
     const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
@@ -48,7 +53,10 @@ const CustomerBookingScreen = () => {
                 firebase
             )({
                 appointmentTypeId:
-                    Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM,
+                    process.env.REACT_APP_ENV === 'prod'
+                        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
+                        : Acuity.Constants.AppointmentTypes
+                              .TEST_HOLIDAY_PROGRAM,
             })
                 .then((result) => {
                     console.log('succeeded')
@@ -65,6 +73,14 @@ const CustomerBookingScreen = () => {
 
         fetchAvailableSlots()
     }, [])
+
+    useEffect(() => {
+        if (classes.length === 0) {
+            setNoUpcomingPrograms(true)
+        } else {
+            setNoUpcomingPrograms(false)
+        }
+    }, [classes])
 
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         const selectedClass = classes.filter(
@@ -111,6 +127,18 @@ const CustomerBookingScreen = () => {
     const renderForm = () => {
         if (loading) {
             return <Spin style={{ marginBottom: 24 }} />
+        }
+
+        if (noUpcomingPrograms) {
+            return (
+                <Card
+                    title="No programs available"
+                    style={{ marginBottom: 24 }}
+                >
+                    <p>There are no programs available at the moment.</p>
+                    <p>Try again a bit later.</p>
+                </Card>
+            )
         }
 
         return (

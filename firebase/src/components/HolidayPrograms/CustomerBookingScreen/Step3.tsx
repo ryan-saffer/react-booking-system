@@ -57,7 +57,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses }) => {
                 total={totalPrice}
             />
             <Elements stripe={stripePromise} options={options}>
-                <Payment form={form} formInstance={formInstance} />
+                <Payment form={form} formInstance={formInstance} selectedClasses={selectedClasses} />
             </Elements>
         </>
     )
