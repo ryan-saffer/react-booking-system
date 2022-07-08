@@ -7,7 +7,6 @@ import { capitalise } from '../../../utilities/stringUtilities'
 const { Option } = Select
 
 type Props = {
-    form: FormInstance
     classes: Acuity.Class[]
     selectedStore: string
     setSelectedStore: Dispatch<SetStateAction<string>>
