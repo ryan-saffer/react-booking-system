@@ -102,16 +102,16 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
             </Form.Item>
             <Form.List name="children">
-                {(fields, { add, remove }) => (
+                {(fields, { add, remove }) => {
+                    console.log(fields)
+                    return (
                     <>
-                        {/* first child required, only additional added below */}
-                        <Divider>Child #1</Divider>
-                        <ChildForm childNumber={1} remove={remove} />
-                        {fields.map((field) => (
+                        {fields.map((field, index) => (
                             <Fragment key={field.key}>
-                                <Divider>Child #{field.name + 2}</Divider>
+                                <Divider>Child #{index + 1}</Divider>
+                                
                                 <ChildForm
-                                    childNumber={field.name + 2}
+                                    childNumber={index}
                                     remove={remove}
                                 />
                             </Fragment>
@@ -124,9 +124,9 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                     // check if there is enough room for an additional child in every class
                                     let canAdd = true
                                     selectedClasses.forEach((klass) => {
-                                        // +2 because one for the first child above, and one for the one we are adding now
+                                        // +1 for the one we are adding now
                                         if (
-                                            fields.length + 2 >
+                                            fields.length + 1 >
                                             klass.slotsAvailable
                                         ) {
                                             setShowModal(true)
@@ -134,6 +134,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                         }
                                     })
                                     if (canAdd) {
+                                        console.log('adding')
                                         add()
                                     }
                                 }}
@@ -144,7 +145,8 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                             </Button>
                         </Form.Item>
                     </>
-                )}
+                    )
+                }}
             </Form.List>
             <Modal
                 title="Not enough room"

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
 import Step1 from './Step1'
-import { Form, Button, Steps, Divider, Row } from 'antd'
+import { Form, Button, Steps, Divider, Row, Modal } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
@@ -24,6 +24,7 @@ const CustomerBookingScreen = () => {
     const [classes, setClasses] = useState<Acuity.Class[]>([])
     const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
     const [step, setStep] = useState(1)
+    const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
     useEffect(() => {
         const fetchAvailableSlots = async () => {
@@ -55,16 +56,19 @@ const CustomerBookingScreen = () => {
     }, [selectedClasses])
 
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
-        console.log(e.target.value)
-        const selectedClass = classes.filter(it => it.id === e.target.value)[0]
-        const classAlreadySelected = selectedClasses.filter(it => it.id === e.target.value).length === 1
+        const selectedClass = classes.filter(
+            (it) => it.id === e.target.value
+        )[0]
+        const classAlreadySelected =
+            selectedClasses.filter((it) => it.id === e.target.value).length ===
+            1
         if (e.target.checked) {
             if (!classAlreadySelected) {
                 setSelectedClasses([...selectedClasses, selectedClass])
             }
         } else {
             setSelectedClasses(
-                selectedClasses.filter(it => it.id !== e.target.value)
+                selectedClasses.filter((it) => it.id !== e.target.value)
             )
         }
     }
@@ -124,7 +128,15 @@ const CustomerBookingScreen = () => {
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         await form.validateFields()
-                        setStep(step + 1)
+                        if (step === 2) {
+                            if (form.getFieldsValue()['children']) {
+                                setStep(step + 1)
+                            } else {
+                                setShowNoChildrenModal(true)
+                            }
+                        } else {
+                            setStep(step + 1)
+                        }
                     }}
                 >
                     Continue
@@ -155,6 +167,20 @@ const CustomerBookingScreen = () => {
                     </div>
                 </div>
             </Row>
+            <Modal
+                title="No children added"
+                footer={[
+                    <Button
+                        type="primary"
+                        onClick={() => setShowNoChildrenModal(false)}
+                    >
+                        Ok
+                    </Button>,
+                ]}
+                visible={showNoChildrenModal}
+            >
+                <p>Please add at least one child to the form.</p>
+            </Modal>
         </>
     )
 }
@@ -181,7 +207,7 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         width: '80%',
         maxWidth: 500,
-        marginBottom: 36
+        marginBottom: 36,
     },
 })
 export default CustomerBookingScreen
