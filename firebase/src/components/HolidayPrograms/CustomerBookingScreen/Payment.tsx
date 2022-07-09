@@ -10,9 +10,14 @@ type Props = {
     form: Form
     formInstance: FormInstance
     selectedClasses: Acuity.Class[]
+    paymentIntentId: string
 }
 
-const Payment: React.FC<Props> = ({ form, selectedClasses }) => {
+const Payment: React.FC<Props> = ({
+    form,
+    selectedClasses,
+    paymentIntentId,
+}) => {
     const stripe = useStripe()
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
@@ -37,6 +42,15 @@ const Payment: React.FC<Props> = ({ form, selectedClasses }) => {
 
         setSubmitting(true)
 
+        // First write all the info needed to book into acuity into firestore, along with
+        // the payment intent id, and a 'booked' status of false.
+        //
+        // A stripe webhook will listen to payment events, and will then search firestore
+        // for this document, and if not booked, perform the acuity booking.
+        //
+        // This process ensures a class is not booked without paid, and vice versa,
+        // and handles states such as failed payments gracefully.
+
         let programs: Acuity.Client.HolidayProgramBooking[] = []
         selectedClasses.forEach((klass) => {
             form.children.forEach((child) => {
@@ -55,22 +69,49 @@ const Payment: React.FC<Props> = ({ form, selectedClasses }) => {
                     emergencyContactPhone: form.emergencyPhone,
                     childName: child.childName,
                     childAge: child.childAge,
-                    childAllergies: child.allergies,
+                    childAllergies: child.allergies ?? '',
                 })
             })
         })
 
-        // first book into acuity
-        let acuityResult = await callAcuityClientV2(
-            'scheduleHolidayProgram',
-            firebase
-        )(programs)
+        // check if payment intent already stored in database
+        // (cannot check if doc.exists, because it has no propeties, and so it doesn't)
+        // this stops multiple stripe validation errors writing the same program again and again to firestore
+        const query = await firebase.db
+            .collection('holidayProgramBookings')
+            .doc(paymentIntentId)
+            .collection('programs')
+            .get()
 
-        if (!acuityResult) {
-            console.error('error booking into acuity')
-            setSubmitting(false)
-            return
+        if (query.size === 0) {
+            let batch = firebase.db.batch()
+            programs.forEach((program) => {
+                let docRef = firebase.db
+                    .collection('holidayProgramBookings')
+                    .doc(paymentIntentId)
+                    .collection('programs')
+                    .doc()
+                batch.set(docRef, { ...program, booked: false })
+            })
+            try {
+                await batch.commit()
+            } catch {
+                console.error('error writing to firestore')
+                setSubmitting(false)
+            }
         }
+
+        // first book into acuity
+        // let acuityResult = await callAcuityClientV2(
+        //     'scheduleHolidayProgram',
+        //     firebase
+        // )(programs)
+
+        // if (!acuityResult) {
+        //     console.error('error booking into acuity')
+        //     setSubmitting(false)
+        //     return
+        // }
 
         const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
