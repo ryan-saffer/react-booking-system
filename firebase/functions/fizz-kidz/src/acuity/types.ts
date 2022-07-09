@@ -12,7 +12,10 @@ export interface Appointment {
     forms: Form[],
     notes: string,
     calendar: string,
-    paid: "yes" | "no"
+    paid: "yes" | "no",
+    location: string,
+    datetime: string,
+    confirmationPage: string
 }
 
 export interface MergedAppointment extends Appointment {
