@@ -24,7 +24,7 @@ export type Form = {
         childName: string
         childAge: string
         hasAllergies: boolean
-        allergies: string
+        allergies?: string
     }[]
 }
 
@@ -75,6 +75,10 @@ const CustomerBookingScreen = () => {
     }, [])
 
     useEffect(() => {
+        console.log(formValues)
+    }, [formValues])
+
+    useEffect(() => {
         if (classes.length === 0) {
             setNoUpcomingPrograms(true)
         } else {
@@ -119,6 +123,7 @@ const CustomerBookingScreen = () => {
                         form={formValues as Form}
                         formInstance={form}
                         selectedClasses={selectedClasses}
+                        selectedStore={selectedStore}
                     />
                 )
         }

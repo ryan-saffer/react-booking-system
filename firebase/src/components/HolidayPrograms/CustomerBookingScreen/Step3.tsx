@@ -17,18 +17,25 @@ type Props = {
     form: Form
     formInstance: FormInstance
     selectedClasses: Acuity.Class[]
+    selectedStore: string
 }
 
-const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses }) => {
+const Step3: React.FC<Props> = ({
+    form,
+    formInstance,
+    selectedClasses,
+    selectedStore,
+}) => {
     const firebase = useContext(FirebaseContext) as Firebase
-    const [clientSecret, setClientSecret] = useState('')
+    const [paymentIntent, setPaymentIntent] = useState({ id: '', clientSecret: ''})
 
     const options = {
         // passing the client secret obtained from the server
-        clientSecret: clientSecret,
+        clientSecret: paymentIntent.clientSecret,
     }
 
-    const totalPrice = selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
+    const totalPrice =
+        selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
 
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
@@ -37,16 +44,24 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses }) => {
                 firebase
             )({
                 amount: amount,
-                description: `${form.store} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
+                description: `${selectedStore} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
             })
             console.log(result)
-            setClientSecret(result.data)
+            setPaymentIntent({ id: result.data.id, clientSecret: result.data.clientSecret })
         }
         createPaymentIntent(totalPrice)
     }, [])
 
-    if (clientSecret === '') {
-        return <Spin style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }} />
+    if (paymentIntent.clientSecret === '') {
+        return (
+            <Spin
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: 24,
+                }}
+            />
+        )
     }
 
     return (
@@ -57,7 +72,12 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses }) => {
                 total={totalPrice}
             />
             <Elements stripe={stripePromise} options={options}>
-                <Payment form={form} formInstance={formInstance} selectedClasses={selectedClasses} />
+                <Payment
+                    form={form}
+                    formInstance={formInstance}
+                    selectedClasses={selectedClasses}
+                    paymentIntentId={paymentIntent.id}
+                />
             </Elements>
         </>
     )

@@ -53,5 +53,5 @@ export type HolidayProgramBooking = {
     emergencyContactPhone: string
     childName: string
     childAge: string
-    childAllergies?: string
+    childAllergies: string
 }
