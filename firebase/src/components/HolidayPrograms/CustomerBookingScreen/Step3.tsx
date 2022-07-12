@@ -7,7 +7,7 @@ import Payment from './Payment'
 import BookingSummary from './BookingSummary'
 import { Acuity } from 'fizz-kidz'
 import { Form, PROGRAM_PRICE } from '.'
-import { FormInstance, Spin } from 'antd'
+import { FormInstance, Spin, Result } from 'antd'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -27,7 +27,11 @@ const Step3: React.FC<Props> = ({
     selectedStore,
 }) => {
     const firebase = useContext(FirebaseContext) as Firebase
-    const [paymentIntent, setPaymentIntent] = useState({ id: '', clientSecret: ''})
+    const [paymentIntent, setPaymentIntent] = useState({
+        id: '',
+        clientSecret: '',
+    })
+    const [error, setError] = useState(false)
 
     const options = {
         // passing the client secret obtained from the server
@@ -39,18 +43,38 @@ const Step3: React.FC<Props> = ({
 
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
-            let result = await callFirebaseFunction(
-                'createPaymentIntent',
-                firebase
-            )({
-                amount: amount,
-                description: `${selectedStore} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
-            })
-            console.log(result)
-            setPaymentIntent({ id: result.data.id, clientSecret: result.data.clientSecret })
+            try {
+                let result = await callFirebaseFunction(
+                    'createPaymentIntent',
+                    firebase
+                )({
+                    name: `${form.parentFirstName} ${form.parentFirstName}`,
+                    email: form.parentEmail,
+                    phone: form.phone,
+                    amount: amount,
+                    description: `${selectedStore} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
+                    program: 'holiday_program',
+                })
+                setPaymentIntent({
+                    id: result.data.id,
+                    clientSecret: result.data.clientSecret,
+                })
+            } catch {
+                setError(true)
+            }
         }
         createPaymentIntent(totalPrice)
     }, [])
+
+    if (error) {
+        return (
+            <Result
+                status="500"
+                title="Oh no.."
+                subTitle="Something went wrong. Please refresh the page to try again."
+            />
+        )
+    }
 
     if (paymentIntent.clientSecret === '') {
         return (

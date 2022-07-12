@@ -25,6 +25,7 @@ const Payment: React.FC<Props> = ({
     const [termsChecked, setTermsChecked] = useState(false)
     const [showTermsWarning, setShowTermsWarning] = useState(false)
     const [showTermsModal, setShowTermsModal] = useState(false)
+    const [paymentError, setPaymentError] = useState('')
 
     const [submitting, setSubmitting] = useState(false)
 
@@ -40,6 +41,7 @@ const Payment: React.FC<Props> = ({
             return
         }
 
+        setPaymentError('')
         setSubmitting(true)
 
         // First write all the info needed to book into acuity into firestore, along with
@@ -75,23 +77,20 @@ const Payment: React.FC<Props> = ({
         })
 
         // check if payment intent already stored in database
-        // (cannot check if doc.exists, because it has no propeties, and so it doesn't)
-        // this stops multiple stripe validation errors writing the same program again and again to firestore
         const query = await firebase.db
             .collection('holidayProgramBookings')
             .doc(paymentIntentId)
-            .collection('programs')
             .get()
 
-        if (query.size === 0) {
+        if (!query.exists) {
             let batch = firebase.db.batch()
+            let paymentIntentRef = firebase.db
+                .collection('holidayProgramBookings')
+                .doc(paymentIntentId)
+            batch.set(paymentIntentRef, { booked: false })
             programs.forEach((program) => {
-                let docRef = firebase.db
-                    .collection('holidayProgramBookings')
-                    .doc(paymentIntentId)
-                    .collection('programs')
-                    .doc()
-                batch.set(docRef, { ...program, booked: false })
+                let programRef = paymentIntentRef.collection('programs').doc()
+                batch.set(programRef, { ...program, booked: false })
             })
             try {
                 await batch.commit()
@@ -124,6 +123,7 @@ const Payment: React.FC<Props> = ({
         if (result.error) {
             // Show error to your customer (for example, payment details incomplete)
             console.error(result.error.message)
+            setPaymentError(result.error.message as string)
             setSubmitting(false)
         } else {
             // Your customer will be redirected to your `return_url`. For some payment
@@ -153,6 +153,11 @@ const Payment: React.FC<Props> = ({
                 <Typography.Text type="danger">
                     Please accept the terms and conditions
                 </Typography.Text>
+            )}
+            {paymentError && (
+                <Typography.Title type='danger' level={5} style={{ textAlign: 'center', marginTop: 12 }}>
+                    {paymentError}
+                </Typography.Title>
             )}
             <Button
                 block

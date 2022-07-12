@@ -75,8 +75,12 @@ const CustomerBookingScreen = () => {
     }, [])
 
     useEffect(() => {
-        console.log(formValues)
-    }, [formValues])
+        // whenever store selection changes, clear all selected classes
+        classes.forEach(klass => {
+            form.resetFields([`${klass.id}-checkbox`])
+        })
+        setSelectedClasses([])
+    }, [selectedStore])
 
     useEffect(() => {
         if (classes.length === 0) {
