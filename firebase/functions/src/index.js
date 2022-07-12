@@ -40,7 +40,6 @@ export const acuityClientV2 = acuityV2.client
 export const sidebar = acuityStripeIntegration.sidebar
 export const sendInvoice = acuityStripeIntegration.sendInvoice
 export const voidAndResendInvoice = acuityStripeIntegration.voidAndResendInvoice
-export const createPaymentIntent = acuityStripeIntegration.createPaymentIntent
 export const retrieveInvoiceStatus = acuityStripeIntegration.retrieveInvoiceStatus
 export const backupScienceClubAppointments = scienceClubBackup.backupScienceClubAppointments
 export const sendTermContinuationEmail = emails.sendScienceClubContinuationEmail
@@ -48,3 +47,4 @@ export const asWebhook = acuityWebhook.webhook
 export const mjml = mjmlService.mjml
 
 export * from './sendgrid'
+export * from './stripe'

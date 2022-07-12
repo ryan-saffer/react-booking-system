@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { Form, Input, Select, Button, Divider, Modal, Typography } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import ChildForm from './ChildForm'
 import { Acuity } from 'fizz-kidz'
 const { Option } = Select
@@ -107,11 +107,14 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         <>
                             {fields.map((field, index) => (
                                 <Fragment key={field.key}>
-                                    <Divider>Child #{index + 1}</Divider>
-                                    <ChildForm
-                                        childNumber={index}
-                                        remove={remove}
-                                    />
+                                    <Divider>
+                                        Child #{index + 1}
+                                        <MinusCircleOutlined
+                                            style={{ marginLeft: 12 }}
+                                            onClick={() => remove(index)}
+                                        />
+                                    </Divider>
+                                    <ChildForm childNumber={index} />
                                 </Fragment>
                             ))}
                             <Form.Item key="addChild">
