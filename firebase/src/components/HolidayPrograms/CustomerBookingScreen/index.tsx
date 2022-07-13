@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
 import Step1 from './Step1'
-import { Form, Button, Steps, Divider, Row, Modal, Spin, Card } from 'antd'
+import { Form, Button, Steps, Row, Modal, Spin, Card, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
@@ -9,7 +9,9 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import Step2 from './Step2'
 import Step3 from './Step3'
 import { makeStyles } from '@material-ui/core'
-import * as Logo from '../../../drawables/fizz-logo.png'
+import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
+import useWindowDimensions from '../../Hooks/UseWindowDimensions'
+import { LeftOutlined } from '@ant-design/icons'
 const { Step } = Steps
 
 export type Form = {
@@ -46,6 +48,8 @@ const CustomerBookingScreen = () => {
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
+    const { width } = useWindowDimensions()
+
     useEffect(() => {
         const fetchAvailableSlots = async () => {
             callAcuityClientV2(
@@ -55,8 +59,7 @@ const CustomerBookingScreen = () => {
                 appointmentTypeId:
                     process.env.REACT_APP_ENV === 'prod'
                         ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : Acuity.Constants.AppointmentTypes
-                              .TEST_HOLIDAY_PROGRAM,
+                        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
             })
                 .then((result) => {
                     console.log('succeeded')
@@ -76,7 +79,7 @@ const CustomerBookingScreen = () => {
 
     useEffect(() => {
         // whenever store selection changes, clear all selected classes
-        classes.forEach(klass => {
+        classes.forEach((klass) => {
             form.resetFields([`${klass.id}-checkbox`])
         })
         setSelectedClasses([])
@@ -91,20 +94,14 @@ const CustomerBookingScreen = () => {
     }, [classes])
 
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
-        const selectedClass = classes.filter(
-            (it) => it.id === e.target.value
-        )[0]
-        const classAlreadySelected =
-            selectedClasses.filter((it) => it.id === e.target.value).length ===
-            1
+        const selectedClass = classes.filter((it) => it.id === e.target.value)[0]
+        const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
         if (e.target.checked) {
             if (!classAlreadySelected) {
                 setSelectedClasses([...selectedClasses, selectedClass])
             }
         } else {
-            setSelectedClasses(
-                selectedClasses.filter((it) => it.id !== e.target.value)
-            )
+            setSelectedClasses(selectedClasses.filter((it) => it.id !== e.target.value))
         }
     }
 
@@ -140,10 +137,7 @@ const CustomerBookingScreen = () => {
 
         if (noUpcomingPrograms) {
             return (
-                <Card
-                    title="No programs available"
-                    style={{ marginBottom: 24 }}
-                >
+                <Card title="No programs available" style={{ marginBottom: 24 }}>
                     <p>There are no programs available at the moment.</p>
                     <p>Try again a bit later.</p>
                 </Card>
@@ -165,12 +159,7 @@ const CustomerBookingScreen = () => {
     const renderBackButton = () => {
         if (step > 1) {
             return (
-                <Button
-                    block
-                    type="default"
-                    size="large"
-                    onClick={() => setStep(step - 1)}
-                >
+                <Button block type="default" size="large" onClick={() => setStep(step - 1)}>
                     Go back
                 </Button>
             )
@@ -184,7 +173,7 @@ const CustomerBookingScreen = () => {
                     block
                     type="primary"
                     size="large"
-                    style={{ marginBottom: 12 }}
+                    className={styles.primaryBtn}
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         await form.validateFields()
@@ -206,34 +195,48 @@ const CustomerBookingScreen = () => {
     }
 
     return (
-        <>
-            <div className={styles.logoWrapper}>
-                <img className={styles.logo} src={Logo.default} />
-            </div>
-            <Divider className={styles.divider}>
-                Holiday Program Booking Form
-            </Divider>
-            <Row justify="center">
-                <div className={styles.form}>
-                    <Steps current={step - 1} style={{ marginBottom: 24 }}>
+        <div className={styles.root}>
+            <Card className={styles.card}>
+                <div className={styles.logoWrapper}>
+                    <img className={styles.logo} src={Logo.default} />
+                </div>
+                <Row justify="center">
+                    <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
+                        Holiday Program Booking Form
+                    </Typography.Title>
+                    <Steps
+                        current={step - 1}
+                        style={{ marginBottom: 24 }}
+                        direction={width < 626 ? 'vertical' : 'horizontal'}
+                    >
                         <Step title="Select classes" />
-                        <Step title="Your informaton" />
+                        <Step title="Your information" />
                         <Step title="Payment" />
                     </Steps>
-                    {renderForm()}
-                    <div>
-                        {renderForwardButton()}
-                        {renderBackButton()}
+                    <div className={styles.wrapper}>
+                        <div className={styles.form}>
+                            {step > 1 && (
+                                <Button
+                                    style={{ width: 'fit-content' }}
+                                    icon={<LeftOutlined />}
+                                    onClick={() => setStep(step - 1)}
+                                >
+                                    Go back
+                                </Button>
+                            )}
+                            {renderForm()}
+                            <>
+                                {renderForwardButton()}
+                                {renderBackButton()}
+                            </>
+                        </div>
                     </div>
-                </div>
-            </Row>
+                </Row>
+            </Card>
             <Modal
                 title="No children added"
                 footer={[
-                    <Button
-                        type="primary"
-                        onClick={() => setShowNoChildrenModal(false)}
-                    >
+                    <Button type="primary" onClick={() => setShowNoChildrenModal(false)}>
                         Ok
                     </Button>,
                 ]}
@@ -241,7 +244,7 @@ const CustomerBookingScreen = () => {
             >
                 <p>Please add at least one child to the form.</p>
             </Modal>
-        </>
+        </div>
     )
 }
 
@@ -252,22 +255,39 @@ const useStyles = makeStyles({
         alignItems: 'center',
     },
     logo: {
-        marginTop: 10,
         maxWidth: 200,
     },
-    divider: {
-        fontSize: '24px !important',
-        fontWeight: 300,
-        marginTop: '24px !important',
-        marginBottom: '24px !important',
+    root: {
+        // backgroundColor: '#f0f2f2',
+        backgroundImage: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        minHeight: '100vh',
+        paddingBottom: 24,
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    wrapper: {
+        width: '100%',
+        maxWidth: 500,
+        marginBottom: 36,
+    },
+    card: {
+        width: '80%',
+        height: 'fit-content',
+        maxWidth: 600,
+        marginTop: 36,
+        borderRadius: 16,
+        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     },
     form: {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        width: '80%',
-        maxWidth: 500,
-        marginBottom: 36,
+    },
+    primaryBtn: {
+        marginTop: 24,
+        marginBottom: 12,
+        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        borderColor: 'white',
     },
 })
 export default CustomerBookingScreen

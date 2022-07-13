@@ -15,9 +15,8 @@ type ChildForm = {
 }
 
 const BookingSummary: React.FC<Props> = ({ form, selectedClasses, total }) => {
-
     let dataSource: string[] = []
-    selectedClasses.forEach(klass => {
+    selectedClasses.forEach((klass) => {
         form['children'].forEach((child: ChildForm) => {
             const dateTime = DateTime.fromISO(klass.time).toLocaleString({
                 weekday: 'long',
@@ -25,7 +24,7 @@ const BookingSummary: React.FC<Props> = ({ form, selectedClasses, total }) => {
                 day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
-                hour12: true
+                hour12: true,
             })
             dataSource.push(`${child.childName} - ${dateTime} ($${PROGRAM_PRICE}.00)`)
         })
@@ -36,7 +35,7 @@ const BookingSummary: React.FC<Props> = ({ form, selectedClasses, total }) => {
             header={<Typography.Title level={4}>Booking summary</Typography.Title>}
             footer={<Typography.Title level={4}>Total price: ${total / 100}.00</Typography.Title>}
             dataSource={dataSource}
-            renderItem={item => (
+            renderItem={(item) => (
                 <List.Item>
                     <Typography.Text>{item}</Typography.Text>
                 </List.Item>

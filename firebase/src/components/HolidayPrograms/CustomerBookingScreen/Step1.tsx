@@ -1,11 +1,5 @@
-import React, {
-    Dispatch,
-    SetStateAction,
-    useContext,
-    useEffect,
-    useState,
-} from 'react'
-import { Form, Checkbox, Select, FormInstance } from 'antd'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Form, Checkbox, Select } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Locations } from 'fizz-kidz'
 import { DateTime } from 'luxon'
@@ -19,34 +13,19 @@ type Props = {
     onClassSelectionChange: (e: CheckboxChangeEvent) => void
 }
 
-const Step1: React.FC<Props> = ({
-    classes,
-    selectedStore,
-    setSelectedStore,
-    onClassSelectionChange,
-}) => {
+const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onClassSelectionChange }) => {
     const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>()
 
     useEffect(() => {
         if (selectedStore !== '') {
-            setFilteredClasses(
-                classes?.filter((it) =>
-                    it.calendar.toLowerCase().includes(selectedStore)
-                )
-            )
+            setFilteredClasses(classes?.filter((it) => it.calendar.toLowerCase().includes(selectedStore)))
         }
     }, [selectedStore])
 
     return (
         <>
-            <Form.Item
-                name="store"
-                label="Which store do you want to book for?"
-            >
-                <Select
-                    value={selectedStore}
-                    onChange={(store) => setSelectedStore(store)}
-                >
+            <Form.Item name="store" label="Which store do you want to book for?">
+                <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
                         if (process.env.REACT_APP_ENV === 'prod') {
                             return Object.values(Locations).map((location) => {
@@ -71,27 +50,25 @@ const Step1: React.FC<Props> = ({
             {filteredClasses?.map((klass) => {
                 let name = `${klass.id}-checkbox`
                 return (
-                    <Form.Item
-                        key={klass.id}
-                        name={name}
-                        valuePropName="checked"
-                    >
+                    <Form.Item style={{ marginBottom: 4 }} key={klass.id} name={name} valuePropName="checked">
                         <Checkbox
                             value={klass.id}
                             disabled={klass.slotsAvailable === 0}
                             onChange={onClassSelectionChange}
                         >
-                            {DateTime.fromISO(klass.time).toLocaleString({
-                                weekday: 'long',
-                                month: 'short',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true,
-                            })}
-                            {klass.slotsAvailable > 0
-                                ? ` [${klass.slotsAvailable} spot/s left]`
-                                : ' [No spots left]'}
+                            <p style={{ marginBottom: 0 }}>
+                                {DateTime.fromISO(klass.time).toLocaleString({
+                                    weekday: 'long',
+                                    month: 'short',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true,
+                                })}
+                            </p>
+                            <p>
+                                {klass.slotsAvailable > 0 ? `[${klass.slotsAvailable} spot/s left]` : '[No spots left]'}
+                            </p>
                         </Checkbox>
                     </Form.Item>
                 )
