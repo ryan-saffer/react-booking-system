@@ -20,12 +20,7 @@ type Props = {
     selectedStore: string
 }
 
-const Step3: React.FC<Props> = ({
-    form,
-    formInstance,
-    selectedClasses,
-    selectedStore,
-}) => {
+const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedStore }) => {
     const firebase = useContext(FirebaseContext) as Firebase
     const [paymentIntent, setPaymentIntent] = useState({
         id: '',
@@ -38,8 +33,7 @@ const Step3: React.FC<Props> = ({
         clientSecret: paymentIntent.clientSecret,
     }
 
-    const totalPrice =
-        selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
+    const totalPrice = selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
 
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
@@ -90,11 +84,7 @@ const Step3: React.FC<Props> = ({
 
     return (
         <>
-            <BookingSummary
-                form={form}
-                selectedClasses={selectedClasses}
-                total={totalPrice}
-            />
+            <BookingSummary form={form} selectedClasses={selectedClasses} total={totalPrice} />
             <Elements stripe={stripePromise} options={options}>
                 <Payment
                     form={form}

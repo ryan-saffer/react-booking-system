@@ -13,11 +13,7 @@ type Props = {
     paymentIntentId: string
 }
 
-const Payment: React.FC<Props> = ({
-    form,
-    selectedClasses,
-    paymentIntentId,
-}) => {
+const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) => {
     const stripe = useStripe()
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
@@ -60,8 +56,7 @@ const Payment: React.FC<Props> = ({
                     appointmentTypeId:
                         process.env.REACT_APP_ENV === 'prod'
                             ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                            : Acuity.Constants.AppointmentTypes
-                                  .TEST_HOLIDAY_PROGRAM,
+                            : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
                     dateTime: klass.time,
                     parentFirstName: form.parentFirstName,
                     parentLastName: form.parentLastName,
@@ -77,16 +72,11 @@ const Payment: React.FC<Props> = ({
         })
 
         // check if payment intent already stored in database
-        const query = await firebase.db
-            .collection('holidayProgramBookings')
-            .doc(paymentIntentId)
-            .get()
+        const query = await firebase.db.collection('holidayProgramBookings').doc(paymentIntentId).get()
 
         if (!query.exists) {
             let batch = firebase.db.batch()
-            let paymentIntentRef = firebase.db
-                .collection('holidayProgramBookings')
-                .doc(paymentIntentId)
+            let paymentIntentRef = firebase.db.collection('holidayProgramBookings').doc(paymentIntentId)
             batch.set(paymentIntentRef, { booked: false })
             programs.forEach((program) => {
                 let programRef = paymentIntentRef.collection('programs').doc()
@@ -144,18 +134,14 @@ const Payment: React.FC<Props> = ({
                     }}
                 >
                     I have read and agreed to the{' '}
-                    <Typography.Link onClick={() => setShowTermsModal(true)}>
-                        Terms and Conditions
-                    </Typography.Link>
+                    <Typography.Link onClick={() => setShowTermsModal(true)}>Terms and Conditions</Typography.Link>
                 </Checkbox>
             </div>
             {showTermsWarning && (
-                <Typography.Text type="danger">
-                    Please accept the terms and conditions
-                </Typography.Text>
+                <Typography.Text type="danger">Please accept the terms and conditions</Typography.Text>
             )}
             {paymentError && (
-                <Typography.Title type='danger' level={5} style={{ textAlign: 'center', marginTop: 12 }}>
+                <Typography.Title type="danger" level={5} style={{ textAlign: 'center', marginTop: 12 }}>
                     {paymentError}
                 </Typography.Title>
             )}
@@ -173,10 +159,7 @@ const Payment: React.FC<Props> = ({
                 title="Terms and conditions"
                 visible={showTermsModal}
                 footer={[
-                    <Button
-                        type="primary"
-                        onClick={() => setShowTermsModal(false)}
-                    >
+                    <Button type="primary" onClick={() => setShowTermsModal(false)}>
                         Ok
                     </Button>,
                 ]}

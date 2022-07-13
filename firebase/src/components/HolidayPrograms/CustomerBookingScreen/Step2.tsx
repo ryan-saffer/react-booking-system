@@ -39,9 +39,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
             <Form.Item
                 label="Parent Last Name"
                 name="parentLastName"
-                rules={[
-                    { required: true, message: 'Please input your last name.' },
-                ]}
+                rules={[{ required: true, message: 'Please input your last name.' }]}
             >
                 <Input />
             </Form.Item>
@@ -71,10 +69,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
             </Form.Item>
             <Divider>Emergency Contact</Divider>
-            <Text strong>
-                This person will be contacted in the case we cannot get hold of
-                you
-            </Text>
+            <Text strong>This person will be contacted in the case we cannot get hold of you</Text>
             <Form.Item
                 style={{ marginTop: 12 }}
                 label="Emergency contact name"
@@ -94,8 +89,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 rules={[
                     {
                         required: true,
-                        message:
-                            'Please input the emergency contact phone number.',
+                        message: 'Please input the emergency contact phone number.',
                     },
                 ]}
             >
@@ -109,15 +103,12 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                 <Fragment key={field.key}>
                                     <Divider>
                                         Child #{index + 1}
-                                        <MinusCircleOutlined
-                                            style={{ marginLeft: 12 }}
-                                            onClick={() => remove(index)}
-                                        />
+                                        <MinusCircleOutlined style={{ marginLeft: 12 }} onClick={() => remove(index)} />
                                     </Divider>
                                     <ChildForm childNumber={index} />
                                 </Fragment>
                             ))}
-                            <Form.Item key="addChild">
+                            <Form.Item key="addChild" style={{ marginBottom: 0 }}>
                                 <Button
                                     type="dashed"
                                     size="large"
@@ -128,10 +119,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                         let canAdd = true
                                         selectedClasses.forEach((klass) => {
                                             // +1 for the one we are adding now
-                                            if (
-                                                fields.length + 1 >
-                                                klass.slotsAvailable
-                                            ) {
+                                            if (fields.length + 1 > klass.slotsAvailable) {
                                                 setShowModal(true)
                                                 canAdd = false
                                             }
@@ -153,22 +141,13 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 title="Not enough spots"
                 visible={showModal}
                 footer={[
-                    <Button
-                        key="ok"
-                        type="primary"
-                        onClick={() => setShowModal(false)}
-                    >
+                    <Button key="ok" type="primary" onClick={() => setShowModal(false)}>
                         Ok
                     </Button>,
                 ]}
             >
-                <p>
-                    It looks like one of the programs you selected does not have
-                    enough spots for another child.
-                </p>
-                <p>
-                    You can always go back and select a class with more spots.
-                </p>
+                <p>It looks like one of the programs you selected does not have enough spots for another child.</p>
+                <p>You can always go back and select a class with more spots.</p>
             </Modal>
         </>
     )

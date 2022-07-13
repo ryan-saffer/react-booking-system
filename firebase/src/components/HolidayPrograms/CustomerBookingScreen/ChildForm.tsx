@@ -16,18 +16,14 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
             <Form.Item
                 name={[childNumber, 'childName']}
                 label="Child's name"
-                rules={[
-                    { required: true, message: "Please input child's name" },
-                ]}
+                rules={[{ required: true, message: "Please input child's name" }]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 name={[childNumber, 'childAge']}
                 label="Child's age"
-                rules={[
-                    { required: true, message: "Please input child's age" },
-                ]}
+                rules={[{ required: true, message: "Please input child's age" }]}
             >
                 <Input />
             </Form.Item>
