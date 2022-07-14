@@ -6,8 +6,9 @@ import { callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Payment from './Payment'
 import BookingSummary from './BookingSummary'
 import { Acuity } from 'fizz-kidz'
-import { Form, PROGRAM_PRICE } from '.'
+import { Form } from '.'
 import { FormInstance, Spin, Result } from 'antd'
+import { calculateTotal, getSameDayClasses } from './utilities'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -33,11 +34,14 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
         clientSecret: paymentIntent.clientSecret,
     }
 
-    const totalPrice = selectedClasses.length * form.children.length * PROGRAM_PRICE * 100
+    console.log('selected classes', selectedClasses)
+    const discountedClasses = getSameDayClasses(selectedClasses)
+    const { totalPrice, originalTotal } = calculateTotal(selectedClasses, discountedClasses, form.children.length)
 
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
+                console.log('creating payment intent with amount', 0)
                 let result = await callFirebaseFunction(
                     'createPaymentIntent',
                     firebase
@@ -45,7 +49,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                     name: `${form.parentFirstName} ${form.parentFirstName}`,
                     email: form.parentEmail,
                     phone: form.phone,
-                    amount: amount,
+                    amount: amount * 100,
                     description: `${selectedStore} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
                     program: 'holiday_program',
                 })
@@ -84,7 +88,13 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
 
     return (
         <>
-            <BookingSummary form={form} selectedClasses={selectedClasses} total={totalPrice} />
+            <BookingSummary
+                form={form}
+                selectedClasses={selectedClasses}
+                discountedClasses={discountedClasses}
+                total={totalPrice}
+                originalTotal={discountedClasses.length !== 0 ? originalTotal : undefined}
+            />
             <Elements stripe={stripePromise} options={options}>
                 <Payment
                     form={form}
