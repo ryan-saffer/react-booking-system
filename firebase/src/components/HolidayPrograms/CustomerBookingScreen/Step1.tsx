@@ -1,19 +1,27 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Form, Checkbox, Select } from 'antd'
+import { Form, Checkbox, Select, Tag } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Locations } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { capitalise } from '../../../utilities/stringUtilities'
+import { getSameDayClasses } from './utilities'
 const { Option } = Select
 
 type Props = {
     classes: Acuity.Class[]
+    selectedClasses: Acuity.Class[]
     selectedStore: string
     setSelectedStore: Dispatch<SetStateAction<string>>
     onClassSelectionChange: (e: CheckboxChangeEvent) => void
 }
 
-const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onClassSelectionChange }) => {
+const Step1: React.FC<Props> = ({
+    classes,
+    selectedStore,
+    setSelectedStore,
+    onClassSelectionChange,
+    selectedClasses,
+}) => {
     const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>()
 
     useEffect(() => {
@@ -21,6 +29,8 @@ const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onCl
             setFilteredClasses(classes?.filter((it) => it.calendar.toLowerCase().includes(selectedStore)))
         }
     }, [selectedStore])
+
+    const discountedClasses = getSameDayClasses(selectedClasses)
 
     return (
         <>
@@ -66,9 +76,10 @@ const Step1: React.FC<Props> = ({ classes, selectedStore, setSelectedStore, onCl
                                     hour12: true,
                                 })}
                             </p>
-                            <p>
+                            <p style={{ marginBottom: 0 }}>
                                 {klass.slotsAvailable > 0 ? `[${klass.slotsAvailable} spot/s left]` : '[No spots left]'}
                             </p>
+                            {discountedClasses.includes(klass.id) && <Tag color='green'>All day discount: -$5.00</Tag>}
                         </Checkbox>
                     </Form.Item>
                 )

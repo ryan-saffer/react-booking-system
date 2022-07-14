@@ -93,6 +93,10 @@ const CustomerBookingScreen = () => {
         }
     }, [classes])
 
+    useEffect(() => {
+        console.log(formValues)
+    }, [formValues])
+
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         const selectedClass = classes.filter((it) => it.id === e.target.value)[0]
         const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
@@ -111,6 +115,7 @@ const CustomerBookingScreen = () => {
                 return (
                     <Step1
                         classes={classes}
+                        selectedClasses={selectedClasses}
                         selectedStore={selectedStore}
                         setSelectedStore={setSelectedStore}
                         onClassSelectionChange={handleClassSelectionChange}
@@ -148,7 +153,15 @@ const CustomerBookingScreen = () => {
             <Form
                 form={form}
                 initialValues={{ prefix: '61' }}
-                onValuesChange={(_, values) => setFormValues(values)}
+                onValuesChange={(_, values) => {
+                    // filter out any removed children with undefined values
+                    let children = values.children
+                    console.log(children)
+                    if (children) {
+                        values.children = children.filter((child: any) => child && child.childName !== undefined)
+                    }
+                    setFormValues(values)
+                }}
                 layout="vertical"
             >
                 {renderStep()}
@@ -178,7 +191,13 @@ const CustomerBookingScreen = () => {
                     onClick={async () => {
                         await form.validateFields()
                         if (step === 2) {
-                            if (form.getFieldsValue()['children']) {
+                            // check if any children added
+                            // (removing a child makes their values undefined.. so filter those out to be sure)
+                            // let children = (formValues as Form).children.filter(child => child.childName !== undefined)
+                            
+
+                            // console.log('stepping')
+                            if ((formValues as Form).children) {
                                 setStep(step + 1)
                             } else {
                                 setShowNoChildrenModal(true)

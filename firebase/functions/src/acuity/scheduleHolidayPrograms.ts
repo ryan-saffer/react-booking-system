@@ -11,17 +11,13 @@ const acuity = AcuitySdk.basic({
     apiKey: acuityCredentials.api_key,
 })
 
-export default async function scheduleHolidayPrograms(
-    programs: Acuity.Client.HolidayProgramBooking[]
-) {
+export default async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBooking[]) {
     let promises: Promise<Acuity.Appointment>[] = []
     programs.forEach((program) => {
         promises.push(
             new Promise((resolve, reject) => {
                 scheduleHolidayProgram(program)
-                    .then((appointment) =>
-                        resolve(appointment as Acuity.Appointment)
-                    )
+                    .then((appointment) => resolve(appointment as Acuity.Appointment))
                     .catch((err) => reject(err))
             })
         )
@@ -31,9 +27,21 @@ export default async function scheduleHolidayPrograms(
         let result = await Promise.all(promises)
         const mailClient = new MailClient()
 
-        let bookings: Emails['holidayProgramConfirmation']['values']['bookings'] =
-            []
-        result.forEach((appointment) => {
+        let bookings: Emails['holidayProgramConfirmation']['values']['bookings'] = []
+        let sortedAppointments = result.sort((a, b) => {
+            const child1Name = Acuity.Utilities.retrieveFormAndField(
+                a,
+                Acuity.Constants.Forms.CHILDREN_DETAILS,
+                Acuity.Constants.FormFields.CHILDREN_NAMES
+            )
+            const child2Name = Acuity.Utilities.retrieveFormAndField(
+                b,
+                Acuity.Constants.Forms.CHILDREN_DETAILS,
+                Acuity.Constants.FormFields.CHILDREN_NAMES
+            )
+            return a.datetime < b.datetime ? -1 : a.datetime > b.datetime ? 1 : child1Name < child2Name ? 1 : -1
+        })
+        sortedAppointments.forEach((appointment) => {
             const dateTime = DateTime.fromISO(appointment.datetime, {
                 setZone: true,
             }).toLocaleString({
@@ -72,9 +80,7 @@ export default async function scheduleHolidayPrograms(
     }
 }
 
-async function scheduleHolidayProgram(
-    program: Acuity.Client.HolidayProgramBooking
-) {
+async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooking) {
     const options = {
         method: 'POST',
         body: {
@@ -85,6 +91,7 @@ async function scheduleHolidayProgram(
             email: program.parentEmail,
             phone: program.parentPhone,
             paid: true,
+            certificate: program.discountCode,
             fields: [
                 {
                     id: Acuity.Constants.FormFields.CHILDREN_NAMES,
@@ -100,12 +107,12 @@ async function scheduleHolidayProgram(
                 },
                 {
                     id: Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME_HP,
-                    value: program.emergencyContactName
+                    value: program.emergencyContactName,
                 },
                 {
                     id: Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
-                    value: program.emergencyContactPhone
-                }
+                    value: program.emergencyContactPhone,
+                },
             ],
         },
     }
@@ -114,11 +121,7 @@ async function scheduleHolidayProgram(
         acuity.request(
             `/appointments?admin=true&noEmail=true`,
             options,
-            (
-                err: any,
-                _acuityResult: any,
-                appointment: Acuity.Appointment | Acuity.Error
-            ) => {
+            (err: any, _acuityResult: any, appointment: Acuity.Appointment | Acuity.Error) => {
                 if (hasError(err, appointment)) {
                     reject(err ?? appointment)
                     return

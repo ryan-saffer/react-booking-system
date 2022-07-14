@@ -4,7 +4,8 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity } from 'fizz-kidz'
 import { Form } from '.'
 import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { makeStyles } from '@material-ui/core'
+import { getSameDayClasses } from './utilities'
 
 type Props = {
     form: Form
@@ -14,6 +15,8 @@ type Props = {
 }
 
 const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) => {
+    const classes = useStyles()
+
     const stripe = useStripe()
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
@@ -49,6 +52,8 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
         // This process ensures a class is not booked without paid, and vice versa,
         // and handles states such as failed payments gracefully.
 
+        const discountedPrograms = getSameDayClasses(selectedClasses)
+
         let programs: Acuity.Client.HolidayProgramBooking[] = []
         selectedClasses.forEach((klass) => {
             form.children.forEach((child) => {
@@ -67,6 +72,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
                     childName: child.childName,
                     childAge: child.childAge,
                     childAllergies: child.allergies ?? '',
+                    discountCode: discountedPrograms.includes(klass.id) ? 'allday' : '',
                 })
             })
         })
@@ -107,6 +113,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
             elements,
             confirmParams: {
                 return_url: 'https://example.com/order/123/complete',
+                receipt_email: form.parentEmail,
             },
         })
 
@@ -146,6 +153,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
                 </Typography.Title>
             )}
             <Button
+                className={classes.primaryButton}
                 block
                 type={submitting ? 'default' : 'primary'}
                 size="large"
@@ -169,5 +177,12 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
         </>
     )
 }
+
+const useStyles = makeStyles({
+    primaryButton: {
+        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        borderColor: 'white',
+    },
+})
 
 export default Payment
