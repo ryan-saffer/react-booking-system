@@ -11,5 +11,5 @@ export function hasError(error: any, object: any | Acuity.Error): object is Acui
 }
 
 export function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
-    return (object as Acuity.Error).error !== undefined
+    return object.error !== undefined && object.status_code !== undefined && object.message !== undefined
 }

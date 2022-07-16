@@ -9,6 +9,7 @@ export interface AcuityFunctions {
     updateLabel: Function<UpdateLabelParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
     scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
+    checkCertificate: Function<CheckCertificateParams, CertificateResult>
 }
 
 export interface FetchAppointmentsParams {
@@ -55,4 +56,15 @@ export type HolidayProgramBooking = {
     childAge: string
     childAllergies: string
     discountCode: string
+}
+
+export type CheckCertificateParams = {
+    certificate: string
+    appointmentTypeId: number
+    email: string
+}
+
+export type CertificateResult = {
+    discountType: 'percentage' | 'price'
+    discountAmount: number
 }

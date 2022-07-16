@@ -9,6 +9,7 @@ import { Acuity } from 'fizz-kidz'
 import { Form } from '.'
 import { FormInstance, Spin, Result } from 'antd'
 import { calculateTotal, getSameDayClasses } from './utilities'
+import DiscountInput from './DiscountInput'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -95,6 +96,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                 total={totalPrice}
                 originalTotal={discountedClasses.length !== 0 ? originalTotal : undefined}
             />
+            <DiscountInput email={form.parentEmail} />
             <Elements stripe={stripePromise} options={options}>
                 <Payment
                     form={form}
