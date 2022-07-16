@@ -4,10 +4,10 @@ import {
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
     Metadata,
+    Acuity
 } from 'fizz-kidz'
 import Stripe from 'stripe'
 import { db } from '..'
-import { Acuity } from 'fizz-kidz'
 import scheduleHolidayPrograms from '../acuity/scheduleHolidayPrograms'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'

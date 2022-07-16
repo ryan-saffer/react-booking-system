@@ -1,10 +1,14 @@
+import { CheckCertificateParams } from './../../../../fizz-kidz/src/acuity/client'
 import { DateTime } from 'luxon'
 import * as functions from 'firebase-functions'
 import { Acuity, AppsScript } from 'fizz-kidz'
 import { runAppsScript } from '../../../bookings'
+import { hasError } from '../../shared'
+// import { throwError } from '../../../utilities'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../../credentials/acuity_credentials.json')
-import { hasError } from '../../shared'
+const sdk = require('api')('@acuity-developers/v1.1#dojefkzhen2fq')
+sdk.auth(process.env.SEND_GRID_API_KEY, process.env.ACUITY_API_KEY)
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
@@ -18,30 +22,26 @@ type AcuityClientParams = {
 
 export const client = functions
     .region('australia-southeast1')
-    .https.onCall(
-        (
-            data: AcuityClientParams,
-            _context: functions.https.CallableContext
-        ) => {
-            let input
-            switch (data.method) {
-                case 'updateEnrolment':
-                    input =
-                        data.input as Acuity.Client.UpdateScienceEnrolmentParams
-                    return updateEnrolment(input)
-                case 'unenrollChildFromTerm':
-                    input =
-                        data.input as Acuity.Client.UnenrollChildFromTermParams
-                    return unenrollChildFromTerm(input)
-                case 'updateLabel':
-                    input = data.input as Acuity.Client.UpdateLabelParams
-                    return updateLabel(input)
-                case 'classAvailability':
-                    input = data.input as Acuity.Client.ClassAvailabilityParams
-                    return getClassAvailability(input)
-            }
+    .https.onCall((data: AcuityClientParams, _context: functions.https.CallableContext) => {
+        let input
+        switch (data.method) {
+            case 'updateEnrolment':
+                input = data.input as Acuity.Client.UpdateScienceEnrolmentParams
+                return updateEnrolment(input)
+            case 'unenrollChildFromTerm':
+                input = data.input as Acuity.Client.UnenrollChildFromTermParams
+                return unenrollChildFromTerm(input)
+            case 'updateLabel':
+                input = data.input as Acuity.Client.UpdateLabelParams
+                return updateLabel(input)
+            case 'classAvailability':
+                input = data.input as Acuity.Client.ClassAvailabilityParams
+                return getClassAvailability(input)
+            case 'checkCertificate':
+                input = data.input as Acuity.Client.CheckCertificateParams
+                return checkCertificate(input)
         }
-    )
+    })
 
 async function updateEnrolment(
     input: Acuity.Client.AcuityFunctions['updateEnrolment']['input']
@@ -49,17 +49,11 @@ async function updateEnrolment(
     try {
         return await updateAllScienceAppointmentsForChild(input)
     } catch (error) {
-        throw new functions.https.HttpsError(
-            'internal',
-            'error updating all science club appointments',
-            error
-        )
+        throw new functions.https.HttpsError('internal', 'error updating all science club appointments', error)
     }
 }
 
-function updateAllScienceAppointmentsForChild(
-    params: Acuity.Client.UpdateScienceEnrolmentParams
-) {
+function updateAllScienceAppointmentsForChild(params: Acuity.Client.UpdateScienceEnrolmentParams) {
     const { email, appointmentTypeId, childName, fieldId, value } = params
 
     return new Promise<Acuity.Appointment[]>((resolve, reject) => {
@@ -68,40 +62,23 @@ function updateAllScienceAppointmentsForChild(
         // therefore appointmentTypeId and email is not enough
         acuity.request(
             `/appointments?email=${email}&appointmentTypeID=${appointmentTypeId}&field:${Acuity.Constants.FormFields.CHILD_NAME}=${childName}`,
-            function (
-                err: any,
-                _resp: any,
-                appointments: Acuity.Appointment[] | Acuity.Error
-            ) {
+            function (err: any, _resp: any, appointments: Acuity.Appointment[] | Acuity.Error) {
                 if (hasError(err, appointments)) {
                     reject(err ?? appointments)
                     return
                 }
 
                 if (appointments.length <= 0) {
-                    console.error(
-                        'no appointments found matching params:',
-                        email,
-                        appointmentTypeId,
-                        childName
-                    )
+                    console.error('no appointments found matching params:', email, appointmentTypeId, childName)
                     reject('no appointments found matching params')
                     return
                 }
 
                 // then update each one with the invoice id
                 const promises: Promise<Acuity.Appointment>[] = []
-                console.log(
-                    'updating all science club appointments for this client...'
-                )
+                console.log('updating all science club appointments for this client...')
                 appointments.forEach((appointment) => {
-                    promises.push(
-                        updateAppointmentFormField(
-                            appointment.id,
-                            fieldId,
-                            value
-                        )
-                    )
+                    promises.push(updateAppointmentFormField(appointment.id, fieldId, value))
                 })
                 Promise.all(promises)
                     .then((result) => {
@@ -114,11 +91,7 @@ function updateAllScienceAppointmentsForChild(
     })
 }
 
-function updateAppointmentFormField(
-    appointmentId: number,
-    fieldId: number,
-    value: string
-) {
+function updateAppointmentFormField(appointmentId: number, fieldId: number, value: string) {
     console.log(`updating single appointment: ${appointmentId}`)
     const options = {
         method: 'PUT',
@@ -136,11 +109,7 @@ function updateAppointmentFormField(
         acuity.request(
             `/appointments/${appointmentId}`,
             options,
-            (
-                err: any,
-                _acuityRes: any,
-                appointment: Acuity.Appointment | Acuity.Error
-            ) => {
+            (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
                 if (hasError(err, appointment)) {
                     reject(err ?? appointment)
                     return
@@ -152,9 +121,7 @@ function updateAppointmentFormField(
     })
 }
 
-function unenrollChildFromTerm(
-    params: Acuity.Client.UnenrollChildFromTermParams
-) {
+function unenrollChildFromTerm(params: Acuity.Client.UnenrollChildFromTermParams) {
     const options = {
         method: 'PUT',
     }
@@ -163,11 +130,7 @@ function unenrollChildFromTerm(
         acuity.request(
             `/appointments/${params.appointmentId}/cancel?admin=true`,
             options,
-            async (
-                err: any,
-                _acuityRes: any,
-                appointment: Acuity.Appointment | Acuity.Error
-            ) => {
+            async (err: any, _acuityRes: any, appointment: Acuity.Appointment | Acuity.Error) => {
                 if (hasError(err, appointment)) {
                     reject(err ?? appointment)
                     return
@@ -184,11 +147,9 @@ function unenrollChildFromTerm(
                     ),
                 }
 
-                await runAppsScript(
-                    AppsScript.Functions
-                        .SEND_TERM_UNENROLMENT_CONFIRMATION_EMAIL,
-                    [appsScriptAppointment]
-                )
+                await runAppsScript(AppsScript.Functions.SEND_TERM_UNENROLMENT_CONFIRMATION_EMAIL, [
+                    appsScriptAppointment,
+                ])
 
                 resolve(appointment)
             }
@@ -208,11 +169,7 @@ function updateLabel(data: Acuity.Client.UpdateLabelParams) {
         acuity.request(
             `/appointments/${data.appointmentId}`,
             options,
-            (
-                err: any,
-                _acuityResult: any,
-                appointment: Acuity.Appointment | Acuity.Error
-            ) => {
+            (err: any, _acuityResult: any, appointment: Acuity.Appointment | Acuity.Error) => {
                 if (hasError(err, appointment)) {
                     reject(err ?? appointment)
                     return
@@ -224,9 +181,7 @@ function updateLabel(data: Acuity.Client.UpdateLabelParams) {
     })
 }
 
-async function getClassAvailability({
-    appointmentTypeId,
-}: Acuity.Client.ClassAvailabilityParams) {
+async function getClassAvailability({ appointmentTypeId }: Acuity.Client.ClassAvailabilityParams) {
     console.log(appointmentTypeId)
     const date = encodeURIComponent(DateTime.now().toISO())
     console.log(date)
@@ -234,17 +189,28 @@ async function getClassAvailability({
     return new Promise((resolve, reject) => {
         acuity.request(
             `/availability/classes?appointmentTypeID=${appointmentTypeId}&minDate=${date}&includeUnavailable=true`,
-            (
-                err: any,
-                _acuityResult: any,
-                classes: Acuity.Class | Acuity.Error
-            ) => {
+            (err: any, _acuityResult: any, classes: Acuity.Class | Acuity.Error) => {
                 if (hasError(err, classes)) {
                     reject(err ?? classes)
                     return
                 }
 
                 resolve(classes)
+            }
+        )
+    })
+}
+
+async function checkCertificate(params: CheckCertificateParams) {
+    return new Promise((resolve, reject) => {
+        acuity.request(
+            `/certificates/check?certificate=${params.certificate}&appointmentTypeID=${params.appointmentTypeId}&email=${params.email}`,
+            (err: any, _acuityResult: any, result: Acuity.Client.CertificateResult | Acuity.Error) => {
+                if (hasError(err, result)) {
+                    console.log('throw https error')
+                    reject(new functions.https.HttpsError('aborted', 'error checking certicicate', err ?? result))
+                }
+                resolve(result)
             }
         )
     })
