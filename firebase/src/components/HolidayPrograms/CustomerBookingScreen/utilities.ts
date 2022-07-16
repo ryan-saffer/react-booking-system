@@ -1,14 +1,12 @@
 import { Acuity } from 'fizz-kidz'
 
 const PROGRAM_PRICE = 45
+const DISCOUNT_PRICE = 5
 
 export function calculateTotal(selectedClasses: Acuity.Class[], discountedClasses: number[], numberOfChildren: number) {
     const originalTotal = selectedClasses.length * numberOfChildren * PROGRAM_PRICE
-    console.log('originalTotal', originalTotal)
-    const amountDiscounted = discountedClasses.length * numberOfChildren * 5
-    console.log('amountDiscounted', amountDiscounted)
+    const amountDiscounted = discountedClasses.length * numberOfChildren * DISCOUNT_PRICE
     const totalPrice = originalTotal - amountDiscounted
-    console.log('total', totalPrice)
 
     return {
         originalTotal,
