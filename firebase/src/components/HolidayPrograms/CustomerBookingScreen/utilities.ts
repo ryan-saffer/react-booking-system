@@ -1,11 +1,28 @@
+import { es } from 'date-fns/locale'
 import { Acuity } from 'fizz-kidz'
 
-const PROGRAM_PRICE = 45
-const DISCOUNT_PRICE = 5
+export const PROGRAM_PRICE = 45
+export const DISCOUNT_PRICE = 5
 
-export function calculateTotal(selectedClasses: Acuity.Class[], discountedClasses: number[], numberOfChildren: number) {
+export function calculateTotal(
+    selectedClasses: Acuity.Class[],
+    discountedClasses: number[],
+    numberOfChildren: number,
+    discount?: Acuity.Certificate
+) {
     const originalTotal = selectedClasses.length * numberOfChildren * PROGRAM_PRICE
-    const amountDiscounted = discountedClasses.length * numberOfChildren * DISCOUNT_PRICE
+    let amountDiscounted: number
+    if (discount) {
+        switch(discount.discountType) {
+            case 'percentage':
+                amountDiscounted = originalTotal * (discount.discountAmount / 100)
+                break;
+            case 'price':
+                amountDiscounted = discount.discountAmount
+        }
+    } else {
+        amountDiscounted = discountedClasses.length * numberOfChildren * DISCOUNT_PRICE
+    }
     const totalPrice = originalTotal - amountDiscounted
 
     return {

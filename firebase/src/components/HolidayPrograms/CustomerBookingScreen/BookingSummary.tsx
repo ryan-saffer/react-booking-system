@@ -1,59 +1,57 @@
-import React from 'react'
-import { Acuity } from 'fizz-kidz'
+import React, { Dispatch, SetStateAction } from 'react'
 import { List, Typography, Tag } from 'antd'
-import { DateTime } from 'luxon'
-import { Form, PROGRAM_PRICE } from '.'
+import { ItemSummary } from './Step3'
+import { DISCOUNT_PRICE, PROGRAM_PRICE } from './utilities'
+import { Acuity } from 'fizz-kidz'
 
 type Props = {
-    form: Form
-    selectedClasses: Acuity.Class[]
-    discountedClasses: number[]
+    summarisedItems: ItemSummary[]
     total: number
+    discount: Acuity.Certificate | undefined
     originalTotal?: number
+    setDiscount: Dispatch<SetStateAction<Acuity.Certificate | undefined>>
 }
 
-type ChildForm = {
-    childName: string
-}
-
-const BookingSummary: React.FC<Props> = ({ form, selectedClasses, discountedClasses, total, originalTotal }) => {
-    let dataSource: { name: string; discounted: boolean }[] = []
-    selectedClasses.forEach((klass) => {
-        form['children'].forEach((child: ChildForm) => {
-            const dateTime = DateTime.fromISO(klass.time).toLocaleString({
-                weekday: 'long',
-                month: 'short',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-            })
-            dataSource.push({
-                name: `${child.childName} - ${dateTime}`,
-                discounted: discountedClasses.includes(klass.id),
-            })
-        })
-    })
-
+const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, originalTotal, setDiscount }) => {
     return (
         <List
             header={<Typography.Title level={4}>Booking summary</Typography.Title>}
-            footer={<Typography.Title level={4}>
-                Total price:{' '}
-                {originalTotal && <del>${originalTotal}.00</del>}{' '}
-                ${total}.00
-            </Typography.Title>}
-            dataSource={dataSource}
-            renderItem={(item) => (
-                <List.Item>
-                    <Typography.Text>
-                        {item.name}{' '}
-                        {item.discounted && <del>(${PROGRAM_PRICE}.00)</del>}
-                        (${item.discounted ? PROGRAM_PRICE - 5 : PROGRAM_PRICE}.00)
-                    </Typography.Text>
-                    {item.discounted && <Tag color="green">All day discount: -$5.00</Tag>}
-                </List.Item>
-            )}
+            footer={
+                <>
+                    <Typography.Title level={4}>
+                        Total price: {originalTotal && <del>${originalTotal.toFixed(2)}</del>} ${total.toFixed(2)}
+                    </Typography.Title>
+                    {discount && (
+                        <Tag
+                            style={{
+                                fontSize: 14,
+                                padding: 7,
+                            }}
+                            color="green"
+                            closable
+                            onClose={() => setDiscount(undefined)}
+                        >
+                            {discount.certificate}:{' '}
+                            {discount.discountType === 'percentage'
+                                ? `${discount.discountAmount}% off`
+                                : `-$${discount.discountAmount.toFixed(2)}`}
+                        </Tag>
+                    )}
+                </>
+            }
+            dataSource={summarisedItems}
+            renderItem={(item) => {
+                const isDiscounted = discount === undefined && item.discounted
+                return (
+                    <List.Item>
+                        <Typography.Text>
+                            {item.name} {isDiscounted && <del>(${PROGRAM_PRICE.toFixed(2)})</del>}
+                            (${(isDiscounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE).toFixed(2)})
+                        </Typography.Text>
+                        {isDiscounted && <Tag color="green">All day discount: -${DISCOUNT_PRICE.toFixed(2)}</Tag>}
+                    </List.Item>
+                )
+            }}
         ></List>
     )
 }

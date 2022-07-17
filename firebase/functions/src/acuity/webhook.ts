@@ -9,7 +9,7 @@ import * as StripeConfig from '../config/stripe'
 const stripeConfig = StripeConfig.PROD_CONFIG
 import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
+    apiVersion: "2020-08-27" // https://stripe.com/docs/api/versioning
   })
 
 const acuity = AcuitySdk.basic({

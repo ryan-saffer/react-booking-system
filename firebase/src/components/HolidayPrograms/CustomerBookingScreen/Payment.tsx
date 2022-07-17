@@ -12,9 +12,10 @@ type Props = {
     formInstance: FormInstance
     selectedClasses: Acuity.Class[]
     paymentIntentId: string
+    discount: Acuity.Certificate | undefined
 }
 
-const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) => {
+const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, discount }) => {
     const classes = useStyles()
 
     const stripe = useStripe()
@@ -86,7 +87,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
             batch.set(paymentIntentRef, { booked: false })
             programs.forEach((program) => {
                 let programRef = paymentIntentRef.collection('programs').doc()
-                batch.set(programRef, { ...program, booked: false })
+                batch.set(programRef, { ...program })
             })
             try {
                 await batch.commit()
@@ -95,18 +96,6 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId }) =>
                 setSubmitting(false)
             }
         }
-
-        // first book into acuity
-        // let acuityResult = await callAcuityClientV2(
-        //     'scheduleHolidayProgram',
-        //     firebase
-        // )(programs)
-
-        // if (!acuityResult) {
-        //     console.error('error booking into acuity')
-        //     setSubmitting(false)
-        //     return
-        // }
 
         const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element

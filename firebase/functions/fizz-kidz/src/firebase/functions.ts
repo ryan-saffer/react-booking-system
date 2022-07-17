@@ -1,6 +1,6 @@
 import { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, SendInvoiceParams } from '../scienceclub/invoicing'
 import { Appointment } from '../acuity';
-import { CreatePaymentIntentParams, CreatePaymentIntentResponse } from '..';
+import { CreatePaymentIntentParams, CreatePaymentIntentResponse, UpdatePaymentIntentParams } from '..';
 
 export interface FirebaseFunctions {
     retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatusWithUrl>
@@ -8,6 +8,7 @@ export interface FirebaseFunctions {
     voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
     sendTermContinuationEmail: Function<Appointment, null>
     createPaymentIntent: Function<CreatePaymentIntentParams, CreatePaymentIntentResponse>
+    updatePaymentIntent: Function<UpdatePaymentIntentParams, void>
 }
 
 export type Function<Input, Result> = {
