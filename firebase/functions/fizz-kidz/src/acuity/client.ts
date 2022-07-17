@@ -1,5 +1,5 @@
 import { Function } from '../firebase/functions'
-import { Appointment } from ".";
+import { Appointment, Certificate } from ".";
 import { Class } from './types';
 
 export interface AcuityFunctions {
@@ -9,7 +9,7 @@ export interface AcuityFunctions {
     updateLabel: Function<UpdateLabelParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
     scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
-    checkCertificate: Function<CheckCertificateParams, CertificateResult>
+    checkCertificate: Function<CheckCertificateParams, Certificate>
 }
 
 export interface FetchAppointmentsParams {
@@ -62,9 +62,4 @@ export type CheckCertificateParams = {
     certificate: string
     appointmentTypeId: number
     email: string
-}
-
-export type CertificateResult = {
-    discountType: 'percentage' | 'price'
-    discountAmount: number
 }

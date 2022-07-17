@@ -63,3 +63,9 @@ export type Class = {
     slotsAvailable: number
     time: string
 }
+
+export type Certificate = {
+    discountType: 'percentage' | 'price'
+    discountAmount: number
+    certificate: string
+}

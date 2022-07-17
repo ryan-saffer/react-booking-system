@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
-import { Input, Typography } from 'antd'
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import { Button, Input, Popover, Tag, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 const AppointmentTypeId =
     process.env.REACT_APP_ENV === 'prod'
@@ -11,11 +12,13 @@ const AppointmentTypeId =
 
 type Props = {
     email: string
+    setDiscount: Dispatch<SetStateAction<Acuity.Certificate | undefined>>
 }
 
-const DiscountInput: React.FC<Props> = ({ email }) => {
+const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
+    const [value, setValue] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -31,10 +34,6 @@ const DiscountInput: React.FC<Props> = ({ email }) => {
 
         setLoading(true)
         setError('')
-        // setTimeout(() => {
-        //     setLoading(false)
-        //     setError(true)
-        // }, 2000)
 
         try {
             let result = await callAcuityClientV2(
@@ -45,12 +44,9 @@ const DiscountInput: React.FC<Props> = ({ email }) => {
                 certificate: value,
                 email: email,
             })
-            if (result.data.discountType === 'price') {
-                console.log('price discount of', result.data.discountAmount)
-            } else if (result.data.discountType === 'percentage') {
-                console.log('percentage discount of', result.data.discountAmount)
-            }
-        } catch(error: any) {
+            setValue('')
+            setDiscount({ ...result.data })
+        } catch (error: any) {
             if (error.message) {
                 setError(error.message)
             } else {
@@ -62,13 +58,31 @@ const DiscountInput: React.FC<Props> = ({ email }) => {
 
     return (
         <div style={{ marginBottom: 16 }}>
-            <Input.Search
-                loading={loading}
-                onSearch={validateDiscount}
-                placeholder="Enter discount code"
-                enterButton="Apply discount code"
-                status={error ? 'error' : ''}
-            />
+            <>
+                <Input.Search
+                    style={{ width: '90%' }}
+                    value={value}
+                    loading={loading}
+                    onChange={(e) => {
+                        setValue(e.target.value)
+                        setError('')
+                    }}
+                    onSearch={validateDiscount}
+                    placeholder="Apply discount code.."
+                    status={error ? 'error' : ''}
+                />
+                <Popover
+                    title="Discounts"
+                    content={
+                        <>
+                            <p>Only one discount can be applied at a time.</p>
+                            <p>The 'same day discount' will be overriden by any discount added here.</p>
+                        </>
+                    }
+                >
+                    <Button style={{ width: '10%' }} type="link" icon={<InfoCircleOutlined />} />
+                </Popover>
+            </>
             {error && <Typography.Text type="danger">{error}</Typography.Text>}
         </div>
     )

@@ -5,7 +5,7 @@ const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
 import Stripe from 'stripe'
 const stripe = new Stripe(stripeConfig.API_KEY, {
-  apiVersion: "2020-03-02" // https://stripe.com/docs/api/versioning
+  apiVersion: "2020-08-27" // https://stripe.com/docs/api/versioning
 })
 import { Acuity, RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams } from 'fizz-kidz'
 import { hasError } from './shared'

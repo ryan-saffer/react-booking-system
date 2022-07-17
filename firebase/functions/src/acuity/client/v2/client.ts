@@ -7,8 +7,6 @@ import { hasError } from '../../shared'
 // import { throwError } from '../../../utilities'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../../credentials/acuity_credentials.json')
-const sdk = require('api')('@acuity-developers/v1.1#dojefkzhen2fq')
-sdk.auth(process.env.SEND_GRID_API_KEY, process.env.ACUITY_API_KEY)
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
@@ -205,7 +203,7 @@ async function checkCertificate(params: CheckCertificateParams) {
     return new Promise((resolve, reject) => {
         acuity.request(
             `/certificates/check?certificate=${params.certificate}&appointmentTypeID=${params.appointmentTypeId}&email=${params.email}`,
-            (err: any, _acuityResult: any, result: Acuity.Client.CertificateResult | Acuity.Error) => {
+            (err: any, _acuityResult: any, result: Acuity.Certificate | Acuity.Error) => {
                 if (hasError(err, result)) {
                     console.log('throw https error')
                     reject(new functions.https.HttpsError('aborted', 'error checking certicicate', err ?? result))

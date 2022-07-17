@@ -10,7 +10,6 @@ import Step2 from './Step2'
 import Step3 from './Step3'
 import { makeStyles } from '@material-ui/core'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
-import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 import { LeftOutlined } from '@ant-design/icons'
 const { Step } = Steps
 
@@ -30,8 +29,6 @@ export type Form = {
     }[]
 }
 
-export const PROGRAM_PRICE = 45
-
 const CustomerBookingScreen = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
@@ -47,8 +44,6 @@ const CustomerBookingScreen = () => {
     const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
-
-    const { width } = useWindowDimensions()
 
     useEffect(() => {
         const fetchAvailableSlots = async () => {
@@ -232,7 +227,6 @@ const CustomerBookingScreen = () => {
                     <Steps
                         current={step - 1}
                         style={{ marginBottom: 24 }}
-                        direction={width < 626 ? 'vertical' : 'horizontal'}
                     >
                         <Step title="Select classes" />
                         <Step title="Your information" />
@@ -296,7 +290,7 @@ const useStyles = makeStyles({
         marginBottom: 36,
     },
     card: {
-        width: '80%',
+        width: '90%',
         height: 'fit-content',
         maxWidth: 600,
         marginTop: 36,
