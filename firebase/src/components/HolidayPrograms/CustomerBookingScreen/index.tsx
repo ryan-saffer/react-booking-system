@@ -1,16 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
-import Step1 from './Step1'
+import Step1 from './step1/Step1'
 import { Form, Button, Steps, Row, Modal, Spin, Card, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import Step2 from './Step2'
-import Step3 from './Step3'
+import Step2 from './step2/Step2'
+import Step3 from './step3/Step3'
 import { makeStyles } from '@material-ui/core'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { LeftOutlined } from '@ant-design/icons'
+import Root from './Root'
 const { Step } = Steps
 
 export type Form = {
@@ -215,43 +215,33 @@ const CustomerBookingScreen = () => {
     }
 
     return (
-        <div className={styles.root}>
-            <Card className={styles.card}>
-                <div className={styles.logoWrapper}>
-                    <img className={styles.logo} src={Logo.default} />
+        <Root>
+            <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
+                Holiday Program Booking Form
+            </Typography.Title>
+            <Steps current={step - 1} style={{ marginBottom: 24 }}>
+                <Step title="Select classes" />
+                <Step title="Your information" />
+                <Step title="Payment" />
+            </Steps>
+            <div className={styles.wrapper}>
+                <div className={styles.form}>
+                    {step > 1 && (
+                        <Button
+                            style={{ width: 'fit-content' }}
+                            icon={<LeftOutlined />}
+                            onClick={() => setStep(step - 1)}
+                        >
+                            Go back
+                        </Button>
+                    )}
+                    {renderForm()}
+                    <>
+                        {renderForwardButton()}
+                        {renderBackButton()}
+                    </>
                 </div>
-                <Row justify="center">
-                    <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
-                        Holiday Program Booking Form
-                    </Typography.Title>
-                    <Steps
-                        current={step - 1}
-                        style={{ marginBottom: 24 }}
-                    >
-                        <Step title="Select classes" />
-                        <Step title="Your information" />
-                        <Step title="Payment" />
-                    </Steps>
-                    <div className={styles.wrapper}>
-                        <div className={styles.form}>
-                            {step > 1 && (
-                                <Button
-                                    style={{ width: 'fit-content' }}
-                                    icon={<LeftOutlined />}
-                                    onClick={() => setStep(step - 1)}
-                                >
-                                    Go back
-                                </Button>
-                            )}
-                            {renderForm()}
-                            <>
-                                {renderForwardButton()}
-                                {renderBackButton()}
-                            </>
-                        </div>
-                    </div>
-                </Row>
-            </Card>
+            </div>
             <Modal
                 title="No children added"
                 footer={[
@@ -263,39 +253,15 @@ const CustomerBookingScreen = () => {
             >
                 <p>Please add at least one child to the form.</p>
             </Modal>
-        </div>
+        </Root>
     )
 }
 
 const useStyles = makeStyles({
-    logoWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    logo: {
-        maxWidth: 200,
-    },
-    root: {
-        // backgroundColor: '#f0f2f2',
-        backgroundImage: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
-        minHeight: '100vh',
-        paddingBottom: 24,
-        display: 'flex',
-        justifyContent: 'center',
-    },
     wrapper: {
         width: '100%',
         maxWidth: 500,
         marginBottom: 36,
-    },
-    card: {
-        width: '90%',
-        height: 'fit-content',
-        maxWidth: 600,
-        marginTop: 36,
-        borderRadius: 16,
-        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     },
     form: {
         display: 'flex',

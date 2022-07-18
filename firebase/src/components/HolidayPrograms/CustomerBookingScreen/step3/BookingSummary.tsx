@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { List, Typography, Tag } from 'antd'
 import { ItemSummary } from './Step3'
-import { DISCOUNT_PRICE, PROGRAM_PRICE } from './utilities'
+import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
 import { Acuity } from 'fizz-kidz'
 
 type Props = {
