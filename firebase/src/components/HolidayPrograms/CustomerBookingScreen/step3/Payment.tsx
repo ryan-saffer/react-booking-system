@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react'
 import { Button, Checkbox, FormInstance, Modal, Spin, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity } from 'fizz-kidz'
-import { Form } from '.'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import { Form } from '..'
+import Firebase, { FirebaseContext } from '../../../Firebase'
 import { makeStyles } from '@material-ui/core'
-import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from './utilities'
+import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 
 type Props = {
     form: Form
@@ -107,7 +107,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
             //`Elements` instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: 'https://example.com/order/123/complete',
+                return_url: `${window.location.origin}/holiday-programs/confirmation`,
                 receipt_email: form.parentEmail,
             },
         })

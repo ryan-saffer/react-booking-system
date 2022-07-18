@@ -3,8 +3,8 @@ import { Form, Checkbox, Select, Tag } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Locations } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { capitalise } from '../../../utilities/stringUtilities'
-import { getSameDayClasses } from './utilities'
+import { capitalise } from '../../../../utilities/stringUtilities'
+import { getSameDayClasses } from '../utilities'
 const { Option } = Select
 
 type Props = {

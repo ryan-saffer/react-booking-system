@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { Button, Input, Popover, Tag, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
+import Firebase, { FirebaseContext } from '../../../Firebase'
 import { InfoCircleOutlined } from '@ant-design/icons'
 
 const AppointmentTypeId =
