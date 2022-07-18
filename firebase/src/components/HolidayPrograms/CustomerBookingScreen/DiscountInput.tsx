@@ -63,6 +63,7 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
                     style={{ width: '90%' }}
                     value={value}
                     loading={loading}
+                    enterButton="Apply"
                     onChange={(e) => {
                         setValue(e.target.value)
                         setError('')

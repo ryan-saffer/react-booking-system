@@ -2,21 +2,43 @@ import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { MailClient } from '../sendgrid/EmailClient'
 import { Emails } from '../sendgrid/types'
+import { hasError } from './shared'
+import { db } from '..'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
-import { hasError } from './shared'
 
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
     apiKey: acuityCredentials.api_key,
 })
 
-export default async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBooking[]) {
+export async function bookHolidayPrograms(paymentIntentId: string) {
+    let query = await db.collection('holidayProgramBookings').doc(paymentIntentId).get()
+
+    console.log('query exists', query.exists)
+    console.log('query booked', query.get('booked'))
+
+    if (query.exists && !query.get('booked')) {
+        let programsSnapshot = await db
+            .collection('holidayProgramBookings')
+            .doc(paymentIntentId)
+            .collection('programs')
+            .get()
+
+        let programs: Acuity.Client.HolidayProgramBooking[] = []
+        programsSnapshot.forEach((program) => programs.push(program.data() as Acuity.Client.HolidayProgramBooking))
+        await scheduleHolidayPrograms(programs, paymentIntentId)
+
+        await db.collection('holidayProgramBookings').doc(paymentIntentId).set({ booked: true })
+    }
+}
+
+async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBooking[], paymentIntentId: string) {
     let promises: Promise<Acuity.Appointment>[] = []
     programs.forEach((program) => {
         promises.push(
             new Promise((resolve, reject) => {
-                scheduleHolidayProgram(program)
+                scheduleHolidayProgram(program, paymentIntentId)
                     .then((appointment) => resolve(appointment as Acuity.Appointment))
                     .catch((err) => reject(err))
             })
@@ -80,7 +102,7 @@ export default async function scheduleHolidayPrograms(programs: Acuity.Client.Ho
     }
 }
 
-async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooking) {
+async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooking, paymentIntentId: string) {
     const options = {
         method: 'POST',
         body: {
@@ -113,6 +135,14 @@ async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooki
                     id: Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
                     value: program.emergencyContactPhone,
                 },
+                {
+                    id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
+                    value: paymentIntentId
+                },
+                {
+                    id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
+                    value: program.amountCharged
+                }
             ],
         },
     }
