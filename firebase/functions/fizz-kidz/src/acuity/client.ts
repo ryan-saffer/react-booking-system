@@ -56,6 +56,7 @@ export type HolidayProgramBooking = {
     childAge: string
     childAllergies: string
     discountCode: string
+    amountCharged: number
 }
 
 export type CheckCertificateParams = {

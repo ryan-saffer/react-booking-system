@@ -5,7 +5,7 @@ import { Acuity } from 'fizz-kidz'
 import { Form } from '.'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { makeStyles } from '@material-ui/core'
-import { getSameDayClasses } from './utilities'
+import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from './utilities'
 
 type Props = {
     form: Form
@@ -74,6 +74,12 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                     childAge: child.childAge,
                     childAllergies: child.allergies ?? '',
                     discountCode: discountedPrograms.includes(klass.id) ? 'allday' : '',
+                    amountCharged:
+                        discount !== undefined
+                            ? PROGRAM_PRICE
+                            : discountedPrograms.includes(klass.id)
+                            ? PROGRAM_PRICE - DISCOUNT_PRICE
+                            : PROGRAM_PRICE,
                 })
             })
         })
