@@ -344,7 +344,7 @@ function sendTermContinuationEmail(appointment, environment) {
   const mjml = t.evaluate().getContent()
   const body = createHtmlFromMjmlFile(mjml, environment)
   const subject = "Thanks for coming to your free trial!"
-  const fromAddress = 'info@fizzkidz.com.au'
+  const fromAddress = 'bookings@fizzkidz.com.au'
 
   MailApp.sendEmail(
     appointment.email,
@@ -378,7 +378,7 @@ function _sendUnenrolmentConfirmation(appointment, environment) {
   const mjml = t.evaluate().getContent()
   const body = createHtmlFromMjmlFile(mjml, environment)
   const subject = "Unenrolment Confirmation"
-  const fromAddress = 'info@fizzkidz.com.au'
+  const fromAddress = 'bookings@fizzkidz.com.au'
 
   MailApp.sendEmail(
     appointment.email,
