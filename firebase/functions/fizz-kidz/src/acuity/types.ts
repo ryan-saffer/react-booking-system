@@ -16,6 +16,7 @@ export interface Appointment {
     location: string,
     datetime: string,
     confirmationPage: string
+    certificate: string
 }
 
 export interface MergedAppointment extends Appointment {
