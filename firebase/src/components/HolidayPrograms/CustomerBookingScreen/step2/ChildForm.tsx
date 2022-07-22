@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { Form, Checkbox, Input, Select } from 'antd'
-import { MinusCircleOutlined } from '@ant-design/icons'
-const { Option } = Select
+import { Form, Input, Select } from 'antd'
+import { SimpleTextRule } from './Step2'
 const { TextArea } = Input
 
 type Props = {
@@ -16,14 +15,17 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
             <Form.Item
                 name={[childNumber, 'childName']}
                 label="Child's name"
-                rules={[{ required: true, message: "Please input child's name" }]}
+                rules={[{ required: true, message: "Please input child's name" }, SimpleTextRule]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 name={[childNumber, 'childAge']}
                 label="Child's age"
-                rules={[{ required: true, message: "Please input child's age" }]}
+                rules={[
+                    { required: true, message: "Please input child's age" },
+                    { pattern: /^(?:[3-9]|1[0-12])$/, message: 'Age must be between 4-12' },
+                ]}
             >
                 <Input />
             </Form.Item>
@@ -51,6 +53,7 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
                             required: true,
                             message: "Please input child's allergies",
                         },
+                        SimpleTextRule
                     ]}
                 >
                     <TextArea rows={3} />

@@ -43,12 +43,19 @@ const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, ori
             renderItem={(item) => {
                 const isDiscounted = discount === undefined && item.discounted
                 return (
-                    <List.Item>
-                        <Typography.Text>
-                            {item.name} {isDiscounted && <del>(${PROGRAM_PRICE.toFixed(2)})</del>}
-                            (${(isDiscounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE).toFixed(2)})
-                        </Typography.Text>
-                        {isDiscounted && <Tag color="green">All day discount: -${DISCOUNT_PRICE.toFixed(2)}</Tag>}
+                    <List.Item style={{ display: 'flex', flexDirection: 'column', alignItems: 'baseline' }}>
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography.Text style={{ textAlign: 'start' }}>{item.name}</Typography.Text>
+                            <Typography.Text style={{ textAlign: 'end' }}>
+                                {isDiscounted && <del>(${PROGRAM_PRICE.toFixed(2)})</del>}
+                                (${(isDiscounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE).toFixed(2)})
+                            </Typography.Text>
+                        </div>
+                        {isDiscounted && (
+                            <Tag color="green" style={{ marginTop: 4 }}>
+                                All day discount: -${DISCOUNT_PRICE.toFixed(2)}
+                            </Tag>
+                        )}
                     </List.Item>
                 )
             }}
