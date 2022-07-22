@@ -3,10 +3,8 @@ import * as StripeConfig from '../../config/stripe'
 import { Metadata } from 'fizz-kidz'
 import Stripe from 'stripe'
 import { bookHolidayPrograms } from '../../acuity/holidayPrograms'
-const stripeConfig =
-    JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-        ? StripeConfig.PROD_CONFIG
-        : StripeConfig.DEV_CONFIG
+const isProd = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
+const stripeConfig = isProd ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
 })
@@ -19,7 +17,11 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
     console.log(signature)
     if (signature) {
         try {
-            event = stripe.webhooks.constructEvent(request.rawBody.toString('utf8'), signature, process.env.STRIPE_WEBHOOK_SECRET)
+            event = stripe.webhooks.constructEvent(
+                request.rawBody.toString('utf8'),
+                signature,
+                isProd ? process.env.STRIPE_WEBHOOK_SECRET_PROD : process.env.STRIPE_WEBHOOK_SECRET_DEV
+            )
         } catch (err) {
             if (err instanceof Error) {
                 console.log(`⚠️  Webhook signature verification failed.`, err.message)
