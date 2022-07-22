@@ -1,12 +1,15 @@
 import { Function } from '../firebase/functions'
-import { Appointment } from ".";
-import { Acuity } from '..';
+import { Appointment, Certificate } from ".";
+import { Class } from './types';
 
 export interface AcuityFunctions {
     getAppointments: Function<FetchAppointmentsParams, Appointment[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
+    classAvailability: Function<ClassAvailabilityParams, Class[]>
+    scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
+    checkCertificate: Function<CheckCertificateParams, Certificate>
 }
 
 export interface FetchAppointmentsParams {
@@ -34,4 +37,30 @@ export interface UnenrollChildFromTermParams {
 export interface UpdateLabelParams {
     appointmentId: number
     label: number // Acuity.Constants.Labels
+}
+
+export type ClassAvailabilityParams = {
+    appointmentTypeId: number
+}
+
+export type HolidayProgramBooking = {
+    appointmentTypeId: number
+    dateTime: string
+    parentFirstName: string
+    parentLastName: string
+    parentEmail: string
+    parentPhone: string
+    emergencyContactName: string
+    emergencyContactPhone: string
+    childName: string
+    childAge: string
+    childAllergies: string
+    discountCode: string
+    amountCharged: number
+}
+
+export type CheckCertificateParams = {
+    certificate: string
+    appointmentTypeId: number
+    email: string
 }

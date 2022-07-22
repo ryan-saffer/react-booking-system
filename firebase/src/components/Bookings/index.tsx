@@ -149,7 +149,7 @@ const BookingsPage = () => {
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar className={classes.appBarToolbar}>
                     <div className={classes.topLeft}>
-                        <Typography variant="h6">
+                        <Typography variant="h6" color='inherit'>
                             Party Bookings
                         </Typography>
                     </div>
@@ -184,7 +184,7 @@ const BookingsPage = () => {
                     <IconButton edge="start" color="inherit" onClick={() => handleCloseBooking()} aria-label="close">
                         <CloseIcon />
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" color='inherit'>
                         New Booking
                     </Typography>
                 </Toolbar>
