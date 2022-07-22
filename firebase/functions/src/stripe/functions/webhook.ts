@@ -11,8 +11,6 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
 })
 
-const endpointSecret = 'whsec_1dd2cc3d8fa40bb5a5accb299d6860654c6294010ab819b92b072937080d7207'
-
 export const stripeWebhook = functions.region('australia-southeast1').https.onRequest(async (request, response) => {
     let event = request.body as Stripe.Event
 
@@ -21,7 +19,7 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
     console.log(signature)
     if (signature) {
         try {
-            event = stripe.webhooks.constructEvent(request.rawBody.toString('utf8'), signature, endpointSecret)
+            event = stripe.webhooks.constructEvent(request.rawBody.toString('utf8'), signature, process.env.STRIPE_WEBHOOK_SECRET)
         } catch (err) {
             if (err instanceof Error) {
                 console.log(`⚠️  Webhook signature verification failed.`, err.message)
