@@ -64,6 +64,8 @@ export const webhook = functions.region('australia-southeast1').https.onRequest(
                             payment_intent: paymentIntent.id,
                             reason: 'requested_by_customer',
                         })
+                    } else {
+                        console.log("Less than 24 hours before program, not performing refund.")
                     }
 
                     // update program count to one less, regardless if refunded or not.
