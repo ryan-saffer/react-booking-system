@@ -86,7 +86,6 @@ export const webhook = functions.region('australia-southeast1').https.onRequest(
                 resp.status(200).send()
                 return
             }
-            break
         default:
             console.log(`Ignoring action: ${data.action}`)
             resp.status(200).send()
