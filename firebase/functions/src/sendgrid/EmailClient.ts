@@ -17,27 +17,17 @@ export class MailClient {
         await this._sendEmail(email, emailInfo, html)
     }
 
-    private async _sendEmail<T extends keyof Emails>(
-        email: T,
-        emailInfo: Emails[T],
-        html: string
-    ) {
+    private async _sendEmail<T extends keyof Emails>(email: T, emailInfo: Emails[T], html: string) {
         switch (email) {
             case 'holidayProgramConfirmation':
-                await this._sendHolidayProgramConfirmationEmail(html)
+                await this._sendHolidayProgramConfirmationEmail(emailInfo, html)
                 return
         }
     }
 
-    private generateHtml<T extends keyof Emails>(
-        email: T,
-        values: Emails[T]['values']
-    ): string {
+    private generateHtml<T extends keyof Emails>(email: T, values: Emails[T]['values']): string {
         const filename = EmailTemplates[email]
-        let mjml = fs.readFileSync(
-            path.resolve(__dirname, `./mjml/${filename}`),
-            'utf8'
-        )
+        let mjml = fs.readFileSync(path.resolve(__dirname, `./mjml/${filename}`), 'utf8')
         var output = Mustache.render(mjml, values)
         let mjmlOutput = mjml2html(output)
         if (mjmlOutput.errors.length > 0) {
@@ -50,17 +40,18 @@ export class MailClient {
         }
     }
 
-    private async _sendHolidayProgramConfirmationEmail(html: string) {
+    private async _sendHolidayProgramConfirmationEmail(emailInfo: Emails['holidayProgramConfirmation'], html: string) {
         const msg: MailDataRequired = {
-            to: 'ryansaffer@gmail.com',
+            to: emailInfo.parentEmail,
             from: {
                 name: 'Fizz Kidz',
-                email: 'info@fizzkidz.com.au',
+                email: 'bookings@fizzkidz.com.au',
             }, // Use the email address or domain you verified above
             subject: 'Holiday program booking confirmation',
             html: html,
         }
         console.log('sending email...')
         await sgMail.send(msg)
+        console.log('email sent successfully!')
     }
 }

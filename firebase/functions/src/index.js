@@ -24,7 +24,7 @@ import * as acuityV2 from './acuity/client/v2/client'
 import * as acuityStripeIntegration from './acuity/stripe'
 import * as scienceClubBackup from './acuity/science-club-backup'
 import * as emails from './acuity/emails'
-import * as acuityWebhook from './acuity/webhook'
+import * as acuityWebhook from './acuity/webhook/webhook'
 import * as mjmlService from './mjml'
 
 export const createBooking = bookings.createBooking

@@ -17,7 +17,9 @@ export type CreatePaymentIntentResponse = {
 }
 
 export type Metadata = {
-    programType?: 'holiday_program' | 'science_club'
+    programType: 'holiday_program' | 'science_club'
+    discount: string
+    programCount: string
 }
 
 export type UpdatePaymentIntentParams = {

@@ -1,6 +1,6 @@
 
 export type AcuityWebhookData = {
-    action: 'scheduled' | 'rescheduled' | 'cancelled' | 'changed' | "order.completed",
+    action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | "order.completed",
     id: string,
     calendarID: string,
     appointmentTypeID: string

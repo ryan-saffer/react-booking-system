@@ -139,7 +139,7 @@ const CustomerBookingScreen = () => {
 
     const renderForm = () => {
         if (loading) {
-            return <Spin style={{ marginBottom: 24 }} />
+            return <Spin style={{ marginTop: 24, marginBottom: 24 }} />
         }
 
         if (noUpcomingPrograms) {

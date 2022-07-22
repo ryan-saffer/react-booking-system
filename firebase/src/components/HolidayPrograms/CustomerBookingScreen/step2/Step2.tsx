@@ -6,6 +6,16 @@ import { Acuity } from 'fizz-kidz'
 const { Option } = Select
 const { Text } = Typography
 
+export const SimpleTextRule = {
+    pattern: /^[a-zA-Z0-9 ]+$/,
+    message: 'No special characters allowed.',
+}
+
+const PhoneRule = {
+    pattern: /^[0-9]+$/,
+    message: 'Only numbers 0-9 allowed',
+}
+
 type Props = {
     selectedClasses: Acuity.Class[]
 }
@@ -32,6 +42,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input your first name.',
                     },
+                    SimpleTextRule,
                 ]}
             >
                 <Input />
@@ -39,7 +50,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
             <Form.Item
                 label="Parent Last Name"
                 name="parentLastName"
-                rules={[{ required: true, message: 'Please input your last name.' }]}
+                rules={[{ required: true, message: 'Please input your last name.' }, SimpleTextRule]}
             >
                 <Input />
             </Form.Item>
@@ -64,6 +75,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input your phone number.',
                     },
+                    PhoneRule
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -79,6 +91,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input the emergency contact.',
                     },
+                    SimpleTextRule,
                 ]}
             >
                 <Input />
@@ -91,6 +104,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input the emergency contact phone number.',
                     },
+                    PhoneRule
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />

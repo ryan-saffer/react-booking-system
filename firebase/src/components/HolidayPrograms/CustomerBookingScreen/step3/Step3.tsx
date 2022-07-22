@@ -53,7 +53,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
     selectedClasses.forEach((klass) => {
         form['children'].forEach((child: ChildForm) => {
             const dateTime = DateTime.fromISO(klass.time).toLocaleString({
-                weekday: 'long',
+                weekday: 'short',
                 month: 'short',
                 day: '2-digit',
                 hour: '2-digit',

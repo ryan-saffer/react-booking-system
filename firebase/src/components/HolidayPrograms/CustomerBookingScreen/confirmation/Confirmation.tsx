@@ -14,25 +14,48 @@ const Confirmation: React.FC<Props> = () => {
     const [error, setError] = useState(false)
 
     useEffect(() => {
-        async function fetchBookedStatus() {
-            const query = await firebase.db.collection('holidayProgramBookings').doc(paymentIntentId).get()
-            if (!query.exists) {
-                setError(true)
-            } else {
-                let status = query.get('booked') as boolean
-                if (!status) {
-                    setError(true)
-                }
-            }
+        // a timeout to wait for the firestore document to be updated to 'booked'
+        let timeout = setTimeout(() => {
+            setError(true)
             setLoading(false)
+        }, 10000)
+
+        const observer = firebase.db
+            .collection('holidayProgramBookings')
+            .doc(paymentIntentId)
+            .onSnapshot(
+                (snapshot) => {
+
+                    if (!snapshot.exists) {
+                        setError(true)
+                        setLoading(false)
+                        return
+                    }
+
+                    let booked = snapshot.get('booked')
+                    // on first snapshot read, this will be false (booking process still ongoing),
+                    // and hence no 'else' statement to set the error.
+                    // if however a second snapshot doesn't happen, the timeout above sets the error
+                    if (booked) {
+                        clearTimeout(timeout)
+                        setLoading(false)
+                        return
+                    }
+                },
+                () => {
+                    setError(true)
+                    setLoading(false)
+                }
+            )
+        return function unsubscribe() {
+            observer()
         }
-        fetchBookedStatus()
     }, [])
 
     if (loading) {
         return (
             <Root>
-                <Spin />
+                <Spin style={{ marginTop: 36, marginBottom: 12 }}/>
             </Root>
         )
     }
