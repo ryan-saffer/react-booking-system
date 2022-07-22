@@ -16,7 +16,7 @@ export class AcuityClient {
                     reject(err ?? appointment)
                     return
                 }
-                resolve(appointment as T)
+                resolve(appointment)
                 return
             })
         })
