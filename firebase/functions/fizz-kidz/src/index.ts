@@ -33,3 +33,5 @@ export namespace Types {
 //#region Utilities
 export * as Utilities from './utilities'
 //#endregion
+
+export * from './stripe'

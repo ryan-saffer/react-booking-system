@@ -92,7 +92,7 @@ function updateEnrolment(data, resolve, reject) {
 
 function updateLabel(data, resolve, reject) {
   sanitise("clientId", data.clientId, reject)
-  sanitise("label", data.label, reject)
+  sanitise("label", data.label ?? "", reject)
 
   var options = {
     method: 'PUT',

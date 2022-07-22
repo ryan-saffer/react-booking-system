@@ -79,7 +79,15 @@ const HolidayProgramSelection = props => {
     }
 
     const handleClassSelection = () => {
-        props.history.push(`/holiday-program/class?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}`)
+        let formattedClass = DateTime.fromISO(selectedClass.time).toLocaleString({
+            weekday: 'short',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+        }) 
+        props.history.push(`/holiday-program/class?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}&class=${encodeURIComponent(formattedClass)}`)
     }
 
     const fetchAppointmentTypes = id => {
@@ -131,7 +139,7 @@ const HolidayProgramSelection = props => {
         <CssBaseline />
         <AppBar className={cssClasses.appBar} position="static">
             <Toolbar className={cssClasses.toolbar}>
-                <Typography className={cssClasses.title} variant="h6">
+                <Typography className={cssClasses.title} variant="h6" color='inherit'>
                     Holiday Programs
                 </Typography>
                 <img

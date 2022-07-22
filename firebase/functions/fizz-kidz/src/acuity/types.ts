@@ -12,7 +12,11 @@ export interface Appointment {
     forms: Form[],
     notes: string,
     calendar: string,
-    paid: "yes" | "no"
+    paid: "yes" | "no",
+    location: string,
+    datetime: string,
+    confirmationPage: string
+    certificate: string
 }
 
 export interface MergedAppointment extends Appointment {
@@ -52,4 +56,17 @@ export interface Error {
 
 export interface Payment {
     transactionID: string
+}
+
+export type Class = {
+    id: number
+    calendar: string
+    slotsAvailable: number
+    time: string
+}
+
+export type Certificate = {
+    discountType: 'percentage' | 'price'
+    discountAmount: number
+    certificate: string
 }
