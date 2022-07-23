@@ -54,7 +54,9 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
     )
 
     const summarisedList: ItemSummary[] = []
-    selectedClasses.forEach((klass) => {
+    let sortedSelectedClasses = selectedClasses.map((it) => it)
+    sortedSelectedClasses.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0))
+    sortedSelectedClasses.forEach((klass) => {
         form['children'].forEach((child: ChildForm) => {
             const dateTime = DateTime.fromISO(klass.time).toLocaleString({
                 weekday: 'short',
