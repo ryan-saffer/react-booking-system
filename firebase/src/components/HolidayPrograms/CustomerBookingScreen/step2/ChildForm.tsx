@@ -24,7 +24,7 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
                 label="Child's age"
                 rules={[
                     { required: true, message: "Please input child's age" },
-                    { pattern: /^(?:[3-9]|1[0-12])$/, message: 'Age must be between 4-12' },
+                    { pattern: /^(?:[4-9]|1[0-12])$/, message: 'Age must be between 4-12' },
                 ]}
             >
                 <Input />
