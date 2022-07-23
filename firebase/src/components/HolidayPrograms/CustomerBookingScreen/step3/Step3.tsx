@@ -12,9 +12,13 @@ import { calculateTotal, DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from
 import DiscountInput from './DiscountInput'
 import { DateTime } from 'luxon'
 
+const isProd = process.env.REACT_APP_ENV === 'prod'
+
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_zVaqwCZ8oI0LXs2CfbGFkZWn')
+const stripePromise = loadStripe(
+    (isProd ? process.env.REACT_APP_STRIPE_API_KEY_PROD : process.env.REACT_APP_STRIPE_API_KEY_TEST) as string
+)
 
 export type ItemSummary = { name: string; discounted: boolean }
 type ChildForm = { childName: string }
@@ -67,21 +71,22 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
         })
     })
 
-    const createPriceMap = () => summarisedList.map(item => ({
-        description: item.name,
-        // if using a discount code, all individual prices are the full amount
-        // if not using a discount code, set according to if each individual item is discounted (ie same day)
-        amount: discount?.certificate
-            ? PROGRAM_PRICE
-            : item.discounted
-            ? PROGRAM_PRICE - DISCOUNT_PRICE
-            : PROGRAM_PRICE,
-    }))
+    const createPriceMap = () =>
+        summarisedList.map((item) => ({
+            description: item.name,
+            // if using a discount code, all individual prices are the full amount
+            // if not using a discount code, set according to if each individual item is discounted (ie same day)
+            amount: discount?.certificate
+                ? PROGRAM_PRICE
+                : item.discounted
+                ? PROGRAM_PRICE - DISCOUNT_PRICE
+                : PROGRAM_PRICE,
+        }))
 
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
-                console.log('creating payment intent with amount', 0)
+                console.log('creating payment intent with amount', amount)
                 let result = await callFirebaseFunction(
                     'createPaymentIntent',
                     firebase
@@ -108,9 +113,9 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
 
     useEffect(() => {
         async function updatePaymentIntent() {
-            console.log('upating payment intent')
             try {
                 if (paymentIntent.id !== '') {
+                    console.log('upating payment intent')
                     await callFirebaseFunction(
                         'updatePaymentIntent',
                         firebase

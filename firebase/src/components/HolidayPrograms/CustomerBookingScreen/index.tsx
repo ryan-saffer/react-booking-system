@@ -88,10 +88,6 @@ const CustomerBookingScreen = () => {
         }
     }, [classes])
 
-    useEffect(() => {
-        console.log(formValues)
-    }, [formValues])
-
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         const selectedClass = classes.filter((it) => it.id === e.target.value)[0]
         const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
