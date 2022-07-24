@@ -11,6 +11,7 @@ import { FormInstance, Spin, Result } from 'antd'
 import { calculateTotal, DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import DiscountInput from './DiscountInput'
 import { DateTime } from 'luxon'
+import { capitalise } from '../../../../utilities/stringUtilities'
 
 const isProd = process.env.REACT_APP_ENV === 'prod'
 
@@ -97,7 +98,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                     email: form.parentEmail,
                     phone: form.phone,
                     amount: amount * 100,
-                    description: `${selectedStore} store holiday program - ${form.parentFirstName} ${form.parentLastName}`,
+                    description: `${capitalise(selectedStore)} Store Holiday Program - ${form.parentFirstName} ${form.parentLastName}`,
                     programType: 'holiday_program',
                     programs: createPriceMap(),
                     discount: discount,

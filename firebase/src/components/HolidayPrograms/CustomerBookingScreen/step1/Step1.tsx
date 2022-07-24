@@ -4,7 +4,7 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Locations } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { capitalise } from '../../../../utilities/stringUtilities'
-import { getSameDayClasses } from '../utilities'
+import { DISCOUNT_PRICE, getSameDayClasses } from '../utilities'
 const { Option } = Select
 
 type Props = {
@@ -79,7 +79,7 @@ const Step1: React.FC<Props> = ({
                             <p style={{ marginBottom: 0 }}>
                                 {klass.slotsAvailable > 0 ? `[${klass.slotsAvailable} spot/s left]` : '[No spots left]'}
                             </p>
-                            {discountedClasses.includes(klass.id) && <Tag color='green'>All day discount: -$5.00</Tag>}
+                            {discountedClasses.includes(klass.id) && <Tag color='green'>All day discount: -${DISCOUNT_PRICE}.00</Tag>}
                         </Checkbox>
                     </Form.Item>
                 )
