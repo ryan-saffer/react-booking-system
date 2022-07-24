@@ -46,5 +46,4 @@ export const sendTermContinuationEmail = emails.sendScienceClubContinuationEmail
 export const asWebhook = acuityWebhook.webhook
 export const mjml = mjmlService.mjml
 
-export * from './sendgrid'
 export * from './stripe'
