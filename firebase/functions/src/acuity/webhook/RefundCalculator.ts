@@ -31,7 +31,7 @@ export class RefundCalculator {
         console.log(this.metadata.discount === "")
         console.log('amount charged', this.amountCharged)
         // check if there are any discounts.
-        if (this.metadata.discount === "") {
+        if (this.metadata.discount === "" || this.metadata.discount === "null") { // sometimes 'null' is stored into stripe
             // just refund the amount charged
             return this.amountCharged
         } else {

@@ -4,6 +4,7 @@ import { MailClient } from '../sendgrid/EmailClient'
 import { Emails } from '../sendgrid/types'
 import { hasError } from './shared'
 import { db } from '..'
+import * as functions from 'firebase-functions'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
 
@@ -97,8 +98,8 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
 
         await mailClient.sendEmail('holidayProgramConfirmation', emailInfo)
         return true
-    } catch {
-        return false
+    } catch(error) {
+        throw new functions.https.HttpsError('internal', 'error booking into acuity', error)
     }
 }
 
