@@ -14,6 +14,8 @@ const acuity = AcuitySdk.basic({
 })
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
+
+    console.log('Acuity userId:', acuityCredentials.user_id)
     let query = await db.collection('holidayProgramBookings').doc(paymentIntentId).get()
 
     console.log('query exists', query.exists)
@@ -99,6 +101,7 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
         await mailClient.sendEmail('holidayProgramConfirmation', emailInfo)
         return true
     } catch(error) {
+        console.error(error)
         throw new functions.https.HttpsError('internal', 'error booking into acuity', error)
     }
 }
