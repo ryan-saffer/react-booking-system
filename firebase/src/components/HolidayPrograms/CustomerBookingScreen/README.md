@@ -43,6 +43,8 @@ Each program is booked in individually, along with the `paymentIntent.id` and th
 
 Finally, a confirmation email is sent to the customer by Fizz Kidz with a link to cancel each individual program. Stripe will additionally send a separate receipt.
 
-
+## Known Limitations
+- If someone books in for the day, then cancels on of the two appointments, they will still be seen as 'allday'.
+- Conversely, if someone books in a program, and later returns to book in the other program on that day, it will not mark both programs as 'allday'.
 
 

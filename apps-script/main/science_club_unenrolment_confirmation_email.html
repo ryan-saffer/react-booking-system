@@ -21,14 +21,16 @@
         <mj-section background-color="#4bc5d9" padding-bottom='0px'>
             <mj-column width="100%">
                 <mj-spacer height="30px" />
-                <mj-text font-family="Trebuchet MS" weight="bold" color="white" align="center" font-size="30px"
+                <mj-text font-family="Trebuchet MS" color="white" font-weight="bold" align="center" font-size="30px"
                     line-height="40px">
                     <?= childName ?> has been unenrolled
                 </mj-text>
             </mj-column>
         </mj-section>
         <mj-section background-color="#ffffff" padding-top="0">
-            <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
         </mj-section>
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
@@ -38,11 +40,12 @@
                         <?= parentName ?>,
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        This email is to confirm that <?= childName ?> has been unenrolled from the term.<br/><br/>
+                        This email is to confirm that
+                        <?= childName ?> has been unenrolled from the term.<br /><br />
                         Below is the name of the class they have been unenrolled from.
                     </mj-text>
                     <mj-text align="center" color="#212b35" font-size="12px" text-transform="uppercase"
-                        font-weight="bold" padding-bottom="20">
+                        font-weight="bold" padding-bottom="20px">
                         <?= className ?>
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
