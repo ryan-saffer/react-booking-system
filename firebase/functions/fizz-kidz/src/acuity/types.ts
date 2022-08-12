@@ -60,6 +60,7 @@ export interface Payment {
 
 export type Class = {
     id: number
+    calendarID: number
     calendar: string
     slotsAvailable: number
     time: string

@@ -154,7 +154,6 @@ const CustomerBookingScreen = () => {
                 onValuesChange={(_, values) => {
                     // filter out any removed children with undefined values
                     let children = values.children
-                    console.log(children)
                     if (children) {
                         values.children = children.filter((child: any) => child && child.childName !== undefined)
                     }
