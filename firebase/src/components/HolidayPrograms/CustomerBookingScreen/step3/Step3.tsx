@@ -94,7 +94,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                     'createPaymentIntent',
                     firebase
                 )({
-                    name: `${form.parentFirstName} ${form.parentFirstName}`,
+                    name: `${form.parentFirstName} ${form.parentLastName}`,
                     email: form.parentEmail,
                     phone: form.phone,
                     amount: amount * 100,
