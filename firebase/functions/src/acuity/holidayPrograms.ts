@@ -112,6 +112,7 @@ async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooki
         body: {
             appointmentTypeID: program.appointmentTypeId,
             datetime: program.dateTime,
+            calendarID: program.calendarId,
             firstName: program.parentFirstName,
             lastName: program.parentLastName,
             email: program.parentEmail,

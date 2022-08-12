@@ -46,6 +46,7 @@ export type ClassAvailabilityParams = {
 export type HolidayProgramBooking = {
     appointmentTypeId: number
     dateTime: string
+    calendarId: number
     parentFirstName: string
     parentLastName: string
     parentEmail: string

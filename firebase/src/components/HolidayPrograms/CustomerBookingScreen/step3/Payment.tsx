@@ -64,6 +64,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                             ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
                             : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
                     dateTime: klass.time,
+                    calendarId: klass.calendarID,
                     parentFirstName: form.parentFirstName,
                     parentLastName: form.parentLastName,
                     parentPhone: form.phone,
