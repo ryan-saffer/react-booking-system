@@ -136,7 +136,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                     }}
                 >
                     I have read and agreed to the{' '}
-                    <Typography.Link onClick={() => setShowTermsModal(true)}>Terms and Conditions</Typography.Link>
+                    <Typography.Link onClick={() => setShowTermsModal(true)}>Cancellation Policy</Typography.Link>
                 </Checkbox>
             </div>
             {showTermsWarning && (
@@ -167,7 +167,9 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                     </Button>,
                 ]}
             >
-                Terms and conditions go here!
+                <strong>Cancellation Policy</strong>
+                <p>A full refund will be automatically issued for cancellations made more than 24 hours before the program.</p>
+                <p>Cancellations made less than 24 hours before the program will not be refunded.</p>
             </Modal>
         </>
     )
