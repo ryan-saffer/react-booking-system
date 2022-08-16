@@ -9,3 +9,12 @@ export function onCall<T extends keyof FirebaseFunctions>(
 ) {
     return functions.region('australia-southeast1').https.onCall(fn)
 }
+
+export function onRequest<T extends keyof FirebaseFunctions>(
+    fn: (
+        req: functions.https.Request,
+        resp: functions.Response<FirebaseFunctions[T]['result']['data']>
+    ) => void | Promise<void>
+) {
+    return functions.region('australia-southeast1').https.onRequest(fn)
+}

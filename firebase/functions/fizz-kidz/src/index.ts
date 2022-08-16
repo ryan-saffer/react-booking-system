@@ -35,3 +35,5 @@ export * as Utilities from './utilities'
 //#endregion
 
 export * from './stripe'
+
+export * from './scienceclub'
