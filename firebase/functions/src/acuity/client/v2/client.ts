@@ -187,7 +187,7 @@ async function getClassAvailability({ appointmentTypeId }: Acuity.Client.ClassAv
     return new Promise((resolve, reject) => {
         acuity.request(
             `/availability/classes?appointmentTypeID=${appointmentTypeId}&minDate=${date}&includeUnavailable=true`,
-            (err: any, _acuityResult: any, classes: Acuity.Class | Acuity.Error) => {
+            (err: any, _acuityResult: any, classes: Acuity.Class[] | Acuity.Error) => {
                 if (hasError(err, classes)) {
                     reject(err ?? classes)
                     return

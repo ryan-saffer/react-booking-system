@@ -47,3 +47,4 @@ export const asWebhook = acuityWebhook.webhook
 export const mjml = mjmlService.mjml
 
 export * from './stripe'
+export * from './scienceProgram'
