@@ -45,7 +45,7 @@ const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, ori
                 return (
                     <List.Item style={{ display: 'flex', flexDirection: 'column', alignItems: 'baseline' }}>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography.Text style={{ textAlign: 'start' }}>{item.name}</Typography.Text>
+                            <Typography.Text style={{ textAlign: 'start' }}>{item.childName} - {item.dateTime}</Typography.Text>
                             <Typography.Text style={{ textAlign: 'end' }}>
                                 {isDiscounted && <del>(${PROGRAM_PRICE.toFixed(2)})</del>}
                                 (${(isDiscounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE).toFixed(2)})

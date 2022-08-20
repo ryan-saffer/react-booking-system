@@ -6,7 +6,7 @@ export type CreatePaymentIntentParams = {
     phone: string
     amount: number
     description: string,
-    programs: { description: string, amount: number }[]
+    programs: { childName: string, dateTime: string, amount: number }[]
     programType: 'holiday_program' | 'science_club'
     discount: Certificate | undefined
 }
@@ -25,6 +25,6 @@ export type Metadata = {
 export type UpdatePaymentIntentParams = {
     id: string
     amount: number
-    programs: { description: string, amount: number }[]
+    programs: { childName: string, dateTime: string, amount: number }[]
     discount: Certificate | undefined
 }
