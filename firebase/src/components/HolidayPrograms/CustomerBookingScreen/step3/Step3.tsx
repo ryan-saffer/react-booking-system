@@ -21,7 +21,7 @@ const stripePromise = loadStripe(
     (isProd ? process.env.REACT_APP_STRIPE_API_KEY_PROD : process.env.REACT_APP_STRIPE_API_KEY_TEST) as string
 )
 
-export type ItemSummary = { name: string; discounted: boolean }
+export type ItemSummary = { childName: string; dateTime: string; discounted: boolean }
 type ChildForm = { childName: string }
 
 type Props = {
@@ -68,7 +68,8 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                 hour12: true,
             })
             summarisedList.push({
-                name: `${child.childName} - ${dateTime}`,
+                childName: child.childName,
+                dateTime: dateTime,
                 discounted: discountedClasses.includes(klass.id),
             })
         })
@@ -76,7 +77,8 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
 
     const createPriceMap = () =>
         summarisedList.map((item) => ({
-            description: item.name,
+            childName: item.childName,
+            dateTime: item.dateTime,
             // if using a discount code, all individual prices are the full amount
             // if not using a discount code, set according to if each individual item is discounted (ie same day)
             amount: discount?.certificate
@@ -98,7 +100,9 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                     email: form.parentEmail,
                     phone: form.phone,
                     amount: amount * 100,
-                    description: `${capitalise(selectedStore)} Store Holiday Program - ${form.parentFirstName} ${form.parentLastName}`,
+                    description: `${capitalise(selectedStore)} Store Holiday Program - ${form.parentFirstName} ${
+                        form.parentLastName
+                    }`,
                     programType: 'holiday_program',
                     programs: createPriceMap(),
                     discount: discount,

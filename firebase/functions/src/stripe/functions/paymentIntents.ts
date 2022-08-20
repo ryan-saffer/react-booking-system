@@ -19,14 +19,16 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(
 
         let programData: { [key: string]: number } = {}
         data.programs.forEach((it) => {
-            programData[it.description] = it.amount
+            // slice childName since key must be under 40 chars
+            const key = `${it.childName.slice(0, 15)} - ${it.dateTime}`
+            programData[key] = it.amount
         })
         const paymentIntent = await stripe.paymentIntents.create({
             customer: customerId,
             amount: data.amount,
             currency: 'aud',
             payment_method_types: ['card'],
-            description: data.description + ' - ' + data.programs.map((it) => it.description).join(', '),
+            description: data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', '),
             metadata: {
                 programType: data.programType,
                 programCount: data.programs.length,
@@ -50,7 +52,9 @@ export const updatePaymentIntent = onCall<'updatePaymentIntent'>(
     async (data: UpdatePaymentIntentParams, _context: functions.https.CallableContext) => {
         let programData: { [key: string]: number } = {}
         data.programs.forEach((it) => {
-            programData[it.description] = it.amount
+            // slice childName since key must be under 40 chars
+            const key = `${it.childName.slice(0, 15)} - ${it.dateTime}`
+            programData[key] = it.amount
         })
         try {
             await stripe.paymentIntents.update(data.id, {
