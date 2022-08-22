@@ -115,9 +115,9 @@ exports.sendFeedbackEmails = functions
   .timeZone('Australia/Melbourne')
   .onRun((context) => {
 
-    const startDate = DateTime.fromObject({ zone: 'Australia/Melbourne', hour: 0, minute: 0, second: 0 }).toJSDate()
+    const startDate = DateTime.fromObject({ hour: 0, minute: 0, second: 0 }, { zone: 'Australia/Melbourne' }).toJSDate()
     startDate.setDate(startDate.getDate() - 1) // yesterday
-    const endDate = DateTime.fromObject({ zone: 'Australia/Melbourne', hour: 0, minute: 0, second: 0 }).toJSDate() // today
+    const endDate = DateTime.fromObject({ hour: 0, minute: 0, second: 0 }, { zone: 'Australia/Melbourne' }).toJSDate() // today
 
     console.log("Start date:")
     console.log(startDate)
