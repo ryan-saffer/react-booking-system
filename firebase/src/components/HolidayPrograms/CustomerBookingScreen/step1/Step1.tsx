@@ -32,6 +32,19 @@ const Step1: React.FC<Props> = ({
 
     const discountedClasses = getSameDayClasses(selectedClasses)
 
+    const renderSlotsAvailable = (klass: Acuity.Class) => {
+        if (klass.slotsAvailable === 0) {
+            return "[No spots left]"
+        }
+        if (klass.slotsAvailable < 6 && klass.slotsAvailable > 1) {
+            return `[${klass.slotsAvailable} spots left]`
+        }
+        if (klass.slotsAvailable === 1) {
+            return "[1 spot left]"
+        }
+        return ""
+    }
+
     return (
         <>
             <Form.Item name="store" label="Which store do you want to book for?">
@@ -77,7 +90,7 @@ const Step1: React.FC<Props> = ({
                                 })}
                             </p>
                             <p style={{ marginBottom: 0 }}>
-                                {klass.slotsAvailable > 0 ? `[${klass.slotsAvailable} spot/s left]` : '[No spots left]'}
+                                {renderSlotsAvailable(klass)}
                             </p>
                             {discountedClasses.includes(klass.id) && <Tag color='green'>All day discount: -${DISCOUNT_PRICE}.00</Tag>}
                         </Checkbox>
