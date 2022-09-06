@@ -2,6 +2,10 @@ export interface RetrieveInvoiceStatusParams {
     appointmentId: number
 }
 
+export interface RetrieveInvoiceStatusParamsV2 {
+    appointmentId: string
+}
+
 export interface InvoiceStatusWithUrl {
     status: InvoiceStatus,
     url?: string
@@ -23,6 +27,12 @@ export interface SendInvoiceParams {
     appointmentTypeId: number,
     price: string,
     [key: string]: string | number
+}
+
+export interface SendInvoiceParamsV2 {
+    id: string,
+    price: string,
+    [key: string]: string
 }
 
 // prices depend on how many weeks they are attending the program for

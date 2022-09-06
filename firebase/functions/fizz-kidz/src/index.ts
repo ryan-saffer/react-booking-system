@@ -18,7 +18,7 @@ export * as AppsScript from './appsscript'
 //#endregion
 
 //#region Science Club
-export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams, PriceWeekMap } from './scienceclub/invoicing'
+export * from './scienceclub/invoicing'
 //#endregion
 
 //#region Firebase
