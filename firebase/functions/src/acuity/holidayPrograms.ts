@@ -89,7 +89,7 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
 
         const emailInfo: Emails['holidayProgramConfirmation'] = {
             templateName: 'holiday_program_confirmation.html',
-            parentEmail: result[0].email,
+            emailAddress: result[0].email,
             values: {
                 parentName: result[0].firstName,
                 location: `Fizz Kidz ${result[0].calendar}`,

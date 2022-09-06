@@ -13,7 +13,7 @@ interface ServiceLoaded<T> {
 
 interface ServiceError {
     status: 'error'
-    error: Error
+    error: any
 }
 
 export type Service<T> =

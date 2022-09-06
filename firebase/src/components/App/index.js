@@ -10,14 +10,17 @@ import * as ROUTES from '../../constants/routes'
 import BookingsPage from '../Bookings'
 import ScienceClubClassSelectionPage from '../ScienceClub/Checkin/SelectClass'
 import ScienceClubClassDetails from '../ScienceClub/Checkin/ClassDetails'
+import ScienceClubClassDetailsV2 from '../ScienceClub/Checkin/ClassDetailsV2'
 import ScienceClubAdminClassSelection from '../ScienceClub/Invoicing/SelectClass'
 import InvoiceStatusPage from '../ScienceClub/Invoicing/InvoiceStatusPage';
+import InvoiceStatusPageV2 from '../ScienceClub/InvoicingV2/InvoiceStatusPage';
 import HolidayProgramSelection from '../HolidayPrograms/SelectClass'
 import HolidayProgramClassDetails from '../HolidayPrograms/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import { withAuthentication } from '../Session'
 import EnrolmentPage from '../ScienceClub/Enrolment';
+import EnrolmentPageV2 from '../ScienceClub/EnrolmentV2';
 import HolidayProgramBookingScreen from '../HolidayPrograms/CustomerBookingScreen';
 import Confirmation from '../HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation';
 
@@ -48,12 +51,15 @@ const App = () => {
             <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_SELECT_CLASS} component={ScienceClubClassSelectionPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} component={ScienceClubClassDetails} />
+            <Route exact path={ROUTES.SCIENCE_CLUB_CLASS_DETAILS_V2} component={ScienceClubClassDetailsV2} />
             <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS} component={ScienceClubAdminClassSelection} />
             <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} component={InvoiceStatusPage} />
+            <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS_V2} component={InvoiceStatusPageV2} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS} component={HolidayProgramSelection} />
-            <Route exact path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS} component={HolidayProgramClassDetails} />
+            <Route exact path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS} component={HolidayProgramClassDetails} />\
             <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT} component={EnrolmentPage} />
+            <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT_V2} component={EnrolmentPageV2} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_BOOKING_SCREEN} component={HolidayProgramBookingScreen} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN} component={Confirmation} />
           </div>

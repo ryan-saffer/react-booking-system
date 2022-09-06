@@ -1,6 +1,5 @@
 import { hasError } from './shared'
-import { Acuity } from 'fizz-kidz'
-import { ScheduleScienceAppointmentParams } from 'fizz-kidz/src'
+import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
@@ -12,12 +11,12 @@ const acuity = AcuitySdk.basic({
 export class AcuityClient {
     private _request<T>(path: string, options: object = {}): Promise<T> {
         return new Promise((resolve, reject) => {
-            acuity.request(path, options, (err: any, _resp: any, appointment: T | Acuity.Error) => {
-                if (hasError(err, appointment)) {
-                    reject(err ?? appointment)
+            acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
+                if (hasError(err, result)) {
+                    reject(err ?? result)
                     return
                 }
-                resolve(appointment)
+                resolve(result)
                 return
             })
         })
@@ -27,8 +26,16 @@ export class AcuityClient {
         return this._request<Acuity.Appointment>(`/appointments/${id}`)
     }
 
+    getAppointmentTypes() {
+        return this._request<Acuity.AppointmentType[]>(`/appointment-types`)
+    }
+
     scheduleAppointment(options: object) {
         return this._request<Acuity.Appointment>('/appointments', options)
+    }
+
+    cancelAppointment(id: number) {
+        return this._request(`/appointments/${id}/cancel?admin=true`, { method: 'PUT' })
     }
 
     getClasses(appointmentTypeId: number) {
@@ -37,31 +44,37 @@ export class AcuityClient {
         )
     }
 
-    async scheduleScienceProgram(data: ScheduleScienceAppointmentParams, firestoreId: string): Promise<number[]> {
+    async scheduleScienceProgram(data: ScheduleScienceAppointmentParams, firestoreId: string) {
         // retrieve all appointments for appointmentType
-        let classes = await this.getClasses(data.appointmentTypeId)
+        const classes = await this.getClasses(data.appointmentTypeId)
 
         // schedule into each appointment
-        let promises: Promise<Acuity.Appointment>[] = []
-        classes.forEach((klass) => {
-            const options = {
-                method: 'POST',
-                body: {
-                    appointmentTypeID: data.appointmentTypeId,
-                    datetime: klass.time,
-                    firstName: data.parentFirstName,
-                    lastName: data.parentLastName,
-                    email: data.parentEmail,
-                    phone: data.parentPhone
-                },
-                fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: firestoreId }],
-            }
-            promises.push(this.scheduleAppointment(options))
-        })
+        const appointments = await Promise.all(
+            classes.map((klass) => {
+                const options = {
+                    method: 'POST',
+                    body: {
+                        appointmentTypeID: data.appointmentTypeId,
+                        datetime: klass.time,
+                        firstName: data.parentFirstName,
+                        lastName: data.parentLastName,
+                        email: data.parentEmail,
+                        phone: data.parentPhone,
+                    },
+                    fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: firestoreId }],
+                }
+                return this.scheduleAppointment(options)
+            })
+        )
 
-        let appointments = await Promise.all(promises)
+        // return array of all ids of appointments, along with price
+        return {
+            appointments: appointments.map((appointment) => appointment.id),
+            price: appointments[0].price
+        }
+    }
 
-        // return array of all ids of appointments
-        return appointments.map(appointment => appointment.id)
+    async unenrollChildFromTerm(ids: number[]) {
+        await Promise.all(ids.map((id) => this.cancelAppointment(id)))
     }
 }
