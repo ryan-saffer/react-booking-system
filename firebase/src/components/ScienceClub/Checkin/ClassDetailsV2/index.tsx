@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import { compose } from 'recompose'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, ScienceAppointment } from 'fizz-kidz'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
@@ -25,21 +25,21 @@ import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
 import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
 import useQueryParam from '../../../Hooks/UseQueryParam'
+import Firebase, { FirebaseContext } from '../../../Firebase'
 
-type Props = {
-
-
-}
-
+type Props = {}
 
 const ScienceClubCheckinClassDetails = (props: Props) => {
-    
     const classes = useStyles()
 
-    const { height } = useWindowDimensions();
+    const firebase = useContext(FirebaseContext) as Firebase
+
+    const { height } = useWindowDimensions()
 
     const history = useHistory()
 
+    // a map will speed up finding the corresponding firestore booking from acuity appointment
+    const [firestoreDocuments, setFirestoreDocuments] = useState<{ [key: string]: ScienceAppointment }>({})
     const [expanded, setExpanded] = useState<string | false>(false)
     const [loading, setLoading] = useState(true)
     const [showHelpDialog, setShowHelpDialog] = useState(false)
@@ -50,17 +50,41 @@ const ScienceClubCheckinClassDetails = (props: Props) => {
     const calendarName = decodeURIComponent(useQueryParam('calendarName') as string)
 
     const sortByChildName = (a: string, b: string) => {
-        const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        const bName = Acuity.Utilities.retrieveFormAndField(b, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+        const aName = Acuity.Utilities.retrieveFormAndField(
+            a,
+            Acuity.Constants.Forms.CHILD_DETAILS,
+            Acuity.Constants.FormFields.CHILD_NAME
+        )
+        const bName = Acuity.Utilities.retrieveFormAndField(
+            b,
+            Acuity.Constants.Forms.CHILD_DETAILS,
+            Acuity.Constants.FormFields.CHILD_NAME
+        )
+        return aName < bName ? -1 : aName > bName ? 1 : 0
     }
 
     const appointments = useFetchAppointments({
         setLoading,
         appointmentTypeId,
         calendarId,
-        classId
+        classId,
     })
+
+    useEffect(() => {
+        firebase.db
+            .collection('scienceAppointments')
+            .where('appointmentTypeId', '==', appointmentTypeId)
+            .where('status', '==', 'active')
+            .get()
+            .then((result) => {
+                let obj: { [key: string]: ScienceAppointment } = {}
+                result.docs.forEach((doc) => {
+                    let appointment = doc.data() as ScienceAppointment
+                    obj[appointment.id] = appointment
+                })
+                setFirestoreDocuments(obj)
+            })
+    }, [])
 
     const navigateBack = () => {
         history.goBack()
@@ -77,24 +101,38 @@ const ScienceClubCheckinClassDetails = (props: Props) => {
                     <IconButton edge="start" color="inherit" onClick={navigateBack}>
                         <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h6" color='inherit'>
+                    <Typography variant="h6" color="inherit">
                         Children
                     </Typography>
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
-            <Typography variant='h6' className={classes.calendarName}>
+            <Typography variant="h6" className={classes.calendarName}>
                 {calendarName}
             </Typography>
             <Divider />
-            {appointments !== null ? appointments.map(appointment => (
-                <ChildExpansionPanel
-                    key={appointment.id}
-                    appointment={appointment}
-                    onClientSelectionChange={handleClientSelectionChange}
-                    expanded={expanded}
-                />
-            )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
+            {appointments !== null && firestoreDocuments !== {} ? (
+                appointments.map((appointment) => {
+                    const firestoreId = Acuity.Utilities.retrieveFormAndField(
+                        appointment,
+                        Acuity.Constants.Forms.FIRESTORE,
+                        Acuity.Constants.FormFields.FIRESTORE_ID
+                    )
+                    return (
+                        <ChildExpansionPanel
+                            key={appointment.id}
+                            appointment={appointment}
+                            firestoreDocument={firestoreDocuments[firestoreId]}
+                            onClientSelectionChange={handleClientSelectionChange}
+                            expanded={expanded}
+                        />
+                    )
+                })
+            ) : (
+                <Typography className={classes.noEnrolments} variant="h5">
+                    No one is enrolled
+                </Typography>
+            )}
             {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
             <IconsDialog open={showHelpDialog} onClose={() => setShowHelpDialog(false)} />
         </div>
@@ -107,12 +145,11 @@ type IconsDialogProps = {
 }
 
 const IconsDialog = (props: IconsDialogProps) => {
-
     const classes = useStyles()
 
     const { open, onClose } = props
 
-    const IconListItem = ({icon, text}: { icon: string, text: string} ) => (
+    const IconListItem = ({ icon, text }: { icon: string; text: string }) => (
         <ListItem>
             <div>
                 <img src={icon} />
@@ -138,33 +175,35 @@ const IconsDialog = (props: IconsDialogProps) => {
             </List>
         </Dialog>
     )
-
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     main: {
         position: 'absolute',
-        top: 0, right: 0, bottom: 0, left: 0
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
     },
     dialogTitle: {
-        paddingBottom: '0px'
+        paddingBottom: '0px',
     },
     list: {
         '& li': {
             display: 'grid',
-            gridTemplateColumns: '1fr 3fr'
+            gridTemplateColumns: '1fr 3fr',
         },
         '& div': {
             display: 'flex',
-            justifyContent: 'center'
-        }
+            justifyContent: 'center',
+        },
     },
     helpIcon: {
         position: 'absolute',
-        right: '24px'
+        right: '24px',
     },
     noEnrolments: {
         display: 'flex',
@@ -173,17 +212,16 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         width: '100%',
         position: 'absolute',
-        top: 0, left: 0,
+        top: 0,
+        left: 0,
         color: 'grey',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
     },
     calendarName: {
         textAlign: 'center',
         marginTop: 10,
-        marginBottom: 10
-    }
+        marginBottom: 10,
+    },
 }))
 
-export default compose(
-    withRouter,
-)(ScienceClubCheckinClassDetails)
+export default compose(withRouter)(ScienceClubCheckinClassDetails)

@@ -1,9 +1,10 @@
 import { Function } from '../firebase/functions'
-import { Appointment, Certificate } from ".";
+import { Appointment, AppointmentType, Certificate } from ".";
 import { Class } from './types';
 
 export interface AcuityFunctions {
     getAppointments: Function<FetchAppointmentsParams, Appointment[]>
+    getAppointmentTypes: Function<void, AppointmentType[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
@@ -41,6 +42,7 @@ export interface UpdateLabelParams {
 
 export type ClassAvailabilityParams = {
     appointmentTypeId: number
+    minDate?: number
 }
 
 export type HolidayProgramBooking = {

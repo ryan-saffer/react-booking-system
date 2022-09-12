@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions'
 import Stripe from 'stripe'
 import { RetrieveInvoiceStatusParamsV2, InvoiceStatus, ScienceAppointment } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
-import { db } from '../../../index'
+import { db } from '../../../init'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
         ? StripeConfig.PROD_CONFIG

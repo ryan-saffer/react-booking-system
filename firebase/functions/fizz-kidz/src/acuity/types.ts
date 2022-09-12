@@ -32,7 +32,9 @@ export interface Label {
 export interface AppointmentType {
     id: number,
     name: string,
-    category: string
+    description: string,
+    category: string,
+    calendarIDs: number[]
 }
 
 export interface Form {

@@ -7,11 +7,11 @@ const { Option } = Select
 const { Text } = Typography
 
 export const SimpleTextRule = {
-    pattern: /^[a-zA-Z0-9 ]+$/,
+    pattern: /^[a-zA-Z0-9 -]+$/,
     message: 'No special characters allowed.',
 }
 
-const PhoneRule = {
+export const PhoneRule = {
     pattern: /^[0-9]+$/,
     message: 'Only numbers 0-9 allowed',
 }

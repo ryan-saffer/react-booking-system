@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions'
 import { UpdateScienceEnrolmentParams, ScienceAppointment } from 'fizz-kidz'
-import { db } from '../..'
+import { db } from '../../init'
 import { onCall } from '../../utilities'
 
 export const updateScienceEnrolment = onCall<'updateScienceEnrolment'>(

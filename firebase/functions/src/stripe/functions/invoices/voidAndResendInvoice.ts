@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { InvoiceStatus, PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
-import { db } from '../../../index'
+import { db } from '../../../init'
 import { sendInvoice } from '../../core/invoicing'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
@@ -33,7 +33,7 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
             lastName: appointment.parentLastName,
             email: appointment.parentEmail,
             phone: appointment.parentPhone,
-            description: `${appointment.childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
+            description: `${appointment.childName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
             price: PricesMap[price],
         })
 

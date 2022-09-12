@@ -2,7 +2,7 @@ import { AppsScript } from 'fizz-kidz';
 import * as functions from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { runAppsScript } from '.'
-import { db } from '../index'
+import { db } from '../init'
 
 export const sendOutForms = functions
   .region('australia-southeast1')

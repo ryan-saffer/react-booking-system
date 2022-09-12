@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Row } from 'antd'
 import { makeStyles } from '@material-ui/core'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
+import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 
 const Root: React.FC = ({ children }) => {
     const classes = useStyles()

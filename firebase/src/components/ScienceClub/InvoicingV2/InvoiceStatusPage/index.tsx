@@ -41,34 +41,29 @@ const ScienceClubInvoicingStatus = () => {
 
     const history = useHistory()
 
-    const appointmentTypeId = useQueryParam<QueryParams>('appointmentTypeId') as string
+    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
     // const calendarId = parseInt(useQueryParam<QueryParams>('calendarId') as string)
     const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName') ?? '')
 
     useEffect(() => {
-        async function fetchAppointments() {
-            console.log('Fetching appointments with appointmentTypeId ', appointmentTypeId)
-            let clientsQuery = await firebase.db
-                .collection('scienceAppointments')
-                .where('appointmentTypeId', '==', appointmentTypeId)
-                .where('status', '==', 'enrolled')
-                .get()
-            let appointments = clientsQuery.docs.map((appointment) => {
-                return {
-                    ...(appointment.data() as ScienceAppointment),
-                    id: appointment.id,
-                }
+        console.log(`Fetching appointments with appointmentTypeId: ${appointmentTypeId}`)
+        firebase.db
+            .collection('scienceAppointments')
+            .where('appointmentTypeId', '==', appointmentTypeId)
+            .where('status', '==', 'active')
+            .get()
+            .then((result) => {
+                let appointments = result.docs.map((appointment) => {
+                    return {
+                        ...(appointment.data() as ScienceAppointment),
+                        id: appointment.id,
+                    }
+                })
+                appointments = appointments.sort(sortByParentName)
+                setAppointments(appointments)
+                setLoading(false)
             })
-            appointments = appointments.sort(sortByParentName)
-            setAppointments(appointments)
-            setLoading(false)
-        }
-        fetchAppointments()
     }, [])
-
-    useEffect(() => {
-        console.log('Clients: ', appointments)
-    }, [appointments])
 
     const sortByParentName = (a: ScienceAppointment, b: ScienceAppointment) => {
         const aName = a.parentFirstName

@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import { ScienceAppointment, SendTermContinuationEmailParams } from 'fizz-kidz'
 import { onCall } from '../../utilities'
-import { db } from '../../index'
+import { db } from '../../init'
 import { MailClient } from '../../sendgrid/EmailClient'
 import { Emails } from '../../sendgrid/types'
 
@@ -27,7 +27,7 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
             emailAddress: appointment.parentEmail,
             values: {
                 parentName: appointment.parentFirstName,
-                className: appointment.type,
+                className: appointment.className,
                 price: appointment.price,
                 childName: appointment.childName,
                 continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,

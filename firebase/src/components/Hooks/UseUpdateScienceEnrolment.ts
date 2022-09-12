@@ -1,14 +1,14 @@
 import { useState, useEffect, useContext } from 'react'
-import { Acuity, Types } from 'fizz-kidz'
+import { Acuity, Service } from 'fizz-kidz'
 
 import Firebase, { FirebaseContext } from '../Firebase'
 import { callAcuityClientV2 } from '../../utilities/firebase/functions'
 
-const useUpdateScienceClubEnrolment = (props: Acuity.Client.UpdateScienceEnrolmentParams): Types.Functions.Service<Acuity.Appointment[]> => {
+const useUpdateScienceClubEnrolment = (props: Acuity.Client.UpdateScienceEnrolmentParams): Service<Acuity.Appointment[]> => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [service, setService] = useState<Types.Functions.Service<Acuity.Appointment[]>>({ status: 'loading' })
+    const [service, setService] = useState<Service<Acuity.Appointment[]>>({ status: 'loading' })
 
     useEffect(
         () => {

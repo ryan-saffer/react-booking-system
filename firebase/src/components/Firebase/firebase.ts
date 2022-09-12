@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 require('firebase/auth')
 require('firebase/firestore')
 require('firebase/functions')
+require('firebase/storage')
 
 class Firebase {
 
@@ -10,6 +11,7 @@ class Firebase {
   db: firebase.firestore.Firestore
   functions: firebase.functions.Functions
   googleProvider: firebase.auth.GoogleAuthProvider
+  storage: firebase.storage.Storage
 
   constructor() {
     const app = firebase.initializeApp(process.env.REACT_APP_ENV === 'prod' ? config.prodConfig : config.devConfig)
@@ -21,6 +23,7 @@ class Firebase {
     //   this.functions.useFunctionsEmulator("http://localhost:5001");
     // }
     this.googleProvider = new firebase.auth.GoogleAuthProvider()
+    this.storage = app.storage()
   }
 
   doCreateUserWithEmailAndPassword = (email: string, password: string) => 
