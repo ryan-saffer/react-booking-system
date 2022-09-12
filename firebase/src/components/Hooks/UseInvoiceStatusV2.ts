@@ -3,14 +3,14 @@ import Firebase, { FirebaseContext } from '../Firebase'
 
 import { InvoiceStatus, InvoiceStatusWithUrl, ScienceAppointment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
-import { Types } from 'fizz-kidz'
+import { Service } from 'fizz-kidz'
 
 
-const useInvoiceStatus = (appointment: ScienceAppointment): [Types.Functions.Service<InvoiceStatusWithUrl>, Dispatch<SetStateAction<Types.Functions.Service<InvoiceStatusWithUrl>>>] => {
+const useInvoiceStatus = (appointment: ScienceAppointment): [Service<InvoiceStatusWithUrl>, Dispatch<SetStateAction<Service<InvoiceStatusWithUrl>>>] => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [result, setResult] = useState<Types.Functions.Service<InvoiceStatusWithUrl>>({ status: 'loading' })
+    const [result, setResult] = useState<Service<InvoiceStatusWithUrl>>({ status: 'loading' })
 
     const invoiceId = appointment.invoiceId
 

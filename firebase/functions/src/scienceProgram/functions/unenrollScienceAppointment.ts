@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import { db } from '../../index'
+import { db } from '../../init'
 import { onCall } from '../../utilities'
 import { ScienceAppointment, UnenrollScienceAppointmentParams } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/AcuityClient'
@@ -27,7 +27,11 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
             )
         }
 
+        const updatedAppointment: Partial<ScienceAppointment> = {
+            status: 'inactive',
+        }
+
         // 3. set status to 'unenrolled'
-        await appointmentSnapshot.ref.set({ status: 'unenrolled' }, { merge: true })
+        await appointmentSnapshot.ref.set(updatedAppointment, { merge: true })
     }
 )

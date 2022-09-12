@@ -17,7 +17,6 @@ interface ExpandableTableRowPros extends ErrorDialogProps {
 }
 
 const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, displayError }) => {
-
     const classes = useStyles()
 
     const forceRerenderExpandableRow = useForceRerenderComponent()
@@ -58,18 +57,24 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                             forceRerenderExpandableRow={forceRerenderExpandableRow}
                         />
                     </TableCell>
-                    <TableCell className={classes.parentNameCell} size="small">{appointment.parentFirstName} {appointment.parentLastName}</TableCell>
+                    <TableCell className={classes.parentNameCell} size="small">
+                        {appointment.parentFirstName} {appointment.parentLastName}
+                    </TableCell>
                     <TableCell size="small">
-                        {
-                            emailSent
-                                ? <CheckIcon className={classes.checkIcon} />
-                                : <ClearIcon className={classes.clearIcon} />
-                        }
+                        {emailSent ? (
+                            <CheckIcon className={classes.checkIcon} />
+                        ) : (
+                            <ClearIcon className={classes.clearIcon} />
+                        )}
                     </TableCell>
                     <EnrolmentStatusCell status={enrolmentStatus} />
-                    <InvoiceStatusWithAction appointment={appointment} setEnrolmentStatus={setEnrolmentStatus} setEmailSent={setEmailSent} />
+                    <InvoiceStatusWithAction
+                        appointment={appointment}
+                        setEnrolmentStatus={setEnrolmentStatus}
+                        setEmailSent={setEmailSent}
+                    />
                 </TableRow>
-                {expanded &&
+                {expanded && (
                     <>
                         <TableRow className={classes.appointmentDetailsRow}>
                             <TableCell className={classes.appointmentDetailsCell} colSpan={7}>
@@ -77,11 +82,21 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                                     <TableBody>
                                         <TableRow className={classes.appointmentDetailsHeaderRow}>
                                             <TableCell variant="head" width="5%" className={classes.paddingCell} />
-                                            <TableCell variant="head" width="19%">Parent Phone</TableCell>
-                                            <TableCell variant="head" width="19%">Parent Email</TableCell>
-                                            <TableCell variant="head" width="19%">Child Name</TableCell>
-                                            <TableCell variant="head" width="19%">Child Age</TableCell>
-                                            <TableCell variant="head" width="19%">Child Grade</TableCell>
+                                            <TableCell variant="head" width="19%">
+                                                Parent Phone
+                                            </TableCell>
+                                            <TableCell variant="head" width="19%">
+                                                Parent Email
+                                            </TableCell>
+                                            <TableCell variant="head" width="19%">
+                                                Child Name
+                                            </TableCell>
+                                            <TableCell variant="head" width="19%">
+                                                Child Age
+                                            </TableCell>
+                                            <TableCell variant="head" width="19%">
+                                                Child Grade
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow className={classes.appointmentDetailsContentRow}>
                                             <TableCell className={classes.paddingCell} />
@@ -96,7 +111,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                             </TableCell>
                         </TableRow>
                     </>
-                }
+                )}
             </>
         )
     }
@@ -106,21 +121,21 @@ const useStyles = makeStyles({
     summaryRow: {
         '& td': {
             textAlign: 'center',
-            padding: '0px !important'
-        }
+            padding: '0px !important',
+        },
     },
     parentNameCell: {
-        textAlign: 'left !important' as 'left'
+        textAlign: 'left !important' as 'left',
     },
     parentName: {
         justifySelf: 'flex-start',
-        marginLeft: '80px'
+        marginLeft: '80px',
     },
     checkIcon: {
         color: 'green',
     },
     clearIcon: {
-        color: 'red'
+        color: 'red',
     },
     appointmentDetailsRow: {
         background: 'whitesmoke',
@@ -130,57 +145,57 @@ const useStyles = makeStyles({
         paddingLeft: 0,
         paddingRight: 0,
         '@media(max-width: 592px)': {
-            paddingBottom: 0
-        }
+            paddingBottom: 0,
+        },
     },
     appointmentDetailsHeaderRow: {
         '& td': {
-            paddingLeft: 0
-        }
+            paddingLeft: 0,
+        },
     },
     appointmentDetailsContentRow: {
         '& td': {
             paddingLeft: 0,
             paddingBottom: 0,
-            borderBottomWidth: 0
+            borderBottomWidth: 0,
         },
         '@media(max-width: 592px)': {
             '& td': {
-                paddingBottom: 16
-            }
-        }
+                paddingBottom: 16,
+            },
+        },
     },
     appointmentDetailsTable: {
         '@media(max-width: 592px)': {
             '& tr': {
                 display: 'block',
                 float: 'left',
-                width: '50%'
+                width: '50%',
             },
             '& td': {
                 display: 'block',
                 width: '100%',
                 textAlign: 'center',
                 borderBottomWidth: 1,
-                minHeight: 57
-            }
-        }
+                minHeight: 57,
+            },
+        },
     },
     paddingCell: {
         '@media(max-width: 592px)': {
-            display: 'none !important'
+            display: 'none !important',
         },
         '@media(max-width: 960px)': {
-            paddingLeft: '32px !important'
-        }
+            paddingLeft: '32px !important',
+        },
     },
     loadingCell: {
         textAlign: 'center',
-        padding: 0
+        padding: 0,
     },
     loadingSpinner: {
-        padding: 8
-    }
+        padding: 8,
+    },
 })
 
 export default WithErrorDialog(ExpandableTableRow)

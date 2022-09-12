@@ -9,11 +9,12 @@ export type ScheduleScienceAppointmentParams = {
     childGrade: string
     childAllergies: string
     childIsAnaphylactic: boolean
+    anaphylaxisPlan: string
     emergencyContactName: string
-    emergencyContactRelation: string
     emergencyContactNumber: string
     permissionToPhotograph: boolean
-    type: string
+    className: string
+    pickupPeople: string[]
 }
 
 export type SendTermContinuationEmailParams = {
@@ -30,7 +31,8 @@ export type UpdateScienceEnrolmentParams = {
 
 export type ScienceAppointment = {
     id: string
-    status: 'enrolled' | 'unenrolled'
+    // inactive status will mean they are deleted in acuity
+    status: 'active' | 'inactive'
     appointmentTypeId: number
     appointments: number[]
     childAge: string
@@ -38,18 +40,24 @@ export type ScienceAppointment = {
     childName: string
     childAllergies: string
     childIsAnaphylactic: boolean
+    anaphylaxisPlan: string
     parentEmail: string
     parentFirstName: string
     parentLastName: string
     parentPhone: string
     continuingWithTerm: "yes" | "no" | ""
     continuingEmailSent: boolean
-    type: string
+    className: string
     invoiceId: string
     emergencyContactName: string
-    emergencyContactRelation: string
     emergencyContactNumber: string
     notes: string
     permissionToPhotograph: boolean
     price: string
+    pickupPeople: string[]
+}
+
+export type Calendar = {
+    id: string
+    logoUrl: string
 }

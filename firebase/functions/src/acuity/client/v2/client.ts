@@ -1,9 +1,9 @@
 import { CheckCertificateParams } from './../../../../fizz-kidz/src/acuity/client'
-import { DateTime } from 'luxon'
 import * as functions from 'firebase-functions'
 import { Acuity, AppsScript } from 'fizz-kidz'
 import { runAppsScript } from '../../../bookings'
 import { hasError } from '../../shared'
+import { AcuityClient } from '../../AcuityClient'
 // import { throwError } from '../../../utilities'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../../credentials/acuity_credentials.json')
@@ -20,24 +20,31 @@ type AcuityClientParams = {
 
 export const client = functions
     .region('australia-southeast1')
-    .https.onCall((data: AcuityClientParams, _context: functions.https.CallableContext) => {
+    .https.onCall(async (data: AcuityClientParams, _context: functions.https.CallableContext) => {
         let input
-        switch (data.method) {
-            case 'updateEnrolment':
-                input = data.input as Acuity.Client.UpdateScienceEnrolmentParams
-                return updateEnrolment(input)
-            case 'unenrollChildFromTerm':
-                input = data.input as Acuity.Client.UnenrollChildFromTermParams
-                return unenrollChildFromTerm(input)
-            case 'updateLabel':
-                input = data.input as Acuity.Client.UpdateLabelParams
-                return updateLabel(input)
-            case 'classAvailability':
-                input = data.input as Acuity.Client.ClassAvailabilityParams
-                return getClassAvailability(input)
-            case 'checkCertificate':
-                input = data.input as Acuity.Client.CheckCertificateParams
-                return checkCertificate(input)
+        const acuityClient = new AcuityClient()
+        try {
+            switch (data.method) {
+                case 'updateEnrolment':
+                    input = data.input as Acuity.Client.UpdateScienceEnrolmentParams
+                    return updateEnrolment(input)
+                case 'unenrollChildFromTerm':
+                    input = data.input as Acuity.Client.UnenrollChildFromTermParams
+                    return unenrollChildFromTerm(input)
+                case 'updateLabel':
+                    input = data.input as Acuity.Client.UpdateLabelParams
+                    return updateLabel(input)
+                case 'classAvailability':
+                    input = data.input as Acuity.Client.ClassAvailabilityParams
+                    return await acuityClient.getClasses(input.appointmentTypeId, input.minDate)
+                case 'checkCertificate':
+                    input = data.input as Acuity.Client.CheckCertificateParams
+                    return checkCertificate(input)
+                case 'getAppointmentTypes':
+                    return await acuityClient.getAppointmentTypes()
+            }
+        } catch(err) {
+            throw new functions.https.HttpsError('internal', 'error calling acuity client', err)
         }
     })
 
@@ -174,26 +181,6 @@ function updateLabel(data: Acuity.Client.UpdateLabelParams) {
                 }
 
                 resolve(appointment)
-            }
-        )
-    })
-}
-
-async function getClassAvailability({ appointmentTypeId }: Acuity.Client.ClassAvailabilityParams) {
-    console.log(appointmentTypeId)
-    const date = encodeURIComponent(DateTime.now().toISO())
-    console.log(date)
-
-    return new Promise((resolve, reject) => {
-        acuity.request(
-            `/availability/classes?appointmentTypeID=${appointmentTypeId}&minDate=${date}&includeUnavailable=true`,
-            (err: any, _acuityResult: any, classes: Acuity.Class[] | Acuity.Error) => {
-                if (hasError(err, classes)) {
-                    reject(err ?? classes)
-                    return
-                }
-
-                resolve(classes)
             }
         )
     })

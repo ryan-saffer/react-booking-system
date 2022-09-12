@@ -38,15 +38,17 @@ export class AcuityClient {
         return this._request(`/appointments/${id}/cancel?admin=true`, { method: 'PUT' })
     }
 
-    getClasses(appointmentTypeId: number) {
-        return this._request<Acuity.Class[]>(
-            `/availability/classes?appointmentTypeID=${appointmentTypeId}&includeUnavailable=true`
-        )
+    getClasses(appointmentTypeId: number, minDate?: number) {
+        let path = `/availability/classes?appointmentTypeID=${appointmentTypeId}&includeUnavailable=true`
+        if (minDate) {
+            path += `&minDate=${encodeURIComponent(new Date(minDate).toISOString())}`
+        }
+        return this._request<Acuity.Class[]>(path)
     }
 
     async scheduleScienceProgram(data: ScheduleScienceAppointmentParams, firestoreId: string) {
         // retrieve all appointments for appointmentType
-        const classes = await this.getClasses(data.appointmentTypeId)
+        const classes = await this.getClasses(data.appointmentTypeId, Date.now())
 
         // schedule into each appointment
         const appointments = await Promise.all(
@@ -60,8 +62,8 @@ export class AcuityClient {
                         lastName: data.parentLastName,
                         email: data.parentEmail,
                         phone: data.parentPhone,
+                        fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: firestoreId }],
                     },
-                    fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: firestoreId }],
                 }
                 return this.scheduleAppointment(options)
             })
@@ -70,7 +72,7 @@ export class AcuityClient {
         // return array of all ids of appointments, along with price
         return {
             appointments: appointments.map((appointment) => appointment.id),
-            price: appointments[0].price
+            price: appointments[0].price,
         }
     }
 

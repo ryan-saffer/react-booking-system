@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Acuity, ScienceAppointment, Types } from 'fizz-kidz'
+import { Acuity, ScienceAppointment, Service } from 'fizz-kidz'
 import useUpdateScienceEnrolment from '../../Hooks/UseUpdateScienceEnrolment'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
@@ -22,7 +22,7 @@ const EnrolmentPage = () => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [service, setService] = useState<Types.Functions.Service<ScienceAppointment>>({ status: 'loading' })
+    const [service, setService] = useState<Service<ScienceAppointment>>({ status: 'loading' })
 
     const base64String = window.location.search
     let queryParams = Buffer.from(base64String, 'base64').toString('utf8')

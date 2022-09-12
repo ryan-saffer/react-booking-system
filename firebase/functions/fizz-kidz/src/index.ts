@@ -24,10 +24,7 @@ export * from './scienceclub/invoicing'
 //#region Firebase
 export { FirebaseFunctions } from './firebase/functions'
 
-import * as result from './firebase/service'
-export namespace Types {
-    export import Functions = result
-}
+export * from './firebase/service'
 //#endregion
 
 //#region Utilities

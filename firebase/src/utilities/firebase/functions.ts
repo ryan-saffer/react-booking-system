@@ -77,12 +77,10 @@ function logFunctionsError(fn: string, error: firebase.functions.HttpsError, det
     )
 }
 
-function logGenericError(fn: string, error: Error) {
+function logGenericError(fn: string, error: firebase.functions.HttpsError) {
     console.error(
         `error running: '${fn}`,
-        `--name`,
-        `${error.name}`,
-        `--message`,
-        `${error.message}`
+        '--code:', error.code,
+        '--details:', error.details
     )
 }

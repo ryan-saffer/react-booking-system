@@ -10,7 +10,7 @@ import Step2 from './step2/Step2'
 import Step3 from './step3/Step3'
 import { makeStyles } from '@material-ui/core'
 import { LeftOutlined } from '@ant-design/icons'
-import Root from './Root'
+import Root from '../../Shared/Root'
 const { Step } = Steps
 
 export type Form = {
@@ -55,6 +55,7 @@ const CustomerBookingScreen = () => {
                     process.env.REACT_APP_ENV === 'prod'
                         ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
                         : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                minDate: Date.now()
             })
                 .then((result) => {
                     console.log('succeeded')
@@ -242,7 +243,7 @@ const CustomerBookingScreen = () => {
                 footer={[
                     <Button type="primary" onClick={() => setShowNoChildrenModal(false)}>
                         Ok
-                    </Button>,
+                    </Button>
                 ]}
                 visible={showNoChildrenModal}
             >

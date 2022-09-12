@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Result, Spin } from 'antd'
 import useQueryParam from '../../../Hooks/UseQueryParam'
-import Root from '../Root'
+import Root from '../../../Shared/Root'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 
 type Props = {}

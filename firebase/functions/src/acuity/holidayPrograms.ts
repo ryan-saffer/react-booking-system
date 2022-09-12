@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { MailClient } from '../sendgrid/EmailClient'
 import { Emails } from '../sendgrid/types'
 import { hasError } from './shared'
-import { db } from '..'
+import { db } from '../init'
 import * as functions from 'firebase-functions'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
