@@ -17,8 +17,9 @@ export async function sendInvoice(input: {
     description: string
     price: string
     daysUntilDue?: number
+    metadata?: Stripe.Emptyable<Stripe.MetadataParam>
 }) {
-    const { firstName, lastName, email, phone, description, price, daysUntilDue = 3 } = input
+    const { firstName, lastName, email, phone, description, price, daysUntilDue = 3, metadata } = input
     // 1. get or create customer
     const customer = await getOrCreateCustomer(`${firstName} ${lastName}`, email, phone)
 
@@ -26,7 +27,7 @@ export async function sendInvoice(input: {
     const invoiceItems = await stripe.invoiceItems.create({
         customer,
         description,
-        price,
+        price
     })
 
     // 3. create the invoice
@@ -35,6 +36,7 @@ export async function sendInvoice(input: {
         description: invoiceItems.description ?? '',
         collection_method: 'send_invoice',
         days_until_due: daysUntilDue,
+        metadata
     })
 
     await stripe.invoices.sendInvoice(invoice.id)

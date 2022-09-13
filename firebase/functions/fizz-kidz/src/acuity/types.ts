@@ -73,3 +73,10 @@ export type Certificate = {
     discountAmount: number
     certificate: string
 }
+
+export type Calendar = {
+    id: number
+    name: string
+    location: string
+    description: string
+}

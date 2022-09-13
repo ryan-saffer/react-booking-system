@@ -5,14 +5,12 @@ import React from 'react'
 
 type Props = {
     appointmentType: Acuity.AppointmentType
-    calendars: Calendar[]
+    logoUrl: string
     onClick: () => void
 }
 
-const AppointmentTypeCard = React.forwardRef<HTMLDivElement, Props>(({ appointmentType, calendars, onClick }, ref) => {
+const AppointmentTypeCard = React.forwardRef<HTMLDivElement, Props>(({ appointmentType, logoUrl, onClick }, ref) => {
     const classes = useStyles()
-
-    const calendar = calendars.find((calendar) => appointmentType.calendarIDs.includes(parseInt(calendar.id)))
 
     return (
         <Grow in>
@@ -26,7 +24,7 @@ const AppointmentTypeCard = React.forwardRef<HTMLDivElement, Props>(({ appointme
                             <p key={line}>{line}</p>
                         ))}
                     </div>
-                    <img className={classes.logo} src={calendar?.logoUrl} />
+                    <img className={classes.logo} src={logoUrl} />
                 </div>
             </Card>
         </Grow>
@@ -67,8 +65,9 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     logo: {
-        height: 80,
+        height: 'fit-content',
         width: 'fit-content',
+        maxWidth: 125,
         [theme.breakpoints.down('xs')]: {
             marginTop: 12,
         },

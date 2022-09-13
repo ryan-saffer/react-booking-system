@@ -1,0 +1,111 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+            color: #5e6ebf
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+            color: #888888
+            }
+        </mj-style>
+
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    Fizz Kidz Science Program Booking Confirmation
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        Hi
+                        {{ parentName }},
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        {{ childName }} is booked into the Fizz Kidz after school science program and we can't wait to
+                        begin our science adventure!
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        To confirm, below is the program name and class times for the term:
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                        padding-bottom="0" align="center">
+                        Program
+                    </mj-text>
+                    <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0" align="center">
+                        {{ className }}
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                        padding-bottom="0" align="center">
+                        When
+                    </mj-text>
+                    <mj-text color="#637381" font-size="14px" padding-top="0" align="center">
+                        {{#appointmentTimes}}
+                        <p>{{.}}</p>
+                        {{/appointmentTimes}}
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        The science program is held in the school {{ location }}. Please ask to meet us there! Prep
+                        students will be picked up in week 1, but for the rest of the term, they need to meet their
+                        facilitator at the {{ location }} straight after school.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        As we offer a free trial session, we will be in touch with you after the first week to see if
+                        you would like to register for the term. Please note that this is only available for new
+                        students. The term fee is ${{ price }} for a {{ numberOfWeeks }} week program of hands-on
+                        science fun!
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        If you would like more information about the program <a
+                            href="https://fizzkidz.com.au/in-school-science-program/">click here</a> or feel free to get
+                        in touch with us via email at <a
+                            href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a> or phone us on <a
+                            href="tel:0390598144">(03) 9059 8144</a>.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Thanks so much, and we hope you have a fizzing day!
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        The Fizz Kidz team 🌟
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link"
+                                href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

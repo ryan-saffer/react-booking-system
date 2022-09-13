@@ -1,7 +1,7 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { MailClient } from '../sendgrid/EmailClient'
-import { Emails } from '../sendgrid/types'
+import { EmailInfo, Emails } from '../sendgrid/types'
 import { hasError } from './shared'
 import { db } from '../init'
 import * as functions from 'firebase-functions'
@@ -14,7 +14,6 @@ const acuity = AcuitySdk.basic({
 })
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
-
     console.log('Acuity userId:', acuityCredentials.user_id)
     let query = await db.collection('holidayProgramBookings').doc(paymentIntentId).get()
 
@@ -87,9 +86,17 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
             })
         })
 
-        const emailInfo: Emails['holidayProgramConfirmation'] = {
+        const emailInfo: EmailInfo = {
+            to: result[0].email,
+            from: {
+                name: 'Fizz Kidz',
+                email: 'bookings@fizzkidz.com.au',
+            },
+            subject: 'Holiday program booking confirmation',
+        }
+
+        const emailValues: Emails['holidayProgramConfirmation'] = {
             templateName: 'holiday_program_confirmation.html',
-            emailAddress: result[0].email,
             values: {
                 parentName: result[0].firstName,
                 location: `Fizz Kidz ${result[0].calendar}`,
@@ -98,9 +105,9 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
             },
         }
 
-        await mailClient.sendEmail('holidayProgramConfirmation', emailInfo)
+        await mailClient.sendEmail(emailInfo, emailValues)
         return true
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         throw new functions.https.HttpsError('internal', 'error booking into acuity', error)
     }
@@ -142,12 +149,12 @@ async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooki
                 },
                 {
                     id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
-                    value: paymentIntentId
+                    value: paymentIntentId,
                 },
                 {
                     id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
-                    value: program.amountCharged
-                }
+                    value: program.amountCharged,
+                },
             ],
         },
     }

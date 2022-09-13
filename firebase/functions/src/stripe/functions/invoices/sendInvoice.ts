@@ -27,6 +27,7 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
                 phone: appointment.parentPhone,
                 description: `${appointment.childName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
                 price: PricesMap[price],
+                metadata: { programType: 'science_program' }
             })
 
             // 3. store id back into firestore

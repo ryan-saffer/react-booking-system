@@ -35,7 +35,7 @@ const useStyles = makeStyles({
         minHeight: '100vh',
         paddingBottom: 24,
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     card: {
         width: '90%',
