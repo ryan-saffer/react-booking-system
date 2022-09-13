@@ -291,6 +291,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     setLoading(true)
                     onSubmit({
                         appointmentTypeId: appointmentType.id,
+                        calendarId: appointmentType.calendarIDs[0],
                         parentFirstName: form.getFieldValue('parentFirstName'),
                         parentLastName: form.getFieldValue('parentLastName'),
                         parentPhone: form.getFieldValue('parentPhone'),
@@ -309,7 +310,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     })
                 }}
             >
-                Continue
+                Enrol
             </Button>
         </>
     )
@@ -319,6 +320,7 @@ const useStyles = makeStyles({
     form: {
         width: '100%',
         maxWidth: 500,
+        alignSelf: 'center'
     },
     submitButton: {
         marginBottom: 12,

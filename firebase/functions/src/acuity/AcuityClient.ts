@@ -46,6 +46,10 @@ export class AcuityClient {
         return this._request<Acuity.Class[]>(path)
     }
 
+    getCalendars() {
+        return this._request<Acuity.Calendar[]>(`/calendars`)
+    }
+
     async scheduleScienceProgram(data: ScheduleScienceAppointmentParams, firestoreId: string) {
         // retrieve all appointments for appointmentType
         const classes = await this.getClasses(data.appointmentTypeId, Date.now())
@@ -69,11 +73,7 @@ export class AcuityClient {
             })
         )
 
-        // return array of all ids of appointments, along with price
-        return {
-            appointments: appointments.map((appointment) => appointment.id),
-            price: appointments[0].price,
-        }
+        return appointments
     }
 
     async unenrollChildFromTerm(ids: number[]) {

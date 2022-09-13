@@ -3,8 +3,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { callAcuityClientV2, callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import Root from '../../Shared/Root'
-import { LoadingOutlined } from '@ant-design/icons'
-import { Card, Result, Spin, Typography } from 'antd'
+import { LeftOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Button, Card, Result, Spin, Typography } from 'antd'
 import { Grow, makeStyles } from '@material-ui/core'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import Form from './Form'
@@ -21,7 +21,7 @@ const BookingForm = () => {
     const [success, setSuccess] = useState(false)
     const [appointmentTypes, setAppointmentTypes] = useState<Acuity.AppointmentType[]>()
     const [selectedClass, setSelectedClass] = useState<Acuity.AppointmentType>()
-    const [calendars, setCalendars] = useState<Calendar[]>()
+    const [logoMap, setLogoMap] = useState<{ [key: string]: string }>()
 
     useEffect(() => {
         async function fetchAppointmentTypes() {
@@ -36,7 +36,15 @@ const BookingForm = () => {
                     (it) => it.category === filterCategory && it.calendarIDs.length !== 0
                 )
                 setAppointmentTypes(scienceAppointmentTypes)
-                setCalendars(calendars.docs.map((it) => it.data() as Calendar))
+                setLogoMap(
+                    Object.assign(
+                        {},
+                        ...calendars.docs.map((it) => {
+                            const calendar = it.data() as Calendar
+                            return { [calendar.id]: calendar.logoUrl }
+                        })
+                    )
+                )
             } catch (err) {
                 console.error(err)
                 setError(true)
@@ -62,32 +70,35 @@ const BookingForm = () => {
         if (loading) {
             return <Spin style={{ marginTop: 24 }} indicator={antIcon} />
         }
-        if (selectedClass && calendars) {
+        if (selectedClass && logoMap) {
             return (
-                <Grow>
-                    <AppointmentTypeCard
-                        appointmentType={selectedClass}
-                        calendars={calendars}
+                <>
+                    <Button
+                        style={{ width: 'fit-content', marginBottom: 8 }}
+                        icon={<LeftOutlined />}
                         onClick={() => setSelectedClass(undefined)}
-                    />
-                </Grow>
+                    >
+                        Go back
+                    </Button>
+                    <Grow>
+                        <AppointmentTypeCard
+                            appointmentType={selectedClass}
+                            logoUrl={logoMap[selectedClass.calendarIDs[0]]}
+                            onClick={() => {}}
+                        />
+                    </Grow>
+                </>
             )
         }
-        if (appointmentTypes && calendars) {
+        if (appointmentTypes && logoMap) {
             return appointmentTypes.map((it) => (
                 <AppointmentTypeCard
                     key={it.id}
                     appointmentType={it}
-                    calendars={calendars}
+                    logoUrl={logoMap[it.calendarIDs[0]]}
                     onClick={() => setSelectedClass(it)}
                 />
             ))
-        }
-    }
-
-    const renderForm = () => {
-        if (selectedClass) {
-            return <Form appointmentType={selectedClass} onSubmit={handleSubmit} />
         }
     }
 
@@ -95,7 +106,7 @@ const BookingForm = () => {
         return (
             <Root>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography.Title level={5} className={classes.title}>
+                    <Typography.Title level={4} className={classes.title}>
                         Science Program Booking Form
                     </Typography.Title>
                     <Result
@@ -123,11 +134,11 @@ const BookingForm = () => {
     return (
         <Root>
             <div className={classes.root}>
-                <Typography.Title level={5} className={classes.title}>
+                <Typography.Title level={4} className={classes.title}>
                     Science Program Booking Form
                 </Typography.Title>
                 {renderClassSelection()}
-                {renderForm()}
+                {selectedClass && <Form appointmentType={selectedClass} onSubmit={handleSubmit} />}
             </div>
         </Root>
     )
@@ -141,7 +152,7 @@ const useStyles = makeStyles({
     },
     title: {
         margin: 8,
-        textAlign: 'center'
+        textAlign: 'center',
     },
 })
 

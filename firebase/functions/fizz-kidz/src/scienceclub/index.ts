@@ -1,5 +1,6 @@
 export type ScheduleScienceAppointmentParams = {
     appointmentTypeId: number
+    calendarId: number
     parentFirstName: string
     parentLastName: string
     parentEmail: string

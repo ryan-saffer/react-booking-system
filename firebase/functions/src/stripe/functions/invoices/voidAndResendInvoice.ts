@@ -35,6 +35,7 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
             phone: appointment.parentPhone,
             description: `${appointment.childName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
             price: PricesMap[price],
+            metadata: { programType: 'science_program' }
         })
 
         // 4. update appointment to include new invoice
