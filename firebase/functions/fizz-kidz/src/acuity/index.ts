@@ -3,7 +3,7 @@ import FormFields from './constants/formFields'
 import Forms from './constants/forms'
 import Labels from './constants/labels'
 import AppointmentTypes from './constants/appointmentTypes'
-import StoreCalendars from './constants/Calendars'
+import { StoreCalendars, TestCalendarId } from './constants/Calendars'
 
 const Constants = {
     FormFieldOptions,
@@ -11,7 +11,8 @@ const Constants = {
     Forms,
     Labels,
     AppointmentTypes,
-    StoreCalendars
+    StoreCalendars,
+    TestCalendarId
 }
 
 import * as Utilities from './utilities'
