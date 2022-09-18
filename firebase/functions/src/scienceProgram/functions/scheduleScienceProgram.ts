@@ -71,7 +71,7 @@ export const scheduleScienceAppointment = onCall<'scheduleScienceAppointment'>(
                 templateName: 'science_term_enrolment_confirmation.html',
                 values: {
                     parentName: input.parentFirstName,
-                    childName: input.childName,
+                    childName: input.childFirstName,
                     className: input.className,
                     appointmentTimes: appointments.map((it) =>
                     DateTime.fromISO(it.datetime, {

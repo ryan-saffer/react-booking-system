@@ -64,9 +64,16 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 
                 <Divider>Child Details</Divider>
                 <AntdForm.Item
-                    label="Child Name"
-                    name="childName"
-                    rules={[{ required: true, message: 'Please enter the child name' }, SimpleTextRule]}
+                    label="Child First Name"
+                    name="childFirstName"
+                    rules={[{ required: true, message: 'Please enter the childs first name' }, SimpleTextRule]}
+                >
+                    <Input />
+                </AntdForm.Item>
+                <AntdForm.Item
+                    label="Child Last Name"
+                    name="childFirstName"
+                    rules={[{ required: true, message: 'Please enter the childs last name' }, SimpleTextRule]}
                 >
                     <Input />
                 </AntdForm.Item>
@@ -296,7 +303,8 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                         parentLastName: form.getFieldValue('parentLastName'),
                         parentPhone: form.getFieldValue('parentPhone'),
                         parentEmail: form.getFieldValue('parentEmail'),
-                        childName: form.getFieldValue('childName'),
+                        childFirstName: form.getFieldValue('childFirstName'),
+                        childLastName: form.getFieldValue('childLastName'),
                         childAge: form.getFieldValue('childAge'),
                         childGrade: form.getFieldValue('childGrade'),
                         childAllergies: form.getFieldValue('childAllergies') ?? '',
@@ -324,7 +332,7 @@ const useStyles = makeStyles({
     },
     submitButton: {
         marginBottom: 12,
-        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        background: 'linear-gradient(270deg, #2FEAA8, #028CF3)',
         borderColor: 'white',
     },
 })

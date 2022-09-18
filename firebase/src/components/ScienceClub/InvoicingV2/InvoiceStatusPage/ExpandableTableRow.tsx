@@ -102,7 +102,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                                             <TableCell className={classes.paddingCell} />
                                             <TableCell>{appointment.parentPhone}</TableCell>
                                             <TableCell>{appointment.parentEmail}</TableCell>
-                                            <TableCell>{appointment.childName}</TableCell>
+                                            <TableCell>{appointment.childFirstName} {appointment.childLastName}</TableCell>
                                             <TableCell>{appointment.childAge}</TableCell>
                                             <TableCell>{appointment.childGrade}</TableCell>
                                         </TableRow>

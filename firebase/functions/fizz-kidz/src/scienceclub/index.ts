@@ -5,7 +5,8 @@ export type ScheduleScienceAppointmentParams = {
     parentLastName: string
     parentEmail: string
     parentPhone: string
-    childName: string
+    childFirstName: string
+    childLastName: string
     childAge: string
     childGrade: string
     childAllergies: string
@@ -38,7 +39,8 @@ export type ScienceAppointment = {
     appointments: number[]
     childAge: string
     childGrade: string
-    childName: string
+    childFirstName: string
+    childLastName: string
     childAllergies: string
     childIsAnaphylactic: boolean
     anaphylaxisPlan: string

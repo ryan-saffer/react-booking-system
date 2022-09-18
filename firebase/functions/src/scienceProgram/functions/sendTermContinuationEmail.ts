@@ -36,7 +36,7 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
                 parentName: appointment.parentFirstName,
                 className: appointment.className,
                 price: appointment.price,
-                childName: appointment.childName,
+                childName: appointment.childFirstName,
                 continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                 unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,
             },

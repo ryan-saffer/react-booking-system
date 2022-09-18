@@ -104,7 +104,7 @@ const BookingForm = () => {
 
     if (error) {
         return (
-            <Root>
+            <Root color='green'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography.Title level={4} className={classes.title}>
                         Science Program Booking Form
@@ -112,7 +112,7 @@ const BookingForm = () => {
                     <Result
                         status="500"
                         title="Something went wrong"
-                        subTitle="There was a problem during your registartion. Please try again, or email us at bookings@fizzkidz.com.au"
+                        subTitle="We're sorry... it looks like something broke. Please try again later, or reach out via email at bookings@fizzkidz.com.au."
                     />
                 </div>
             </Root>
@@ -121,7 +121,7 @@ const BookingForm = () => {
 
     if (success) {
         return (
-            <Root>
+            <Root color='green'>
                 <Result
                     status="success"
                     title="Registration Confirmed"
@@ -132,10 +132,10 @@ const BookingForm = () => {
     }
 
     return (
-        <Root>
+        <Root color='green'>
             <div className={classes.root}>
                 <Typography.Title level={4} className={classes.title}>
-                    Science Program Booking Form
+                    Science Program Registration Form
                 </Typography.Title>
                 {renderClassSelection()}
                 {selectedClass && <Form appointmentType={selectedClass} onSubmit={handleSubmit} />}
