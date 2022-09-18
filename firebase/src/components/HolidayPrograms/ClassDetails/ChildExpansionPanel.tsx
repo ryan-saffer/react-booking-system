@@ -154,7 +154,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                         loading={loading}
                         onClick={handleSignOut}
                     >
-                        Revert to signed out
+                        Undo Sign In
                     </AntButton>
                 </div>
             )}
