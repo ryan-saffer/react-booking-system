@@ -72,7 +72,6 @@ const ChildExpansionPanel = (props: Props) => {
     }, [firebase.db, appointment.id])
 
     const mergedPickupPeople = [`${appointment.firstName} ${appointment.lastName}`, ...firestoreDocument.pickupPeople]
-    const childName = firestoreDocument.childName
     const isInPrep = firestoreDocument.childGrade === 'Prep'
     const isAnaphylactic = firestoreDocument.childIsAnaphylactic
     const permissionToPhotograph = firestoreDocument.permissionToPhotograph
@@ -185,7 +184,7 @@ const ChildExpansionPanel = (props: Props) => {
                                 setNotAttending={setNotAttending}
                             />
                             <Typography className={classes.childName} variant="button">
-                                {childName}
+                                {firestoreDocument.childFirstName} {firestoreDocument.childLastName}
                             </Typography>
                             {isInPrep && <StarIcon style={{ color: yellow[800] }} />}
                             {firestoreDocument.childAllergies && (

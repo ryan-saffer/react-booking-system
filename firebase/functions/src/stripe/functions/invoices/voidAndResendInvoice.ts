@@ -33,7 +33,7 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
             lastName: appointment.parentLastName,
             email: appointment.parentEmail,
             phone: appointment.parentPhone,
-            description: `${appointment.childName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
+            description: `${appointment.childFirstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
             price: PricesMap[price],
             metadata: { programType: 'science_program' }
         })

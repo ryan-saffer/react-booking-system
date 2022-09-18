@@ -115,8 +115,8 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                     onClick={() => {
                         setMenuAnchorEl(null)
                         showConfirmationDialog({
-                            dialogTitle: `Unenroll ${appointment.childName} from the term`,
-                            dialogContent: `This will completely unenroll ${appointment.childName} from the term, and delete all of their information. This cannot be undone.`,
+                            dialogTitle: `Unenroll ${appointment.childFirstName} from the term`,
+                            dialogContent: `This will completely unenroll ${appointment.childFirstName} from the term, and delete all of their information. This cannot be undone.`,
                             confirmationButtonText: 'Unenroll from term',
                             onConfirm: unenrollChildFromTerm,
                         })

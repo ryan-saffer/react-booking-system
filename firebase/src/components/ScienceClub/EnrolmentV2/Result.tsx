@@ -56,8 +56,8 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointment }) => 
         return (
             <>
                 <Typography variant="h5" gutterBottom>Hi {appointment.parentFirstName},</Typography>
-                <Typography variant="body1" gutterBottom>{appointment.childName}'s enrolment in the term has been confirmed.</Typography>
-                <Typography variant="body1" gutterBottom>We are thrilled to have {appointment.childName} part of the science program! We will send you an invoice for the term shortly.</Typography>
+                <Typography variant="body1" gutterBottom>{appointment.childFirstName}'s enrolment in the term has been confirmed.</Typography>
+                <Typography variant="body1" gutterBottom>We are thrilled to have {appointment.childFirstName} part of the science program! We will send you an invoice for the term shortly.</Typography>
                 <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
             </>
         )
@@ -67,8 +67,8 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointment }) => 
         return (
             <>
                 <Typography variant="h5" gutterBottom>Hi {appointment.parentFirstName},</Typography>
-                <Typography variant="body1" gutterBottom>We're sad to see {appointment.childName} go!</Typography>
-                <Typography variant="body1" gutterBottom>{appointment.childName} will be unenrolled from the term program.</Typography>
+                <Typography variant="body1" gutterBottom>We're sad to see {appointment.childFirstName} go!</Typography>
+                <Typography variant="body1" gutterBottom>{appointment.childFirstName} will be unenrolled from the term program.</Typography>
                 <Typography variant="body1" gutterBottom>We hope to see you again soon!</Typography>
                 <Typography variant="button" gutterBottom>The Fizz Kidz team</Typography>
             </>
