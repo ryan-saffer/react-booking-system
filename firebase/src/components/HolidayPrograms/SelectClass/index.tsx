@@ -103,13 +103,22 @@ const HolidayProgramSelection = (props: any) => {
                                     value={selectedCalendar}
                                     onChange={(e) => setSelectedCalendar(e.target.value as string)}
                                 >
-                                    {Object.entries(Acuity.Constants.StoreCalendars).map(([store, calendarId]) => {
-                                        return (
-                                            <MenuItem key={calendarId} value={calendarId}>
-                                                {capitalise(store)}
-                                            </MenuItem>
-                                        )
-                                    })}
+                                    {process.env.REACT_APP_ENV === 'prod' &&
+                                        Object.entries(Acuity.Constants.StoreCalendars).map(([store, calendarId]) => {
+                                            return (
+                                                <MenuItem key={calendarId} value={calendarId}>
+                                                    {capitalise(store)}
+                                                </MenuItem>
+                                            )
+                                        })}
+                                    {process.env.REACT_APP_ENV === 'dev' && (
+                                        <MenuItem
+                                            key={Acuity.Constants.TestCalendarId}
+                                            value={Acuity.Constants.TestCalendarId}
+                                        >
+                                            Test Calendar
+                                        </MenuItem>
+                                    )}
                                 </Select>
                             </FormControl>
                         </>
