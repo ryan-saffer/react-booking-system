@@ -64,6 +64,7 @@ export type Class = {
     calendar: string
     slotsAvailable: number
     time: string
+    appointmentTypeID: number
 }
 
 export type Certificate = {
