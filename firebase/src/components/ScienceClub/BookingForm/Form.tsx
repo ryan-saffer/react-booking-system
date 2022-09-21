@@ -72,7 +72,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 </AntdForm.Item>
                 <AntdForm.Item
                     label="Child Last Name"
-                    name="childFirstName"
+                    name="childLastName"
                     rules={[{ required: true, message: 'Please enter the childs last name' }, SimpleTextRule]}
                 >
                     <Input />

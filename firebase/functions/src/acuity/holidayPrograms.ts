@@ -1,7 +1,7 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { MailClient } from '../sendgrid/EmailClient'
-import { EmailInfo, Emails } from '../sendgrid/types'
+import { MailClient } from '../sendgrid/MailClient'
+import { Emails } from '../sendgrid/types'
 import { hasError } from './shared'
 import { db } from '../init'
 import * as functions from 'firebase-functions'
@@ -51,7 +51,7 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
         let result = await Promise.all(promises)
         const mailClient = new MailClient()
 
-        let bookings: Emails['holidayProgramConfirmation']['values']['bookings'] = []
+        let bookings: Emails['holidayProgramConfirmation']['bookings'] = []
         let sortedAppointments = result.sort((a, b) => {
             const child1Name = Acuity.Utilities.retrieveFormAndField(
                 a,
@@ -86,26 +86,12 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
             })
         })
 
-        const emailInfo: EmailInfo = {
-            to: result[0].email,
-            from: {
-                name: 'Fizz Kidz',
-                email: 'bookings@fizzkidz.com.au',
-            },
-            subject: 'Holiday program booking confirmation',
-        }
-
-        const emailValues: Emails['holidayProgramConfirmation'] = {
-            templateName: 'holiday_program_confirmation.html',
-            values: {
-                parentName: result[0].firstName,
-                location: `Fizz Kidz ${result[0].calendar}`,
-                address: result[0].location,
-                bookings: bookings,
-            },
-        }
-
-        await mailClient.sendEmail(emailInfo, emailValues)
+        await mailClient.sendEmail('holidayProgramConfirmation', result[0].email, {
+            parentName: result[0].firstName,
+            location: `Fizz Kidz ${result[0].calendar}`,
+            address: result[0].location,
+            bookings: bookings,
+        })
         return true
     } catch (error) {
         console.error(error)
