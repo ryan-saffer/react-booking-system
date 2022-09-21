@@ -12,14 +12,14 @@ firebase_admin.initialize_app(cred, {
 
 db = firestore.client()
 
-users_ref = db.collection(u'bookings').where(u'dateTime', u'>=', datetime.datetime(2022, 4, 28)).where(u'dateTime', '<=', datetime.datetime(2023, 12, 30))
+users_ref = db.collection(u'bookings').where(u'dateTime', u'>=', datetime.datetime(2020, 1, 1)).where(u'dateTime', '<=', datetime.datetime(2023, 12, 30))
 
 output = users_ref.stream()
 
 f = open('result.csv', 'w')
 writer = csv.writer(f)
 
-writer.writerow(["First Name", "Last Name", "Email", "Child Name", "Child Age", "Branch", "Party Date", "Service"])
+writer.writerow(["First Name", "Last Name", "Email", "Child Name", "Child Age", "Branch", "Party Date", "Service", "Customer Type"])
 
 for booking in output:
     party = booking.to_dict()
@@ -30,6 +30,6 @@ for booking in output:
     else:
       service = "In-store Party"
 
-    writer.writerow([party["parentFirstName"], party["parentLastName"], party["parentEmail"], party["childName"], party["childAge"], party["location"], formattedDate, service])
+    writer.writerow([party["parentFirstName"], party["parentLastName"], party["parentEmail"], party["childName"], party["childAge"], party["location"], formattedDate, service, "B2C"])
 
 f.close()
