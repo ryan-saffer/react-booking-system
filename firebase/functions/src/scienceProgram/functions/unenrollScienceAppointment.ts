@@ -3,6 +3,7 @@ import { db } from '../../init'
 import { onCall } from '../../utilities'
 import { ScienceAppointment, UnenrollScienceAppointmentParams } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/AcuityClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
     async (input: UnenrollScienceAppointmentParams, _context: functions.https.CallableContext) => {
@@ -15,10 +16,8 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
         // 2. cancel each acuity appointment
         let appointmentIds = appointment.appointments
 
-        let acuityClient = new AcuityClient()
-
         try {
-            await acuityClient.unenrollChildFromTerm(appointmentIds)
+            await new AcuityClient().unenrollChildFromTerm(appointmentIds)
         } catch (err) {
             throw new functions.https.HttpsError(
                 'internal',
@@ -33,5 +32,21 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
 
         // 3. set status to 'unenrolled'
         await appointmentSnapshot.ref.set(updatedAppointment, { merge: true })
+
+        // 4. email confirmation
+        try {
+            await new MailClient().sendEmail('scienceTermUnenrolmentConfirmation', appointment.parentEmail, {
+                parentName: appointment.parentFirstName,
+                childName: appointment.childFirstName,
+                className: appointment.className,
+            })
+        } catch (err) {
+            functions.logger.error('error sending unenrolment confirmation', err)
+            throw new functions.https.HttpsError(
+                'internal',
+                'appointment cancelled, however an error occurred sending the confirmation email',
+                err
+            )
+        }
     }
 )

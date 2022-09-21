@@ -3,8 +3,7 @@ import { AcuityClient } from '../../acuity/AcuityClient'
 import { onCall } from '../../utilities'
 import { db, storage } from '../../init'
 import { ScheduleScienceAppointmentParams, ScienceAppointment } from 'fizz-kidz'
-import { MailClient } from '../../sendgrid/EmailClient'
-import { EmailInfo, Emails } from '../../sendgrid/types'
+import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
 const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId
@@ -59,42 +58,28 @@ export const scheduleScienceAppointment = onCall<'scheduleScienceAppointment'>(
             await newDoc.set({ ...appointment })
 
             // send the confirmation email
-            const emailInfo: EmailInfo = {
-                to: input.parentEmail,
-                from: {
-                    name: 'Fizz Kidz',
-                    email: 'bookings@fizzkidz.com.au',
-                },
-                subject: 'Science Program Booking Confirmation',
-            }
-            const emailValues: Emails['scienceTermEnrolmentConfirmation'] = {
-                templateName: 'science_term_enrolment_confirmation.html',
-                values: {
+            try {
+                await new MailClient().sendEmail('scienceTermEnrolmentConfirmation', input.parentEmail, {
                     parentName: input.parentFirstName,
                     childName: input.childFirstName,
                     className: input.className,
                     appointmentTimes: appointments.map((it) =>
-                    DateTime.fromISO(it.datetime, {
-                        setZone: true,
-                    }).toLocaleString({
-                        weekday: 'short',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    })
+                        DateTime.fromISO(it.datetime, {
+                            setZone: true,
+                        }).toLocaleString({
+                            weekday: 'short',
+                            month: 'short',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                        })
                     ),
                     calendarName: calendar.location,
                     price: appointments[0].price,
                     location: calendar.description,
                     numberOfWeeks: appointments.length.toString(),
-                },
-            }
-            
-            try {
-                const mailClient = new MailClient()
-                await mailClient.sendEmail(emailInfo, emailValues)
+                })
             } catch (err) {
                 throw new functions.https.HttpsError(
                     'ok',

@@ -2,8 +2,7 @@ import * as functions from 'firebase-functions'
 import { ScienceAppointment, SendTermContinuationEmailParams } from 'fizz-kidz'
 import { onCall } from '../../utilities'
 import { db } from '../../init'
-import { MailClient } from '../../sendgrid/EmailClient'
-import { EmailInfo, Emails } from '../../sendgrid/types'
+import { MailClient } from '../../sendgrid/MailClient'
 
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -22,29 +21,15 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
         let baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
         baseUrl += '/science-club-enrolment-v2'
 
-        const emailInfo: EmailInfo = {
-            to: appointment.parentEmail,
-            from: {
-                name: 'Fizz Kidz',
-                email: 'bookings@fizzkidz.com.au',
-            },
-            subject: 'Thanks for coming to your first session!',
-        }
-        const emailValues: Emails['termContinuationEmail'] = {
-            templateName: 'term_continuation_email.html',
-            values: {
+        try {
+            await new MailClient().sendEmail('termContinuationEmail', appointment.parentEmail, {
                 parentName: appointment.parentFirstName,
                 className: appointment.className,
                 price: appointment.price,
                 childName: appointment.childFirstName,
                 continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                 unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,
-            },
-        }
-
-        try {
-            const mailClient = new MailClient()
-            await mailClient.sendEmail(emailInfo, emailValues)
+            })
             const updatedAppointment: Partial<ScienceAppointment> = {
                 continuingEmailSent: true,
             }

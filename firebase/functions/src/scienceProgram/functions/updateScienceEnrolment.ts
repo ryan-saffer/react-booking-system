@@ -8,8 +8,8 @@ export const updateScienceEnrolment = onCall<'updateScienceEnrolment'>(
         const { appointmentId, ...updatedAppointment } = input
 
         const appointmentRef = db.collection('scienceAppointments').doc(appointmentId)
-        
-        await db.collection('scienceAppointments').doc(input.appointmentId).set(updatedAppointment, { merge: true })
+
+        await appointmentRef.set(updatedAppointment, { merge: true })
         const appointment = (await appointmentRef.get()).data() as ScienceAppointment
 
         return appointment

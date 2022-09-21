@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Acuity, ScienceAppointment, Service } from 'fizz-kidz'
-import useUpdateScienceEnrolment from '../../Hooks/UseUpdateScienceEnrolment'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
 
@@ -34,19 +33,18 @@ const EnrolmentPage = () => {
         async function updateEnrolment() {
             try {
                 const result = await callFirebaseFunction(
-                'updateScienceEnrolment',
-                firebase
-            )({
-                appointmentId,
-                continuingWithTerm,
-            })
-            setService({ status: 'loaded', result: result.data })
-        } catch (error) {
-            console.error("Error updating science enrolment:", error)
-            setService({ status: 'error', error })
+                    'updateScienceEnrolment',
+                    firebase
+                )({
+                    appointmentId,
+                    continuingWithTerm,
+                })
+                setService({ status: 'loaded', result: result.data })
+            } catch (error) {
+                console.error('Error updating science enrolment:', error)
+                setService({ status: 'error', error })
+            }
         }
-        }
-        console.log("UPDATING ENROLMENT")
         updateEnrolment()
     }, [])
 
