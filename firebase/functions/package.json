@@ -2,9 +2,9 @@
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "build": "npm --prefix fizz-kidz run build && ./node_modules/.bin/tslint --project tsconfig.json && ./node_modules/.bin/tsc",
+    "build": "npm --prefix fizz-kidz run build && ./node_modules/.bin/tslint --project tsconfig.json && npm run copy-files && ./node_modules/.bin/tsc",
     "build:watch": "npm --prefix fizz-kidz run build && ./node_modules/.bin/tslint --project tsconfig.json && npm run copy-files &&./node_modules/.bin/tsc --watch",
-    "copy-files": "copyfiles -u 1 src/**/*.html lib/src",
+    "copy-files": "copyfiles -u 1 src/**/*.html lib/src && copyfiles -u 1 src/**/*.csv lib/src",
     "serve": "firebase emulators:start --only functions --inspect-functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/luxon": "^2.3.2",
     "@types/mjml": "^4.7.0",
+    "csv-parse": "^5.3.0",
     "firebase-functions-test": "^0.1.7",
     "mocha": "^6.2.2"
   },
