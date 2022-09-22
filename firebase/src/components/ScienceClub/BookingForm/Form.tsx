@@ -312,7 +312,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                         anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
                         emergencyContactName: form.getFieldValue('emergencyContactName'),
                         emergencyContactNumber: form.getFieldValue('emergencyContactNumber'),
-                        permissionToPhotograph: form.getFieldValue('permissionToPhotograph'),
+                        permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
                         className: appointmentType.name,
                         pickupPeople: form.getFieldValue('pickupPeople').map((person: any) => person.pickupPerson),
                     })
