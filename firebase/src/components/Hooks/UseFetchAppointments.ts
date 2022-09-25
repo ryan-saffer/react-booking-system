@@ -29,7 +29,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
     useEffect(
         () => {
             const fetchClients = (data: Acuity.Client.FetchAppointmentsParams) => {
-                callAcuityClient('getAppointments', firebase)({ ...data })
+                callAcuityClient('searchForAppointments', firebase)({ ...data })
                     .then(result => {
                         let filteredResults = result.data.filter(x => x.classID === classId)
                         if (sorter) {

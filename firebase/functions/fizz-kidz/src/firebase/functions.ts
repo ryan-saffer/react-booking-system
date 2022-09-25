@@ -1,9 +1,9 @@
 import {
     RetrieveInvoiceStatusParams,
     RetrieveInvoiceStatusParamsV2,
-    InvoiceStatusWithUrl,
     SendInvoiceParams,
     SendInvoiceParamsV2,
+    InvoiceStatus
 } from '../scienceclub/invoicing'
 import { Appointment } from '../acuity'
 import {
@@ -18,12 +18,12 @@ import {
 } from '..'
 
 export interface FirebaseFunctions {
-    retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatusWithUrl>
-    retrieveInvoiceStatusV2: Function<RetrieveInvoiceStatusParamsV2, InvoiceStatusWithUrl>
-    sendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
-    sendInvoiceV2: Function<SendInvoiceParamsV2, InvoiceStatusWithUrl>
-    voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
-    voidAndResendInvoiceV2: Function<SendInvoiceParamsV2, InvoiceStatusWithUrl>
+    retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatus>
+    retrieveInvoiceStatusV2: Function<RetrieveInvoiceStatusParamsV2, InvoiceStatus>
+    sendInvoice: Function<SendInvoiceParams, InvoiceStatus>
+    sendInvoiceV2: Function<SendInvoiceParamsV2, InvoiceStatus>
+    voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatus>
+    voidAndResendInvoiceV2: Function<SendInvoiceParamsV2, InvoiceStatus>
     sendTermContinuationEmail: Function<Appointment, null>
     sendTermContinuationEmailV2: Function<SendTermContinuationEmailParams, void>
     createPaymentIntent: Function<CreatePaymentIntentParams, CreatePaymentIntentResponse>

@@ -41,5 +41,5 @@ export async function sendInvoice(input: {
 
     await stripe.invoices.sendInvoice(invoice.id)
 
-    return invoice.id
+    return invoice
 }

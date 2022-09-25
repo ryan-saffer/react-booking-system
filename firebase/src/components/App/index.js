@@ -24,6 +24,7 @@ import EnrolmentPageV2 from '../ScienceClub/EnrolmentV2';
 import HolidayProgramBookingScreen from '../HolidayPrograms/CustomerBookingScreen';
 import Confirmation from '../HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation';
 import ScienceProgramBookingForm from '../ScienceClub/BookingForm'
+import ParentPortal from '../ScienceClub/ParentPortal';
 
 const App = () => {
 
@@ -61,6 +62,7 @@ const App = () => {
             <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT} component={EnrolmentPage} />
             <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT_V2} component={EnrolmentPageV2} />
+            <Route path={ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL} component={ParentPortal} />
             <Route exact path={ROUTES.SCIENCE_PROGRAM_BOOKING_FORM} component={ScienceProgramBookingForm} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_BOOKING_SCREEN} component={HolidayProgramBookingScreen} />
             <Route exact path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN} component={Confirmation} />

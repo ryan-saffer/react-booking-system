@@ -26,6 +26,15 @@ export class AcuityClient {
         return this._request<Acuity.Appointment>(`/appointments/${id}`)
     }
 
+    updateAppointment(params: Acuity.Client.UpdateAppointmentParams) {
+        const { id, ...body } = params
+        return this._request<Acuity.Appointment>(`/appointments/${id}`, { method: 'PUT', body })
+    }
+
+    getAppointments(ids: number[]) {
+        return Promise.all(ids.map((id) => this.getAppointment(id.toString())))
+    }
+
     getAppointmentTypes() {
         return this._request<Acuity.AppointmentType[]>(`/appointment-types`)
     }

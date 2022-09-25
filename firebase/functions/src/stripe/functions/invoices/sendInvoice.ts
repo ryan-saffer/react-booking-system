@@ -1,6 +1,6 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
-import { InvoiceStatus, PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
@@ -20,26 +20,31 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
             const appointment = (await (await appointmentRef.get()).data()) as ScienceAppointment
 
             // 2. send invoice
-            const invoiceId = await sendInvoice({
+            const invoice = await sendInvoice({
                 firstName: appointment.parentFirstName,
                 lastName: appointment.parentLastName,
                 email: appointment.parentEmail,
                 phone: appointment.parentPhone,
                 description: `${appointment.childFirstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
                 price: PricesMap[price],
-                metadata: { programType: 'science_program' }
+                metadata: { programType: 'science_program' },
             })
 
             // 3. store id back into firestore
             const updatedAppointment: Partial<ScienceAppointment> = {
-                invoiceId,
+                invoiceId: invoice.id,
                 continuingWithTerm: 'yes',
                 continuingEmailSent: true,
             }
             await appointmentRef.set({ ...updatedAppointment }, { merge: true })
 
             // 4. return result
-            return { status: InvoiceStatus.UNPAID, url: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoiceId}` }
+            return {
+                status: 'UNPAID',
+                amount: parseInt(price) * 100,
+                dashboardUrl: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}`,
+                paymentUrl: invoice.hosted_invoice_url || '',
+            }
         } catch (err) {
             throw new functions.https.HttpsError(
                 'internal',

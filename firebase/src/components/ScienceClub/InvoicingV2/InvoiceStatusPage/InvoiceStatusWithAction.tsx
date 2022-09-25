@@ -3,7 +3,7 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import { TableCell, LinearProgress, Chip, Button, makeStyles } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 
-import { Acuity, InvoiceStatus, PriceWeekMap, ScienceAppointment } from 'fizz-kidz'
+import { Acuity, PriceWeekMap, ScienceAppointment } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
 import useInvoiceStatus from '../../../Hooks/UseInvoiceStatusV2'
@@ -58,8 +58,9 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
     }
 
     if (service.status === 'loaded') {
-        switch (service.result.status) {
-            case InvoiceStatus.PAID:
+        const invoiceStatus = service.result
+        switch (invoiceStatus.status) {
+            case 'PAID':
                 return (
                     <>
                         <TableCell size="small">
@@ -68,14 +69,14 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
                         <TableCell size="small">
                             <Button
                                 className={classes.viewInvoiceButton}
-                                onClick={(event) => openUrl(service.result.url, event)}
+                                onClick={(event) => openUrl(invoiceStatus.dashboardUrl, event)}
                             >
                                 View Invoice
                             </Button>
                         </TableCell>
                     </>
                 )
-            case InvoiceStatus.UNPAID:
+            case 'UNPAID':
                 return (
                     <>
                         <TableCell size="small">
@@ -84,14 +85,14 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
                         <TableCell size="small">
                             <Button
                                 className={classes.viewInvoiceButton}
-                                onClick={(event) => openUrl(service.result.url, event)}
+                                onClick={(event) => openUrl(invoiceStatus.dashboardUrl, event)}
                             >
                                 View Invoice
                             </Button>
                         </TableCell>
                     </>
                 )
-            case InvoiceStatus.NOT_SENT:
+            case 'NOT_SENT':
                 return (
                     <>
                         <TableCell size="small">
@@ -121,7 +122,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
                         </TableCell>
                     </>
                 )
-            case InvoiceStatus.UNSUPPORTED:
+            case 'UNSUPPORTED':
                 return (
                     <TableCell size="small" colSpan={2}>
                         This class does not support invoices
