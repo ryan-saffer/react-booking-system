@@ -104,7 +104,7 @@ const BookingForm = () => {
 
     if (error) {
         return (
-            <Root color='green'>
+            <Root color='green' width='centered'>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography.Title level={4} className={classes.title}>
                         Science Program Booking Form
@@ -121,7 +121,7 @@ const BookingForm = () => {
 
     if (success) {
         return (
-            <Root color='green'>
+            <Root color='green' width='centered'>
                 <Result
                     status="success"
                     title="Registration Confirmed"
@@ -132,7 +132,7 @@ const BookingForm = () => {
     }
 
     return (
-        <Root color='green'>
+        <Root color='green' width='centered'>
             <div className={classes.root}>
                 <Typography.Title level={4} className={classes.title}>
                     Science Program Registration Form

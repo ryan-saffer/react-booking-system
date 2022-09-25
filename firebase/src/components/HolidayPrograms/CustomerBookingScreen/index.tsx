@@ -211,7 +211,7 @@ const CustomerBookingScreen = () => {
     }
 
     return (
-        <Root color='pink'>
+        <Root color='pink' width='centered'>
             <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
                 Holiday Program Booking Form
             </Typography.Title>

@@ -34,6 +34,9 @@ export const client = functions
                 case 'updateLabel':
                     input = data.input as Acuity.Client.UpdateLabelParams
                     return updateLabel(input)
+                case 'updateAppointment':
+                    input = data.input as Acuity.Client.UpdateAppointmentParams
+                    return await acuityClient.updateAppointment(input)
                 case 'classAvailability':
                     input = data.input as Acuity.Client.ClassAvailabilityParams
                     return await acuityClient.getClasses(input.appointmentTypeId, input.minDate)
@@ -42,6 +45,9 @@ export const client = functions
                     return checkCertificate(input)
                 case 'getAppointmentTypes':
                     return await acuityClient.getAppointmentTypes()
+                case 'getAppointments':
+                    input = data.input as Acuity.Client.GetAppointmentsParams
+                    return await acuityClient.getAppointments(input.ids)
             }
         } catch(err) {
             throw new functions.https.HttpsError('internal', 'error calling acuity client', err)

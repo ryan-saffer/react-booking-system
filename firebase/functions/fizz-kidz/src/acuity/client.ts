@@ -3,19 +3,26 @@ import { Appointment, AppointmentType, Certificate } from ".";
 import { Class } from './types';
 
 export interface AcuityFunctions {
-    getAppointments: Function<FetchAppointmentsParams, Appointment[]>
+    searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
+    getAppointments: Function<GetAppointmentsParams, Appointment[]>
     getAppointmentTypes: Function<void, AppointmentType[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
+    updateAppointment: Function<UpdateAppointmentParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
-    scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
     checkCertificate: Function<CheckCertificateParams, Certificate>
 }
 
-export interface FetchAppointmentsParams {
+// For querying acuity, ie all appointments from a certain type and calendar
+export type FetchAppointmentsParams = {
     appointmentTypeID: number
     calendarID: number
+}
+
+// For getting specific appointments by ids
+export type GetAppointmentsParams = {
+    ids: number[]
 }
 
 export type ContinuingOption = 'yes' | 'no' | ''
@@ -38,6 +45,11 @@ export interface UnenrollChildFromTermParams {
 export interface UpdateLabelParams {
     appointmentId: number
     label: number // Acuity.Constants.Labels
+}
+
+export type UpdateAppointmentParams = {
+    id: number
+    labels?: { id: number }[]
 }
 
 export type ClassAvailabilityParams = {

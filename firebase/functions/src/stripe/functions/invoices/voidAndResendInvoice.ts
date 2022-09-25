@@ -1,7 +1,7 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
 import Stripe from 'stripe'
-import { InvoiceStatus, PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
@@ -28,22 +28,27 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
         }
 
         // 3. send new invoice
-        const invoiceId = await sendInvoice({
+        const invoice = await sendInvoice({
             firstName: appointment.parentFirstName,
             lastName: appointment.parentLastName,
             email: appointment.parentEmail,
             phone: appointment.parentPhone,
             description: `${appointment.childFirstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
             price: PricesMap[price],
-            metadata: { programType: 'science_program' }
+            metadata: { programType: 'science_program' },
         })
 
         // 4. update appointment to include new invoice
         const updatedAppointment: Partial<ScienceAppointment> = {
-            invoiceId,
+            invoiceId: invoice.id,
         }
         await appointmentRef.set({ ...updatedAppointment }, { merge: true })
 
-        return { status: InvoiceStatus.UNPAID, url: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoiceId}` }
+        return {
+            status: 'UNPAID',
+            amount: parseInt(price) * 100,
+            dashboardUrl: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}`,
+            paymentUrl: invoice.hosted_invoice_url || '',
+        }
     }
 )

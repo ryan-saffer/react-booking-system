@@ -56,7 +56,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        subject: 'Science Program Booking Confirmation',
+                        subject: 'Science Program Enrolment Confirmation',
                     },
                     template: 'science_term_enrolment_confirmation.html',
                 }

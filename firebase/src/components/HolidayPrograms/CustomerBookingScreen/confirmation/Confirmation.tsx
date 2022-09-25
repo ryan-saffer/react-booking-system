@@ -54,7 +54,7 @@ const Confirmation: React.FC<Props> = () => {
 
     if (loading) {
         return (
-            <Root color='pink'>
+            <Root color='pink' width='centered'>
                 <Spin style={{ marginTop: 36, marginBottom: 12 }}/>
             </Root>
         )
@@ -62,7 +62,7 @@ const Confirmation: React.FC<Props> = () => {
 
     if (error) {
         return (
-            <Root color='pink'>
+            <Root color='pink' width='centered'>
                 <Result
                     status="500"
                     title="Something went wrong"
@@ -72,7 +72,7 @@ const Confirmation: React.FC<Props> = () => {
         )
     }
     return (
-        <Root color='pink'>
+        <Root color='pink' width='centered'>
             <Result
                 status="success"
                 title="Booking confirmed"

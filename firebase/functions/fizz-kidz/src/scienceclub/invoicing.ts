@@ -6,16 +6,20 @@ export interface RetrieveInvoiceStatusParamsV2 {
     appointmentId: string
 }
 
-export interface InvoiceStatusWithUrl {
-    status: InvoiceStatus,
-    url?: string
+// INVOICING
+export type InvoiceStatus =
+    | ExistingInvoice
+    | OtherInvoice
+
+export type ExistingInvoice = {
+    status: 'PAID' | 'UNPAID'
+    amount: number
+    dashboardUrl: string
+    paymentUrl: string
 }
 
-export enum InvoiceStatus {
-    NOT_SENT = "NOT_SENT",
-    UNPAID = "UNPAID",
-    PAID = "PAID",
-    UNSUPPORTED = "UNSUPPORTED"
+type OtherInvoice = {
+    status: "NOT_SENT" | "UNSUPPORTED"
 }
 
 export interface SendInvoiceParams {

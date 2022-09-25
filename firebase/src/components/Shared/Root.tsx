@@ -5,9 +5,20 @@ import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 
 type Props = {
     color: 'pink' | 'green'
+    width?: 'centered' | 'full'
+    logoSize?: 'sm' | 'lg'
 }
 
-const Root: React.FC<Props> = (props) => {
+const defaultProps: Partial<Props> = {
+    width: 'centered',
+    logoSize: 'lg'
+}
+
+const Root: React.FC<Props> = (_props) => {
+    const props = {
+        ...defaultProps,
+        ..._props,
+    }
     const classes = useStyles(props)
 
     return (
@@ -22,17 +33,18 @@ const Root: React.FC<Props> = (props) => {
     )
 }
 
+Root.defaultProps = defaultProps
+
 const useStyles = makeStyles<Theme, Props>(() => ({
     logoWrapper: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
     },
-    logo: {
-        maxWidth: 200,
-    },
+    logo: (props) => ({
+        maxWidth: props.logoSize === 'lg' ? 200 : 130,
+    }),
     root: (props) => ({
-        // backgroundColor: '#f0f2f2',
         backgroundImage:
             props.color === 'pink'
                 ? 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)'
@@ -42,14 +54,16 @@ const useStyles = makeStyles<Theme, Props>(() => ({
         display: 'flex',
         justifyContent: 'center',
     }),
-    card: {
-        width: '90%',
+    card: (props) => ({
+        width: '100%',
+        marginRight: 20,
+        marginLeft: 20,
         height: 'fit-content',
-        maxWidth: 600,
+        maxWidth: props.width === 'centered' ? 600 : '100%',
         marginTop: 36,
         borderRadius: 16,
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-    },
+    }),
 }))
 
 export default Root

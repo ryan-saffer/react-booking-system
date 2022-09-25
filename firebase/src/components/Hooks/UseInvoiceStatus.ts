@@ -1,22 +1,22 @@
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
 import Firebase, { FirebaseContext } from '../Firebase'
 
-import { Acuity, InvoiceStatus, InvoiceStatusWithUrl } from 'fizz-kidz'
+import { Acuity, InvoiceStatus } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
 import { Service } from 'fizz-kidz'
 
 
-const useInvoiceStatus = (appointment: Acuity.Appointment): [Service<InvoiceStatusWithUrl>, Dispatch<SetStateAction<Service<InvoiceStatusWithUrl>>>] => {
+const useInvoiceStatus = (appointment: Acuity.Appointment): [Service<InvoiceStatus>, Dispatch<SetStateAction<Service<InvoiceStatus>>>] => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [result, setResult] = useState<Service<InvoiceStatusWithUrl>>({ status: 'loading' })
+    const [result, setResult] = useState<Service<InvoiceStatus>>({ status: 'loading' })
 
     const invoiceId = Acuity.Utilities.retrieveFormAndField(appointment, Acuity.Constants.Forms.INVOICE, Acuity.Constants.FormFields.INVOICE_ID)
 
     useEffect(() => {
         if (invoiceId === "") {
-            setResult({ status: 'loaded', result: { status: InvoiceStatus.NOT_SENT }})
+            setResult({ status: 'loaded', result: { status: 'NOT_SENT' }})
             return
         }
         console.log('running retrieveInvoiceStatus')
