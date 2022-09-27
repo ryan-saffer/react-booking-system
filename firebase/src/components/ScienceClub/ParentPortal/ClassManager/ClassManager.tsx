@@ -1,9 +1,7 @@
+import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { List, Typography } from 'antd'
-import { Acuity, ScienceAppointment, Service } from 'fizz-kidz'
-import React, { useContext, useEffect, useState } from 'react'
-import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../../Firebase'
+import { List, Result, Typography } from 'antd'
+import { ScienceAppointment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import Loader from '../Loader'
@@ -50,8 +48,13 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
             )
 
         default: // error
-            // TODO
-            return <h1>ERROR</h1>
+            return (
+                <Result
+                    status="error"
+                    title="Something went wrong"
+                    subTitle="There was an error retreiving your term details. Please try again later."
+                />
+            )
     }
 }
 

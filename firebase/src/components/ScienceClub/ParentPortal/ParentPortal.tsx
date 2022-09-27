@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { Divider, Typography } from 'antd'
+import { Divider, Result, Typography } from 'antd'
 import { useParams } from 'react-router-dom'
 import useFetchScienceAppointment from '../../Hooks/api/UseFetchScienceAppointment'
 import ClassManager from './ClassManager/ClassManager'
@@ -41,8 +41,15 @@ const ParentPortal: React.FC = () => {
             )
 
         default: // error
-            // TODO
-            return <h1>ERROR</h1>
+            return (
+                <div className={classes.error}>
+                    <Result
+                        status="500"
+                        title="Oh no.."
+                        subTitle="Sorry, something went wrong. Please try again later."
+                    />
+                </div>
+            )
     }
 }
 
@@ -58,6 +65,12 @@ const useStyles = makeStyles({
     summaryInvoice: {
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    error: {
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
     },
 })
