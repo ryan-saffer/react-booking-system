@@ -17,7 +17,7 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
         try {
             // 1. get appointment
             const appointmentRef = db.collection('scienceAppointments').doc(id)
-            const appointment = (await (await appointmentRef.get()).data()) as ScienceAppointment
+            const appointment = (await appointmentRef.get()).data() as ScienceAppointment
 
             // 2. send invoice
             const invoice = await sendInvoice({
@@ -34,7 +34,10 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
             const updatedAppointment: Partial<ScienceAppointment> = {
                 invoiceId: invoice.id,
                 continuingWithTerm: 'yes',
-                continuingEmailSent: true,
+                emails: {
+                    ...appointment.emails,
+                    continuingEmailSent: true,
+                },
             }
             await appointmentRef.set({ ...updatedAppointment }, { merge: true })
 

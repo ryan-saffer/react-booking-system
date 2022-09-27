@@ -1,6 +1,6 @@
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { makeStyles, Theme } from '@material-ui/core'
-import { Button, Card, Form, Input, message, Tooltip } from 'antd'
+import { Button, Card, Form, Input, message, Row, Tooltip } from 'antd'
 import { ScienceAppointment } from 'fizz-kidz'
 import React, { useContext, useState } from 'react'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
@@ -62,88 +62,96 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
     }
 
     return (
-        <Card
-            className={classes.card}
-            title="Name and relation to child"
-            extra={
-                !editing && (
-                    <>
-                        {width > BREAKPOINT ? (
-                            <Button type="primary" onClick={() => setEditing(true)}>
-                                Edit
-                            </Button>
-                        ) : (
-                            <Button type="primary" onClick={() => setEditing(true)} icon={<EditOutlined />} />
-                        )}
-                    </>
-                )
-            }
-        >
-            <Form form={form} initialValues={initialValues} onFinish={onFinish} autoComplete="off">
-                <Form.List name="pickupPeople">
-                    {(fields, { add, remove }) => (
+        <Row className={classes.row}>
+            <Card
+                className={classes.card}
+                title="Name and relation to child"
+                extra={
+                    !editing && (
                         <>
-                            {fields.map(({ key, name, ...restField }) => (
-                                <div key={key} className={classes.wrapper}>
-                                    <Form.Item
-                                        className={classes.spacer}
-                                        {...restField}
-                                        name={[name, 'person']}
-                                        rules={[
-                                            { required: true, message: 'Please enter a name and relation to child' },
-                                        ]}
-                                    >
-                                        <Input
-                                            placeholder="Name and relation to child"
-                                            size="large"
-                                            disabled={!editing}
-                                        />
-                                    </Form.Item>
-                                    <Tooltip title="Remove person">
-                                        <Button
-                                            className={classes.removeButton}
-                                            disabled={!editing}
-                                            type="text"
-                                            shape="circle"
-                                            icon={<MinusCircleOutlined onClick={() => remove(name)} />}
-                                        />
-                                    </Tooltip>
-                                </div>
-                            ))}
-
-                            <Form.Item className={classes.addButton}>
-                                <Button
-                                    disabled={!editing}
-                                    type="dashed"
-                                    size="large"
-                                    onClick={() => add()}
-                                    block
-                                    icon={<PlusOutlined />}
-                                >
-                                    Add Pickup Person
+                            {width > BREAKPOINT ? (
+                                <Button type="primary" onClick={() => setEditing(true)}>
+                                    Edit
                                 </Button>
-                            </Form.Item>
+                            ) : (
+                                <Button type="primary" onClick={() => setEditing(true)} icon={<EditOutlined />} />
+                            )}
                         </>
-                    )}
-                </Form.List>
+                    )
+                }
+            >
+                <Form form={form} initialValues={initialValues} onFinish={onFinish} autoComplete="off">
+                    <Form.List name="pickupPeople">
+                        {(fields, { add, remove }) => (
+                            <>
+                                {fields.map(({ key, name, ...restField }) => (
+                                    <div key={key} className={classes.wrapper}>
+                                        <Form.Item
+                                            className={classes.spacer}
+                                            {...restField}
+                                            name={[name, 'person']}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Please enter a name and relation to child',
+                                                },
+                                            ]}
+                                        >
+                                            <Input
+                                                placeholder="Name and relation to child"
+                                                size="large"
+                                                disabled={!editing}
+                                            />
+                                        </Form.Item>
+                                        <Tooltip title="Remove person">
+                                            <Button
+                                                className={classes.removeButton}
+                                                disabled={!editing}
+                                                type="text"
+                                                shape="circle"
+                                                icon={<MinusCircleOutlined onClick={() => remove(name)} />}
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                ))}
 
-                <Form.Item>
-                    <div className={classes.buttons}>
-                        <Button type="primary" htmlType="submit" loading={loading} disabled={!editing}>
-                            Save
-                        </Button>
-                        <Button onClick={cancel} disabled={!editing}>
-                            Cancel
-                        </Button>
-                    </div>
-                </Form.Item>
-            </Form>
-            <ErrorModal />
-        </Card>
+                                <Form.Item className={classes.addButton}>
+                                    <Button
+                                        disabled={!editing}
+                                        type="dashed"
+                                        size="large"
+                                        onClick={() => add()}
+                                        block
+                                        icon={<PlusOutlined />}
+                                    >
+                                        Add Pickup Person
+                                    </Button>
+                                </Form.Item>
+                            </>
+                        )}
+                    </Form.List>
+
+                    <Form.Item>
+                        <div className={classes.buttons}>
+                            <Button type="primary" htmlType="submit" loading={loading} disabled={!editing}>
+                                Save
+                            </Button>
+                            <Button onClick={cancel} disabled={!editing}>
+                                Cancel
+                            </Button>
+                        </div>
+                    </Form.Item>
+                </Form>
+                <ErrorModal />
+            </Card>
+        </Row>
     )
 }
 
 const useStyles = makeStyles<Theme, ThemeProps>(() => ({
+    row: {
+        justifyContent: 'center',
+    },
     card: (props) => ({
         boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
         '& .ant-card-head': {
@@ -151,6 +159,7 @@ const useStyles = makeStyles<Theme, ThemeProps>(() => ({
                 fontSize: 15,
             },
         },
+        width: 1000,
     }),
     spacer: {
         flex: 1,

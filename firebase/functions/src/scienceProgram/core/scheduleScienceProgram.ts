@@ -51,9 +51,12 @@ export default async function scheduleScienceProgram(
             price: appointments[0].price,
             status: 'active',
             continuingWithTerm: '',
-            continuingEmailSent: false,
             invoiceId: '',
             notes: '',
+            emails: {
+                continuingEmailSent: false,
+                portalLinkEmailSent: false
+            }
         }
 
         await newDoc.set({ ...appointment })

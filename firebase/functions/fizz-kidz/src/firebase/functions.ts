@@ -31,6 +31,7 @@ export interface FirebaseFunctions {
     scheduleScienceAppointment: Function<ScheduleScienceAppointmentParams, void>
     unenrollScienceAppointment: Function<UnenrollScienceAppointmentParams, void>
     updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceAppointment>
+    sendPortalLinks: Function<void, void>
 }
 
 export type Function<Input, Result> = {

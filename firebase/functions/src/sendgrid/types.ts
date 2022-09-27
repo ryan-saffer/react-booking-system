@@ -31,4 +31,11 @@ export type Emails = {
         childName: string
         className: string
     }
+
+    scienceParentPortalLink: {
+        parentName: string
+        childName: string
+        className: string
+        portalUrl: string
+    }
 }
