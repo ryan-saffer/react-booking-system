@@ -6,7 +6,7 @@ import { green, orange, red, blue } from '@material-ui/core/colors'
 import { Acuity, PriceWeekMap } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
-import useInvoiceStatus from '../../../Hooks/UseInvoiceStatus'
+import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatus'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {
