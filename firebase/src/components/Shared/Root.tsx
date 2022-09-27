@@ -33,8 +33,6 @@ const Root: React.FC<Props> = (_props) => {
     )
 }
 
-Root.defaultProps = defaultProps
-
 const useStyles = makeStyles<Theme, Props>(() => ({
     logoWrapper: {
         display: 'flex',
