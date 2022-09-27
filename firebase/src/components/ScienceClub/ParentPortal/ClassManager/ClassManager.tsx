@@ -4,6 +4,7 @@ import { Acuity, ScienceAppointment, Service } from 'fizz-kidz'
 import React, { useContext, useEffect, useState } from 'react'
 import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../../Firebase'
+import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import Loader from '../Loader'
 import AppointmentRow from './AppointmentRow'
@@ -14,19 +15,10 @@ type Props = {
 
 const ClassManager: React.FC<Props> = ({ appointment }) => {
     const classes = useStyles()
-    const firebase = useContext(FirebaseContext) as Firebase
 
-    const [appointments, setAppointments] = useState<Service<Acuity.Appointment[]>>({ status: 'loading' })
+    const appointments = useAcuityClient('getAppointments', { ids: appointment.appointments })
+
     const { ErrorModal, showError } = useErrorDialog()
-
-    useEffect(() => {
-        callAcuityClientV2(
-            'getAppointments',
-            firebase
-        )({ ids: appointment.appointments })
-            .then((result) => setAppointments({ status: 'loaded', result: result.data }))
-            .catch((error) => setAppointments({ status: 'error', error }))
-    }, [appointment])
 
     switch (appointments.status) {
         case 'loading':
@@ -35,8 +27,8 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
             return (
                 <>
                     <Typography.Text>
-                        If {appointment.childFirstName} cannot attend on a given week, let us know by simply
-                        toggling off that week.
+                        If {appointment.childFirstName} cannot attend on a given week, let us know by simply toggling
+                        off that week.
                     </Typography.Text>
                     <List
                         className={classes.list}

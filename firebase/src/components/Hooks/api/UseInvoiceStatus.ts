@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
-import Firebase, { FirebaseContext } from '../Firebase'
+import Firebase, { FirebaseContext } from '../../Firebase'
 
 import { Acuity, InvoiceStatus } from 'fizz-kidz'
-import { callFirebaseFunction } from '../../utilities/firebase/functions'
+import { callFirebaseFunction } from '../../../utilities/firebase/functions'
 import { Service } from 'fizz-kidz'
 
 

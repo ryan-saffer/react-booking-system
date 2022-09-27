@@ -3,7 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom'
 import { makeStyles, CssBaseline, AppBar, Toolbar, IconButton, Typography, Table, TableHead, TableRow, TableCell, TableBody, Divider } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
-import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
+import useFetchAppointments from '../../../Hooks/api/UseFetchAppointments'
 import ExpandableTableRow from './ExpandableTableRow'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'

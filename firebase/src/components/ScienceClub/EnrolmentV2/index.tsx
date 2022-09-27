@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Acuity, ScienceAppointment, Service } from 'fizz-kidz'
+import React, { useContext } from 'react'
+import { Acuity } from 'fizz-kidz'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
 
@@ -8,7 +8,7 @@ import Loading from './Loading'
 import Footer from './Footer'
 import { Success, Error as ErrorResult } from './Result'
 import Firebase, { FirebaseContext } from '../../Firebase'
-import { callFirebaseFunction } from '../../../utilities/firebase/functions'
+import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
 
 /**
  * Page requires 2 URL query params:
@@ -21,32 +21,13 @@ const EnrolmentPage = () => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [service, setService] = useState<Service<ScienceAppointment>>({ status: 'loading' })
-
     const base64String = window.location.search
     let queryParams = Buffer.from(base64String, 'base64').toString('utf8')
 
     const appointmentId = useQueryParam<any>('appointmentId', queryParams) as string
     const continuingWithTerm = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
 
-    useEffect(() => {
-        async function updateEnrolment() {
-            try {
-                const result = await callFirebaseFunction(
-                    'updateScienceEnrolment',
-                    firebase
-                )({
-                    appointmentId,
-                    continuingWithTerm,
-                })
-                setService({ status: 'loaded', result: result.data })
-            } catch (error) {
-                console.error('Error updating science enrolment:', error)
-                setService({ status: 'error', error })
-            }
-        }
-        updateEnrolment()
-    }, [])
+    const service = useFirebaseFunction('updateScienceEnrolment', { appointmentId, continuingWithTerm })
 
     return (
         <div className={classes.main}>

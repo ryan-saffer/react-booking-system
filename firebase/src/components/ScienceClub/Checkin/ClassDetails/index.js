@@ -23,7 +23,7 @@ import SkeletonRows from '../../../Shared/SkeletonRows'
 import { Dialog, DialogTitle, List, ListItem, Divider } from '@material-ui/core'
 import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
-import useFetchAppointments from '../../../Hooks/UseFetchAppointments'
+import useFetchAppointments from '../../../Hooks/api/UseFetchAppointments'
 
 const ScienceClubCheckinClassDetails = props => {
     
