@@ -1,7 +1,7 @@
 import React from 'react'
 import { ScienceAppointment } from 'fizz-kidz'
 import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatusV2'
-import { Card } from 'antd'
+import { Card, Typography } from 'antd'
 import Loader from '../Loader'
 import InvoiceStatistic from './InvoiceStatistic'
 import { makeStyles } from '@material-ui/core'
@@ -38,8 +38,9 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                                 )
                         }
                     default: // error
-                        // TODO
-                        return <h1>ERROR</h1>
+                        return (
+                            <Typography.Text type="danger">There was an error retrieving your invoice.</Typography.Text>
+                        )
                 }
             })()}
         </Card>
