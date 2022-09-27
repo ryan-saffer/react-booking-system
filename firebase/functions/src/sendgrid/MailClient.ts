@@ -4,6 +4,7 @@ import path from 'path'
 import mjml2html from 'mjml'
 import sgMail from '@sendgrid/mail'
 import { MailData } from '@sendgrid/helpers/classes/mail'
+import * as functions from 'firebase-functions'
 
 var Mustache = require('mustache')
 
@@ -13,11 +14,15 @@ export class MailClient {
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T]) {
         console.log('generating html...')
         const { emailInfo, template } = this._getInfo(email, to)
-        let html = this._generateHtml(template, values)
-        console.log('generated successfully!')
-        console.log('sending email...')
-        await sgMail.send({ ...emailInfo, html })
-        console.log('email sent successfully!')
+        try {
+            let html = this._generateHtml(template, values)
+            console.log('generated successfully!')
+            console.log('sending email...')
+            await sgMail.send({ ...emailInfo, html })
+            console.log('email sent successfully!')
+        } catch (error) {
+            functions.logger.error('Unable to send email', emailInfo)
+        }
     }
 
     private _generateHtml(template: string, values: object): string {
@@ -83,6 +88,18 @@ export class MailClient {
                         subject: 'Unenrolment Confirmation',
                     },
                     template: 'term_unenrolment_confirmation.html',
+                }
+            case 'scienceParentPortalLink':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: 'Science Program begins next week!',
+                    },
+                    template: 'science_parent_portal.html',
                 }
             default:
                 throw new Error(`Unrecognised email template: ${email}`)

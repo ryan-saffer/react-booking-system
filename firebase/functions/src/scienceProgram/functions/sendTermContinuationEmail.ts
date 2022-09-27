@@ -31,7 +31,10 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
                 unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,
             })
             const updatedAppointment: Partial<ScienceAppointment> = {
-                continuingEmailSent: true,
+                emails: {
+                    ...appointment.emails,
+                    continuingEmailSent: true,
+                },
             }
             await appointmentRef.set({ ...updatedAppointment }, { merge: true })
             return

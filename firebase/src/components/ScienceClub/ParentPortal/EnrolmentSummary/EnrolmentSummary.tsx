@@ -20,7 +20,7 @@ const EnrolmentSummary: React.FC<Props> = ({ appointment }) => {
     return (
         <Row justify="space-between" gutter={[32, 12]} style={{ marginTop: 24 }}>
             <Col span={width > BREAK_LARGE ? 9 : 24}>
-                <Card className={classes.card} title="🧪 Program" hoverable>
+                <Card className={classes.card} title="🧪 Program">
                     <p>{appointment.className}</p>
                 </Card>
             </Col>

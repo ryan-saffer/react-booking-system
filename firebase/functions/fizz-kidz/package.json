@@ -9,8 +9,5 @@
     "build:watch": "tsc --watch"
   },
   "author": "Ryan Saffer",
-  "license": "ISC",
-  "devDependencies": {
-    "typescript": "^4.2.3"
-  }
+  "license": "ISC"
 }

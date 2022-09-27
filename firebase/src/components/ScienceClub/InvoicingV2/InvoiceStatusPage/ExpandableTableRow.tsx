@@ -26,7 +26,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
     const [isDeleted, setIsDeleted] = useState(false)
 
     const [enrolmentStatus, setEnrolmentStatus] = useState(appointment.continuingWithTerm)
-    const [emailSent, setEmailSent] = useState(appointment.continuingEmailSent)
+    const [emailSent, setEmailSent] = useState(appointment.emails.continuingEmailSent)
 
     if (isDeleted) {
         return null
@@ -102,7 +102,9 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                                             <TableCell className={classes.paddingCell} />
                                             <TableCell>{appointment.parentPhone}</TableCell>
                                             <TableCell>{appointment.parentEmail}</TableCell>
-                                            <TableCell>{appointment.childFirstName} {appointment.childLastName}</TableCell>
+                                            <TableCell>
+                                                {appointment.childFirstName} {appointment.childLastName}
+                                            </TableCell>
                                             <TableCell>{appointment.childAge}</TableCell>
                                             <TableCell>{appointment.childGrade}</TableCell>
                                         </TableRow>

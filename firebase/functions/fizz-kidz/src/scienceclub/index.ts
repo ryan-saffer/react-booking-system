@@ -48,8 +48,7 @@ export type ScienceAppointment = {
     parentFirstName: string
     parentLastName: string
     parentPhone: string
-    continuingWithTerm: "yes" | "no" | ""
-    continuingEmailSent: boolean
+    continuingWithTerm: 'yes' | 'no' | ''
     className: string
     invoiceId: string
     emergencyContactName: string
@@ -58,6 +57,10 @@ export type ScienceAppointment = {
     permissionToPhotograph: boolean
     price: string
     pickupPeople: string[]
+    emails: {
+        portalLinkEmailSent: boolean
+        continuingEmailSent: boolean
+    }
 }
 
 export type Calendar = {
