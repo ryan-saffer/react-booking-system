@@ -1,40 +1,39 @@
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { makeStyles } from '@material-ui/core'
+import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { makeStyles, Theme } from '@material-ui/core'
 import { Button, Card, Form, Input, message, Tooltip } from 'antd'
 import { ScienceAppointment } from 'fizz-kidz'
 import React, { useContext, useState } from 'react'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
-
+import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 const { useForm } = Form
+
+const BREAKPOINT = 430
 
 type Props = {
     appointment: ScienceAppointment
 }
 
+type ThemeProps = {
+    width: number
+}
+
 const PickupPeople: React.FC<Props> = ({ appointment }) => {
-    const classes = useStyles()
+    const classes = useStyles({ width: BREAKPOINT })
 
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [form] = useForm()
+    const { width } = useWindowDimensions()
 
-    const [changed, setChanged] = useState(false)
+    const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const { ErrorModal, showError } = useErrorDialog()
 
     const [initialValues, setInitialValues] = useState({
         pickupPeople: appointment.pickupPeople.map((person) => ({ person })),
     })
-
-    const onChange = (values: any) => {
-        if (JSON.stringify(values) === JSON.stringify(initialValues)) {
-            setChanged(false)
-        } else {
-            setChanged(true)
-        }
-    }
 
     const onFinish = async (values: { pickupPeople: { person: string }[] }) => {
         setLoading(true)
@@ -53,25 +52,34 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
             showError('There was an issue updating the pickup people. Please try again later, or give us a call.')
             form.setFieldsValue(initialValues)
         }
-
-        setChanged(false)
+        setEditing(false)
         setLoading(false)
     }
 
     const cancel = () => {
         form.setFieldsValue(initialValues)
-        setChanged(false)
+        setEditing(false)
     }
 
     return (
-        <Card className={classes.card} title="Name and relation to child">
-            <Form
-                form={form}
-                initialValues={initialValues}
-                onFinish={onFinish}
-                onValuesChange={onChange}
-                autoComplete="off"
-            >
+        <Card
+            className={classes.card}
+            title="Name and relation to child"
+            extra={
+                !editing && (
+                    <>
+                        {width > BREAKPOINT ? (
+                            <Button type="primary" onClick={() => setEditing(true)}>
+                                Edit
+                            </Button>
+                        ) : (
+                            <Button type="primary" onClick={() => setEditing(true)} icon={<EditOutlined />} />
+                        )}
+                    </>
+                )
+            }
+        >
+            <Form form={form} initialValues={initialValues} onFinish={onFinish} autoComplete="off">
                 <Form.List name="pickupPeople">
                     {(fields, { add, remove }) => (
                         <>
@@ -85,30 +93,46 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                                             { required: true, message: 'Please enter a name and relation to child' },
                                         ]}
                                     >
-                                        <Input placeholder="Name and relation to child" size="large" />
+                                        <Input
+                                            placeholder="Name and relation to child"
+                                            size="large"
+                                            disabled={!editing}
+                                        />
                                     </Form.Item>
                                     <Tooltip title="Remove person">
-                                        <MinusCircleOutlined
+                                        <Button
                                             className={classes.removeButton}
-                                            onClick={() => remove(name)}
+                                            disabled={!editing}
+                                            type="text"
+                                            shape="circle"
+                                            icon={<MinusCircleOutlined onClick={() => remove(name)} />}
                                         />
                                     </Tooltip>
                                 </div>
                             ))}
+
                             <Form.Item className={classes.addButton}>
-                                <Button type="dashed" size="large" onClick={() => add()} block icon={<PlusOutlined />}>
+                                <Button
+                                    disabled={!editing}
+                                    type="dashed"
+                                    size="large"
+                                    onClick={() => add()}
+                                    block
+                                    icon={<PlusOutlined />}
+                                >
                                     Add Pickup Person
                                 </Button>
                             </Form.Item>
                         </>
                     )}
                 </Form.List>
+
                 <Form.Item>
                     <div className={classes.buttons}>
-                        <Button type="primary" htmlType="submit" disabled={!changed} loading={loading}>
+                        <Button type="primary" htmlType="submit" loading={loading} disabled={!editing}>
                             Save
                         </Button>
-                        <Button disabled={!changed} onClick={cancel}>
+                        <Button onClick={cancel} disabled={!editing}>
                             Cancel
                         </Button>
                     </div>
@@ -119,10 +143,15 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
     )
 }
 
-const useStyles = makeStyles({
-    card: {
+const useStyles = makeStyles<Theme, ThemeProps>(() => ({
+    card: (props) => ({
         boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
-    },
+        '& .ant-card-head': {
+            [`@media(max-width: ${props.width}px)`]: {
+                fontSize: 15,
+            },
+        },
+    }),
     spacer: {
         flex: 1,
         marginBottom: 0,
@@ -134,8 +163,8 @@ const useStyles = makeStyles({
     },
     removeButton: {
         position: 'absolute',
-        right: 22,
-        marginTop: 12,
+        right: 15,
+        marginTop: 3,
     },
     addButton: {
         paddingRight: 32,
@@ -149,6 +178,6 @@ const useStyles = makeStyles({
     message: {
         marginTop: '85vh',
     },
-})
+}))
 
 export default PickupPeople
