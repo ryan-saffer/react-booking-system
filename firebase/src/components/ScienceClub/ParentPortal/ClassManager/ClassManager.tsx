@@ -4,7 +4,7 @@ import { List, Result, Row, Typography } from 'antd'
 import { ScienceAppointment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
-import Loader from '../Loader'
+import Loader from '../../shared/Loader'
 import AppointmentRow from './AppointmentRow'
 
 type Props = {
