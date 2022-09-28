@@ -5,8 +5,9 @@ export const devConfig = {
     projectId: process.env.REACT_APP_FIREBASE_DEV_PROJECT_ID,
     storageBucket: process.env.REACT_APP_FIREBASE_DEV_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_FIREBASE_DEV_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_DEV_APP_ID
-};
+    appId: process.env.REACT_APP_FIREBASE_DEV_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_DEV_MEASUREMENT_ID,
+}
 
 export const prodConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_PROD_API_KEY,
@@ -15,5 +16,6 @@ export const prodConfig = {
     projectId: process.env.REACT_APP_FIREBASE_PROD_PROJECT_ID,
     storageBucket: process.env.REACT_APP_FIREBASE_PROD_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_FIREBASE_PROD_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_PROD_APP_ID
+    appId: process.env.REACT_APP_FIREBASE_PROD_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_PROD_MEASUREMENT_ID,
 }

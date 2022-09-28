@@ -3,9 +3,11 @@ import { Acuity } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../../Firebase'
 import { WithErrorModal } from '../../../Hooks/UseErrorDialog'
 import { DateTime } from 'luxon'
+import useFirebase from '../../../Hooks/context/UseFirebase'
+import useMixpanel from '../../../Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '../../../Mixpanel/Events'
 
 type Props = {
     appointment: Acuity.Appointment
@@ -14,7 +16,8 @@ type Props = {
 const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
     const classes = useStyles()
 
-    const firebase = useContext(FirebaseContext) as Firebase
+    const firebase = useFirebase()
+    const mixpanel = useMixpanel()
 
     const notAttending =
         appointment.labels &&
@@ -36,9 +39,17 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
             } else {
                 setAttending(false)
             }
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ATTENDANCE_TOGGLED, {
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.email,
+                attempted_to_toggle_on: checked,
+                acuity_apointment_id: appointment.id,
+            })
         } catch (error) {
-            console.error('error updating label', error)
             showError('Your appointment could not be updated. Please try again later.')
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_TOGGLING_ATTENDANCE, {
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.email,
+                toggled_on: checked,
+            })
         }
         setSetloading(false)
     }

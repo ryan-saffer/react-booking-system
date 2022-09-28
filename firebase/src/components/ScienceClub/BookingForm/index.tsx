@@ -9,11 +9,16 @@ import { Grow, makeStyles } from '@material-ui/core'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
 import Loader from '../shared/Loader'
+import useMixpanel from '../../Hooks/context/UseMixpanel'
+import useFirebase from '../../Hooks/context/UseFirebase'
+import { MixpanelEvents } from '../../Mixpanel/Events'
 
 const BookingForm = () => {
     const classes = useStyles()
 
-    const firebase = useContext(FirebaseContext) as Firebase
+    const firebase = useFirebase()
+    const mixpanel = useMixpanel()
+    console.log(mixpanel)
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -51,6 +56,7 @@ const BookingForm = () => {
             setLoading(false)
         }
         fetchAppointmentTypes()
+        mixpanel.track(MixpanelEvents.SCIENCE_FORM_VIEW)
     }, [])
 
     const handleSubmit = async (params: ScheduleScienceAppointmentParams) => {
@@ -108,6 +114,7 @@ const BookingForm = () => {
             </Typography.Title>
             {(() => {
                 if (error) {
+                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
                     return (
                         <Result
                             status="500"
@@ -118,6 +125,7 @@ const BookingForm = () => {
                 }
 
                 if (success) {
+                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED)
                     return (
                         <Result
                             status="success"

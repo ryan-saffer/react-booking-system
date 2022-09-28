@@ -14,10 +14,8 @@ const Loader: React.FC<Props> = ({ className, style }) => {
     const classes = useStyles()
 
     return (
-        <div className={className} style={style}>
-            <div className={classes.loading}>
-                <Spin indicator={antIcon} />
-            </div>
+        <div className={`${classes.loading} ${className}`} style={style}>
+            <Spin indicator={antIcon} />
         </div>
     )
 }
