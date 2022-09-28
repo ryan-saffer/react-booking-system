@@ -1,12 +1,14 @@
+import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { makeStyles, Theme } from '@material-ui/core'
 import { Button, Card, Form, Input, message, Row, Tooltip } from 'antd'
 import { ScienceAppointment } from 'fizz-kidz'
-import React, { useContext, useState } from 'react'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../../Firebase'
+import useFirebase from '../../../Hooks/context/UseFirebase'
+import useMixpanel from '../../../Hooks/context/UseMixpanel'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
+import { MixpanelEvents } from '../../../Mixpanel/Events'
 const { useForm } = Form
 
 const BREAKPOINT = 430
@@ -22,7 +24,8 @@ type ThemeProps = {
 const PickupPeople: React.FC<Props> = ({ appointment }) => {
     const classes = useStyles({ width: BREAKPOINT })
 
-    const firebase = useContext(FirebaseContext) as Firebase
+    const firebase = useFirebase()
+    const mixpanel = useMixpanel()
 
     const [form] = useForm()
     const { width } = useWindowDimensions()
@@ -48,9 +51,17 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                 className: classes.message,
             })
             setInitialValues({ pickupPeople: pickupPeople.map((person) => ({ person })) })
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_PICKUP_PEOPLE_UPDATED, {
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                appointment_id: appointment.id,
+            })
         } catch (error) {
             showError('There was an issue updating the pickup people. Please try again later, or give us a call.')
             form.setFieldsValue(initialValues)
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_UPDATING_PICKUP_PEOPLE, {
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                appointment_id: appointment.id,
+            })
         }
         setEditing(false)
         setLoading(false)

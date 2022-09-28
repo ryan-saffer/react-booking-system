@@ -7,6 +7,9 @@ import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
 import Loader from '../shared/Loader'
 import PickupPeople from './PickupPeople/PickupPeople'
+import useMixpanel from '../../Hooks/context/UseMixpanel'
+import useFirebase from '../../Hooks/context/UseFirebase'
+import { MixpanelEvents } from '../../Mixpanel/Events'
 
 type Params = {
     id: string
@@ -16,6 +19,8 @@ const ParentPortal: React.FC = () => {
     const classes = useStyles()
 
     const { id } = useParams<Params>()
+    const firebase = useFirebase()
+    const mixpanel = useMixpanel()
 
     const service = useFetchScienceAppointment(id)
 
@@ -25,6 +30,11 @@ const ParentPortal: React.FC = () => {
 
         case 'loaded':
             const appointment = service.result
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_VIEW, {
+                // to know if its us or the parent viewing their portal
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                appointment_id: appointment.id,
+            })
             return (
                 <div className={classes.root}>
                     <Typography.Title level={2}>Hi {appointment.parentFirstName} 👋</Typography.Title>
@@ -41,6 +51,9 @@ const ParentPortal: React.FC = () => {
             )
 
         default: // error
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_LOADING, {
+                appointment_id: id,
+            })
             return (
                 <div className={classes.error}>
                     <Result

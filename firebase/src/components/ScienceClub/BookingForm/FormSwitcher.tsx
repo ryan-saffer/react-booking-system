@@ -5,6 +5,8 @@ import Loader from '../shared/Loader'
 import Form from './Form'
 import { makeStyles } from '@material-ui/core'
 import { Alert } from 'antd'
+import useMixpanel from '../../Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '../../Mixpanel/Events'
 
 type Props = {
     appointmentType: Acuity.AppointmentType
@@ -17,6 +19,8 @@ type Props = {
  */
 const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
     const classes = useStyles()
+
+    const mixpanel = useMixpanel()
 
     const classesService = useAcuityClient('classAvailability', { appointmentTypeId: appointmentType.id })
 
@@ -31,6 +35,9 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 } else {
                     // no spots left
                     // this could be swapped out with a waiting list form in the future
+                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_CLASS_FULL, {
+                        appointment_type: appointmentType.name,
+                    })
                     return (
                         <Alert
                             className={classes.topMargin}
@@ -42,6 +49,9 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 }
             } else {
                 // no upcoming classes left
+                mixpanel.track(MixpanelEvents.SCIENCE_FORM_NO_CLASSES, {
+                    appointment_type: appointmentType.name,
+                })
                 return (
                     <Alert
                         className={classes.topMargin}
@@ -52,6 +62,9 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 )
             }
         default: // error
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_CLASSES, {
+                appointment_type: appointmentType.name,
+            })
             return (
                 <Alert
                     className={classes.topMargin}
