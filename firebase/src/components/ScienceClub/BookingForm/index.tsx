@@ -1,15 +1,14 @@
-import { Service, Acuity, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Acuity, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import React, { useContext, useEffect, useState } from 'react'
 import { callAcuityClientV2, callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import Root from '../../Shared/Root'
-import { LeftOutlined, LoadingOutlined } from '@ant-design/icons'
-import { Button, Card, Result, Spin, Typography } from 'antd'
+import { LeftOutlined } from '@ant-design/icons'
+import { Button, Result, Typography } from 'antd'
 import { Grow, makeStyles } from '@material-ui/core'
 import AppointmentTypeCard from './AppointmentTypeCard'
-import Form from './Form'
-
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+import FormSwitcher from './FormSwitcher'
+import Loader from '../shared/Loader'
 
 const BookingForm = () => {
     const classes = useStyles()
@@ -68,7 +67,7 @@ const BookingForm = () => {
 
     const renderClassSelection = () => {
         if (loading) {
-            return <Spin style={{ marginTop: 24 }} indicator={antIcon} />
+            return <Loader className={classes.loader} />
         }
         if (selectedClass && logoMap) {
             return (
@@ -102,44 +101,39 @@ const BookingForm = () => {
         }
     }
 
-    if (error) {
-        return (
-            <Root color='green' width='centered'>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography.Title level={4} className={classes.title}>
-                        Science Program Booking Form
-                    </Typography.Title>
-                    <Result
-                        status="500"
-                        title="Something went wrong"
-                        subTitle="We're sorry... it looks like something broke. Please try again later, or reach out via email at bookings@fizzkidz.com.au."
-                    />
-                </div>
-            </Root>
-        )
-    }
-
-    if (success) {
-        return (
-            <Root color='green' width='centered'>
-                <Result
-                    status="success"
-                    title="Registration Confirmed"
-                    subTitle="We've sent you a confirmation email where you can manage your enrolment. We can't wait to see you at the start of term!"
-                />
-            </Root>
-        )
-    }
-
     return (
-        <Root color='green' width='centered'>
-            <div className={classes.root}>
-                <Typography.Title level={4} className={classes.title}>
-                    Science Program Registration Form
-                </Typography.Title>
-                {renderClassSelection()}
-                {selectedClass && <Form appointmentType={selectedClass} onSubmit={handleSubmit} />}
-            </div>
+        <Root color="green" width="centered">
+            <Typography.Title level={4} className={classes.title}>
+                Science Program Enrolment Form
+            </Typography.Title>
+            {(() => {
+                if (error) {
+                    return (
+                        <Result
+                            status="500"
+                            title="Something went wrong"
+                            subTitle="We're sorry... it looks like something broke. Please try again later, or reach out via email at bookings@fizzkidz.com.au."
+                        />
+                    )
+                }
+
+                if (success) {
+                    return (
+                        <Result
+                            status="success"
+                            title="Registration Confirmed"
+                            subTitle="We've sent you a confirmation email where you can manage your enrolment. We can't wait to see you at the start of term!"
+                        />
+                    )
+                }
+
+                return (
+                    <div className={classes.root}>
+                        {renderClassSelection()}
+                        {selectedClass && <FormSwitcher appointmentType={selectedClass} onSubmit={handleSubmit} />}
+                    </div>
+                )
+            })()}
         </Root>
     )
 }
@@ -153,6 +147,9 @@ const useStyles = makeStyles({
     title: {
         margin: 8,
         textAlign: 'center',
+    },
+    loader: {
+        marginTop: 24,
     },
 })
 

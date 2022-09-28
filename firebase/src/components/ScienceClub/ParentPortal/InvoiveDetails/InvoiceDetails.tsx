@@ -2,7 +2,7 @@ import React from 'react'
 import { ScienceAppointment } from 'fizz-kidz'
 import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatusV2'
 import { Card, Typography } from 'antd'
-import Loader from '../Loader'
+import Loader from '../../shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
 import { makeStyles } from '@material-ui/core'
 

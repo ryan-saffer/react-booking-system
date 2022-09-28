@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import useFetchScienceAppointment from '../../Hooks/api/UseFetchScienceAppointment'
 import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
-import Loader from './Loader'
+import Loader from '../shared/Loader'
 import PickupPeople from './PickupPeople/PickupPeople'
 
 type Params = {

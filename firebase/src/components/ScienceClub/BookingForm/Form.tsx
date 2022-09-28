@@ -328,7 +328,7 @@ const useStyles = makeStyles({
     form: {
         width: '100%',
         maxWidth: 500,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     submitButton: {
         marginBottom: 12,
