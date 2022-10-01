@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { DateTime } from 'luxon'
 
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { Button, Paper } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
+import { Button, Paper } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
-import { withRouter } from 'react-router-dom';
-import { FirebaseContext } from '../../Firebase';
+import { withRouter } from 'react-router-dom'
+import { FirebaseContext } from '../../Firebase'
 
-const ScienceClubClassSelection = props => {
-
+const ScienceClubClassSelection = (props) => {
     const cssClasses = useStyles()
 
     const { classRoute } = props
@@ -28,28 +27,29 @@ const ScienceClubClassSelection = props => {
     const [selectedClass, setSelectedClass] = useState('')
 
     useEffect(() => {
-
         const fetchCalendars = () => {
-            firebase.functions.httpsCallable('acuityClient')({
-                auth: firebase.auth.currentUser.toJSON(),
-                data: {method: 'getCalendars'}
-            }).then(result => {
-                console.log(result.data)
-                setCalendars(result.data)
-                setLoading({ calendar: false, appointmentTypes: false, classes: false })
-            }).catch(err => {
-                console.error(err)
-                setLoading({ calendar: false, appointmentTypes: false, classes: false })
-            })
+            firebase.functions
+                .httpsCallable('acuityClient')({
+                    auth: firebase.auth.currentUser.toJSON(),
+                    data: { method: 'getCalendars' },
+                })
+                .then((result) => {
+                    console.log(result.data)
+                    setCalendars(result.data)
+                    setLoading({ calendar: false, appointmentTypes: false, classes: false })
+                })
+                .catch((err) => {
+                    console.error(err)
+                    setLoading({ calendar: false, appointmentTypes: false, classes: false })
+                })
         }
-        
+
         if (firebase.auth.currentUser) {
             fetchCalendars()
         }
-
     }, [firebase.auth.currentUser])
 
-    const handleCalendarChange = e => {
+    const handleCalendarChange = (e) => {
         console.log(`Selected calendar: ${e.target.value}`)
         setSelectedCalendar(e.target.value)
         setSelectedAppointmentType('')
@@ -60,7 +60,7 @@ const ScienceClubClassSelection = props => {
         fetchAppointmentTypes(e.target.value)
     }
 
-    const handleAppointmentTypeChange = e => {
+    const handleAppointmentTypeChange = (e) => {
         console.log(`Selected appointment type: ${e.target.value}`)
         setSelectedAppointmentType(e.target.value)
         setSelectedClass('')
@@ -69,148 +69,178 @@ const ScienceClubClassSelection = props => {
         fetchClasses(e.target.value)
     }
 
-    const handleClassChange = e => {
+    const handleClassChange = (e) => {
         setSelectedClass(e.target.value)
     }
 
     const handleClassSelection = () => {
-        let calendar = calendars.find(cal => cal.id === selectedCalendar)
-        props.history.push(`${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${selectedClass.calendarID}&classId=${selectedClass.id}&calendarName=${encodeURIComponent(calendar.name)}`)
+        let calendar = calendars.find((cal) => cal.id === selectedCalendar)
+        props.history.push(
+            `${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${
+                selectedClass.calendarID
+            }&classId=${selectedClass.id}&calendarName=${encodeURIComponent(calendar.name)}&classTime=${
+                selectedClass.time
+            }`
+        )
     }
 
-    const fetchAppointmentTypes = id => {
-        console.log("FETCHING APPOINTMENTS WITH ID: " + id)
+    const fetchAppointmentTypes = (id) => {
+        console.log('FETCHING APPOINTMENTS WITH ID: ' + id)
         setLoading({
             ...loading,
-            appointmentTypes: true
+            appointmentTypes: true,
         })
-        firebase.functions.httpsCallable('acuityClient')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: {method: "getAppointmentTypes"}
-        }).then(result => {
-            console.log(result.data)
-            setAppointmentTypes(
-                result.data.filter(x => x.calendarIDs.includes(id))
-            )
-            setLoading({
-                ...loading,
-                appointmentTypes: false
+        firebase.functions
+            .httpsCallable('acuityClient')({
+                auth: firebase.auth.currentUser.toJSON(),
+                data: { method: 'getAppointmentTypes' },
             })
-        }).catch(err => {
-            console.error(err)
-            setLoading({
-                ...loading,
-                appointmentTypes: false
+            .then((result) => {
+                console.log(result.data)
+                setAppointmentTypes(result.data.filter((x) => x.calendarIDs.includes(id)))
+                setLoading({
+                    ...loading,
+                    appointmentTypes: false,
+                })
             })
-        })
+            .catch((err) => {
+                console.error(err)
+                setLoading({
+                    ...loading,
+                    appointmentTypes: false,
+                })
+            })
     }
 
-    const fetchClasses = id => {
+    const fetchClasses = (id) => {
         console.log(id)
         setLoading({
             ...loading,
-            classes: true
+            classes: true,
         })
-        firebase.functions.httpsCallable('acuityClient')({
-            auth: firebase.auth.currentUser.toJSON(),
-            data: { method: "getClasses", id }
-        }).then(result => {
-            console.log(result)
-            setClasses(result.data)
-            setLoading({
-                ...loading,
-                classes: false
+        firebase.functions
+            .httpsCallable('acuityClient')({
+                auth: firebase.auth.currentUser.toJSON(),
+                data: { method: 'getClasses', id },
             })
-        }).catch(err => {
-            console.error(err)
-            setLoading({
-                ...loading,
-                classes: false
+            .then((result) => {
+                console.log(result)
+                setClasses(result.data)
+                setLoading({
+                    ...loading,
+                    classes: false,
+                })
             })
-        })
+            .catch((err) => {
+                console.error(err)
+                setLoading({
+                    ...loading,
+                    classes: false,
+                })
+            })
     }
 
     return (
         <Paper className={cssClasses.paper}>
             <div className={cssClasses.main}>
-                {!loading.calendar ? <>
-                    <Typography className={cssClasses.heading} variant="body1">Select location:</Typography>
-                    <FormControl className={cssClasses.formControl} variant="outlined">
-                        <Select
-                            id="calendars-select"
-                            value={selectedCalendar}
-                            onChange={handleCalendarChange}
-                            disabled={calendars.length === 0}
-                        >
-                            {calendars.map(calendar => {
-                                const menuItem = <MenuItem key={calendar.id} value={calendar.id}>{calendar.name}</MenuItem>
-                                if (process.env.REACT_APP_ENV == 'prod') {
-                                    // only show science club appointments
-                                    if (calendar.name.endsWith("Science Club")) {
-                                        return menuItem
+                {!loading.calendar ? (
+                    <>
+                        <Typography className={cssClasses.heading} variant="body1">
+                            Select location:
+                        </Typography>
+                        <FormControl className={cssClasses.formControl} variant="outlined">
+                            <Select
+                                id="calendars-select"
+                                value={selectedCalendar}
+                                onChange={handleCalendarChange}
+                                disabled={calendars.length === 0}
+                            >
+                                {calendars.map((calendar) => {
+                                    const menuItem = (
+                                        <MenuItem key={calendar.id} value={calendar.id}>
+                                            {calendar.name}
+                                        </MenuItem>
+                                    )
+                                    if (process.env.REACT_APP_ENV == 'prod') {
+                                        // only show science club appointments
+                                        if (calendar.name.endsWith('Science Club')) {
+                                            return menuItem
+                                        }
+                                    } else {
+                                        // only show test calendar
+                                        if (calendar.name === 'TEST CALENDAR') {
+                                            return menuItem
+                                        }
                                     }
-                                } else {
-                                    // only show test calendar
-                                    if (calendar.name === "TEST CALENDAR") {
-                                        return menuItem
-                                    }
-                                }
-                            })}
-                        </Select>
-                    </FormControl>
-                </> : <Skeleton height={80} />}
-                
-                {appointmentTypes.length !== 0 && <>
-                    <Typography className={cssClasses.heading} variant="body1">Select program:</Typography>
-                    <FormControl className={cssClasses.formControl} variant="outlined">
-                        <Select
-                            id="programs-select"
-                            value={selectedAppointmentType}
-                            onChange={handleAppointmentTypeChange}
-                            disabled={appointmentTypes.length === 0}
-                        >
-                            {appointmentTypes.map(appointmentType => (
-                                <MenuItem key={appointmentType.id} value={appointmentType.id}>{appointmentType.name}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </>}
-                {loading.appointmentTypes && <Skeleton height={80} />}
-                
-                {classes.length !== 0 && <>
-                    <Typography className={cssClasses.heading} variant="body1">Select class:</Typography>
-                    <FormControl className={cssClasses.formControl} variant="outlined">
-                        <Select
-                            id="classes-select"
-                            value={selectedClass}
-                            onChange={handleClassChange}
-                            disabled={classes.length === 0}
-                        >
-                            {classes.map(mClass => (
-                                <MenuItem key={mClass.id} value={mClass}>
-                                    {DateTime.fromISO(mClass.time).toFormat('EEEE MMMM d, h:mm a, yyyy')}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                                })}
+                            </Select>
+                        </FormControl>
+                    </>
+                ) : (
+                    <Skeleton height={80} />
+                )}
 
-                    <Button
-                    className={cssClasses.submitButton}
-                    variant="contained"
-                    color="primary"
-                    disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
-                    onClick={handleClassSelection}
-                    >
-                        Select
-                    </Button>
-                </>}
+                {appointmentTypes.length !== 0 && (
+                    <>
+                        <Typography className={cssClasses.heading} variant="body1">
+                            Select program:
+                        </Typography>
+                        <FormControl className={cssClasses.formControl} variant="outlined">
+                            <Select
+                                id="programs-select"
+                                value={selectedAppointmentType}
+                                onChange={handleAppointmentTypeChange}
+                                disabled={appointmentTypes.length === 0}
+                            >
+                                {appointmentTypes.map((appointmentType) => (
+                                    <MenuItem key={appointmentType.id} value={appointmentType.id}>
+                                        {appointmentType.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </>
+                )}
+                {loading.appointmentTypes && <Skeleton height={80} />}
+
+                {classes.length !== 0 && (
+                    <>
+                        <Typography className={cssClasses.heading} variant="body1">
+                            Select class:
+                        </Typography>
+                        <FormControl className={cssClasses.formControl} variant="outlined">
+                            <Select
+                                id="classes-select"
+                                value={selectedClass}
+                                onChange={handleClassChange}
+                                disabled={classes.length === 0}
+                            >
+                                {classes.map((mClass) => (
+                                    <MenuItem key={mClass.id} value={mClass}>
+                                        {DateTime.fromISO(mClass.time).toFormat('EEEE MMMM d, h:mm a, yyyy')}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <Button
+                            className={cssClasses.submitButton}
+                            variant="contained"
+                            color="primary"
+                            disabled={selectedCalendar === '' || selectedAppointmentType === '' || selectedClass === ''}
+                            onClick={handleClassSelection}
+                        >
+                            Select
+                        </Button>
+                    </>
+                )}
                 {loading.classes && <Skeleton height={80} />}
             </div>
         </Paper>
     )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     paper: {
         margin: theme.spacing(3),
         padding: theme.spacing(2),
@@ -223,10 +253,10 @@ const useStyles = makeStyles(theme => ({
     main: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     heading: {
-        width: '100%'
+        width: '100%',
     },
     formControl: {
         marginTop: theme.spacing(1),
@@ -234,8 +264,8 @@ const useStyles = makeStyles(theme => ({
         minWidth: 120,
     },
     submitButton: {
-        marginTop: 16
-    }
-}));
+        marginTop: 16,
+    },
+}))
 
 export default withRouter(ScienceClubClassSelection)

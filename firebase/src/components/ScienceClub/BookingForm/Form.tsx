@@ -195,12 +195,9 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 </AntdForm.Item>
 
                 <Divider>Pickup People</Divider>
-                <p>
-                    Please list here anyone who you give permission to pickup your child from Science Club (excluding
-                    yourself).
-                </p>
-                <p>You must list at least one person, and can list up to three people.</p>
-                <p>Example: Harry - Dad, Alice - Nanny, Mary - Grandmother</p>
+                <p>Please list here anyone who you give permission to pickup your child from Science Club.</p>
+                <p>You do not need to list yourself.</p>
+                <p>Example: 'Harry - Dad'</p>
                 <AntdForm.List name="pickupPeople">
                     {(fields, { add, remove }) => {
                         return (
@@ -299,22 +296,31 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     onSubmit({
                         appointmentTypeId: appointmentType.id,
                         calendarId: appointmentType.calendarIDs[0],
-                        parentFirstName: form.getFieldValue('parentFirstName'),
-                        parentLastName: form.getFieldValue('parentLastName'),
-                        parentPhone: form.getFieldValue('parentPhone'),
-                        parentEmail: form.getFieldValue('parentEmail'),
-                        childFirstName: form.getFieldValue('childFirstName'),
-                        childLastName: form.getFieldValue('childLastName'),
-                        childAge: form.getFieldValue('childAge'),
-                        childGrade: form.getFieldValue('childGrade'),
-                        childAllergies: form.getFieldValue('childAllergies') ?? '',
-                        childIsAnaphylactic: form.getFieldValue('childIsAnaphylactic') ?? false,
-                        anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
-                        emergencyContactName: form.getFieldValue('emergencyContactName'),
-                        emergencyContactNumber: form.getFieldValue('emergencyContactNumber'),
-                        permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
+                        parent: {
+                            firstName: form.getFieldValue('parentFirstName'),
+
+                            lastName: form.getFieldValue('parentLastName'),
+                            phone: form.getFieldValue('parentPhone'),
+                            email: form.getFieldValue('parentEmail'),
+                        },
+                        child: {
+                            firstName: form.getFieldValue('childFirstName'),
+                            lastName: form.getFieldValue('childLastName'),
+                            age: form.getFieldValue('childAge'),
+                            grade: form.getFieldValue('childGrade'),
+                            allergies: form.getFieldValue('childAllergies') ?? '',
+                            isAnaphylactic: form.getFieldValue('childIsAnaphylactic') ?? false,
+                            anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
+                            permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
+                        },
+                        emergencyContact: {
+                            name: form.getFieldValue('emergencyContactName'),
+                            phone: form.getFieldValue('emergencyContactNumber'),
+                        },
                         className: appointmentType.name,
-                        pickupPeople: form.getFieldValue('pickupPeople').map((person: any) => person.pickupPerson),
+                        pickupPeople: form.getFieldValue('pickupPeople')
+                            ? form.getFieldValue('pickupPeople').map((person: any) => person.pickupPerson)
+                            : [],
                     })
                 }}
             >

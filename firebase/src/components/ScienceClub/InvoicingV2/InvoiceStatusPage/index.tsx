@@ -20,7 +20,7 @@ import ExpandableTableRow from './ExpandableTableRow'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import useQueryParam from '../../../Hooks/UseQueryParam'
-import { Acuity, ScienceAppointment } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 
 interface QueryParams {
@@ -37,7 +37,7 @@ const ScienceClubInvoicingStatus = () => {
     const { height } = useWindowDimensions()
 
     const [loading, setLoading] = useState(true)
-    const [appointments, setAppointments] = useState<ScienceAppointment[]>([])
+    const [appointments, setAppointments] = useState<ScienceEnrolment[]>([])
 
     const history = useHistory()
 
@@ -55,7 +55,7 @@ const ScienceClubInvoicingStatus = () => {
             .then((result) => {
                 let appointments = result.docs.map((appointment) => {
                     return {
-                        ...(appointment.data() as ScienceAppointment),
+                        ...(appointment.data() as ScienceEnrolment),
                         id: appointment.id,
                     }
                 })
@@ -65,9 +65,9 @@ const ScienceClubInvoicingStatus = () => {
             })
     }, [])
 
-    const sortByParentName = (a: ScienceAppointment, b: ScienceAppointment) => {
-        const aName = a.parentFirstName
-        const bName = b.parentFirstName
+    const sortByParentName = (a: ScienceEnrolment, b: ScienceEnrolment) => {
+        const aName = a.parent.firstName
+        const bName = b.parent.firstName
         return aName < bName ? -1 : aName > bName ? 1 : 0
     }
 

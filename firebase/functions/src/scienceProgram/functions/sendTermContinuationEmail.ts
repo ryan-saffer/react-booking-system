@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import { ScienceAppointment, SendTermContinuationEmailParams } from 'fizz-kidz'
+import { ScienceEnrolment, SendTermContinuationEmailParams } from 'fizz-kidz'
 import { onCall } from '../../utilities'
 import { db } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -9,7 +9,7 @@ const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod
 export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>(
     async (input: SendTermContinuationEmailParams, _context: functions.https.CallableContext) => {
         const appointmentRef = db.collection('scienceAppointments').doc(input.appointmentId)
-        const appointment = (await appointmentRef.get()).data() as ScienceAppointment
+        const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
 
         const baseQueryParams = `?appointmentId=${input.appointmentId}`
         const continueQueryParams = baseQueryParams + `&continuing=yes`
@@ -22,15 +22,15 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
         baseUrl += '/science-club-enrolment-v2'
 
         try {
-            await new MailClient().sendEmail('termContinuationEmail', appointment.parentEmail, {
-                parentName: appointment.parentFirstName,
+            await new MailClient().sendEmail('termContinuationEmail', appointment.parent.email, {
+                parentName: appointment.parent.firstName,
                 className: appointment.className,
                 price: appointment.price,
-                childName: appointment.childFirstName,
+                childName: appointment.child.firstName,
                 continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                 unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,
             })
-            const updatedAppointment: Partial<ScienceAppointment> = {
+            const updatedAppointment: Partial<ScienceEnrolment> = {
                 emails: {
                     ...appointment.emails,
                     continuingEmailSent: true,

@@ -3,14 +3,14 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import { TableCell, LinearProgress, Chip, Button, makeStyles } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 
-import { Acuity, PriceWeekMap, ScienceAppointment } from 'fizz-kidz'
+import { Acuity, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
 import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatusV2'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
     setEnrolmentStatus: React.Dispatch<React.SetStateAction<Acuity.Client.ContinuingOption>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -104,7 +104,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
                                 onClick={() =>
                                     showConfirmationDialog({
                                         dialogTitle: 'Send Invoice',
-                                        dialogContent: `Select the amount you'd like to invoice ${appointment.parentFirstName}`,
+                                        dialogContent: `Select the amount you'd like to invoice ${appointment.parent.firstName}`,
                                         confirmationButtonText: 'Send Invoice',
                                         listItems: {
                                             title: 'Invoice Price',

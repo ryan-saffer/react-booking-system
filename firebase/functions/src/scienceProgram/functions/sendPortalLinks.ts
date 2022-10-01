@@ -1,7 +1,7 @@
 import { AcuityClient } from '../../acuity/AcuityClient'
 import { db } from '../../init'
 import { onRequest } from '../../utilities'
-import { ScienceAppointment, Acuity } from 'fizz-kidz'
+import { ScienceEnrolment, Acuity } from 'fizz-kidz'
 import { MailClient } from '../../sendgrid/MailClient'
 import * as functions from 'firebase-functions'
 
@@ -43,14 +43,14 @@ async function _sendPortalLinks(appointmentTypeIds: Acuity.AppointmentType[]) {
         .where('emails.portalLinkEmailSent', '==', false)
         .get()
 
-    const appointments = appointmentsSnapshot.docs.map((doc) => doc.data() as ScienceAppointment)
+    const appointments = appointmentsSnapshot.docs.map((doc) => doc.data() as ScienceEnrolment)
     const mailClient = new MailClient()
     const baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
     const results = await Promise.allSettled(
         appointments.map(async (appointment) => {
-            await mailClient.sendEmail('scienceParentPortalLink', appointment.parentEmail, {
-                parentName: appointment.parentFirstName,
-                childName: appointment.childFirstName,
+            await mailClient.sendEmail('scienceParentPortalLink', appointment.parent.email, {
+                parentName: appointment.parent.firstName,
+                childName: appointment.child.firstName,
                 className: appointment.className,
                 portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
             })
@@ -60,7 +60,7 @@ async function _sendPortalLinks(appointmentTypeIds: Acuity.AppointmentType[]) {
     for (const result of results) {
         if (result.status === 'fulfilled') {
             const appointment = result.value
-            const updatedAppointment: Partial<ScienceAppointment> = {
+            const updatedAppointment: Partial<ScienceEnrolment> = {
                 emails: {
                     ...appointment.emails,
                     portalLinkEmailSent: true,

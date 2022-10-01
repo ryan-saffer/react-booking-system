@@ -32,12 +32,12 @@ const ParentPortal: React.FC = () => {
             const appointment = service.result
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_VIEW, {
                 // to know if its us or the parent viewing their portal
-                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
                 appointment_id: appointment.id,
             })
             return (
                 <div className={classes.root}>
-                    <Typography.Title level={2}>Hi {appointment.parentFirstName} 👋</Typography.Title>
+                    <Typography.Title level={2}>Hi {appointment.parent.firstName} 👋</Typography.Title>
                     <Typography.Text strong>
                         Use this portal to manage your Fizz Kidz science program enrolment.
                     </Typography.Text>

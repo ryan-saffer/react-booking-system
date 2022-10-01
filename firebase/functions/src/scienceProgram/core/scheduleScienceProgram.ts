@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import { ScheduleScienceAppointmentParams, ScienceAppointment } from 'fizz-kidz'
+import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { db, storage } from '../../init'
 import { AcuityClient } from '../../acuity/AcuityClient'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -29,22 +29,35 @@ export default async function scheduleScienceProgram(
 
         // if an apaphylaxis plan was uploaded, move it into a directory under this booking
         // this will avoid files named the same thing from overwriting each other
-        if (input.anaphylaxisPlan) {
+        if (input.child.anaphylaxisPlan) {
             try {
                 await storage
                     .bucket(`${projectName}.appspot.com`)
-                    .file(`anaphylaxisPlans/${input.anaphylaxisPlan}`)
-                    .move(`anaphylaxisPlans/${newDoc.id}/${input.anaphylaxisPlan}`)
+                    .file(`anaphylaxisPlans/${input.child.anaphylaxisPlan}`)
+                    .move(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`)
             } catch (err) {
                 throw new functions.https.HttpsError('internal', 'error moving anaphylaxis plan', err)
             }
         }
 
         // schedule into all appointments of the program, along with the document id
-        const appointments = await acuityClient.scheduleScienceProgram(input, newDoc.id)
+        const classes = await acuityClient.getClasses(input.appointmentTypeId, Date.now())
+        const appointments = await Promise.all(
+            classes.map((it) =>
+                acuityClient.scheduleAppointment({
+                    appointmentTypeID: input.appointmentTypeId,
+                    datetime: it.time,
+                    firstName: input.parent.firstName,
+                    lastName: input.parent.lastName,
+                    email: input.parent.email,
+                    phone: input.parent.phone,
+                    fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: newDoc.id }],
+                })
+            )
+        )
 
         // save all details, including all appointment ids, into firestore
-        let appointment: ScienceAppointment = {
+        let appointment: ScienceEnrolment = {
             ...input,
             id: newDoc.id,
             appointments: appointments.map((it) => it.id),
@@ -55,8 +68,9 @@ export default async function scheduleScienceProgram(
             notes: '',
             emails: {
                 continuingEmailSent: false,
-                portalLinkEmailSent: false
-            }
+                portalLinkEmailSent: false,
+            },
+            signatures: appointments.reduce((accumulator, value) => ({ ...accumulator, [value.id]: '' }), {}),
         }
 
         await newDoc.set({ ...appointment })
@@ -64,9 +78,9 @@ export default async function scheduleScienceProgram(
         // send the confirmation email
         if (sendEmail) {
             try {
-                await new MailClient().sendEmail('scienceTermEnrolmentConfirmation', input.parentEmail, {
-                    parentName: input.parentFirstName,
-                    childName: input.childFirstName,
+                await new MailClient().sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
+                    parentName: input.parent.firstName,
+                    childName: input.child.firstName,
                     className: input.className,
                     appointmentTimes: appointments.map((it) =>
                         DateTime.fromISO(it.datetime, {
@@ -93,7 +107,7 @@ export default async function scheduleScienceProgram(
                 )
             }
         } else {
-            console.log("Skipping confirmation email")
+            console.log('Skipping confirmation email')
         }
     } catch (err) {
         throw new functions.https.HttpsError('internal', 'error schedulding into science program', err)

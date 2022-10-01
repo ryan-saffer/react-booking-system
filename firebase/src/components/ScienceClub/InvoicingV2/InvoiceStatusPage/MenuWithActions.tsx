@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Acuity, PriceWeekMap, ScienceAppointment } from 'fizz-kidz'
+import { Acuity, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
@@ -8,7 +8,7 @@ import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 
 interface MenuWithActionsProps extends ConfirmationDialogProps, ErrorDialogProps {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
     setIsDeleted: React.Dispatch<React.SetStateAction<boolean>>
@@ -102,8 +102,8 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                     onClick={() => {
                         setMenuAnchorEl(null)
                         showConfirmationDialog({
-                            dialogTitle: `Send enrolment email to ${appointment.parentFirstName}`,
-                            dialogContent: `This will send an email asking ${appointment.parentFirstName} if they would like to continue with the term or not.`,
+                            dialogTitle: `Send enrolment email to ${appointment.parent.firstName}`,
+                            dialogContent: `This will send an email asking ${appointment.parent.firstName} if they would like to continue with the term or not.`,
                             confirmationButtonText: 'Send Email',
                             onConfirm: sendTermContinuationEmail,
                         })
@@ -115,8 +115,8 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                     onClick={() => {
                         setMenuAnchorEl(null)
                         showConfirmationDialog({
-                            dialogTitle: `Unenroll ${appointment.childFirstName} from the term`,
-                            dialogContent: `This will completely unenroll ${appointment.childFirstName} from the term, and delete all of their information. This cannot be undone.`,
+                            dialogTitle: `Unenroll ${appointment.child.firstName} from the term`,
+                            dialogContent: `This will completely unenroll ${appointment.child.firstName} from the term, and delete all of their information. This cannot be undone.`,
                             confirmationButtonText: 'Unenroll from term',
                             onConfirm: unenrollChildFromTerm,
                         })
@@ -129,7 +129,7 @@ const MenuWithActions: React.FC<MenuWithActionsProps> = (props) => {
                         setMenuAnchorEl(null)
                         showConfirmationDialog({
                             dialogTitle: 'Send Invoice',
-                            dialogContent: `This will void the existing invoice and issue a new one.Select the amount you'd like to invoice ${appointment.parentFirstName}.`,
+                            dialogContent: `This will void the existing invoice and issue a new one.Select the amount you'd like to invoice ${appointment.parent.firstName}.`,
                             confirmationButtonText: 'Send Invoice',
                             listItems: {
                                 title: 'Invoice Price',

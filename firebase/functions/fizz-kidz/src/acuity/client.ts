@@ -1,6 +1,6 @@
 import { Function } from '../firebase/functions'
-import { Appointment, AppointmentType, Certificate } from ".";
-import { Class } from './types';
+import { Appointment, AppointmentType, Certificate } from '.'
+import { Class } from './types'
 
 export interface AcuityFunctions {
     searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
@@ -16,8 +16,9 @@ export interface AcuityFunctions {
 
 // For querying acuity, ie all appointments from a certain type and calendar
 export type FetchAppointmentsParams = {
-    appointmentTypeID: number
-    calendarID: number
+    appointmentTypeId: number
+    calendarId: number
+    classTime?: string
 }
 
 // For getting specific appointments by ids

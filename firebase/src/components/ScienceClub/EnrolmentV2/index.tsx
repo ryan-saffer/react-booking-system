@@ -27,7 +27,7 @@ const EnrolmentPage = () => {
     const appointmentId = useQueryParam<any>('appointmentId', queryParams) as string
     const continuingWithTerm = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
 
-    const service = useFirebaseFunction('updateScienceEnrolment', { appointmentId, continuingWithTerm })
+    const service = useFirebaseFunction('updateScienceEnrolment', { id: appointmentId, continuingWithTerm })
 
     return (
         <div className={classes.main}>

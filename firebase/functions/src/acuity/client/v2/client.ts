@@ -4,7 +4,6 @@ import { Acuity, AppsScript } from 'fizz-kidz'
 import { runAppsScript } from '../../../bookings'
 import { hasError } from '../../shared'
 import { AcuityClient } from '../../AcuityClient'
-// import { throwError } from '../../../utilities'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../../credentials/acuity_credentials.json')
 
@@ -48,8 +47,11 @@ export const client = functions
                 case 'getAppointments':
                     input = data.input as Acuity.Client.GetAppointmentsParams
                     return await acuityClient.getAppointments(input.ids)
+                case 'searchForAppointments':
+                    input = data.input as Acuity.Client.FetchAppointmentsParams
+                    return await acuityClient.searchForAppointments(input)
             }
-        } catch(err) {
+        } catch (err) {
             throw new functions.https.HttpsError('internal', 'error calling acuity client', err)
         }
     })

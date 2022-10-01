@@ -1,7 +1,7 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
 import Stripe from 'stripe'
-import { PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceEnrolment, SendInvoiceParamsV2 } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
@@ -20,7 +20,7 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
 
         // 1. get appointment
         const appointmentRef = db.collection('scienceAppointments').doc(id)
-        const appointment = (await (await appointmentRef.get()).data()) as ScienceAppointment
+        const appointment = (await (await appointmentRef.get()).data()) as ScienceEnrolment
 
         // 2. void existing invoice
         if (appointment.invoiceId) {
@@ -29,17 +29,17 @@ export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
 
         // 3. send new invoice
         const invoice = await sendInvoice({
-            firstName: appointment.parentFirstName,
-            lastName: appointment.parentLastName,
-            email: appointment.parentEmail,
-            phone: appointment.parentPhone,
-            description: `${appointment.childFirstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
+            firstName: appointment.parent.firstName,
+            lastName: appointment.parent.lastName,
+            email: appointment.parent.email,
+            phone: appointment.parent.phone,
+            description: `${appointment.child.firstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
             price: PricesMap[price],
             metadata: { programType: 'science_program' },
         })
 
         // 4. update appointment to include new invoice
-        const updatedAppointment: Partial<ScienceAppointment> = {
+        const updatedAppointment: Partial<ScienceEnrolment> = {
             invoiceId: invoice.id,
         }
         await appointmentRef.set({ ...updatedAppointment }, { merge: true })
