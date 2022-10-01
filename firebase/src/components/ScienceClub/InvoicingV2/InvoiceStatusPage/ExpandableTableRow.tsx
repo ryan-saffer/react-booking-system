@@ -5,7 +5,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@material-ui/icons/Check'
 
-import { Acuity, ScienceAppointment } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import InvoiceStatusWithAction from './InvoiceStatusWithAction'
 import EnrolmentStatusCell from './EnrolmentStatusCell'
 import MenuWithActions from './MenuWithActions'
@@ -13,7 +13,7 @@ import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import useForceRerenderComponent from '../../../Hooks/UseForceRerenderComponent'
 
 interface ExpandableTableRowPros extends ErrorDialogProps {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
 }
 
 const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, displayError }) => {
@@ -58,7 +58,7 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                         />
                     </TableCell>
                     <TableCell className={classes.parentNameCell} size="small">
-                        {appointment.parentFirstName} {appointment.parentLastName}
+                        {appointment.parent.firstName} {appointment.parent.lastName}
                     </TableCell>
                     <TableCell size="small">
                         {emailSent ? (
@@ -100,13 +100,13 @@ const ExpandableTableRow: React.FC<ExpandableTableRowPros> = ({ appointment, dis
                                         </TableRow>
                                         <TableRow className={classes.appointmentDetailsContentRow}>
                                             <TableCell className={classes.paddingCell} />
-                                            <TableCell>{appointment.parentPhone}</TableCell>
-                                            <TableCell>{appointment.parentEmail}</TableCell>
+                                            <TableCell>{appointment.parent.phone}</TableCell>
+                                            <TableCell>{appointment.parent.email}</TableCell>
                                             <TableCell>
-                                                {appointment.childFirstName} {appointment.childLastName}
+                                                {appointment.child.firstName} {appointment.child.lastName}
                                             </TableCell>
-                                            <TableCell>{appointment.childAge}</TableCell>
-                                            <TableCell>{appointment.childGrade}</TableCell>
+                                            <TableCell>{appointment.child.age}</TableCell>
+                                            <TableCell>{appointment.child.grade}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>

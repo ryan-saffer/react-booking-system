@@ -1,14 +1,14 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
 import { List, Result, Row, Typography } from 'antd'
-import { ScienceAppointment } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import Loader from '../../shared/Loader'
 import AppointmentRow from './AppointmentRow'
 
 type Props = {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
 }
 
 const ClassManager: React.FC<Props> = ({ appointment }) => {
@@ -26,7 +26,7 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
                 <>
                     <Row className={classes.row}>
                         <Typography.Text className={classes.heading}>
-                            If {appointment.childFirstName} cannot attend on a given week, let us know by simply
+                            If {appointment.child.firstName} cannot attend on a given week, let us know by simply
                             toggling off that week.
                         </Typography.Text>
                         <List

@@ -5,7 +5,7 @@ import { compose } from 'recompose'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
-import { Acuity, ScienceAppointment } from 'fizz-kidz'
+import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
@@ -39,7 +39,7 @@ const ScienceClubCheckinClassDetails = (props: Props) => {
     const history = useHistory()
 
     // a map will speed up finding the corresponding firestore booking from acuity appointment
-    const [firestoreDocuments, setFirestoreDocuments] = useState<{ [key: string]: ScienceAppointment }>({})
+    const [firestoreDocuments, setFirestoreDocuments] = useState<{ [key: string]: ScienceEnrolment }>({})
     const [expanded, setExpanded] = useState<string | false>(false)
     const [loading, setLoading] = useState(true)
     const [showHelpDialog, setShowHelpDialog] = useState(false)
@@ -77,9 +77,9 @@ const ScienceClubCheckinClassDetails = (props: Props) => {
             .where('status', '==', 'active')
             .get()
             .then((result) => {
-                let obj: { [key: string]: ScienceAppointment } = {}
+                let obj: { [key: string]: ScienceEnrolment } = {}
                 result.docs.forEach((doc) => {
-                    let appointment = doc.data() as ScienceAppointment
+                    let appointment = doc.data() as ScienceEnrolment
                     obj[appointment.id] = appointment
                 })
                 setFirestoreDocuments(obj)
@@ -111,7 +111,7 @@ const ScienceClubCheckinClassDetails = (props: Props) => {
                 {calendarName}
             </Typography>
             <Divider />
-            {appointments !== null && firestoreDocuments !== {} ? (
+            {appointments !== null && Object.keys(firestoreDocuments).length !== 0 ? (
                 appointments.map((appointment) => {
                     const firestoreId = Acuity.Utilities.retrieveFormAndField(
                         appointment,

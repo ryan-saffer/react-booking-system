@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 
-import Firebase, { FirebaseContext, withFirebase } from '../../../Firebase'
-import { Acuity, ScienceAppointment } from 'fizz-kidz'
+import Firebase, { FirebaseContext } from '../../../Firebase'
+import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import * as bannedPhotoIcon from '../../../../drawables/banned-camera-icon-24.png'
 import * as medicalIcon from '../../../../drawables/medical-icon-24.png'
 import * as insulinIcon from '../../../../drawables/insulin-icon-24.png'
@@ -23,10 +23,11 @@ import StarIcon from '@material-ui/icons/Star'
 import SignatureDialog from './SignatureDialog'
 import { DateTime } from 'luxon'
 import MenuWithActions from './MenuWithActions'
+import { callAcuityClientV2, callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 type Props = {
     appointment: Acuity.Appointment
-    firestoreDocument: ScienceAppointment
+    firestoreDocument: ScienceEnrolment
     expanded: string | false
     onClientSelectionChange: any
 }
@@ -34,67 +35,62 @@ type Props = {
 const ChildExpansionPanel = (props: Props) => {
     const classes = useStyles()
 
-    const { firestoreDocument, expanded } = props
+    const { expanded } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [appointment, setAppointment] = useState(props.appointment)
+    const [firestoreDocument, setFirestoreDocument] = useState(props.firestoreDocument)
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
-    const [signature, setSignature] = useState<any>(null)
     const [key, setKey] = useState(0)
+    const [anaphylaxisUrl, setAnaphylaxisUrl] = useState('')
 
     const isSignedIn = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_IN
     const isSignedOut = appointment.labels != null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_OUT
+
     const [notAttending, setNotAttending] = useState(
         appointment.labels !== null && appointment.labels[0].id === Acuity.Constants.Labels.NOT_ATTENDING
     )
     const notSignedIn = appointment.labels == null && !notAttending
 
     useEffect(() => {
-        const fetchSignature = () => {
-            firebase.db
-                .collection('scienceClubAppointments')
-                .doc(`${appointment.id}`)
-                .get()
-                .then((documentSnapshot) => {
-                    const sig = documentSnapshot.get('signature')
-                    const signedBy = documentSnapshot.get('pickupPerson')
-                    const timeStamp = documentSnapshot.get('timeStamp')
-                    setSignature({ sig, signedBy, timeStamp: timeStamp ? timeStamp.toDate() : '' })
+        if (firestoreDocument.child.isAnaphylactic) {
+            firebase.storage
+                .ref(`anaphylaxisPlans/${firestoreDocument.id}/${firestoreDocument.child.anaphylaxisPlan}`)
+                .getDownloadURL()
+                .then((url) => {
+                    console.log(url)
+                    setAnaphylaxisUrl(url)
                 })
-                .catch((err) => {
-                    console.log(`Error getting signature: ${err}`)
-                })
+                .catch((error) => console.error(error))
         }
-
-        fetchSignature()
-    }, [firebase.db, appointment.id])
+    }, [])
 
     const mergedPickupPeople = [`${appointment.firstName} ${appointment.lastName}`, ...firestoreDocument.pickupPeople]
-    const isInPrep = firestoreDocument.childGrade === 'Prep'
-    const isAnaphylactic = firestoreDocument.childIsAnaphylactic
-    const permissionToPhotograph = firestoreDocument.permissionToPhotograph
+    const isInPrep = firestoreDocument.child.grade === 'Prep'
+    const isAnaphylactic = firestoreDocument.child.isAnaphylactic
+    const permissionToPhotograph = firestoreDocument.child.permissionToPhotograph
     const hasNotes = firestoreDocument.notes ? true : false
 
-    const handleSignInButtonClick = (e: any) => {
+    const handleSignInButtonClick = async (e: any) => {
         e.stopPropagation()
+        setAttendance(true)
+    }
+
+    const setAttendance = async (signingIn: boolean) => {
         setLoading(true)
 
-        firebase.functions
-            .httpsCallable('acuityClient')({
-                auth: firebase.auth.currentUser?.toJSON(),
-                data: { method: 'updateLabel', clientId: appointment.id, label: Acuity.Constants.Labels.CHECKED_IN },
-            })
-            .then((result) => {
-                console.log(result)
-                setAppointment(result.data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
-            })
+        const result = await callAcuityClientV2(
+            'updateAppointment',
+            firebase
+        )({
+            id: appointment.id,
+            labels: signingIn ? [{ id: Acuity.Constants.Labels.CHECKED_IN }] : [],
+        })
+
+        setAppointment(result.data)
+        setLoading(false)
     }
 
     const handleSignOutButtonClick = (e: any) => {
@@ -109,40 +105,38 @@ const ChildExpansionPanel = (props: Props) => {
         }
     }
 
-    const handleCloseDialog = () => {
-        setOpen(false)
-    }
-
-    const handleSignOut = (pickupPerson: any, dataUrl: any) => {
-        console.log(`DATA URL: ${dataUrl}`)
-
-        firebase.functions
-            .httpsCallable('acuityClient')({
-                auth: firebase.auth.currentUser?.toJSON(),
-                data: { method: 'updateLabel', clientId: appointment.id, label: Acuity.Constants.Labels.CHECKED_OUT },
+    const handleSignOut = async (pickupPerson: string, dataUrl: string) => {
+        try {
+            const acuityResult = await callAcuityClientV2(
+                'updateAppointment',
+                firebase
+            )({
+                id: appointment.id,
+                labels: [{ id: Acuity.Constants.Labels.CHECKED_OUT }],
             })
-            .then((functionsResult) => {
-                console.log(functionsResult)
-                firebase.db
-                    .doc(`scienceClubAppointments/${appointment.id}/`)
-                    .set({
-                        pickupPerson: pickupPerson,
+
+            const updatedApointment = await callFirebaseFunction(
+                'updateScienceEnrolment',
+                firebase
+            )({
+                id: firestoreDocument.id,
+                signatures: {
+                    ...firestoreDocument.signatures,
+                    [appointment.id]: {
+                        pickupPerson,
+                        timestamp: Date.now(),
                         signature: dataUrl,
-                        timeStamp: new Date(),
-                    })
-                    .then((firestoreResult) => {
-                        console.log(`Firestore result: ${firestoreResult}`)
-                        setAppointment(functionsResult.data)
-                        setSignature({ sig: dataUrl, signedBy: pickupPerson, timeStamp: new Date() })
-                        setLoading(false)
-                        setOpen(false)
-                        setKey((key) => key + 1)
-                    })
+                    },
+                },
             })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
-            })
+            setFirestoreDocument(updatedApointment.data)
+            setAppointment(acuityResult.data)
+            setLoading(false)
+            setOpen(false)
+            setKey((key) => key + 1)
+        } catch (err) {
+            setLoading(false)
+        }
     }
 
     return (
@@ -184,10 +178,10 @@ const ChildExpansionPanel = (props: Props) => {
                                 setNotAttending={setNotAttending}
                             />
                             <Typography className={classes.childName} variant="button">
-                                {firestoreDocument.childFirstName} {firestoreDocument.childLastName}
+                                {firestoreDocument.child.firstName} {firestoreDocument.child.lastName}
                             </Typography>
                             {isInPrep && <StarIcon style={{ color: yellow[800] }} />}
-                            {firestoreDocument.childAllergies && (
+                            {firestoreDocument.child.allergies && (
                                 <img className={classes.icon} src={medicalIcon.default} alt="medical icon" />
                             )}
                             {isAnaphylactic && (
@@ -238,7 +232,7 @@ const ChildExpansionPanel = (props: Props) => {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell variant="head">Child year level:</TableCell>
-                                    <TableCell>{firestoreDocument.childGrade}</TableCell>
+                                    <TableCell>{firestoreDocument.child.grade}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell variant="head">Parent mobile:</TableCell>
@@ -252,13 +246,30 @@ const ChildExpansionPanel = (props: Props) => {
                                         <TableCell className={classes.notes}>{appointment.notes}</TableCell>
                                     </TableRow>
                                 )}
-                                {firestoreDocument.childAllergies && (
+                                {firestoreDocument.child.allergies && (
                                     <TableRow>
                                         <TableCell className={classes.allergies} variant="head">
                                             Allergies: {isAnaphylactic && '(ANAPHYLACTIC)'}
                                         </TableCell>
                                         <TableCell className={classes.allergies}>
-                                            {firestoreDocument.childAllergies}
+                                            {firestoreDocument.child.allergies}
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {firestoreDocument.child.isAnaphylactic && (
+                                    <TableRow>
+                                        <TableCell className={classes.allergies} variant="head">
+                                            Anaphylaxis Plan
+                                        </TableCell>
+                                        <TableCell className={classes.allergies}>
+                                            <Button
+                                                variant="outlined"
+                                                href={anaphylaxisUrl}
+                                                target="_blank"
+                                                color="primary"
+                                            >
+                                                Open Anaphylaxis Plan
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -286,35 +297,67 @@ const ChildExpansionPanel = (props: Props) => {
                                     <TableCell>
                                         <List>
                                             <ListItem className={classes.listItem}>
-                                                {firestoreDocument.emergencyContactName}
+                                                {firestoreDocument.emergencyContact.name}
                                             </ListItem>
                                             <ListItem className={classes.listItem}>
-                                                {firestoreDocument.emergencyContactNumber}
+                                                {firestoreDocument.emergencyContact.phone}
                                             </ListItem>
                                         </List>
                                     </TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    {signature && signature.sig && (
-                                        <>
-                                            <TableCell variant="head">Signature:</TableCell>
-                                            <TableCell>
-                                                <List>
-                                                    <ListItem className={classes.listItem}>
-                                                        <img
-                                                            className={classes.signature}
-                                                            src={signature.sig}
-                                                            alt="signature"
-                                                        />
-                                                    </ListItem>
-                                                    <ListItem className={classes.listItem}>
-                                                        {signature.signedBy}: {signature.timeStamp.toLocaleTimeString()}
-                                                    </ListItem>
-                                                </List>
-                                            </TableCell>
-                                        </>
-                                    )}
+                                    {(() => {
+                                        const signature = firestoreDocument.signatures[appointment.id]
+                                        if (signature.pickupPerson) {
+                                            return (
+                                                <>
+                                                    <TableCell variant="head">Signature:</TableCell>
+                                                    <TableCell>
+                                                        <List>
+                                                            <ListItem className={classes.listItem}>
+                                                                <img
+                                                                    className={classes.signature}
+                                                                    src={signature.signature}
+                                                                    alt="signature"
+                                                                />
+                                                            </ListItem>
+                                                            <ListItem className={classes.listItem}>
+                                                                {signature.pickupPerson}:{' '}
+                                                                {new Date(signature.timestamp).toLocaleTimeString()}
+                                                            </ListItem>
+                                                        </List>
+                                                    </TableCell>
+                                                </>
+                                            )
+                                        }
+                                    })()}
                                 </TableRow>
+                                {isSignedIn && (
+                                    <TableRow>
+                                        <TableCell colSpan={2} style={{ textAlign: 'end' }}>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => setAttendance(false)}
+                                            >
+                                                Undo Sign In
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {isSignedOut && (
+                                    <TableRow>
+                                        <TableCell colSpan={2} style={{ textAlign: 'end' }}>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => setAttendance(true)}
+                                            >
+                                                Undo Sign Out
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -324,7 +367,7 @@ const ChildExpansionPanel = (props: Props) => {
                 key={key}
                 pickupPeople={mergedPickupPeople}
                 open={open}
-                onClose={handleCloseDialog}
+                onClose={() => setOpen(false)}
                 onSignOut={handleSignOut}
             />
         </>

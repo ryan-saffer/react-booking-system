@@ -3,14 +3,14 @@ import {
     RetrieveInvoiceStatusParamsV2,
     SendInvoiceParams,
     SendInvoiceParamsV2,
-    InvoiceStatus
+    InvoiceStatus,
 } from '../scienceclub/invoicing'
 import { Appointment } from '../acuity'
 import {
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
     ScheduleScienceAppointmentParams,
-    ScienceAppointment,
+    ScienceEnrolment,
     SendTermContinuationEmailParams,
     UnenrollScienceAppointmentParams,
     UpdatePaymentIntentParams,
@@ -30,7 +30,7 @@ export interface FirebaseFunctions {
     updatePaymentIntent: Function<UpdatePaymentIntentParams, void>
     scheduleScienceAppointment: Function<ScheduleScienceAppointmentParams, void>
     unenrollScienceAppointment: Function<UnenrollScienceAppointmentParams, void>
-    updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceAppointment>
+    updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: Function<void, void>
 }
 

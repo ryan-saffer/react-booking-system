@@ -1,20 +1,26 @@
 export type ScheduleScienceAppointmentParams = {
     appointmentTypeId: number
     calendarId: number
-    parentFirstName: string
-    parentLastName: string
-    parentEmail: string
-    parentPhone: string
-    childFirstName: string
-    childLastName: string
-    childAge: string
-    childGrade: string
-    childAllergies: string
-    childIsAnaphylactic: boolean
-    anaphylaxisPlan: string
-    emergencyContactName: string
-    emergencyContactNumber: string
-    permissionToPhotograph: boolean
+    parent: {
+        firstName: string
+        lastName: string
+        email: string
+        phone: string
+    }
+    child: {
+        firstName: string
+        lastName: string
+        age: string
+        grade: string
+        allergies: string
+        isAnaphylactic: boolean
+        anaphylaxisPlan: string
+        permissionToPhotograph: boolean
+    }
+    emergencyContact: {
+        name: string
+        phone: string
+    }
     className: string
     pickupPeople: string[]
 }
@@ -28,38 +34,51 @@ export type UnenrollScienceAppointmentParams = {
 }
 
 export type UpdateScienceEnrolmentParams = {
-    appointmentId: string
-} & Partial<ScienceAppointment>
+    id: string
+} & Partial<ScienceEnrolment>
 
-export type ScienceAppointment = {
+export type ScienceEnrolment = {
     id: string
     // inactive status will mean they are deleted in acuity
     status: 'active' | 'inactive'
     appointmentTypeId: number
     appointments: number[]
-    childAge: string
-    childGrade: string
-    childFirstName: string
-    childLastName: string
-    childAllergies: string
-    childIsAnaphylactic: boolean
-    anaphylaxisPlan: string
-    parentEmail: string
-    parentFirstName: string
-    parentLastName: string
-    parentPhone: string
+    parent: {
+        firstName: string
+        lastName: string
+        email: string
+        phone: string
+    }
+    child: {
+        firstName: string
+        lastName: string
+        age: string
+        grade: string
+        allergies: string
+        isAnaphylactic: boolean
+        anaphylaxisPlan: string
+        permissionToPhotograph: boolean
+    }
+    emergencyContact: {
+        name: string
+        phone: string
+    }
     continuingWithTerm: 'yes' | 'no' | ''
     className: string
     invoiceId: string
-    emergencyContactName: string
-    emergencyContactNumber: string
     notes: string
-    permissionToPhotograph: boolean
     price: string
     pickupPeople: string[]
     emails: {
         portalLinkEmailSent: boolean
         continuingEmailSent: boolean
+    }
+    signatures: {
+        [key: number]: {
+            pickupPerson: string
+            timestamp: number
+            signature: string
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 import { hasError } from './shared'
-import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Acuity } from 'fizz-kidz'
 
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
@@ -7,6 +7,16 @@ const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
     apiKey: acuityCredentials.api_key,
 })
+
+type ScheduleAppointmentParams = {
+    appointmentTypeID: number
+    datetime: string
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    fields?: { id: number; value: number | string }[]
+}
 
 export class AcuityClient {
     private _request<T>(path: string, options: object = {}): Promise<T> {
@@ -35,12 +45,21 @@ export class AcuityClient {
         return Promise.all(ids.map((id) => this.getAppointment(id.toString())))
     }
 
+    searchForAppointments(params: Acuity.Client.FetchAppointmentsParams) {
+        let path = `/appointments?calendarID=${params.calendarId}&appointmenTypeID=${params.appointmentTypeId}`
+        if (params.classTime) {
+            const date = params.classTime.split('T')[0]
+            path += `&minDate=${date}&maxDate=${date}`
+        }
+        return this._request<Acuity.Appointment[]>(path)
+    }
+
     getAppointmentTypes() {
         return this._request<Acuity.AppointmentType[]>(`/appointment-types`)
     }
 
-    scheduleAppointment(options: object) {
-        return this._request<Acuity.Appointment>('/appointments', options)
+    scheduleAppointment(body: ScheduleAppointmentParams) {
+        return this._request<Acuity.Appointment>('/appointments', { method: 'POST', body })
     }
 
     cancelAppointment(id: number) {
@@ -57,35 +76,5 @@ export class AcuityClient {
 
     getCalendars() {
         return this._request<Acuity.Calendar[]>(`/calendars`)
-    }
-
-    async scheduleScienceProgram(data: ScheduleScienceAppointmentParams, firestoreId: string) {
-        // retrieve all appointments for appointmentType
-        const classes = await this.getClasses(data.appointmentTypeId, Date.now())
-
-        // schedule into each appointment
-        const appointments = await Promise.all(
-            classes.map((klass) => {
-                const options = {
-                    method: 'POST',
-                    body: {
-                        appointmentTypeID: data.appointmentTypeId,
-                        datetime: klass.time,
-                        firstName: data.parentFirstName,
-                        lastName: data.parentLastName,
-                        email: data.parentEmail,
-                        phone: data.parentPhone,
-                        fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: firestoreId }],
-                    },
-                }
-                return this.scheduleAppointment(options)
-            })
-        )
-
-        return appointments
-    }
-
-    async unenrollChildFromTerm(ids: number[]) {
-        await Promise.all(ids.map((id) => this.cancelAppointment(id)))
     }
 }

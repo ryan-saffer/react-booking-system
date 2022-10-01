@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import { db } from '../../init'
 import { onCall } from '../../utilities'
-import { ScienceAppointment, UnenrollScienceAppointmentParams } from 'fizz-kidz'
+import { ScienceEnrolment, UnenrollScienceAppointmentParams } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/AcuityClient'
 import { MailClient } from '../../sendgrid/MailClient'
 
@@ -11,13 +11,14 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
 
         // 1. get appointment from firestore
         const appointmentSnapshot = await db.collection('scienceAppointments').doc(appointmentId).get()
-        const appointment = appointmentSnapshot.data() as ScienceAppointment
+        const appointment = appointmentSnapshot.data() as ScienceEnrolment
 
         // 2. cancel each acuity appointment
         let appointmentIds = appointment.appointments
 
         try {
-            await new AcuityClient().unenrollChildFromTerm(appointmentIds)
+            const acuityClient = new AcuityClient()
+            await Promise.all(appointmentIds.map((id) => acuityClient.cancelAppointment(id)))
         } catch (err) {
             throw new functions.https.HttpsError(
                 'internal',
@@ -26,7 +27,7 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
             )
         }
 
-        const updatedAppointment: Partial<ScienceAppointment> = {
+        const updatedAppointment: Partial<ScienceEnrolment> = {
             status: 'inactive',
         }
 
@@ -35,9 +36,9 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
 
         // 4. email confirmation
         try {
-            await new MailClient().sendEmail('scienceTermUnenrolmentConfirmation', appointment.parentEmail, {
-                parentName: appointment.parentFirstName,
-                childName: appointment.childFirstName,
+            await new MailClient().sendEmail('scienceTermUnenrolmentConfirmation', appointment.parent.email, {
+                parentName: appointment.parent.firstName,
+                childName: appointment.child.firstName,
                 className: appointment.className,
             })
         } catch (err) {

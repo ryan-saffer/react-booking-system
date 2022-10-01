@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { makeStyles, Theme } from '@material-ui/core'
 import { Button, Card, Form, Input, message, Row, Tooltip } from 'antd'
-import { ScienceAppointment } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import useMixpanel from '../../../Hooks/context/UseMixpanel'
@@ -14,7 +14,7 @@ const { useForm } = Form
 const BREAKPOINT = 430
 
 type Props = {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
 }
 
 type ThemeProps = {
@@ -42,24 +42,21 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
         setLoading(true)
         try {
             const pickupPeople = values.pickupPeople.map((it) => it.person)
-            await callFirebaseFunction(
-                'updateScienceEnrolment',
-                firebase
-            )({ appointmentId: appointment.id, pickupPeople })
+            await callFirebaseFunction('updateScienceEnrolment', firebase)({ id: appointment.id, pickupPeople })
             message.success({
                 content: 'Pickup people updated successfully.',
                 className: classes.message,
             })
             setInitialValues({ pickupPeople: pickupPeople.map((person) => ({ person })) })
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_PICKUP_PEOPLE_UPDATED, {
-                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
                 appointment_id: appointment.id,
             })
         } catch (error) {
             showError('There was an issue updating the pickup people. Please try again later, or give us a call.')
             form.setFieldsValue(initialValues)
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_UPDATING_PICKUP_PEOPLE, {
-                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parentEmail,
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
                 appointment_id: appointment.id,
             })
         }

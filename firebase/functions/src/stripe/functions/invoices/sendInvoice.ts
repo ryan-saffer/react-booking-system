@@ -1,6 +1,6 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
-import { PriceWeekMap, ScienceAppointment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceEnrolment, SendInvoiceParamsV2 } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
@@ -17,21 +17,21 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
         try {
             // 1. get appointment
             const appointmentRef = db.collection('scienceAppointments').doc(id)
-            const appointment = (await appointmentRef.get()).data() as ScienceAppointment
+            const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
 
             // 2. send invoice
             const invoice = await sendInvoice({
-                firstName: appointment.parentFirstName,
-                lastName: appointment.parentLastName,
-                email: appointment.parentEmail,
-                phone: appointment.parentPhone,
-                description: `${appointment.childFirstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
+                firstName: appointment.parent.firstName,
+                lastName: appointment.parent.lastName,
+                email: appointment.parent.email,
+                phone: appointment.parent.phone,
+                description: `${appointment.child.firstName} - ${appointment.className} - ${PriceWeekMap[price]} Weeks`,
                 price: PricesMap[price],
                 metadata: { programType: 'science_program' },
             })
 
             // 3. store id back into firestore
-            const updatedAppointment: Partial<ScienceAppointment> = {
+            const updatedAppointment: Partial<ScienceEnrolment> = {
                 invoiceId: invoice.id,
                 continuingWithTerm: 'yes',
                 emails: {

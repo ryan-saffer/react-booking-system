@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Col, Row } from 'antd'
-import { ScienceAppointment } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import InvoiceDetails from '../InvoiveDetails/InvoiceDetails'
 import { makeStyles } from '@material-ui/core'
@@ -9,7 +9,7 @@ const BREAK_LARGE = 990
 const BREAK_SMALL = 515
 
 type Props = {
-    appointment: ScienceAppointment
+    appointment: ScienceEnrolment
 }
 
 const EnrolmentSummary: React.FC<Props> = ({ appointment }) => {
@@ -27,7 +27,7 @@ const EnrolmentSummary: React.FC<Props> = ({ appointment }) => {
             <Col span={width > BREAK_LARGE ? 9 : width > BREAK_SMALL ? 12 : 24}>
                 <Card className={classes.card} title="👩‍🔬 Child Enrolled">
                     <p>
-                        {appointment.childFirstName} {appointment.childLastName}
+                        {appointment.child.firstName} {appointment.child.lastName}
                     </p>
                 </Card>
             </Col>
