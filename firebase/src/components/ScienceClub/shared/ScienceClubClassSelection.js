@@ -78,9 +78,9 @@ const ScienceClubClassSelection = (props) => {
         props.history.push(
             `${classRoute}?appointmentTypeId=${selectedClass.appointmentTypeID}&calendarId=${
                 selectedClass.calendarID
-            }&classId=${selectedClass.id}&calendarName=${encodeURIComponent(calendar.name)}&classTime=${
-                selectedClass.time
-            }`
+            }&classId=${selectedClass.id}&calendarName=${encodeURIComponent(
+                calendar.name
+            )}&classTime=${encodeURIComponent(selectedClass.time)}`
         )
     }
 
