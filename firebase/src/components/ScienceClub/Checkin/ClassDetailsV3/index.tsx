@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { makeStyles } from '@material-ui/core/styles'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useQueryParam from '../../../Hooks/UseQueryParam'
 import useFirebase from '../../../Hooks/context/UseFirebase'
-import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import Heading from './Header'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
@@ -17,6 +16,7 @@ type QueryParams = {
     classId: string
     calendarName: string
     classTime: string
+    class: string
 }
 
 export type EnrolmentsMap = { [key: string]: ScienceEnrolment }
@@ -45,7 +45,7 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
     const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId'))
     const calendarId = parseInt(useQueryParam<QueryParams>('calendarId'))
     const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName'))
-    const classTime = useQueryParam<QueryParams>('classTime')
+    const classTime = decodeURIComponent(useQueryParam<QueryParams>('classTime'))
 
     useEffect(() => {
         async function init() {
@@ -91,7 +91,7 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
 
     return (
         <div className={classes.main}>
-            <Heading />
+            <Heading time={classTime} />
             <div className={classes.root}>
                 <Card className={classes.card}>
                     {(() => {
