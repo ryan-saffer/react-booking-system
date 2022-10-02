@@ -78,6 +78,7 @@ export type ScienceEnrolment = {
             pickupPerson: string
             timestamp: number
             signature: string
+            staffReason: string
         }
     }
 }

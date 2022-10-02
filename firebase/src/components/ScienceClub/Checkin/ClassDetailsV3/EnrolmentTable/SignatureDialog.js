@@ -29,23 +29,38 @@ const SignatureDialog = (props) => {
     const [showNameInput, setShowNameInput] = useState(false)
     const [staffName, setStaffName] = useState('')
     const [staffNameError, setStaffNameError] = useState(false)
+    const [staffReason, setStaffReason] = useState('')
+    const [staffReasonError, setStaffReasonError] = useState(false)
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
+        const staffSignout = selectedGuardian === 'Fizz Kidz Staff'
         if (selectedGuardian === '') {
             setGuardianError(true)
-        } else if (selectedGuardian === 'Fizz Kidz Staff' && staffName === '') {
+        } else if (staffSignout && staffName === '') {
             setStaffNameError(true)
+        } else if (staffSignout && staffReason === '') {
+            setStaffReasonError(true)
         } else if (sigPad.isEmpty()) {
             setSignatureError(true)
         } else {
             setDisabled(true)
             setGuardianError(false)
             setSignatureError(false)
+            setStaffNameError(false)
+            setStaffReasonError(false)
             let person = selectedGuardian
-            if (selectedGuardian === 'Fizz Kidz Staff') {
+            if (staffSignout) {
                 person = `STAFF: ${staffName}`
             }
-            props.onSignOut(person, sigPad.getTrimmedCanvas().toDataURL('image/png'))
+            await props.onSignOut(
+                person,
+                sigPad.getTrimmedCanvas().toDataURL('image/png'),
+                staffSignout ? staffReason : ''
+            )
+            setSelectedGuardian('')
+            setStaffName('')
+            setStaffReason('')
+            setDisabled(false)
         }
     }
 
@@ -87,19 +102,34 @@ const SignatureDialog = (props) => {
                     </Select>
                 </FormControl>
                 {showNameInput && (
-                    <FormControl className={classes.formControl}>
-                        <TextField
-                            error={staffNameError}
-                            label={staffNameError && 'Staff Name Required'}
-                            variant="outlined"
-                            value={staffName}
-                            placeholder="Enter staff name"
-                            onChange={(e) => {
-                                setStaffNameError(false)
-                                setStaffName(e.target.value)
-                            }}
-                        />
-                    </FormControl>
+                    <>
+                        <FormControl className={classes.formControl}>
+                            <TextField
+                                error={staffNameError}
+                                label={staffNameError && 'Staff Name Required'}
+                                variant="outlined"
+                                value={staffName}
+                                placeholder="Enter staff name"
+                                onChange={(e) => {
+                                    setStaffNameError(false)
+                                    setStaffName(e.target.value)
+                                }}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <TextField
+                                error={staffReasonError}
+                                label={staffReasonError && 'Please explain why a staff is signing this child out'}
+                                variant="outlined"
+                                value={staffReason}
+                                placeholder="Enter reason that the staff is signing this child out"
+                                onChange={(e) => {
+                                    setStaffReason(false)
+                                    setStaffReason(e.target.value)
+                                }}
+                            />
+                        </FormControl>
+                    </>
                 )}
                 <div className={classes.signatureCanvas}>
                     <SignatureCanvas
