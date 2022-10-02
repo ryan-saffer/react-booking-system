@@ -105,7 +105,7 @@ const ChildExpansionPanel = (props: Props) => {
         }
     }
 
-    const handleSignOut = async (pickupPerson: string, dataUrl: string) => {
+    const handleSignOut = async (pickupPerson: string, dataUrl: string, staffReason: string = '') => {
         try {
             const acuityResult = await callAcuityClientV2(
                 'updateAppointment',
@@ -126,6 +126,7 @@ const ChildExpansionPanel = (props: Props) => {
                         pickupPerson,
                         timestamp: Date.now(),
                         signature: dataUrl,
+                        staffReason,
                     },
                 },
             })
