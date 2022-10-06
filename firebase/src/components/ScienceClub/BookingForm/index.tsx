@@ -1,7 +1,6 @@
 import { Acuity, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { callAcuityClientV2, callFirebaseFunction } from '../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../Firebase'
 import Root from '../../Shared/Root'
 import { LeftOutlined } from '@ant-design/icons'
 import { Button, Result, Typography } from 'antd'
@@ -112,6 +111,12 @@ const BookingForm = () => {
             <Typography.Title level={4} className={classes.title}>
                 Science Program Enrolment Form
             </Typography.Title>
+            <Typography.Title level={5} className={classes.subtitle}>
+                Free trial available - $24 per class ($216, 9 week term)
+            </Typography.Title>
+            <Typography.Text>
+                If your school has a term less than 9 weeks, you will be invoiced accordingly.
+            </Typography.Text>
             {(() => {
                 if (error) {
                     mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
@@ -155,6 +160,10 @@ const useStyles = makeStyles({
     title: {
         margin: 8,
         textAlign: 'center',
+    },
+    subtitle: {
+        textAlign: 'center',
+        margin: 0,
     },
     loader: {
         marginTop: 24,

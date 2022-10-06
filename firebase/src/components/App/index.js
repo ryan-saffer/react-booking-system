@@ -12,6 +12,7 @@ import ScienceClubClassDetailsV3 from '../ScienceClub/Checkin/ClassDetailsV3'
 import ScienceClubAdminClassSelection from '../ScienceClub/Invoicing/SelectClass'
 import InvoiceStatusPage from '../ScienceClub/Invoicing/InvoiceStatusPage'
 import InvoiceStatusPageV2 from '../ScienceClub/InvoicingV2/InvoiceStatusPage'
+import InvoiceStatusPageV3 from '../ScienceClub/InvoicingV3/InvoiceStatusPage'
 import HolidayProgramSelection from '../HolidayPrograms/SelectClass'
 import HolidayProgramClassDetails from '../HolidayPrograms/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles'
@@ -59,6 +60,7 @@ const App = () => {
                     />
                     <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} component={InvoiceStatusPage} />
                     <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS_V2} component={InvoiceStatusPageV2} />
+                    <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS_V3} component={InvoiceStatusPageV3} />
                     <Route exact path={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS} component={HolidayProgramSelection} />
                     <Route exact path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS} component={HolidayProgramClassDetails} />
                     <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
