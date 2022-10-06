@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { List, Result, Row, Typography } from 'antd'
+import { Alert, List, Result, Row, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
@@ -26,8 +26,14 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
                 <>
                     <Row className={classes.row}>
                         <Typography.Text className={classes.heading}>
-                            If {appointment.child.firstName} cannot attend on a given week, let us know by simply
-                            toggling off that week.
+                            If {appointment.child.firstName} cannot attend on a given week, let us know by simply{' '}
+                            <strong>toggling off</strong> that week.
+                        </Typography.Text>
+                        <Typography.Text className={classes.heading}>
+                            Otherwise, we will search for {appointment.child.firstName} far and wide!
+                        </Typography.Text>
+                        <Typography.Text className={classes.heading} keyboard>
+                            ℹ️ Please note, we do not offer credits or refunds for missed weeks.
                         </Typography.Text>
                         <List
                             className={classes.list}

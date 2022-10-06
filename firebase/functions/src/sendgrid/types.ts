@@ -37,5 +37,6 @@ export type Emails = {
         childName: string
         className: string
         portalUrl: string
+        location: string
     }
 }

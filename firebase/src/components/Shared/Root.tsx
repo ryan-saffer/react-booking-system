@@ -11,7 +11,7 @@ type Props = {
 
 const defaultProps: Partial<Props> = {
     width: 'centered',
-    logoSize: 'lg'
+    logoSize: 'lg',
 }
 
 const Root: React.FC<Props> = (_props) => {
@@ -48,17 +48,17 @@ const useStyles = makeStyles<Theme, Props>(() => ({
                 ? 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)'
                 : 'linear-gradient(45deg, #2FEAA8, #028CF3)',
         minHeight: '100vh',
-        paddingBottom: 24,
         display: 'flex',
         justifyContent: 'center',
+        paddingTop: 36,
+        paddingBottom: 36,
+        paddingRight: 20,
+        paddingLeft: 20,
     }),
     card: (props) => ({
         width: '100%',
-        marginRight: 20,
-        marginLeft: 20,
         height: 'fit-content',
         maxWidth: props.width === 'centered' ? 600 : '100%',
-        marginTop: 36,
         borderRadius: 16,
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     }),

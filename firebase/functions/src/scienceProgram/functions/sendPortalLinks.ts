@@ -53,6 +53,7 @@ async function _sendPortalLinks(appointmentTypeIds: Acuity.AppointmentType[]) {
                 childName: appointment.child.firstName,
                 className: appointment.className,
                 portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
+                location: 'TODO',
             })
             return appointment
         })

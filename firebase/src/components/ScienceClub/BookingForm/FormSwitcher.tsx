@@ -4,7 +4,7 @@ import useAcuityClient from '../../Hooks/api/UseAcuityClient'
 import Loader from '../shared/Loader'
 import Form from './Form'
 import { makeStyles } from '@material-ui/core'
-import { Alert } from 'antd'
+import { Alert, Typography } from 'antd'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '../../Mixpanel/Events'
 
@@ -30,8 +30,16 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
         case 'loaded':
             if (classesService.result.length > 0) {
                 const spotsLeft = classesService.result[0].slotsAvailable
+                const numClasses = classesService.result.length
                 if (spotsLeft > 0) {
-                    return <Form appointmentType={appointmentType} onSubmit={onSubmit} />
+                    return (
+                        <>
+                            <Typography.Title className={classes.price} level={5}>
+                                ${parseInt(appointmentType.price) * numClasses} for an {numClasses} week term
+                            </Typography.Title>
+                            <Form appointmentType={appointmentType} onSubmit={onSubmit} />
+                        </>
+                    )
                 } else {
                     // no spots left
                     // this could be swapped out with a waiting list form in the future
@@ -79,6 +87,11 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 const useStyles = makeStyles({
     topMargin: {
         marginTop: 24,
+    },
+    price: {
+        textAlign: 'center',
+        marginBottom: 0,
+        marginTop: 12,
     },
 })
 

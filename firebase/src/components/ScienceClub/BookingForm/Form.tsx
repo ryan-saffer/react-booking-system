@@ -187,6 +187,19 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     <Input />
                 </AntdForm.Item>
                 <AntdForm.Item
+                    label="Emergency Contact Relation"
+                    name="emergencyContactRelation"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter the emergency contacts relation to the child. Eg. "Aunty"',
+                        },
+                        SimpleTextRule,
+                    ]}
+                >
+                    <Input />
+                </AntdForm.Item>
+                <AntdForm.Item
                     label="Emergency Contact Number"
                     name="emergencyContactNumber"
                     rules={[{ required: true, message: 'Please enter the emergency contact phone number' }, PhoneRule]}
@@ -315,6 +328,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                         },
                         emergencyContact: {
                             name: form.getFieldValue('emergencyContactName'),
+                            relation: form.getFieldValue('emergencyContactRelation'),
                             phone: form.getFieldValue('emergencyContactNumber'),
                         },
                         className: appointmentType.name,

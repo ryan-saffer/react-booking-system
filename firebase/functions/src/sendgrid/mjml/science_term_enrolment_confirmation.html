@@ -22,7 +22,7 @@
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    Fizz Kidz Science Program Booking Confirmation
+                    Science Program Enrolment Confirmation
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -48,35 +48,52 @@
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
-                        padding-bottom="0" align="center">
+                        padding-bottom="0">
                         Program
                     </mj-text>
-                    <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0" align="center">
+                    <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
                         {{ className }}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
-                        padding-bottom="0" align="center">
+                        padding-bottom="0">
+                        Location
+                    </mj-text>
+                    <mj-text color="#637381" font-size="14px" padding-top="0">
+                        {{ location }}
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                        padding-bottom="0">
                         When
                     </mj-text>
-                    <mj-text color="#637381" font-size="14px" padding-top="0" align="center">
-                        {{#appointmentTimes}}
-                        <p>{{.}}</p>
-                        {{/appointmentTimes}}
+                    <mj-text color="#637381" font-size="14px" padding-top="0">
+                        <ul style="margin-bottom:0px; padding-left:24px">
+                            {{#appointmentTimes}}
+                            <li>{{.}}</li>
+                            {{/appointmentTimes}}
+                        </ul>
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                        padding-bottom="0">
+                        Important Information
+                    </mj-text>
+                    <mj-text color="#637381" font-size="14px" padding-top="0">
+                        Please ask {{ childName }} to meet us at the {{ location }}. Prep students will be picked up in
+                        week
+                        1, however for the rest of the term they need to meet their facilitator at the {{ location }}
+                        straight after school.
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
-                        The science program is held in the school {{ location }}. Please ask to meet us there! Prep
-                        students will be picked up in week 1, but for the rest of the term, they need to meet their
-                        facilitator at the {{ location }} straight after school.
-                    </mj-text>
-                    <mj-text color="#637381" font-size="16px">
-                        As we offer a free trial session, we will be in touch with you after the first week to see if
-                        you would like to register for the term. Please note that this is only available for new
-                        students. The term fee is ${{ price }} for a {{ numberOfWeeks }} week program of hands-on
-                        science fun!
+                        For all new students, we will be in touch with you after the first week to see if you would like
+                        to continue for the term after your free trial session. The term fee is ${{ price }} for a
+                        {{ numberOfWeeks }} week program of hands-on science fun!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
                         If you would like more information about the program <a

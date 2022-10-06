@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { makeStyles, Theme } from '@material-ui/core'
-import { Button, Card, Form, Input, message, Row, Tooltip } from 'antd'
+import { Alert, Button, Card, Form, Input, message, Row, Tooltip, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
@@ -44,7 +44,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
             const pickupPeople = values.pickupPeople.map((it) => it.person)
             await callFirebaseFunction('updateScienceEnrolment', firebase)({ id: appointment.id, pickupPeople })
             message.success({
-                content: 'Pickup people updated successfully.',
+                content: 'Pickup people updated',
                 className: classes.message,
             })
             setInitialValues({ pickupPeople: pickupPeople.map((person) => ({ person })) })
@@ -88,7 +88,22 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                     )
                 }
             >
-                <Form form={form} initialValues={initialValues} onFinish={onFinish} autoComplete="off">
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <Alert
+                        style={{ marginBottom: 12 }}
+                        type="info"
+                        message="You do not need to list yourself here"
+                        showIcon
+                    />
+                    <Typography.Text italic>Example: "John Smith - Grandfather"</Typography.Text>
+                </div>
+                <Form
+                    form={form}
+                    initialValues={initialValues}
+                    style={{ marginTop: 12 }}
+                    onFinish={onFinish}
+                    autoComplete="off"
+                >
                     <Form.List name="pickupPeople">
                         {(fields, { add, remove }) => (
                             <>
