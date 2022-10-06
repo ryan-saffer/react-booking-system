@@ -105,6 +105,9 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                     ))}
                 </Descriptions.Item>
                 <Descriptions.Item label="Emergency Contact Name:">{enrolment.emergencyContact.name}</Descriptions.Item>
+                <Descriptions.Item label="Emergency Contact Relation:">
+                    {enrolment.emergencyContact.relation}
+                </Descriptions.Item>
                 <Descriptions.Item label="Emergency Contact Phone:">
                     {enrolment.emergencyContact.phone}
                 </Descriptions.Item>

@@ -97,7 +97,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        subject: 'Science Program begins next week!',
+                        subject: 'Manage your enrolment',
                     },
                     template: 'science_parent_portal.html',
                 }

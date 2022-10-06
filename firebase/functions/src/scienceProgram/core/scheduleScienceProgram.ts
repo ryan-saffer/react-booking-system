@@ -6,10 +6,12 @@ import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
 const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId
+const env = projectName === 'bookings-prod' ? 'prod' : 'dev'
 
 export default async function scheduleScienceProgram(
     input: ScheduleScienceAppointmentParams,
-    sendEmail: boolean = true
+    sendConfirmationEmail: boolean = true,
+    sendPortalEmail: boolean = true
 ) {
     try {
         // create a firestore document
@@ -76,9 +78,10 @@ export default async function scheduleScienceProgram(
         await newDoc.set({ ...appointment })
 
         // send the confirmation email
-        if (sendEmail) {
+        const mailClient = new MailClient()
+        if (sendConfirmationEmail) {
             try {
-                await new MailClient().sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
+                await mailClient.sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
                     parentName: input.parent.firstName,
                     childName: input.child.firstName,
                     className: input.className,
@@ -95,7 +98,7 @@ export default async function scheduleScienceProgram(
                         })
                     ),
                     calendarName: calendar.location,
-                    price: appointments[0].price,
+                    price: (parseInt(appointments[0].price) * appointments.length).toString(),
                     location: calendar.description,
                     numberOfWeeks: appointments.length.toString(),
                 })
@@ -108,6 +111,22 @@ export default async function scheduleScienceProgram(
             }
         } else {
             console.log('Skipping confirmation email')
+        }
+
+        if (sendPortalEmail) {
+            try {
+                const baseUrl =
+                    env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
+                await mailClient.sendEmail('scienceParentPortalLink', input.parent.email, {
+                    parentName: input.parent.firstName,
+                    childName: input.child.firstName,
+                    className: input.className,
+                    portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
+                    location: calendar.description,
+                })
+            } catch (err) {
+                throw new functions.https.HttpsError('ok', 'error sending portal email after successfull booking', err)
+            }
         }
     } catch (err) {
         throw new functions.https.HttpsError('internal', 'error schedulding into science program', err)

@@ -19,6 +19,7 @@ export type ScheduleScienceAppointmentParams = {
     }
     emergencyContact: {
         name: string
+        relation: string
         phone: string
     }
     className: string
@@ -61,13 +62,14 @@ export type ScienceEnrolment = {
     }
     emergencyContact: {
         name: string
+        relation: string
         phone: string
     }
     continuingWithTerm: 'yes' | 'no' | ''
     className: string
     invoiceId: string
     notes: string
-    price: string
+    price: string // eg. "24.00"
     pickupPeople: string[]
     emails: {
         portalLinkEmailSent: boolean

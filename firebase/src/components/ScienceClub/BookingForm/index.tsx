@@ -111,12 +111,6 @@ const BookingForm = () => {
             <Typography.Title level={4} className={classes.title}>
                 Science Program Enrolment Form
             </Typography.Title>
-            <Typography.Title level={5} className={classes.subtitle}>
-                Free trial available - $24 per class ($216, 9 week term)
-            </Typography.Title>
-            <Typography.Text>
-                If your school has a term less than 9 weeks, you will be invoiced accordingly.
-            </Typography.Text>
             {(() => {
                 if (error) {
                     mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
@@ -134,8 +128,8 @@ const BookingForm = () => {
                     return (
                         <Result
                             status="success"
-                            title="Registration Confirmed"
-                            subTitle="We've sent you a confirmation email where you can manage your enrolment. We can't wait to see you at the start of term!"
+                            title="Enrolment Confirmed"
+                            subTitle="We've sent you a confirmation email, as well as an email where you can manage your enrolment. We can't wait to see you at the start of term!"
                         />
                     )
                 }

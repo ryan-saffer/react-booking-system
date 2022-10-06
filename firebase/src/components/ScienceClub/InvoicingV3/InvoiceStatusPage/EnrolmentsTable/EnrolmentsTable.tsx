@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { FunctionsResult, InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
+import { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Table, Tag, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { CloseCircleOutlined, CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons'

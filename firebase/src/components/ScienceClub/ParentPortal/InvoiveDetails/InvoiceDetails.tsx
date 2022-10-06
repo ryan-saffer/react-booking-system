@@ -29,11 +29,12 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                                 return <InvoiceStatistic invoice={invoiceService.result} status="UNPAID" />
                             default:
                                 return (
-                                    // TODO: Confirm if price is term price, or weekly price.
-                                    // NOTE: Changing to weekly will require change in acuity appointmen type.
                                     <>
                                         <p>Invoice not yet sent.</p>
-                                        <p>The price for the full term is ${appointment.price}.</p>
+                                        <p>
+                                            The price for {appointment.appointments.length} weeks is $
+                                            {parseInt(appointment.price) * appointment.appointments.length}
+                                        </p>
                                     </>
                                 )
                         }
