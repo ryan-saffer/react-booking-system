@@ -3,16 +3,16 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { makeStyles } from '@material-ui/core'
 import { Spin } from 'antd'
 
-const antIcon = <LoadingOutlined style={{ fontSize: 48 }} spin />
-
 type Props = {
     className?: string
     style?: React.CSSProperties
+    fontSize?: number
 }
 
-const Loader: React.FC<Props> = ({ className, style }) => {
+const Loader: React.FC<Props> = ({ className, style, fontSize }) => {
     const classes = useStyles()
 
+    const antIcon = <LoadingOutlined style={{ fontSize: fontSize ?? 48 }} spin />
     return (
         <div className={`${classes.loading} ${className}`} style={style}>
             <Spin indicator={antIcon} />

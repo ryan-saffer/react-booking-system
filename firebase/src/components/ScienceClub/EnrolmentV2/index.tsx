@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Acuity } from 'fizz-kidz'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
@@ -7,7 +7,6 @@ import * as logo from '../../../drawables/fizz-logo.png'
 import Loading from './Loading'
 import Footer from './Footer'
 import { Success, Error as ErrorResult } from './Result'
-import Firebase, { FirebaseContext } from '../../Firebase'
 import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
 
 /**
@@ -18,8 +17,6 @@ import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
  */
 const EnrolmentPage = () => {
     const classes = useStyles()
-
-    const firebase = useContext(FirebaseContext) as Firebase
 
     const base64String = window.location.search
     let queryParams = Buffer.from(base64String, 'base64').toString('utf8')

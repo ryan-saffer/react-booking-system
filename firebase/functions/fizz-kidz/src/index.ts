@@ -7,7 +7,7 @@ export { AdditionsDisplayValuesMapPrices } from './booking/AdditionsDisplayValue
 export { AdditionsDisplayValuesMap } from './booking/AdditionsDisplayValuesMap'
 export { Locations } from './booking/Locations'
 export { Booking, FormBooking, FirestoreBooking, FormBookingFields, BookingFields } from './booking/Booking'
-//#endregion 
+//#endregion
 
 //#region Acuity
 export * as Acuity from './acuity'
@@ -22,7 +22,7 @@ export * from './scienceclub/invoicing'
 //#endregion
 
 //#region Firebase
-export { FirebaseFunctions } from './firebase/functions'
+export * from './firebase/functions'
 
 export * from './firebase/service'
 //#endregion
