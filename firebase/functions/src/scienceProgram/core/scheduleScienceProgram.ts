@@ -122,7 +122,6 @@ export default async function scheduleScienceProgram(
                     childName: input.child.firstName,
                     className: input.className,
                     portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
-                    location: calendar.description,
                 })
                 appointment.emails.portalLinkEmailSent = true
                 await newDoc.set(appointment, { merge: true })
