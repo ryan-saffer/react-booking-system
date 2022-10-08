@@ -75,7 +75,7 @@ export default async function scheduleScienceProgram(
             signatures: appointments.reduce((accumulator, value) => ({ ...accumulator, [value.id]: '' }), {}),
         }
 
-        await newDoc.set({ ...appointment })
+        await newDoc.set(appointment)
 
         // send the confirmation email
         const mailClient = new MailClient()
@@ -124,11 +124,15 @@ export default async function scheduleScienceProgram(
                     portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
                     location: calendar.description,
                 })
+                appointment.emails.portalLinkEmailSent = true
+                await newDoc.set(appointment, { merge: true })
             } catch (err) {
+                console.error(err)
                 throw new functions.https.HttpsError('ok', 'error sending portal email after successfull booking', err)
             }
         }
     } catch (err) {
+        console.error(err)
         throw new functions.https.HttpsError('internal', 'error schedulding into science program', err)
     }
 }

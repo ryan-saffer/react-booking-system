@@ -28,7 +28,7 @@
     "craco-antd": "^2.0.0",
     "date-fns": "^2.14.0",
     "dateformat": "^3.0.3",
-    "firebase": "^7.15.3",
+    "firebase": "^9.10.0",
     "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
     "luxon": "^2.4.0",

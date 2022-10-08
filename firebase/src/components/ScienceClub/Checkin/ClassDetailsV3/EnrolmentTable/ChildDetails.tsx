@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
-import { Button, Descriptions, Dropdown, Menu, MenuProps, Space, Tag } from 'antd'
+import { Button, Descriptions, Dropdown, Menu, MenuProps, Space, Tag, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT, SetAppointmentLabel } from './EnrolmentTable'
@@ -94,6 +94,9 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                         </Button>
                     </Descriptions.Item>
                 )}
+                {enrolment.child.allergies && (
+                    <Descriptions.Item label="Allergies:">{enrolment.child.allergies}</Descriptions.Item>
+                )}
                 <Descriptions.Item label="Parent Name:">
                     {enrolment.parent.firstName} {enrolment.parent.lastName}
                 </Descriptions.Item>
@@ -111,8 +114,19 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 <Descriptions.Item label="Emergency Contact Phone:">
                     {enrolment.emergencyContact.phone}
                 </Descriptions.Item>
+                {enrolment.signatures[appointment.id] && (
+                    <Descriptions.Item label="Signature">
+                        <div className={classes.signatureWrapper}>
+                            {<img className={classes.signature} src={enrolment.signatures[appointment.id].signature} />}
+                            <Typography.Text>
+                                {enrolment.signatures[appointment.id].pickupPerson} -{' '}
+                                {new Date(enrolment.signatures[appointment.id].timestamp).toLocaleString()}
+                            </Typography.Text>
+                        </div>
+                    </Descriptions.Item>
+                )}
             </Descriptions>
-            <Dropdown placement="bottomRight" overlay={menu} trigger={['click', 'hover']}>
+            <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
                 <div className={classes.dropdownBtn}>
                     <Button loading={loading}>
                         <Space>
@@ -136,6 +150,14 @@ const useStyles = makeStyles({
     dropdownBtn: {
         float: 'right',
         paddingTop: 8,
+    },
+    signatureWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    signature: {
+        maxWidth: 300,
+        width: 'fit-content',
     },
 })
 

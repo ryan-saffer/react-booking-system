@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Button, message, Progress, Spin, Upload as AntdUpload } from 'antd'
+import React, { useContext, useState } from 'react'
+import { Button, message, Progress, Upload as AntdUpload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
+import type { RcFile, UploadFile } from 'antd/es/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import Firebase, { FirebaseContext } from '../../Firebase'
+import firebase from 'firebase/compat'
 
 type Props = {
     onSuccess: (filename: string) => void
@@ -57,7 +58,7 @@ const Upload: React.FC<Props> = ({ onSuccess }) => {
             (error: Error) => {
                 console.error('error', error)
                 setUploading(false)
-                message.error("Error occured during upload")
+                message.error('Error occured during upload')
             },
             () => {
                 setFileList([{ uid: file.uid, name: file.name }])
@@ -78,7 +79,9 @@ const Upload: React.FC<Props> = ({ onSuccess }) => {
                 customRequest={upload}
                 onRemove={onRemove}
             >
-                <Button icon={<UploadOutlined />} loading={deleting || uploading}>Press to Upload</Button>
+                <Button icon={<UploadOutlined />} loading={deleting || uploading}>
+                    Press to Upload
+                </Button>
             </AntdUpload>
             {uploading && <Progress percent={progress} />}
         </>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { makeStyles, Theme } from '@material-ui/core'
-import { Alert, Button, Card, Form, Input, message, Row, Tooltip, Typography } from 'antd'
+import { Button, Card, Form, Input, message, Row, Tooltip, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
@@ -89,13 +89,10 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                 }
             >
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Alert
-                        style={{ marginBottom: 12 }}
-                        type="info"
-                        message="You do not need to list yourself here"
-                        showIcon
-                    />
-                    <Typography.Text italic>Example: "John Smith - Grandfather"</Typography.Text>
+                    <Typography.Text strong>You do not need to list yourself here</Typography.Text>
+                    <Typography.Text italic style={{ marginTop: 12 }}>
+                        Example: "John Smith - Grandfather"
+                    </Typography.Text>
                 </div>
                 <Form
                     form={form}

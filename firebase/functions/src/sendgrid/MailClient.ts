@@ -93,6 +93,7 @@ export class MailClient {
                 return {
                     emailInfo: {
                         to,
+                        bcc: 'info@fizzkidz.com.au',
                         from: {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',

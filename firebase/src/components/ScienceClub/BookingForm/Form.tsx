@@ -322,7 +322,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                             age: form.getFieldValue('childAge'),
                             grade: form.getFieldValue('childGrade'),
                             allergies: form.getFieldValue('childAllergies') ?? '',
-                            isAnaphylactic: form.getFieldValue('childIsAnaphylactic') ?? false,
+                            isAnaphylactic: isAnaphylactic,
                             anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
                             permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
                         },

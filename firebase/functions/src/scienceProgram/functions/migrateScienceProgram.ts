@@ -6,6 +6,7 @@
 
 // const OldAppointmentTypesMap = {
 //     'Ripponlea Primary Science Club - Term 4, 2022': { appointmentTypeId: 37212413, calendarId: 6947379 },
+//     'Abbotsford Primary Science Club - Term 4, 2022': { appointmentTypeId: 37673757, calendarId: 6947379 },
 // }
 
 // function isValidParam(k: string): k is keyof typeof OldAppointmentTypesMap {
@@ -13,7 +14,7 @@
 // }
 
 // export const migrateScienceProgram = functions.region('australia-southeast1').https.onRequest(async (req, resp) => {
-//     const buffer = fs.readFileSync(path.join(__dirname, '..', 'data/schedule2022-09-21.csv'))
+//     const buffer = fs.readFileSync(path.join(__dirname, '..', 'data/schedule2022-10-07-abbotsford.csv'))
 //     const data = parse(buffer)
 
 //     for (const row of data) {
@@ -53,8 +54,7 @@
 //             childAllergies,
 //             permissionToPhotograph,
 //             emergencyContactName,
-//             // @ts-ignore
-//             _emergencyContactRelation,
+//             emergencyContactRelation,
 //             emergencyContactPhone,
 //             pickupPerson1,
 //             pickuperPerson2,
@@ -69,25 +69,33 @@
 
 //             await scheduleScienceProgram(
 //                 {
-//                     parentFirstName: firstName,
-//                     parentLastName: lastName,
-//                     parentEmail: email,
-//                     parentPhone: phone.startsWith("'+") ? phone.substring(2) : phone,
+//                     parent: {
+//                         firstName: firstName,
+//                         lastName: lastName,
+//                         email: email,
+//                         phone: phone.startsWith("'+") ? phone.substring(2) : phone,
+//                     },
 //                     appointmentTypeId: OldAppointmentTypesMap[type]['appointmentTypeId'],
 //                     calendarId: OldAppointmentTypesMap[type]['calendarId'],
-//                     childFirstName: childNames[0],
-//                     childLastName: childNames.length > 0 ? childNames[1] : '',
-//                     childAge: childAge,
-//                     childGrade: childGrade,
-//                     childAllergies: childAllergies,
-//                     childIsAnaphylactic: false,
-//                     emergencyContactName: emergencyContactName,
-//                     emergencyContactNumber: emergencyContactPhone,
-//                     anaphylaxisPlan: '',
-//                     permissionToPhotograph: permissionToPhotograph === 'Yes - I give permission',
+//                     child: {
+//                         firstName: childNames[0],
+//                         lastName: childNames.length > 0 ? childNames[1] || '' : '',
+//                         age: childAge,
+//                         grade: childGrade,
+//                         allergies: childAllergies,
+//                         isAnaphylactic: false,
+//                         anaphylaxisPlan: '',
+//                         permissionToPhotograph: permissionToPhotograph === 'Yes - I give permission',
+//                     },
+//                     emergencyContact: {
+//                         name: emergencyContactName,
+//                         relation: emergencyContactRelation,
+//                         phone: emergencyContactPhone,
+//                     },
 //                     className: type,
 //                     pickupPeople: [pickupPerson1, pickuperPerson2, pickuperPerson3].filter((it) => it !== ''),
 //                 },
+//                 false,
 //                 false
 //             )
 //         }

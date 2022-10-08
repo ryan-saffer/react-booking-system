@@ -66,6 +66,12 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
                     }),
                 ])
 
+                // DO NOT UNDERSTAND - OLD APPOINTMENT TYPES SNEAKING IN 👀
+                // once migrated 100%, this can be removed
+                const filteredAppointments = appointments.data.filter(
+                    (it) => it.appointmentTypeID === appointmentTypeId
+                )
+
                 let obj: { [key: string]: ScienceEnrolment } = {}
                 enrolments.docs.forEach((doc) => {
                     const enrolment = doc.data() as ScienceEnrolment
@@ -73,15 +79,15 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
                 })
 
                 // sort appointments by child name
-                appointments.data.sort((a, b) => {
+                filteredAppointments.sort((a, b) => {
                     const enrolment1 = getEnrolment(a, obj)
                     const enrolment2 = getEnrolment(b, obj)
-                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName)
+                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], { numeric: false })
                 })
 
                 setEnrolmentsMap(obj)
-                setAppointments(appointments.data)
-            } catch {
+                setAppointments(filteredAppointments)
+            } catch (err) {
                 setError(true)
             }
             setLoading(false)
