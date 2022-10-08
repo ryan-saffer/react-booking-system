@@ -9,11 +9,12 @@ interface UseFetchAppointmentsProps {
     appointmentTypeId: number
     calendarId: number
     classId: number
+    classTime?: string
     sorter?: (a: Acuity.Appointment, b: Acuity.Appointment) => 0 | 1 | -1
 }
 
 const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
-    const { setLoading, appointmentTypeId, calendarId, classId, sorter } = props
+    const { setLoading, appointmentTypeId, calendarId, classId, sorter, classTime } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
 
@@ -38,7 +39,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
                 })
         }
 
-        fetchClients({ appointmentTypeId, calendarId })
+        fetchClients({ appointmentTypeId, calendarId, classTime })
     }, [])
 
     return appointments

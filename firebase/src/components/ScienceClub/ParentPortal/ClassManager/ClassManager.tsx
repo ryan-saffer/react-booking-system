@@ -26,13 +26,11 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
                 <>
                     <Row className={classes.row}>
                         <Typography.Text className={classes.heading}>
-                            If {appointment.child.firstName} cannot attend on a given week, let us know by simply{' '}
-                            <strong>toggling off</strong> that week.
+                            If {appointment.child.firstName} cannot attend on a given week,{' '}
+                            <strong>let us know by toggling off that week.</strong> Otherwise, we will search for{' '}
+                            {appointment.child.firstName} far and wide!
                         </Typography.Text>
-                        <Typography.Text className={classes.heading}>
-                            Otherwise, we will search for {appointment.child.firstName} far and wide!
-                        </Typography.Text>
-                        <Typography.Text className={classes.heading} keyboard>
+                        <Typography.Text style={{ marginTop: 12 }} className={classes.heading} italic>
                             ℹ️ Please note, we do not offer credits or refunds for missed weeks.
                         </Typography.Text>
                         <List

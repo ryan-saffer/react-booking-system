@@ -1,9 +1,9 @@
 import * as config from '../../config'
-import firebase from 'firebase/app'
-require('firebase/auth')
-require('firebase/firestore')
-require('firebase/functions')
-require('firebase/storage')
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import 'firebase/compat/functions'
+import 'firebase/compat/storage'
 
 class Firebase {
     auth: firebase.auth.Auth
@@ -19,7 +19,7 @@ class Firebase {
         this.db = app.firestore()
         this.functions = app.functions('australia-southeast1')
         // if (process.env.NODE_ENV === 'development') {
-        //     this.functions.useFunctionsEmulator('http://localhost:5001')
+        //     this.functions.useEmulator('localhost', 5001)
         // }
         this.googleProvider = new firebase.auth.GoogleAuthProvider()
         this.storage = app.storage()

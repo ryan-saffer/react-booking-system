@@ -1,29 +1,29 @@
-import { AcuityClient } from '../../acuity/AcuityClient'
 import { db } from '../../init'
 import { onRequest } from '../../utilities'
-import { ScienceEnrolment, Acuity } from 'fizz-kidz'
+import { ScienceEnrolment } from 'fizz-kidz'
 import { MailClient } from '../../sendgrid/MailClient'
 import * as functions from 'firebase-functions'
 
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
+const CURRENT_APPOINTMENT_TYPE_ID = 123
+const CURRENT_LOCATION = 'TODO'
 /**
  * Sends an email to enrolments for this term with their portal url
  */
 export const sendPortalLinks = onRequest<'sendPortalLinks'>(async (req, resp) => {
     try {
-        const acuityClient = new AcuityClient()
-        const appointmentTypes = await acuityClient.getAppointmentTypes()
-        let scienceAppointmentTypes = appointmentTypes.filter(
-            (it) => it.category === (env === 'prod' ? 'Science Club' : 'TEST')
-        )
+        // const acuityClient = new AcuityClient()
+        // const appointmentTypes = await acuityClient.getAppointmentTypes()
+        // let scienceAppointmentTypes = appointmentTypes.filter((it) => it.id === CURRENT_APPOINTMENT_TYPE_ID)
 
+        await _sendPortalLinks(CURRENT_APPOINTMENT_TYPE_ID)
         // batch in groups of 10 (max number supported by firestore 'in' query)
-        const chunkSize = 10
-        for (let i = 0; i < scienceAppointmentTypes.length; i += chunkSize) {
-            const chunk = scienceAppointmentTypes.slice(i, i + chunkSize)
-            await _sendPortalLinks(chunk)
-        }
+        // const chunkSize = 10
+        // for (let i = 0; i < scienceAppointmentTypes.length; i += chunkSize) {
+        //     const chunk = scienceAppointmentTypes.slice(i, i + chunkSize)
+        //     await _sendPortalLinks(chunk)
+        // }
         resp.status(200).send()
     } catch (error) {
         functions.logger.error('error while sending science parent portal link email', error)
@@ -31,14 +31,10 @@ export const sendPortalLinks = onRequest<'sendPortalLinks'>(async (req, resp) =>
     }
 })
 
-async function _sendPortalLinks(appointmentTypeIds: Acuity.AppointmentType[]) {
+async function _sendPortalLinks(appointmentTypeId: number) {
     const appointmentsSnapshot = await db
         .collection('scienceAppointments')
-        .where(
-            'appointmentTypeId',
-            'in',
-            appointmentTypeIds.map((it) => it.id)
-        )
+        .where('appointmentTypeId', '==', appointmentTypeId)
         .where('status', '==', 'active')
         .where('emails.portalLinkEmailSent', '==', false)
         .get()
@@ -53,7 +49,7 @@ async function _sendPortalLinks(appointmentTypeIds: Acuity.AppointmentType[]) {
                 childName: appointment.child.firstName,
                 className: appointment.className,
                 portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
-                location: 'TODO',
+                location: CURRENT_LOCATION,
             })
             return appointment
         })

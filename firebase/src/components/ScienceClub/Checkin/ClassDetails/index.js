@@ -25,40 +25,50 @@ import StarIcon from '@material-ui/icons/StarOutlined'
 import { yellow } from '@material-ui/core/colors'
 import useFetchAppointments from '../../../Hooks/api/UseFetchAppointments'
 
-const ScienceClubCheckinClassDetails = props => {
-    
+const ScienceClubCheckinClassDetails = (props) => {
     const classes = useStyles()
 
-    const { height } = useWindowDimensions();
+    const { height } = useWindowDimensions()
 
     const [expanded, setExpanded] = useState(false)
     const [loading, setLoading] = useState(true)
     const [showHelpDialog, setShowHelpDialog] = useState(false)
 
     const queries = queryString.parse(props.location.search)
-    const appointmentTypeId = queries.appointmentTypeId
-    const calendarId = queries.calendarId
+    const appointmentTypeId = parseInt(queries.appointmentTypeId)
+    const calendarId = parseInt(queries.calendarId)
     const classId = parseInt(queries.classId)
+    const classTime = decodeURIComponent(queries.classTime)
     const calendarName = decodeURIComponent(queries.calendarName)
 
     const sortByChildName = (a, b) => {
-        const aName = Acuity.Utilities.retrieveFormAndField(a, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        const bName = Acuity.Utilities.retrieveFormAndField(b, Acuity.Constants.Forms.CHILD_DETAILS, Acuity.Constants.FormFields.CHILD_NAME)
-        return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+        const aName = Acuity.Utilities.retrieveFormAndField(
+            a,
+            Acuity.Constants.Forms.CHILD_DETAILS,
+            Acuity.Constants.FormFields.CHILD_NAME
+        )
+        const bName = Acuity.Utilities.retrieveFormAndField(
+            b,
+            Acuity.Constants.Forms.CHILD_DETAILS,
+            Acuity.Constants.FormFields.CHILD_NAME
+        )
+        return aName < bName ? -1 : aName > bName ? 1 : 0
     }
 
+    console.log(appointmentTypeId, calendarId, classId, classTime)
     const appointments = useFetchAppointments({
         setLoading,
         appointmentTypeId,
         calendarId,
         classId,
-        sorter: sortByChildName
+        classTime,
+        sorter: sortByChildName,
     })
 
     const navigateBack = () => {
         props.history.goBack()
     }
-    const handleClientSelectionChange = panel => (_, isExpanded) => {
+    const handleClientSelectionChange = (panel) => (_, isExpanded) => {
         setExpanded(isExpanded ? panel : false)
     }
 
@@ -70,37 +80,42 @@ const ScienceClubCheckinClassDetails = props => {
                     <IconButton edge="start" color="inherit" onClick={navigateBack}>
                         <ArrowBackIcon />
                     </IconButton>
-                    <Typography variant="h6" color='inherit'>
+                    <Typography variant="h6" color="inherit">
                         Children
                     </Typography>
                     <HelpOutlineIcon className={classes.helpIcon} onClick={() => setShowHelpDialog(true)} />
                 </Toolbar>
             </AppBar>
-            <Typography variant='h6' className={classes.calendarName}>
+            <Typography variant="h6" className={classes.calendarName}>
                 {calendarName}
             </Typography>
             <Divider />
-            {appointments !== null ? appointments.map(appointment => (
-                <ChildExpansionPanel
-                    key={appointment.id}
-                    appointment={appointment}
-                    onClientSelectionChange={handleClientSelectionChange}
-                    expanded={expanded}
-                />
-            )) : <Typography className={classes.noEnrolments} variant="h5">No one is enrolled</Typography>}
+            {appointments !== null ? (
+                appointments.map((appointment) => (
+                    <ChildExpansionPanel
+                        key={appointment.id}
+                        appointment={appointment}
+                        onClientSelectionChange={handleClientSelectionChange}
+                        expanded={expanded}
+                    />
+                ))
+            ) : (
+                <Typography className={classes.noEnrolments} variant="h5">
+                    No one is enrolled
+                </Typography>
+            )}
             {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
             <IconsDialog open={showHelpDialog} onClose={() => setShowHelpDialog(false)} />
         </div>
     )
 }
 
-const IconsDialog = props => {
-
+const IconsDialog = (props) => {
     const classes = useStyles()
 
     const { open, onClose } = props
 
-    const IconListItem = ({icon, text}) => (
+    const IconListItem = ({ icon, text }) => (
         <ListItem>
             <div>
                 <img src={icon} />
@@ -126,33 +141,35 @@ const IconsDialog = props => {
             </List>
         </Dialog>
     )
-
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     main: {
         position: 'absolute',
-        top: 0, right: 0, bottom: 0, left: 0
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
     },
     dialogTitle: {
-        paddingBottom: '0px'
+        paddingBottom: '0px',
     },
     list: {
         '& li': {
             display: 'grid',
-            gridTemplateColumns: '1fr 3fr'
+            gridTemplateColumns: '1fr 3fr',
         },
         '& div': {
             display: 'flex',
-            justifyContent: 'center'
-        }
+            justifyContent: 'center',
+        },
     },
     helpIcon: {
         position: 'absolute',
-        right: '24px'
+        right: '24px',
     },
     noEnrolments: {
         display: 'flex',
@@ -161,17 +178,16 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         width: '100%',
         position: 'absolute',
-        top: 0, left: 0,
+        top: 0,
+        left: 0,
         color: 'grey',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
     },
     calendarName: {
         textAlign: 'center',
         marginTop: 10,
-        marginBottom: 10
-    }
+        marginBottom: 10,
+    },
 }))
 
-export default compose(
-    withRouter,
-)(ScienceClubCheckinClassDetails)
+export default compose(withRouter)(ScienceClubCheckinClassDetails)

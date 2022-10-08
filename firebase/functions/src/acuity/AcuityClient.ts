@@ -45,13 +45,14 @@ export class AcuityClient {
         return Promise.all(ids.map((id) => this.getAppointment(id.toString())))
     }
 
-    searchForAppointments(params: Acuity.Client.FetchAppointmentsParams) {
+    async searchForAppointments(params: Acuity.Client.FetchAppointmentsParams) {
         let path = `/appointments?calendarID=${params.calendarId}&appointmenTypeID=${params.appointmentTypeId}`
         if (params.classTime) {
             const date = params.classTime.split('T')[0]
             path += `&minDate=${date}&maxDate=${date}`
         }
-        return this._request<Acuity.Appointment[]>(path)
+        const result = await this._request<Acuity.Appointment[]>(path)
+        return result.filter((it) => it.appointmentTypeID === params.appointmentTypeId)
     }
 
     getAppointmentTypes() {

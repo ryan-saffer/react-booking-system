@@ -14,7 +14,7 @@
     "test": "mocha --reporter spec"
   },
   "engines": {
-    "node": "10"
+    "node": "16"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -24,7 +24,7 @@
     "acuityscheduling": "^0.1.9",
     "copyfiles": "^2.4.1",
     "firebase-admin": "^8.13.0",
-    "firebase-functions": "^3.14.1",
+    "firebase-functions": "^3.24.1",
     "fizz-kidz": "file:fizz-kidz",
     "googleapis": "^41.0.1",
     "luxon": "^2.4.0",

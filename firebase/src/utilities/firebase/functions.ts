@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from 'firebase/compat'
 import Firebase from '../../components/Firebase'
 import { FirebaseFunctions, Acuity } from 'fizz-kidz'
 

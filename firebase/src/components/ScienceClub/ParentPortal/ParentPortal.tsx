@@ -10,6 +10,7 @@ import PickupPeople from './PickupPeople/PickupPeople'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { MixpanelEvents } from '../../Mixpanel/Events'
+import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 
 type Params = {
     id: string
@@ -21,6 +22,7 @@ const ParentPortal: React.FC = () => {
     const { id } = useParams<Params>()
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
+    const { width } = useWindowDimensions()
 
     const service = useFetchScienceAppointment(id)
 
@@ -37,7 +39,9 @@ const ParentPortal: React.FC = () => {
             })
             return (
                 <div className={classes.root}>
-                    <Typography.Title level={2}>Hi {appointment.parent.firstName} 👋</Typography.Title>
+                    <Typography.Title level={width > 450 ? 2 : 3}>
+                        Hi {appointment.parent.firstName} 👋
+                    </Typography.Title>
                     <Typography.Text strong>
                         Use this portal to manage your Fizz Kidz science program enrolment.
                     </Typography.Text>

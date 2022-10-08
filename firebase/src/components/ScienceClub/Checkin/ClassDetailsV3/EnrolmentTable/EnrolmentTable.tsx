@@ -90,8 +90,8 @@ const EnrolmentTable: React.FC<Props> = ({
     }
 
     const updateAppointment = (newApt: Acuity.Appointment) => {
-        setAppointments(
-            appointments.map((existingApt) => {
+        setAppointments((oldAppointments) =>
+            oldAppointments.map((existingApt) => {
                 if (newApt.id === existingApt.id) {
                     return newApt
                 }
@@ -104,9 +104,18 @@ const EnrolmentTable: React.FC<Props> = ({
         const cols: any = []
         cols.push({
             title: 'Child Name',
-            dataIndex: 'enrolment',
+            dataIndex: 'acuityAppointment',
             key: 'childName',
-            render: (enrolment: ScienceEnrolment) => `${enrolment.child.firstName} ${enrolment.child.lastName}`,
+            render: (appointment: Acuity.Appointment) => {
+                const enrolment = getEnrolment(appointment, enrolmentsMap)
+                const name = `${enrolment.child.firstName} ${enrolment.child.lastName}`
+                const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
+                if (notAttending) {
+                    return <del>{name}</del>
+                } else {
+                    return name
+                }
+            },
         })
 
         if (width > BREAKPOINT) {
@@ -138,7 +147,7 @@ const EnrolmentTable: React.FC<Props> = ({
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
                 const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
                 if (notAttending) {
-                    return <Tag color="red">NOT ATTENDING</Tag>
+                    return <Tag color="purple">NOT ATTENDING</Tag>
                 }
                 return (
                     <span>
