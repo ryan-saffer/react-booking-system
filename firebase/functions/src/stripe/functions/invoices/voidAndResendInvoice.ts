@@ -1,7 +1,7 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
 import Stripe from 'stripe'
-import { PriceWeekMap, ScienceEnrolment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceEnrolment, SendInvoiceParams } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
@@ -14,8 +14,8 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
 })
 
-export const voidAndResendInvoiceV2 = onCall<'voidAndResendInvoiceV2'>(
-    async (input: SendInvoiceParamsV2, _context: functions.https.CallableContext) => {
+export const voidAndResendInvoice = onCall<'voidAndResendInvoice'>(
+    async (input: SendInvoiceParams, _context: functions.https.CallableContext) => {
         const { id, price } = input
 
         // 1. get appointment

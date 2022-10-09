@@ -3,14 +3,14 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import { TableCell, LinearProgress, Chip, Button, makeStyles } from '@material-ui/core'
 import { green, orange, red, blue } from '@material-ui/core/colors'
 
-import { Acuity, PriceWeekMap } from 'fizz-kidz'
+import { Acuity, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import Firebase from '../../../Firebase'
 import { FirebaseContext } from '../../../Firebase'
 import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatus'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 interface InvoiceStatusProps extends ConfirmationDialogProps {
-    appointment: Acuity.Appointment
+    appointment: ScienceEnrolment
     setEnrolmentStatus: React.Dispatch<React.SetStateAction<Acuity.Client.ContinuingOption>>
     setEmailSent: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -25,21 +25,11 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
 
     const sendInvoice = (price: string) => {
         setService({ status: 'loading' })
-        const childName = Acuity.Utilities.retrieveFormAndField(
-            appointment,
-            Acuity.Constants.Forms.CHILD_DETAILS,
-            Acuity.Constants.FormFields.CHILD_NAME
-        )
         callFirebaseFunction(
             'sendInvoice',
             firebase
         )({
-            email: appointment.email,
-            name: `${appointment.firstName} ${appointment.lastName}`,
-            phone: appointment.phone,
-            childName: childName,
-            invoiceItem: `${childName} - ${appointment.type} - ${PriceWeekMap[price]} Weeks`,
-            appointmentTypeId: appointment.appointmentTypeID,
+            id: appointment.id,
             price: price,
         })
             .then((result) => {
@@ -114,7 +104,7 @@ const InvoiceStatusWithAction: React.FC<InvoiceStatusProps> = (props) => {
                                 onClick={() =>
                                     showConfirmationDialog({
                                         dialogTitle: 'Send Invoice',
-                                        dialogContent: `Select the amount you'd like to invoice ${appointment.firstName}`,
+                                        dialogContent: `Select the amount you'd like to invoice ${appointment.parent.firstName}`,
                                         confirmationButtonText: 'Send Invoice',
                                         listItems: {
                                             title: 'Invoice Price',

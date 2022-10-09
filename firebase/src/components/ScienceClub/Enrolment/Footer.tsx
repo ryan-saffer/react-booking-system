@@ -4,15 +4,14 @@ import LanguageIcon from '@material-ui/icons/Language'
 import InstagramIcon from '@material-ui/icons/Instagram'
 
 const Footer = () => {
-
     const classes = useStyles()
 
     return (
         <div className={classes.footer}>
-            <IconButton onClick={() => window.location.href = 'https://www.fizzkidz.com.au'}>
+            <IconButton onClick={() => (window.location.href = 'https://www.fizzkidz.com.au')}>
                 <LanguageIcon />
             </IconButton>
-            <IconButton onClick={() => window.location.href = 'https://www.instagram.com/fizzkidzz'}>
+            <IconButton onClick={() => (window.location.href = 'https://www.instagram.com/fizzkidzz')}>
                 <InstagramIcon />
             </IconButton>
         </div>
@@ -34,10 +33,10 @@ const useStyles = makeStyles({
             height: 40,
             padding: 30,
             '&:hover': {
-                color: 'green'
-            }
-        }
-    }
+                color: 'green',
+            },
+        },
+    },
 })
 
 export default Footer

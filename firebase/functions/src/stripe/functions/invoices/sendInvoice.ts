@@ -1,17 +1,17 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
-import { PriceWeekMap, ScienceEnrolment, SendInvoiceParamsV2 } from 'fizz-kidz'
+import { PriceWeekMap, ScienceEnrolment, SendInvoiceParams } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db } from '../../../init'
-import { sendInvoice } from '../../core/invoicing'
+import { sendInvoice as _sendInvoice } from '../../core/invoicing'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
         ? StripeConfig.PROD_CONFIG
         : StripeConfig.DEV_CONFIG
 
-export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
-    async (input: SendInvoiceParamsV2, _context: functions.https.CallableContext) => {
+export const sendInvoice = onCall<'sendInvoice'>(
+    async (input: SendInvoiceParams, _context: functions.https.CallableContext) => {
         const { id, price } = input
 
         try {
@@ -20,7 +20,7 @@ export const sendInvoiceV2 = onCall<'sendInvoiceV2'>(
             const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
 
             // 2. send invoice
-            const invoice = await sendInvoice({
+            const invoice = await _sendInvoice({
                 firstName: appointment.parent.firstName,
                 lastName: appointment.parent.lastName,
                 email: appointment.parent.email,

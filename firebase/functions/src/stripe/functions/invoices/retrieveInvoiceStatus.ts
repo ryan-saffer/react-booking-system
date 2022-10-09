@@ -1,7 +1,7 @@
 import * as StripeConfig from '../../../config/stripe'
 import * as functions from 'firebase-functions'
 import Stripe from 'stripe'
-import { RetrieveInvoiceStatusParamsV2, ScienceEnrolment } from 'fizz-kidz'
+import { RetrieveInvoiceStatusParams, ScienceEnrolment } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
 import { db } from '../../../init'
 const stripeConfig =
@@ -12,8 +12,8 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
 })
 
-export const retrieveInvoiceStatusV2 = onCall<'retrieveInvoiceStatusV2'>(
-    async (data: RetrieveInvoiceStatusParamsV2, _context: functions.https.CallableContext) => {
+export const retrieveInvoiceStatus = onCall<'retrieveInvoiceStatus'>(
+    async (data: RetrieveInvoiceStatusParams, _context: functions.https.CallableContext) => {
         const { appointmentId } = data
 
         const appointment = (
