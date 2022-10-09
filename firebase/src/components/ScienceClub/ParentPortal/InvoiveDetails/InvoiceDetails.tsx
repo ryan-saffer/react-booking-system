@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScienceEnrolment } from 'fizz-kidz'
-import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatusV2'
+import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatus'
 import { Card, Typography } from 'antd'
 import Loader from '../../shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'

@@ -7,14 +7,12 @@ import * as logo from '../../../drawables/fizz-logo.png'
 import Loading from './Loading'
 import Footer from './Footer'
 import { Success, Error as ErrorResult } from './Result'
-import useAcuityClient from '../../Hooks/api/UseAcuityClient'
+import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
 
 /**
- * Page requires 4 URL query params:
+ * Page requires 2 URL query params:
  *
- * @param appointmentTypeId the id of the science class
- * @param email email of the parent
- * @param chilName childs name
+ * @param appointmentId the id of the science class
  * @param continuing either 'yes' if they want to continue with the term, or ''
  */
 const EnrolmentPage = () => {
@@ -23,27 +21,17 @@ const EnrolmentPage = () => {
     const base64String = window.location.search
     let queryParams = Buffer.from(base64String, 'base64').toString('utf8')
 
-    const email = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('email', queryParams) as string
-    const appointmentTypeId = parseInt(
-        useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('appointmentTypeId', queryParams) as string
-    )
-    const childName = useQueryParam<Acuity.Client.UpdateScienceEnrolmentParams>('childName', queryParams) as string
-    const continuing = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
+    const appointmentId = useQueryParam<any>('appointmentId', queryParams) as string
+    const continuingWithTerm = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
 
-    const service = useAcuityClient('updateEnrolment', {
-        email,
-        appointmentTypeId,
-        childName,
-        fieldId: Acuity.Constants.FormFields.CONTINUING_WITH_TERM,
-        value: continuing,
-    })
+    const service = useFirebaseFunction('updateScienceEnrolment', { id: appointmentId, continuingWithTerm })
 
     return (
         <div className={classes.main}>
             <img className={classes.logo} src={logo.default} />
             <Divider className={classes.divider} />
             {service.status === 'loading' && <Loading />}
-            {service.status === 'loaded' && <Success continuing={continuing} appointments={service.result} />}
+            {service.status === 'loaded' && <Success continuing={continuingWithTerm} appointment={service.result} />}
             {service.status === 'error' && <ErrorResult />}
             <Footer />
         </div>

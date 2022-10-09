@@ -1,15 +1,9 @@
 export interface RetrieveInvoiceStatusParams {
-    appointmentId: number
-}
-
-export interface RetrieveInvoiceStatusParamsV2 {
     appointmentId: string
 }
 
 // INVOICING
-export type InvoiceStatus =
-    | ExistingInvoice
-    | OtherInvoice
+export type InvoiceStatus = ExistingInvoice | OtherInvoice
 
 export type ExistingInvoice = {
     status: 'PAID' | 'UNPAID'
@@ -19,23 +13,12 @@ export type ExistingInvoice = {
 }
 
 type OtherInvoice = {
-    status: "NOT_SENT" | "UNSUPPORTED"
+    status: 'NOT_SENT' | 'UNSUPPORTED'
 }
 
 export interface SendInvoiceParams {
-    email: string,
-    name: string,
-    phone: string,
-    childName: string
-    invoiceItem: string,
-    appointmentTypeId: number,
-    price: string,
-    [key: string]: string | number
-}
-
-export interface SendInvoiceParamsV2 {
-    id: string,
-    price: string,
+    id: string
+    price: string
     [key: string]: string
 }
 
@@ -50,5 +33,5 @@ export const PriceWeekMap: { [key: string]: string } = {
     '96': '4',
     '72': '3',
     '48': '2',
-    '24': '1'
+    '24': '1',
 }

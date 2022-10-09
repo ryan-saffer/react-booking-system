@@ -7,7 +7,6 @@ interface EnrolementStatusCellProps {
 }
 
 const EnrolmentStatusCell: React.FC<EnrolementStatusCellProps> = ({ status }) => {
-
     const classes = useStyles()
 
     switch (status) {
@@ -34,14 +33,14 @@ const EnrolmentStatusCell: React.FC<EnrolementStatusCellProps> = ({ status }) =>
 
 const useStyles = makeStyles({
     enrolled: {
-        backgroundColor: '#78d462'
+        backgroundColor: '#78d462',
     },
     unenrolled: {
-        backgroundColor: '#ff8c8c'
+        backgroundColor: '#ff8c8c',
     },
     freeTrial: {
-        backgroundColor: '#ff9800'
-    }
+        backgroundColor: '#ff9800',
+    },
 })
 
 export default EnrolmentStatusCell

@@ -6,7 +6,7 @@ import { MailClient } from '../../sendgrid/MailClient'
 
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
-export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>(
+export const sendTermContinuationEmail = onCall<'sendTermContinuationEmail'>(
     async (input: SendTermContinuationEmailParams, _context: functions.https.CallableContext) => {
         const appointmentRef = db.collection('scienceAppointments').doc(input.appointmentId)
         const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
@@ -19,7 +19,7 @@ export const sendTermContinuationEmailV2 = onCall<'sendTermContinuationEmailV2'>
         const encodedUnenrollQueryParams = Buffer.from(unenrollQueryParams).toString('base64')
 
         let baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
-        baseUrl += '/science-club-enrolment-v2'
+        baseUrl += '/science-club-enrolment'
 
         try {
             await new MailClient().sendEmail('termContinuationEmail', appointment.parent.email, {

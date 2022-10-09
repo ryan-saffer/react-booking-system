@@ -38,7 +38,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar }) => {
         async function retrieveInvoiceStatuses() {
             const invoiceStatusesArray = await Promise.all(
                 enrolments.map((enrolment) =>
-                    callFirebaseFunction('retrieveInvoiceStatusV2', firebase)({ appointmentId: enrolment.id })
+                    callFirebaseFunction('retrieveInvoiceStatus', firebase)({ appointmentId: enrolment.id })
                 )
             )
             const invoiceStatuses: InvoiceStatusMap = {}
