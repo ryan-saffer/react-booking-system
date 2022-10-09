@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import useAcuityClient from '../../Hooks/api/UseAcuityClient'
 import Loader from '../shared/Loader'
@@ -24,6 +24,29 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 
     const classesService = useAcuityClient('classAvailability', { appointmentTypeId: appointmentType.id })
 
+    // Mixpanel Tracking
+    useEffect(() => {
+        if (classesService.status === 'loaded') {
+            if (classesService.result.length > 0) {
+                const spotsLeft = classesService.result[0].slotsAvailable
+                if (spotsLeft < 0) {
+                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_CLASS_FULL, {
+                        appointment_type: appointmentType.name,
+                    })
+                } else {
+                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_NO_CLASSES, {
+                        appointment_type: appointmentType.name,
+                    })
+                }
+            }
+        }
+        if (classesService.status === 'error') {
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_CLASSES, {
+                appointment_type: appointmentType.name,
+            })
+        }
+    }, [classesService])
+
     switch (classesService.status) {
         case 'loading':
             return <Loader className={classes.topMargin} />
@@ -43,9 +66,6 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 } else {
                     // no spots left
                     // this could be swapped out with a waiting list form in the future
-                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_CLASS_FULL, {
-                        appointment_type: appointmentType.name,
-                    })
                     return (
                         <Alert
                             className={classes.topMargin}
@@ -57,9 +77,6 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 }
             } else {
                 // no upcoming classes left
-                mixpanel.track(MixpanelEvents.SCIENCE_FORM_NO_CLASSES, {
-                    appointment_type: appointmentType.name,
-                })
                 return (
                     <Alert
                         className={classes.topMargin}
@@ -70,9 +87,6 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 )
             }
         default: // error
-            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_CLASSES, {
-                appointment_type: appointmentType.name,
-            })
             return (
                 <Alert
                     className={classes.topMargin}

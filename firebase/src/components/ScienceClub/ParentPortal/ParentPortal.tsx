@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { Divider, Result, Typography } from 'antd'
 import { useParams } from 'react-router-dom'
@@ -9,8 +9,8 @@ import Loader from '../shared/Loader'
 import PickupPeople from './PickupPeople/PickupPeople'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import useFirebase from '../../Hooks/context/UseFirebase'
-import { MixpanelEvents } from '../../Mixpanel/Events'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
+import { MixpanelEvents } from '../../Mixpanel/Events'
 
 type Params = {
     id: string
@@ -26,17 +26,29 @@ const ParentPortal: React.FC = () => {
 
     const service = useFetchScienceAppointment(id)
 
+    useEffect(() => {
+        if (service.status === 'loaded') {
+            const appointment = service.result
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_VIEW, {
+                // to know if its us or the parent viewing their portal
+                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
+                appointment_id: appointment,
+                id,
+            })
+        }
+        if (service.status === 'error') {
+            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_LOADING, {
+                appointment_id: id,
+            })
+        }
+    }, [service])
+
     switch (service.status) {
         case 'loading':
             return <Loader />
 
         case 'loaded':
             const appointment = service.result
-            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_VIEW, {
-                // to know if its us or the parent viewing their portal
-                distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
-                appointment_id: appointment.id,
-            })
             return (
                 <div className={classes.root}>
                     <Typography.Title level={width > 450 ? 2 : 3}>
@@ -55,9 +67,6 @@ const ParentPortal: React.FC = () => {
             )
 
         default: // error
-            mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_LOADING, {
-                appointment_id: id,
-            })
             return (
                 <div className={classes.error}>
                     <Result
