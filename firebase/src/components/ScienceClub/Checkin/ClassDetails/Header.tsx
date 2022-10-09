@@ -30,9 +30,6 @@ const Heading: React.FC<Props> = ({ time }) => {
                         <IconButton edge="start" color="inherit" onClick={() => history.goBack()}>
                             <ArrowBackIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit">
-                            Children
-                        </Typography>
                     </div>
                     <Typography variant="h6" color="inherit">
                         {formattedClass}

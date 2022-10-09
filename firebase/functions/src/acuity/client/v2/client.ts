@@ -43,7 +43,8 @@ export const client = functions
                     input = data.input as Acuity.Client.CheckCertificateParams
                     return checkCertificate(input)
                 case 'getAppointmentTypes':
-                    return await acuityClient.getAppointmentTypes()
+                    input = data.input as Acuity.Client.GetAppointmentTypesParams
+                    return await acuityClient.getAppointmentTypes(input)
                 case 'getAppointments':
                     input = data.input as Acuity.Client.GetAppointmentsParams
                     return await acuityClient.getAppointments(input.ids)
