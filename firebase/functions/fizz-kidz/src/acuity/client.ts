@@ -5,7 +5,7 @@ import { Class } from './types'
 export interface AcuityFunctions {
     searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
     getAppointments: Function<GetAppointmentsParams, Appointment[]>
-    getAppointmentTypes: Function<void, AppointmentType[]>
+    getAppointmentTypes: Function<GetAppointmentTypesParams, AppointmentType[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
@@ -24,6 +24,10 @@ export type FetchAppointmentsParams = {
 // For getting specific appointments by ids
 export type GetAppointmentsParams = {
     ids: number[]
+}
+
+export type GetAppointmentTypesParams = {
+    category?: string
 }
 
 export type ContinuingOption = 'yes' | 'no' | ''

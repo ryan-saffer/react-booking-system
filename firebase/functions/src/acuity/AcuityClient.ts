@@ -55,8 +55,12 @@ export class AcuityClient {
         return result.filter((it) => it.appointmentTypeID === params.appointmentTypeId)
     }
 
-    getAppointmentTypes() {
-        return this._request<Acuity.AppointmentType[]>(`/appointment-types`)
+    async getAppointmentTypes(input: Acuity.Client.GetAppointmentTypesParams) {
+        const appointmentTypes = await this._request<Acuity.AppointmentType[]>(`/appointment-types`)
+        if (input.category) {
+            return appointmentTypes.filter((it) => it.category === input.category)
+        }
+        return appointmentTypes
     }
 
     scheduleAppointment(body: ScheduleAppointmentParams) {

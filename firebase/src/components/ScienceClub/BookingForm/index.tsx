@@ -30,7 +30,7 @@ const BookingForm = () => {
         async function fetchAppointmentTypes() {
             try {
                 const [appointmentTypes, calendars] = await Promise.all([
-                    callAcuityClientV2('getAppointmentTypes', firebase)(),
+                    callAcuityClientV2('getAppointmentTypes', firebase)({}),
                     firebase.db.collection('acuityCalendars').get(),
                 ])
 
