@@ -51,6 +51,7 @@ const BookingForm = () => {
             } catch (err) {
                 console.error(err)
                 setError(true)
+                mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
             }
             setLoading(false)
         }
@@ -63,9 +64,11 @@ const BookingForm = () => {
         try {
             await callFirebaseFunction('scheduleScienceAppointment', firebase)(params)
             setSuccess(true)
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED)
         } catch (err) {
             console.error(err)
             setError(true)
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
         }
         setLoading(false)
     }
@@ -113,7 +116,6 @@ const BookingForm = () => {
             </Typography.Title>
             {(() => {
                 if (error) {
-                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
                     return (
                         <Result
                             status="500"
@@ -124,7 +126,6 @@ const BookingForm = () => {
                 }
 
                 if (success) {
-                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED)
                     return (
                         <Result
                             status="success"
