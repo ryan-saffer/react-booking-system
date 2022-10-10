@@ -55,7 +55,8 @@ const CustomerBookingScreen = () => {
                     process.env.REACT_APP_ENV === 'prod'
                         ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
                         : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
-                minDate: Date.now()
+                includeUnavailable: true,
+                minDate: Date.now(),
             })
                 .then((result) => {
                     console.log('succeeded')
@@ -211,7 +212,7 @@ const CustomerBookingScreen = () => {
     }
 
     return (
-        <Root color='pink' width='centered'>
+        <Root color="pink" width="centered">
             <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
                 Holiday Program Booking Form
             </Typography.Title>
@@ -243,7 +244,7 @@ const CustomerBookingScreen = () => {
                 footer={[
                     <Button type="primary" onClick={() => setShowNoChildrenModal(false)}>
                         Ok
-                    </Button>
+                    </Button>,
                 ]}
                 visible={showNoChildrenModal}
             >

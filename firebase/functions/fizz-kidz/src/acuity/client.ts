@@ -59,6 +59,7 @@ export type UpdateAppointmentParams = {
 
 export type ClassAvailabilityParams = {
     appointmentTypeId: number
+    includeUnavailable: boolean
     minDate?: number
 }
 

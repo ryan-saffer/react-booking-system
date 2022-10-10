@@ -71,10 +71,13 @@ export class AcuityClient {
         return this._request(`/appointments/${id}/cancel?admin=true`, { method: 'PUT' })
     }
 
-    getClasses(appointmentTypeId: number, minDate?: number) {
-        let path = `/availability/classes?appointmentTypeID=${appointmentTypeId}&includeUnavailable=true`
+    getClasses(appointmentTypeId: number, includeUnavailable: boolean, minDate?: number) {
+        let path = `/availability/classes?appointmentTypeID=${appointmentTypeId}`
         if (minDate) {
             path += `&minDate=${encodeURIComponent(new Date(minDate).toISOString())}`
+        }
+        if (includeUnavailable) {
+            path += `&includeUnavailable=true`
         }
         return this._request<Acuity.Class[]>(path)
     }

@@ -95,7 +95,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
         callAcuityClientV2(
             'classAvailability',
             firebase
-        )({ appointmentTypeId: id, minDate: Date.now() })
+        )({ appointmentTypeId: id, minDate: Date.now(), includeUnavailable: true })
             .then((result) => {
                 setClasses(result.data)
             })
@@ -119,7 +119,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                         <FormControl className={cssClasses.formControl} variant="outlined">
                             <Select
                                 id="programs-select"
-                                value={selectedAppointmentType}
+                                value={selectedAppointmentType?.id || ''}
                                 onChange={handleAppointmentTypeChange}
                                 disabled={appointmentTypes.length === 0}
                             >
@@ -142,7 +142,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                         <FormControl className={cssClasses.formControl} variant="outlined">
                             <Select
                                 id="classes-select"
-                                value={selectedClass}
+                                value={selectedClass?.id || ''}
                                 onChange={handleClassChange}
                                 disabled={classes.length === 0}
                             >

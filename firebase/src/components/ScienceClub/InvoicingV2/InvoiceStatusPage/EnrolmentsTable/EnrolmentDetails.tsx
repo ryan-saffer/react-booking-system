@@ -15,7 +15,9 @@ const EnrolmentDetails: React.FC<Props> = ({ enrolment }) => {
         <Descriptions className={classes.description} bordered size="small" column={1}>
             <Descriptions.Item label="Parent Phone">{enrolment.parent.phone}</Descriptions.Item>
             <Descriptions.Item label="Parent Email">{enrolment.parent.email}</Descriptions.Item>
-            <Descriptions.Item label="Child Name">{enrolment.child.age}</Descriptions.Item>
+            <Descriptions.Item label="Child Name">
+                {enrolment.child.firstName} {enrolment.child.lastName}
+            </Descriptions.Item>
             <Descriptions.Item label="Child Grade">{enrolment.child.grade}</Descriptions.Item>
             <Descriptions.Item label="Child Age">{enrolment.child.age}</Descriptions.Item>
         </Descriptions>

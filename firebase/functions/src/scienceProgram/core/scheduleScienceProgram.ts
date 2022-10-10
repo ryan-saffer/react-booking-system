@@ -43,7 +43,7 @@ export default async function scheduleScienceProgram(
         }
 
         // schedule into all appointments of the program, along with the document id
-        const classes = await acuityClient.getClasses(input.appointmentTypeId, Date.now())
+        const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
         const appointments = await Promise.all(
             classes.map((it) =>
                 acuityClient.scheduleAppointment({
