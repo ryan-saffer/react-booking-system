@@ -38,7 +38,11 @@ export const client = functions
                     return await acuityClient.updateAppointment(input)
                 case 'classAvailability':
                     input = data.input as Acuity.Client.ClassAvailabilityParams
-                    return await acuityClient.getClasses(input.appointmentTypeId, input.minDate)
+                    return await acuityClient.getClasses(
+                        input.appointmentTypeId,
+                        input.includeUnavailable,
+                        input.minDate
+                    )
                 case 'checkCertificate':
                     input = data.input as Acuity.Client.CheckCertificateParams
                     return checkCertificate(input)

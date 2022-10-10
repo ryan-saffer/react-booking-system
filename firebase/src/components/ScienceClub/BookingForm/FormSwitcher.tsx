@@ -22,7 +22,10 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 
     const mixpanel = useMixpanel()
 
-    const classesService = useAcuityClient('classAvailability', { appointmentTypeId: appointmentType.id })
+    const classesService = useAcuityClient('classAvailability', {
+        appointmentTypeId: appointmentType.id,
+        includeUnavailable: false,
+    })
 
     // Mixpanel Tracking
     useEffect(() => {

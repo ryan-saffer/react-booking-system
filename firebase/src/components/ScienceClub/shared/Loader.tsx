@@ -6,13 +6,23 @@ import { Spin } from 'antd'
 type Props = {
     className?: string
     style?: React.CSSProperties
-    fontSize?: number
+    size?: 'sm' | 'lg'
 }
 
-const Loader: React.FC<Props> = ({ className, style, fontSize }) => {
+const defaultProps: Props = {
+    size: 'lg',
+}
+
+const Loader: React.FC<Props> = (_props) => {
+    const props = {
+        ...defaultProps,
+        ..._props,
+    }
+
+    const { className, style, size } = props
     const classes = useStyles()
 
-    const antIcon = <LoadingOutlined style={{ fontSize: fontSize ?? 48 }} spin />
+    const antIcon = <LoadingOutlined style={{ fontSize: size === 'sm' ? 24 : 48 }} spin />
     return (
         <div className={`${classes.loading} ${className}`} style={style}>
             <Spin indicator={antIcon} />

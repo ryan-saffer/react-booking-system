@@ -30,7 +30,7 @@ const InvoiceStatusCell: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => 
         }
         return <Tag color={colour}>{text}</Tag>
     }
-    return <Loader fontSize={24} />
+    return <Loader size="sm" />
 }
 
 export default InvoiceStatusCell
