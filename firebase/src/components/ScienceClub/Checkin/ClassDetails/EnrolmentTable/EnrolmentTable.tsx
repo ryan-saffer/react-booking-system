@@ -8,8 +8,11 @@ import ActionButton from './ActionButton'
 import { EnrolmentsMap, getEnrolment } from '..'
 import { callAcuityClientV2, callFirebaseFunction } from '../../../../../utilities/firebase/functions'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
+import { makeStyles } from '@material-ui/core'
 
-export const BREAKPOINT = 540
+const BREAKPOINT_SM = 370
+export const BREAKPOINT_MD = 420
+export const BREAKPOINT_LG = 540
 
 type Props = {
     appointments: Acuity.Appointment[]
@@ -38,6 +41,7 @@ const EnrolmentTable: React.FC<Props> = ({
 }) => {
     const firebase = useFirebase()
     const { width } = useWindowDimensions()
+    const classes = useStyles()
 
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
@@ -118,7 +122,7 @@ const EnrolmentTable: React.FC<Props> = ({
             },
         })
 
-        if (width > BREAKPOINT) {
+        if (width > BREAKPOINT_LG) {
             cols.push({
                 title: 'Child Age',
                 dataIndex: 'enrolment',
@@ -189,6 +193,7 @@ const EnrolmentTable: React.FC<Props> = ({
 
     return (
         <Table
+            className={width < BREAKPOINT_SM ? classes.table : ''}
             bordered
             pagination={false}
             size="small"
@@ -218,5 +223,19 @@ const EnrolmentTable: React.FC<Props> = ({
         />
     )
 }
+
+const useStyles = makeStyles({
+    table: {
+        '& h5': {
+            fontSize: 14,
+        },
+        '& th, td': {
+            fontSize: 12,
+        },
+        '& .ant-tag': {
+            fontSize: 10,
+        },
+    },
+})
 
 export default EnrolmentTable
