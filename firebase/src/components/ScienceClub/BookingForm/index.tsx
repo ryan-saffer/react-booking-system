@@ -12,12 +12,13 @@ import useMixpanel from '../../Hooks/context/UseMixpanel'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { MixpanelEvents } from '../../Mixpanel/Events'
 
+export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
+
 const BookingForm = () => {
     const classes = useStyles()
 
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
-    console.log(mixpanel)
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -51,7 +52,7 @@ const BookingForm = () => {
             } catch (err) {
                 console.error(err)
                 setError(true)
-                mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
+                mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_FORM)
             }
             setLoading(false)
         }
@@ -61,14 +62,18 @@ const BookingForm = () => {
 
     const handleSubmit = async (params: ScheduleScienceAppointmentParams) => {
         setLoading(true)
+        const mixpanelProps = {
+            appointment_type: params.className,
+            parent_email: params.parent.email,
+        }
         try {
             await callFirebaseFunction('scheduleScienceAppointment', firebase)(params)
             setSuccess(true)
-            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED)
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED, mixpanelProps)
         } catch (err) {
             console.error(err)
             setError(true)
-            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_APT_TYPES)
+            mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_SUBMITTING_FORM, mixpanelProps)
         }
         setLoading(false)
     }

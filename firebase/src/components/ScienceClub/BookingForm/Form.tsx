@@ -6,13 +6,14 @@ import { PhoneRule, SimpleTextRule } from '../../HolidayPrograms/CustomerBooking
 import Upload from './Upload'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import TermsAndConditions from './TermsAndConditions'
+import { FormSubmission } from '.'
 const { Text } = Typography
 const { Option } = Select
 const { TextArea } = Input
 
 type Props = {
     appointmentType: Acuity.AppointmentType
-    onSubmit: (params: ScheduleScienceAppointmentParams) => void
+    onSubmit: FormSubmission
 }
 
 const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
@@ -28,6 +29,40 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
+
+    const handleSubmit = async () => {
+        await form.validateFields()
+        setLoading(true)
+        onSubmit({
+            appointmentTypeId: appointmentType.id,
+            calendarId: appointmentType.calendarIDs[0],
+            parent: {
+                firstName: form.getFieldValue('parentFirstName'),
+                lastName: form.getFieldValue('parentLastName'),
+                phone: form.getFieldValue('parentPhone'),
+                email: form.getFieldValue('parentEmail'),
+            },
+            child: {
+                firstName: form.getFieldValue('childFirstName'),
+                lastName: form.getFieldValue('childLastName'),
+                age: form.getFieldValue('childAge'),
+                grade: form.getFieldValue('childGrade'),
+                allergies: form.getFieldValue('childAllergies') ?? '',
+                isAnaphylactic: isAnaphylactic,
+                anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
+                permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
+            },
+            emergencyContact: {
+                name: form.getFieldValue('emergencyContactName'),
+                relation: form.getFieldValue('emergencyContactRelation'),
+                phone: form.getFieldValue('emergencyContactNumber'),
+            },
+            className: appointmentType.name,
+            pickupPeople: form.getFieldValue('pickupPeople')
+                ? form.getFieldValue('pickupPeople').map((person: any) => person.pickupPerson)
+                : [],
+        })
+    }
 
     return (
         <>
@@ -303,40 +338,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 loading={loading}
                 type="primary"
                 size="large"
-                onClick={async () => {
-                    await form.validateFields()
-                    setLoading(true)
-                    onSubmit({
-                        appointmentTypeId: appointmentType.id,
-                        calendarId: appointmentType.calendarIDs[0],
-                        parent: {
-                            firstName: form.getFieldValue('parentFirstName'),
-
-                            lastName: form.getFieldValue('parentLastName'),
-                            phone: form.getFieldValue('parentPhone'),
-                            email: form.getFieldValue('parentEmail'),
-                        },
-                        child: {
-                            firstName: form.getFieldValue('childFirstName'),
-                            lastName: form.getFieldValue('childLastName'),
-                            age: form.getFieldValue('childAge'),
-                            grade: form.getFieldValue('childGrade'),
-                            allergies: form.getFieldValue('childAllergies') ?? '',
-                            isAnaphylactic: isAnaphylactic,
-                            anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
-                            permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
-                        },
-                        emergencyContact: {
-                            name: form.getFieldValue('emergencyContactName'),
-                            relation: form.getFieldValue('emergencyContactRelation'),
-                            phone: form.getFieldValue('emergencyContactNumber'),
-                        },
-                        className: appointmentType.name,
-                        pickupPeople: form.getFieldValue('pickupPeople')
-                            ? form.getFieldValue('pickupPeople').map((person: any) => person.pickupPerson)
-                            : [],
-                    })
-                }}
+                onClick={handleSubmit}
             >
                 Enrol
             </Button>
