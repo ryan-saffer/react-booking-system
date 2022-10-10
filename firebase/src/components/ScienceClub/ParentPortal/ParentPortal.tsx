@@ -32,8 +32,7 @@ const ParentPortal: React.FC = () => {
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_VIEW, {
                 // to know if its us or the parent viewing their portal
                 distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,
-                appointment_id: appointment,
-                id,
+                appointment: appointment.className,
             })
         }
         if (service.status === 'error') {

@@ -7,10 +7,11 @@ import { makeStyles } from '@material-ui/core'
 import { Alert, Typography } from 'antd'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '../../Mixpanel/Events'
+import { FormSubmission } from '.'
 
 type Props = {
     appointmentType: Acuity.AppointmentType
-    onSubmit: (params: ScheduleScienceAppointmentParams) => void
+    onSubmit: FormSubmission
 }
 
 /**
@@ -36,11 +37,11 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     mixpanel.track(MixpanelEvents.SCIENCE_FORM_CLASS_FULL, {
                         appointment_type: appointmentType.name,
                     })
-                } else {
-                    mixpanel.track(MixpanelEvents.SCIENCE_FORM_NO_CLASSES, {
-                        appointment_type: appointmentType.name,
-                    })
                 }
+            } else {
+                mixpanel.track(MixpanelEvents.SCIENCE_FORM_NO_CLASSES, {
+                    appointment_type: appointmentType.name,
+                })
             }
         }
         if (classesService.status === 'error') {
