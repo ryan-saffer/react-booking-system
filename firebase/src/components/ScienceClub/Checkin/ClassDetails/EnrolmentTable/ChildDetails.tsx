@@ -3,7 +3,7 @@ import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions, Dropdown, Menu, MenuProps, Space, Tag, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import { BREAKPOINT, SetAppointmentLabel } from './EnrolmentTable'
+import { BREAKPOINT_LG, SetAppointmentLabel } from './EnrolmentTable'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { DownOutlined } from '@ant-design/icons'
 
@@ -77,7 +77,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
     return (
         <>
             <Descriptions className={classes.description} bordered size="small" column={1}>
-                {width < BREAKPOINT && (
+                {width < BREAKPOINT_LG && (
                     <>
                         <Descriptions.Item label="Child Age:">{enrolment.child.age}</Descriptions.Item>
                         <Descriptions.Item label="Child Grade:">

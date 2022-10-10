@@ -61,7 +61,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     return (
                         <>
                             <Typography.Title className={classes.price} level={5}>
-                                ${parseInt(appointmentType.price) * numClasses} for an {numClasses} week term
+                                ${parseInt(appointmentType.price) * numClasses} for a {numClasses} week term
                             </Typography.Title>
                             <Form appointmentType={appointmentType} onSubmit={onSubmit} />
                         </>

@@ -5,10 +5,8 @@ import { makeStyles } from '@material-ui/core'
 import SignatureDialog from './SignatureDialog'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
-import { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import { DateTime } from 'luxon'
-
-const BREAKPOINT = 420
 
 type Props = {
     appointment: Acuity.Appointment
@@ -78,7 +76,7 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
             {(() => {
                 if (isNotAttending) return null
                 if (!isSignedIn && !isSignedOut) {
-                    if (width > BREAKPOINT) {
+                    if (width > BREAKPOINT_MD) {
                         return (
                             <Button loading={loading} type="primary" onClick={handleSignIn}>
                                 Sign In
@@ -98,7 +96,7 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
                     }
                 }
                 if (isSignedIn) {
-                    if (width > BREAKPOINT) {
+                    if (width > BREAKPOINT_MD) {
                         return (
                             <Button danger loading={loading} type="primary" onClick={handleSignOutButtonClick}>
                                 Sign Out
