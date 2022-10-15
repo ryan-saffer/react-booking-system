@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { db, storage } from '../../init'
 import { AcuityClient } from '../../acuity/AcuityClient'
-import { MailClient } from '../../sendgrid/MailClient'
+import { mailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
 const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId
@@ -78,7 +78,6 @@ export default async function scheduleScienceProgram(
         await newDoc.set(appointment)
 
         // send the confirmation email
-        const mailClient = new MailClient()
         if (sendConfirmationEmail) {
             try {
                 await mailClient.sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {

@@ -3,7 +3,7 @@ import { db } from '../../init'
 import { onCall } from '../../utilities'
 import { ScienceEnrolment, UnenrollScienceAppointmentParams } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/AcuityClient'
-import { MailClient } from '../../sendgrid/MailClient'
+import { mailClient } from '../../sendgrid/MailClient'
 
 export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
     async (input: UnenrollScienceAppointmentParams, _context: functions.https.CallableContext) => {
@@ -36,7 +36,7 @@ export const unenrollScienceAppointment = onCall<'unenrollScienceAppointment'>(
 
         // 4. email confirmation
         try {
-            await new MailClient().sendEmail('scienceTermUnenrolmentConfirmation', appointment.parent.email, {
+            await mailClient.sendEmail('scienceTermUnenrolmentConfirmation', appointment.parent.email, {
                 parentName: appointment.parent.firstName,
                 childName: appointment.child.firstName,
                 className: appointment.className,
