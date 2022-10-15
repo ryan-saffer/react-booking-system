@@ -6,6 +6,7 @@ import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT_LG, SetAppointmentLabel } from './EnrolmentTable'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { DownOutlined } from '@ant-design/icons'
+import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
 
 type Props = {
     appointment: Acuity.Appointment
@@ -100,7 +101,11 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 <Descriptions.Item label="Parent Name:">
                     {enrolment.parent.firstName} {enrolment.parent.lastName}
                 </Descriptions.Item>
-                <Descriptions.Item label="Parent Phone:">{enrolment.parent.phone}</Descriptions.Item>
+                <Descriptions.Item label="Parent Phone:">
+                    <a href={`tel:${formatMobileNumber(enrolment.parent.phone)}`}>
+                        {formatMobileNumber(enrolment.parent.phone)}
+                    </a>
+                </Descriptions.Item>
                 <Descriptions.Item label="Parent Email:">{enrolment.parent.email}</Descriptions.Item>
                 <Descriptions.Item label="Pickup People:">
                     {enrolment.pickupPeople.map((it) => (
@@ -112,7 +117,9 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                     {enrolment.emergencyContact.relation}
                 </Descriptions.Item>
                 <Descriptions.Item label="Emergency Contact Phone:">
-                    {enrolment.emergencyContact.phone}
+                    <a href={`tel:${formatMobileNumber(enrolment.emergencyContact.phone)}`}>
+                        {formatMobileNumber(enrolment.emergencyContact.phone)}
+                    </a>
                 </Descriptions.Item>
                 {enrolment.signatures[appointment.id] && (
                     <Descriptions.Item label="Signature">

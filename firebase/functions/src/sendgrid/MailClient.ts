@@ -7,10 +7,11 @@ import { MailData } from '@sendgrid/helpers/classes/mail'
 import * as functions from 'firebase-functions'
 
 var Mustache = require('mustache')
+const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
-export class MailClient {
+class MailClient {
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T]) {
         console.log('generating html...')
         const { emailInfo, template } = this._getInfo(email, to)
@@ -18,7 +19,11 @@ export class MailClient {
             let html = this._generateHtml(template, values)
             console.log('generated successfully!')
             console.log('sending email...')
-            await sgMail.send({ ...emailInfo, html })
+            if (env === 'prod') {
+                await sgMail.send({ ...emailInfo, bcc: 'bookings@fizzkidz.com.au', html })
+            } else {
+                await sgMail.send({ ...emailInfo, html })
+            }
             console.log('email sent successfully!')
         } catch (error) {
             functions.logger.error('Unable to send email', emailInfo)
@@ -106,3 +111,6 @@ export class MailClient {
         }
     }
 }
+
+const mailClient = new MailClient()
+export { mailClient }

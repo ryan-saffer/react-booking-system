@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import { ScienceEnrolment, SendTermContinuationEmailParams } from 'fizz-kidz'
 import { onCall } from '../../utilities'
 import { db } from '../../init'
-import { MailClient } from '../../sendgrid/MailClient'
+import { mailClient } from '../../sendgrid/MailClient'
 
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -22,10 +22,10 @@ export const sendTermContinuationEmail = onCall<'sendTermContinuationEmail'>(
         baseUrl += '/science-club-enrolment'
 
         try {
-            await new MailClient().sendEmail('termContinuationEmail', appointment.parent.email, {
+            await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
                 parentName: appointment.parent.firstName,
                 className: appointment.className,
-                price: appointment.price,
+                price: (parseInt(appointment.price) * appointment.appointments.length).toString(),
                 childName: appointment.child.firstName,
                 continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                 unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,
@@ -39,7 +39,8 @@ export const sendTermContinuationEmail = onCall<'sendTermContinuationEmail'>(
             await appointmentRef.set({ ...updatedAppointment }, { merge: true })
             return
         } catch (error) {
-            throw new functions.https.HttpsError('internal', 'error running apps script', error)
+            console.error(error)
+            throw new functions.https.HttpsError('internal', 'error sending continuation email', error)
         }
     }
 )

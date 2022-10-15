@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Acuity } from 'fizz-kidz'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
@@ -8,6 +8,8 @@ import Loading from './Loading'
 import Footer from './Footer'
 import { Success, Error as ErrorResult } from './Result'
 import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
+import useMixpanel from '../../Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '../../Mixpanel/Events'
 
 /**
  * Page requires 2 URL query params:
@@ -24,7 +26,32 @@ const EnrolmentPage = () => {
     const appointmentId = useQueryParam<any>('appointmentId', queryParams) as string
     const continuingWithTerm = useQueryParam<any>('continuing', queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
 
+    const mixpanel = useMixpanel()
+
     const service = useFirebaseFunction('updateScienceEnrolment', { id: appointmentId, continuingWithTerm })
+
+    // Mixpanel Tracking
+    useEffect(() => {
+        if (service.status === 'loaded') {
+            const props = {
+                distinct_id: service.result.parent.email,
+                appointment: service.result.className,
+            }
+            if (continuingWithTerm === 'yes') {
+                mixpanel.track(MixpanelEvents.SCIENCE_ENROLMENT_CONFIRMED, props)
+            }
+            if (continuingWithTerm === 'no') {
+                mixpanel.track(MixpanelEvents.SCIENCE_ENROLMENT_CANCELLED, props)
+            }
+        }
+
+        if (service.status === 'error') {
+            mixpanel.track(MixpanelEvents.SCIENCE_ENROLMENT_ERROR, {
+                appointment_id: appointmentId,
+                continuing_with_term: continuingWithTerm,
+            })
+        }
+    }, [service])
 
     return (
         <div className={classes.main}>

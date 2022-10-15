@@ -1,6 +1,6 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { MailClient } from '../sendgrid/MailClient'
+import { mailClient } from '../sendgrid/MailClient'
 import { Emails } from '../sendgrid/types'
 import { hasError } from './shared'
 import { db } from '../init'
@@ -49,7 +49,6 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
     try {
         // once all booked, send confirmation email
         let result = await Promise.all(promises)
-        const mailClient = new MailClient()
 
         let bookings: Emails['holidayProgramConfirmation']['bookings'] = []
         let sortedAppointments = result.sort((a, b) => {

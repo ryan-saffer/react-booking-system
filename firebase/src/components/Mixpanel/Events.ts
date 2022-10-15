@@ -15,4 +15,9 @@ export enum MixpanelEvents {
     SCIENCE_PORTAL_ERROR_TOGGLING_ATTENDANCE = 'Science Portal - Error Toggling Attendance',
     SCIENCE_PORTAL_PICKUP_PEOPLE_UPDATED = 'Science Portal - Pickup People Updated',
     SCIENCE_PORTAL_ERROR_UPDATING_PICKUP_PEOPLE = 'Science Portal - Error Updating Pickup People',
+
+    // Science Enrolment
+    SCIENCE_ENROLMENT_CONFIRMED = 'Science Enrolment - Confirmed',
+    SCIENCE_ENROLMENT_CANCELLED = 'Science Enrolment - Cancelled',
+    SCIENCE_ENROLMENT_ERROR = 'Science Enrolment - Error',
 }
