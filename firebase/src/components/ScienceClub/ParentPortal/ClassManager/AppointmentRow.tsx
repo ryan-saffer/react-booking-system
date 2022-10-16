@@ -45,7 +45,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
                 acuity_apointment_id: appointment.id,
             })
         } catch (error) {
-            showError('Your appointment could not be updated. Please try again later.')
+            showError({ message: 'Your appointment could not be updated. Please try again later.' })
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_TOGGLING_ATTENDANCE, {
                 distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.email,
                 toggled_on: checked,

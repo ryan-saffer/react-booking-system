@@ -45,7 +45,6 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
         clientSecret: paymentIntent.clientSecret,
     }
 
-    console.log('selected classes', selectedClasses)
     const discountedClasses = getSameDayClasses(selectedClasses)
     const { totalPrice, originalTotal } = calculateTotal(
         selectedClasses,
@@ -91,7 +90,6 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
-                console.log('creating payment intent with amount', amount)
                 let result = await callFirebaseFunction(
                     'createPaymentIntent',
                     firebase
@@ -122,7 +120,6 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
         async function updatePaymentIntent() {
             try {
                 if (paymentIntent.id !== '') {
-                    console.log('upating payment intent')
                     await callFirebaseFunction(
                         'updatePaymentIntent',
                         firebase

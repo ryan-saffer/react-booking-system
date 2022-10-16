@@ -75,7 +75,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input your phone number.',
                     },
-                    PhoneRule
+                    PhoneRule,
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -104,7 +104,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input the emergency contact phone number.',
                     },
-                    PhoneRule
+                    PhoneRule,
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -139,7 +139,6 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                             }
                                         })
                                         if (canAdd) {
-                                            console.log('adding')
                                             add()
                                         }
                                     }}

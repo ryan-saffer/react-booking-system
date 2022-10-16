@@ -53,7 +53,9 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                 appointment_id: appointment.id,
             })
         } catch (error) {
-            showError('There was an issue updating the pickup people. Please try again later, or give us a call.')
+            showError({
+                message: 'There was an issue updating the pickup people. Please try again later, or give us a call.',
+            })
             form.setFieldsValue(initialValues)
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_ERROR_UPDATING_PICKUP_PEOPLE, {
                 distinct_id: firebase.auth.currentUser ? firebase.auth.currentUser.email : appointment.parent.email,

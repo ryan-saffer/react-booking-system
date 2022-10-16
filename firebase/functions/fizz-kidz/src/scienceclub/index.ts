@@ -26,12 +26,12 @@ export type ScheduleScienceAppointmentParams = {
     pickupPeople: string[]
 }
 
-export type SendTermContinuationEmailParams = {
-    appointmentId: string
+export type SendTermContinuationEmailsParams = {
+    appointmentIds: string[]
 }
 
-export type UnenrollScienceAppointmentParams = {
-    appointmentId: string
+export type UnenrollScienceAppointmentsParams = {
+    appointmentIds: string[]
 }
 
 export type UpdateScienceEnrolmentParams = {

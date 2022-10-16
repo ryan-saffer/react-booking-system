@@ -53,7 +53,6 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     }, [])
 
     const handleAppointmentTypeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        console.log(`Selected appointment type: ${e.target.value}`)
         const id = e.target.value as number
         setSelectedAppointmentType(appointmentTypes.find((it) => it.id === id))
         setSelectedClass(undefined)
@@ -87,7 +86,6 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     }
 
     const fetchClasses = (id: number) => {
-        console.log(id)
         setLoading({
             ...loading,
             classes: true,
