@@ -1,18 +1,29 @@
-import { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, SendInvoiceParams } from '../scienceclub/invoicing'
-import { Appointment } from '../acuity';
-import { CreatePaymentIntentParams, CreatePaymentIntentResponse, UpdatePaymentIntentParams } from '..';
+import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
+import {
+    CreatePaymentIntentParams,
+    CreatePaymentIntentResponse,
+    ScheduleScienceAppointmentParams,
+    ScienceEnrolment,
+    SendTermContinuationEmailsParams,
+    UnenrollScienceAppointmentsParams,
+    UpdatePaymentIntentParams,
+    UpdateScienceEnrolmentParams,
+} from '..'
 
 export interface FirebaseFunctions {
-    retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatusWithUrl>
-    sendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
-    voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatusWithUrl>
-    sendTermContinuationEmail: Function<Appointment, null>
+    retrieveInvoiceStatuses: Function<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
+    sendInvoices: Function<SendInvoiceParams[], InvoiceStatusMap>
+    sendTermContinuationEmails: Function<SendTermContinuationEmailsParams, string[]>
     createPaymentIntent: Function<CreatePaymentIntentParams, CreatePaymentIntentResponse>
     updatePaymentIntent: Function<UpdatePaymentIntentParams, void>
+    scheduleScienceAppointment: Function<ScheduleScienceAppointmentParams, void>
+    unenrollScienceAppointments: Function<UnenrollScienceAppointmentsParams, void>
+    updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceEnrolment>
+    sendPortalLinks: Function<void, void>
 }
 
 export type Function<Input, Result> = {
-    input: Input,
+    input: Input
     result: FunctionsResult<Result>
 }
 

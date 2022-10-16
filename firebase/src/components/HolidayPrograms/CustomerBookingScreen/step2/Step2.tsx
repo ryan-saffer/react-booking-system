@@ -7,11 +7,11 @@ const { Option } = Select
 const { Text } = Typography
 
 export const SimpleTextRule = {
-    pattern: /^[a-zA-Z0-9 ]+$/,
+    pattern: /^[a-zA-Z0-9 -]+$/,
     message: 'No special characters allowed.',
 }
 
-const PhoneRule = {
+export const PhoneRule = {
     pattern: /^[0-9]+$/,
     message: 'Only numbers 0-9 allowed',
 }
@@ -75,7 +75,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input your phone number.',
                     },
-                    PhoneRule
+                    PhoneRule,
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -104,7 +104,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                         required: true,
                         message: 'Please input the emergency contact phone number.',
                     },
-                    PhoneRule
+                    PhoneRule,
                 ]}
             >
                 <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -139,7 +139,6 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                             }
                                         })
                                         if (canAdd) {
-                                            console.log('adding')
                                             add()
                                         }
                                     }}

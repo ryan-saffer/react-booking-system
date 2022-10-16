@@ -1,28 +1,31 @@
-export interface RetrieveInvoiceStatusParams {
-    appointmentId: number
+export type RetrieveInvoiceStatusParams = {
+    appointmentId: string
 }
 
-export interface InvoiceStatusWithUrl {
-    status: InvoiceStatus,
-    url?: string
+export type RetrieveInvoiceStatusesParams = {
+    appointmentIds: string[]
 }
 
-export enum InvoiceStatus {
-    NOT_SENT = "NOT_SENT",
-    UNPAID = "UNPAID",
-    PAID = "PAID",
-    UNSUPPORTED = "UNSUPPORTED"
+// INVOICING
+export type InvoiceStatus = ExistingInvoice | OtherInvoice
+
+export type ExistingInvoice = {
+    status: 'PAID' | 'UNPAID' | 'VOID'
+    amount: number
+    dashboardUrl: string
+    paymentUrl: string
 }
+
+type OtherInvoice = {
+    status: 'NOT_SENT' | 'UNSUPPORTED'
+}
+
+export type InvoiceStatusMap = { [key: string]: InvoiceStatus }
 
 export interface SendInvoiceParams {
-    email: string,
-    name: string,
-    phone: string,
-    childName: string
-    invoiceItem: string,
-    appointmentTypeId: number,
-    price: string,
-    [key: string]: string | number
+    id: string
+    price: string
+    [key: string]: string
 }
 
 // prices depend on how many weeks they are attending the program for
@@ -36,5 +39,5 @@ export const PriceWeekMap: { [key: string]: string } = {
     '96': '4',
     '72': '3',
     '48': '2',
-    '24': '1'
+    '24': '1',
 }

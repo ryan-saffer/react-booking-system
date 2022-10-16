@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from 'firebase/compat'
 import Firebase from '../../components/Firebase'
 import { FirebaseFunctions, Acuity } from 'fizz-kidz'
 
@@ -16,6 +16,9 @@ export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, f
     }
 }
 
+/**
+ * @deprecated Uses the deprecated `acuityClient` firebase function. Use {@link callAcuityClientV2} instead.
+ */
 export function callAcuityClient<K extends keyof Acuity.Client.AcuityFunctions>(fn: K, firebase: Firebase) {
     return function (
         input: Acuity.Client.AcuityFunctions[K]['input']
@@ -77,12 +80,6 @@ function logFunctionsError(fn: string, error: firebase.functions.HttpsError, det
     )
 }
 
-function logGenericError(fn: string, error: Error) {
-    console.error(
-        `error running: '${fn}`,
-        `--name`,
-        `${error.name}`,
-        `--message`,
-        `${error.message}`
-    )
+function logGenericError(fn: string, error: firebase.functions.HttpsError) {
+    console.error(`error running: '${fn}`, '--code:', error.code, '--details:', error.details)
 }

@@ -7,7 +7,7 @@ export { AdditionsDisplayValuesMapPrices } from './booking/AdditionsDisplayValue
 export { AdditionsDisplayValuesMap } from './booking/AdditionsDisplayValuesMap'
 export { Locations } from './booking/Locations'
 export { Booking, FormBooking, FirestoreBooking, FormBookingFields, BookingFields } from './booking/Booking'
-//#endregion 
+//#endregion
 
 //#region Acuity
 export * as Acuity from './acuity'
@@ -18,16 +18,13 @@ export * as AppsScript from './appsscript'
 //#endregion
 
 //#region Science Club
-export { RetrieveInvoiceStatusParams, InvoiceStatusWithUrl, InvoiceStatus, SendInvoiceParams, PriceWeekMap } from './scienceclub/invoicing'
+export * from './scienceclub/invoicing'
 //#endregion
 
 //#region Firebase
-export { FirebaseFunctions } from './firebase/functions'
+export * from './firebase/functions'
 
-import * as result from './firebase/service'
-export namespace Types {
-    export import Functions = result
-}
+export * from './firebase/service'
 //#endregion
 
 //#region Utilities
@@ -35,3 +32,5 @@ export * as Utilities from './utilities'
 //#endregion
 
 export * from './stripe'
+
+export * from './scienceclub'

@@ -1,20 +1,33 @@
 import { Function } from '../firebase/functions'
-import { Appointment, Certificate } from ".";
-import { Class } from './types';
+import { Appointment, AppointmentType, Certificate } from '.'
+import { Class } from './types'
 
 export interface AcuityFunctions {
-    getAppointments: Function<FetchAppointmentsParams, Appointment[]>
+    searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
+    getAppointments: Function<GetAppointmentsParams, Appointment[]>
+    getAppointmentTypes: Function<GetAppointmentTypesParams, AppointmentType[]>
     updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
     unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
+    updateAppointment: Function<UpdateAppointmentParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
-    scheduleHolidayProgram: Function<HolidayProgramBooking[], boolean>
     checkCertificate: Function<CheckCertificateParams, Certificate>
 }
 
-export interface FetchAppointmentsParams {
-    appointmentTypeID: number
-    calendarID: number
+// For querying acuity, ie all appointments from a certain type and calendar
+export type FetchAppointmentsParams = {
+    appointmentTypeId: number
+    calendarId: number
+    classTime?: string
+}
+
+// For getting specific appointments by ids
+export type GetAppointmentsParams = {
+    ids: number[]
+}
+
+export type GetAppointmentTypesParams = {
+    category?: string
 }
 
 export type ContinuingOption = 'yes' | 'no' | ''
@@ -39,8 +52,15 @@ export interface UpdateLabelParams {
     label: number // Acuity.Constants.Labels
 }
 
+export type UpdateAppointmentParams = {
+    id: number
+    labels?: { id: number }[]
+}
+
 export type ClassAvailabilityParams = {
     appointmentTypeId: number
+    includeUnavailable: boolean
+    minDate?: number
 }
 
 export type HolidayProgramBooking = {

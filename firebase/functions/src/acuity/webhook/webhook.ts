@@ -21,7 +21,7 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
-export const webhook = functions.region('australia-southeast1').https.onRequest(async (req, resp) => {
+export const asWebhook = functions.region('australia-southeast1').https.onRequest(async (req, resp) => {
     console.log('STARTING WEBHOOK')
     console.log(req.body)
     let data = req.body as AcuityWebhookData
@@ -65,7 +65,7 @@ export const webhook = functions.region('australia-southeast1').https.onRequest(
                             reason: 'requested_by_customer',
                         })
                     } else {
-                        console.log("Less than 24 hours before program, not performing refund.")
+                        console.log('Less than 24 hours before program, not performing refund.')
                     }
 
                     // update program count to one less, regardless if refunded or not.

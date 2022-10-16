@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Result, Spin } from 'antd'
 import useQueryParam from '../../../Hooks/UseQueryParam'
-import Root from '../Root'
+import Root from '../../../Shared/Root'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 
 type Props = {}
@@ -54,7 +54,7 @@ const Confirmation: React.FC<Props> = () => {
 
     if (loading) {
         return (
-            <Root>
+            <Root color='pink' width='centered'>
                 <Spin style={{ marginTop: 36, marginBottom: 12 }}/>
             </Root>
         )
@@ -62,7 +62,7 @@ const Confirmation: React.FC<Props> = () => {
 
     if (error) {
         return (
-            <Root>
+            <Root color='pink' width='centered'>
                 <Result
                     status="500"
                     title="Something went wrong"
@@ -72,7 +72,7 @@ const Confirmation: React.FC<Props> = () => {
         )
     }
     return (
-        <Root>
+        <Root color='pink' width='centered'>
             <Result
                 status="success"
                 title="Booking confirmed"
