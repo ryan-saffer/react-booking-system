@@ -1,24 +1,23 @@
-import { RetrieveInvoiceStatusParams, SendInvoiceParams, InvoiceStatus } from '../scienceclub/invoicing'
+import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
     ScheduleScienceAppointmentParams,
     ScienceEnrolment,
-    SendTermContinuationEmailParams,
-    UnenrollScienceAppointmentParams,
+    SendTermContinuationEmailsParams,
+    UnenrollScienceAppointmentsParams,
     UpdatePaymentIntentParams,
     UpdateScienceEnrolmentParams,
 } from '..'
 
 export interface FirebaseFunctions {
-    retrieveInvoiceStatus: Function<RetrieveInvoiceStatusParams, InvoiceStatus>
-    sendInvoice: Function<SendInvoiceParams, InvoiceStatus>
-    voidAndResendInvoice: Function<SendInvoiceParams, InvoiceStatus>
-    sendTermContinuationEmail: Function<SendTermContinuationEmailParams, void>
+    retrieveInvoiceStatuses: Function<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
+    sendInvoices: Function<SendInvoiceParams[], InvoiceStatusMap>
+    sendTermContinuationEmails: Function<SendTermContinuationEmailsParams, string[]>
     createPaymentIntent: Function<CreatePaymentIntentParams, CreatePaymentIntentResponse>
     updatePaymentIntent: Function<UpdatePaymentIntentParams, void>
     scheduleScienceAppointment: Function<ScheduleScienceAppointmentParams, void>
-    unenrollScienceAppointment: Function<UnenrollScienceAppointmentParams, void>
+    unenrollScienceAppointments: Function<UnenrollScienceAppointmentsParams, void>
     updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: Function<void, void>
 }

@@ -1,8 +1,7 @@
 import React from 'react'
-import { ScienceEnrolment } from 'fizz-kidz'
+import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { Tag } from 'antd'
 import Loader from '../../../shared/Loader'
-import { InvoiceStatusMap } from './EnrolmentsTable'
 
 type Props = {
     enrolment: ScienceEnrolment
@@ -26,6 +25,10 @@ const InvoiceStatusCell: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => 
             case 'PAID':
                 colour = 'green'
                 text = 'PAID'
+                break
+            case 'VOID':
+                colour = 'default'
+                text = 'VOID'
                 break
         }
         return <Tag color={colour}>{text}</Tag>

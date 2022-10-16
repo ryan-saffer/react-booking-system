@@ -1,29 +1,29 @@
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-import { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
+import { InvoiceStatus, InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../utilities/firebase/functions'
 import { Service } from 'fizz-kidz'
 
 const useInvoiceStatus = (
     appointment: ScienceEnrolment
-): [Service<InvoiceStatus>, Dispatch<SetStateAction<Service<InvoiceStatus>>>] => {
+): [Service<InvoiceStatusMap>, Dispatch<SetStateAction<Service<InvoiceStatusMap>>>] => {
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [result, setResult] = useState<Service<InvoiceStatus>>({ status: 'loading' })
+    const [result, setResult] = useState<Service<InvoiceStatusMap>>({ status: 'loading' })
 
     const invoiceId = appointment.invoiceId
 
     useEffect(() => {
         if (invoiceId === '') {
-            setResult({ status: 'loaded', result: { status: 'NOT_SENT' } })
+            setResult({ status: 'loaded', result: { [appointment.id]: { status: 'NOT_SENT' } } })
             return
         }
-        console.log('running retrieveInvoiceStatus')
+        console.log('running retrieveInvoiceStatuses')
         callFirebaseFunction(
-            'retrieveInvoiceStatus',
+            'retrieveInvoiceStatuses',
             firebase
-        )({ appointmentId: appointment.id })
+        )({ appointmentIds: [appointment.id] })
             .then((result) => {
                 setResult({ status: 'loaded', result: result.data })
             })

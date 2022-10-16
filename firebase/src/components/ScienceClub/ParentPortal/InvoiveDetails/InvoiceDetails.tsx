@@ -22,11 +22,12 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                     case 'loading':
                         return <Loader />
                     case 'loaded':
-                        switch (invoiceService.result.status) {
+                        const invoiceStatus = invoiceService.result[appointment.id]
+                        switch (invoiceStatus.status) {
                             case 'PAID':
-                                return <InvoiceStatistic invoice={invoiceService.result} status="PAID" />
+                                return <InvoiceStatistic invoice={invoiceStatus} status="PAID" />
                             case 'UNPAID':
-                                return <InvoiceStatistic invoice={invoiceService.result} status="UNPAID" />
+                                return <InvoiceStatistic invoice={invoiceStatus} status="UNPAID" />
                             default:
                                 return (
                                     <>

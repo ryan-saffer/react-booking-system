@@ -1,10 +1,8 @@
-import * as StripeConfig from '../../config/stripe'
+import * as StripeConfig from '../../../config/stripe'
 import Stripe from 'stripe'
-import { getOrCreateCustomer } from './customers'
-const stripeConfig =
-    JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-        ? StripeConfig.PROD_CONFIG
-        : StripeConfig.DEV_CONFIG
+import { getOrCreateCustomer } from '../customers'
+import { env } from '../../../init'
+const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
     apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
 })
@@ -27,7 +25,7 @@ export async function sendInvoice(input: {
     const invoiceItems = await stripe.invoiceItems.create({
         customer,
         description,
-        price
+        price,
     })
 
     // 3. create the invoice
@@ -36,10 +34,9 @@ export async function sendInvoice(input: {
         description: invoiceItems.description ?? '',
         collection_method: 'send_invoice',
         days_until_due: daysUntilDue,
-        metadata
+        metadata,
     })
 
     await stripe.invoices.sendInvoice(invoice.id)
-
     return invoice
 }

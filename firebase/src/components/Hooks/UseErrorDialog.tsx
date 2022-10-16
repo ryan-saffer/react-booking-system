@@ -1,8 +1,13 @@
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Button, Modal } from 'antd'
 
+type Props = {
+    message: string
+    title?: string
+}
+
 export type WithErrorModal = {
-    showError: (message: string) => void
+    showError: (props: Props) => void
 }
 
 type Result = {
@@ -12,19 +17,21 @@ type Result = {
 const useErrorDialog = (): Result => {
     const [showModal, setShowModal] = useState(false)
     const [message, setMessage] = useState('')
+    const [title, setTitle] = useState('')
 
-    const showError = useCallback((message: string) => {
-        setMessage(message)
+    const showError = useCallback((props: Props) => {
+        setMessage(props.message)
+        setTitle(props.title || 'Something went wrong')
         setShowModal(true)
     }, [])
 
     const _Modal = () => {
         return (
             <Modal
-                title="Something went wrong"
+                title={title}
                 visible={showModal}
                 footer={[
-                    <Button type="primary" onClick={() => setShowModal(false)}>
+                    <Button type="primary" key="ok" onClick={() => setShowModal(false)}>
                         Ok
                     </Button>,
                 ]}

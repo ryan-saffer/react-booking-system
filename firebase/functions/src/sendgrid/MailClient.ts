@@ -5,9 +5,9 @@ import mjml2html from 'mjml'
 import sgMail from '@sendgrid/mail'
 import { MailData } from '@sendgrid/helpers/classes/mail'
 import * as functions from 'firebase-functions'
+import { env } from '../init'
 
 var Mustache = require('mustache')
-const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
