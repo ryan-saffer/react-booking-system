@@ -17,7 +17,7 @@ import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../constants/routes'
 
 import { withAuthorization } from '../../Session'
-import { Acuity, Types } from 'fizz-kidz'
+import { Acuity, Service } from 'fizz-kidz'
 import { capitalise } from '../../../utilities/stringUtilities'
 import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
@@ -27,7 +27,7 @@ const HolidayProgramSelection = (props: any) => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [classes, setClasses] = useState<Types.Functions.Service<Acuity.Class[]>>({ status: 'loading' })
+    const [classes, setClasses] = useState<Service<Acuity.Class[]>>({ status: 'loading' })
     const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>([])
     const [selectedCalendar, setSelectedCalendar] = useState<string>('')
     const [selectedClass, setSelectedClass] = useState<string>('')
@@ -41,6 +41,7 @@ const HolidayProgramSelection = (props: any) => {
                 process.env.REACT_APP_ENV === 'prod'
                     ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
                     : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+            includeUnavailable: false,
         })
             .then((result) => {
                 setClasses({ status: 'loaded', result: result.data })
