@@ -67,6 +67,9 @@ function sendBookingConfirmationEmail(booking, environment) {
 
   if (booking.location === "balwyn") {
     photos.push(DriveApp.getFileById(balwynPhotoId));
+  } else if (booking.location === "cheltenham") {
+    // currently using essendon, change when we get a photo
+    photos.push(DriveApp.getFileById(essendonPhotoId));
   } else if (booking.location === "essendon") {
     photos.push(DriveApp.getFileById(essendonPhotoId));
   } else if (booking.location === "malvern") {
@@ -81,7 +84,7 @@ function sendBookingConfirmationEmail(booking, environment) {
     bcc: "bookings@fizzkidz.com.au",
     attachments: [faqs.getBlob(), ...photos.map((photo) => photo.getBlob())],
     replyTo:
-      booking.location === "malvern"
+      booking.location === "malvern" || booking.location === "cheltenham"
         ? "michaela@fizzkidz.com.au"
         : "bonnie@fizzkidz.com.au",
   });
@@ -314,7 +317,9 @@ function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
   var fromAddress = determineFromEmailAddress(booking.location);
 
   var signature = getGmailSignature(
-    booking.location === "malvern" ? "michaela" : "bonnie"
+    booking.location === "malvern" || booking.location === "cheltenham"
+      ? "michaela"
+      : "bonnie"
   );
 
   // Send the confirmation email

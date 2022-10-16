@@ -1,6 +1,7 @@
 export enum Locations {
-    BALWYN = "balwyn",
-    ESSENDON = "essendon",
-    MALVERN = "malvern",
-    MOBILE = "mobile"
+    BALWYN = 'balwyn',
+    CHELTENHAM = 'cheltenham',
+    ESSENDON = 'essendon',
+    MALVERN = 'malvern',
+    MOBILE = 'mobile',
 }
