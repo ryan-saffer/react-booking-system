@@ -1,19 +1,19 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { makeStyles, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     deleteButton: {
-        color: 'red'
+        color: 'red',
     },
     form: {
-        width: '100%'
-    }
+        width: '100%',
+    },
 }))
 
 /**
@@ -25,27 +25,25 @@ export interface ConfirmationDialogProps {
 }
 
 interface ShowDialogParams {
-    dialogTitle: string,
-    dialogContent: string,
-    confirmationButtonText: string,
-    listItems?: ListItems,
+    dialogTitle: string
+    dialogContent: string
+    confirmationButtonText: string
+    listItems?: ListItems
     onConfirm: ConfirmationCallback
 }
 
 type ConfirmationCallback = (selectedListItem: string) => void
 
 export interface ListItems {
-    title: string,
-    items: Array<{ key: string, value: string}>
+    title: string
+    items: Array<{ key: string; value: string }>
 }
 
 // see https://stackoverflow.com/a/51084259
 const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
     Component: React.ComponentType<P>
 ): React.FC<Omit<P, keyof ConfirmationDialogProps>> => {
-    
     const ComponentWithConfirmationDialog = (props: Omit<P, keyof ConfirmationDialogProps>) => {
-        
         const classes = useStyles()
 
         const [open, setOpen] = useState(false)
@@ -56,6 +54,21 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         const [selectedListItem, setSelectedListItem] = useState('')
         const [confirmButton, setConfirmButton] = useState('')
         const [confirmCallback, setConfirmCallback] = useState<ConfirmationCallback>(() => {})
+
+        useEffect(() => {
+            // reset form when closing
+            if (!open) {
+                reset()
+            }
+        }, [open])
+
+        const reset = () => {
+            setListItems(null)
+            setSelectedListItem('')
+            setFormError(false)
+            setConfirmButton('')
+            setConfirmCallback(() => {})
+        }
 
         const handleShow = (params: ShowDialogParams) => {
             setTitle(params.dialogTitle)
@@ -89,32 +102,33 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
 
         return (
             <>
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <DialogTitle >{title}</DialogTitle>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>{content}</DialogContentText>
-                        {listItems && 
-                                <FormControl className={classes.form} error={formError}>
-                                    <InputLabel>{listItems.title}</InputLabel>
-                                    <Select value={selectedListItem} onChange={handleListItemChange}>
-                                        {listItems.items.map(item => <MenuItem key={item.key} value={item.key}>{item.value}</MenuItem>)}
-                                    </Select>
-                                </FormControl>
-                        }
+                        {listItems && (
+                            <FormControl className={classes.form} error={formError}>
+                                <InputLabel>{listItems.title}</InputLabel>
+                                <Select value={selectedListItem} onChange={handleListItemChange}>
+                                    {listItems.items.map((item) => (
+                                        <MenuItem key={item.key} value={item.key}>
+                                            {item.value}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={e => handleConfirm(e)} classes={{ root: classes.deleteButton }}>
+                        <Button onClick={(e) => handleConfirm(e)} classes={{ root: classes.deleteButton }}>
                             {confirmButton}
                         </Button>
-                        <Button onClick={e => handleClose(e)} color="primary">
+                        <Button onClick={(e) => handleClose(e)} color="primary">
                             Cancel
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Component { ...props as P } showConfirmationDialog={handleShow} />
+                <Component {...(props as P)} showConfirmationDialog={handleShow} />
             </>
         )
     }

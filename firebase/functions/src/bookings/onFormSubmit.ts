@@ -1,7 +1,7 @@
 import { AppsScript, Booking } from 'fizz-kidz';
 import * as functions from 'firebase-functions'
 import { runAppsScript } from './index'
-import { db } from '../index'
+import { db } from '../init'
 import { FormMapper } from './FormMapper';
 import { PFQuestion } from './types';
 

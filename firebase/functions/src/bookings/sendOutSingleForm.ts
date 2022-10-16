@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions'
 import { runAppsScript } from '.'
-import { db } from '../index'
+import { db } from '../init'
 import { AppsScript } from 'fizz-kidz'
 
 export const sendOutSingleForm = functions

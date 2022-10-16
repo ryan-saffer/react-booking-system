@@ -1,9 +1,9 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { MailClient } from '../sendgrid/EmailClient'
+import { mailClient } from '../sendgrid/MailClient'
 import { Emails } from '../sendgrid/types'
 import { hasError } from './shared'
-import { db } from '..'
+import { db } from '../init'
 import * as functions from 'firebase-functions'
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../credentials/acuity_credentials.json')
@@ -14,7 +14,6 @@ const acuity = AcuitySdk.basic({
 })
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
-
     console.log('Acuity userId:', acuityCredentials.user_id)
     let query = await db.collection('holidayProgramBookings').doc(paymentIntentId).get()
 
@@ -50,9 +49,8 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
     try {
         // once all booked, send confirmation email
         let result = await Promise.all(promises)
-        const mailClient = new MailClient()
 
-        let bookings: Emails['holidayProgramConfirmation']['values']['bookings'] = []
+        let bookings: Emails['holidayProgramConfirmation']['bookings'] = []
         let sortedAppointments = result.sort((a, b) => {
             const child1Name = Acuity.Utilities.retrieveFormAndField(
                 a,
@@ -87,20 +85,14 @@ async function scheduleHolidayPrograms(programs: Acuity.Client.HolidayProgramBoo
             })
         })
 
-        const emailInfo: Emails['holidayProgramConfirmation'] = {
-            templateName: 'holiday_program_confirmation.html',
-            parentEmail: result[0].email,
-            values: {
-                parentName: result[0].firstName,
-                location: `Fizz Kidz ${result[0].calendar}`,
-                address: result[0].location,
-                bookings: bookings,
-            },
-        }
-
-        await mailClient.sendEmail('holidayProgramConfirmation', emailInfo)
+        await mailClient.sendEmail('holidayProgramConfirmation', result[0].email, {
+            parentName: result[0].firstName,
+            location: `Fizz Kidz ${result[0].calendar}`,
+            address: result[0].location,
+            bookings: bookings,
+        })
         return true
-    } catch(error) {
+    } catch (error) {
         console.error(error)
         throw new functions.https.HttpsError('internal', 'error booking into acuity', error)
     }
@@ -142,12 +134,12 @@ async function scheduleHolidayProgram(program: Acuity.Client.HolidayProgramBooki
                 },
                 {
                     id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
-                    value: paymentIntentId
+                    value: paymentIntentId,
                 },
                 {
                     id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
-                    value: program.amountCharged
-                }
+                    value: program.amountCharged,
+                },
             ],
         },
     }

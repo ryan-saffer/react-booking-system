@@ -23,8 +23,6 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
     const [error, setError] = useState('')
 
     const validateDiscount = async (value: string) => {
-        console.log(value)
-
         // do not allow the 'allday' discount code
         if (value === 'allday') {
             setLoading(false)

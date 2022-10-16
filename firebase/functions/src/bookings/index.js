@@ -6,7 +6,7 @@ const {
 var { DateTime } = require('luxon')
 import { AppsScript } from 'fizz-kidz'
 
-import { db } from '../index'
+import { db } from '../init'
 
 const googleCredentials = require('../../credentials/google-credentials.json')
 
