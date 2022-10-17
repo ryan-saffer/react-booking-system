@@ -170,7 +170,7 @@ function getPartyAddress(booking) {
       case "balwyn":
         return "184 Whitehorse Rd, Balwyn, 3103";
       case "cheltenham":
-        return "173 Bay Rd, Cheltenham, VIC 3192";
+        return "273 Bay Rd, Cheltenham, VIC 3192";
       case "essendon":
         return "75 Raleigh St, Essendon, 3040";
       case "malvern":
