@@ -37,13 +37,13 @@ const ClassDetailsPage = () => {
             a,
             Acuity.Constants.Forms.CHILDREN_DETAILS,
             Acuity.Constants.FormFields.CHILDREN_NAMES
-        )
+        ) as string
         const bName = Acuity.Utilities.retrieveFormAndField(
             b,
             Acuity.Constants.Forms.CHILDREN_DETAILS,
             Acuity.Constants.FormFields.CHILDREN_NAMES
-        )
-        return aName < bName ? -1 : aName > bName ? 1 : 0
+        ) as string
+        return aName.toUpperCase() < bName.toUpperCase() ? -1 : aName > bName ? 1 : 0
     }
 
     const appointments = useFetchAppointments({
