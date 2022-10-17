@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Form, Checkbox, Select, Tag } from 'antd'
+import { Form, Checkbox, Select, Tag, Card } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Locations } from 'fizz-kidz'
 import { DateTime } from 'luxon'
@@ -34,15 +34,15 @@ const Step1: React.FC<Props> = ({
 
     const renderSlotsAvailable = (klass: Acuity.Class) => {
         if (klass.slotsAvailable === 0) {
-            return "[No spots left]"
+            return '[No spots left]'
         }
         if (klass.slotsAvailable < 6 && klass.slotsAvailable > 1) {
             return `[${klass.slotsAvailable} spots left]`
         }
         if (klass.slotsAvailable === 1) {
-            return "[1 spot left]"
+            return '[1 spot left]'
         }
-        return ""
+        return ''
     }
 
     return (
@@ -89,14 +89,20 @@ const Step1: React.FC<Props> = ({
                                     hour12: true,
                                 })}
                             </p>
-                            <p style={{ marginBottom: 0 }}>
-                                {renderSlotsAvailable(klass)}
-                            </p>
-                            {discountedClasses.includes(klass.id) && <Tag color='green'>All day discount: -${DISCOUNT_PRICE}.00</Tag>}
+                            <p style={{ marginBottom: 0 }}>{renderSlotsAvailable(klass)}</p>
+                            {discountedClasses.includes(klass.id) && (
+                                <Tag color="green">All day discount: -${DISCOUNT_PRICE}.00</Tag>
+                            )}
                         </Checkbox>
                     </Form.Item>
                 )
             })}
+            {filteredClasses?.length === 0 && (
+                <Card title="No programs available" style={{ marginBottom: 24 }}>
+                    <p>There are no programs available at the moment for this studio.</p>
+                    <p>Try picking another location.</p>
+                </Card>
+            )}
         </>
     )
 }
