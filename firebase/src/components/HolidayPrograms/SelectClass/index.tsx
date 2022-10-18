@@ -33,8 +33,6 @@ const HolidayProgramSelection = (props: any) => {
     const [selectedClass, setSelectedClass] = useState<string>('')
 
     useEffect(() => {
-        const today6am = new Date()
-        today6am.setHours(6)
         callAcuityClientV2(
             'classAvailability',
             firebase
@@ -44,7 +42,7 @@ const HolidayProgramSelection = (props: any) => {
                     ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
                     : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
             includeUnavailable: true,
-            minDate: today6am.getTime(),
+            minDate: Date.now(),
         })
             .then((result) => {
                 setClasses({ status: 'loaded', result: result.data })
