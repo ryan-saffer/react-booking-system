@@ -66,28 +66,27 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
                     }),
                 ])
 
-                // DO NOT UNDERSTAND - OLD APPOINTMENT TYPES SNEAKING IN 👀
-                // once migrated 100%, this can be removed
-                const filteredAppointments = appointments.data.filter(
-                    (it) => it.appointmentTypeID === appointmentTypeId
-                )
-
-                let obj: { [key: string]: ScienceEnrolment } = {}
+                let _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
                 enrolments.docs.forEach((doc) => {
                     const enrolment = doc.data() as ScienceEnrolment
-                    obj[enrolment.id] = enrolment
+                    _enrolmentsMap[enrolment.id] = enrolment
                 })
+
+                // filter out appointments that are not stored in firestore
+                // side effect from migration. should be impossible. remove at end of term 4 22.
+                const filteredAppointments = appointments.data.filter((it) => getEnrolment(it, _enrolmentsMap))
 
                 // sort appointments by child name
                 filteredAppointments.sort((a, b) => {
-                    const enrolment1 = getEnrolment(a, obj)
-                    const enrolment2 = getEnrolment(b, obj)
+                    const enrolment1 = getEnrolment(a, _enrolmentsMap)
+                    const enrolment2 = getEnrolment(b, _enrolmentsMap)
                     return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], { numeric: false })
                 })
 
-                setEnrolmentsMap(obj)
+                setEnrolmentsMap(_enrolmentsMap)
                 setAppointments(filteredAppointments)
             } catch (err) {
+                console.error(err)
                 setError(true)
             }
             setLoading(false)
