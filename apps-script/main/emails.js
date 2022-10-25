@@ -132,6 +132,7 @@ function _sendOutForm(booking, environment) {
   // Send the confirmation email
   GmailApp.sendEmail(booking.parentEmail, subject, "", {
     from: fromAddress,
+    bcc: "bookings@fizzkidz.com.au",
     htmlBody: body,
     name: "Fizz Kidz",
     attachments: [faqs.getBlob()],
