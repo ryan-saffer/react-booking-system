@@ -9,7 +9,7 @@ const stripeConfig =
         ? StripeConfig.PROD_CONFIG
         : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
+    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
 })
 
 export const createPaymentIntent = onCall<'createPaymentIntent'>(
@@ -28,7 +28,8 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(
             amount: data.amount,
             currency: 'aud',
             payment_method_types: ['card'],
-            description: data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', '),
+            description:
+                data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', '),
             metadata: {
                 programType: data.programType,
                 programCount: data.programs.length,

@@ -4,6 +4,7 @@ import { onCall } from '../../utilities'
 import { ScienceEnrolment, UnenrollScienceAppointmentsParams } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/AcuityClient'
 import { mailClient } from '../../sendgrid/MailClient'
+import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(
     async (input: UnenrollScienceAppointmentsParams, _context: functions.https.CallableContext) => {
@@ -35,7 +36,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
 
                 // 4. void invoice if needed
                 if (enrolment.invoiceId) {
-                    const invoice = await stripe.invoices.retrieve(enrolment.invoiceId)
+                    const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
                     if (invoice.status === 'open') {
                         await stripe.invoices.voidInvoice(enrolment.invoiceId)
                     }

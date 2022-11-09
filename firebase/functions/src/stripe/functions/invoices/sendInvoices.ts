@@ -5,6 +5,7 @@ import { onCall } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db, env, stripe } from '../../../init'
 import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
+import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
 export const sendInvoices = onCall<'sendInvoices'>(
@@ -21,7 +22,7 @@ export const sendInvoices = onCall<'sendInvoices'>(
                 // 2. void any existing invoice
                 if (enrolment.invoiceId) {
                     // first check status, cannot void a paid invoice
-                    const existingInvoice = await stripe.invoices.retrieve(enrolment.invoiceId)
+                    const existingInvoice = await retrieveLatestInvoice(enrolment.invoiceId)
                     if (existingInvoice.status === 'open') {
                         await stripe.invoices.voidInvoice(enrolment.invoiceId)
                     }

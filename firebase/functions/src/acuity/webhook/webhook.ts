@@ -10,7 +10,7 @@ import Stripe from 'stripe'
 import { AcuityClient } from '../AcuityClient'
 import { RefundCalculator } from './RefundCalculator'
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
+    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
 })
 const acuity = new AcuityClient()
 
