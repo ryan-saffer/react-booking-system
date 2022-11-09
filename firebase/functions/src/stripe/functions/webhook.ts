@@ -6,7 +6,7 @@ import { bookHolidayPrograms } from '../../acuity/holidayPrograms'
 const isProd = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
 const stripeConfig = isProd ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
+    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
 })
 
 export const stripeWebhook = functions.region('australia-southeast1').https.onRequest(async (request, response) => {

@@ -4,7 +4,7 @@ import { getOrCreateCustomer } from '../customers'
 import { env } from '../../../init'
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
+    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
 })
 
 export async function sendInvoice(input: {
@@ -36,6 +36,10 @@ export async function sendInvoice(input: {
         days_until_due: daysUntilDue,
         metadata,
     })
+
+    if (!invoice.id) {
+        throw new Error('error creating invoice - no id returned')
+    }
 
     await stripe.invoices.sendInvoice(invoice.id)
     return invoice

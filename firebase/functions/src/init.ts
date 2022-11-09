@@ -17,5 +17,5 @@ db.settings({ ignoreUndefinedProperties: true })
 // STRIPE
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 export const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2020-08-27', // https://stripe.com/docs/api/versioning
+    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
 })

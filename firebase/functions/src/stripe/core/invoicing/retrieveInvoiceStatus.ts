@@ -1,6 +1,7 @@
 import { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
-import { env, stripe } from '../../../init'
+import { env } from '../../../init'
 import * as StripeConfig from '../../../config/stripe'
+import { retrieveLatestInvoice } from './retrieveLatestInvoice'
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
 export async function retrieveInvoiceStatus(enrolment: ScienceEnrolment): Promise<InvoiceStatus> {
@@ -8,7 +9,7 @@ export async function retrieveInvoiceStatus(enrolment: ScienceEnrolment): Promis
         return { status: 'NOT_SENT' }
     } else {
         // invoice already created... check its status
-        let invoice = await stripe.invoices.retrieve(enrolment.invoiceId)
+        const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
         const url = `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}`
         if (invoice.paid) {
             return {
