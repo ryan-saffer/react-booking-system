@@ -19,6 +19,7 @@ import HolidayProgramBookingScreen from '../HolidayPrograms/CustomerBookingScree
 import Confirmation from '../HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation'
 import ScienceProgramBookingForm from '../ScienceClub/BookingForm'
 import ParentPortal from '../ScienceClub/ParentPortal'
+import InvitationsPage from '../Invitations/InvitationsPage'
 
 const App = () => {
     const theme = createMuiTheme({
@@ -64,6 +65,7 @@ const App = () => {
                         component={HolidayProgramBookingScreen}
                     />
                     <Route exact path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN} component={Confirmation} />
+                    <Route exact path={ROUTES.INVITATIONS} component={InvitationsPage} />
                 </div>
             </Router>
         </ThemeProvider>

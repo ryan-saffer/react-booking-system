@@ -4,7 +4,7 @@
   "scripts": {
     "build": "npm --prefix fizz-kidz run build && tslint --project tsconfig.json && npm run copy-files && tsc",
     "build:watch": "npm --prefix fizz-kidz run build && tslint --project tsconfig.json && npm run copy-files && tsc --watch",
-    "copy-files": "copyfiles -u 1 src/**/*.html lib/src && copyfiles -u 1 src/**/*.csv lib/src && copyfiles -u 1 credentials/**/*.json lib/credentials",
+    "copy-files": "copyfiles -u 1 src/**/*.html lib/src && copyfiles -u 1 src/**/*.csv lib/src && copyfiles -u 1 credentials/**/*.json lib/credentials && copyfiles -u 1 src/**/*.woff lib/src",
     "serve": "firebase emulators:start --only functions --inspect-functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
     "@types/express": "^4.17.6",
+    "@types/filesystem": "^0.0.32",
     "@types/firebase": "^3.2.1",
     "@types/stripe": "^7.13.23",
     "acuityscheduling": "^0.1.9",
@@ -30,6 +31,7 @@
     "luxon": "^2.4.0",
     "mjml": "^4.12.0",
     "mustache": "^4.2.0",
+    "puppeteer": "^19.2.2",
     "stripe": "^10.17.0",
     "tslint": "^6.1.2"
   },
@@ -38,7 +40,8 @@
     "@types/mjml": "^4.7.0",
     "csv-parse": "^5.3.0",
     "firebase-functions-test": "^0.1.7",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "typescript": "^4.8.4"
   },
   "main": "lib/src/index.js",
   "private": true

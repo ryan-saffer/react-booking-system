@@ -18,9 +18,9 @@ class Firebase {
         this.auth = app.auth()
         this.db = app.firestore()
         this.functions = app.functions('australia-southeast1')
-        // if (process.env.NODE_ENV === 'development') {
-        //     this.functions.useEmulator('localhost', 5001)
-        // }
+        if (process.env.NODE_ENV === 'development') {
+            this.functions.useEmulator('localhost', 5001)
+        }
         this.googleProvider = new firebase.auth.GoogleAuthProvider()
         this.storage = app.storage()
     }

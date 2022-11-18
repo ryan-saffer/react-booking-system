@@ -7,6 +7,7 @@ export const acuityClientV2 = acuityV2.client
 export * from './bookings'
 export * from './bookings/sendOutForms'
 export * from './bookings/sendOutSingleForm'
+export * from './bookings/invitations'
 export * from './bookings/onFormSubmit'
 export * from './mjml'
 export * from './acuity/webhook/webhook'
