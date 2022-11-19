@@ -16,7 +16,7 @@ class Client {
     }
 
     updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<HolidayProgramBooking>) {
-        FirestoreRefs.holidayProgram(paymentIntentId, documentId).update(data)
+        return FirestoreRefs.holidayProgram(paymentIntentId, documentId).update(data)
     }
 
     getScienceEnrolment(appointmentId: string) {
