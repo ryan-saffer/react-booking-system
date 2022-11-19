@@ -130,12 +130,10 @@ async function scheduleHolidayProgram(
         ],
     })
 
-    const result = await FirestoreClient.updateHolidayProgram(paymentIntentId, programSnapshot.id, {
+    await FirestoreClient.updateHolidayProgram(paymentIntentId, programSnapshot.id, {
         booked: true,
         appointmentId: appointment.id,
     })
-
-    console.log({ result })
 
     return appointment
 }
