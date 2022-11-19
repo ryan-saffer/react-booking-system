@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import './AntD.less'
 import Step1 from './step1/Step1'
-import { Form, Button, Steps, Row, Modal, Spin, Card, Typography } from 'antd'
+import { Form, Button, Steps, Modal, Card, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
@@ -11,6 +11,7 @@ import Step3 from './step3/Step3'
 import { makeStyles } from '@material-ui/core'
 import { LeftOutlined } from '@ant-design/icons'
 import Root from '../../Shared/Root'
+import Loader from '../../ScienceClub/shared/Loader'
 const { Step } = Steps
 
 export type Form = {
@@ -137,7 +138,7 @@ const CustomerBookingScreen = () => {
 
     const renderForm = () => {
         if (loading) {
-            return <Spin style={{ marginTop: 24, marginBottom: 24 }} />
+            return <Loader style={{ marginTop: 24, marginBottom: 24 }} />
         }
 
         if (noUpcomingPrograms) {

@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Result, Spin } from 'antd'
+import { Result } from 'antd'
 import useQueryParam from '../../../Hooks/UseQueryParam'
 import Root from '../../../Shared/Root'
 import Firebase, { FirebaseContext } from '../../../Firebase'
+import Loader from '../../../ScienceClub/shared/Loader'
 
 type Props = {}
 
@@ -25,7 +26,6 @@ const Confirmation: React.FC<Props> = () => {
             .doc(paymentIntentId)
             .onSnapshot(
                 (snapshot) => {
-
                     if (!snapshot.exists) {
                         setError(true)
                         setLoading(false)
@@ -54,15 +54,15 @@ const Confirmation: React.FC<Props> = () => {
 
     if (loading) {
         return (
-            <Root color='pink' width='centered'>
-                <Spin style={{ marginTop: 36, marginBottom: 12 }}/>
+            <Root color="pink" width="centered">
+                <Loader style={{ marginTop: 36, marginBottom: 12 }} />
             </Root>
         )
     }
 
     if (error) {
         return (
-            <Root color='pink' width='centered'>
+            <Root color="pink" width="centered">
                 <Result
                     status="500"
                     title="Something went wrong"
@@ -72,7 +72,7 @@ const Confirmation: React.FC<Props> = () => {
         )
     }
     return (
-        <Root color='pink' width='centered'>
+        <Root color="pink" width="centered">
             <Result
                 status="success"
                 title="Booking confirmed"

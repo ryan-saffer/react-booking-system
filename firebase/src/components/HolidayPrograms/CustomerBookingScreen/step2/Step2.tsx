@@ -78,7 +78,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                     PhoneRule,
                 ]}
             >
-                <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                <Input />
             </Form.Item>
             <Divider>Emergency Contact</Divider>
             <Text strong>This person will be contacted in the case we cannot get hold of you</Text>
@@ -107,7 +107,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                     PhoneRule,
                 ]}
             >
-                <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                <Input />
             </Form.Item>
             <Form.List name="children">
                 {(fields, { add, remove }) => {

@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react'
-import { Button, Checkbox, FormInstance, Modal, Spin, Typography } from 'antd'
+import { Button, Checkbox, FormInstance, Modal, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity } from 'fizz-kidz'
 import { Form } from '..'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { makeStyles } from '@material-ui/core'
 import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
+import Loader from '../../../ScienceClub/shared/Loader'
 
 type Props = {
     form: Form
@@ -157,7 +158,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 onClick={handleSubmit}
                 style={{ marginBottom: 12, marginTop: 16 }}
             >
-                {submitting && <Spin />}
+                {submitting && <Loader size="sm" />}
                 {!submitting && <strong>Confirm and pay</strong>}
             </Button>
             <Modal
