@@ -7,11 +7,12 @@ import Payment from './Payment'
 import BookingSummary from './BookingSummary'
 import { Acuity } from 'fizz-kidz'
 import { Form } from '..'
-import { FormInstance, Spin, Result } from 'antd'
+import { FormInstance, Result } from 'antd'
 import { calculateTotal, DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import DiscountInput from './DiscountInput'
 import { DateTime } from 'luxon'
 import { capitalise } from '../../../../utilities/stringUtilities'
+import Loader from '../../../ScienceClub/shared/Loader'
 
 const isProd = process.env.REACT_APP_ENV === 'prod'
 
@@ -149,7 +150,7 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
 
     if (paymentIntent.clientSecret === '') {
         return (
-            <Spin
+            <Loader
                 style={{
                     display: 'flex',
                     justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
-import { Button, Input, Popover, Tag, Typography } from 'antd'
+import { Button, Input, Popover, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../../Firebase'
