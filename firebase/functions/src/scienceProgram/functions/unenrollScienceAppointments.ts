@@ -1,25 +1,25 @@
 import * as functions from 'firebase-functions'
-import { db, stripe } from '../../init'
+import { stripe } from '../../init'
 import { onCall } from '../../utilities'
 import { ScienceEnrolment, UnenrollScienceAppointmentsParams } from 'fizz-kidz'
-import { AcuityClient } from '../../acuity/AcuityClient'
+import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { mailClient } from '../../sendgrid/MailClient'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
+import { FirestoreClient } from '../../firebase/FirestoreClient'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(
     async (input: UnenrollScienceAppointmentsParams, _context: functions.https.CallableContext) => {
         await Promise.all(
             input.appointmentIds.map(async (appointmentId) => {
                 // 1. get appointment from firestore
-                const enrolmentSnapshot = await db.collection('scienceAppointments').doc(appointmentId).get()
-                const enrolment = enrolmentSnapshot.data() as ScienceEnrolment
+                const enrolmentSnapshot = await FirestoreClient.getScienceEnrolment(appointmentId)
+                const enrolment = enrolmentSnapshot.data()!
 
                 // 2. cancel each acuity appointment
                 let appointmentIds = enrolment.appointments
 
                 try {
-                    const acuityClient = new AcuityClient()
-                    await Promise.all(appointmentIds.map((id) => acuityClient.cancelAppointment(id)))
+                    await Promise.all(appointmentIds.map((id) => AcuityClient.cancelAppointment(id)))
                 } catch (err) {
                     throw new functions.https.HttpsError(
                         'internal',

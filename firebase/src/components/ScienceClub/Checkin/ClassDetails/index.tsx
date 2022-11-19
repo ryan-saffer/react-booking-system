@@ -8,7 +8,7 @@ import useFirebase from '../../../Hooks/context/UseFirebase'
 import Heading from './Header'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
-import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../../utilities/firebase/functions'
 
 type QueryParams = {
     appointmentTypeId: string
@@ -56,7 +56,7 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
                         .where('appointmentTypeId', '==', appointmentTypeId)
                         .where('status', '==', 'active')
                         .get(),
-                    callAcuityClientV2(
+                    callAcuityClient(
                         'searchForAppointments',
                         firebase
                     )({

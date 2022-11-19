@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react
 import { Acuity } from 'fizz-kidz'
 
 import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>
@@ -22,7 +22,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
 
     useEffect(() => {
         const fetchClients = (data: Acuity.Client.FetchAppointmentsParams) => {
-            callAcuityClientV2(
+            callAcuityClient(
                 'searchForAppointments',
                 firebase
             )({ ...data })

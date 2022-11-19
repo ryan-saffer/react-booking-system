@@ -6,7 +6,7 @@ import ChildDetails from './ChildDetails'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import ActionButton from './ActionButton'
 import { EnrolmentsMap, getEnrolment } from '..'
-import { callAcuityClientV2, callFirebaseFunction } from '../../../../../utilities/firebase/functions'
+import { callAcuityClient, callFirebaseFunction } from '../../../../../utilities/firebase/functions'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { makeStyles } from '@material-ui/core'
 
@@ -54,7 +54,7 @@ const EnrolmentTable: React.FC<Props> = ({
     }
 
     const setAppointmentLabel: SetAppointmentLabel = async (id: number, label: string) => {
-        const result = await callAcuityClientV2(
+        const result = await callAcuityClient(
             'updateAppointment',
             firebase
         )({

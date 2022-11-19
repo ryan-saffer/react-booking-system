@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Acuity } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
-import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import { WithErrorModal } from '../../../Hooks/UseErrorDialog'
 import { DateTime } from 'luxon'
 import useFirebase from '../../../Hooks/context/UseFirebase'
@@ -30,7 +30,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
     const toggle = async (checked: boolean) => {
         setSetloading(true)
         try {
-            await callAcuityClientV2(
+            await callAcuityClient(
                 'updateAppointment',
                 firebase
             )({ id: appointment.id, labels: checked ? [] : [{ id: Acuity.Constants.Labels.NOT_ATTENDING }] })

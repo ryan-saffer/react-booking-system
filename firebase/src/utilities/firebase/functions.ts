@@ -16,32 +16,13 @@ export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, f
     }
 }
 
-/**
- * @deprecated Uses the deprecated `acuityClient` firebase function. Use {@link callAcuityClientV2} instead.
- */
-export function callAcuityClient<K extends keyof Acuity.Client.AcuityFunctions>(fn: K, firebase: Firebase) {
+export function callAcuityClient<K extends keyof Acuity.Client.AcuityFunctions>(method: K, firebase: Firebase) {
     return function (
         input: Acuity.Client.AcuityFunctions[K]['input']
     ): Promise<Acuity.Client.AcuityFunctions[K]['result']> {
         return new Promise((resolve, reject) => {
             firebase.functions
-                .httpsCallable('acuityClient')({ data: { method: fn, ...input } })
-                .then((result) => resolve(result))
-                .catch((error) => {
-                    logGenericError(fn, error)
-                    reject(error)
-                })
-        })
-    }
-}
-
-export function callAcuityClientV2<K extends keyof Acuity.Client.AcuityFunctions>(method: K, firebase: Firebase) {
-    return function (
-        input: Acuity.Client.AcuityFunctions[K]['input']
-    ): Promise<Acuity.Client.AcuityFunctions[K]['result']> {
-        return new Promise((resolve, reject) => {
-            firebase.functions
-                .httpsCallable('acuityClientV2')({ method, input })
+                .httpsCallable('acuityClient')({ method, input })
                 .then((result) => resolve(result))
                 .catch((error) => {
                     if (isFunctionsError(error)) {

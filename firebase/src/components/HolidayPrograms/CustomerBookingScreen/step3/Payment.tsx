@@ -81,6 +81,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                             : discountedPrograms.includes(klass.id)
                             ? PROGRAM_PRICE - DISCOUNT_PRICE
                             : PROGRAM_PRICE,
+                    booked: false,
                 })
             })
         })
@@ -169,7 +170,10 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 ]}
             >
                 <strong>Cancellation Policy</strong>
-                <p>A full refund will be automatically issued for cancellations made more than 24 hours before the program.</p>
+                <p>
+                    A full refund will be automatically issued for cancellations made more than 24 hours before the
+                    program.
+                </p>
                 <p>Cancellations made less than 24 hours before the program will not be refunded.</p>
             </Modal>
         </>

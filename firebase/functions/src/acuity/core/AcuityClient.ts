@@ -1,8 +1,11 @@
-import { hasError } from './shared'
+import { hasError } from './utilities'
 import { Acuity } from 'fizz-kidz'
+import UpdateAppointmentParams = Acuity.Client.UpdateAppointmentParams
+import FetchAppointmentsParams = Acuity.Client.FetchAppointmentsParams
+import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
 
 const AcuitySdk = require('acuityscheduling')
-const acuityCredentials = require('../../credentials/acuity_credentials.json')
+const acuityCredentials = require('../../../credentials/acuity_credentials.json')
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
     apiKey: acuityCredentials.api_key,
@@ -15,10 +18,13 @@ type ScheduleAppointmentParams = {
     lastName: string
     email: string
     phone: string
+    calendarID?: number
+    paid?: boolean
+    certificate?: string
     fields?: { id: number; value: number | string }[]
 }
 
-export class AcuityClient {
+export class Client {
     private _request<T>(path: string, options: object = {}): Promise<T> {
         return new Promise((resolve, reject) => {
             acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
@@ -36,7 +42,7 @@ export class AcuityClient {
         return this._request<Acuity.Appointment>(`/appointments/${id}`)
     }
 
-    updateAppointment(params: Acuity.Client.UpdateAppointmentParams) {
+    updateAppointment(params: UpdateAppointmentParams) {
         const { id, ...body } = params
         return this._request<Acuity.Appointment>(`/appointments/${id}`, { method: 'PUT', body })
     }
@@ -45,7 +51,7 @@ export class AcuityClient {
         return Promise.all(ids.map((id) => this.getAppointment(id.toString())))
     }
 
-    async searchForAppointments(params: Acuity.Client.FetchAppointmentsParams) {
+    async searchForAppointments(params: FetchAppointmentsParams) {
         let path = `/appointments?calendarID=${params.calendarId}&appointmenTypeID=${params.appointmentTypeId}`
         if (params.classTime) {
             const date = params.classTime.split('T')[0]
@@ -55,7 +61,7 @@ export class AcuityClient {
         return result.filter((it) => it.appointmentTypeID === params.appointmentTypeId)
     }
 
-    async getAppointmentTypes(input: Acuity.Client.GetAppointmentTypesParams) {
+    async getAppointmentTypes(input: GetAppointmentTypesParams) {
         const appointmentTypes = await this._request<Acuity.AppointmentType[]>(`/appointment-types`)
         if (input.category) {
             return appointmentTypes.filter((it) => it.category === input.category)
@@ -86,3 +92,6 @@ export class AcuityClient {
         return this._request<Acuity.Calendar[]>(`/calendars`)
     }
 }
+
+const AcuityClient = new Client()
+export { AcuityClient }

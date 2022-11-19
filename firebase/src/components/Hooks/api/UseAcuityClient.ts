@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import { Acuity, Service } from 'fizz-kidz'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
 const useAcuityClient = <T extends keyof Acuity.Client.AcuityFunctions>(
@@ -14,7 +14,7 @@ const useAcuityClient = <T extends keyof Acuity.Client.AcuityFunctions>(
     })
 
     useEffect(() => {
-        callAcuityClientV2(
+        callAcuityClient(
             method,
             firebase
         )(input)
