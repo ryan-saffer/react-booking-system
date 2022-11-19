@@ -1,6 +1,6 @@
 import { Acuity, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import React, { useEffect, useState } from 'react'
-import { callAcuityClientV2, callFirebaseFunction } from '../../../utilities/firebase/functions'
+import { callAcuityClient, callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Root from '../../Shared/Root'
 import { LeftOutlined } from '@ant-design/icons'
 import { Button, Result, Typography } from 'antd'
@@ -31,7 +31,7 @@ const BookingForm = () => {
         async function fetchAppointmentTypes() {
             try {
                 const [appointmentTypes, calendars] = await Promise.all([
-                    callAcuityClientV2('getAppointmentTypes', firebase)({}),
+                    callAcuityClient('getAppointmentTypes', firebase)({}),
                     firebase.db.collection('acuityCalendars').get(),
                 ])
 

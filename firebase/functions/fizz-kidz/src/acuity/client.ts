@@ -6,8 +6,6 @@ export interface AcuityFunctions {
     searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
     getAppointments: Function<GetAppointmentsParams, Appointment[]>
     getAppointmentTypes: Function<GetAppointmentTypesParams, AppointmentType[]>
-    updateEnrolment: Function<UpdateScienceEnrolmentParams, Appointment[]>
-    unenrollChildFromTerm: Function<UnenrollChildFromTermParams, null> // number = appointmentId
     updateLabel: Function<UpdateLabelParams, Appointment>
     updateAppointment: Function<UpdateAppointmentParams, Appointment>
     classAvailability: Function<ClassAvailabilityParams, Class[]>
@@ -63,7 +61,7 @@ export type ClassAvailabilityParams = {
     minDate?: number
 }
 
-export type HolidayProgramBooking = {
+interface BaseHolidayProgramBooking {
     appointmentTypeId: number
     dateTime: string
     calendarId: number
@@ -79,6 +77,17 @@ export type HolidayProgramBooking = {
     discountCode: string
     amountCharged: number
 }
+
+interface BookedHolidayProgram extends BaseHolidayProgramBooking {
+    booked: true
+    appointmentId: number
+}
+
+interface UnbookedHolidayProgram extends BaseHolidayProgramBooking {
+    booked: false
+}
+
+export type HolidayProgramBooking = BookedHolidayProgram | UnbookedHolidayProgram
 
 export type CheckCertificateParams = {
     certificate: string

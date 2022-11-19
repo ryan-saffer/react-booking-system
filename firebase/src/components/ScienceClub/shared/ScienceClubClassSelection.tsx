@@ -10,7 +10,7 @@ import { Button, Paper } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 import { useHistory } from 'react-router-dom'
 import useFirebase from '../../Hooks/context/UseFirebase'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 import { Acuity } from 'fizz-kidz'
 
 type Props = {
@@ -32,7 +32,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
 
     useEffect(() => {
         const fetchAppointmentTypes = () => {
-            callAcuityClientV2(
+            callAcuityClient(
                 'getAppointmentTypes',
                 firebase
             )({
@@ -90,7 +90,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
             ...loading,
             classes: true,
         })
-        callAcuityClientV2(
+        callAcuityClient(
             'classAvailability',
             firebase
         )({ appointmentTypeId: id, minDate: Date.now(), includeUnavailable: true })

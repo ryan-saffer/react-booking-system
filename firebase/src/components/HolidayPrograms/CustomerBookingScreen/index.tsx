@@ -4,7 +4,7 @@ import Step1 from './step1/Step1'
 import { Form, Button, Steps, Row, Modal, Spin, Card, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import Step2 from './step2/Step2'
 import Step3 from './step3/Step3'
@@ -47,7 +47,7 @@ const CustomerBookingScreen = () => {
 
     useEffect(() => {
         const fetchAvailableSlots = async () => {
-            callAcuityClientV2(
+            callAcuityClient(
                 'classAvailability',
                 firebase
             )({

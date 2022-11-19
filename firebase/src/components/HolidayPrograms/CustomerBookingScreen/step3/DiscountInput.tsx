@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { Button, Input, Popover, Tag, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
-import { callAcuityClientV2 } from '../../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { InfoCircleOutlined } from '@ant-design/icons'
 
@@ -34,7 +34,7 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
         setError('')
 
         try {
-            let result = await callAcuityClientV2(
+            let result = await callAcuityClient(
                 'checkCertificate',
                 firebase
             )({

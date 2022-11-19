@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import * as StripeConfig from '../../config/stripe'
 import { Metadata } from 'fizz-kidz'
 import Stripe from 'stripe'
-import { bookHolidayPrograms } from '../../acuity/holidayPrograms'
+import { bookHolidayPrograms } from '../../holidayPrograms/core'
 const isProd = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
 const stripeConfig = isProd ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {

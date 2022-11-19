@@ -19,7 +19,7 @@ import * as ROUTES from '../../../constants/routes'
 import { withAuthorization } from '../../Session'
 import { Acuity, Service } from 'fizz-kidz'
 import { capitalise } from '../../../utilities/stringUtilities'
-import { callAcuityClientV2 } from '../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
 const HolidayProgramSelection = (props: any) => {
@@ -33,7 +33,7 @@ const HolidayProgramSelection = (props: any) => {
     const [selectedClass, setSelectedClass] = useState<string>('')
 
     useEffect(() => {
-        callAcuityClientV2(
+        callAcuityClient(
             'classAvailability',
             firebase
         )({

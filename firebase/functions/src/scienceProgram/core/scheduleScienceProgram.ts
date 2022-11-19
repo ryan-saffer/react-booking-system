@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { db, storage } from '../../init'
-import { AcuityClient } from '../../acuity/AcuityClient'
+import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { mailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
@@ -18,8 +18,7 @@ export default async function scheduleScienceProgram(
         const newDoc = db.collection('scienceAppointments').doc()
 
         // get the calendar information from acuity
-        const acuityClient = new AcuityClient()
-        const calendars = await acuityClient.getCalendars()
+        const calendars = await AcuityClient.getCalendars()
         const calendar = calendars.find((it) => it.id === input.calendarId)
 
         if (!calendar) {
@@ -43,10 +42,10 @@ export default async function scheduleScienceProgram(
         }
 
         // schedule into all appointments of the program, along with the document id
-        const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
+        const classes = await AcuityClient.getClasses(input.appointmentTypeId, false, Date.now())
         const appointments = await Promise.all(
             classes.map((it) =>
-                acuityClient.scheduleAppointment({
+                AcuityClient.scheduleAppointment({
                     appointmentTypeID: input.appointmentTypeId,
                     datetime: it.time,
                     firstName: input.parent.firstName,
