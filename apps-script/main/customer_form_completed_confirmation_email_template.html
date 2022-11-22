@@ -103,8 +103,10 @@
   <p>We look forward to seeing you then!</p>
   <p>Kind regards,</p>
   <p>
-    <? if (location === 'malvern' || location === 'cheltenham') { ?>
+    <? if (location === 'malvern') { ?>
     Michaela
+    <? } else if (location === 'cheltenham') { ?>
+    Maxie
     <? } else { ?>
     Bonnie
     <? } ?>

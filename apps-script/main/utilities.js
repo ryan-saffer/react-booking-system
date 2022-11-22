@@ -5,8 +5,10 @@
  * @returns {String} email address to send from
  */
 function determineFromEmailAddress(location) {
-  return location === "malvern" || location === "cheltenham"
+  return location === "malvern"
     ? "michaela@fizzkidz.com.au"
+    : location === "cheltenham"
+    ? "maxie@fizzkidz.com.au"
     : "bonnie@fizzkidz.com.au";
 }
 
