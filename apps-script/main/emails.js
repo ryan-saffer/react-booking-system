@@ -84,8 +84,10 @@ function sendBookingConfirmationEmail(booking, environment) {
     bcc: "bookings@fizzkidz.com.au",
     attachments: [faqs.getBlob(), ...photos.map((photo) => photo.getBlob())],
     replyTo:
-      booking.location === "malvern" || booking.location === "cheltenham"
+      booking.location === "malvern"
         ? "michaela@fizzkidz.com.au"
+        : booking.location === "cheltenham"
+        ? "maxie@fizzkidz.com.au"
         : "bonnie@fizzkidz.com.au",
   });
 }
@@ -318,8 +320,10 @@ function sendOnFormSubmitConfirmationEmail(booking, creations, additions) {
   var fromAddress = determineFromEmailAddress(booking.location);
 
   var signature = getGmailSignature(
-    booking.location === "malvern" || booking.location === "cheltenham"
+    booking.location === "malvern"
       ? "michaela"
+      : booking.location === "cheltenham"
+      ? "maxie"
       : "bonnie"
   );
 
