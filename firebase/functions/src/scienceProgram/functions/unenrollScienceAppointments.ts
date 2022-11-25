@@ -28,19 +28,19 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                     )
                 }
 
-                // 3. set status to 'unenrolled'
+                // 3. void invoice if needed
+                if (enrolment.invoiceId) {
+                    const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
+                    if (invoice.status === 'open') {
+                        await stripe.invoices.voidInvoice(invoice.id!)
+                    }
+                }
+
+                // 4. set status to 'unenrolled'
                 const updatedAppointment: Partial<ScienceEnrolment> = {
                     status: 'inactive',
                 }
                 await enrolmentSnapshot.ref.update(updatedAppointment)
-
-                // 4. void invoice if needed
-                if (enrolment.invoiceId) {
-                    const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
-                    if (invoice.status === 'open') {
-                        await stripe.invoices.voidInvoice(enrolment.invoiceId)
-                    }
-                }
 
                 // 5. email confirmation
                 try {
