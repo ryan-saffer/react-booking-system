@@ -20,7 +20,7 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(
         let programData: { [key: string]: number } = {}
         data.programs.forEach((it) => {
             // slice childName since key must be under 40 chars
-            const key = `${it.childName.slice(0, 15)} - ${it.dateTime}`
+            const key = `${it.childName.slice(0, 40 - it.dateTime.length - 3)} - ${it.dateTime}`
             programData[key] = it.amount
         })
         const paymentIntent = await stripe.paymentIntents.create({
