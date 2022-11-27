@@ -45,9 +45,11 @@ export interface UnenrollChildFromTermParams {
     appointmentId: number
 }
 
+export type Label = 'none' | 'checked-in' | 'checked-out' | 'not-attending'
+
 export interface UpdateLabelParams {
     appointmentId: number
-    label: number // Acuity.Constants.Labels
+    label: Label
 }
 
 export type UpdateAppointmentParams = {

@@ -3,6 +3,8 @@ import { Acuity } from 'fizz-kidz'
 import UpdateAppointmentParams = Acuity.Client.UpdateAppointmentParams
 import FetchAppointmentsParams = Acuity.Client.FetchAppointmentsParams
 import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
+import UpdateLabelParams = Acuity.Client.UpdateLabelParams
+import Label = Acuity.Client.Label
 
 const AcuitySdk = require('acuityscheduling')
 const acuityCredentials = require('../../../credentials/acuity_credentials.json')
@@ -90,6 +92,22 @@ export class Client {
 
     getCalendars() {
         return this._request<Acuity.Calendar[]>(`/calendars`)
+    }
+
+    checkCertificate(certificate: string, appointmentTypeId: number, email: string): Promise<Acuity.Certificate> {
+        return this._request<Acuity.Certificate>(
+            `/certificates/check?certificate=${certificate}&appointmentTypeID=${appointmentTypeId}&email=${email}`
+        )
+    }
+
+    updateLabel(params: UpdateLabelParams) {
+        const labelMap: { [key in Exclude<Label, 'none'>]: number } = {
+            'checked-in': Acuity.Constants.Labels.CHECKED_IN,
+            'checked-out': Acuity.Constants.Labels.CHECKED_OUT,
+            'not-attending': Acuity.Constants.Labels.NOT_ATTENDING,
+        }
+        const label = params.label === 'none' ? [] : [{ id: labelMap[params.label] }]
+        return this.updateAppointment({ id: params.appointmentId, labels: label })
     }
 }
 

@@ -7,6 +7,7 @@ import { Collapse, Button as AntButton, List, Tag } from 'antd'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../utilities/stringUtilities'
+import { callAcuityClient } from '../../../utilities/firebase/functions'
 const { Panel } = Collapse
 
 type Props = {
@@ -47,28 +48,29 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const hasAllergies = allergies !== ''
     const stayingAllDay = appointment.certificate === 'ALLDAY'
 
-    const updateLabel = (value: number | null) => {
-        firebase.functions
-            .httpsCallable('acuityClient')({
-                auth: firebase.auth.currentUser?.toJSON(),
-                data: { method: 'updateLabel', clientId: appointment.id, label: value },
+    const updateLabel = async (value: Acuity.Client.Label) => {
+        try {
+            const result = await callAcuityClient(
+                'updateLabel',
+                firebase
+            )({
+                appointmentId: appointment.id,
+                label: value,
             })
-            .then((result) => {
-                console.log(result)
-                setAppointment(result.data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
-            })
+
+            setAppointment(result.data)
+            setLoading(false)
+        } catch (err) {
+            console.error(err)
+            setLoading(false)
+        }
     }
 
     const handleSignIn = (e: any) => {
         e.stopPropagation()
         setLoading(true)
 
-        updateLabel(Acuity.Constants.Labels.CHECKED_IN)
+        updateLabel('checked-in')
     }
 
     const handleSignOut = (e: any) => {
@@ -77,7 +79,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
 
         console.log(appointment.id)
 
-        updateLabel(null)
+        updateLabel('none')
     }
 
     const childInfo = [
