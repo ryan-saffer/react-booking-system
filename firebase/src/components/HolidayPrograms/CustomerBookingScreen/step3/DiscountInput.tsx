@@ -4,6 +4,7 @@ import { Acuity } from 'fizz-kidz'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { InfoCircleOutlined } from '@ant-design/icons'
+import { calculateDiscountedAmount } from '../utilities'
 
 const AppointmentTypeId =
     process.env.REACT_APP_ENV === 'prod'
@@ -13,9 +14,10 @@ const AppointmentTypeId =
 type Props = {
     email: string
     setDiscount: Dispatch<SetStateAction<Acuity.Certificate | undefined>>
+    total: number
 }
 
-const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
+const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [value, setValue] = useState('')
@@ -42,8 +44,15 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
                 certificate: value,
                 email: email,
             })
-            setValue('')
-            setDiscount(result.data)
+
+            if (total - calculateDiscountedAmount(total, result.data) < 0) {
+                setError(
+                    `Discount code amount of $${result.data.discountAmount} is greater than the total of $${total}.`
+                )
+            } else {
+                setValue('')
+                setDiscount(result.data)
+            }
         } catch (error: any) {
             if (error.message) {
                 setError(error.message)
