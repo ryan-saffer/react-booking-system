@@ -126,12 +126,7 @@ const CustomerBookingScreen = () => {
                 return <Step2 selectedClasses={selectedClasses} />
             case 3:
                 return (
-                    <Step3
-                        form={formValues as Form}
-                        formInstance={form}
-                        selectedClasses={selectedClasses}
-                        selectedStore={selectedStore}
-                    />
+                    <Step3 form={formValues as Form} selectedClasses={selectedClasses} selectedStore={selectedStore} />
                 )
         }
     }

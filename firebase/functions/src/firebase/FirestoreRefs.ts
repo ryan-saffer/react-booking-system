@@ -1,7 +1,5 @@
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { db } from '../init'
-import HolidayProgramBooking = Acuity.Client.HolidayProgramBooking
-
 type Collection<T> = FirebaseFirestore.CollectionReference<T>
 type Document<T> = FirebaseFirestore.DocumentReference<T>
 
@@ -10,7 +8,9 @@ class Refs {
         return db.collection('holidayProgramBookings').doc(paymentIntentId)
     }
     holidayPrograms(paymentIntentId: string) {
-        return this.holidayProgramBooking(paymentIntentId).collection('programs') as Collection<HolidayProgramBooking>
+        return this.holidayProgramBooking(paymentIntentId).collection(
+            'programs'
+        ) as Collection<PaidHolidayProgramBooking>
     }
 
     holidayProgram(paymentIntentId: string, documentId: string) {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import Firebase, { FirebaseContext } from '../../../Firebase'
@@ -7,12 +7,13 @@ import Payment from './Payment'
 import BookingSummary from './BookingSummary'
 import { Acuity } from 'fizz-kidz'
 import { Form } from '..'
-import { FormInstance, Result } from 'antd'
+import { Result } from 'antd'
 import { calculateTotal, DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import DiscountInput from './DiscountInput'
 import { DateTime } from 'luxon'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import Loader from '../../../ScienceClub/shared/Loader'
+import FreeConfirmationButton from './FreeConfirmationButton'
 
 const isProd = process.env.REACT_APP_ENV === 'prod'
 
@@ -27,12 +28,11 @@ type ChildForm = { childName: string }
 
 type Props = {
     form: Form
-    formInstance: FormInstance
     selectedClasses: Acuity.Class[]
     selectedStore: string
 }
 
-const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedStore }) => {
+const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
     const firebase = useContext(FirebaseContext) as Firebase
     const [paymentIntent, setPaymentIntent] = useState({
         id: '',
@@ -46,13 +46,12 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
         clientSecret: paymentIntent.clientSecret,
     }
 
-    const discountedClasses = getSameDayClasses(selectedClasses)
-    const { totalPrice, originalTotal } = calculateTotal(
-        selectedClasses,
-        discountedClasses,
-        form.children.length,
-        discount
+    const discountedClasses = useMemo(() => getSameDayClasses(selectedClasses), [selectedClasses])
+    const { totalPrice, originalTotal } = useMemo(
+        () => calculateTotal(selectedClasses, discountedClasses, form.children.length, discount),
+        [selectedClasses, discountedClasses, discount, form.children]
     )
+    const isFree = totalPrice == 0
 
     const summarisedList: ItemSummary[] = []
     let sortedSelectedClasses = selectedClasses.map((it) => it)
@@ -135,6 +134,10 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                 setError(true)
             }
         }
+
+        if (isFree) {
+            return
+        }
         updatePaymentIntent()
     }, [discount])
 
@@ -170,15 +173,24 @@ const Step3: React.FC<Props> = ({ form, formInstance, selectedClasses, selectedS
                 setDiscount={setDiscount}
             />
             <DiscountInput email={form.parentEmail} setDiscount={setDiscount} />
-            <Elements stripe={stripePromise} options={options}>
-                <Payment
+            {!isFree && (
+                <Elements stripe={stripePromise} options={options}>
+                    <Payment
+                        form={form}
+                        selectedClasses={selectedClasses}
+                        paymentIntentId={paymentIntent.id}
+                        discount={discount}
+                    />
+                </Elements>
+            )}
+            {isFree && discount?.certificate && (
+                <FreeConfirmationButton
                     form={form}
-                    formInstance={formInstance}
                     selectedClasses={selectedClasses}
-                    paymentIntentId={paymentIntent.id}
-                    discount={discount}
+                    discountCode={discount?.certificate}
+                    setError={setError}
                 />
-            </Elements>
+            )}
         </>
     )
 }

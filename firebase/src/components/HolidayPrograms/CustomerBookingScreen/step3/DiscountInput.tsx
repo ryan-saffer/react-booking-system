@@ -43,7 +43,7 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount }) => {
                 email: email,
             })
             setValue('')
-            setDiscount({ ...result.data })
+            setDiscount(result.data)
         } catch (error: any) {
             if (error.message) {
                 setError(error.message)
