@@ -9,7 +9,8 @@ type Props = {}
 
 const Confirmation: React.FC<Props> = () => {
     const firebase = useContext(FirebaseContext) as Firebase
-    const paymentIntentId = useQueryParam('payment_intent') as string
+    const paymentIntentId = useQueryParam('payment_intent', false) as string
+    const isFree = useQueryParam('free', false)
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -20,6 +21,12 @@ const Confirmation: React.FC<Props> = () => {
             setError(true)
             setLoading(false)
         }, 10000)
+
+        if (isFree) {
+            setLoading(false)
+            clearTimeout(timeout)
+            return
+        }
 
         const observer = firebase.db
             .collection('holidayProgramBookings')
