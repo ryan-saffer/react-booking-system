@@ -13,13 +13,7 @@ export function calculateTotal(
     const originalTotal = selectedClasses.length * numberOfChildren * PROGRAM_PRICE
     let amountDiscounted: number
     if (discount) {
-        switch(discount.discountType) {
-            case 'percentage':
-                amountDiscounted = originalTotal * (discount.discountAmount / 100)
-                break;
-            case 'price':
-                amountDiscounted = discount.discountAmount
-        }
+        amountDiscounted = calculateDiscountedAmount(originalTotal, discount)
     } else {
         amountDiscounted = discountedClasses.length * numberOfChildren * DISCOUNT_PRICE
     }
@@ -28,6 +22,15 @@ export function calculateTotal(
     return {
         originalTotal,
         totalPrice,
+    }
+}
+
+export function calculateDiscountedAmount(total: number, discount: Acuity.Certificate) {
+    switch (discount.discountType) {
+        case 'percentage':
+            return total * (discount.discountAmount / 100)
+        case 'price':
+            return discount.discountAmount
     }
 }
 

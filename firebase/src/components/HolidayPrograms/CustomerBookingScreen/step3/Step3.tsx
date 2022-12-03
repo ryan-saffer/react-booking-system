@@ -172,7 +172,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                 discount={discount}
                 setDiscount={setDiscount}
             />
-            <DiscountInput email={form.parentEmail} setDiscount={setDiscount} />
+            <DiscountInput email={form.parentEmail} setDiscount={setDiscount} total={totalPrice} />
             {!isFree && (
                 <Elements stripe={stripePromise} options={options}>
                     <Payment
