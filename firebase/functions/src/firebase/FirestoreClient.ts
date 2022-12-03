@@ -1,6 +1,5 @@
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { FirestoreRefs } from './FirestoreRefs'
-import HolidayProgramBooking = Acuity.Client.HolidayProgramBooking
 
 class Client {
     getHolidayProgramBooking(paymentIntentId: string) {
@@ -15,7 +14,7 @@ class Client {
         return FirestoreRefs.holidayPrograms(paymentIntentId).get()
     }
 
-    updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<HolidayProgramBooking>) {
+    updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<PaidHolidayProgramBooking>) {
         return FirestoreRefs.holidayProgram(paymentIntentId, documentId).update(data)
     }
 

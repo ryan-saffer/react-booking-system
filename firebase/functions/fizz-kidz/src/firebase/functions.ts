@@ -9,6 +9,7 @@ import {
     UpdatePaymentIntentParams,
     UpdateScienceEnrolmentParams,
 } from '..'
+import { FreeHolidayProgramBooking } from '../holidayPrograms'
 
 export interface FirebaseFunctions {
     retrieveInvoiceStatuses: Function<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
@@ -20,6 +21,7 @@ export interface FirebaseFunctions {
     unenrollScienceAppointments: Function<UnenrollScienceAppointmentsParams, void>
     updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: Function<void, void>
+    scheduleFreeHolidayPrograms: Function<FreeHolidayProgramBooking[], void>
 }
 
 export type Function<Input, Result> = {

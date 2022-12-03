@@ -42,10 +42,10 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<Acuity.Appointment[]>([])
 
-    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId'))
-    const calendarId = parseInt(useQueryParam<QueryParams>('calendarId'))
-    const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName'))
-    const classTime = decodeURIComponent(useQueryParam<QueryParams>('classTime'))
+    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
+    const calendarId = parseInt(useQueryParam<QueryParams>('calendarId') as string)
+    const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName') as string)
+    const classTime = decodeURIComponent(useQueryParam<QueryParams>('classTime') as string)
 
     useEffect(() => {
         async function init() {

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { Button, Checkbox, FormInstance, Modal, Typography } from 'antd'
+import { Button, Checkbox, Modal, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { Acuity } from 'fizz-kidz'
+import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { Form } from '..'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { makeStyles } from '@material-ui/core'
@@ -10,7 +10,6 @@ import Loader from '../../../ScienceClub/shared/Loader'
 
 type Props = {
     form: Form
-    formInstance: FormInstance
     selectedClasses: Acuity.Class[]
     paymentIntentId: string
     discount: Acuity.Certificate | undefined
@@ -56,36 +55,33 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
 
         const discountedPrograms = getSameDayClasses(selectedClasses)
 
-        let programs: Acuity.Client.HolidayProgramBooking[] = []
-        selectedClasses.forEach((klass) => {
-            form.children.forEach((child) => {
-                programs.push({
-                    appointmentTypeId:
-                        process.env.REACT_APP_ENV === 'prod'
-                            ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                            : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
-                    dateTime: klass.time,
-                    calendarId: klass.calendarID,
-                    parentFirstName: form.parentFirstName,
-                    parentLastName: form.parentLastName,
-                    parentPhone: form.phone,
-                    parentEmail: form.parentEmail,
-                    emergencyContactName: form.emergencyContact,
-                    emergencyContactPhone: form.emergencyPhone,
-                    childName: child.childName,
-                    childAge: child.childAge,
-                    childAllergies: child.allergies ?? '',
-                    discountCode: discountedPrograms.includes(klass.id) ? 'allday' : '',
-                    amountCharged:
-                        discount !== undefined
-                            ? PROGRAM_PRICE
-                            : discountedPrograms.includes(klass.id)
-                            ? PROGRAM_PRICE - DISCOUNT_PRICE
-                            : PROGRAM_PRICE,
-                    booked: false,
-                })
-            })
-        })
+        const programs: PaidHolidayProgramBooking[] = selectedClasses.flatMap((klass) =>
+            form.children.map((child) => ({
+                appointmentTypeId:
+                    process.env.REACT_APP_ENV === 'prod'
+                        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
+                        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                dateTime: klass.time,
+                calendarId: klass.calendarID,
+                parentFirstName: form.parentFirstName,
+                parentLastName: form.parentLastName,
+                parentPhone: form.phone,
+                parentEmail: form.parentEmail,
+                emergencyContactName: form.emergencyContact,
+                emergencyContactPhone: form.emergencyPhone,
+                childName: child.childName,
+                childAge: child.childAge,
+                childAllergies: child.allergies ?? '',
+                discountCode: discountedPrograms.includes(klass.id) ? 'allday' : '',
+                amountCharged:
+                    discount !== undefined
+                        ? PROGRAM_PRICE
+                        : discountedPrograms.includes(klass.id)
+                        ? PROGRAM_PRICE - DISCOUNT_PRICE
+                        : PROGRAM_PRICE,
+                booked: false,
+            }))
+        )
 
         // check if payment intent already stored in database
         const query = await firebase.db.collection('holidayProgramBookings').doc(paymentIntentId).get()

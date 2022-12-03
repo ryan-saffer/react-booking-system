@@ -34,3 +34,5 @@ export * as Utilities from './utilities'
 export * from './stripe'
 
 export * from './scienceclub'
+
+export * from './holidayPrograms'
