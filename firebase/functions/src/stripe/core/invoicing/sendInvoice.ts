@@ -35,6 +35,7 @@ export async function sendInvoice(input: {
         collection_method: 'send_invoice',
         days_until_due: daysUntilDue,
         metadata,
+        pending_invoice_items_behavior: 'include',
     })
 
     if (!invoice.id) {
