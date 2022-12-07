@@ -36,6 +36,7 @@ export interface AppointmentType {
     category: string
     calendarIDs: number[]
     price: string
+    color: string
 }
 
 export interface Form {
