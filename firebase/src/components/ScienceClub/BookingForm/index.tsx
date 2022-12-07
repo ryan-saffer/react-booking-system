@@ -31,15 +31,16 @@ const BookingForm = () => {
         async function fetchAppointmentTypes() {
             try {
                 const [appointmentTypes, calendars] = await Promise.all([
-                    callAcuityClient('getAppointmentTypes', firebase)({}),
+                    callAcuityClient(
+                        'getAppointmentTypes',
+                        firebase
+                    )({
+                        category: 'Science Club',
+                        availableToBook: true,
+                    }),
                     firebase.db.collection('acuityCalendars').get(),
                 ])
-
-                const filterCategory = process.env.REACT_APP_ENV === 'prod' ? 'Science Club' : 'TEST'
-                const scienceAppointmentTypes = appointmentTypes.data.filter(
-                    (it) => it.category === filterCategory && it.calendarIDs.length !== 0
-                )
-                setAppointmentTypes(scienceAppointmentTypes)
+                setAppointmentTypes(appointmentTypes.data)
                 setLogoMap(
                     Object.assign(
                         {},

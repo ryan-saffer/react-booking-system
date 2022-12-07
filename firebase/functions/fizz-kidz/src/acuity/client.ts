@@ -25,7 +25,8 @@ export type GetAppointmentsParams = {
 }
 
 export type GetAppointmentTypesParams = {
-    category?: string
+    category?: 'Science Club' | 'TEST'
+    availableToBook?: boolean
 }
 
 export type ContinuingOption = 'yes' | 'no' | ''

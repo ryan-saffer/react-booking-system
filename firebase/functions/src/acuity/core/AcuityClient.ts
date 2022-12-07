@@ -64,9 +64,12 @@ export class Client {
     }
 
     async getAppointmentTypes(input: GetAppointmentTypesParams) {
-        const appointmentTypes = await this._request<Acuity.AppointmentType[]>(`/appointment-types`)
+        let appointmentTypes = await this._request<Acuity.AppointmentType[]>(`/appointment-types`)
         if (input.category) {
-            return appointmentTypes.filter((it) => it.category === input.category)
+            appointmentTypes = appointmentTypes.filter((it) => it.category === input.category)
+        }
+        if (input.availableToBook) {
+            appointmentTypes = appointmentTypes.filter((it) => it.color === '#FFFFFF')
         }
         return appointmentTypes
     }
