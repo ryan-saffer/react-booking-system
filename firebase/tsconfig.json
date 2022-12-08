@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -18,10 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "noFallthroughCasesInSwitch": true,
-    "paths": {
-      "fizz-kidz": ["./functions/fizz-kidz"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"
