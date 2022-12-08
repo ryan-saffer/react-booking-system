@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
 import { firestore } from 'firebase' // https://stackoverflow.com/a/51275905/7870403
-import { Locations } from "./Locations";
+import { Locations } from './Locations'
 import { Creations } from './Creations'
-import { CakeFlavours } from "./CakeFlavours";
+import { CakeFlavours } from './CakeFlavours'
 import { Additions } from './Additions'
 
 type AdditionKeys = keyof typeof Additions
@@ -10,29 +10,29 @@ type AdditionKeyValues = { [key in AdditionKeys]: boolean }
 
 export interface BaseBooking extends AdditionKeyValues {
     eventId?: string
-    parentFirstName: string,
-    parentLastName: string,
-    parentEmail: string,
-    parentMobile: string,
-    childName: string,
-    childAge: string,
-    location: Locations,
-    partyLength: "1" | "1.5" | "2",
-    address: string,
-    numberOfChildren: string,
-    notes: string,
-    creation1: Creations | undefined,
-    creation2: Creations | undefined,
-    creation3: Creations | undefined,
-    cake: string,
-    cakeFlavour: CakeFlavours | undefined,
-    questions: string,
-    funFacts: string,
+    parentFirstName: string
+    parentLastName: string
+    parentEmail: string
+    parentMobile: string
+    childName: string
+    childAge: string
+    location: Locations
+    partyLength: '1' | '1.5' | '2'
+    address: string
+    numberOfChildren: string
+    notes: string
+    creation1: Creations | undefined
+    creation2: Creations | undefined
+    creation3: Creations | undefined
+    cake: string
+    cakeFlavour: CakeFlavours | undefined
+    questions: string
+    funFacts: string
 }
 
 // separates date and time into separate values, for better use in forms
 export interface FormBooking extends BaseBooking {
-    date: Date,
+    date: Date
     time: string
 }
 
@@ -43,17 +43,16 @@ export interface Booking extends BaseBooking {
 
 // used when retrieving from firestore, where dateTime is a firestore Timestamp
 export interface FirestoreBooking extends BaseBooking {
-    dateTime: firestore.Timestamp,
+    dateTime: firestore.Timestamp
 }
-
 
 type FormBookingKeys = { [K in keyof FormBooking]: K }
 
 export const FormBookingFields: FormBookingKeys = {
-    parentFirstName: "parentFirstName",
-    parentLastName: "parentLastName",
-    parentEmail: "parentEmail",
-    parentMobile: "parentMobile",
+    parentFirstName: 'parentFirstName',
+    parentLastName: 'parentLastName',
+    parentEmail: 'parentEmail',
+    parentMobile: 'parentMobile',
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
@@ -84,16 +83,16 @@ export const FormBookingFields: FormBookingKeys = {
     volcanoPartyPack: 'volcanoPartyPack',
     lipBalmPartyPack: 'lipBalmPartyPack',
     dinosaurBathBombPartyPack: 'dinosaurBathBombPartyPack',
-    slimePartyPack: 'slimePartyPack'
+    slimePartyPack: 'slimePartyPack',
 }
 
-type BookingKeys = { [K in keyof FirestoreBooking]: K}
+type BookingKeys = { [K in keyof FirestoreBooking]: K }
 
 export const BookingFields: BookingKeys = {
-    parentFirstName: "parentFirstName",
-    parentLastName: "parentLastName",
-    parentEmail: "parentEmail",
-    parentMobile: "parentMobile",
+    parentFirstName: 'parentFirstName',
+    parentLastName: 'parentLastName',
+    parentEmail: 'parentEmail',
+    parentMobile: 'parentMobile',
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
@@ -123,5 +122,5 @@ export const BookingFields: BookingKeys = {
     volcanoPartyPack: 'volcanoPartyPack',
     lipBalmPartyPack: 'lipBalmPartyPack',
     dinosaurBathBombPartyPack: 'dinosaurBathBombPartyPack',
-    slimePartyPack: 'slimePartyPack'
+    slimePartyPack: 'slimePartyPack',
 }

@@ -35,7 +35,7 @@ const BookingForm = () => {
                         'getAppointmentTypes',
                         firebase
                     )({
-                        category: 'Science Club',
+                        category: process.env.REACT_APP_ENV === 'prod' ? 'Science Club' : 'TEST',
                         availableToBook: true,
                     }),
                     firebase.db.collection('acuityCalendars').get(),
