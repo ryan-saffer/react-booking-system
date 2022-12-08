@@ -61,18 +61,10 @@ const HolidayProgramSelection = (props: any) => {
         if (classes.status === 'loaded') {
             const klass = classes.result.find((it) => it.id === parseInt(selectedClass))
             if (!klass) return
-            let formattedClass = DateTime.fromISO(klass.time).toLocaleString({
-                weekday: 'short',
-                month: 'short',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-            })
             props.history.push(
                 `/holiday-program/class?appointmentTypeId=${klass.appointmentTypeID}&calendarId=${
                     klass.calendarID
-                }&classId=${klass.id}&class=${encodeURIComponent(formattedClass)}`
+                }&classId=${klass.id}&classTime=${encodeURIComponent(klass.time)}`
             )
         }
     }

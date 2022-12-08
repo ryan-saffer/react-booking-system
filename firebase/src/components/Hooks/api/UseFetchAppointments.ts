@@ -27,11 +27,11 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
                 firebase
             )({ ...data })
                 .then((result) => {
-                    let filteredResults = result.data.filter((x) => x.classID === classId)
+                    const appointments = result.data
                     if (sorter) {
-                        filteredResults = filteredResults.sort(sorter)
+                        appointments.sort(sorter)
                     }
-                    setAppointments(filteredResults.length === 0 ? null : filteredResults)
+                    setAppointments(appointments.length === 0 ? null : appointments)
                     setLoading(false)
                 })
                 .catch(() => {
@@ -39,7 +39,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
                 })
         }
 
-        fetchClients({ appointmentTypeId, calendarId, classTime })
+        fetchClients({ appointmentTypeId, calendarId, classId, classTime })
     }, [])
 
     return appointments

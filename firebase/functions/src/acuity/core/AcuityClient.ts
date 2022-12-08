@@ -59,7 +59,10 @@ export class Client {
             const date = params.classTime.split('T')[0]
             path += `&minDate=${date}&maxDate=${date}`
         }
-        const result = await this._request<Acuity.Appointment[]>(path)
+        let result = await this._request<Acuity.Appointment[]>(path)
+        if (params.classId) {
+            result = result.filter((it) => it.classID === params.classId)
+        }
         return result.filter((it) => it.appointmentTypeID === params.appointmentTypeId)
     }
 
