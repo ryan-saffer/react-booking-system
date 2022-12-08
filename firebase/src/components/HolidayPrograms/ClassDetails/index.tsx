@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
@@ -17,6 +17,7 @@ import useFetchAppointments from '../../Hooks/api/UseFetchAppointments'
 import useQueryParam from '../../Hooks/UseQueryParam'
 import { Card, Collapse, Empty } from 'antd'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
+import { DateTime } from 'luxon'
 
 const ClassDetailsPage = () => {
     const classes = useStyles()
@@ -28,7 +29,19 @@ const ClassDetailsPage = () => {
     const appointmentTypeId = parseInt(useQueryParam('appointmentTypeId') as string)
     const calendarId = parseInt(useQueryParam('calendarId') as string)
     const classId = parseInt(useQueryParam('classId') as string)
-    const classDisplayable = decodeURIComponent(useQueryParam('class') as string)
+    const classTime = decodeURIComponent(useQueryParam('classTime') as string)
+    const classDisplayable = useMemo(
+        () =>
+            DateTime.fromISO(classTime).toLocaleString({
+                weekday: 'short',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            }),
+        [classTime]
+    )
 
     const history = useHistory()
 
@@ -51,6 +64,7 @@ const ClassDetailsPage = () => {
         appointmentTypeId,
         calendarId,
         classId,
+        classTime,
         sorter: sortByChildName,
     }) as Acuity.Appointment[]
 

@@ -16,6 +16,7 @@ export interface AcuityFunctions {
 export type FetchAppointmentsParams = {
     appointmentTypeId: number
     calendarId: number
+    classId?: number
     classTime?: string
 }
 
