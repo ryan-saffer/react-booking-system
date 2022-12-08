@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "fizz-kidz": ["./functions/fizz-kidz/src"]
+        }
+    }
+}
