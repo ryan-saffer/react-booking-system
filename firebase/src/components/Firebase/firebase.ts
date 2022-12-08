@@ -5,6 +5,8 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/storage'
 
+const useEmulators = false
+
 class Firebase {
     auth: firebase.auth.Auth
     db: firebase.firestore.Firestore
@@ -18,9 +20,9 @@ class Firebase {
         this.auth = app.auth()
         this.db = app.firestore()
         this.functions = app.functions('australia-southeast1')
-        // if (process.env.NODE_ENV === 'development') {
-        //     this.functions.useEmulator('localhost', 5001)
-        // }
+        if (useEmulators) {
+            this.functions.useEmulator('localhost', 5001)
+        }
         this.googleProvider = new firebase.auth.GoogleAuthProvider()
         this.storage = app.storage()
     }

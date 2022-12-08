@@ -9,7 +9,10 @@
     "target": "es2020",
     "allowJs": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "fizz-kidz": ["./fizz-kidz/src"]
+    }
   },
   "compileOnSave": true,
   "include": [

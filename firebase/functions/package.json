@@ -3,7 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "build": "npm --prefix fizz-kidz run build && tslint --project tsconfig.json && npm run copy-files && tsc",
-    "build:watch": "npm --prefix fizz-kidz run build && tslint --project tsconfig.json && npm run copy-files && tsc --watch",
+    "build:watch": "npm --prefix fizz-kidz run build:watch | tslint --project tsconfig.json && npm run copy-files && tsc --watch",
     "copy-files": "copyfiles -u 1 src/**/*.html lib/src && copyfiles -u 1 src/**/*.csv lib/src && copyfiles -u 1 credentials/**/*.json lib/credentials",
     "serve": "firebase emulators:start --only functions --inspect-functions",
     "shell": "firebase functions:shell",

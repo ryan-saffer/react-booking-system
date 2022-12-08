@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "build-fizz-kidz": "npm --prefix functions/fizz-kidz run build",
-    "start": "npm run build-fizz-kidz && REACT_APP_ENV=dev craco start",
-    "start:prod": "npm run build-fizz-kidz && REACT_APP_ENV=prod craco start",
+    "build-fizz-kidz:watch": "npm --prefix functions/fizz-kidz run build:watch",
+    "start": "npm run build-fizz-kidz:watch | REACT_APP_ENV=dev craco start",
+    "start:prod": "npm run build-fizz-kidz:watch | REACT_APP_ENV=prod craco start",
     "build-prod": "npm run build-fizz-kidz && REACT_APP_ENV=prod craco build",
     "build-dev": "npm run build-fizz-kidz && REACT_APP_ENV=dev craco build",
     "test": "craco test",
