@@ -4,7 +4,6 @@ import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import {
-    Paper,
     Grid,
     Hidden,
     Typography,
@@ -17,14 +16,12 @@ import {
     Divider,
     LinearProgress,
     IconButton,
-    Dialog,
     Slide,
 } from '@material-ui/core'
-import { ExitToApp as ExitToAppIcon, Close as CloseIcon } from '@material-ui/icons'
+import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session'
-import NewBookingForm from './Forms/NewBookingForm'
 import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
@@ -36,16 +33,7 @@ import { TransitionProps } from '@material-ui/core/transitions'
 import Firebase, { FirebaseContext } from '../Firebase'
 import { Roles } from '../../constants/roles'
 import firebase from 'firebase/compat'
-
-interface QueryParams {
-    id: string
-}
-
-const Transition = React.forwardRef(
-    (props: TransitionProps & { children?: ReactElement<any, any> }, ref: Ref<unknown>) => (
-        <Slide direction="up" ref={ref} {...props} />
-    )
-)
+import NewBookingDialog from './NewBookingDialog'
 
 const BookingsPage = () => {
     const classes = useStyles()
@@ -62,8 +50,6 @@ const BookingsPage = () => {
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
-    // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
-    const [key, setKey] = useState(0)
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = urlSearchParams.get('id')
 
@@ -110,7 +96,6 @@ const BookingsPage = () => {
             setDate(date)
             fetchBookingsByDate(date)
         }
-        setKey(key + 1)
         setOpenNewBooking(false)
     }
 
@@ -183,38 +168,7 @@ const BookingsPage = () => {
                     </div>
                 </Toolbar>
             </AppBar>
-            {/* New Booking Dialogue */}
-            <Dialog
-                fullScreen
-                open={openNewBooking}
-                onClose={() => handleCloseBooking()}
-                TransitionComponent={Transition}
-                disableAutoFocus={true}
-                PaperProps={{ classes: { root: classes.dialog } }}
-            >
-                <CssBaseline />
-                <AppBar position="absolute" className={classes.dialogueAppBar}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={() => handleCloseBooking()}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit">
-                            New Booking
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <main key={key} className={classes.layout}>
-                    <Paper className={classes.paper}>
-                        <NewBookingForm onSuccess={handleCloseBooking} />
-                    </Paper>
-                </main>
-            </Dialog>
-            {/* End New Bookings Dialogue */}
+            <NewBookingDialog open={openNewBooking} onBookingCreated={handleCloseBooking} />
             <Hidden smDown>
                 <Drawer
                     className={classes.drawer}
