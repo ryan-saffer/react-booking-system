@@ -1,4 +1,5 @@
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, FirestoreBooking } from 'fizz-kidz'
+import { EventBooking } from './../../fizz-kidz/src/booking/Event'
+import { ScienceEnrolment, PaidHolidayProgramBooking, FirestoreBooking, Booking } from 'fizz-kidz'
 import { FirestoreRefs } from './FirestoreRefs'
 
 class Client {
@@ -34,6 +35,10 @@ class Client {
 
     updateScienceEnrolment(appointmentId: string, data: Partial<ScienceEnrolment>) {
         return FirestoreRefs.scienceEnrolment(appointmentId).update(data)
+    }
+
+    createEventBooking(booking: EventBooking) {
+        return FirestoreRefs.events().add(booking)
     }
 }
 
