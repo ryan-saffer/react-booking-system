@@ -6,9 +6,9 @@
  */
 function determineFromEmailAddress(location) {
   return location === "malvern"
-    ? "michaela@fizzkidz.com.au"
+    ? "malvern@fizzkidz.com.au"
     : location === "cheltenham"
-    ? "maxie@fizzkidz.com.au"
+    ? "cheltenham@fizzkidz.com.au"
     : "bonnie@fizzkidz.com.au";
 }
 
