@@ -1,6 +1,6 @@
 import { CircularProgress, Fab, Grid, makeStyles, Typography } from '@material-ui/core'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import CustomTextField from './CustomTextField'
 import { FormFields, getEmptyFormValues } from './FormFields'
 import DateFnsUtils from '@date-io/date-fns'
@@ -8,15 +8,31 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
 import { green } from '@material-ui/core/colors'
+import moment from 'moment'
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
+import useFirebase from '../../../Hooks/context/UseFirebase'
 
-type Props = {}
+function combineDateAndTime(date: Date, time: string) {
+    const options = { timeZone: 'Australia/Melbourne' }
+    return moment
+        .tz(`${date.toLocaleDateString('en-au', options)} ${time}`, 'DD/MM/YYYY hh:mm', 'Australia/Melbourne')
+        .toDate()
+}
 
-const EventForm: React.FC<Props> = ({}) => {
+type Props = {
+    onSuccess: (date: Date) => void
+}
+
+const EventForm: React.FC<Props> = ({ onSuccess }) => {
     const classes = useStyles()
+    const firebase = useFirebase()
 
     const [formValues, setFormValues] = useState(getEmptyFormValues())
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
+
+    useEffect(() => console.log(formValues), [formValues])
 
     function handleFormChange(field: keyof FormFields, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const value = e.target.value
@@ -41,11 +57,11 @@ const EventForm: React.FC<Props> = ({}) => {
         }))
     }
 
-    function handleSubmit() {
+    async function handleSubmit() {
         // validation
         let hasError = false
         for (const [key, value] of Object.entries(formValues)) {
-            if (!value.value) {
+            if (key !== 'notes' && !value.value) {
                 setFormValues((values) => ({
                     ...values,
                     [key]: {
@@ -58,8 +74,31 @@ const EventForm: React.FC<Props> = ({}) => {
         }
         if (hasError) return
 
-        // setting loading to true
-        setLoading(true)
+        const startDate = combineDateAndTime(formValues.date.value!, formValues.startTime.value)
+        const endDate = combineDateAndTime(formValues.date.value!, formValues.endTime.value)
+
+        try {
+            setLoading(true)
+            await callFirebaseFunction(
+                'bookEvent',
+                firebase
+            )({
+                contactName: formValues.contactName.value,
+                contactNumber: formValues.contactNumber.value,
+                contactEmail: formValues.contactEmail.value,
+                organisation: formValues.organisation.value,
+                location: formValues.location.value,
+                startTime: startDate,
+                endTime: endDate,
+                notes: formValues.notes.value,
+            })
+            setLoading(false)
+            setSuccess(true)
+            setTimeout(() => onSuccess(startDate), 1000)
+        } catch (err) {
+            setError(true)
+            setLoading(false)
+        }
     }
 
     return (

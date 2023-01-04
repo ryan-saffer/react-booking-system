@@ -68,7 +68,7 @@ const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
                 </Tabs>
                 <Paper className={classes.paper}>
                     {value === 0 && <NewBookingForm onSuccess={handleBookingCreated} />}
-                    {value === 1 && <EventForm />}
+                    {value === 1 && <EventForm onSuccess={handleBookingCreated} />}
                 </Paper>
             </main>
         </Dialog>

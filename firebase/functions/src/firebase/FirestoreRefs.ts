@@ -27,6 +27,10 @@ class Refs {
     scienceEnrolment(appointmentId: string) {
         return this.scienceEnrolments().doc(appointmentId) as Document<ScienceEnrolment>
     }
+
+    events() {
+        return db.collection('events')
+    }
 }
 
 const FirestoreRefs = new Refs()
