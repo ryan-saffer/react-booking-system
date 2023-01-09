@@ -101,6 +101,7 @@ export default async function scheduleScienceProgram(
                     numberOfWeeks: appointments.length.toString(),
                 })
             } catch (err) {
+                functions.logger.error(err)
                 throw new functions.https.HttpsError(
                     'ok',
                     'error sending confirmation email after successfull booking',
@@ -124,12 +125,12 @@ export default async function scheduleScienceProgram(
                 appointment.emails.portalLinkEmailSent = true
                 await newDoc.set(appointment, { merge: true })
             } catch (err) {
-                console.error(err)
+                functions.logger.error(err)
                 throw new functions.https.HttpsError('ok', 'error sending portal email after successfull booking', err)
             }
         }
     } catch (err) {
-        console.error(err)
+        functions.logger.error(err)
         throw new functions.https.HttpsError('internal', 'error schedulding into science program', err)
     }
 }

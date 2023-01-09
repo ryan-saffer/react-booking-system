@@ -33,7 +33,7 @@ async function scheduleHolidayPrograms(
 
         return true
     } catch (error) {
-        console.error(error)
+        functions.logger.error(error)
         throw new functions.https.HttpsError('internal', 'error booking into acuity', error)
     }
 }

@@ -26,7 +26,7 @@ class MailClient {
             }
             console.log('email sent successfully!')
         } catch (error) {
-            functions.logger.error('Unable to send email', emailInfo)
+            throw new Error(`unable to send email '${email}' to '${to}'`)
         }
     }
 
@@ -36,7 +36,7 @@ class MailClient {
         let mjmlOutput = mjml2html(output)
         if (mjmlOutput.errors.length > 0) {
             mjmlOutput.errors.forEach((error) => {
-                console.error(error.formattedMessage)
+                console.log(error.formattedMessage)
             })
             throw new Error('error converting mjml to html')
         } else {
