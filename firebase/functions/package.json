@@ -27,7 +27,7 @@
     "firebase-functions": "^3.24.1",
     "fizz-kidz": "file:fizz-kidz",
     "googleapis": "^41.0.1",
-    "luxon": "^2.4.0",
+    "luxon": "^2.5.2",
     "mjml": "^4.12.0",
     "mustache": "^4.2.0",
     "stripe": "^10.17.0",
