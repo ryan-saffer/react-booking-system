@@ -6,13 +6,13 @@ import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
-    let query = await FirestoreClient.getHolidayProgramBooking(paymentIntentId)
+    const query = await FirestoreClient.getHolidayProgramBooking(paymentIntentId)
 
     console.log('query exists', query.exists)
     console.log('query booked', query.get('booked'))
 
     if (query.exists && !query.get('booked')) {
-        let programsSnapshot = await FirestoreClient.getHolidayPrograms(paymentIntentId)
+        const programsSnapshot = await FirestoreClient.getHolidayPrograms(paymentIntentId)
         await scheduleHolidayPrograms(programsSnapshot, paymentIntentId)
         await FirestoreClient.updateHolidayProgramBooking(paymentIntentId, { booked: true })
     }

@@ -15,9 +15,9 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
 export const createPaymentIntent = onCall<'createPaymentIntent'>(
     async (data: CreatePaymentIntentParams, _context: functions.https.CallableContext) => {
         // first create the customer
-        let customerId = await getOrCreateCustomer(data.name, data.email, data.phone)
+        const customerId = await getOrCreateCustomer(data.name, data.email, data.phone)
 
-        let programData: { [key: string]: number } = {}
+        const programData: { [key: string]: number } = {}
         data.programs.forEach((it) => {
             // slice childName since key must be under 40 chars
             const key = `${it.childName.slice(0, 40 - it.dateTime.length - 3)} - ${it.dateTime}`

@@ -19,7 +19,7 @@ function isHolidayProgram(appointmentTypeId: string) {
 export const asWebhook = functions.region('australia-southeast1').https.onRequest(async (req, resp) => {
     console.log('STARTING WEBHOOK')
     console.log(req.body)
-    let data = req.body as AcuityWebhookData
+    const data = req.body as AcuityWebhookData
 
     try {
         switch (data.action) {

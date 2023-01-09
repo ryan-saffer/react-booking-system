@@ -13,7 +13,7 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
 
 export const updatePaymentIntent = onCall<'updatePaymentIntent'>(
     async (data: UpdatePaymentIntentParams, _context: functions.https.CallableContext) => {
-        let programData: { [key: string]: number } = {}
+        const programData: { [key: string]: number } = {}
         data.programs.forEach((it) => {
             // slice childName since key must be under 40 chars
             const key = `${it.childName.slice(0, 15)} - ${it.dateTime}`

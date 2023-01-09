@@ -36,21 +36,22 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
     }
 
     switch (event.type) {
-        case 'payment_intent.succeeded':
+        case 'payment_intent.succeeded': {
             console.log('payment intent succeeded')
-            let paymentIntent = event.data.object as Stripe.PaymentIntent
-            let metadata = paymentIntent.metadata as Metadata
+            const paymentIntent = event.data.object as Stripe.PaymentIntent
+            const metadata = paymentIntent.metadata as Metadata
             if (metadata.programType === 'holiday_program') {
                 console.log('beginning to book holiday programs')
                 await bookHolidayPrograms(paymentIntent.id)
             }
             break
+        }
         default:
             // Unexpected event type
             console.log(`Unhandled event type ${event.type}.`)
     }
 
-    let object = event.data.object as any
+    const object = event.data.object as any
     console.log(object.id)
 
     response.sendStatus(200)

@@ -10,7 +10,7 @@ const stripe = new Stripe(stripeConfig.API_KEY, {
 
 export async function getOrCreateCustomer(name: string, email: string, phone: string) {
     // first check if customer already exists
-    let customersResponse = await stripe.customers.list({ email })
+    const customersResponse = await stripe.customers.list({ email })
     let customer = customersResponse.data[0]
     if (customer) {
         return customer.id

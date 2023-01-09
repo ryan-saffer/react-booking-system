@@ -6,8 +6,8 @@ import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
 import UpdateLabelParams = Acuity.Client.UpdateLabelParams
 import Label = Acuity.Client.Label
 
-const AcuitySdk = require('acuityscheduling')
-const acuityCredentials = require('../../../credentials/acuity_credentials.json')
+import AcuitySdk = require('acuityscheduling')
+import acuityCredentials from '../../../credentials/acuity_credentials.json'
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
     apiKey: acuityCredentials.api_key,
@@ -27,7 +27,7 @@ type ScheduleAppointmentParams = {
 }
 
 export class Client {
-    private _request<T>(path: string, options: object = {}): Promise<T> {
+    private _request<T>(path: string, options: Record<string, unknown> = {}): Promise<T> {
         return new Promise((resolve, reject) => {
             acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
                 if (hasError(err, result)) {

@@ -16,7 +16,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                 const enrolment = enrolmentSnapshot.data()!
 
                 // 2. cancel each acuity appointment
-                let appointmentIds = enrolment.appointments
+                const appointmentIds = enrolment.appointments
 
                 try {
                     await Promise.all(appointmentIds.map((id) => AcuityClient.cancelAppointment(id)))

@@ -9,7 +9,7 @@ import { stripe } from '../../../init'
  * @return invoice
  */
 export async function retrieveLatestInvoice(invoiceId: string): Promise<Stripe.Invoice> {
-    let invoice = await stripe.invoices.retrieve(invoiceId)
+    const invoice = await stripe.invoices.retrieve(invoiceId)
     if (invoice.latest_revision) {
         if (typeof invoice.latest_revision === 'string') {
             return retrieveLatestInvoice(invoice.latest_revision)

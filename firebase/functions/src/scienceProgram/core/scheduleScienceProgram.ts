@@ -10,8 +10,8 @@ const env = projectName === 'bookings-prod' ? 'prod' : 'dev'
 
 export default async function scheduleScienceProgram(
     input: ScheduleScienceAppointmentParams,
-    sendConfirmationEmail: boolean = true,
-    sendPortalEmail: boolean = true
+    sendConfirmationEmail = true,
+    sendPortalEmail = true
 ) {
     try {
         // create a firestore document
@@ -58,7 +58,7 @@ export default async function scheduleScienceProgram(
         )
 
         // save all details, including all appointment ids, into firestore
-        let appointment: ScienceEnrolment = {
+        const appointment: ScienceEnrolment = {
             ...input,
             id: newDoc.id,
             appointments: appointments.map((it) => it.id),
