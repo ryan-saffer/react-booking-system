@@ -78,7 +78,7 @@ export class Client {
     }
 
     scheduleAppointment(body: ScheduleAppointmentParams) {
-        return this._request<Acuity.Appointment>('/appointments', { method: 'POST', body })
+        return this._request<Acuity.Appointment>('/appointments?admin=true', { method: 'POST', body })
     }
 
     cancelAppointment(id: number) {
