@@ -6,13 +6,13 @@ import { RefundCalculator } from './RefundCalculator'
 
 export async function cancelHolidayProgram(data: AcuityWebhookData) {
     try {
-        let appointment = await AcuityClient.getAppointment(data.id)
-        let paymentIntentId = Acuity.Utilities.retrieveFormAndField(
+        const appointment = await AcuityClient.getAppointment(data.id)
+        const paymentIntentId = Acuity.Utilities.retrieveFormAndField(
             appointment,
             Acuity.Constants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
             Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID
         )
-        let amountCharged = Acuity.Utilities.retrieveFormAndField(
+        const amountCharged = Acuity.Utilities.retrieveFormAndField(
             appointment,
             Acuity.Constants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
             Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED
@@ -38,7 +38,7 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
 
         if (hoursBetweenDates > 24) {
             const refundCalulcator = new RefundCalculator(metadata, parseInt(amountCharged))
-            let refundAmount = refundCalulcator.calculateRefund()
+            const refundAmount = refundCalulcator.calculateRefund()
             console.log('Performing refund of amount:', refundAmount)
 
             // perform the refund

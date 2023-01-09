@@ -4,10 +4,9 @@ import path from 'path'
 import mjml2html from 'mjml'
 import sgMail from '@sendgrid/mail'
 import { MailData } from '@sendgrid/helpers/classes/mail'
-import * as functions from 'firebase-functions'
 import { env } from '../init'
 
-var Mustache = require('mustache')
+import Mustache from 'mustache'
 
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
@@ -16,7 +15,7 @@ class MailClient {
         console.log('generating html...')
         const { emailInfo, template } = this._getInfo(email, to)
         try {
-            let html = this._generateHtml(template, values)
+            const html = this._generateHtml(template, values)
             console.log('generated successfully!')
             console.log('sending email...')
             if (env === 'prod') {
@@ -30,10 +29,10 @@ class MailClient {
         }
     }
 
-    private _generateHtml(template: string, values: object): string {
-        let mjml = fs.readFileSync(path.resolve(__dirname, `./mjml/${template}`), 'utf8')
-        var output = Mustache.render(mjml, values)
-        let mjmlOutput = mjml2html(output)
+    private _generateHtml(template: string, values: Record<string, unknown>): string {
+        const mjml = fs.readFileSync(path.resolve(__dirname, `./mjml/${template}`), 'utf8')
+        const output = Mustache.render(mjml, values)
+        const mjmlOutput = mjml2html(output)
         if (mjmlOutput.errors.length > 0) {
             mjmlOutput.errors.forEach((error) => {
                 console.log(error.formattedMessage)

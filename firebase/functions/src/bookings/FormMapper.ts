@@ -42,8 +42,8 @@ export class FormMapper {
     }
 
     getCreationDisplayValues() {
-        let creationKeys = this.getCreations()
-        let creations: string[] = []
+        const creationKeys = this.getCreations()
+        const creations: string[] = []
         creationKeys.forEach((creation) => {
             creations.push(CreationDisplayValuesMap[creation])
         })
@@ -51,15 +51,15 @@ export class FormMapper {
     }
 
     getAdditionDisplayValues() {
-        let additionKeys = this.getQuestionValue('additions')
-        let displayValues: string[] = []
+        const additionKeys = this.getQuestionValue('additions')
+        const displayValues: string[] = []
         additionKeys.forEach((addition) => {
             if (this.isValidAddition(addition)) {
                 displayValues.push(AdditionsDisplayValuesMapPrices[addition])
             }
         })
 
-        let partyPackKeys = this.mapProductToSku(this.getQuestionValue('party_packs'))
+        const partyPackKeys = this.mapProductToSku(this.getQuestionValue('party_packs'))
         partyPackKeys.forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 displayValues.push(AdditionsDisplayValuesMapPrices[pack])
@@ -72,7 +72,7 @@ export class FormMapper {
      * Returns an array of SKUs for all selected creations.
      */
     private getCreations() {
-        let creationSkus = [
+        const creationSkus = [
             ...this.mapProductToSku(this.getQuestionValue('glam_creations')),
             ...this.mapProductToSku(this.getQuestionValue('science_creations')),
             ...this.mapProductToSku(this.getQuestionValue('slime_creations')),
@@ -82,9 +82,9 @@ export class FormMapper {
         ]
 
         // filter out any duplicate creation selections
-        let filteredSkus = [...new Set(creationSkus)]
+        const filteredSkus = [...new Set(creationSkus)]
 
-        let creations = filteredSkus.map((creation) => {
+        const creations = filteredSkus.map((creation) => {
             if (this.isValidCreation(creation)) {
                 return creation
             } else {
@@ -101,9 +101,9 @@ export class FormMapper {
      * shared across both in-store and mobile
      */
     private getSharedQuestions() {
-        let creations = this.getCreations()
+        const creations = this.getCreations()
 
-        let booking: Partial<Booking> = {
+        const booking: Partial<Booking> = {
             location: this.mapLocation(this.getQuestionValue('location')),
             parentFirstName: this.getQuestionValue('parent_first_name'),
             parentLastName: this.getQuestionValue('parent_last_name'),
@@ -121,7 +121,7 @@ export class FormMapper {
     }
 
     private getQuestionValue<T extends keyof Questions>(question: T): Questions[T] {
-        let response = this.responses.find((it): it is PFQuestion<T> => it.custom_key === question)
+        const response = this.responses.find((it): it is PFQuestion<T> => it.custom_key === question)
 
         if (response) {
             return response.value
@@ -154,9 +154,9 @@ export class FormMapper {
     }
 
     private getAdditions() {
-        let additions = this.getQuestionValue('additions')
+        const additions = this.getQuestionValue('additions')
         additions.forEach((addition, index, array) => (array[index] = AdditionsFormMap[addition]))
-        let booking: Partial<Booking> = {}
+        const booking: Partial<Booking> = {}
         additions.forEach((addition) => {
             if (this.isValidAddition(addition)) {
                 booking[addition] = true
@@ -171,7 +171,7 @@ export class FormMapper {
     }
 
     private getPartyPacks() {
-        let booking: Partial<Booking> = {}
+        const booking: Partial<Booking> = {}
         this.mapProductToSku(this.getQuestionValue('party_packs')).forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 booking[pack] = true
