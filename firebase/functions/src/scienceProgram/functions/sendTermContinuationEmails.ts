@@ -41,8 +41,12 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                     }
                     await appointmentRef.set({ ...updatedAppointment }, { merge: true })
                 } catch (err) {
-                    console.error(`error sending term continutation email to appointment with id: ${appointmentId}`)
-                    console.error(err)
+                    functions.logger.error(err)
+                    throw new functions.https.HttpsError(
+                        'internal',
+                        `error sending term continutation email to appointment with id: ${appointmentId}`,
+                        err
+                    )
                 }
             })
         )

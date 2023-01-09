@@ -8,7 +8,7 @@ export const scheduleFreeHolidayPrograms = onCall<'scheduleFreeHolidayPrograms'>
         const result = await Promise.all(input.map((program) => scheduleHolidayProgram(program)))
         await sendConfirmationEmail(result)
     } catch (err) {
-        console.error(err)
+        functions.logger.error(err)
         throw new functions.https.HttpsError('internal', 'acuity returned an error booking into holiday programs', err)
     }
 })
