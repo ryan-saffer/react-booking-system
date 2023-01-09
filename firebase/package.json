@@ -33,7 +33,7 @@
     "firebase": "^9.10.0",
     "fizz-kidz": "file:functions/fizz-kidz",
     "googleapis": "^39.2.0",
-    "luxon": "^2.4.0",
+    "luxon": "^2.5.2",
     "mixpanel-browser": "^2.45.0",
     "moment-timezone": "^0.5.28",
     "query-string": "^6.8.3",
