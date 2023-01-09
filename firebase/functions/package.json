@@ -23,7 +23,7 @@
     "@types/stripe": "^7.13.23",
     "acuityscheduling": "^0.1.9",
     "copyfiles": "^2.4.1",
-    "firebase-admin": "^8.13.0",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.24.1",
     "fizz-kidz": "file:fizz-kidz",
     "googleapis": "^41.0.1",
