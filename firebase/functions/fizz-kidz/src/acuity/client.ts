@@ -1,15 +1,15 @@
-import { Function } from '../firebase/functions'
+import { CloudFunction } from '../firebase/functions'
 import { Appointment, AppointmentType, Certificate } from '.'
 import { Class } from './types'
 
 export interface AcuityFunctions {
-    searchForAppointments: Function<FetchAppointmentsParams, Appointment[]>
-    getAppointments: Function<GetAppointmentsParams, Appointment[]>
-    getAppointmentTypes: Function<GetAppointmentTypesParams, AppointmentType[]>
-    updateLabel: Function<UpdateLabelParams, Appointment>
-    updateAppointment: Function<UpdateAppointmentParams, Appointment>
-    classAvailability: Function<ClassAvailabilityParams, Class[]>
-    checkCertificate: Function<CheckCertificateParams, Certificate>
+    searchForAppointments: CloudFunction<FetchAppointmentsParams, Appointment[]>
+    getAppointments: CloudFunction<GetAppointmentsParams, Appointment[]>
+    getAppointmentTypes: CloudFunction<GetAppointmentTypesParams, AppointmentType[]>
+    updateLabel: CloudFunction<UpdateLabelParams, Appointment>
+    updateAppointment: CloudFunction<UpdateAppointmentParams, Appointment>
+    classAvailability: CloudFunction<ClassAvailabilityParams, Class[]>
+    checkCertificate: CloudFunction<CheckCertificateParams, Certificate>
 }
 
 // For querying acuity, ie all appointments from a certain type and calendar

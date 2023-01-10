@@ -12,19 +12,19 @@ import {
 import { FreeHolidayProgramBooking } from '../holidayPrograms'
 
 export interface FirebaseFunctions {
-    retrieveInvoiceStatuses: Function<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
-    sendInvoices: Function<SendInvoiceParams[], InvoiceStatusMap>
-    sendTermContinuationEmails: Function<SendTermContinuationEmailsParams, string[]>
-    createPaymentIntent: Function<CreatePaymentIntentParams, CreatePaymentIntentResponse>
-    updatePaymentIntent: Function<UpdatePaymentIntentParams, void>
-    scheduleScienceAppointment: Function<ScheduleScienceAppointmentParams, void>
-    unenrollScienceAppointments: Function<UnenrollScienceAppointmentsParams, void>
-    updateScienceEnrolment: Function<UpdateScienceEnrolmentParams, ScienceEnrolment>
-    sendPortalLinks: Function<void, void>
-    scheduleFreeHolidayPrograms: Function<FreeHolidayProgramBooking[], void>
+    retrieveInvoiceStatuses: CloudFunction<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
+    sendInvoices: CloudFunction<SendInvoiceParams[], InvoiceStatusMap>
+    sendTermContinuationEmails: CloudFunction<SendTermContinuationEmailsParams, string[]>
+    createPaymentIntent: CloudFunction<CreatePaymentIntentParams, CreatePaymentIntentResponse>
+    updatePaymentIntent: CloudFunction<UpdatePaymentIntentParams, void>
+    scheduleScienceAppointment: CloudFunction<ScheduleScienceAppointmentParams, void>
+    unenrollScienceAppointments: CloudFunction<UnenrollScienceAppointmentsParams, void>
+    updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
+    sendPortalLinks: CloudFunction<void, void>
+    scheduleFreeHolidayPrograms: CloudFunction<FreeHolidayProgramBooking[], void>
 }
 
-export type Function<Input, Result> = {
+export type CloudFunction<Input, Result> = {
     input: Input
     result: FunctionsResult<Result>
 }
