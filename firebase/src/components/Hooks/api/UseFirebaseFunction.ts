@@ -15,7 +15,7 @@ const useFirebaseFunction = <T extends keyof FirebaseFunctions>(method: T, input
         )(input)
             .then((result) => setService({ status: 'loaded', result: result.data }))
             .catch((error) => setService({ status: 'error', error }))
-    }, [])
+    }, [firebase, method, input])
 
     return service
 }
