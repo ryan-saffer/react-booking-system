@@ -8,7 +8,7 @@ import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLates
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(
-    async (input: UnenrollScienceAppointmentsParams, _context: functions.https.CallableContext) => {
+    async (input: UnenrollScienceAppointmentsParams) => {
         await Promise.all(
             input.appointmentIds.map(async (appointmentId) => {
                 // 1. get appointment from firestore

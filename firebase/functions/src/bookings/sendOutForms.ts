@@ -8,7 +8,7 @@ export const sendOutForms = functions
     .region('australia-southeast1')
     .pubsub.schedule('30 8 * * 4')
     .timeZone('Australia/Melbourne')
-    .onRun((_context) => {
+    .onRun(() => {
         const startDate = DateTime.fromObject(
             { hour: 0, minute: 0, second: 0 },
             { zone: 'Australia/Melbourne' }
