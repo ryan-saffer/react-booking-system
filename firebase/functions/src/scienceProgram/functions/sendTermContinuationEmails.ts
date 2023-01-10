@@ -7,7 +7,7 @@ import { mailClient } from '../../sendgrid/MailClient'
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
-    async (input: SendTermContinuationEmailsParams, _context: functions.https.CallableContext) => {
+    async (input: SendTermContinuationEmailsParams) => {
         const results = await Promise.allSettled(
             input.appointmentIds.map(async (appointmentId) => {
                 const appointmentRef = db.collection('scienceAppointments').doc(appointmentId)

@@ -3,7 +3,7 @@ import { onCall } from '../../utilities'
 import { scheduleHolidayProgram } from '../core/scheduleHolidayProgram'
 import { sendConfirmationEmail } from '../core/sendConfirmationEmail'
 
-export const scheduleFreeHolidayPrograms = onCall<'scheduleFreeHolidayPrograms'>(async (input, _context) => {
+export const scheduleFreeHolidayPrograms = onCall<'scheduleFreeHolidayPrograms'>(async (input) => {
     try {
         const result = await Promise.all(input.map((program) => scheduleHolidayProgram(program)))
         await sendConfirmationEmail(result)
