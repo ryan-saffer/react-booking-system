@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { Alert, List, Result, Row, Typography } from 'antd'
+import { List, Result, Row, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'

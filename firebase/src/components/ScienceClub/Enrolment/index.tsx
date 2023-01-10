@@ -51,11 +51,12 @@ const EnrolmentPage = () => {
                 continuing_with_term: continuingWithTerm,
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [service])
 
     return (
         <div className={classes.main}>
-            <img className={classes.logo} src={logo.default} />
+            <img className={classes.logo} src={logo.default} alt="fizz kidz logo" />
             <Divider className={classes.divider} />
             {service.status === 'loading' && <Loading />}
             {service.status === 'loaded' && <Success continuing={continuingWithTerm} appointment={service.result} />}
