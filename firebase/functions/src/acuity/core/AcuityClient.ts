@@ -26,7 +26,7 @@ type ScheduleAppointmentParams = {
     fields?: { id: number; value: number | string }[]
 }
 
-export class Client {
+class Client {
     private _request<T>(path: string, options: Record<string, unknown> = {}): Promise<T> {
         return new Promise((resolve, reject) => {
             acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
