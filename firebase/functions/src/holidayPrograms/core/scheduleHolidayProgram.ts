@@ -1,7 +1,7 @@
-import { Acuity, FreeHolidayProgramBooking, PaidHolidayProgramBooking } from 'fizz-kidz'
+import { Acuity, HolidayProgramBooking } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 
-export function scheduleHolidayProgram(booking: FreeHolidayProgramBooking | PaidHolidayProgramBooking) {
+export function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
     return AcuityClient.scheduleAppointment({
         appointmentTypeID: booking.appointmentTypeId,
         datetime: booking.dateTime,
@@ -36,6 +36,10 @@ export function scheduleHolidayProgram(booking: FreeHolidayProgramBooking | Paid
             {
                 id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
                 value: booking.amountCharged,
+            },
+            {
+                id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
+                value: paymentIntentId,
             },
         ],
     })

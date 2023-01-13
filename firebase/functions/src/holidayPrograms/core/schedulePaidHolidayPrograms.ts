@@ -48,7 +48,7 @@ async function _scheduleHolidayProgram(
         return AcuityClient.getAppointment(program.appointmentId.toString())
     }
 
-    const appointment = await scheduleHolidayProgram(program)
+    const appointment = await scheduleHolidayProgram(program, paymentIntentId)
 
     await FirestoreClient.updateHolidayProgram(paymentIntentId, programSnapshot.id, {
         booked: true,
