@@ -26,3 +26,5 @@ interface UnbookedPaidHolidayProgram extends BaseHolidayProgramBooking {
 
 export type PaidHolidayProgramBooking = BookedPaidHolidayProgram | UnbookedPaidHolidayProgram
 export type FreeHolidayProgramBooking = BaseHolidayProgramBooking
+
+export type HolidayProgramBooking = PaidHolidayProgramBooking | FreeHolidayProgramBooking
