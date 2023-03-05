@@ -28,7 +28,6 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.expertRainbowSoap]: 'Expert Rainbow Soap',
     [Creations.expertWatermelonBathBombs]: 'Expert Watermelon Bath-Bombs',
     [Creations.expertGalaxyBathBombs]: 'Expert Galaxy Bath-Bombs',
-    // added after website and packages rebuilt
     [Creations.unicornSoap]: 'Unicorn Soap',
     [Creations.rainbowBathBombs]: 'Rainbow Bath Bombs',
     [Creations.volcanoes]: 'Bubbling Volcanoes',
@@ -59,4 +58,7 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.tieDyeSocks]: 'Tie Dye Socks',
     [Creations.bugsInBathBombs]: 'Bugs in Bath Bombs',
     [Creations.sandSlime]: 'Sand Slime',
+    [Creations.sugarScrubLipBalm]: 'Sugar Scrub Lip-Balm',
+    [Creations.mermaidSugarScrub]: 'Mermaid Sugar Scrub',
+    [Creations.goldSlime]: 'Gold Slime',
 }

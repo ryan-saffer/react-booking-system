@@ -52,7 +52,7 @@ const EnrolmentPage = () => {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [service])
+    }, [service.status])
 
     return (
         <div className={classes.main}>
