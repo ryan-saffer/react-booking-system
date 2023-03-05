@@ -1,18 +1,17 @@
-import moment from "moment"
+import moment from 'moment'
 import dateFormat from 'dateformat'
-import { Booking, FirestoreBooking, FormBooking, Locations, Utilities } from "fizz-kidz"
-import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
+import { Booking, FirestoreBooking, FormBooking, Locations, Utilities } from 'fizz-kidz'
+import { ExistingBookingFormFields } from './ExistingBookingForm/types'
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value
- * 
+ *
  * @param {object} formValues - the form values as an object
  * @return {object} the booking ready to be written to firestore
  */
- export function mapFormToBooking(formValues: ExistingBookingFormFields): Booking {
-
+export function mapFormToBooking(formValues: ExistingBookingFormFields): Booking {
     let booking = getEmptyDomainBooking()
-    Object.keys(booking).forEach(key => {
+    Object.keys(booking).forEach((key) => {
         if (Utilities.isObjKey(key, booking)) {
             booking[key] = formValues[key]?.value as never // safe given we know key is a keyof DomainBooking
         }
@@ -28,15 +27,16 @@ import { ExistingBookingFormFields } from "./ExistingBookingForm/types"
 }
 
 function convertFormBookingToBooking(formBooking: FormBooking): Booking {
-
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
-    let options = { timeZone: "Australia/Melbourne" }
-    let dateTime = moment.tz(
-        `${formBooking.date.toLocaleDateString('en-au', options)} ${formBooking.time}}`,
-        "DD/MM/YYYY hh:mm",
-        "Australia/Melbourne"
-    ).toDate()
+    let options = { timeZone: 'Australia/Melbourne' }
+    let dateTime = moment
+        .tz(
+            `${formBooking.date.toLocaleDateString('en-au', options)} ${formBooking.time}}`,
+            'DD/MM/YYYY hh:mm',
+            'Australia/Melbourne'
+        )
+        .toDate()
 
     // downcast to any, since we know deleting date and time is safe.
     // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
@@ -50,7 +50,6 @@ function convertFormBookingToBooking(formBooking: FormBooking): Booking {
 }
 
 export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooking): ExistingBookingFormFields {
-
     const domainBooking = convertFirestoreBookingToFormBooking({ ...firestoreBooking }) // copy so as not to mutate original value
     let formValues = getEmptyValues()
 
@@ -71,7 +70,6 @@ export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooki
 }
 
 function convertFirestoreBookingToFormBooking(firestoreBooking: FirestoreBooking): FormBooking {
-
     const dateTime = firestoreBooking.dateTime.toDate()
 
     // downcast to any, since we know deleting dateTime is safe.
@@ -81,7 +79,7 @@ function convertFirestoreBookingToFormBooking(firestoreBooking: FirestoreBooking
 
     const formBooking = booking as FormBooking
     formBooking.date = dateTime
-    formBooking.time = dateFormat(dateTime, "HH:MM")
+    formBooking.time = dateFormat(dateTime, 'HH:MM')
 
     return formBooking
 }
@@ -92,183 +90,188 @@ export function getEmptyValues(): ExistingBookingFormFields {
         parentFirstName: {
             value: '',
             error: false,
-            errorText: 'First name cannot be empty'
+            errorText: 'First name cannot be empty',
         },
         parentLastName: {
             value: '',
             error: false,
-            errorText: 'Last name cannot be empty'
+            errorText: 'Last name cannot be empty',
         },
         parentEmail: {
             value: '',
             error: false,
-            errorText: "Email address cannot be empty"
+            errorText: 'Email address cannot be empty',
         },
         parentMobile: {
             value: '',
             error: false,
-            errorText: 'Mobile number cannot be empty'
+            errorText: 'Mobile number cannot be empty',
         },
         childName: {
             value: '',
             error: false,
-            errorText: 'Child name cannot be empty'
+            errorText: 'Child name cannot be empty',
         },
         childAge: {
             value: '',
             error: false,
-            errorText: 'Child age cannot be empty'
+            errorText: 'Child age cannot be empty',
         },
         date: {
             value: new Date(),
             error: false,
-            errorText: 'Date cannot be empty'
+            errorText: 'Date cannot be empty',
         },
         time: {
             value: '',
             error: false,
-            errorText: 'Time cannot be empty'
+            errorText: 'Time cannot be empty',
         },
         location: {
             value: Locations.BALWYN,
             error: false,
-            errorText: 'Location cannot be empty'
+            errorText: 'Location cannot be empty',
         },
         partyLength: {
             value: '1',
             error: false,
-            errorText: 'Party length cannot be empty'
+            errorText: 'Party length cannot be empty',
         },
         address: {
             value: '',
             error: false,
-            errorText: 'Address cannot be empty'
+            errorText: 'Address cannot be empty',
         },
         numberOfChildren: {
             value: '',
             error: false,
-            errorText: ''
+            errorText: '',
         },
         notes: {
             value: '',
             error: false,
-            errorText: ''
+            errorText: '',
         },
         creation1: {
             value: undefined,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         creation2: {
             value: undefined,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         creation3: {
             value: undefined,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         chickenNuggets: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         fairyBread: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         fruitPlatter: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
+        },
+        frankfurts: {
+            value: false,
+            error: false,
+            errorText: '',
         },
         lollyBags: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         sandwichPlatter: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         veggiePlatter: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         vegetarianQuiche: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         watermelonPlatter: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         wedges: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         grazingPlatterMedium: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         grazingPlatterLarge: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         volcanoPartyPack: {
             value: false,
             error: false,
-            errorText:''
+            errorText: '',
         },
         lipBalmPartyPack: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         dinosaurBathBombPartyPack: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         slimePartyPack: {
             value: false,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         cake: {
             value: '',
             error: false,
-            errorText: ''
+            errorText: '',
         },
         cakeFlavour: {
             value: undefined,
             error: false,
-            errorText: ''
+            errorText: '',
         },
         questions: {
             value: '',
             error: false,
-            errorText: ''
+            errorText: '',
         },
         funFacts: {
             value: '',
             error: false,
-            errorText: ''
-        }
+            errorText: '',
+        },
     }
 }
 
 function getEmptyDomainBooking(): FormBooking {
-    return { 
+    return {
         parentFirstName: '',
         parentLastName: '',
         parentEmail: '',
@@ -292,6 +295,7 @@ function getEmptyDomainBooking(): FormBooking {
         chickenNuggets: false,
         fairyBread: false,
         fruitPlatter: false,
+        frankfurts: false,
         veggiePlatter: false,
         vegetarianQuiche: false,
         watermelonPlatter: false,
@@ -303,6 +307,6 @@ function getEmptyDomainBooking(): FormBooking {
         volcanoPartyPack: false,
         lipBalmPartyPack: false,
         dinosaurBathBombPartyPack: false,
-        slimePartyPack: false
+        slimePartyPack: false,
     }
 }

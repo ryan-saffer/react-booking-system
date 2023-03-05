@@ -24,7 +24,6 @@ export enum Creations {
     expertRainbowSoap = 'expertRainbowSoap',
     expertWatermelonBathBombs = 'expertWatermelonBathBombs',
     expertGalaxyBathBombs = 'expertGalaxyBathBombs',
-    // added after website and packages rebuilt
     unicornSoap = 'unicornSoap',
     rainbowBathBombs = 'rainbowBathBombs',
     volcanoes = 'volcanoes',
@@ -55,4 +54,7 @@ export enum Creations {
     tieDyeSocks = 'tieDyeSocks',
     bugsInBathBombs = 'bugsInBathBombs',
     sandSlime = 'sandSlime',
+    sugarScrubLipBalm = 'sugarScrubLipBalm',
+    mermaidSugarScrub = 'mermaidSugarScrub',
+    goldSlime = 'goldSlime',
 }

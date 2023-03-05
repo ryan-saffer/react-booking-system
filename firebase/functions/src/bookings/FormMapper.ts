@@ -79,6 +79,7 @@ export class FormMapper {
             ...this.mapProductToSku(this.getQuestionValue('safari_creations')),
             ...this.mapProductToSku(this.getQuestionValue('unicorn_creations')),
             ...this.mapProductToSku(this.getQuestionValue('tie_dye_creations')),
+            ...this.mapProductToSku(this.getQuestionValue('expert_creations')),
         ]
 
         // filter out any duplicate creation selections
