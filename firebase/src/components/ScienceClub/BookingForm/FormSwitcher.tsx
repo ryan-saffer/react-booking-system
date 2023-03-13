@@ -49,6 +49,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 appointment_type: appointmentType.name,
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [classesService.status])
 
     switch (classesService.status) {

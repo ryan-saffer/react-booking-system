@@ -59,6 +59,7 @@ const BookingForm = () => {
         }
         fetchAppointmentTypes()
         mixpanel.track(MixpanelEvents.SCIENCE_FORM_VIEW)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleSubmit = async (params: ScheduleScienceAppointmentParams) => {
