@@ -28,6 +28,7 @@ export interface BaseBooking extends AdditionKeyValues {
     cakeFlavour: CakeFlavours | undefined
     questions: string
     funFacts: string
+    partyFormFilledIn: boolean
 }
 
 // separates date and time into separate values, for better use in forms
@@ -67,6 +68,7 @@ export const FormBookingFields: FormBookingKeys = {
     creation1: 'creation1',
     creation2: 'creation2',
     creation3: 'creation3',
+    partyFormFilledIn: 'partyFormFilledIn',
     cake: 'cake',
     cakeFlavour: 'cakeFlavour',
     chickenNuggets: 'chickenNuggets',
@@ -107,6 +109,7 @@ export const BookingFields: BookingKeys = {
     creation1: 'creation1',
     creation2: 'creation2',
     creation3: 'creation3',
+    partyFormFilledIn: 'partyFormFilledIn',
     cake: 'cake',
     cakeFlavour: 'cakeFlavour',
     chickenNuggets: 'chickenNuggets',

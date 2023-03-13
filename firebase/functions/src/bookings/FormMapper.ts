@@ -6,6 +6,7 @@ import {
     Creations,
     Locations,
     AdditionsDisplayValuesMapPrices,
+    AdditionsDisplayValuesMap,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
 
@@ -50,12 +51,16 @@ export class FormMapper {
         return creations
     }
 
-    getAdditionDisplayValues() {
+    getAdditionDisplayValues(showPrices: boolean) {
         const additionKeys = this.getQuestionValue('additions')
         const displayValues: string[] = []
         additionKeys.forEach((addition) => {
             if (this.isValidAddition(addition)) {
-                displayValues.push(AdditionsDisplayValuesMapPrices[addition])
+                if (showPrices) {
+                    displayValues.push(AdditionsDisplayValuesMapPrices[addition])
+                } else {
+                    displayValues.push(AdditionsDisplayValuesMap[addition])
+                }
             }
         })
 
