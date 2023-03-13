@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { callAcuityClient, callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Root from '../../Shared/Root'
 import { LeftOutlined } from '@ant-design/icons'
-import { Button, Result, Typography } from 'antd'
+import { Alert, Button, Result, Typography } from 'antd'
 import { Grow, makeStyles } from '@material-ui/core'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
@@ -103,7 +103,7 @@ const BookingForm = () => {
                 </>
             )
         }
-        if (appointmentTypes && logoMap) {
+        if (appointmentTypes?.length && logoMap) {
             return appointmentTypes.map((it) => (
                 <AppointmentTypeCard
                     key={it.id}
@@ -112,6 +112,14 @@ const BookingForm = () => {
                     onClick={() => setSelectedClass(it)}
                 />
             ))
+        } else {
+            return (
+                <Alert
+                    message="No classes available"
+                    description="Unfortunately there are no classes available to book at the moment. Please try again later."
+                    type="error"
+                />
+            )
         }
     }
 

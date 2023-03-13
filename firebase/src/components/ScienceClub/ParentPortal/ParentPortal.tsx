@@ -40,7 +40,7 @@ const ParentPortal: React.FC = () => {
                 appointment_id: id,
             })
         }
-    }, [service])
+    }, [service.status])
 
     switch (service.status) {
         case 'loading':

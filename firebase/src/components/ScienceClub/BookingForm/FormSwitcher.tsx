@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Acuity } from 'fizz-kidz'
 import useAcuityClient from '../../Hooks/api/UseAcuityClient'
 import Loader from '../shared/Loader'
 import Form from './Form'
@@ -49,7 +49,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 appointment_type: appointmentType.name,
             })
         }
-    }, [classesService])
+    }, [classesService.status])
 
     switch (classesService.status) {
         case 'loading':
@@ -58,6 +58,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
             if (classesService.result.length > 0) {
                 const spotsLeft = classesService.result[0].slotsAvailable
                 const numClasses = classesService.result.length
+
                 if (spotsLeft > 0) {
                     return (
                         <>
@@ -85,8 +86,8 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 return (
                     <Alert
                         className={classes.topMargin}
-                        message="No upcoming classes"
-                        description="Sorry, it seems there are no upcoming classes for this program."
+                        message="Class Full"
+                        description="Unfortunately this class is full for the term."
                         type="error"
                     />
                 )
