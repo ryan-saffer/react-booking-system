@@ -40,6 +40,7 @@ const ParentPortal: React.FC = () => {
                 appointment_id: id,
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [service.status])
 
     switch (service.status) {

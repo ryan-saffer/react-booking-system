@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ScienceEnrolment, Service } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
@@ -19,6 +19,7 @@ const useFetchScienceAppointment = (id: string) => {
                 }
             })
             .catch((error) => setService({ status: 'error', error }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return service

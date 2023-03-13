@@ -20,6 +20,7 @@ const useAcuityClient = <T extends keyof Acuity.Client.AcuityFunctions>(
         )(input)
             .then((result) => setService({ status: 'loaded', result: result.data }))
             .catch((error) => setService({ status: 'error', error }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return service
