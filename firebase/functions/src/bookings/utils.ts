@@ -1,4 +1,4 @@
-import { Additions, AdditionsDisplayValuesMap, Booking, CreationDisplayValuesMap, Locations } from 'fizz-kidz'
+import { Additions, AdditionsDisplayValuesMap, BaseBooking, CreationDisplayValuesMap, Locations } from 'fizz-kidz'
 
 export const AdditionsFormMap: { [key: string]: Additions } = {
     'Chicken Nuggets - $35': Additions.chickenNuggets,
@@ -27,7 +27,7 @@ export function getManagerEmail(location: Locations) {
     }
 }
 
-export function getBookingCreations(booking: Partial<Booking>) {
+export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []
     if (booking.creation1) {
         result.push(CreationDisplayValuesMap[booking.creation1])
@@ -41,7 +41,7 @@ export function getBookingCreations(booking: Partial<Booking>) {
     return result
 }
 
-export function getBookingAdditions(booking: Partial<Booking>) {
+export function getBookingAdditions(booking: BaseBooking) {
     const output: string[] = []
     // iterate each property of the booking
     for (const key of Object.keys(booking)) {
