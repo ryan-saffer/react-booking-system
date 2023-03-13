@@ -114,8 +114,7 @@ export default async function scheduleScienceProgram(
 
         if (sendPortalEmail) {
             try {
-                const baseUrl =
-                    env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
+                const baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
                 await mailClient.sendEmail('scienceParentPortalLink', input.parent.email, {
                     parentName: input.parent.firstName,
                     childName: input.child.firstName,
