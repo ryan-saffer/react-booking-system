@@ -222,5 +222,5 @@ function createHtmlFromMjmlFile(mjml, environment) {
 function getApplictionDomain(environment) {
   return environment === "prod"
     ? "https://bookings.fizzkidz.com.au"
-    : "https://booking-system-6435d.web.app";
+    : "https://dev.fizzkidz.com.au";
 }
