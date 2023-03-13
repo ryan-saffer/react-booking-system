@@ -4,6 +4,10 @@ import { runAppsScript } from './index'
 import { db } from '../init'
 import { FormMapper } from './FormMapper'
 import { PFQuestion } from './types'
+import { FirestoreClient } from '../firebase/FirestoreClient'
+import { mailClient } from '../sendgrid/MailClient'
+import { getBookingAdditions, getBookingCreations, getManagerEmail } from './utils'
+import { DateTime } from 'luxon'
 
 export const onFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
     console.log(req.body.data)
@@ -14,6 +18,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
 
     try {
         booking = formMapper.mapToBooking()
+        booking.partyFormFilledIn = true
         console.log(booking)
     } catch (e) {
         console.log(e)
@@ -21,8 +26,34 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
         return
     }
 
+    // first check if the booking form has been filled in previously
+    const existingBooking = (await FirestoreClient.getPartyBooking(formMapper.bookingId)).data()!
+    if (existingBooking.partyFormFilledIn) {
+        // form has been filled in before, notify manager of the change
+        await mailClient.sendEmail(
+            'partyFormFilledInAgain',
+            getManagerEmail(booking.location!),
+            {
+                parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
+                parentEmail: existingBooking.parentEmail,
+                parentMobile: existingBooking.parentMobile,
+                childName: booking.childName!,
+                dateTime: DateTime.fromJSDate(existingBooking.dateTime.toDate(), {
+                    zone: 'Australia/Melbourne',
+                }).toLocaleString(DateTime.DATETIME_SHORT),
+                oldNumberOfKids: existingBooking.numberOfChildren,
+                oldCreations: getBookingCreations(booking),
+                oldAdditions: getBookingAdditions(booking),
+                newNumberOfKids: booking.numberOfChildren!,
+                newCreations: formMapper.getCreationDisplayValues(),
+                newAdditions: formMapper.getAdditionDisplayValues(false),
+            },
+            `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`
+        )
+    }
+
     // write to firestore
-    await db.doc(`bookings/${formMapper.bookingId}`).set(booking, { merge: true })
+    await FirestoreClient.updatePartyBooking(formMapper.bookingId, booking)
 
     const documentSnapshot = await db.doc(`bookings/${formMapper.bookingId}`).get()
     const fullBooking = documentSnapshot.data()
@@ -34,7 +65,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
         await runAppsScript(AppsScript.Functions.ON_FORM_SUBMIT, [
             fullBooking,
             formMapper.getCreationDisplayValues(),
-            formMapper.getAdditionDisplayValues(),
+            formMapper.getAdditionDisplayValues(true),
         ])
     } catch (err) {
         functions.logger.error(`error running ${AppsScript.Functions.ON_FORM_SUBMIT}`)

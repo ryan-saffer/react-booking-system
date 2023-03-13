@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+</head>
+
+<body>
+    <p>A parent has filled in a party form for a second time.</p>
+    <p>This email is to warn you in case of a last minute change!</p>
+    <h3>- - - Party Details - - -</h3>
+    <p><strong>Parent: </strong>{{ parentName }}</p>
+    <p><strong>Parent Email: </strong><a href="mailto:{{ parentEmail }}">{{ parentEmail }}</a></p>
+    <p><strong>Parent Phone: </strong><a href="tel:{{ parentMobile }}">{{ parentMobile }}</a></p>
+    <p><strong>Child: </strong>{{ childName }}</p>
+    <p><strong>Date / Time: </strong>{{ dateTime }}</p>
+    <h3>- - - Previous Selections - - -</h3>
+    <p><strong>Number of kids: </strong>{{ oldNumberOfKids }}</p>
+    <p><strong>Selected Creations:</strong></p>
+    <ul>
+        {{#oldCreations}}
+        <li>{{.}}</li>
+        {{/oldCreations}}
+    </ul>
+    <p><strong>Selected Additions:</strong></p>
+    <ul>
+        {{#oldAdditions}}
+        <li>{{.}}</li>
+        {{/oldAdditions}}
+    </ul>
+    <h3>- - - New Selections - - -</h3>
+    <p><strong>Number of kids: </strong>{{ newNumberOfKids }}</p>
+    <p><strong>Selected Creations:</strong></p>
+    <ul>
+        {{#newCreations}}
+        <li>{{.}}</li>
+        {{/newCreations}}
+    </ul>
+    <p><strong>Selected Additions:</strong></p>
+    <ul>
+        {{#newAdditions}}
+        <li>{{.}}</li>
+        {{/newAdditions}}
+    </ul>
+</body>
+
+</html>

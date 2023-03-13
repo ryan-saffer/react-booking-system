@@ -38,4 +38,18 @@ export type Emails = {
         className: string
         portalUrl: string
     }
+
+    partyFormFilledInAgain: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        dateTime: string
+        oldNumberOfKids: string
+        oldCreations: string[]
+        oldAdditions: string[]
+        newNumberOfKids: string
+        newCreations: string[]
+        newAdditions: string[]
+    }
 }
