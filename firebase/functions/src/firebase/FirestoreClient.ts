@@ -1,13 +1,15 @@
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, FirestoreBooking } from 'fizz-kidz'
 import { FirestoreRefs } from './FirestoreRefs'
 
 class Client {
     getPartyBooking(bookingId: string) {
-        return FirestoreRefs.partyBooking(bookingId).get()
+        return FirestoreRefs.partyBooking(bookingId).get() as Promise<
+            FirebaseFirestore.DocumentSnapshot<FirestoreBooking>
+        >
     }
 
     updatePartyBooking(bookingId: string, booking: Partial<Booking>) {
-        return FirestoreRefs.partyBooking(bookingId).update(booking)
+        return FirestoreRefs.partyBooking(bookingId).set(booking, { merge: true })
     }
 
     getHolidayProgramBooking(paymentIntentId: string) {
