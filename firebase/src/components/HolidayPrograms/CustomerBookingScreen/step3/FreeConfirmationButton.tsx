@@ -1,12 +1,13 @@
 import { makeStyles } from '@material-ui/core'
 import { Button } from 'antd'
 import { Acuity } from 'fizz-kidz'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form } from '..'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import Loader from '../../../ScienceClub/shared/Loader'
+import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
 
 type Props = {
     form: Form
@@ -21,9 +22,18 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
 
     const history = useHistory()
 
+    const termsRef = useRef<TermsCheckboxHandle>(null)
+    const submitButtonRef = useRef<HTMLButtonElement>(null)
+
     const [submitting, setSubmitting] = useState(false)
 
     const handleSubmit = async () => {
+        setTimeout(() => submitButtonRef.current?.blur())
+        if (!termsRef.current?.isChecked()) {
+            termsRef.current?.showWarning()
+            return
+        }
+
         setSubmitting(true)
         try {
             await callFirebaseFunction(
@@ -57,17 +67,21 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
     }
 
     return (
-        <Button
-            className={classes.primaryButton}
-            block
-            type={submitting ? 'default' : 'primary'}
-            size="large"
-            onClick={handleSubmit}
-            style={{ marginBottom: 12, marginTop: 16 }}
-        >
-            {submitting && <Loader size="sm" />}
-            {!submitting && <strong>Confirm and register</strong>}
-        </Button>
+        <>
+            <TermsCheckbox ref={termsRef} />
+            <Button
+                className={classes.primaryButton}
+                block
+                type={submitting ? 'default' : 'primary'}
+                size="large"
+                onClick={handleSubmit}
+                ref={submitButtonRef}
+                style={{ marginBottom: 12, marginTop: 16 }}
+            >
+                {submitting && <Loader size="sm" />}
+                {!submitting && <strong>Confirm and register</strong>}
+            </Button>
+        </>
     )
 }
 

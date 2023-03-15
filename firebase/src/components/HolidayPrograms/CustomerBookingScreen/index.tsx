@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useRef } from 'react'
 import './AntD.less'
 import Step1 from './step1/Step1'
 import { Form, Button, Steps, Modal, Card, Typography } from 'antd'
@@ -37,6 +37,8 @@ const CustomerBookingScreen = () => {
     const [form] = Form.useForm()
 
     const styles = useStyles()
+
+    const continueButtonRef = useRef<HTMLButtonElement>(null)
 
     const [loading, setLoading] = useState(true)
     const [noUpcomingPrograms, setNoUpcomingPrograms] = useState(false)
@@ -178,12 +180,14 @@ const CustomerBookingScreen = () => {
         if (step < 3) {
             return (
                 <Button
+                    ref={continueButtonRef}
                     block
                     type="primary"
                     size="large"
                     className={styles.primaryBtn}
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
+                        setTimeout(() => continueButtonRef.current?.blur())
                         await form.validateFields()
                         if (step === 2) {
                             // check if any children added
@@ -239,7 +243,7 @@ const CustomerBookingScreen = () => {
                 title="No children added"
                 footer={[
                     <Button type="primary" onClick={() => setShowNoChildrenModal(false)}>
-                        Ok
+                        OK
                     </Button>,
                 ]}
                 visible={showNoChildrenModal}
