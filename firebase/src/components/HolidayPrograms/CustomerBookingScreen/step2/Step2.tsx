@@ -155,7 +155,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
                 visible={showModal}
                 footer={[
                     <Button key="ok" type="primary" onClick={() => setShowModal(false)}>
-                        Ok
+                        OK
                     </Button>,
                 ]}
             >

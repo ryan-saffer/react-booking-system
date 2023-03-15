@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { Button, Checkbox, Modal, Typography } from 'antd'
+import React, { useContext, useRef, useState } from 'react'
+import { Button, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { Form } from '..'
@@ -7,6 +7,7 @@ import Firebase, { FirebaseContext } from '../../../Firebase'
 import { makeStyles } from '@material-ui/core'
 import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import Loader from '../../../ScienceClub/shared/Loader'
+import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
 
 type Props = {
     form: Form
@@ -22,22 +23,24 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [termsChecked, setTermsChecked] = useState(false)
-    const [showTermsWarning, setShowTermsWarning] = useState(false)
-    const [showTermsModal, setShowTermsModal] = useState(false)
+    const termsRef = useRef<TermsCheckboxHandle>(null)
+    const submitButtonRef = useRef<HTMLButtonElement>(null)
+
     const [paymentError, setPaymentError] = useState('')
 
     const [submitting, setSubmitting] = useState(false)
 
     const handleSubmit = async () => {
+        setTimeout(() => submitButtonRef.current?.blur())
+
         if (!stripe || !elements) {
             // Stripe.js has not yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
             return
         }
 
-        if (!termsChecked) {
-            setShowTermsWarning(true)
+        if (!termsRef.current?.isChecked()) {
+            termsRef.current?.showWarning()
             return
         }
 
@@ -126,27 +129,14 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
     return (
         <>
             <PaymentElement />
-            <div style={{ display: 'flex', marginTop: 16 }}>
-                <Checkbox
-                    checked={termsChecked}
-                    onChange={(e) => {
-                        setTermsChecked(e.target.checked)
-                        setShowTermsWarning(false)
-                    }}
-                >
-                    I have read and agreed to the{' '}
-                    <Typography.Link onClick={() => setShowTermsModal(true)}>Cancellation Policy</Typography.Link>
-                </Checkbox>
-            </div>
-            {showTermsWarning && (
-                <Typography.Text type="danger">Please accept the terms and conditions</Typography.Text>
-            )}
+            <TermsCheckbox ref={termsRef} />
             {paymentError && (
                 <Typography.Title type="danger" level={5} style={{ textAlign: 'center', marginTop: 12 }}>
                     {paymentError}
                 </Typography.Title>
             )}
             <Button
+                ref={submitButtonRef}
                 className={classes.primaryButton}
                 block
                 type={submitting ? 'default' : 'primary'}
@@ -157,22 +147,6 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 {submitting && <Loader size="sm" />}
                 {!submitting && <strong>Confirm and pay</strong>}
             </Button>
-            <Modal
-                title="Terms and conditions"
-                visible={showTermsModal}
-                footer={[
-                    <Button type="primary" onClick={() => setShowTermsModal(false)}>
-                        Ok
-                    </Button>,
-                ]}
-            >
-                <strong>Cancellation Policy</strong>
-                <p>
-                    A full refund will be automatically issued for cancellations made more than 24 hours before the
-                    program.
-                </p>
-                <p>Cancellations made less than 24 hours before the program will not be refunded.</p>
-            </Modal>
         </>
     )
 }

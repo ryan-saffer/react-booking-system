@@ -32,7 +32,7 @@ const useErrorDialog = (): Result => {
                 visible={showModal}
                 footer={[
                     <Button type="primary" key="ok" onClick={() => setShowModal(false)}>
-                        Ok
+                        OK
                     </Button>,
                 ]}
             >
