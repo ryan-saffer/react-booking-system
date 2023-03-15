@@ -1,5 +1,4 @@
 import { Checkbox, Typography } from 'antd'
-import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import React, { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useState } from 'react'
 import CancellationPolicyModal from './CancellationPolicyModal'
 import TermsAndConditionsModal from './TermsAndConditionsModal'
@@ -27,22 +26,30 @@ const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, 
     const [showCancellationPolicyModal, setShowCancellationPolicyModal] = useState(false)
     const [showTermsModal, setShowTermsModal] = useState(false)
 
-    function onToggle(event: CheckboxChangeEvent) {
-        setTermsChecked(event.target.checked)
-        setShowTermsWarning(!event.target.checked)
+    function onToggle(checked: boolean) {
+        setTermsChecked(checked)
+        setShowTermsWarning(!checked)
+    }
+
+    function showModal(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, modal: 'cancellation' | 'terms') {
+        e.stopPropagation()
+        if (modal === 'cancellation') {
+            setShowCancellationPolicyModal(true)
+        }
+        if (modal === 'terms') {
+            setShowTermsModal(true)
+        }
     }
 
     return (
         <>
             <div style={{ display: 'flex', marginTop: 16 }}>
-                <Checkbox checked={termsChecked} onChange={(e) => onToggle(e)}>
+                <Checkbox checked={termsChecked} onChange={(e) => onToggle(e.target.checked)} />
+                <div style={{ cursor: 'pointer', marginLeft: 8 }} onClick={() => onToggle(!termsChecked)}>
                     I have read and agreed to the{' '}
-                    <Typography.Link onClick={() => setShowCancellationPolicyModal(true)}>
-                        Cancellation Policy
-                    </Typography.Link>{' '}
-                    and the{' '}
-                    <Typography.Link onClick={() => setShowTermsModal(true)}>Terms & Conditions</Typography.Link>
-                </Checkbox>
+                    <Typography.Link onClick={(e) => showModal(e, 'cancellation')}>Cancellation Policy</Typography.Link>{' '}
+                    and the <Typography.Link onClick={(e) => showModal(e, 'terms')}>Terms & Conditions</Typography.Link>
+                </div>
             </div>
             {showTermsWarning && (
                 <Typography.Text type="danger">Please accept the terms and conditions</Typography.Text>
