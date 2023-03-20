@@ -1,8 +1,12 @@
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
 
-export const bookEvent = onCall<'bookEvent'>(async (booking, _context) => {
-    const { id: eventId } = await FirestoreClient.createEventBooking(booking)
+export const bookEvent = onCall<'bookEvent'>(async (booking) => {
+    // parse date strings back to date objects
+    booking.startTime = new Date(booking.startTime)
+    booking.endTime = new Date(booking.endTime)
 
-    return eventId
+    const id = await FirestoreClient.createEventBooking(booking)
+
+    return id
 })

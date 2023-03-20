@@ -1,6 +1,7 @@
 import { EventBooking } from './../../fizz-kidz/src/booking/Event'
 import { ScienceEnrolment, PaidHolidayProgramBooking, FirestoreBooking, Booking } from 'fizz-kidz'
 import { FirestoreRefs } from './FirestoreRefs'
+import { WithoutId } from 'fizz-kidz/src/utilities'
 
 class Client {
     getPartyBooking(bookingId: string) {
@@ -37,8 +38,10 @@ class Client {
         return FirestoreRefs.scienceEnrolment(appointmentId).update(data)
     }
 
-    createEventBooking(booking: EventBooking) {
-        return FirestoreRefs.events().add(booking)
+    async createEventBooking(booking: WithoutId<EventBooking>) {
+        const ref = FirestoreRefs.events().doc()
+        await ref.set({ id: ref.id, ...booking })
+        return ref.id
     }
 }
 

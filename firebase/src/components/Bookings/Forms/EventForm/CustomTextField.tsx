@@ -1,5 +1,5 @@
+import React from 'react'
 import { TextField, TextFieldProps } from '@material-ui/core'
-import React, { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import { FormFields } from './FormFields'
 
 type Props = {

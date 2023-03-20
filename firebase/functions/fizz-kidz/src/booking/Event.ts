@@ -1,4 +1,5 @@
 export type EventBooking = {
+    id: string
     contactName: string
     contactNumber: string
     contactEmail: string

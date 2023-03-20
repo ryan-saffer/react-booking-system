@@ -2,14 +2,13 @@ import { FormBookingFields, Locations } from 'fizz-kidz'
 
 /**
  * Validates the form values, sets any errors and error text messages.
- * 
+ *
  * @param formValues - the formValues object reperesenting the form
  * @param field - the field name that was changed
  * @param value - the value form value that was changed
  * @return {object} the updated form values object
  */
 export function validateFormOnChange(formValues, field, value) {
-
     switch (field) {
         // all the following only need to check for empty values
         case FormBookingFields.parentFirstName:
@@ -25,11 +24,10 @@ export function validateFormOnChange(formValues, field, value) {
             // email must be checked if valid
             if (value === '') {
                 formValues[field].error = true
-                formValues[field].errorText = "Email cannot be empty"
-            }
-            else if (emailIsInvalid(value)) {
+                formValues[field].errorText = 'Email cannot be empty'
+            } else if (emailIsInvalid(value)) {
                 formValues[field].error = true
-                formValues[field].errorText = "Email is not valid"
+                formValues[field].errorText = 'Email is not valid'
             } else {
                 formValues[field].error = false
             }
@@ -38,12 +36,12 @@ export function validateFormOnChange(formValues, field, value) {
             // mobile number must be 10 digits long
             if (value === '') {
                 formValues[field].error = true
-                formValues[field].errorText = "Mobile number cannot be empty"
+                formValues[field].errorText = 'Mobile number cannot be empty'
                 break
             }
             if (value.length !== 10) {
                 formValues[field].error = true
-                formValues[field].errorText = "Mobile number must be 10 digits long"
+                formValues[field].errorText = 'Mobile number must be 10 digits long'
             } else {
                 formValues[field].error = false
             }
@@ -56,7 +54,9 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[FormBookingFields.partyLength].error = true
                 var length = `${formValues[FormBookingFields.partyLength].value} hour`
                 if (formValues[FormBookingFields.partyLength].value > 1) length += 's'
-                formValues[FormBookingFields.partyLength].errorText = `A ${formValues[FormBookingFields.location].value} party cannot be of length ${length}`
+                formValues[FormBookingFields.partyLength].errorText = `A ${
+                    formValues[FormBookingFields.location].value
+                } party cannot be of length ${length}`
                 break
             } else if (field === FormBookingFields.location) {
                 formValues[FormBookingFields.partyLength].error = false
@@ -71,12 +71,12 @@ export function validateFormOnChange(formValues, field, value) {
 
 /**
  * Determines whether the combination of location and length is valid.
- * 
+ *
  * @param {object} formValues - the formValues object representing the form
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = Object.values(Locations).filter(location => location !== 'mobile')
+    var storeLocations = Object.values(Locations).filter((location) => location !== 'mobile')
     var location = formValues[FormBookingFields.location].value
     var length = formValues[FormBookingFields.partyLength].value
     if (storeLocations.includes(location) && length === '1') {
@@ -91,16 +91,16 @@ function locationAndTimeIsInvalid(formValues) {
  * Validates the form when submitting.
  * Runs through all form values and ensures they aren't empty.
  * Then checks for any errors in the form.
- * 
+ *
  * @param {object} formValues - the formValues representing the form
  * @return {object} - if there is an error, returns the form values, otherwise returns null
  */
 export function validateFormOnSubmit(formValues) {
-
     for (let field in formValues) {
         // notes not required, address only required in some cases
         // no need to validate creations, cake and questions
-        if (field !== FormBookingFields.address &&
+        if (
+            field !== FormBookingFields.address &&
             field !== FormBookingFields.numberOfChildren &&
             field !== FormBookingFields.notes &&
             field !== FormBookingFields.creation1 &&
@@ -109,7 +109,8 @@ export function validateFormOnSubmit(formValues) {
             field !== FormBookingFields.cake &&
             field !== FormBookingFields.cakeFlavour &&
             field !== FormBookingFields.questions &&
-            field !== FormBookingFields.funFacts) {
+            field !== FormBookingFields.funFacts
+        ) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
     }
@@ -124,7 +125,7 @@ export function validateFormOnSubmit(formValues) {
 
 /**
  * Iterates the form values and checks for any errors
- * 
+ *
  * @param {object} formValues - The form values object
  * @return {boolean} Whether or not an error exists
  */
@@ -141,12 +142,13 @@ export function errorFound(formValues) {
 
 /**
  * Determines whether or not a string is an invalid email address
- * 
+ *
  * @param {string} email - the email to validate
  * @return {boolean} whether or not the email is invalid
  */
-function emailIsInvalid(email) {
+export function emailIsInvalid(email) {
     // eslint-disable-next-line
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return !re.test(String(email).toLowerCase());
+    var re =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return !re.test(String(email).toLowerCase())
 }

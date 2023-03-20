@@ -16,7 +16,7 @@ import { Close as CloseIcon } from '@material-ui/icons'
 import { TransitionProps } from '@material-ui/core/transitions'
 import React, { ReactElement, Ref, useState } from 'react'
 import NewBookingForm from './Forms/NewBookingForm'
-import EventForm from './Forms/EventForm'
+import NewEventForm from './Forms/EventForm/NewEventForm'
 
 type Props = {
     open: boolean
@@ -68,7 +68,7 @@ const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
                 </Tabs>
                 <Paper className={classes.paper}>
                     {value === 0 && <NewBookingForm onSuccess={handleBookingCreated} />}
-                    {value === 1 && <EventForm onSuccess={handleBookingCreated} />}
+                    {value === 1 && <NewEventForm onSuccess={handleBookingCreated} />}
                 </Paper>
             </main>
         </Dialog>

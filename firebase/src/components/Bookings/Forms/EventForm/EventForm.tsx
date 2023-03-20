@@ -1,47 +1,65 @@
-import { CircularProgress, Fab, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import CustomTextField from './CustomTextField'
-import { FormFields, getEmptyFormValues } from './FormFields'
+import { FormFields } from './FormFields'
 import DateFnsUtils from '@date-io/date-fns'
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
-import SaveIcon from '@material-ui/icons/Save'
-import CheckIcon from '@material-ui/icons/Check'
-import { green } from '@material-ui/core/colors'
+import { emailIsInvalid } from '../validation'
 import moment from 'moment'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import useFirebase from '../../../Hooks/context/UseFirebase'
 
-function combineDateAndTime(date: Date, time: string) {
+type Props = {
+    formValues: FormFields
+    setFormValues: Dispatch<SetStateAction<FormFields>>
+    disabled?: boolean
+}
+
+export function isFormValid(formValues: FormFields) {
+    let isValid = true
+
+    const formValuesCopy = { ...formValues } as { [key: string]: any }
+    for (const [key, value] of Object.entries(formValuesCopy)) {
+        if (key !== 'notes' && !value.value) {
+            formValuesCopy[key] = {
+                ...formValuesCopy[key],
+                error: true,
+            }
+            isValid = false
+        }
+    }
+    return { isValid, formValuesCopy: formValuesCopy as FormFields }
+}
+
+export function combineDateAndTime(date: Date, time: string) {
     const options = { timeZone: 'Australia/Melbourne' }
     return moment
         .tz(`${date.toLocaleDateString('en-au', options)} ${time}`, 'DD/MM/YYYY hh:mm', 'Australia/Melbourne')
         .toDate()
 }
 
-type Props = {
-    onSuccess: (date: Date) => void
-}
-
-const EventForm: React.FC<Props> = ({ onSuccess }) => {
+const EventForm: React.FC<Props> = ({ formValues, setFormValues, disabled }) => {
     const classes = useStyles()
-    const firebase = useFirebase()
-
-    const [formValues, setFormValues] = useState(getEmptyFormValues())
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
-    const [success, setSuccess] = useState(false)
-
-    useEffect(() => console.log(formValues), [formValues])
 
     function handleFormChange(field: keyof FormFields, e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const value = e.target.value
+
+        let error = false
+        let errorText = ''
+        if (field === 'contactEmail') {
+            if (value && emailIsInvalid(value)) {
+                errorText = 'Email is invalid'
+                error = true
+            } else {
+                errorText = 'Contact email cannot be empty'
+            }
+        }
         setFormValues((values) => ({
             ...values,
             [field]: {
                 ...values[field],
                 value: value,
-                error: false,
+                error: error || (!value && field !== 'notes'),
+                errorText: errorText || values[field].errorText,
             },
         }))
     }
@@ -57,50 +75,6 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
         }))
     }
 
-    async function handleSubmit() {
-        // validation
-        let hasError = false
-        for (const [key, value] of Object.entries(formValues)) {
-            if (key !== 'notes' && !value.value) {
-                setFormValues((values) => ({
-                    ...values,
-                    [key]: {
-                        ...values[key as keyof FormFields],
-                        error: true,
-                    },
-                }))
-                hasError = true
-            }
-        }
-        if (hasError) return
-
-        const startDate = combineDateAndTime(formValues.date.value!, formValues.startTime.value)
-        const endDate = combineDateAndTime(formValues.date.value!, formValues.endTime.value)
-
-        try {
-            setLoading(true)
-            await callFirebaseFunction(
-                'bookEvent',
-                firebase
-            )({
-                contactName: formValues.contactName.value,
-                contactNumber: formValues.contactNumber.value,
-                contactEmail: formValues.contactEmail.value,
-                organisation: formValues.organisation.value,
-                location: formValues.location.value,
-                startTime: startDate,
-                endTime: endDate,
-                notes: formValues.notes.value,
-            })
-            setLoading(false)
-            setSuccess(true)
-            setTimeout(() => onSuccess(startDate), 1000)
-        } catch (err) {
-            setError(true)
-            setLoading(false)
-        }
-    }
-
     return (
         <>
             <Grid container spacing={3}>
@@ -113,6 +87,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                         label="Contact name"
                         details={formValues.contactName}
                         onChange={(e) => handleFormChange('contactName', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -121,6 +97,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                         label="Contact number"
                         details={formValues.contactNumber}
                         onChange={(e) => handleFormChange('contactNumber', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -129,6 +107,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                         label="Contact email"
                         details={formValues.contactEmail}
                         onChange={(e) => handleFormChange('contactEmail', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -137,6 +117,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                         label="Organisation / Company name"
                         details={formValues.organisation}
                         onChange={(e) => handleFormChange('organisation', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12}>
@@ -145,6 +127,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                         label="Location"
                         details={formValues.location}
                         onChange={(e) => handleFormChange('location', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -167,6 +151,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
+                            disabled={disabled}
+                            className={classes.disabled}
                         />
                     </MuiPickersUtilsProvider>
                 </Grid>
@@ -183,6 +169,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                             step: 1800, // 5 min
                         }}
                         onChange={(e) => handleFormChange('startTime', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={6} sm={4}>
@@ -198,6 +186,8 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                             step: 1800, // 5 min
                         }}
                         onChange={(e) => handleFormChange('endTime', e)}
+                        disabled={disabled}
+                        classes={{ root: classes.disabled }}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -210,41 +200,20 @@ const EventForm: React.FC<Props> = ({ onSuccess }) => {
                     multiline
                     rows={5}
                     onChange={(e) => handleFormChange('notes', e)}
+                    disabled={disabled}
+                    classes={{ root: classes.disabled }}
                 />
             </Grid>
-            <div className={classes.saveButtonDiv}>
-                <Fab
-                    className={success ? classes.success : ''}
-                    aria-label="save"
-                    color="secondary"
-                    type="submit"
-                    disabled={loading}
-                    onClick={handleSubmit}
-                >
-                    {success ? <CheckIcon /> : <SaveIcon />}
-                </Fab>
-                {loading && <CircularProgress size={68} className={classes.progress} />}
-            </div>
         </>
     )
 }
 
-const useStyles = makeStyles((theme) => ({
-    saveButtonDiv: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginTop: 24,
+const useStyles = makeStyles({
+    disabled: {
+        '& .Mui-disabled': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
     },
-    success: {
-        marginTop: theme.spacing(3),
-        backgroundColor: green[500],
-    },
-    progress: {
-        color: green[500],
-        position: 'absolute',
-        marginTop: '-6px',
-        marginRight: '-6px',
-    },
-}))
+})
 
 export default EventForm
