@@ -31,6 +31,10 @@ class Refs {
     events() {
         return db.collection('events')
     }
+
+    event(eventId: string) {
+        return this.events().doc(eventId)
+    }
 }
 
 const FirestoreRefs = new Refs()

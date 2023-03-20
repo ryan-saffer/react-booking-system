@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, ReactElement, Ref } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
@@ -16,7 +16,9 @@ import {
     Divider,
     LinearProgress,
     IconButton,
-    Slide,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
 } from '@material-ui/core'
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
@@ -29,11 +31,12 @@ import LocationCheckboxes from './LocationCheckboxes'
 import DateNav from './BookingsNav'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import useRole from '../Hooks/UseRole'
-import { TransitionProps } from '@material-ui/core/transitions'
 import Firebase, { FirebaseContext } from '../Firebase'
 import { Roles } from '../../constants/roles'
 import firebase from 'firebase/compat'
 import NewBookingDialog from './NewBookingDialog'
+import { useEvents } from './Events/UseEvents'
+import Events from './Events/Events'
 
 const BookingsPage = () => {
     const classes = useStyles()
@@ -43,11 +46,13 @@ const BookingsPage = () => {
     const isAdmin = useRole() === Roles.ADMIN
 
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
+    const [events, setEventsDate] = useEvents()
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
     let initialLocations: { [key in Locations]?: boolean } = {}
     Object.values(Locations).forEach((location) => (initialLocations[location] = true))
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
+    const [eventsChecked, setEventsChecked] = useState(true)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
     const urlSearchParams = new URLSearchParams(window.location.search)
@@ -66,19 +71,22 @@ const BookingsPage = () => {
     const handleDateChange = (date: Date) => {
         setDate(date)
         fetchBookingsByDate(date)
+        setEventsDate(date)
     }
 
     const handleNavigateBefore = () => {
-        var dayBefore = date
+        const dayBefore = new Date(date)
         dayBefore.setDate(dayBefore.getDate() - 1)
         setDate(dayBefore)
+        setEventsDate(dayBefore)
         fetchBookingsByDate(dayBefore)
     }
 
     const handleNavigateNext = () => {
-        var tomorrow = date
+        const tomorrow = new Date(date)
         tomorrow.setDate(tomorrow.getDate() + 1)
         setDate(tomorrow)
+        setEventsDate(tomorrow)
         fetchBookingsByDate(tomorrow)
     }
 
@@ -91,10 +99,10 @@ const BookingsPage = () => {
     }
 
     const handleCloseBooking = (date?: Date) => {
-        console.log(date)
         if (date instanceof Date) {
             setDate(date)
             fetchBookingsByDate(date)
+            setEventsDate(date)
         }
         setOpenNewBooking(false)
     }
@@ -154,7 +162,12 @@ const BookingsPage = () => {
                         </Typography>
                     </div>
                     <div className={classes.topCenter}>
-                        <img className={classes.logo} src={Logo.default} onClick={() => history.push(ROUTES.LANDING)} />
+                        <img
+                            className={classes.logo}
+                            src={Logo.default}
+                            onClick={() => history.push(ROUTES.LANDING)}
+                            alt="fizz kidz logo"
+                        />
                     </div>
                     <div className={isAdmin ? classes.authTopRight : classes.noAuthTopRight}>
                         {isAdmin && (
@@ -231,7 +244,15 @@ const BookingsPage = () => {
                     </Hidden>
                     <DateNav onNavigateBefore={handleNavigateBefore} onNavigateNext={handleNavigateNext} date={date} />
                     <LinearProgress className={loading ? '' : classes.linearProgressHidden} color="secondary" />
-                    <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                    <FormGroup row>
+                        <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={eventsChecked} onChange={() => setEventsChecked((it) => !it)} />
+                            }
+                            label="Events"
+                        />
+                    </FormGroup>
                     <Divider />
                     <Grid item xs sm md>
                         {Object.values(Locations).map(
@@ -245,6 +266,7 @@ const BookingsPage = () => {
                                     />
                                 )
                         )}
+                        {eventsChecked && <Events events={events} onDeleteEvent={handleCloseBooking} />}
                     </Grid>
                 </main>
             </Grid>
