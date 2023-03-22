@@ -8,4 +8,5 @@ export type EventBooking = {
     startTime: Date
     endTime: Date
     notes: string
+    calendarEventId: string
 }
