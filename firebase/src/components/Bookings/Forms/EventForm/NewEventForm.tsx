@@ -7,19 +7,19 @@ import { green } from '@material-ui/core/colors'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import EventForm, { combineDateAndTime, isFormValid } from './EventForm'
+import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 
 type Props = {
     onSuccess: (date: Date) => void
-}
+} & ErrorDialogProps
 
-const NewEventForm: React.FC<Props> = ({ onSuccess }) => {
+const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     const classes = useStyles()
     const firebase = useFirebase()
 
     const [formValues, setFormValues] = useState(getEmptyFormValues())
 
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
 
     async function handleSubmit() {
@@ -51,8 +51,8 @@ const NewEventForm: React.FC<Props> = ({ onSuccess }) => {
             setSuccess(true)
             setTimeout(() => onSuccess(startDate), 1000)
         } catch (err) {
-            setError(true)
             setLoading(false)
+            displayError('There was an error booking in the event')
         }
     }
 
@@ -94,4 +94,4 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default NewEventForm
+export default WithErrorDialog(NewEventForm)

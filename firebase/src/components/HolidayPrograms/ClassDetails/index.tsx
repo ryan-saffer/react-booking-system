@@ -91,7 +91,7 @@ const ClassDetailsPage = () => {
                         </Typography>
                     </div>
                     <div style={{ flex: 1, textAlign: 'right' }}>
-                        <img src={Logo.default} style={{ maxWidth: 100 }} />
+                        <img src={Logo.default} style={{ maxWidth: 100 }} alt="fizz kidz logo" />
                     </div>
                 </Toolbar>
             </AppBar>

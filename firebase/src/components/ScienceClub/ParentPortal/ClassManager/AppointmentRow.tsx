@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Acuity } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'

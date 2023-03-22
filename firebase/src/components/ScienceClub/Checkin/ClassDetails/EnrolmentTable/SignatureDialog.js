@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import SignatureCanvas from 'react-signature-canvas'
 import { red } from '@material-ui/core/colors'
-import { Input, TextField } from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 
 const SignatureDialog = (props) => {
     const classes = useStyles()

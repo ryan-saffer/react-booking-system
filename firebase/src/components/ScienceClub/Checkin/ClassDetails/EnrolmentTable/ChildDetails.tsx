@@ -34,6 +34,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
             }
         }
         getUrl()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleMenuClick: MenuProps['onClick'] = async (e) => {
@@ -73,6 +74,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
         }
 
         return <Menu items={items} onClick={handleMenuClick} />
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appointment])
 
     return (
@@ -124,7 +126,13 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 {enrolment.signatures[appointment.id] && (
                     <Descriptions.Item label="Signature">
                         <div className={classes.signatureWrapper}>
-                            {<img className={classes.signature} src={enrolment.signatures[appointment.id].signature} />}
+                            {
+                                <img
+                                    className={classes.signature}
+                                    src={enrolment.signatures[appointment.id].signature}
+                                    alt="signature"
+                                />
+                            }
                             <Typography.Text>
                                 {enrolment.signatures[appointment.id].pickupPerson} -{' '}
                                 {new Date(enrolment.signatures[appointment.id].timestamp).toLocaleString()}

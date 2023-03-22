@@ -83,6 +83,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
             setLoading(false)
         }
         retrieveInvoiceStatuses()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleActionButtonClick: MenuProps['onClick'] = (e) => {
@@ -320,7 +321,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
 
     const data = useMemo<TableData[]>(
         () => enrolments.map((enrolment) => ({ key: enrolment.id, enrolment })),
-        [enrolments, invoiceStatusMap]
+        [enrolments]
     )
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {

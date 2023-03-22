@@ -39,6 +39,7 @@ export function useEvents(_date: Date = new Date()) {
         }
 
         fetchEvents()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [date])
 
     return [events, setDate] as const
