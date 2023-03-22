@@ -32,7 +32,7 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
         const endDate = combineDateAndTime(formValues.date.value!, formValues.endTime.value)
 
         const updatedBooking: EventBooking = {
-            id: event.id,
+            ...event,
             contactName: formValues.contactName.value,
             contactNumber: formValues.contactNumber.value,
             contactEmail: formValues.contactEmail.value,

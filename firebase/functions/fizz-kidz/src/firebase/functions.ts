@@ -24,7 +24,7 @@ export interface FirebaseFunctions {
     updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: CloudFunction<void, void>
     scheduleFreeHolidayPrograms: CloudFunction<FreeHolidayProgramBooking[], void>
-    bookEvent: CloudFunction<WithoutId<EventBooking>, string>
+    bookEvent: CloudFunction<WithoutId<Omit<EventBooking, 'calendarEventId'>>, string>
 }
 
 export type CloudFunction<Input, Result> = {
