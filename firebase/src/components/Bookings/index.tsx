@@ -66,6 +66,7 @@ const BookingsPage = () => {
         } else {
             fetchBookingsByDate(new Date())
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleDateChange = (date: Date) => {

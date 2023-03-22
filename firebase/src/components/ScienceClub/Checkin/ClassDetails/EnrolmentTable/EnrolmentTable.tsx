@@ -179,6 +179,7 @@ const EnrolmentTable: React.FC<Props> = ({
             },
         })
         return cols
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appointments, width])
 
     const data = useMemo<TableData[]>(

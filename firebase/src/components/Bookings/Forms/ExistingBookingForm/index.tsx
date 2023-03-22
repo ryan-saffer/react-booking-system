@@ -28,7 +28,7 @@ import {
     Utilities,
     AdditionsDisplayValuesMap,
 } from 'fizz-kidz'
-import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
+import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
@@ -53,14 +53,12 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const role = useRole()
-    const isAdmin = role === Roles.ADMIN
     const isRestricted = role === Roles.RESTRICTED
     const MASK = 'xxxxx'
 
-    const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [])
+    const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
 
-    const [valid, setValid] = useState(true)
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -124,7 +122,6 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 formCopy.address.error = false
             }
 
-            setValid(!errorFound(formCopy))
             setFormValues(formCopy)
         }
     }
@@ -134,7 +131,6 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         tmpFormValues = validateFormOnSubmit(tmpFormValues) as ExistingBookingFormFields
         // if there is an error (fields are empty), update the values and return
         if (tmpFormValues) {
-            setValid(false)
             setFormValues(tmpFormValues)
             return
         }
@@ -623,7 +619,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                         />
                                     </Grid>
                                 )
-                            }
+                            } else return null
                         })}
                     </>
                 )}

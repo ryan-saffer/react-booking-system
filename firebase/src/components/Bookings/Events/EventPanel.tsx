@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { EventBooking } from 'fizz-kidz'
