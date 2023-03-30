@@ -158,7 +158,6 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                                 required: true,
                                 message: "Please input child's allergies",
                             },
-                            SimpleTextRule,
                         ]}
                     >
                         <TextArea rows={3} />
