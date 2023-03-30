@@ -131,6 +131,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                         <Option value="Grade 3">Grade 3</Option>
                         <Option value="Grade 4">Grade 4</Option>
                         <Option value="Grade 5">Grade 5</Option>
+                        <Option value="Grade 6">Grade 6</Option>"
                     </Select>
                 </AntdForm.Item>
                 <AntdForm.Item
