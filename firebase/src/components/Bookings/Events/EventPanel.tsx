@@ -3,7 +3,7 @@ import React from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { EventBooking } from 'fizz-kidz'
 import dateFormat from 'dateformat'
-import ExistingEventForm from '../Forms/EventForm/ExistingEventForm'
+// import ExistingEventForm from '../Forms/EventForm/ExistingEventForm'
 
 type Props = {
     event: EventBooking
@@ -23,7 +23,7 @@ const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ margin: 16 }}>
-                    <ExistingEventForm event={event} onDeleteEvent={onDeleteEvent} />
+                    {/* <ExistingEventForm event={event} onDeleteEvent={onDeleteEvent} /> */}
                 </div>
             </AccordionDetails>
         </Accordion>
