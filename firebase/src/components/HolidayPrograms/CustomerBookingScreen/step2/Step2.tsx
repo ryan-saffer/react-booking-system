@@ -23,14 +23,6 @@ type Props = {
 const Step2: React.FC<Props> = ({ selectedClasses }) => {
     const [showModal, setShowModal] = useState(false)
 
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select style={{ width: 70 }}>
-                <Option value="61">+61</Option>
-            </Select>
-        </Form.Item>
-    )
-
     return (
         <>
             <Divider>Parent details</Divider>
@@ -152,7 +144,7 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
             </Form.List>
             <Modal
                 title="Not enough spots"
-                visible={showModal}
+                open={showModal}
                 footer={[
                     <Button key="ok" type="primary" onClick={() => setShowModal(false)}>
                         OK

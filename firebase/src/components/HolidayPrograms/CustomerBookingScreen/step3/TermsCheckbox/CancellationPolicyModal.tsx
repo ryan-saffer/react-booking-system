@@ -2,15 +2,15 @@ import { Button, Modal } from 'antd'
 import React from 'react'
 
 type Props = {
-    visible: boolean
+    open: boolean
     onClose: () => void
 }
 
-const CancellationPolicyModal: React.FC<Props> = ({ visible, onClose }) => {
+const CancellationPolicyModal: React.FC<Props> = ({ open, onClose }) => {
     return (
         <Modal
             title="Terms and conditions"
-            visible={visible}
+            open={open}
             onCancel={() => onClose()}
             footer={[
                 <Button type="primary" onClick={() => onClose()}>
