@@ -246,7 +246,7 @@ const CustomerBookingScreen = () => {
                         OK
                     </Button>,
                 ]}
-                visible={showNoChildrenModal}
+                open={showNoChildrenModal}
             >
                 <p>Please add at least one child to the form.</p>
             </Modal>

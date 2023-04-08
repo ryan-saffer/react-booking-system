@@ -29,7 +29,7 @@ const useErrorDialog = (): Result => {
         return (
             <Modal
                 title={title}
-                visible={showModal}
+                open={showModal}
                 footer={[
                     <Button type="primary" key="ok" onClick={() => setShowModal(false)}>
                         OK
