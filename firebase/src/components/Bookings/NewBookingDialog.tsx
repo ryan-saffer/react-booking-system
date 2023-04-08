@@ -16,7 +16,7 @@ import { Close as CloseIcon } from '@material-ui/icons'
 import { TransitionProps } from '@material-ui/core/transitions'
 import React, { ReactElement, Ref, useState } from 'react'
 import NewBookingForm from './Forms/NewBookingForm'
-import NewEventForm from './Forms/EventForm/NewEventForm'
+import NewEventForm from './Forms/EventFormNew/NewEventForm'
 
 type Props = {
     open: boolean

@@ -1,3 +1,5 @@
+import { WithoutId } from '../utilities'
+
 export type EventBooking = {
     id: string
     contactName: string
@@ -9,4 +11,11 @@ export type EventBooking = {
     endTime: Date
     notes: string
     calendarEventId: string
+}
+
+export type ScheduleEventParams = WithoutId<Omit<EventBooking, 'startTime' | 'endTime' | 'calendarEventId'>> & {
+    slots: {
+        startTime: Date
+        endTime: Date
+    }[]
 }

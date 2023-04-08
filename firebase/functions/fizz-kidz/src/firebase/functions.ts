@@ -1,4 +1,4 @@
-import { EventBooking } from './../booking/Event'
+import { ScheduleEventParams } from './../booking/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
     CreatePaymentIntentParams,
@@ -11,7 +11,6 @@ import {
     UpdateScienceEnrolmentParams,
 } from '..'
 import { FreeHolidayProgramBooking } from '../holidayPrograms'
-import { WithoutId } from '../utilities'
 
 export interface FirebaseFunctions {
     retrieveInvoiceStatuses: CloudFunction<RetrieveInvoiceStatusesParams, InvoiceStatusMap>
@@ -24,7 +23,7 @@ export interface FirebaseFunctions {
     updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: CloudFunction<void, void>
     scheduleFreeHolidayPrograms: CloudFunction<FreeHolidayProgramBooking[], void>
-    bookEvent: CloudFunction<WithoutId<Omit<EventBooking, 'calendarEventId'>>, string>
+    bookEvent: CloudFunction<ScheduleEventParams, string>
 }
 
 export type CloudFunction<Input, Result> = {
