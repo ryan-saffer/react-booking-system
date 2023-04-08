@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from 'react'
-import { Form, Input, Select, Button, Divider, Modal, Typography } from 'antd'
+import { Form, Input, Button, Divider, Modal, Typography } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import ChildForm from './ChildForm'
 import { Acuity } from 'fizz-kidz'
-const { Option } = Select
 const { Text } = Typography
 
 export const SimpleTextRule = {

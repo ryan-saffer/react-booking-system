@@ -1,4 +1,4 @@
-import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Acuity } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Checkbox, Divider, Form as AntdForm, Input, Modal, Select, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
