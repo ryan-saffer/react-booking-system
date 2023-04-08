@@ -31,7 +31,7 @@ const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, 
         setShowTermsWarning(!checked)
     }
 
-    function showModal(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, modal: 'cancellation' | 'terms') {
+    function showModal(e: React.MouseEvent<HTMLElement, MouseEvent>, modal: 'cancellation' | 'terms') {
         e.stopPropagation()
         if (modal === 'cancellation') {
             setShowCancellationPolicyModal(true)
