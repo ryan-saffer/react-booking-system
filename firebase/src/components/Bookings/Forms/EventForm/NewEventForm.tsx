@@ -70,7 +70,7 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             })
             setLoading(false)
             setSuccess(true)
-            // setTimeout(() => onSuccess(startDate), 1000)
+            setTimeout(() => onSuccess(values.slots[0].startDate!), 1000)
         } catch (err) {
             setLoading(false)
             displayError('There was an error booking in the event')
@@ -82,7 +82,6 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             <FormProvider {...methods}>
                 <EventForm isNew={true} fieldArray={fieldArray} />
             </FormProvider>
-            {/* <EventForm formValues={formValues} setFormValues={setFormValues} /> */}
             <div className={classes.saveButtonDiv}>
                 <Fab
                     className={success ? classes.success : ''}

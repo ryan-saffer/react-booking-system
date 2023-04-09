@@ -23,7 +23,7 @@ export interface FirebaseFunctions {
     updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: CloudFunction<void, void>
     scheduleFreeHolidayPrograms: CloudFunction<FreeHolidayProgramBooking[], void>
-    bookEvent: CloudFunction<ScheduleEventParams, string>
+    bookEvent: CloudFunction<ScheduleEventParams, void>
 }
 
 export type CloudFunction<Input, Result> = {

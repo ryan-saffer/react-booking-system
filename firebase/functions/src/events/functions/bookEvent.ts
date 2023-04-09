@@ -4,29 +4,51 @@ import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
 
 export const bookEvent = onCall<'bookEvent'>(async (booking) => {
+    const { slots, ...rest } = booking
+
     // parse date strings back to date objects
-    booking.startTime = new Date(booking.startTime)
-    booking.endTime = new Date(booking.endTime)
+    slots.forEach((slot) => {
+        slot.startTime = new Date(slot.startTime)
+        slot.endTime = new Date(slot.endTime)
+    })
 
     try {
-        const id = await FirestoreClient.createEventBooking(booking)
-
-        const result = await calendarClient.createEvent(
-            booking.organisation,
-            booking.location,
-            booking.startTime,
-            booking.endTime,
-            'events',
-            booking.notes
+        // create events in firestore
+        const eventIds = await Promise.all(
+            slots.map((slot) =>
+                FirestoreClient.createEventBooking({
+                    ...rest,
+                    startTime: slot.startTime,
+                    endTime: slot.endTime,
+                })
+            )
         )
 
-        if (!result) {
-            throw new https.HttpsError('internal', `error creating calendar event for event booking ${id}`)
-        }
+        // create events in calendar
+        const calendarEventIds = await Promise.all(
+            slots.map((slot) =>
+                calendarClient.createEvent(
+                    booking.organisation,
+                    booking.location,
+                    slot.startTime,
+                    slot.endTime,
+                    'events',
+                    booking.notes
+                )
+            )
+        )
 
-        await FirestoreClient.updateEventBooking(id, { calendarEventId: result })
-
-        return id
+        // update calendar ids back into firestore
+        await Promise.all(
+            eventIds.map((eventId, idx) => {
+                const calendarEventId = calendarEventIds[idx]
+                if (!calendarEventId) {
+                    throw new https.HttpsError('internal', `error creating calendar event for event with id ${eventId}`)
+                }
+                FirestoreClient.updateEventBooking(eventId, { calendarEventId })
+            })
+        )
+        return
     } catch (err) {
         throw new https.HttpsError('internal', 'error creating event booking', err)
     }
