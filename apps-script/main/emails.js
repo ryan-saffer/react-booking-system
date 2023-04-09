@@ -57,7 +57,7 @@ function sendBookingConfirmationEmail(booking, environment) {
   var body = createHtmlFromMjmlFile(mjml, environment);
   var subject = "Party Booking Confirmation";
 
-  let faqs = DriveApp.getFileById("1G5rC2dMx85oQDxJYdUZOPQQodOZ5ODz3");
+  let faqs = DriveApp.getFileById("123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD");
 
   const balwynPhotoId = "14mqrG74qkbE43FGqexGS1_zfb11mOONy";
   const essendonPhotoId = "1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g";
@@ -129,7 +129,7 @@ function _sendOutForm(booking, environment) {
   // determine the from email address
   var fromAddress = determineFromEmailAddress(booking.location);
 
-  let faqs = DriveApp.getFileById("1G5rC2dMx85oQDxJYdUZOPQQodOZ5ODz3");
+  let faqs = DriveApp.getFileById("123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD");
 
   // Send the confirmation email
   GmailApp.sendEmail(booking.parentEmail, subject, "", {
