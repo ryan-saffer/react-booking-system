@@ -47,6 +47,10 @@ class Client {
     updateEventBooking(eventId: string, booking: Partial<EventBooking>) {
         return this.refs.event(eventId).update(booking)
     }
+
+    deleteEventBooking(eventId: string) {
+        return this.refs.event(eventId).delete()
+    }
 }
 
 const FirestoreClient = new Client()

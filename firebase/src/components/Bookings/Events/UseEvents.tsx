@@ -11,29 +11,39 @@ export function useEvents(_date: Date = new Date()) {
 
     useEffect(() => {
         async function fetchEvents() {
+            // since we need to get a range between startDate and endDate,
+            // and firestore does not support equality operators '>', '<' on multiple fields,
+            // fetch all events that may have already started, and filter the rest on the frontend
+
             date.setHours(0, 0, 0, 0)
-            var nextDay = new Date(date.getTime())
+            const nextDay = new Date(date.getTime())
             nextDay.setDate(nextDay.getDate() + 1)
+            // an event will never be 90 days long, so a safe window
+            const ninetyDaysAgo = new Date(date.getTime())
+            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90)
 
             try {
                 const snap = await firebase.db
                     .collection('events')
-                    .where('startTime', '>', date)
                     .where('startTime', '<', nextDay)
+                    .where('startTime', '>', ninetyDaysAgo)
                     .get()
 
                 const events = snap.docs
                     .map((doc) => {
                         const data = doc.data()
                         if (data) {
-                            return convertTimestamps(data)
+                            const event = convertTimestamps(data) as EventBooking
+                            if (event.endTime > date) {
+                                return event
+                            }
                         }
                         return null
                     })
                     .filter((it): it is EventBooking => !!it)
-
                 setEvents({ status: 'loaded', result: events })
             } catch (error) {
+                console.error(error)
                 setEvents({ status: 'error', error })
             }
         }

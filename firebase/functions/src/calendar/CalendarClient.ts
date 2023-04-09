@@ -4,6 +4,14 @@ import { calendar_v3, google } from 'googleapis'
 
 type Calendar = 'events'
 
+type Event = {
+    title: string
+    location: string
+    start: Date
+    end: Date
+    description?: string
+}
+
 class CalendarClient {
     private calendar: calendar_v3.Calendar
 
@@ -21,29 +29,40 @@ class CalendarClient {
         this.calendar = google.calendar({ version: 'v3', auth: OAuth2Client })
     }
 
-    async createEvent(
-        title: string,
-        location: string,
-        start: Date,
-        end: Date,
-        calendar: Calendar,
-        description?: string
-    ) {
+    async createEvent(calendar: Calendar, event: Event) {
         const result = await this.calendar.events.insert(
             {
                 calendarId: this.getCalendarId(calendar),
                 requestBody: {
-                    summary: title,
-                    location,
-                    start: { dateTime: start.toISOString() },
-                    end: { dateTime: end.toISOString() },
-                    description,
+                    summary: event.title,
+                    location: event.location,
+                    start: { dateTime: event.start.toISOString() },
+                    end: { dateTime: event.end.toISOString() },
+                    description: event.description,
                 },
             },
             undefined
         )
 
         return result.data.id
+    }
+
+    updateEvent(eventId: string, calendar: Calendar, event: Event) {
+        return this.calendar.events.update({
+            eventId,
+            calendarId: this.getCalendarId(calendar),
+            requestBody: {
+                summary: event.title,
+                location: event.location,
+                start: { dateTime: event.start.toISOString() },
+                end: { dateTime: event.end.toISOString() },
+                description: event.description,
+            },
+        })
+    }
+
+    deleteEvent(eventId: string, calendar: Calendar) {
+        return this.calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
     }
 
     private getCalendarId(calendar: Calendar) {
