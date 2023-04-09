@@ -5,13 +5,16 @@ import EditFormButtons from '../EditFormButtons'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
 import { useForm, FormProvider } from 'react-hook-form'
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
+import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 
 type Props = {
     event: EventBooking
     onDeleteEvent: (date: Date) => void
-} & ConfirmationDialogProps
+} & ConfirmationDialogProps &
+    ErrorDialogProps
 
-const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onDeleteEvent }) => {
+const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onDeleteEvent, displayError }) => {
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(false)
@@ -49,31 +52,43 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
 
         setLoading(true)
 
-        const updatedBooking: EventBooking = {
-            ...event,
-            contactName: values.contactName,
-            contactNumber: values.contactNumber,
-            contactEmail: values.contactEmail,
-            organisation: values.organisation,
-            location: values.location,
-            startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime),
-            endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime),
-            notes: values.notes,
+        try {
+            const updatedBooking: EventBooking = {
+                ...event,
+                contactName: values.contactName,
+                contactNumber: values.contactNumber,
+                contactEmail: values.contactEmail,
+                organisation: values.organisation,
+                location: values.location,
+                startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime),
+                endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime),
+                notes: values.notes,
+            }
+
+            await callFirebaseFunction('updateEvent', firebase)(updatedBooking)
+
+            setSuccess(true)
+            setTimeout(() => {
+                setEditing(false)
+                setSuccess(false)
+            }, 1000)
+        } catch {
+            displayError('There was an error updating the event')
+        } finally {
+            setLoading(false)
         }
-
-        await firebase.db.collection('events').doc(event.id).set(updatedBooking, { merge: true })
-
-        setLoading(false)
-        setSuccess(true)
-        setTimeout(() => {
-            setEditing(false)
-            setSuccess(false)
-        }, 1000)
     }
 
-    function handleDelete() {
-        firebase.db.collection('events').doc(event.id).delete()
-        onDeleteEvent(event.startTime)
+    async function handleDelete() {
+        setLoading(true)
+        try {
+            await callFirebaseFunction('deleteEvent', firebase)(event)
+            onDeleteEvent(event.startTime)
+        } catch (err) {
+            displayError('There was an error deleting the event')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -104,4 +119,4 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
     )
 }
 
-export default WithConfirmationDialog(ExistingEventForm)
+export default WithConfirmationDialog(WithErrorDialog(ExistingEventForm))

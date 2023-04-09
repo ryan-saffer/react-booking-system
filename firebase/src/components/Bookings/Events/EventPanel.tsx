@@ -17,7 +17,21 @@ const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
-                    {dateFormat(event.startTime, 'h:MM TT')} - {dateFormat(event.endTime, 'h:MM TT')}
+                    {(() => {
+                        if (event.startTime.toDateString() === event.endTime.toDateString()) {
+                            return `${dateFormat(event.startTime, 'h:MM TT')} - ${dateFormat(event.endTime, 'h:MM TT')}`
+                        } else {
+                            return `${event.startTime.toLocaleDateString('en-au', {
+                                day: 'numeric',
+                                month: 'numeric',
+                                year: 'numeric',
+                            })} - ${event.endTime.toLocaleDateString('en-au', {
+                                day: 'numeric',
+                                month: 'numeric',
+                                year: 'numeric',
+                            })}`
+                        }
+                    })()}
                 </Typography>
                 <Typography className={classes.secondaryHeading}>{event.organisation}</Typography>
             </AccordionSummary>

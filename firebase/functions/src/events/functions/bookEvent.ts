@@ -27,14 +27,13 @@ export const bookEvent = onCall<'bookEvent'>(async (booking) => {
         // create events in calendar
         const calendarEventIds = await Promise.all(
             slots.map((slot) =>
-                calendarClient.createEvent(
-                    booking.organisation,
-                    booking.location,
-                    slot.startTime,
-                    slot.endTime,
-                    'events',
-                    booking.notes
-                )
+                calendarClient.createEvent('events', {
+                    title: booking.organisation,
+                    location: booking.location,
+                    start: slot.startTime,
+                    end: slot.endTime,
+                    description: booking.notes,
+                })
             )
         )
 
@@ -45,7 +44,7 @@ export const bookEvent = onCall<'bookEvent'>(async (booking) => {
                 if (!calendarEventId) {
                     throw new https.HttpsError('internal', `error creating calendar event for event with id ${eventId}`)
                 }
-                FirestoreClient.updateEventBooking(eventId, { calendarEventId })
+                return FirestoreClient.updateEventBooking(eventId, { calendarEventId })
             })
         )
         return
