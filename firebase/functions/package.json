@@ -39,7 +39,8 @@
         "@types/mustache": "^4.2.2",
         "csv-parse": "^5.3.0",
         "firebase-functions-test": "^0.1.7",
-        "mocha": "^6.2.2"
+        "mocha": "^6.2.2",
+        "typescript": "^5.0.4"
     },
     "main": "lib/src/index.js",
     "private": true
