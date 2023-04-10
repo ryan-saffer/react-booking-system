@@ -1,4 +1,13 @@
-import { CircularProgress, Fab, makeStyles } from '@material-ui/core'
+import {
+    Checkbox,
+    CircularProgress,
+    Fab,
+    FormControlLabel,
+    Grid,
+    TextField,
+    Typography,
+    makeStyles,
+} from '@material-ui/core'
 import React, { useState } from 'react'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
@@ -17,8 +26,13 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     const classes = useStyles()
     const firebase = useFirebase()
 
+    const [emailMessage, setEmailMessage] = useState('')
+    const [emailMessageError, setEmailMessageError] = useState(false)
+    const [sendConfirmationEmail, setSendConfirmationEmail] = useState(true)
+
     const methods = useForm<Form>({
         defaultValues: {
+            eventName: '',
             contactName: '',
             contactNumber: '',
             contactEmail: '',
@@ -46,7 +60,10 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     const [success, setSuccess] = useState(false)
 
     async function onSubmit(values: Form) {
-        console.log(values)
+        if (sendConfirmationEmail && !emailMessage) {
+            setEmailMessageError(true)
+            return
+        }
         if (!isValid) {
             return
         }
@@ -57,16 +74,21 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                 'bookEvent',
                 firebase
             )({
-                contactName: values.contactName,
-                contactNumber: values.contactNumber,
-                contactEmail: values.contactEmail,
-                organisation: values.organisation,
-                location: values.location,
-                slots: values.slots.map((slot) => ({
-                    startTime: combineDateAndTime(slot.startDate!, slot.startTime),
-                    endTime: combineDateAndTime(slot.endDate!, slot.endTime),
-                })),
-                notes: values.notes,
+                event: {
+                    eventName: values.eventName,
+                    contactName: values.contactName,
+                    contactNumber: values.contactNumber,
+                    contactEmail: values.contactEmail,
+                    organisation: values.organisation,
+                    location: values.location,
+                    slots: values.slots.map((slot) => ({
+                        startTime: combineDateAndTime(slot.startDate!, slot.startTime),
+                        endTime: combineDateAndTime(slot.endDate!, slot.endTime),
+                    })),
+                    notes: values.notes,
+                },
+                sendConfirmationEmail,
+                emailMessage,
             })
             setLoading(false)
             setSuccess(true)
@@ -82,6 +104,51 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             <FormProvider {...methods}>
                 <EventForm isNew={true} fieldArray={fieldArray} />
             </FormProvider>
+            <Grid container spacing={3}>
+                {sendConfirmationEmail && (
+                    <>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Email Message</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Email Message"
+                                placeholder="This message will be included in the confirmation email"
+                                value={emailMessage}
+                                error={emailMessageError}
+                                helperText={
+                                    emailMessageError && 'Email message is required if sending confirmation email'
+                                }
+                                multiline
+                                rows={5}
+                                fullWidth
+                                variant="outlined"
+                                autoComplete="off"
+                                onChange={(e) => {
+                                    const val = e.target.value
+                                    setEmailMessage(val)
+                                    setEmailMessageError(!val)
+                                }}
+                            />
+                        </Grid>
+                    </>
+                )}
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                id="sendConfirmationEmail"
+                                color="secondary"
+                                name="sendConfirmationEmail"
+                                checked={sendConfirmationEmail}
+                                onChange={(e) => setSendConfirmationEmail(e.target.checked)}
+                            />
+                        }
+                        label="Send confirmation email"
+                        style={{ float: 'right' }}
+                    />
+                </Grid>
+            </Grid>
             <div className={classes.saveButtonDiv}>
                 <Fab
                     className={success ? classes.success : ''}

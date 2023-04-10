@@ -33,7 +33,7 @@ const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
                         }
                     })()}
                 </Typography>
-                <Typography className={classes.secondaryHeading}>{event.organisation}</Typography>
+                <Typography className={classes.secondaryHeading}>{event.eventName}</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ margin: 16 }}>
