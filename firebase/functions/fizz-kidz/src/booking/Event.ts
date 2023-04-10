@@ -8,6 +8,7 @@ export type EventBooking = {
     contactEmail: string
     organisation: string
     location: string
+    price: string
     startTime: Date
     endTime: Date
     notes: string

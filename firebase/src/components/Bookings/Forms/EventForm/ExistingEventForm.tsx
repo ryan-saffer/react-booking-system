@@ -29,6 +29,7 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
             contactEmail: event.contactEmail,
             organisation: event.organisation,
             location: event.location,
+            price: event.price,
             slots: [
                 {
                     startDate: event.startTime,
@@ -38,7 +39,7 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
                 },
             ],
             notes: event.notes,
-        },
+        } satisfies Form,
     })
     const {
         formState: { isValid },

@@ -15,6 +15,7 @@ export type Form = {
     contactEmail: string
     organisation: string
     location: string
+    price: string
     slots: { startDate: Date | null; startTime: string; endDate: Date | null; endTime: string }[]
     notes: string
 }
@@ -154,7 +155,7 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={6}>
                     <Controller
                         name="location"
                         control={control}
@@ -165,6 +166,26 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                 label="Location"
                                 error={errors.location && true}
                                 helperText={errors.location && 'Location is required'}
+                                fullWidth
+                                variant="outlined"
+                                autoComplete="off"
+                                disabled={disabled}
+                                classes={{ root: classes.disabled }}
+                            />
+                        )}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Controller
+                        name="price"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Price"
+                                error={errors.price && true}
+                                helperText={errors.price && 'Price is required'}
                                 fullWidth
                                 variant="outlined"
                                 autoComplete="off"
@@ -301,6 +322,7 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                             <TextField
                                 {...field}
                                 label="Notes"
+                                placeholder="These are only for us to view."
                                 multiline
                                 rows={5}
                                 fullWidth

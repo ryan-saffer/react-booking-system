@@ -61,6 +61,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
                 contactName: event.contactName,
                 location: event.location,
                 emailMessage: input.emailMessage,
+                price: event.price,
                 slots: slots.map((slot) => ({
                     startTime: DateTime.fromJSDate(slot.startTime, {
                         zone: 'Australia/Melbourne',
