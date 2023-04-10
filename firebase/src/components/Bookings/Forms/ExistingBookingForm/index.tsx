@@ -507,6 +507,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                 size="small"
                                 variant={editing || formValues[FormBookingFields.notes].value ? 'outlined' : 'filled'}
                                 multiline
+                                rows={3}
                                 disabled={!editing}
                                 classes={{ root: classes.disabled }}
                                 value={formValues[FormBookingFields.notes].value}
@@ -601,7 +602,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         {Object.keys(Additions).map((addition) => {
                             if (isAddition(addition)) {
                                 return (
-                                    <Grid item xs={6} sm={3}>
+                                    <Grid item xs={6} sm={3} key={addition}>
                                         <FormControlLabel
                                             control={
                                                 <Checkbox

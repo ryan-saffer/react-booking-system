@@ -424,6 +424,7 @@ const NewBookingForm = (props) => {
                         fullWidth
                         variant="outlined"
                         multiline
+                        rows={5}
                         value={formValues.notes.value}
                         error={formValues.notes.error}
                         onChange={handleFormChange}
