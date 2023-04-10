@@ -11,20 +11,32 @@ type Props = {
 const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
     const classes = useStyles()
 
+    const title = () => (
+        <Typography className={classes.heading} variant="h6">
+            Events
+        </Typography>
+    )
+
+    const noEvents = () => <Typography variant="overline">No events</Typography>
+
     switch (events.status) {
         case 'loaded':
             return (
                 <>
-                    <Typography className={classes.heading} variant="h6">
-                        Events
-                    </Typography>
+                    {title()}
                     {events.result.map((event) => (
                         <EventPanel event={event} onDeleteEvent={onDeleteEvent} key={event.id} />
                     ))}
-                    {events.result.length === 0 && <Typography variant="overline">No events</Typography>}
+                    {events.result.length === 0 && noEvents()}
                 </>
             )
-
+        case 'loading':
+            return (
+                <>
+                    {title()}
+                    {noEvents()}
+                </>
+            )
         default:
             return <h1>Error</h1>
     }
