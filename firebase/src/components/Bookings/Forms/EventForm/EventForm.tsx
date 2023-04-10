@@ -9,6 +9,7 @@ import moment from 'moment'
 import { capitalise } from '../../../../utilities/stringUtilities'
 
 export type Form = {
+    eventName: string
     contactName: string
     contactNumber: string
     contactEmail: string
@@ -43,6 +44,26 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant="h6">Event Details</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Controller
+                        name="eventName"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                error={errors.eventName ? true : false}
+                                helperText={errors.eventName && 'Event name is required'}
+                                label="Event name"
+                                fullWidth
+                                variant="outlined"
+                                autoComplete="off"
+                                disabled={disabled}
+                                classes={{ root: classes.disabled }}
+                            />
+                        )}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <Controller

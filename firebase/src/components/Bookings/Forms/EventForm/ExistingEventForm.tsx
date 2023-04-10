@@ -23,6 +23,7 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
 
     const methods = useForm<Form>({
         defaultValues: {
+            eventName: event.eventName,
             contactName: event.contactName,
             contactNumber: event.contactNumber,
             contactEmail: event.contactEmail,

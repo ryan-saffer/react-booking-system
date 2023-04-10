@@ -18,8 +18,8 @@ const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
                     <Typography className={classes.heading} variant="h6">
                         Events
                     </Typography>
-                    {events.result.map((event, idx) => (
-                        <EventPanel event={event} onDeleteEvent={onDeleteEvent} key={idx} />
+                    {events.result.map((event) => (
+                        <EventPanel event={event} onDeleteEvent={onDeleteEvent} key={event.id} />
                     ))}
                     {events.result.length === 0 && <Typography variant="overline">No events</Typography>}
                 </>
