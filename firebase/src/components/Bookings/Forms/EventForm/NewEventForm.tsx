@@ -38,6 +38,7 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             contactEmail: '',
             organisation: '',
             location: '',
+            price: '',
             slots: [
                 {
                     startDate: null,
@@ -46,7 +47,8 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     endTime: '',
                 },
             ],
-        },
+            notes: '',
+        } satisfies Form,
     })
     const {
         control,
@@ -81,6 +83,7 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     contactEmail: values.contactEmail,
                     organisation: values.organisation,
                     location: values.location,
+                    price: values.price,
                     slots: values.slots.map((slot) => ({
                         startTime: combineDateAndTime(slot.startDate!, slot.startTime),
                         endTime: combineDateAndTime(slot.endDate!, slot.endTime),

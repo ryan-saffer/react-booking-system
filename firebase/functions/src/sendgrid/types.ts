@@ -58,5 +58,6 @@ export type Emails = {
         location: string
         slots: { startTime: string; endTime: string }[]
         emailMessage: string
+        price: string
     }
 }
