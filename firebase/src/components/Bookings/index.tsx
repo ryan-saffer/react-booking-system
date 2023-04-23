@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext, ReactElement, Ref } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import {
-    Paper,
     Grid,
     Hidden,
     Typography,
@@ -17,14 +16,14 @@ import {
     Divider,
     LinearProgress,
     IconButton,
-    Dialog,
-    Slide,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
 } from '@material-ui/core'
-import { ExitToApp as ExitToAppIcon, Close as CloseIcon } from '@material-ui/icons'
+import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
 
 import { withAuthorization } from '../Session'
-import NewBookingForm from './Forms/NewBookingForm'
 import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
@@ -32,20 +31,12 @@ import LocationCheckboxes from './LocationCheckboxes'
 import DateNav from './BookingsNav'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import useRole from '../Hooks/UseRole'
-import { TransitionProps } from '@material-ui/core/transitions'
 import Firebase, { FirebaseContext } from '../Firebase'
 import { Roles } from '../../constants/roles'
 import firebase from 'firebase/compat'
-
-interface QueryParams {
-    id: string
-}
-
-const Transition = React.forwardRef(
-    (props: TransitionProps & { children?: ReactElement<any, any> }, ref: Ref<unknown>) => (
-        <Slide direction="up" ref={ref} {...props} />
-    )
-)
+import NewBookingDialog from './NewBookingDialog'
+import { useEvents } from './Events/UseEvents'
+import Events from './Events/Events'
 
 const BookingsPage = () => {
     const classes = useStyles()
@@ -55,15 +46,15 @@ const BookingsPage = () => {
     const isAdmin = useRole() === Roles.ADMIN
 
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
+    const [events, setEventsDate] = useEvents()
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
     let initialLocations: { [key in Locations]?: boolean } = {}
     Object.values(Locations).forEach((location) => (initialLocations[location] = true))
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
+    const [eventsChecked, setEventsChecked] = useState(true)
 
     const [openNewBooking, setOpenNewBooking] = useState(false)
-    // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
-    const [key, setKey] = useState(0)
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = urlSearchParams.get('id')
 
@@ -75,24 +66,28 @@ const BookingsPage = () => {
         } else {
             fetchBookingsByDate(new Date())
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleDateChange = (date: Date) => {
         setDate(date)
         fetchBookingsByDate(date)
+        setEventsDate(date)
     }
 
     const handleNavigateBefore = () => {
-        var dayBefore = date
+        const dayBefore = new Date(date)
         dayBefore.setDate(dayBefore.getDate() - 1)
         setDate(dayBefore)
+        setEventsDate(dayBefore)
         fetchBookingsByDate(dayBefore)
     }
 
     const handleNavigateNext = () => {
-        var tomorrow = date
+        const tomorrow = new Date(date)
         tomorrow.setDate(tomorrow.getDate() + 1)
         setDate(tomorrow)
+        setEventsDate(tomorrow)
         fetchBookingsByDate(tomorrow)
     }
 
@@ -105,12 +100,11 @@ const BookingsPage = () => {
     }
 
     const handleCloseBooking = (date?: Date) => {
-        console.log(date)
         if (date instanceof Date) {
             setDate(date)
             fetchBookingsByDate(date)
+            setEventsDate(date)
         }
-        setKey(key + 1)
         setOpenNewBooking(false)
     }
 
@@ -169,7 +163,12 @@ const BookingsPage = () => {
                         </Typography>
                     </div>
                     <div className={classes.topCenter}>
-                        <img className={classes.logo} src={Logo.default} onClick={() => history.push(ROUTES.LANDING)} />
+                        <img
+                            className={classes.logo}
+                            src={Logo.default}
+                            onClick={() => history.push(ROUTES.LANDING)}
+                            alt="fizz kidz logo"
+                        />
                     </div>
                     <div className={isAdmin ? classes.authTopRight : classes.noAuthTopRight}>
                         {isAdmin && (
@@ -183,38 +182,7 @@ const BookingsPage = () => {
                     </div>
                 </Toolbar>
             </AppBar>
-            {/* New Booking Dialogue */}
-            <Dialog
-                fullScreen
-                open={openNewBooking}
-                onClose={() => handleCloseBooking()}
-                TransitionComponent={Transition}
-                disableAutoFocus={true}
-                PaperProps={{ classes: { root: classes.dialog } }}
-            >
-                <CssBaseline />
-                <AppBar position="absolute" className={classes.dialogueAppBar}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={() => handleCloseBooking()}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit">
-                            New Booking
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <main key={key} className={classes.layout}>
-                    <Paper className={classes.paper}>
-                        <NewBookingForm onSuccess={handleCloseBooking} />
-                    </Paper>
-                </main>
-            </Dialog>
-            {/* End New Bookings Dialogue */}
+            <NewBookingDialog open={openNewBooking} onBookingCreated={handleCloseBooking} />
             <Hidden smDown>
                 <Drawer
                     className={classes.drawer}
@@ -277,7 +245,15 @@ const BookingsPage = () => {
                     </Hidden>
                     <DateNav onNavigateBefore={handleNavigateBefore} onNavigateNext={handleNavigateNext} date={date} />
                     <LinearProgress className={loading ? '' : classes.linearProgressHidden} color="secondary" />
-                    <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                    <FormGroup row>
+                        <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
+                        <FormControlLabel
+                            control={
+                                <Checkbox checked={eventsChecked} onChange={() => setEventsChecked((it) => !it)} />
+                            }
+                            label="Events"
+                        />
+                    </FormGroup>
                     <Divider />
                     <Grid item xs sm md>
                         {Object.values(Locations).map(
@@ -291,6 +267,7 @@ const BookingsPage = () => {
                                     />
                                 )
                         )}
+                        {eventsChecked && <Events events={events} onDeleteEvent={handleCloseBooking} />}
                     </Grid>
                 </main>
             </Grid>

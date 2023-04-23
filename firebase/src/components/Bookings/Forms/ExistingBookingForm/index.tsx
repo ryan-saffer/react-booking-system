@@ -1,18 +1,34 @@
-import React, { useState, useContext, useMemo, FormEvent, ChangeEvent, ChangeEventHandler } from 'react'
+import React, { useState, useContext, useMemo, ChangeEvent } from 'react'
 import 'typeface-roboto'
 import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
-import { makeStyles, Grid, Typography, TextField, InputLabel, MenuItem, FormHelperText, FormControlLabel,
-Select, CircularProgress, Fab, Checkbox, Button, FormControl } from '@material-ui/core'
+import {
+    makeStyles,
+    Grid,
+    Typography,
+    TextField,
+    InputLabel,
+    MenuItem,
+    FormHelperText,
+    FormControlLabel,
+    Select,
+    Checkbox,
+    FormControl,
+} from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
-import SaveIcon from '@material-ui/icons/Save'
-import CheckIcon from '@material-ui/icons/Check'
-import CreateIcon from '@material-ui/icons/Create'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { green, red } from '@material-ui/core/colors'
 
-import { Additions, FormBookingFields, Locations, FirestoreBooking, CakeFlavours, CreationDisplayValuesMap, FormBooking, Utilities, AdditionsDisplayValuesMap } from 'fizz-kidz'
-import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
+import {
+    Additions,
+    FormBookingFields,
+    Locations,
+    FirestoreBooking,
+    CakeFlavours,
+    CreationDisplayValuesMap,
+    FormBooking,
+    Utilities,
+    AdditionsDisplayValuesMap,
+} from 'fizz-kidz'
+import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
@@ -21,35 +37,33 @@ import { ExistingBookingFormFields } from './types'
 import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
 import useRole from '../../../Hooks/UseRole'
 import { Roles } from '../../../../constants/roles'
+import EditFormButtons from '../EditFormButtons'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
-    bookingId: string,
-    booking: FirestoreBooking,
+    bookingId: string
+    booking: FirestoreBooking
     onSuccess: (data: any) => void
 }
 
-const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
-
+const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
     const classes = useStyles()
-    
+
     const { bookingId, booking } = props
-    
+
     const firebase = useContext(FirebaseContext) as Firebase
 
     const role = useRole()
-    const isAdmin = role === Roles.ADMIN
     const isRestricted = role === Roles.RESTRICTED
     const MASK = 'xxxxx'
 
-    const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [])
+    const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
 
-    const [valid, setValid] = useState(true)
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
-    
-    const displayAddress = formValues.location.value === "mobile"
+
+    const displayAddress = formValues.location.value === 'mobile'
     const displayDateTimeLocation = editing
     const displayDateTimeLocationHeading = displayDateTimeLocation || displayAddress
     const displayNumberOfChildren = formValues.numberOfChildren.value || editing
@@ -96,7 +110,6 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
     }
 
     function updateFormValues<K extends keyof FormBooking>(field: K, value: string | Date | boolean | null) {
-
         if (value !== null) {
             let formCopy = { ...formValues }
             const prop = formCopy[field]
@@ -109,18 +122,15 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                 formCopy.address.error = false
             }
 
-            setValid(!errorFound(formCopy))
             setFormValues(formCopy)
         }
     }
 
     const handleSubmit = () => {
-
         let tmpFormValues = { ...formValues }
         tmpFormValues = validateFormOnSubmit(tmpFormValues) as ExistingBookingFormFields
         // if there is an error (fields are empty), update the values and return
         if (tmpFormValues) {
-            setValid(false)
             setFormValues(tmpFormValues)
             return
         }
@@ -132,50 +142,60 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
         let bookingCopy = { ...booking }
         let mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
 
-        firebase.functions.httpsCallable('updateBooking')({
-            auth: firebase.auth.currentUser?.toJSON(),
-            data: JSON.stringify({ bookingId: bookingId, booking: mergedBooking })
-        }).then(result => {
-            console.log(result.data)
-            setLoading(false)
-            setSuccess(true)
-            setTimeout(() => { // let user see success for a second, then refesh
-                setEditing(false)
+        firebase.functions
+            .httpsCallable('updateBooking')({
+                auth: firebase.auth.currentUser?.toJSON(),
+                data: JSON.stringify({ bookingId: bookingId, booking: mergedBooking }),
+            })
+            .then((result) => {
+                console.log(result.data)
+                setLoading(false)
+                setSuccess(true)
+                setTimeout(() => {
+                    // let user see success for a second, then refesh
+                    setEditing(false)
+                    setSuccess(false)
+                    props.onSuccess(formValues.date.value)
+                }, 1000)
+            })
+            .catch((err) => {
+                console.log(err)
+                setLoading(false)
                 setSuccess(false)
-                props.onSuccess(formValues.date.value)
-            }, 1000)
-        }).catch(err => {
-            console.log(err)
-            setLoading(false)
-            setSuccess(false)
-            props.displayError("Unable to update the booking. Please try again.\nError details: " + err)
-        }).finally(() => {
-            console.log('finally')
-        })
+                props.displayError('Unable to update the booking. Please try again.\nError details: ' + err)
+            })
+            .finally(() => {
+                console.log('finally')
+            })
     }
 
     const handleDeleteBooking = () => {
         setLoading(true)
-        firebase.functions.httpsCallable('deleteBooking')({
-            auth: firebase.auth.currentUser?.toJSON(),
-            data: { bookingId, booking }
-        }).then(result => {
-            console.log(result.data)
-            setLoading(false)
-            setSuccess(true)
-            setTimeout(() => { // let user see success for a second, then refesh
-                setEditing(false)
+        firebase.functions
+            .httpsCallable('deleteBooking')({
+                auth: firebase.auth.currentUser?.toJSON(),
+                data: { bookingId, booking },
+            })
+            .then((result) => {
+                console.log(result.data)
+                setLoading(false)
+                setSuccess(true)
+                setTimeout(() => {
+                    // let user see success for a second, then refesh
+                    setEditing(false)
+                    setSuccess(false)
+                    props.onSuccess(formValues.date.value)
+                }, 1000)
+            })
+            .catch((err) => {
+                console.log(err)
+                setLoading(false)
                 setSuccess(false)
-                props.onSuccess(formValues.date.value)
-            }, 1000)
-        }).catch(err => {
-            console.log(err)
-            setLoading(false)
-            setSuccess(false)
-            props.displayError("Unable to delete the booking. Please try again.\nError details: " + err)
-        }).finally(() => {
-            console.log('finally')
-        })
+                props.displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
+            })
+            .finally(() => {
+                console.log('finally')
+            })
     }
 
     const isAddition = (key: string): key is Additions => {
@@ -186,9 +206,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
         <>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Parent details
-                    </Typography>
+                    <Typography variant="h6">Parent details</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -198,12 +216,16 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         fullWidth
                         size="small"
                         variant="outlined"
-                        autoComplete='off'
+                        autoComplete="off"
                         disabled={!editing}
                         classes={{ root: classes.disabled }}
                         value={formValues[FormBookingFields.parentFirstName].value}
                         error={formValues[FormBookingFields.parentFirstName].error}
-                        helperText={formValues[FormBookingFields.parentFirstName].error ? formValues[FormBookingFields.parentFirstName].errorText : ''}
+                        helperText={
+                            formValues[FormBookingFields.parentFirstName].error
+                                ? formValues[FormBookingFields.parentFirstName].errorText
+                                : ''
+                        }
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -219,7 +241,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         classes={{ root: classes.disabled }}
                         value={isRestricted ? MASK : formValues[FormBookingFields.parentLastName].value}
                         error={formValues[FormBookingFields.parentLastName].error}
-                        helperText={formValues[FormBookingFields.parentLastName].error ? formValues[FormBookingFields.parentLastName].errorText : ''}
+                        helperText={
+                            formValues[FormBookingFields.parentLastName].error
+                                ? formValues[FormBookingFields.parentLastName].errorText
+                                : ''
+                        }
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -235,30 +261,36 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         classes={{ root: classes.disabled }}
                         value={isRestricted ? MASK : formValues[FormBookingFields.parentEmail].value}
                         error={formValues[FormBookingFields.parentEmail].error}
-                        helperText={formValues[FormBookingFields.parentEmail].error ? formValues[FormBookingFields.parentEmail].errorText : ''}
+                        helperText={
+                            formValues[FormBookingFields.parentEmail].error
+                                ? formValues[FormBookingFields.parentEmail].errorText
+                                : ''
+                        }
                         onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <TextField
-                    id={createUniqueId(FormBookingFields.parentMobile, bookingId)}
-                    name={FormBookingFields.parentMobile}
-                    label="Parent mobile"
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    disabled={!editing}
-                    classes={{ root: classes.disabled }}
-                    value={isRestricted ? MASK : formValues[FormBookingFields.parentMobile].value}
-                    error={formValues[FormBookingFields.parentMobile].error}
-                    helperText={formValues[FormBookingFields.parentMobile].error ? formValues[FormBookingFields.parentMobile].errorText : ''}
-                    onChange={handleFormChange}
+                    <TextField
+                        id={createUniqueId(FormBookingFields.parentMobile, bookingId)}
+                        name={FormBookingFields.parentMobile}
+                        label="Parent mobile"
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        disabled={!editing}
+                        classes={{ root: classes.disabled }}
+                        value={isRestricted ? MASK : formValues[FormBookingFields.parentMobile].value}
+                        error={formValues[FormBookingFields.parentMobile].error}
+                        helperText={
+                            formValues[FormBookingFields.parentMobile].error
+                                ? formValues[FormBookingFields.parentMobile].errorText
+                                : ''
+                        }
+                        onChange={handleFormChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h6">
-                        Child details
-                    </Typography>
+                    <Typography variant="h6">Child details</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -272,7 +304,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         classes={{ root: classes.disabled }}
                         value={formValues[FormBookingFields.childName].value}
                         error={formValues[FormBookingFields.childName].error}
-                        helperText={formValues[FormBookingFields.childName].error ? formValues[FormBookingFields.childName].errorText : ''}
+                        helperText={
+                            formValues[FormBookingFields.childName].error
+                                ? formValues[FormBookingFields.childName].errorText
+                                : ''
+                        }
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -288,118 +324,127 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                         classes={{ root: classes.disabled }}
                         value={formValues[FormBookingFields.childAge].value}
                         error={formValues[FormBookingFields.childAge].error}
-                        helperText={formValues[FormBookingFields.childAge].error ? formValues[FormBookingFields.childAge].errorText : ''}
+                        helperText={
+                            formValues[FormBookingFields.childAge].error
+                                ? formValues[FormBookingFields.childAge].errorText
+                                : ''
+                        }
                         onChange={handleFormChange}
                     />
                 </Grid>
-                {displayDateTimeLocationHeading &&
+                {displayDateTimeLocationHeading && (
                     <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Date, time & location
-                        </Typography>
+                        <Typography variant="h6">Date, time & location</Typography>
                     </Grid>
-                }
-                {displayDateTimeLocation &&
+                )}
+                {displayDateTimeLocation && (
                     <>
-                    <Grid item xs={6} sm={3}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
+                        <Grid item xs={6} sm={3}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    fullWidth
+                                    disableToolbar
+                                    variant="inline"
+                                    format="dd/MM/yyyy"
+                                    id={createUniqueId(FormBookingFields.date, bookingId)}
+                                    label="Date of party"
+                                    autoOk={true}
+                                    size="small"
+                                    disabled={!editing}
+                                    // classes={{ root: classes.disabled }}
+                                    value={formValues[FormBookingFields.date].value}
+                                    error={formValues[FormBookingFields.date].error}
+                                    helperText={
+                                        formValues[FormBookingFields.date].error
+                                            ? formValues[FormBookingFields.date].errorText
+                                            : ''
+                                    }
+                                    onChange={handleFormDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item xs={6} sm={3}>
+                            <TextField
                                 fullWidth
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                id={createUniqueId(FormBookingFields.date, bookingId)}
-                                label="Date of party"
-                                autoOk={true}
+                                id={createUniqueId(FormBookingFields.time, bookingId)}
+                                name={FormBookingFields.time}
+                                label="Party time"
+                                type="time"
                                 size="small"
                                 disabled={!editing}
-                                // classes={{ root: classes.disabled }}
-                                value={formValues[FormBookingFields.date].value}
-                                error={formValues[FormBookingFields.date].error}
-                                helperText={formValues[FormBookingFields.date].error ? formValues[FormBookingFields.date].errorText : ''}
-                                onChange={handleFormDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
+                                classes={{ root: classes.disabled }}
+                                value={formValues[FormBookingFields.time].value}
+                                error={formValues[FormBookingFields.time].error}
+                                helperText={
+                                    formValues[FormBookingFields.time].error
+                                        ? formValues[FormBookingFields.time].errorText
+                                        : ''
+                                }
+                                onChange={handleFormChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    step: 1800, // 5 min
                                 }}
                             />
-                        </MuiPickersUtilsProvider>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <TextField
-                            fullWidth
-                            id={createUniqueId(FormBookingFields.time, bookingId)}
-                            name={FormBookingFields.time}
-                            label="Party time"
-                            type="time"
-                            size="small"
-                            disabled={!editing}
-                            classes={{ root: classes.disabled }}
-                            value={formValues[FormBookingFields.time].value}
-                            error={formValues[FormBookingFields.time].error}
-                            helperText={formValues[FormBookingFields.time].error ? formValues[FormBookingFields.time].errorText : ''}
-                            onChange={handleFormChange}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            inputProps={{
-                                step: 1800, // 5 min
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl
-                            fullWidth
-                            size="small"
-                            classes={{ root: classes.disabled }}
-                        >
-                            <InputLabel>Location</InputLabel>
-                            <Select
-                                inputProps={{
-                                    name: FormBookingFields.location,
-                                    id: FormBookingFields.location,
-                                    value: formValues[FormBookingFields.location].value || ''
-                                }}
-                                disabled={true}
-                                error={formValues[FormBookingFields.location].error}
-                                onChange={handleFormChange}
-                            >
-                                {Object.values(Locations).map(location => (
-                                    <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>
-                                ))}
-                            </Select>
-                            {formValues.location.error ? (
-                                <FormHelperText error={true}>{formValues[FormBookingFields.location].errorText}</FormHelperText>
-                            ) : null}
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                        <FormControl
-                            fullWidth
-                            size="small"
-                            classes={{ root: classes.disabled }}
-                        >
-                            <InputLabel>Party length</InputLabel>
-                            <Select
-                                inputProps={{
-                                    name: FormBookingFields.partyLength,
-                                    id: FormBookingFields.partyLength,
-                                    value: formValues[FormBookingFields.partyLength].value || ''
-                                }}
-                                disabled={!editing}
-                                error={formValues[FormBookingFields.partyLength].error}
-                                onChange={handleFormChange}
-                            >
-                                <MenuItem value={'1'}>1 hour</MenuItem>
-                                <MenuItem value={'1.5'}>1.5 hours</MenuItem>
-                                <MenuItem value={'2'}>2 hours</MenuItem>
-                            </Select>
-                            {formValues.partyLength.error &&
-                                <FormHelperText error={true}>{formValues[FormBookingFields.partyLength].errorText}</FormHelperText>}
-                        </FormControl>
-                    </Grid>
+                        </Grid>
+                        <Grid item xs={6} sm={3}>
+                            <FormControl fullWidth size="small" classes={{ root: classes.disabled }}>
+                                <InputLabel>Location</InputLabel>
+                                <Select
+                                    inputProps={{
+                                        name: FormBookingFields.location,
+                                        id: FormBookingFields.location,
+                                        value: formValues[FormBookingFields.location].value || '',
+                                    }}
+                                    disabled={true}
+                                    error={formValues[FormBookingFields.location].error}
+                                    onChange={handleFormChange}
+                                >
+                                    {Object.values(Locations).map((location) => (
+                                        <MenuItem key={location} value={location}>
+                                            {capitalise(location)}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {formValues.location.error ? (
+                                    <FormHelperText error={true}>
+                                        {formValues[FormBookingFields.location].errorText}
+                                    </FormHelperText>
+                                ) : null}
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6} sm={3}>
+                            <FormControl fullWidth size="small" classes={{ root: classes.disabled }}>
+                                <InputLabel>Party length</InputLabel>
+                                <Select
+                                    inputProps={{
+                                        name: FormBookingFields.partyLength,
+                                        id: FormBookingFields.partyLength,
+                                        value: formValues[FormBookingFields.partyLength].value || '',
+                                    }}
+                                    disabled={!editing}
+                                    error={formValues[FormBookingFields.partyLength].error}
+                                    onChange={handleFormChange}
+                                >
+                                    <MenuItem value={'1'}>1 hour</MenuItem>
+                                    <MenuItem value={'1.5'}>1.5 hours</MenuItem>
+                                    <MenuItem value={'2'}>2 hours</MenuItem>
+                                </Select>
+                                {formValues.partyLength.error && (
+                                    <FormHelperText error={true}>
+                                        {formValues[FormBookingFields.partyLength].errorText}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                        </Grid>
                     </>
-                }
-                {displayAddress &&
+                )}
+                {displayAddress && (
                     <Grid item xs={12}>
                         <TextField
                             id={createUniqueId(FormBookingFields.address, bookingId)}
@@ -412,18 +457,20 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             classes={{ root: classes.disabled }}
                             value={formValues[FormBookingFields.address].value}
                             error={formValues[FormBookingFields.address].error}
-                            helperText={formValues[FormBookingFields.address].error ? formValues[FormBookingFields.address].errorText : ''}
+                            helperText={
+                                formValues[FormBookingFields.address].error
+                                    ? formValues[FormBookingFields.address].errorText
+                                    : ''
+                            }
                             onChange={handleFormChange}
                         />
                     </Grid>
-                }
-                {displayNumberOfChildren &&
+                )}
+                {displayNumberOfChildren && (
                     <>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                                Number of children
-                        </Typography>
-                    </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Number of children</Typography>
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 id={createUniqueId(FormBookingFields.numberOfChildren, bookingId)}
@@ -436,45 +483,46 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 classes={{ root: classes.disabled }}
                                 value={formValues[FormBookingFields.numberOfChildren].value}
                                 error={formValues[FormBookingFields.numberOfChildren].error}
-                                helperText={formValues[FormBookingFields.numberOfChildren].error ? formValues[FormBookingFields.numberOfChildren].errorText : ''}
+                                helperText={
+                                    formValues[FormBookingFields.numberOfChildren].error
+                                        ? formValues[FormBookingFields.numberOfChildren].errorText
+                                        : ''
+                                }
                                 onChange={handleFormChange}
                             />
                         </Grid>
                     </>
-                }
-                {displayNotes &&
+                )}
+                {displayNotes && (
                     <>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Notes
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            id={createUniqueId(FormBookingFields.notes, bookingId)}
-                            name={FormBookingFields.notes}
-                            label="Notes"
-                            fullWidth
-                            size="small"
-                            variant={(editing || formValues[FormBookingFields.notes].value) ? 'outlined' : 'filled'}
-                            multiline
-                            disabled={!editing}
-                            classes={{ root: classes.disabled }}
-                            value={formValues[FormBookingFields.notes].value}
-                            error={formValues[FormBookingFields.notes].error}
-                            onChange={handleFormChange}
-                        />
-                    </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Notes</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                id={createUniqueId(FormBookingFields.notes, bookingId)}
+                                name={FormBookingFields.notes}
+                                label="Notes"
+                                fullWidth
+                                size="small"
+                                variant={editing || formValues[FormBookingFields.notes].value ? 'outlined' : 'filled'}
+                                multiline
+                                rows={3}
+                                disabled={!editing}
+                                classes={{ root: classes.disabled }}
+                                value={formValues[FormBookingFields.notes].value}
+                                error={formValues[FormBookingFields.notes].error}
+                                onChange={handleFormChange}
+                            />
+                        </Grid>
                     </>
-                }
-                {displayCreationHeading &&
+                )}
+                {displayCreationHeading && (
                     <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Creations
-                        </Typography>
+                        <Typography variant="h6">Creations</Typography>
                     </Grid>
-                }
-                {displayCreation1 &&
+                )}
+                {displayCreation1 && (
                     <Grid item xs={12} sm={4}>
                         <FormControl
                             fullWidth
@@ -487,7 +535,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 inputProps={{
                                     name: FormBookingFields.creation1,
                                     id: createUniqueId(FormBookingFields.creation1, bookingId),
-                                    value: formValues[FormBookingFields.creation1].value || ''
+                                    value: formValues[FormBookingFields.creation1].value || '',
                                 }}
                                 disabled={!editing}
                                 error={formValues[FormBookingFields.creation1].error}
@@ -497,8 +545,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             </Select>
                         </FormControl>
                     </Grid>
-                }
-                {displayCreation2 &&
+                )}
+                {displayCreation2 && (
                     <Grid item xs={12} sm={4}>
                         <FormControl
                             fullWidth
@@ -511,7 +559,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 inputProps={{
                                     name: FormBookingFields.creation2,
                                     id: createUniqueId(FormBookingFields.creation2, bookingId),
-                                    value: formValues[FormBookingFields.creation2].value || ''
+                                    value: formValues[FormBookingFields.creation2].value || '',
                                 }}
                                 disabled={!editing}
                                 error={formValues[FormBookingFields.creation2].error}
@@ -521,8 +569,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             </Select>
                         </FormControl>
                     </Grid>
-                }
-                {displayCreation3 &&
+                )}
+                {displayCreation3 && (
                     <Grid item xs={12} sm={4}>
                         <FormControl
                             fullWidth
@@ -535,7 +583,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                                 inputProps={{
                                     name: FormBookingFields.creation3,
                                     id: createUniqueId(FormBookingFields.creation3, bookingId),
-                                    value: formValues[FormBookingFields.creation3].value || ''
+                                    value: formValues[FormBookingFields.creation3].value || '',
                                 }}
                                 disabled={!editing || booking.partyLength !== '2'}
                                 error={formValues[FormBookingFields.creation3].error}
@@ -545,94 +593,91 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             </Select>
                         </FormControl>
                     </Grid>
-                }
-                {displayAdditions &&
+                )}
+                {displayAdditions && (
                     <>
                         <Grid item xs={12}>
-                            <Typography variant="h6">
-                                Additions
-                            </Typography>
+                            <Typography variant="h6">Additions</Typography>
                         </Grid>
-                        {Object.keys(Additions).map(addition => {
+                        {Object.keys(Additions).map((addition) => {
                             if (isAddition(addition)) {
                                 return (
-                                    <Grid item xs={6} sm={3}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                id={createUniqueId(FormBookingFields[addition], bookingId)}
-                                                color="secondary"
-                                                name={FormBookingFields[addition]}
-                                                checked={formValues[FormBookingFields[addition]].value ?? false}
-                                                value={formValues[FormBookingFields[addition]].value}
-                                                disabled={!editing}
-                                                onChange={handleFormCheckboxChange} />
-                                        }
-                                        label={AdditionsDisplayValuesMap[addition]}
-                                        classes={{ root: classes.disabled }}
-                                    />
+                                    <Grid item xs={6} sm={3} key={addition}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    id={createUniqueId(FormBookingFields[addition], bookingId)}
+                                                    color="secondary"
+                                                    name={FormBookingFields[addition]}
+                                                    checked={formValues[FormBookingFields[addition]].value ?? false}
+                                                    value={formValues[FormBookingFields[addition]].value}
+                                                    disabled={!editing}
+                                                    onChange={handleFormCheckboxChange}
+                                                />
+                                            }
+                                            label={AdditionsDisplayValuesMap[addition]}
+                                            classes={{ root: classes.disabled }}
+                                        />
                                     </Grid>
                                 )
-                            }
+                            } else return null
                         })}
                     </>
-                }
-                {displayCake &&
+                )}
+                {displayCake && (
                     <>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Cake
-                    </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            id={createUniqueId(FormBookingFields.cake, bookingId)}
-                            name={FormBookingFields.cake}
-                            label="Cake"
-                            fullWidth
-                            size="small"
-                            variant={(editing || formValues[FormBookingFields.cake].value) ? 'outlined' : 'filled'}
-                            disabled={!editing}
-                            classes={{ root: classes.disabled }}
-                            value={formValues[FormBookingFields.cake].value}
-                            error={formValues[FormBookingFields.cake].error}
-                            onChange={handleFormChange}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <FormControl
-                            fullWidth
-                            size="small"
-                            variant={formValues[FormBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
-                            classes={{ root: classes.disabled }}
-                        >
-                            <InputLabel>Cake flavour</InputLabel>
-                            <Select
-                                inputProps={{
-                                    name: FormBookingFields.cakeFlavour,
-                                    id: FormBookingFields.cakeFlavour,
-                                    value: formValues[FormBookingFields.cakeFlavour].value || ''
-                                }}
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Cake</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId(FormBookingFields.cake, bookingId)}
+                                name={FormBookingFields.cake}
+                                label="Cake"
+                                fullWidth
+                                size="small"
+                                variant={editing || formValues[FormBookingFields.cake].value ? 'outlined' : 'filled'}
                                 disabled={!editing}
-                                error={formValues[FormBookingFields.cakeFlavour].error}
-                                onChange={e => handleFormChange(e)}
+                                classes={{ root: classes.disabled }}
+                                value={formValues[FormBookingFields.cake].value}
+                                error={formValues[FormBookingFields.cake].error}
+                                onChange={handleFormChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl
+                                fullWidth
+                                size="small"
+                                variant={formValues[FormBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
+                                classes={{ root: classes.disabled }}
                             >
-                                {Object.values(CakeFlavours).map(flavour => (
-                                    <MenuItem key={flavour} value={flavour}>{capitalise(flavour)}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                                <InputLabel>Cake flavour</InputLabel>
+                                <Select
+                                    inputProps={{
+                                        name: FormBookingFields.cakeFlavour,
+                                        id: FormBookingFields.cakeFlavour,
+                                        value: formValues[FormBookingFields.cakeFlavour].value || '',
+                                    }}
+                                    disabled={!editing}
+                                    error={formValues[FormBookingFields.cakeFlavour].error}
+                                    onChange={(e) => handleFormChange(e)}
+                                >
+                                    {Object.values(CakeFlavours).map((flavour) => (
+                                        <MenuItem key={flavour} value={flavour}>
+                                            {capitalise(flavour)}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     </>
-                }
-                {displayQuestionsCommentsFunFactsHeading &&
+                )}
+                {displayQuestionsCommentsFunFactsHeading && (
                     <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Parent Questions  / Comments / Fun Facts
-                        </Typography>
+                        <Typography variant="h6">Parent Questions / Comments / Fun Facts</Typography>
                     </Grid>
-                }
-                {displayQuestions &&
+                )}
+                {displayQuestions && (
                     <Grid item xs={12}>
                         <TextField
                             id={createUniqueId(FormBookingFields.questions, bookingId)}
@@ -641,7 +686,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[FormBookingFields.questions].value) ? 'outlined' : 'filled'}
+                            variant={editing || formValues[FormBookingFields.questions].value ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
                             error={formValues[FormBookingFields.questions].error}
@@ -649,8 +694,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             onChange={handleFormChange}
                         />
                     </Grid>
-                }
-                {displayFunFacts &&
+                )}
+                {displayFunFacts && (
                     <Grid item xs={12}>
                         <TextField
                             id={createUniqueId(FormBookingFields.funFacts, bookingId)}
@@ -659,7 +704,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             fullWidth
                             multiline
                             size="small"
-                            variant={(editing || formValues[FormBookingFields.funFacts].value) ? 'outlined' : 'filled'}
+                            variant={editing || formValues[FormBookingFields.funFacts].value ? 'outlined' : 'filled'}
                             disabled={!editing}
                             classes={{ root: classes.disabled }}
                             error={formValues[FormBookingFields.funFacts].error}
@@ -667,63 +712,24 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = props => {
                             onChange={handleFormChange}
                         />
                     </Grid>
-                }
+                )}
             </Grid>
-            {isAdmin
-                ? <div className={classes.saveButtonDiv}>
-                    {!loading && !editing &&
-                        <Fab
-                            className={classes.deleteButton}
-                            aria-label="delete"
-                            color="primary"
-                            onClick={e => {
-                                props.showConfirmationDialog({
-                                    dialogTitle: "Delete Booking",
-                                    dialogContent: "Are you sure you want to delete this booking?",
-                                    confirmationButtonText: "Delete",
-                                    onConfirm: handleDeleteBooking
-                                })
-                            }}
-                        >
-                            <DeleteIcon />
-                        </Fab>
-                    }
-                    {editing ? (
-                        <>
-                        <Button
-                            className={classes.cancelButton}
-                            variant="outlined"
-                            onClick={cancelEdit}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </Button>
-                        <Fab
-                            className={success ? classes.success : classes.saveButton}
-                            aria-label="save"
-                            color="secondary"
-                            type="submit"
-                            disabled={loading || !valid}
-                            onClick={handleSubmit}
-                        >
-                            {success ? <CheckIcon /> : <SaveIcon />}
-                        </Fab>
-                        </>
-                    ) : (
-                        <Fab
-                            className={classes.editButton}
-                            aria-label="edit"
-                            color="secondary"
-                            type="submit"
-                            disabled={loading}
-                            onClick={handleEdit}
-                        >
-                            {<CreateIcon />}
-                        </Fab>
-                    )}
-                    {loading && <CircularProgress size={68} className={classes.progress} />}
-                </div> : null
-            }
+            <EditFormButtons
+                loading={loading}
+                editing={editing}
+                success={success}
+                onStartEditing={handleEdit}
+                onCancelEditing={cancelEdit}
+                onDelete={() => {
+                    props.showConfirmationDialog({
+                        dialogTitle: 'Delete Booking',
+                        dialogContent: 'Are you sure you want to delete this booking?',
+                        confirmationButtonText: 'Delete',
+                        onConfirm: handleDeleteBooking,
+                    })
+                }}
+                onSave={handleSubmit}
+            />
         </>
     )
 }
@@ -733,18 +739,17 @@ function createUniqueId(field: string, id: string) {
 }
 
 function getCreationMenuItems() {
-
     // Sort the creation by their display value
     // this is particularly difficult, so first invert the CreationDisplayValues object
     // see https://stackoverflow.com/a/23013726/7870403
     const invertedCreationDisplayValues = Object.entries(CreationDisplayValuesMap).reduce(
         (ret: { [key: string]: any }, entry) => {
-            const [key, value] = entry;
-            ret[value] = key;
-            return ret;
+            const [key, value] = entry
+            ret[value] = key
+            return ret
         },
         {}
-    );
+    )
 
     // then sort it by key
     const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
@@ -752,57 +757,25 @@ function getCreationMenuItems() {
 
     // then add each creation back into a new object one by one, now that it is sorted
     const sortedCreations: { [key: string]: any } = {}
-    creationDisplayValues.forEach(value => {
+    creationDisplayValues.forEach((value) => {
         const creation = invertedCreationDisplayValues[value]
         sortedCreations[creation] = value
     })
 
     // and finally return them as menu items
-    return Object.keys(sortedCreations).map(creation => (
-        <MenuItem key={creation} value={creation}>{sortedCreations[creation]}</MenuItem>
+    return Object.keys(sortedCreations).map((creation) => (
+        <MenuItem key={creation} value={creation}>
+            {sortedCreations[creation]}
+        </MenuItem>
     ))
 }
 
-const useStyles = makeStyles(theme => ({
-    saveButtonDiv: {
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
-    saveButton: {
-        marginTop: theme.spacing(3)
-    },
-    deleteButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        "&:hover": {
-            backgroundColor: red[800]
-        }
-    },
-    progress: {
-        color: green[500],
-        position: 'absolute',
-        marginTop: '18px',
-        marginRight: '-6px'
-    },
-    success: {
-        marginTop: theme.spacing(3),
-        backgroundColor: green[500]
-    },
-    editButton: {
-        marginTop: theme.spacing(3)
-    },
-    cancelButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3)
-    },
+const useStyles = makeStyles((theme) => ({
     disabled: {
-        "& .Mui-disabled": {
-            color: "rgba(0, 0, 0, 0.87)"
-        }
-    }
+        '& .Mui-disabled': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
+    },
 }))
 
-export default compose<ExistingBookingFormProps, {}>(
-    WithErrorDialog,
-    WithConfirmationDialog
-)(ExistingBookingForm)
+export default compose<ExistingBookingFormProps, {}>(WithErrorDialog, WithConfirmationDialog)(ExistingBookingForm)

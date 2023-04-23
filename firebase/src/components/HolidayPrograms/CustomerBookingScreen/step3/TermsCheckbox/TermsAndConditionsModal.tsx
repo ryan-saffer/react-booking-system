@@ -2,15 +2,15 @@ import React from 'react'
 import { Button, Modal } from 'antd'
 
 type Props = {
-    visible: boolean
+    open: boolean
     onClose: () => void
 }
 
-const TermsAndConditionsModal: React.FC<Props> = ({ visible, onClose }) => {
+const TermsAndConditionsModal: React.FC<Props> = ({ open, onClose }) => {
     return (
         <Modal
             title="Terms and conditions"
-            visible={visible}
+            open={open}
             style={{ top: 20 }}
             bodyStyle={{ top: 20, maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
             onCancel={() => onClose()}

@@ -37,6 +37,7 @@ const ScienceClassDashboard: React.FC = () => {
                 enrolments = enrolments.sort((a, b) => a.parent.firstName.localeCompare(b.parent.firstName))
                 setEnrolmentsService({ status: 'loaded', result: enrolments })
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

@@ -1,3 +1,4 @@
+import { EventBooking, ScheduleEventParams } from './../booking/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
     CreatePaymentIntentParams,
@@ -22,6 +23,9 @@ export interface FirebaseFunctions {
     updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
     sendPortalLinks: CloudFunction<void, void>
     scheduleFreeHolidayPrograms: CloudFunction<FreeHolidayProgramBooking[], void>
+    bookEvent: CloudFunction<ScheduleEventParams, void>
+    updateEvent: CloudFunction<EventBooking, void>
+    deleteEvent: CloudFunction<EventBooking, void>
 }
 
 export type CloudFunction<Input, Result> = {

@@ -1,4 +1,4 @@
-import { Acuity, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Acuity } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Checkbox, Divider, Form as AntdForm, Input, Modal, Select, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
@@ -321,7 +321,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 title="Terms and conditions"
                 style={{ top: 20 }}
                 bodyStyle={{ top: 20, maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
-                visible={showTermsModal}
+                open={showTermsModal}
                 footer={[
                     <Button key="ok" type="primary" onClick={() => setShowTermsModal(false)}>
                         OK
