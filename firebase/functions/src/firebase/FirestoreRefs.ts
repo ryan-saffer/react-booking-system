@@ -3,7 +3,7 @@ import { db } from '../init'
 type Collection<T> = FirebaseFirestore.CollectionReference<T>
 type Document<T> = FirebaseFirestore.DocumentReference<T>
 
-class Refs {
+export class FirestoreRefs {
     partyBooking(id: string) {
         return db.collection('bookings').doc(id)
     }
@@ -27,7 +27,12 @@ class Refs {
     scienceEnrolment(appointmentId: string) {
         return this.scienceEnrolments().doc(appointmentId) as Document<ScienceEnrolment>
     }
-}
 
-const FirestoreRefs = new Refs()
-export { FirestoreRefs }
+    events() {
+        return db.collection('events')
+    }
+
+    event(eventId: string) {
+        return this.events().doc(eventId)
+    }
+}

@@ -132,8 +132,23 @@ class MailClient {
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
                 }
-            default:
-                throw new Error(`Unrecognised email template: ${email}`)
+            case 'eventBooking':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: 'Fizz Kidz Booking Confirmation',
+                    },
+                    template: 'event_booking_confirmation.html',
+                    useMjml: true,
+                }
+            default: {
+                const exhaustiveCheck: never = email
+                throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
+            }
         }
     }
 }

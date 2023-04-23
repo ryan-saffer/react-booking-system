@@ -52,4 +52,12 @@ export type Emails = {
         newCreations: string[]
         newAdditions: string[]
     }
+
+    eventBooking: {
+        contactName: string
+        location: string
+        slots: { startTime: string; endTime: string }[]
+        emailMessage: string
+        price: string
+    }
 }

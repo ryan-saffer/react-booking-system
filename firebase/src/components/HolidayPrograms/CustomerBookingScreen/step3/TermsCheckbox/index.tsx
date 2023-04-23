@@ -31,7 +31,7 @@ const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, 
         setShowTermsWarning(!checked)
     }
 
-    function showModal(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, modal: 'cancellation' | 'terms') {
+    function showModal(e: React.MouseEvent<HTMLElement, MouseEvent>, modal: 'cancellation' | 'terms') {
         e.stopPropagation()
         if (modal === 'cancellation') {
             setShowCancellationPolicyModal(true)
@@ -55,10 +55,10 @@ const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, 
                 <Typography.Text type="danger">Please accept the terms and conditions</Typography.Text>
             )}
             <CancellationPolicyModal
-                visible={showCancellationPolicyModal}
+                open={showCancellationPolicyModal}
                 onClose={() => setShowCancellationPolicyModal(false)}
             />
-            <TermsAndConditionsModal visible={showTermsModal} onClose={() => setShowTermsModal(false)} />
+            <TermsAndConditionsModal open={showTermsModal} onClose={() => setShowTermsModal(false)} />
         </>
     )
 }

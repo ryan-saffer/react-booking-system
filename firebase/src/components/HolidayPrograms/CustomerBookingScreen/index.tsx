@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
-import './AntD.less'
 import Step1 from './step1/Step1'
-import { Form, Button, Steps, Modal, Card, Typography } from 'antd'
+import { Form as AntdForm, Button, Steps, Modal, Card, Typography } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
@@ -34,7 +33,7 @@ const CustomerBookingScreen = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
-    const [form] = Form.useForm()
+    const [form] = AntdForm.useForm()
 
     const styles = useStyles()
 
@@ -75,6 +74,7 @@ const CustomerBookingScreen = () => {
         }
 
         fetchAvailableSlots()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -83,6 +83,7 @@ const CustomerBookingScreen = () => {
             form.resetFields([`${klass.id}-checkbox`])
         })
         setSelectedClasses([])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedStore])
 
     useEffect(() => {
@@ -148,7 +149,7 @@ const CustomerBookingScreen = () => {
         }
 
         return (
-            <Form
+            <AntdForm
                 form={form}
                 initialValues={{ prefix: '61' }}
                 onValuesChange={(_, values) => {
@@ -162,7 +163,7 @@ const CustomerBookingScreen = () => {
                 layout="vertical"
             >
                 {renderStep()}
-            </Form>
+            </AntdForm>
         )
     }
 
@@ -246,7 +247,7 @@ const CustomerBookingScreen = () => {
                         OK
                     </Button>,
                 ]}
-                visible={showNoChildrenModal}
+                open={showNoChildrenModal}
             >
                 <p>Please add at least one child to the form.</p>
             </Modal>
