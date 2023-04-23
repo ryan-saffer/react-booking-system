@@ -62,14 +62,14 @@ function sendBookingConfirmationEmail(booking, environment) {
   const balwynPhotoId = "14mqrG74qkbE43FGqexGS1_zfb11mOONy";
   const essendonPhotoId = "1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g";
   const malvernPhotoId = "1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh";
+  const cheltenhamPhotoId = "1PLiZZEqr2yGBd-ipLixzfLkh5FkrO1oG";
 
   let photos = [];
 
   if (booking.location === "balwyn") {
     photos.push(DriveApp.getFileById(balwynPhotoId));
   } else if (booking.location === "cheltenham") {
-    // currently using essendon, change when we get a photo
-    photos.push(DriveApp.getFileById(essendonPhotoId));
+    photos.push(DriveApp.getFileById(cheltenhamPhotoId));
   } else if (booking.location === "essendon") {
     photos.push(DriveApp.getFileById(essendonPhotoId));
   } else if (booking.location === "malvern") {

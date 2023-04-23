@@ -146,8 +146,13 @@
             <li>
               Maximum numbers of kids
               <ul>
+                <? if (location === 'cheltenham') { ?>
+                <li>4 and 5 years old - max 20 kids</li>
+                <li>6 years plus - max 26 kids</li>
+                <? } else { ?>
                 <li>4 and 5 years old - max 24 kids</li>
                 <li>6 years plus - max 30 kids</li>
+                <? } ?>
               </ul>
             </li>
             <li>You're welcome to bring your own nut free cake, however please just remember to bring along some paper
@@ -170,7 +175,7 @@
           <? if (location === 'balwyn') { ?>
           Balwyn
           <? } else if (location === 'cheltenham') { ?>
-          Essendon
+          Cheltenham
           <? } else if (location === 'essendon') { ?>
           Essendon
           <? } else if (location === 'malvern') { ?>
