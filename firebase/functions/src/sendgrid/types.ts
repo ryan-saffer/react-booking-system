@@ -1,4 +1,5 @@
 export type Emails = {
+    // HOLIDAY PROGRAMS
     holidayProgramConfirmation: {
         parentName: string
         location: string
@@ -6,6 +7,7 @@ export type Emails = {
         bookings: { datetime: string; confirmationPage: string }[]
     }
 
+    // SCIENCE PROGRAM
     termContinuationEmail: {
         parentName: string
         className: string
@@ -39,6 +41,7 @@ export type Emails = {
         portalUrl: string
     }
 
+    // BIRTHDAY PARTIES
     partyFormFilledInAgain: {
         parentName: string
         parentEmail: string
@@ -53,6 +56,16 @@ export type Emails = {
         newAdditions: string[]
     }
 
+    tooManyCreationsChosen: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        dateTime: string
+        chosenCreations: string[]
+    }
+
+    // EVENTS
     eventBooking: {
         contactName: string
         location: string
