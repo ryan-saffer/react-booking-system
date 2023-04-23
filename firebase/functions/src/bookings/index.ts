@@ -203,8 +203,7 @@ export function runAppsScript(functionName: string, parameters: any[]) {
 
                     if (error?.scriptStackTraceElements) {
                         // There may not be a stacktrace if the script didn't start executing.
-                        for (let i = 0; i < error.scriptStackTraceElements.length; i++) {
-                            const trace = error.scriptStackTraceElements[i]
+                        for (const trace of error.scriptStackTraceElements) {
                             console.log('\t%s: %s', trace.function, trace.lineNumber)
                         }
                     }
