@@ -140,10 +140,23 @@ class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        subject: 'Fizz Kidz Booking Confirmation',
+                        subject: subject || 'Fizz Kidz Booking Confirmation',
                     },
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
+                }
+            case 'tooManyCreationsChosen':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Too many creations chosen!',
+                    },
+                    template: 'too_many_creations_chosen.html',
+                    useMjml: false,
                 }
             default: {
                 const exhaustiveCheck: never = email

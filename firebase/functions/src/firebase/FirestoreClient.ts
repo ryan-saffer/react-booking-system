@@ -1,55 +1,82 @@
 import { EventBooking } from './../../fizz-kidz/src/booking/Event'
-import { ScienceEnrolment, PaidHolidayProgramBooking, FirestoreBooking, Booking } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking, Booking } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
-import { FirestoreRefs } from './FirestoreRefs'
+import { FirestoreRefs, Document } from './FirestoreRefs'
 
 class Client {
-    private refs: FirestoreRefs = new FirestoreRefs()
+    private async _getDocument<T>(ref: Document<T>) {
+        const snap = await ref.get()
+        if (snap.exists) {
+            return this.convertTimestamps<T>(snap.data() as T)
+        } else {
+            throw new Error(`Cannot find document at path '${ref.path}' with id '${ref.id}'`)
+        }
+    }
+
+    private _updateDocument<T>(ref: Document<T>, data: Partial<T>) {
+        return ref.set(data as any, { merge: true })
+    }
+
+    /**
+     * Converts all firebase timestamps to javascript dates, including nested fields.
+     */
+    private convertTimestamps<T>(obj: T): T {
+        const data = obj as any
+        Object.keys(data).forEach((key) => {
+            if (typeof data[key] === 'object') {
+                data[key] = this.convertTimestamps(data[key])
+            }
+            if (data[key] instanceof FirebaseFirestore.Timestamp) {
+                data[key] = data[key].toDate()
+            }
+        })
+        return data
+    }
 
     getPartyBooking(bookingId: string) {
-        return this.refs.partyBooking(bookingId).get() as Promise<FirebaseFirestore.DocumentSnapshot<FirestoreBooking>>
+        return this._getDocument(FirestoreRefs.partyBooking(bookingId))
     }
 
     updatePartyBooking(bookingId: string, booking: Partial<Booking>) {
-        return this.refs.partyBooking(bookingId).set(booking, { merge: true })
+        return this._updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
 
     getHolidayProgramBooking(paymentIntentId: string) {
-        return this.refs.holidayProgramBooking(paymentIntentId).get()
+        return this._getDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId))
     }
 
     updateHolidayProgramBooking(paymentIntentId: string, data: { booked: boolean }) {
-        return this.refs.holidayProgramBooking(paymentIntentId).update(data)
+        return this._updateDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId), data)
     }
 
     getHolidayPrograms(paymentIntentId: string) {
-        return this.refs.holidayPrograms(paymentIntentId).get()
+        return FirestoreRefs.holidayPrograms(paymentIntentId).get()
     }
 
     updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<PaidHolidayProgramBooking>) {
-        return this.refs.holidayProgram(paymentIntentId, documentId).update(data)
+        return this._updateDocument(FirestoreRefs.holidayProgram(paymentIntentId, documentId), data)
     }
 
     getScienceEnrolment(appointmentId: string) {
-        return this.refs.scienceEnrolment(appointmentId).get()
+        return this._getDocument(FirestoreRefs.scienceEnrolment(appointmentId))
     }
 
     updateScienceEnrolment(appointmentId: string, data: Partial<ScienceEnrolment>) {
-        return this.refs.scienceEnrolment(appointmentId).update(data)
+        return this._updateDocument(FirestoreRefs.scienceEnrolment(appointmentId), data)
     }
 
     async createEventBooking(booking: WithoutId<Omit<EventBooking, 'calendarEventId'>>) {
-        const ref = this.refs.events().doc()
+        const ref = FirestoreRefs.events().doc()
         await ref.set({ id: ref.id, ...booking })
         return ref.id
     }
 
     updateEventBooking(eventId: string, booking: Partial<EventBooking>) {
-        return this.refs.event(eventId).update(booking)
+        return this._updateDocument(FirestoreRefs.event(eventId), booking)
     }
 
     deleteEventBooking(eventId: string) {
-        return this.refs.event(eventId).delete()
+        return FirestoreRefs.event(eventId).delete()
     }
 }
 

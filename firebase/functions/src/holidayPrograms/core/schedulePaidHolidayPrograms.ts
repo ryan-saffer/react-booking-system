@@ -4,9 +4,10 @@ import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
-    const query = await FirestoreClient.getHolidayProgramBooking(paymentIntentId)
+    const query = await FirestoreRefs.holidayProgramBooking(paymentIntentId).get()
 
     console.log('query exists', query.exists)
     console.log('query booked', query.get('booked'))

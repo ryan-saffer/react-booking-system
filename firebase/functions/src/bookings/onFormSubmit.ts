@@ -1,7 +1,6 @@
 import { AppsScript, Booking } from 'fizz-kidz'
 import * as functions from 'firebase-functions'
 import { runAppsScript } from './index'
-import { db } from '../init'
 import { FormMapper } from './FormMapper'
 import { PFQuestion } from './types'
 import { FirestoreClient } from '../firebase/FirestoreClient'
@@ -27,7 +26,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
     }
 
     // first check if the booking form has been filled in previously
-    const existingBooking = (await FirestoreClient.getPartyBooking(formMapper.bookingId)).data()!
+    const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
     if (existingBooking.partyFormFilledIn) {
         // form has been filled in before, notify manager of the change
         await mailClient.sendEmail(
@@ -38,7 +37,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
                 parentEmail: existingBooking.parentEmail,
                 parentMobile: existingBooking.parentMobile,
                 childName: booking.childName!,
-                dateTime: DateTime.fromJSDate(existingBooking.dateTime.toDate(), {
+                dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                     zone: 'Australia/Melbourne',
                 }).toLocaleString(DateTime.DATETIME_SHORT),
                 oldNumberOfKids: existingBooking.numberOfChildren,
@@ -55,10 +54,24 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
     // write to firestore
     await FirestoreClient.updatePartyBooking(formMapper.bookingId, booking)
 
-    const documentSnapshot = await db.doc(`bookings/${formMapper.bookingId}`).get()
-    const fullBooking = documentSnapshot.data()
-    if (fullBooking) {
-        fullBooking.dateTime = fullBooking.dateTime.toDate()
+    const fullBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
+
+    // if its a two creation party, but they picked three or more creations, notify manager
+    const choseThreeCreations = booking.creation3 !== undefined
+    const requiresTwoCreations =
+        (fullBooking.location === 'mobile' && fullBooking.partyLength === '1') ||
+        (fullBooking.location !== 'mobile' && fullBooking.partyLength === '1.5')
+    if (choseThreeCreations && requiresTwoCreations) {
+        await mailClient.sendEmail('tooManyCreationsChosen', getManagerEmail(fullBooking.location), {
+            parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
+            parentEmail: fullBooking.parentEmail,
+            parentMobile: fullBooking.parentMobile,
+            childName: fullBooking.childName,
+            dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
+                zone: 'Australia/Melbourne',
+            }).toLocaleString(DateTime.DATETIME_SHORT),
+            chosenCreations: formMapper.getCreationDisplayValues(),
+        })
     }
 
     try {
