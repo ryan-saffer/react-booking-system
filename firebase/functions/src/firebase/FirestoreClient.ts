@@ -2,6 +2,7 @@ import { EventBooking } from './../../fizz-kidz/src/booking/Event'
 import { ScienceEnrolment, PaidHolidayProgramBooking, Booking } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
 import { FirestoreRefs, Document } from './FirestoreRefs'
+import { firestore } from 'firebase-admin'
 
 class Client {
     private async _getDocument<T>(ref: Document<T>) {
@@ -23,11 +24,12 @@ class Client {
     private convertTimestamps<T>(obj: T): T {
         const data = obj as any
         Object.keys(data).forEach((key) => {
-            if (typeof data[key] === 'object') {
-                data[key] = this.convertTimestamps(data[key])
+            const value = data[key]
+            if (typeof value === 'object') {
+                data[key] = this.convertTimestamps(value)
             }
-            if (data[key] instanceof FirebaseFirestore.Timestamp) {
-                data[key] = data[key].toDate()
+            if (value instanceof firestore.Timestamp) {
+                data[key] = value.toDate()
             }
         })
         return data
