@@ -25,6 +25,7 @@ class Client {
         const data = obj as any
         Object.keys(data).forEach((key) => {
             const value = data[key]
+            if (!value) return
             if (typeof value === 'object') {
                 data[key] = this.convertTimestamps(value)
             }
