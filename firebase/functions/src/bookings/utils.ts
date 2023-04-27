@@ -17,13 +17,16 @@ export function getManagerEmail(location: Locations) {
     switch (location) {
         case Locations.BALWYN:
         case Locations.ESSENDON:
+        case Locations.MOBILE:
             return 'bonnie@fizzkidz.com.au'
         case Locations.CHELTENHAM:
             return 'cheltenham@fizzkidz.com.au'
         case Locations.MALVERN:
             return 'malvern@fizzkidz.com.au'
-        default:
-            throw new Error(`Unknown location: ${location}`)
+        default: {
+            const exhaustiveCheck: never = location
+            throw new Error(`Unknown location: ${exhaustiveCheck}`)
+        }
     }
 }
 
