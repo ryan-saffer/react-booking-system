@@ -20,8 +20,9 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
 const EnrolmentPage = () => {
     const classes = useStyles()
 
-    const base64String = window.location.search
-    let queryParams = Buffer.from(base64String, 'base64').toString('utf8')
+    // remove first '?'
+    const base64String = window.location.search.substring(1, window.location.search.length - 1)
+    const queryParams = atob(base64String)
 
     const appointmentId = useQueryParam<any>('appointmentId', true, queryParams) as string
     const continuingWithTerm = useQueryParam<any>('continuing', true, queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
