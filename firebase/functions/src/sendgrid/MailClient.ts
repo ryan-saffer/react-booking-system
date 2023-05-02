@@ -141,6 +141,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Fizz Kidz Booking Confirmation',
+                        bcc: 'bonnie@fizzkidz.com.au',
                     },
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
