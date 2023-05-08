@@ -21,7 +21,7 @@ const EnrolmentPage = () => {
     const classes = useStyles()
 
     // remove first '?'
-    const base64String = window.location.search.substring(1, window.location.search.length - 1)
+    const base64String = window.location.search.substring(1, window.location.search.length)
     const queryParams = atob(base64String)
 
     const appointmentId = useQueryParam<any>('appointmentId', true, queryParams) as string
