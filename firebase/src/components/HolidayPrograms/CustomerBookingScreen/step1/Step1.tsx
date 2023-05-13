@@ -28,19 +28,20 @@ const Step1: React.FC<Props> = ({
         if (selectedStore !== '') {
             setFilteredClasses(classes?.filter((it) => it.calendar.toLowerCase().includes(selectedStore)))
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedStore])
 
     const discountedClasses = getSameDayClasses(selectedClasses)
 
-    const renderSlotsAvailable = (klass: Acuity.Class) => {
+    const getSlotsAvailable = (klass: Acuity.Class) => {
         if (klass.slotsAvailable === 0) {
-            return '[No spots left]'
+            return 'No spots left'
         }
         if (klass.slotsAvailable < 6 && klass.slotsAvailable > 1) {
-            return `[${klass.slotsAvailable} spots left]`
+            return `${klass.slotsAvailable} spots left`
         }
         if (klass.slotsAvailable === 1) {
-            return '[1 spot left]'
+            return '1 spot left'
         }
         return ''
     }
@@ -72,6 +73,7 @@ const Step1: React.FC<Props> = ({
             </Form.Item>
             {filteredClasses?.map((klass) => {
                 let name = `${klass.id}-checkbox`
+                const slotsAvailable = getSlotsAvailable(klass)
                 return (
                     <Form.Item style={{ marginBottom: 4 }} key={klass.id} name={name} valuePropName="checked">
                         <Checkbox
@@ -79,7 +81,7 @@ const Step1: React.FC<Props> = ({
                             disabled={klass.slotsAvailable === 0}
                             onChange={onClassSelectionChange}
                         >
-                            <p style={{ marginBottom: 0 }}>
+                            <p style={{ marginTop: 0, marginBottom: 4 }}>
                                 {DateTime.fromISO(klass.time).toLocaleString({
                                     weekday: 'long',
                                     month: 'short',
@@ -89,7 +91,11 @@ const Step1: React.FC<Props> = ({
                                     hour12: true,
                                 })}
                             </p>
-                            <p style={{ marginBottom: 0 }}>{renderSlotsAvailable(klass)}</p>
+                            {slotsAvailable && (
+                                <p style={{ marginTop: 0, marginBottom: 4 }}>
+                                    [<em>{slotsAvailable}</em>]
+                                </p>
+                            )}
                             {discountedClasses.includes(klass.id) && (
                                 <Tag color="green">All day discount: -${DISCOUNT_PRICE}.00</Tag>
                             )}
