@@ -50,6 +50,6 @@ export function withExponentialBackoff<T extends () => any>(
             }
         }
 
-        runFunction()
+        runFunction().catch(reject)
     })
 }
