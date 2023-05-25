@@ -25,6 +25,7 @@ export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data: Up
         })
         return
     } catch (error) {
+        functions.logger.error('failed updating payment intent', data, error)
         throw new functions.https.HttpsError('aborted', 'failed updating payment intent', error)
     }
 })

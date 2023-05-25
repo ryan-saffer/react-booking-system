@@ -44,6 +44,7 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: Cr
             clientSecret: paymentIntent.client_secret,
         }
     } else {
+        functions.logger.error('payment intent failed to create with secret', data)
         throw new functions.https.HttpsError('aborted', 'payment intent failed to create with secret')
     }
 })

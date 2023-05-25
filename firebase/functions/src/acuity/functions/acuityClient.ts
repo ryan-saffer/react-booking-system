@@ -40,6 +40,7 @@ export const acuityClient = functions
                     return await AcuityClient.searchForAppointments(input)
             }
         } catch (err) {
+            functions.logger.error(`error calling acuity client with method: ${data.method}`, err)
             throw new functions.https.HttpsError(
                 'internal',
                 `error calling acuity client with method: ${data.method}`,

@@ -19,6 +19,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             try {
                 await Promise.all(appointmentIds.map((id) => AcuityClient.cancelAppointment(id)))
             } catch (err) {
+                functions.logger.error('error unenrolling from term.', input, err)
                 throw new functions.https.HttpsError(
                     'internal',
                     `error unenrolling from term. firestore id: ${appointmentId}`,

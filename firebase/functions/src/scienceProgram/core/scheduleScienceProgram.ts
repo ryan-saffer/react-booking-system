@@ -37,6 +37,7 @@ export default async function scheduleScienceProgram(
                     .file(`anaphylaxisPlans/${input.child.anaphylaxisPlan}`)
                     .move(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`)
             } catch (err) {
+                functions.logger.error('error moving anaphylaxis plan', input, err)
                 throw new functions.https.HttpsError('internal', 'error moving anaphylaxis plan', err)
             }
         }
