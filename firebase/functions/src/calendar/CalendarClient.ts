@@ -1,6 +1,7 @@
 import { env } from './../init'
 import googleCredentials from '../../credentials/google-credentials.json'
 import { calendar_v3, google } from 'googleapis'
+import { withExponentialBackoff } from '../utilities'
 
 type Calendar = 'events'
 
@@ -29,20 +30,30 @@ class CalendarClient {
         this.calendar = google.calendar({ version: 'v3', auth: OAuth2Client })
     }
 
-    async createEvent(calendar: Calendar, event: Event) {
-        const result = await this.calendar.events.insert(
-            {
-                calendarId: this.getCalendarId(calendar),
-                requestBody: {
-                    summary: event.title,
-                    location: event.location,
-                    start: { dateTime: event.start.toISOString() },
-                    end: { dateTime: event.end.toISOString() },
-                    description: event.description,
+    async createEvent(
+        calendar: Calendar,
+        event: Event,
+        options: {
+            useExponentialBackoff?: boolean
+        } = {}
+    ) {
+        const { useExponentialBackoff = false } = options
+        const insertFn = () =>
+            this.calendar.events.insert(
+                {
+                    calendarId: this.getCalendarId(calendar),
+                    requestBody: {
+                        summary: event.title,
+                        location: event.location,
+                        start: { dateTime: event.start.toISOString() },
+                        end: { dateTime: event.end.toISOString() },
+                        description: event.description,
+                    },
                 },
-            },
-            undefined
-        )
+                undefined
+            )
+
+        const result = useExponentialBackoff ? await withExponentialBackoff(insertFn, [403, 429]) : await insertFn()
 
         return result.data.id
     }

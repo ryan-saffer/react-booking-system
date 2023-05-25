@@ -30,13 +30,17 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
         // create events in calendar
         const calendarEventIds = await Promise.all(
             slots.map((slot) =>
-                calendarClient.createEvent('events', {
-                    title: event.eventName,
-                    location: event.location,
-                    start: slot.startTime,
-                    end: slot.endTime,
-                    description: event.notes,
-                })
+                calendarClient.createEvent(
+                    'events',
+                    {
+                        title: event.eventName,
+                        location: event.location,
+                        start: slot.startTime,
+                        end: slot.endTime,
+                        description: event.notes,
+                    },
+                    { useExponentialBackoff: true }
+                )
             )
         )
 
@@ -51,6 +55,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
             })
         )
     } catch (err) {
+        logger.error('error creating event booking', event, err)
         throw new https.HttpsError('internal', 'error creating event booking', err)
     }
 
