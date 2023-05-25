@@ -10,10 +10,15 @@ import Mustache from 'mustache'
 
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
+type Options = {
+    subject?: string
+    replyTo?: string
+}
+
 class MailClient {
-    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], subject?: string) {
+    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
         console.log('generating html...')
-        const { emailInfo, template, useMjml } = this._getInfo(email, to, subject)
+        const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         try {
             const html = this._generateHtml(template, values, useMjml)
             console.log('generated successfully!')
@@ -51,8 +56,13 @@ class MailClient {
     private _getInfo<T extends keyof Emails>(
         email: T,
         to: string,
-        subject?: string
-    ): { emailInfo: MailData; template: string; useMjml: boolean } {
+        options: Options
+    ): {
+        emailInfo: MailData & { to: string; from: { name: string; email: string }; subject: string; replyTo: string }
+        template: string
+        useMjml: boolean
+    } {
+        const { subject, replyTo } = options
         switch (email) {
             case 'holidayProgramConfirmation':
                 return {
@@ -63,6 +73,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Holiday program booking confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'holiday_program_confirmation.html',
                     useMjml: true,
@@ -76,6 +87,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Science Program Enrolment Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'science_term_enrolment_confirmation.html',
                     useMjml: true,
@@ -89,6 +101,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Thanks for coming to your first session!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'term_continuation_email.html',
                     useMjml: true,
@@ -102,6 +115,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Unenrolment Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'term_unenrolment_confirmation.html',
                     useMjml: true,
@@ -115,6 +129,7 @@ class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Manage your enrolment',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'science_parent_portal.html',
                     useMjml: true,
@@ -128,6 +143,7 @@ class MailClient {
                             email: 'info@fizzkidz.com.au',
                         },
                         subject: subject || 'Party form filled in again!',
+                        replyTo: replyTo || 'info@fizzkidz.com.au',
                     },
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
@@ -140,8 +156,9 @@ class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        subject: subject || 'Fizz Kidz Booking Confirmation',
                         bcc: 'bonnie@fizzkidz.com.au',
+                        subject: subject || 'Fizz Kidz Booking Confirmation',
+                        replyTo: replyTo || 'bonnie@fizzkidz.com.au',
                     },
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
@@ -155,6 +172,7 @@ class MailClient {
                             email: 'info@fizzkidz.com.au',
                         },
                         subject: subject || 'Too many creations chosen!',
+                        replyTo: replyTo || 'info@fizzkidz.com.au',
                     },
                     template: 'too_many_creations_chosen.html',
                     useMjml: false,

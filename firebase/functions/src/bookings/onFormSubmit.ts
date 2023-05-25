@@ -47,7 +47,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
                 newCreations: formMapper.getCreationDisplayValues(),
                 newAdditions: formMapper.getAdditionDisplayValues(false),
             },
-            `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`
+            { subject: `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}` }
         )
     }
 
@@ -62,16 +62,23 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
         (fullBooking.location === 'mobile' && fullBooking.partyLength === '1') ||
         (fullBooking.location !== 'mobile' && fullBooking.partyLength === '1.5')
     if (choseThreeCreations && requiresTwoCreations) {
-        await mailClient.sendEmail('tooManyCreationsChosen', getManagerEmail(fullBooking.location), {
-            parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
-            parentEmail: fullBooking.parentEmail,
-            parentMobile: fullBooking.parentMobile,
-            childName: fullBooking.childName,
-            dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
-                zone: 'Australia/Melbourne',
-            }).toLocaleString(DateTime.DATETIME_SHORT),
-            chosenCreations: formMapper.getCreationDisplayValues(),
-        })
+        await mailClient.sendEmail(
+            'tooManyCreationsChosen',
+            getManagerEmail(fullBooking.location),
+            {
+                parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
+                parentEmail: fullBooking.parentEmail,
+                parentMobile: fullBooking.parentMobile,
+                childName: fullBooking.childName,
+                dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
+                    zone: 'Australia/Melbourne',
+                }).toLocaleString(DateTime.DATETIME_SHORT),
+                chosenCreations: formMapper.getCreationDisplayValues(),
+            },
+            {
+                replyTo: fullBooking.parentEmail,
+            }
+        )
     }
 
     try {
