@@ -29,7 +29,7 @@ export function onRequest<T extends keyof FirebaseFunctions>(
 export function withExponentialBackoff<T extends () => any>(
     fn: T,
     backoffCodes: number[],
-    retryCount = 1
+    retryCount = 0
 ): Promise<ReturnType<T>> {
     return new Promise((resolve, reject) => {
         const runFunction = async () => {
@@ -38,7 +38,7 @@ export function withExponentialBackoff<T extends () => any>(
                 resolve(result)
             } catch (err: any) {
                 if (backoffCodes.includes(err.code)) {
-                    if (retryCount <= 3) {
+                    if (retryCount <= 2) {
                         console.log(`Error code ${err.code} found. Running again, with retryCount of ${retryCount + 1}`)
                         setTimeout(runFunction, Math.pow(2, retryCount + 1))
                     } else {
