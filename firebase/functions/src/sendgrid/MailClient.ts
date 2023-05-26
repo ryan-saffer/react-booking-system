@@ -185,5 +185,9 @@ class MailClient {
     }
 }
 
-const mailClient = new MailClient()
-export { mailClient }
+let mailClient: MailClient
+export function getMailClient() {
+    if (mailClient) return mailClient
+    mailClient = new MailClient()
+    return mailClient
+}

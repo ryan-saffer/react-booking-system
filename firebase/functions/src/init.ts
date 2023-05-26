@@ -1,6 +1,3 @@
-import * as StripeConfig from './config/stripe'
-import { Stripe } from 'stripe'
-
 // FIREBASE
 import * as admin from 'firebase-admin'
 export const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
@@ -13,9 +10,3 @@ admin.initializeApp({
 export const storage = admin.storage()
 export const db = admin.firestore()
 db.settings({ ignoreUndefinedProperties: true })
-
-// STRIPE
-const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
-export const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})

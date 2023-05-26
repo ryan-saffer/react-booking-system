@@ -4,7 +4,7 @@ import { runAppsScript } from './index'
 import { FormMapper } from './FormMapper'
 import { PFQuestion } from './types'
 import { FirestoreClient } from '../firebase/FirestoreClient'
-import { mailClient } from '../sendgrid/MailClient'
+import { getMailClient } from '../sendgrid/MailClient'
 import { getBookingAdditions, getBookingCreations, getManagerEmail } from './utils'
 import { DateTime } from 'luxon'
 
@@ -24,6 +24,8 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
         res.status(500).end(e)
         return
     }
+
+    const mailClient = getMailClient()
 
     // first check if the booking form has been filled in previously
     const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)

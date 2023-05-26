@@ -86,5 +86,10 @@ class CalendarClient {
     }
 }
 
-const calendarClient = new CalendarClient()
-export { calendarClient }
+let calendarClient: CalendarClient
+
+export function getCalendarClient() {
+    if (calendarClient) return calendarClient
+    calendarClient = new CalendarClient()
+    return calendarClient
+}

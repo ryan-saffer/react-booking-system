@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import { ScienceEnrolment, SendTermContinuationEmailsParams } from 'fizz-kidz'
 import { onCall } from '../../utilities'
 import { db } from '../../init'
-import { mailClient } from '../../sendgrid/MailClient'
+import { getMailClient } from '../../sendgrid/MailClient'
 
 const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -25,7 +25,7 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                 baseUrl += '/science-club-enrolment'
 
                 try {
-                    await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
+                    await getMailClient().sendEmail('termContinuationEmail', appointment.parent.email, {
                         parentName: appointment.parent.firstName,
                         className: appointment.className,
                         price: (parseInt(appointment.price) * appointment.appointments.length).toString(),

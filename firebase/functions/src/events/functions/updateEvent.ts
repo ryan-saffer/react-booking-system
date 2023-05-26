@@ -1,5 +1,5 @@
 import { https, logger } from 'firebase-functions/v1'
-import { calendarClient } from '../../calendar/CalendarClient'
+import { getCalendarClient } from '../../calendar/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
 
@@ -9,7 +9,7 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
     event.endTime = new Date(event.endTime)
 
     try {
-        await calendarClient.updateEvent(event.calendarEventId, 'events', {
+        await getCalendarClient().updateEvent(event.calendarEventId, 'events', {
             title: event.eventName,
             location: event.location,
             start: event.startTime,
