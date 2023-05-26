@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { db, storage } from '../../init'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
-import { mailClient } from '../../sendgrid/MailClient'
+import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
 const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId
@@ -80,7 +80,7 @@ export default async function scheduleScienceProgram(
         // send the confirmation email
         if (sendConfirmationEmail) {
             try {
-                await mailClient.sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
+                await getMailClient().sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
                     parentName: input.parent.firstName,
                     childName: input.child.firstName,
                     className: input.className,
@@ -116,7 +116,7 @@ export default async function scheduleScienceProgram(
         if (sendPortalEmail) {
             try {
                 const baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
-                await mailClient.sendEmail('scienceParentPortalLink', input.parent.email, {
+                await getMailClient().sendEmail('scienceParentPortalLink', input.parent.email, {
                     parentName: input.parent.firstName,
                     childName: input.child.firstName,
                     className: input.className,

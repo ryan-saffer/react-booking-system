@@ -1,12 +1,13 @@
 import { AcuityWebhookData } from './../../acuity/functions/webhook'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { Acuity, Metadata } from 'fizz-kidz'
-import { stripe } from '../../init'
 import { RefundCalculator } from './RefundCalculator'
 import * as functions from 'firebase-functions'
+import { getStripeClient } from '../../stripe/core/StripeClient'
 
 export async function cancelHolidayProgram(data: AcuityWebhookData) {
     try {
+        const stripe = getStripeClient()
         const appointment = await AcuityClient.getAppointment(data.id)
         const paymentIntentId = Acuity.Utilities.retrieveFormAndField(
             appointment,

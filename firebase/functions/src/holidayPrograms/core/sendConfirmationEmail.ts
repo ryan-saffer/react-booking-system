@@ -1,6 +1,6 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { mailClient } from '../../sendgrid/MailClient'
+import { getMailClient } from '../../sendgrid/MailClient'
 import { Emails } from '../../sendgrid/types'
 
 export function sendConfirmationEmail(appointments: Acuity.Appointment[]) {
@@ -38,7 +38,7 @@ export function sendConfirmationEmail(appointments: Acuity.Appointment[]) {
         }
     })
 
-    return mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
+    return getMailClient().sendEmail('holidayProgramConfirmation', appointments[0].email, {
         parentName: appointments[0].firstName,
         location: `Fizz Kidz ${appointments[0].calendar}`,
         address: appointments[0].location,

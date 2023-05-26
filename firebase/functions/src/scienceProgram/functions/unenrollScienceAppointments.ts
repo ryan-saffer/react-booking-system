@@ -1,11 +1,11 @@
 import * as functions from 'firebase-functions'
-import { stripe } from '../../init'
 import { onCall } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
-import { mailClient } from '../../sendgrid/MailClient'
+import { getMailClient } from '../../sendgrid/MailClient'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { getStripeClient } from '../../stripe/core/StripeClient'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(async (input) => {
     await Promise.all(
@@ -31,7 +31,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             if (enrolment.invoiceId) {
                 const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
                 if (invoice.status === 'open') {
-                    await stripe.invoices.voidInvoice(invoice.id!)
+                    await getStripeClient().invoices.voidInvoice(invoice.id!)
                 }
             }
 
@@ -43,7 +43,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
 
             // 5. email confirmation
             try {
-                await mailClient.sendEmail('scienceTermUnenrolmentConfirmation', enrolment.parent.email, {
+                await getMailClient().sendEmail('scienceTermUnenrolmentConfirmation', enrolment.parent.email, {
                     parentName: enrolment.parent.firstName,
                     childName: enrolment.child.firstName,
                     className: enrolment.className,

@@ -1,13 +1,15 @@
 import { https, logger } from 'firebase-functions/v1'
-import { calendarClient } from '../../calendar/CalendarClient'
+import { getCalendarClient } from '../../calendar/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
-import { mailClient } from '../../sendgrid/MailClient'
+import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
 export const bookEvent = onCall<'bookEvent'>(async (input) => {
     const { event } = input
     const { slots, ...rest } = event
+
+    const calendarClient = getCalendarClient()
 
     // parse date strings back to date objects
     slots.forEach((slot) => {
@@ -62,7 +64,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
     // send confirmation email
     if (input.sendConfirmationEmail) {
         try {
-            await mailClient.sendEmail('eventBooking', event.contactEmail, {
+            await getMailClient().sendEmail('eventBooking', event.contactEmail, {
                 contactName: event.contactName,
                 location: event.location,
                 emailMessage: input.emailMessage,
