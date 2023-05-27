@@ -3,7 +3,7 @@ import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions, Dropdown, Menu, MenuProps, Space, Tag, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import { BREAKPOINT_LG, SetAppointmentLabel } from './EnrolmentTable'
+import { BREAKPOINT_LG, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { DownOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
@@ -12,11 +12,12 @@ type Props = {
     appointment: Acuity.Appointment
     enrolment: ScienceEnrolment
     setAppointmentLabel: SetAppointmentLabel
+    updateEnrolment: UpdateEnrolment
 }
 
-type MenuKey = 'sign-in' | 'sign-out' | 'not-attending' | 'attending'
+type MenuKey = 'sign-in' | 'sign-out' | 'not-attending' | 'attending' | 'not-continuing'
 
-const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentLabel }) => {
+const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentLabel, updateEnrolment }) => {
     const classes = useStyles()
     const { width } = useWindowDimensions()
     const firebase = useFirebase()
@@ -51,6 +52,13 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
             case 'not-attending':
                 await setAppointmentLabel(appointment.id, 'not-attending')
                 break
+            case 'not-continuing':
+                await updateEnrolment({ ...enrolment, continuingWithTerm: 'no' })
+                break
+            default: {
+                const exhaustiveCheck: never = key
+                console.error(`Unknown menu item: ${exhaustiveCheck}`)
+            }
         }
         setLoading(false)
     }
@@ -61,6 +69,10 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
             items.push({
                 key: 'not-attending',
                 label: 'Mark Not Attending',
+            })
+            items.push({
+                key: 'not-continuing',
+                label: 'Not Continuing With Term',
             })
         }
         if (appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.CHECKED_IN)) {

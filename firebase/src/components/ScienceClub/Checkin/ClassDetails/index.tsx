@@ -48,50 +48,60 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
     const classTime = decodeURIComponent(useQueryParam<QueryParams>('classTime') as string)
 
     useEffect(() => {
-        async function init() {
-            try {
-                const [enrolments, appointments] = await Promise.all([
-                    firebase.db
-                        .collection('scienceAppointments')
-                        .where('appointmentTypeId', '==', appointmentTypeId)
-                        .where('status', '==', 'active')
-                        .get(),
-                    callAcuityClient(
-                        'searchForAppointments',
-                        firebase
-                    )({
-                        appointmentTypeId,
-                        calendarId,
-                        classTime,
-                    }),
-                ])
+        setLoading(true)
+        let _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
+        // needed to track within the scope of this render
+        let _isFirstLoad = true
+        let _appointments = appointments
+        const unsubscribe = firebase.db
+            .collection('scienceAppointments')
+            .where('appointmentTypeId', '==', appointmentTypeId)
+            .where('status', '==', 'active')
+            .onSnapshot(async (snapshot) => {
+                if (_isFirstLoad) {
+                    try {
+                        const result = await callAcuityClient(
+                            'searchForAppointments',
+                            firebase
+                        )({
+                            appointmentTypeId,
+                            calendarId,
+                            classTime,
+                        })
+                        _appointments = result.data
+                    } catch (err) {
+                        console.error(err)
+                        setError(true)
+                        return
+                    }
+                }
 
-                let _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
-                enrolments.docs.forEach((doc) => {
+                snapshot.docs.forEach((doc) => {
                     const enrolment = doc.data() as ScienceEnrolment
                     _enrolmentsMap[enrolment.id] = enrolment
                 })
 
                 // filter out appointments that are not stored in firestore
                 // side effect from migration. should be impossible. remove at end of term 4 22.
-                const filteredAppointments = appointments.data.filter((it) => getEnrolment(it, _enrolmentsMap))
+                const filteredAppointments = _appointments.filter((it) => getEnrolment(it, _enrolmentsMap))
 
                 // sort appointments by child name
                 filteredAppointments.sort((a, b) => {
                     const enrolment1 = getEnrolment(a, _enrolmentsMap)
                     const enrolment2 = getEnrolment(b, _enrolmentsMap)
-                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], { numeric: false })
+                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], {
+                        numeric: false,
+                    })
                 })
+
+                _isFirstLoad = false
+                _appointments = filteredAppointments
 
                 setEnrolmentsMap(_enrolmentsMap)
                 setAppointments(filteredAppointments)
-            } catch (err) {
-                console.error(err)
-                setError(true)
-            }
-            setLoading(false)
-        }
-        init()
+                setLoading(false)
+            })
+        return unsubscribe
     }, [])
 
     return (
@@ -111,7 +121,6 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
                                 appointments={appointments}
                                 setAppointments={setAppointments}
                                 enrolmentsMap={enrolmentsMap}
-                                setEnrolmentsMap={setEnrolmentsMap}
                                 calendarName={calendarName}
                             />
                         )

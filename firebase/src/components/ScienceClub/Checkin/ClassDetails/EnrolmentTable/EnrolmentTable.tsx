@@ -19,7 +19,6 @@ type Props = {
     setAppointments: Dispatch<SetStateAction<Acuity.Appointment[]>>
     enrolmentsMap: EnrolmentsMap
     calendarName: string
-    setEnrolmentsMap: Dispatch<SetStateAction<EnrolmentsMap>>
 }
 
 type TableData = {
@@ -30,15 +29,9 @@ type TableData = {
 
 export type SetAppointmentLabel = (id: number, label: 'signed-in' | 'signed-out' | 'not-attending' | 'none') => void
 
-export type UpdateEnrolment = (enrolment: ScienceEnrolment, signOutInfo: ScienceEnrolment['signatures']) => void
+export type UpdateEnrolment = (enrolment: ScienceEnrolment) => void
 
-const EnrolmentTable: React.FC<Props> = ({
-    appointments,
-    setAppointments,
-    enrolmentsMap,
-    calendarName,
-    setEnrolmentsMap,
-}) => {
+const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolmentsMap, calendarName }) => {
     const firebase = useFirebase()
     const { width } = useWindowDimensions()
     const classes = useStyles()
@@ -72,24 +65,13 @@ const EnrolmentTable: React.FC<Props> = ({
         updateAppointment(result.data)
     }
 
-    const updateEnrolment: UpdateEnrolment = async (
-        enrolment: ScienceEnrolment,
-        signOutInfo: ScienceEnrolment['signatures']
-    ) => {
-        const result = await callFirebaseFunction(
+    const updateEnrolment: UpdateEnrolment = async (enrolment: ScienceEnrolment) => {
+        await callFirebaseFunction(
             'updateScienceEnrolment',
             firebase
         )({
+            ...enrolment,
             id: enrolment.id,
-            signatures: {
-                ...enrolment.signatures,
-                ...signOutInfo,
-            },
-        })
-
-        setEnrolmentsMap({
-            ...enrolmentsMap,
-            [result.data.id]: result.data,
         })
     }
 
@@ -114,7 +96,7 @@ const EnrolmentTable: React.FC<Props> = ({
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
                 const name = `${enrolment.child.firstName} ${enrolment.child.lastName}`
                 const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
-                if (notAttending) {
+                if (notAttending || enrolment.continuingWithTerm === 'no') {
                     return <del>{name}</del>
                 } else {
                     return name
@@ -150,6 +132,9 @@ const EnrolmentTable: React.FC<Props> = ({
             render: (appointment: Acuity.Appointment) => {
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
                 const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
+                if (enrolment.continuingWithTerm === 'no') {
+                    return <Tag color="volcano">NOT CONTINUING</Tag>
+                }
                 if (notAttending) {
                     return <Tag color="purple">NOT ATTENDING</Tag>
                 }
@@ -217,6 +202,7 @@ const EnrolmentTable: React.FC<Props> = ({
                             enrolment={enrolment}
                             appointment={appointment}
                             setAppointmentLabel={setAppointmentLabel}
+                            updateEnrolment={updateEnrolment}
                         />
                     )
                 },
