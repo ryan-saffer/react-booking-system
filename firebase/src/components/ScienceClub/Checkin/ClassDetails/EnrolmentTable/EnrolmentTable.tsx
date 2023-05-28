@@ -46,7 +46,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolm
         }
     }
 
-    const setAppointmentLabel: SetAppointmentLabel = async (id: number, label: string) => {
+    const setAppointmentLabel: SetAppointmentLabel = async (id, label) => {
         const result = await callAcuityClient(
             'updateAppointment',
             firebase
@@ -184,7 +184,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolm
             pagination={false}
             size="small"
             title={() => (
-                <Typography.Title level={5} style={{ textAlign: 'center' }}>
+                <Typography.Title level={5} style={{ textAlign: 'center', margin: '9px 0' }}>
                     {calendarName}
                 </Typography.Title>
             )}
