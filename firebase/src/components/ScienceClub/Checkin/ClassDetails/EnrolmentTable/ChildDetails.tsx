@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
-import { Button, Descriptions, Dropdown, Menu, MenuProps, Space, Tag, Typography } from 'antd'
+import { Button, Descriptions, Dropdown, MenuProps, Space, Tag, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT_LG, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { DownOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
+import { MenuItemType } from 'antd/es/menu/hooks/useItems'
 
 type Props = {
     appointment: Acuity.Appointment
@@ -38,9 +39,8 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const handleMenuClick: MenuProps['onClick'] = async (e) => {
+    const handleMenuClick = async (key: MenuKey) => {
         setLoading(true)
-        const key = e.key as MenuKey
         switch (key) {
             case 'sign-in':
                 await setAppointmentLabel(appointment.id, 'signed-in')
@@ -63,8 +63,8 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
         setLoading(false)
     }
 
-    const menu = useMemo(() => {
-        const items: { key: MenuKey; label: string }[] = []
+    const menu = useMemo((): MenuProps => {
+        const items: MenuItemType[] = []
         if (!appointment.labels) {
             items.push({
                 key: 'not-attending',
@@ -85,7 +85,10 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
             items.push({ key: 'attending', label: 'Mark As Attending' })
         }
 
-        return <Menu items={items} onClick={handleMenuClick} />
+        return {
+            items,
+            onClick: ({ key }) => handleMenuClick(key as MenuKey),
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appointment])
 
@@ -153,7 +156,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                     </Descriptions.Item>
                 )}
             </Descriptions>
-            <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
+            <Dropdown placement="bottomRight" menu={menu} trigger={['click']}>
                 <div className={classes.dropdownBtn}>
                     <Button loading={loading}>
                         <Space>
