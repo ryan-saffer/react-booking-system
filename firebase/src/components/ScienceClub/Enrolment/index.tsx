@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { Acuity } from 'fizz-kidz'
-import useQueryParam from '../../Hooks/UseQueryParam'
 import { Divider, makeStyles } from '@material-ui/core'
 
 import * as logo from '../../../drawables/fizz-logo.png'
@@ -22,10 +21,10 @@ export const EnrolmentPage = () => {
 
     // remove first '?'
     const base64String = window.location.search.substring(1, window.location.search.length)
-    const queryParams = atob(base64String)
+    const searchParams = new URLSearchParams(atob(base64String))
 
-    const appointmentId = useQueryParam<any>('appointmentId', true, queryParams) as string
-    const continuingWithTerm = useQueryParam<any>('continuing', true, queryParams) as Acuity.Client.ContinuingOption // 'any' to avoid requiring to use 'value'
+    const appointmentId = searchParams.get('appointmentId')!
+    const continuingWithTerm = searchParams.get('continuing') as Acuity.Client.ContinuingOption
 
     const mixpanel = useMixpanel()
 
