@@ -386,6 +386,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
 const useStyles = makeStyles({
     classTitle: {
         textAlign: 'center',
+        margin: '9px 0',
     },
     actionBtn: {
         position: 'absolute',
@@ -394,7 +395,7 @@ const useStyles = makeStyles({
         alignItems: 'center',
         top: 0,
         right: 32,
-        height: 55,
+        height: 61,
     },
 })
 

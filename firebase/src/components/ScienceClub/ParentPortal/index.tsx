@@ -3,7 +3,7 @@ import React from 'react'
 import Root from '../../Shared/Root'
 import ParentPortalMain from './ParentPortal'
 
-const ParentPortalRoot = () => {
+export const ParentPortalRoot = () => {
     const classes = useStyles()
 
     return (
@@ -21,5 +21,3 @@ const useStyles = makeStyles({
         width: '100%',
     },
 })
-
-export default ParentPortalRoot

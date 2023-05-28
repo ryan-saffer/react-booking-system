@@ -10,9 +10,12 @@ import * as ROUTES from '../../../../constants/routes'
 import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
 import { withAuthorization } from '../../../Session'
+import { useNavigate } from 'react-router-dom'
 
-const ScienceClubCheckinClassSelection = (props) => {
+export const ScienceClubCheckinClassSelection = withAuthorization(() => {
     const cssClasses = useStyles()
+
+    const navigate = useNavigate()
 
     return (
         <>
@@ -25,14 +28,15 @@ const ScienceClubCheckinClassSelection = (props) => {
                     <img
                         className={cssClasses.logo}
                         src={Logo.default}
-                        onClick={() => props.history.push(ROUTES.LANDING)}
+                        onClick={() => navigate(ROUTES.LANDING)}
+                        alt="Fizz Kidz Logo"
                     />
                 </Toolbar>
             </AppBar>
             <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} classRequired={true} />
         </>
     )
-}
+})
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -51,5 +55,3 @@ const useStyles = makeStyles((theme) => ({
         cursor: 'pointer',
     },
 }))
-
-export default withAuthorization(ScienceClubCheckinClassSelection)
