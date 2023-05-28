@@ -3,21 +3,12 @@ import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { makeStyles } from '@material-ui/core/styles'
 import SkeletonRows from '../../../Shared/SkeletonRows'
-import useQueryParam from '../../../Hooks/UseQueryParam'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import Heading from './Header'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
-
-type QueryParams = {
-    appointmentTypeId: string
-    calendarId: string
-    classId: string
-    calendarName: string
-    classTime: string
-    class: string
-}
+import { useSearchParams } from 'react-router-dom'
 
 export type EnrolmentsMap = { [key: string]: ScienceEnrolment }
 
@@ -30,7 +21,7 @@ export function getEnrolment(appointment: Acuity.Appointment, enrolmentsMap: { [
     return enrolmentsMap[firestoreId]
 }
 
-const ScienceClubCheckinClassDetails: React.FC = () => {
+export const ScienceClubCheckinClassDetails: React.FC = () => {
     const classes = useStyles()
 
     const firebase = useFirebase()
@@ -42,10 +33,11 @@ const ScienceClubCheckinClassDetails: React.FC = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<Acuity.Appointment[]>([])
 
-    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
-    const calendarId = parseInt(useQueryParam<QueryParams>('calendarId') as string)
-    const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName') as string)
-    const classTime = decodeURIComponent(useQueryParam<QueryParams>('classTime') as string)
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)
+    const calendarId = parseInt(searchParams.get('calendarId')!)
+    const calendarName = decodeURIComponent(searchParams.get('calendarName')!)
+    const classTime = decodeURIComponent(searchParams.get('classTime')!)
 
     useEffect(() => {
         setLoading(true)
@@ -173,5 +165,3 @@ const useStyles = makeStyles({
         pointerEvents: 'none',
     },
 })
-
-export default ScienceClubCheckinClassDetails

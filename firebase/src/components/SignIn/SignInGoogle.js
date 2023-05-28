@@ -1,57 +1,55 @@
 import React, { useState, useContext } from 'react'
 
 import * as ROUTES from '../../constants/routes'
-import * as SignInGoogleButton from '../../drawables/sign-in-google-btn.png'
 import * as GoogleLogo from '../../drawables/google-logo.png'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { Snackbar, Button } from '@material-ui/core'
 import { red } from '@material-ui/core/colors'
 import { FirebaseContext } from '../Firebase'
+import { useNavigate } from 'react-router-dom'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     signInButton: {
         height: 36,
         marginTop: theme.spacing(2),
-        "&:hover": {
-            cursor: "pointer"
-        }
+        '&:hover': {
+            cursor: 'pointer',
+        },
     },
     signInWithGoogleButton: {
         height: 36,
         marginTop: theme.spacing(2),
     },
     googleLogo: {
-        height: 30
+        height: 30,
     },
     snackBar: {
-        backgroundColor: red[500]
-    }
+        backgroundColor: red[500],
+    },
 }))
 
-const SignInGoogleBase = props => {
-    
+const SignInGoogle = (props) => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext)
 
+    const navigate = useNavigate()
+
     const [error, setError] = useState(null)
 
-    const handleSubmit = event => {
+    const handleSubmit = (event) => {
         firebase
             .doSignInWithGoogle()
-            .then(socialAuthUser => {
+            .then((socialAuthUser) => {
                 setError(null)
                 firebase.db
-                    .collection("users")
+                    .collection('users')
                     .doc(socialAuthUser.user.uid)
-                    .set(
-                        { email: socialAuthUser.user.email },
-                        { merge: true }
-                    )
-                props.history.push(ROUTES.LANDING)
+                    .set({ email: socialAuthUser.user.email }, { merge: true })
+                navigate(ROUTES.LANDING)
             })
-            .catch(error => {
+            .catch((error) => {
                 setError(error)
             })
         event.preventDefault()
@@ -64,7 +62,7 @@ const SignInGoogleBase = props => {
                 onClick={handleSubmit}
                 variant="outlined"
                 fullWidth
-                startIcon={<img className={classes.googleLogo} src={GoogleLogo.default} />}
+                startIcon={<img className={classes.googleLogo} src={GoogleLogo.default} alt="Google logo" />}
             >
                 Sign in with Google
             </Button>
@@ -80,4 +78,4 @@ const SignInGoogleBase = props => {
     )
 }
 
-export default SignInGoogleBase
+export default SignInGoogle

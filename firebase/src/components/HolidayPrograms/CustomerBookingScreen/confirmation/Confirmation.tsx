@@ -1,16 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Result } from 'antd'
-import useQueryParam from '../../../Hooks/UseQueryParam'
 import Root from '../../../Shared/Root'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import Loader from '../../../ScienceClub/shared/Loader'
+import { useSearchParams } from 'react-router-dom'
 
 type Props = {}
 
-const Confirmation: React.FC<Props> = () => {
+export const Confirmation: React.FC<Props> = () => {
     const firebase = useContext(FirebaseContext) as Firebase
-    const paymentIntentId = useQueryParam('payment_intent', false) as string
-    const isFree = useQueryParam('free', false)
+
+    const [searchParams] = useSearchParams()
+    const paymentIntentId = searchParams.get('payment_intent') ?? undefined
+    const isFree = searchParams.get('free')
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -57,6 +59,7 @@ const Confirmation: React.FC<Props> = () => {
         return function unsubscribe() {
             observer()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     if (loading) {
@@ -88,5 +91,3 @@ const Confirmation: React.FC<Props> = () => {
         </Root>
     )
 }
-
-export default Confirmation

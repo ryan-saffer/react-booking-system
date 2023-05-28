@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core'
 import { Button } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Form } from '..'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
@@ -20,7 +20,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
     const firebase = useFirebase()
     const classes = useStyles()
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const termsRef = useRef<TermsCheckboxHandle>(null)
     const submitButtonRef = useRef<HTMLButtonElement>(null)
@@ -59,7 +59,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                     }))
                 )
             )
-            history.push('/holiday-programs/confirmation?free=true')
+            navigate('/holiday-programs/confirmation?free=true')
         } catch (err) {
             setError(true)
             setSubmitting(false)

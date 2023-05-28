@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { ScienceEnrolment, Service } from 'fizz-kidz'
 import useFirebase from '../../../Hooks/context/UseFirebase'
-import useQueryParam from '../../../Hooks/UseQueryParam'
 import Heading from './Heading'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Result } from 'antd'
 import EnrolmentsTable from './EnrolmentsTable/EnrolmentsTable'
+import { useSearchParams } from 'react-router-dom'
 
-interface QueryParams {
-    appointmentTypeId: string
-    calendarName: string
-}
-
-const ScienceClassDashboard: React.FC = () => {
+export const ScienceClassDashboard: React.FC = () => {
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
-    const appointmentTypeId = parseInt(useQueryParam<QueryParams>('appointmentTypeId') as string)
-    const calendarName = decodeURIComponent(useQueryParam<QueryParams>('calendarName') ?? '')
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)
+    const calendarName = searchParams.get('calendarName') ?? ''
 
     const [enrolmentsService, setEnrolmentsService] = useState<Service<ScienceEnrolment[]>>({ status: 'loading' })
 
@@ -62,5 +58,3 @@ const ScienceClassDashboard: React.FC = () => {
         </>
     )
 }
-
-export default ScienceClassDashboard
