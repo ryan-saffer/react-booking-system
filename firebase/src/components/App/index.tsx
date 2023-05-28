@@ -1,24 +1,10 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import Navigation from '../Navigation'
-import SignInPage from '../SignIn'
 import * as ROUTES from '../../constants/routes'
-import BookingsPage from '../Bookings'
-import ScienceClubClassSelectionPage from '../ScienceClub/Checkin/SelectClass'
-import ScienceClubClassDetails from '../ScienceClub/Checkin/ClassDetails'
-import ScienceClubAdminClassSelection from '../ScienceClub/Invoicing/SelectClass'
-import InvoiceStatusPage from '../ScienceClub/Invoicing/InvoiceStatusPage'
-import HolidayProgramSelection from '../HolidayPrograms/SelectClass'
-import HolidayProgramClassDetails from '../HolidayPrograms/ClassDetails'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core'
 import { withAuthentication } from '../Session'
-import EnrolmentPage from '../ScienceClub/Enrolment'
-import HolidayProgramBookingScreen from '../HolidayPrograms/CustomerBookingScreen'
-import Confirmation from '../HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation'
-import ScienceProgramBookingForm from '../ScienceClub/BookingForm'
-import ParentPortal from '../ScienceClub/ParentPortal'
 import { ConfigProvider, ThemeConfig } from 'antd'
 
 const App = () => {
@@ -46,47 +32,119 @@ const App = () => {
         },
     }
 
+    const router = createBrowserRouter([
+        {
+            path: ROUTES.LANDING,
+            lazy: async () => {
+                const { Navigation: Component } = await import('../Navigation')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SIGN_IN,
+            lazy: async () => {
+                const { SignInPage: Component } = await import('../SignIn')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
+            lazy: async () => {
+                const { ScienceClubCheckinClassSelection: Component } = await import(
+                    '../ScienceClub/Checkin/SelectClass'
+                )
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_CLUB_CLASS_DETAILS,
+            lazy: async () => {
+                const { ScienceClubCheckinClassDetails: Component } = await import(
+                    '../ScienceClub/Checkin/ClassDetails'
+                )
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
+            lazy: async () => {
+                const { ScienceClubInvoicingClassSelection: Component } = await import(
+                    '../ScienceClub/Invoicing/SelectClass'
+                )
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_CLUB_INVOICING_STATUS,
+            lazy: async () => {
+                const { ScienceClassDashboard: Component } = await import('../ScienceClub/Invoicing/InvoiceStatusPage')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS,
+            lazy: async () => {
+                const { HolidayProgramSelection: Component } = await import('../HolidayPrograms/SelectClass')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS,
+            lazy: async () => {
+                const { ClassDetailsPage: Component } = await import('../HolidayPrograms/ClassDetails')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.BOOKINGS,
+            lazy: async () => {
+                const { BookingsPage: Component } = await import('../Bookings')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_CLUB_ENROLMENT,
+            lazy: async () => {
+                const { EnrolmentPage: Component } = await import('../ScienceClub/Enrolment')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL,
+            lazy: async () => {
+                const { ParentPortalRoot: Component } = await import('../ScienceClub/ParentPortal')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.SCIENCE_PROGRAM_BOOKING_FORM,
+            lazy: async () => {
+                const { BookingForm: Component } = await import('../ScienceClub/BookingForm')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.HOLIDAY_PROGRAM_CUSTOMER_BOOKING_SCREEN,
+            lazy: async () => {
+                const { CustomerBookingScreen: Component } = await import('../HolidayPrograms/CustomerBookingScreen')
+                return { Component }
+            },
+        },
+        {
+            path: ROUTES.HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN,
+            lazy: async () => {
+                const { Confirmation: Component } = await import(
+                    '../HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation'
+                )
+                return { Component }
+            },
+        },
+    ])
+
     return (
         <ThemeProvider theme={theme}>
             <ConfigProvider theme={antdTheme}>
-                <Router>
-                    <div>
-                        <Route exact path={ROUTES.LANDING} component={Navigation} />
-                        <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
-                        <Route
-                            exact
-                            path={ROUTES.SCIENCE_CLUB_SELECT_CLASS}
-                            component={ScienceClubClassSelectionPage}
-                        />
-                        <Route exact path={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} component={ScienceClubClassDetails} />
-                        <Route
-                            exact
-                            path={ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS}
-                            component={ScienceClubAdminClassSelection}
-                        />
-                        <Route exact path={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} component={InvoiceStatusPage} />
-                        <Route exact path={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS} component={HolidayProgramSelection} />
-                        <Route
-                            exact
-                            path={ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS}
-                            component={HolidayProgramClassDetails}
-                        />
-                        <Route path={ROUTES.BOOKINGS} component={BookingsPage} />
-                        <Route exact path={ROUTES.SCIENCE_CLUB_ENROLMENT} component={EnrolmentPage} />
-                        <Route path={ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL} component={ParentPortal} />
-                        <Route exact path={ROUTES.SCIENCE_PROGRAM_BOOKING_FORM} component={ScienceProgramBookingForm} />
-                        <Route
-                            exact
-                            path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_BOOKING_SCREEN}
-                            component={HolidayProgramBookingScreen}
-                        />
-                        <Route
-                            exact
-                            path={ROUTES.HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN}
-                            component={Confirmation}
-                        />
-                    </div>
-                </Router>
+                <RouterProvider router={router} />
             </ConfigProvider>
         </ThemeProvider>
     )

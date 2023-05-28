@@ -14,7 +14,7 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
 
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 
-const BookingForm = () => {
+export const BookingForm = () => {
     const classes = useStyles()
 
     const firebase = useFirebase()
@@ -179,5 +179,3 @@ const useStyles = makeStyles({
         marginTop: 24,
     },
 })
-
-export default BookingForm

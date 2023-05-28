@@ -30,7 +30,7 @@ export function getEnrolment(appointment: Acuity.Appointment, enrolmentsMap: { [
     return enrolmentsMap[firestoreId]
 }
 
-const ScienceClubCheckinClassDetails: React.FC = () => {
+export const ScienceClubCheckinClassDetails: React.FC = () => {
     const classes = useStyles()
 
     const firebase = useFirebase()
@@ -173,5 +173,3 @@ const useStyles = makeStyles({
         pointerEvents: 'none',
     },
 })
-
-export default ScienceClubCheckinClassDetails

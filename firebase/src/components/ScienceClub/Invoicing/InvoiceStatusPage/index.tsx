@@ -13,7 +13,7 @@ interface QueryParams {
     calendarName: string
 }
 
-const ScienceClassDashboard: React.FC = () => {
+export const ScienceClassDashboard: React.FC = () => {
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -62,5 +62,3 @@ const ScienceClassDashboard: React.FC = () => {
         </>
     )
 }
-
-export default ScienceClassDashboard

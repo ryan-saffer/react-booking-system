@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Form, Input, Button, Divider, Modal, Typography } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import ChildForm from './ChildForm'
+import { ChildForm } from './ChildForm'
 import { Acuity } from 'fizz-kidz'
 const { Text } = Typography
 
@@ -19,7 +19,7 @@ type Props = {
     selectedClasses: Acuity.Class[]
 }
 
-const Step2: React.FC<Props> = ({ selectedClasses }) => {
+export const Step2: React.FC<Props> = ({ selectedClasses }) => {
     const [showModal, setShowModal] = useState(false)
 
     return (
@@ -156,5 +156,3 @@ const Step2: React.FC<Props> = ({ selectedClasses }) => {
         </>
     )
 }
-
-export default Step2

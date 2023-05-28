@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
+import { useNavigate } from 'react-router-dom'
 import { DateTime } from 'luxon'
 
 import Typography from '@material-ui/core/Typography'
@@ -22,10 +21,12 @@ import { capitalise } from '../../../utilities/stringUtilities'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-const HolidayProgramSelection = (props: any) => {
+export const HolidayProgramSelection = withAuthorization(() => {
     const cssClasses = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
+
+    const navigate = useNavigate()
 
     const [classes, setClasses] = useState<Service<Acuity.Class[]>>({ status: 'loading' })
     const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>([])
@@ -61,7 +62,7 @@ const HolidayProgramSelection = (props: any) => {
         if (classes.status === 'loaded') {
             const klass = classes.result.find((it) => it.id === parseInt(selectedClass))
             if (!klass) return
-            props.history.push(
+            navigate(
                 `/holiday-program/class?appointmentTypeId=${klass.appointmentTypeID}&calendarId=${
                     klass.calendarID
                 }&classId=${klass.id}&classTime=${encodeURIComponent(klass.time)}`
@@ -80,7 +81,8 @@ const HolidayProgramSelection = (props: any) => {
                     <img
                         className={cssClasses.logo}
                         src={Logo.default}
-                        onClick={() => props.history.push(ROUTES.LANDING)}
+                        onClick={() => navigate(ROUTES.LANDING)}
+                        alt="Fizz Kidz Logo"
                     />
                 </Toolbar>
             </AppBar>
@@ -157,7 +159,7 @@ const HolidayProgramSelection = (props: any) => {
             </Paper>
         </>
     )
-}
+})
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -197,5 +199,3 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 16,
     },
 }))
-
-export default compose(withRouter, withAuthorization)(HolidayProgramSelection)

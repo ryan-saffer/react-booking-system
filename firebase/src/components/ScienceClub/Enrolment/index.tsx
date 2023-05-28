@@ -17,7 +17,7 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
  * @param appointmentId the id of the science class
  * @param continuing either 'yes' if they want to continue with the term, or ''
  */
-const EnrolmentPage = () => {
+export const EnrolmentPage = () => {
     const classes = useStyles()
 
     // remove first '?'
@@ -88,5 +88,3 @@ const useStyles = makeStyles({
         alignSelf: 'center',
     },
 })
-
-export default EnrolmentPage

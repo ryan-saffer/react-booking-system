@@ -8,7 +8,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { Button, Paper } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import { Acuity } from 'fizz-kidz'
@@ -22,7 +22,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     const cssClasses = useStyles()
 
     const firebase = useFirebase()
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState({ appointmentTypes: true, classes: false })
     const [appointmentTypes, setAppointmentTypes] = useState<Acuity.AppointmentType[]>([])
@@ -69,7 +69,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     const handleClassSelection = () => {
         // checkin
         if (classRequired && selectedAppointmentType && selectedClass) {
-            history.push(
+            navigate(
                 `${classRoute}?appointmentTypeId=${selectedAppointmentType.id}&calendarId=${
                     selectedClass.calendarID
                 }&classId=${selectedClass.id}&calendarName=${encodeURIComponent(
@@ -79,7 +79,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
         }
         // invoicing
         if (!classRequired && selectedAppointmentType) {
-            history.push(
+            navigate(
                 `${classRoute}?appointmentTypeId=${selectedAppointmentType.id}&calendarName=${selectedAppointmentType.name}`
             )
         }

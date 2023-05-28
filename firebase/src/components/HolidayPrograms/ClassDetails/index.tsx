@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useHistory, withRouter } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
@@ -19,7 +19,7 @@ import { Card, Collapse, Empty } from 'antd'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { DateTime } from 'luxon'
 
-const ClassDetailsPage = () => {
+export const ClassDetailsPage = () => {
     const classes = useStyles()
 
     const { height } = useWindowDimensions()
@@ -43,7 +43,7 @@ const ClassDetailsPage = () => {
         [classTime]
     )
 
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const sortByChildName = (a: Acuity.Appointment, b: Acuity.Appointment) => {
         const aName = Acuity.Utilities.retrieveFormAndField(
@@ -68,17 +68,13 @@ const ClassDetailsPage = () => {
         sorter: sortByChildName,
     }) as Acuity.Appointment[]
 
-    const navigateBack = () => {
-        history.goBack()
-    }
-
     return (
         <div className={classes.main}>
             <CssBaseline />
             <AppBar position="static">
                 <Toolbar style={{ display: 'flex' }}>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                        <IconButton edge="start" color="inherit" onClick={navigateBack}>
+                        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)}>
                             <ArrowBackIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit">
@@ -138,5 +134,3 @@ const useStyles = makeStyles({
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     },
 })
-
-export default withRouter(ClassDetailsPage)
