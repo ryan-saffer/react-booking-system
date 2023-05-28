@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
@@ -14,7 +14,6 @@ import IconButton from '@material-ui/core/IconButton'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import SkeletonRows from '../../Shared/SkeletonRows'
 import useFetchAppointments from '../../Hooks/api/UseFetchAppointments'
-import useQueryParam from '../../Hooks/UseQueryParam'
 import { Card, Collapse, Empty } from 'antd'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { DateTime } from 'luxon'
@@ -26,10 +25,12 @@ export const ClassDetailsPage = () => {
 
     const [loading, setLoading] = useState(true)
 
-    const appointmentTypeId = parseInt(useQueryParam('appointmentTypeId') as string)
-    const calendarId = parseInt(useQueryParam('calendarId') as string)
-    const classId = parseInt(useQueryParam('classId') as string)
-    const classTime = decodeURIComponent(useQueryParam('classTime') as string)
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)
+    const calendarId = parseInt(searchParams.get('calendarId')!)
+    const classId = parseInt(searchParams.get('classId')!)
+    const classTime = decodeURIComponent(searchParams.get('classTime')!)
+
     const classDisplayable = useMemo(
         () =>
             DateTime.fromISO(classTime).toLocaleString({
