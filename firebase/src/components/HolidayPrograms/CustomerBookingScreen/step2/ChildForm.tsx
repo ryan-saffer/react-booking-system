@@ -7,7 +7,7 @@ type Props = {
     childNumber: number
 }
 
-const ChildForm: React.FC<Props> = ({ childNumber }) => {
+export const ChildForm: React.FC<Props> = ({ childNumber }) => {
     const [hasAllergies, setHasAllergies] = useState(false)
 
     return (
@@ -53,7 +53,7 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
                             required: true,
                             message: "Please input child's allergies",
                         },
-                        SimpleTextRule
+                        SimpleTextRule,
                     ]}
                 >
                     <TextArea rows={3} />
@@ -62,5 +62,3 @@ const ChildForm: React.FC<Props> = ({ childNumber }) => {
         </>
     )
 }
-
-export default ChildForm

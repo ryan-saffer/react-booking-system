@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppBar, CssBaseline, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { DateTime } from 'luxon'
@@ -10,8 +10,7 @@ type Props = {
 
 const Heading: React.FC<Props> = ({ time }) => {
     const classes = useStyles()
-    const history = useHistory()
-
+    const navigate = useNavigate()
     const formattedClass = DateTime.fromISO(time).toLocaleString({
         weekday: 'short',
         month: 'short',
@@ -27,7 +26,7 @@ const Heading: React.FC<Props> = ({ time }) => {
             <AppBar className={classes.appBar} position="static">
                 <Toolbar className={classes.toolbar}>
                     <div className={classes.nav}>
-                        <IconButton edge="start" color="inherit" onClick={() => history.goBack()}>
+                        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)}>
                             <ArrowBackIcon />
                         </IconButton>
                     </div>

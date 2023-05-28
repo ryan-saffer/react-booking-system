@@ -7,7 +7,7 @@ import Loader from '../../../ScienceClub/shared/Loader'
 
 type Props = {}
 
-const Confirmation: React.FC<Props> = () => {
+export const Confirmation: React.FC<Props> = () => {
     const firebase = useContext(FirebaseContext) as Firebase
     const paymentIntentId = useQueryParam('payment_intent', false) as string
     const isFree = useQueryParam('free', false)
@@ -88,5 +88,3 @@ const Confirmation: React.FC<Props> = () => {
         </Root>
     )
 }
-
-export default Confirmation

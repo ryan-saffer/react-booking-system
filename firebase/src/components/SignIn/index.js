@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react'
-import { withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
+import { useNavigate } from 'react-router-dom'
 
-import SignInGoogleBase from './SignInGoogleBase'
+import SignInGoogle from './SignInGoogle'
 import * as ROUTES from '../../constants/routes'
 import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
 
@@ -13,69 +12,72 @@ import Container from '@material-ui/core/Container'
 import { red } from '@material-ui/core/colors'
 import { FirebaseContext } from '../Firebase'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     main: {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginTop: theme.spacing(6)
+        marginTop: theme.spacing(6),
     },
     logo: {
         maxWidth: 200,
-        margin: theme.spacing(2)
+        margin: theme.spacing(2),
     },
     submitButton: {
         marginTop: theme.spacing(1),
-        color: 'white'
+        color: 'white',
     },
     snackBar: {
-        backgroundColor: red[500]
-    }
+        backgroundColor: red[500],
+    },
 }))
 
-const SignInPage = props => {
-
+const SignInPage = () => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext)
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const navigate = useNavigate()
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [emailError, setEmailError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
     const [loading, setLoading] = useState(false)
     const [loginError, setLoginError] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const onKeyDown = e => {
-      // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        e.stopPropagation();
-        handleSubmit(e);
-      }
+    const onKeyDown = (e) => {
+        // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+        if (e.key === 'Enter') {
+            e.preventDefault()
+            e.stopPropagation()
+            handleSubmit(e)
+        }
     }
 
-    const handleSubmit = e => {
-
+    const handleSubmit = (e) => {
         setLoading(true)
 
-        if (email === "") { setEmailError(true); setLoading(false); return }
-        if (password === "") { setPasswordError(true); setLoading(false); return }
+        if (email === '') {
+            setEmailError(true)
+            setLoading(false)
+            return
+        }
+        if (password === '') {
+            setPasswordError(true)
+            setLoading(false)
+            return
+        }
 
-        firebase.doSignInWithEmailAndPassword(email, password)
-            .then(authUser => {
-                firebase.db
-                    .collection("users")
-                    .doc(authUser.user.uid)
-                    .set(
-                        { username: email },
-                        { merge: true }
-                    )
+        firebase
+            .doSignInWithEmailAndPassword(email, password)
+            .then((authUser) => {
+                firebase.db.collection('users').doc(authUser.user.uid).set({ username: email }, { merge: true })
                 setLoading(false)
-                props.history.push(ROUTES.LANDING)
+                navigate(ROUTES.LANDING)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err)
                 setLoading(false)
                 setErrorMessage(err.message)
@@ -88,7 +90,9 @@ const SignInPage = props => {
             <CssBaseline />
             <div className={classes.main}>
                 <img className={classes.logo} src={FizzLogo.default} alt="fizz kidz logo" />
-                <Typography component="h1" variant="h5">Sign in</Typography>
+                <Typography component="h1" variant="h5">
+                    Sign in
+                </Typography>
                 <TextField
                     variant="outlined"
                     margin="normal"
@@ -100,7 +104,10 @@ const SignInPage = props => {
                     autoFocus
                     error={emailError}
                     onKeyDown={onKeyDown}
-                    onChange={e => { setEmailError(false); setEmail(e.target.value) }}
+                    onChange={(e) => {
+                        setEmailError(false)
+                        setEmail(e.target.value)
+                    }}
                 />
                 <TextField
                     variant="outlined"
@@ -113,7 +120,10 @@ const SignInPage = props => {
                     autoComplete="current-password"
                     error={passwordError}
                     onKeyDown={onKeyDown}
-                    onChange={e => { setPasswordError(false); setPassword(e.target.value) }}
+                    onChange={(e) => {
+                        setPasswordError(false)
+                        setPassword(e.target.value)
+                    }}
                 />
                 <Button
                     className={classes.submitButton}
@@ -140,9 +150,4 @@ const SignInPage = props => {
     )
 }
 
-const SignInGoogle = compose(
-    withRouter,
-)(SignInGoogleBase)
-
-export default SignInPage
 export { SignInPage, SignInGoogle }

@@ -24,7 +24,7 @@ const ParentPortal: React.FC = () => {
     const mixpanel = useMixpanel()
     const { width } = useWindowDimensions()
 
-    const service = useFetchScienceAppointment(id)
+    const service = useFetchScienceAppointment(id!)
 
     useEffect(() => {
         if (service.status === 'loaded') {

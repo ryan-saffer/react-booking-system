@@ -1,6 +1,5 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
+import { useNavigate } from 'react-router-dom'
 
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,8 +12,10 @@ import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
 import { withAuthorization } from '../../../Session'
 
-const ScienceClubInvoicingClassSelection = (props) => {
+export const ScienceClubInvoicingClassSelection = withAuthorization(() => {
     const cssClasses = useStyles()
+
+    const navigate = useNavigate()
 
     return (
         <>
@@ -27,14 +28,15 @@ const ScienceClubInvoicingClassSelection = (props) => {
                     <img
                         className={cssClasses.logo}
                         src={Logo.default}
-                        onClick={() => props.history.push(ROUTES.LANDING)}
+                        onClick={() => navigate(ROUTES.LANDING)}
+                        alt="Fizz Kidz Logo"
                     />
                 </Toolbar>
             </AppBar>
             <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} classRequired={false} />
         </>
     )
-}
+})
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -53,5 +55,3 @@ const useStyles = makeStyles((theme) => ({
         cursor: 'pointer',
     },
 }))
-
-export default compose(withRouter, withAuthorization)(ScienceClubInvoicingClassSelection)

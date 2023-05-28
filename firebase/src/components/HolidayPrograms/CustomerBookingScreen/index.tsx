@@ -5,7 +5,7 @@ import { Acuity } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import Step2 from './step2/Step2'
+import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
 import { makeStyles } from '@material-ui/core'
 import { LeftOutlined } from '@ant-design/icons'
@@ -29,7 +29,7 @@ export type Form = {
     }[]
 }
 
-const CustomerBookingScreen = () => {
+export const CustomerBookingScreen = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
@@ -273,4 +273,3 @@ const useStyles = makeStyles({
         borderColor: 'white',
     },
 })
-export default CustomerBookingScreen

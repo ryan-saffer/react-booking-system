@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
+import { useNavigate } from 'react-router-dom'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import {
@@ -38,7 +37,7 @@ import NewBookingDialog from './NewBookingDialog'
 import { useEvents } from './Events/UseEvents'
 import Events from './Events/Events'
 
-const BookingsPage = () => {
+export const BookingsPage = withAuthorization(() => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -58,7 +57,7 @@ const BookingsPage = () => {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = urlSearchParams.get('id')
 
-    let history = useHistory()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (id) {
@@ -166,7 +165,7 @@ const BookingsPage = () => {
                         <img
                             className={classes.logo}
                             src={Logo.default}
-                            onClick={() => history.push(ROUTES.LANDING)}
+                            onClick={() => navigate(ROUTES.LANDING)}
                             alt="fizz kidz logo"
                         />
                     </div>
@@ -273,7 +272,7 @@ const BookingsPage = () => {
             </Grid>
         </div>
     )
-}
+})
 
 const drawerWidth = 320
 
@@ -391,5 +390,3 @@ const useStyles = makeStyles((theme) => ({
         visibility: 'hidden',
     },
 }))
-
-export default compose(withAuthorization, withRouter)(BookingsPage)
