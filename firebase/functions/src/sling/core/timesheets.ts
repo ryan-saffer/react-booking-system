@@ -31,14 +31,23 @@ export function getWeeks(_start: DateTime, end: DateTime) {
  * @param usersTimesheets the users timesheets from sling
  * @returns an array of timesheet rows
  */
-export function createTimesheetRows(
-    firstName: string,
-    lastName: string,
-    dob: DateTime,
-    isCasual: boolean,
-    usersTimesheets: SlingTimesheet[],
+export function createTimesheetRows({
+    firstName,
+    lastName,
+    dob,
+    hasBirthdayDuringPayrun,
+    isCasual,
+    usersTimesheets,
+    timezone,
+}: {
+    firstName: string
+    lastName: string
+    dob: DateTime
+    hasBirthdayDuringPayrun: boolean
+    isCasual: boolean
+    usersTimesheets: SlingTimesheet[]
     timezone: string
-): TimesheetRow[] {
+}): TimesheetRow[] {
     const output: TimesheetRow[] = []
 
     // keep track of hours worked this week
@@ -58,6 +67,7 @@ export function createTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    hasBirthdayDuringPayrun,
                     date: start,
                     isCasual,
                     position,
@@ -82,6 +92,7 @@ export function createTimesheetRows(
                         firstName,
                         lastName,
                         dob,
+                        hasBirthdayDuringPayrun,
                         date: start,
                         isCasual,
                         position,
@@ -98,6 +109,7 @@ export function createTimesheetRows(
                         firstName,
                         lastName,
                         dob,
+                        hasBirthdayDuringPayrun,
                         isCasual,
                         date: start,
                         position,
@@ -113,6 +125,7 @@ export function createTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    hasBirthdayDuringPayrun,
                     isCasual,
                     start,
                     position,
@@ -127,6 +140,7 @@ export function createTimesheetRows(
                 firstName,
                 lastName,
                 dob,
+                hasBirthdayDuringPayrun,
                 isCasual,
                 start,
                 position,
@@ -144,6 +158,7 @@ function createOvertimeTimesheetRows(
     firstName: string,
     lastName: string,
     dob: DateTime,
+    hasBirthdayDuringPayrun: boolean,
     isCasual: boolean,
     date: DateTime,
     position: Position,
@@ -163,6 +178,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    hasBirthdayDuringPayrun,
                     isCasual,
                     date,
                     position,
@@ -179,6 +195,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    hasBirthdayDuringPayrun,
                     isCasual,
                     date,
                     position,
@@ -192,6 +209,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    hasBirthdayDuringPayrun,
                     isCasual,
                     date,
                     position,
@@ -208,6 +226,7 @@ function createOvertimeTimesheetRows(
                 firstName,
                 lastName,
                 dob,
+                hasBirthdayDuringPayrun,
                 isCasual,
                 date,
                 position,
@@ -230,6 +249,7 @@ export class TimesheetRow {
     firstName: string
     lastname: string
     dob: DateTime
+    hasBirthdayDuringPayrun: boolean
     payItem: PayItem
     date: DateTime
     isCasual: boolean
@@ -240,6 +260,7 @@ export class TimesheetRow {
         firstName,
         lastName,
         dob,
+        hasBirthdayDuringPayrun,
         date,
         position,
         location,
@@ -250,6 +271,7 @@ export class TimesheetRow {
         firstName: string
         lastName: string
         dob: DateTime
+        hasBirthdayDuringPayrun: boolean
         date: DateTime
         position: Position
         location: Location
@@ -260,6 +282,7 @@ export class TimesheetRow {
         this.firstName = firstName
         this.lastname = lastName
         this.dob = dob
+        this.hasBirthdayDuringPayrun = hasBirthdayDuringPayrun
         this.date = date
         this.isCasual = isCasual
         this.hours = hours
@@ -481,6 +504,34 @@ export class TimesheetRow {
                 return 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
         }
     }
+}
+
+/**
+ * Tells you if a birthday falls between two dates.
+ *
+ * @param dob the date of birth
+ * @param start start of the range
+ * @param end end of the range
+ * @returns true if users birthday falls within the range, false otherwise
+ */
+export function hasBirthdayDuring(dob: DateTime, start: DateTime, end: DateTime) {
+    let year = start.year
+
+    while (year <= end.year) {
+        const nextBirthday = DateTime.fromObject({
+            year,
+            month: dob.month,
+            day: dob.day,
+        })
+
+        if (start <= nextBirthday && nextBirthday <= end) {
+            return true
+        }
+
+        year++
+    }
+
+    return false
 }
 
 export enum Location {
