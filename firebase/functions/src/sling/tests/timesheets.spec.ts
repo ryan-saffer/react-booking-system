@@ -16,6 +16,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
@@ -29,6 +30,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -42,6 +44,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -55,6 +58,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
@@ -68,6 +72,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
@@ -83,12 +88,13 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -96,6 +102,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -109,12 +116,13 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
 
             // malvern
             row = new TimesheetRow({
@@ -122,12 +130,13 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -135,12 +144,13 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
         })
 
         it('should map on call for all locations on sunday - over 18', () => {
@@ -150,6 +160,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
@@ -163,6 +174,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -176,6 +188,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -189,6 +202,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
@@ -202,6 +216,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
@@ -210,13 +225,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Mobile')
         })
 
-        it('should map called in party facilitator for all locations mon-sat', () => {
+        it('should map on call for all locations on sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Mobile')
+        })
+
+        it('should map called in party facilitator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -230,6 +318,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -243,6 +332,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -256,6 +346,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -269,6 +360,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -277,13 +369,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
         })
 
-        it('should map called in holiday program facilitator for all locations mon-sat', () => {
+        it('should map called in party facilitator for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+        })
+
+        it('should map called in holiday program facilitator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -297,6 +462,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -310,6 +476,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -323,6 +490,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -336,6 +504,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -344,13 +513,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
         })
 
-        it('should map called in party facilitator for all locations sunday', () => {
+        it('should map called in holiday program facilitator for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+        })
+
+        it('should map called in party facilitator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -364,6 +606,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -377,6 +620,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -390,6 +634,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -403,6 +648,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -411,13 +657,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
         })
 
-        it('should map called in holiday program facilitator for all locations sunday', () => {
+        it('should map called in party facilitator for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile')
+        })
+
+        it('should map called in holiday program facilitator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -431,6 +750,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -444,6 +764,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -457,6 +778,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -470,6 +792,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -478,13 +801,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
         })
 
-        it('should map party faciliator for all locations mon-sat', () => {
+        it('should map called in holiday program facilitator for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile')
+        })
+
+        it('should map party faciliator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -498,6 +894,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -511,6 +908,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -524,6 +922,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -537,6 +936,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -545,13 +945,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
         })
 
-        it('should map party faciliator for all locations sunday', () => {
+        it('should map party faciliator for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+        })
+
+        it('should map party faciliator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -565,6 +1038,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -578,6 +1052,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -591,6 +1066,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -604,6 +1080,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -612,13 +1089,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
         })
 
-        it('should map holiday program faciliator for all locations mon-sat', () => {
+        it('should map party faciliator for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map holiday program facilitator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -632,6 +1182,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -645,6 +1196,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -658,6 +1210,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -671,6 +1224,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -679,13 +1233,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
         })
 
-        it('should map holiday program faciliator for all locations sunday', () => {
+        it('should map holiday program facilitator for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+        })
+
+        it('should map holiday program facilitator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -699,6 +1326,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -712,6 +1340,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -725,6 +1354,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -738,6 +1368,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -746,13 +1377,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
         })
 
-        it('should map science club facilitator for all locations mon-sat', () => {
+        it('should map holiday program facilitator for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map science club facilitator for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -766,6 +1470,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -779,6 +1484,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -792,6 +1498,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -805,6 +1512,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -813,13 +1521,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
         })
 
-        it('should map science club faciliator for all locations sunday', () => {
+        it('should map science club facilitator for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+        })
+
+        it('should map science club facilitator for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
@@ -833,6 +1614,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -846,6 +1628,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -859,6 +1642,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
@@ -872,6 +1656,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
@@ -880,13 +1665,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
         })
 
-        it('should map miscellaneous position for all locations mon-sat', () => {
+        it('should map science club facilitator for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.SCIENCE_CLUB_FACILITATOR,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map miscellaneous for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
@@ -900,6 +1758,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -913,6 +1772,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -926,6 +1786,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
@@ -939,6 +1800,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
@@ -947,13 +1809,86 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
         })
 
-        it('should map miscellaneous position for all locations sunday', () => {
+        it('should map miscellaneous for all locations mon-sat - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+        })
+
+        it('should map miscellaneous for all locations sunday - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
                 firstName: 'Ryan',
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
@@ -967,6 +1902,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
@@ -980,6 +1916,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
@@ -993,6 +1930,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
@@ -1006,12 +1944,373 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map miscellaneous for all locations sunday - under 18', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map non casual staff to ordinary hours mon-sat', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Mobile')
+        })
+
+        it('should map non casual staff to ordinary hours sunday', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Mobile')
+        })
+
+        it('should map overtime first three hours', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - CHELTENHAM')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - ESSENDON')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - MALVERN')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - MOBILE')
+        })
+
+        it('should map overtime after three hours', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - CHELTENHAM')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - ESSENDON')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - MALVERN')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                isCasual: false,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - MOBILE')
         })
     })
 
@@ -1055,6 +2354,7 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
+                true,
                 timesheets,
                 'Australia/Melbourne'
             )
@@ -1127,6 +2427,7 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
+                true,
                 timesheets,
                 'Australia/Melbourne'
             )
@@ -1211,6 +2512,7 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
+                true,
                 timesheets,
                 'Australia/Melbourne'
             )

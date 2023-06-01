@@ -84,12 +84,16 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
                     )
                 }
 
+                // only bonnie is not casual
+                const isCasual = slingUser.employeeId !== '1551679a-9e81-47d3-b019-906d7ce617f1'
+
                 rows = [
                     ...rows,
                     ...createTimesheetRows(
                         xeroUser.firstName,
                         xeroUser.lastName,
                         DateTime.fromISO(xeroUser.dateOfBirth),
+                        isCasual,
                         usersTimesheets,
                         slingUser.timezone
                     ),
