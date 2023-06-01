@@ -2182,7 +2182,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2196,7 +2196,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - CHELTENHAM')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -2210,7 +2210,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - ESSENDON')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2224,7 +2224,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - MALVERN')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2238,7 +2238,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - FIRST THREE HOURS - MOBILE')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Mobile')
         })
 
         it('should map overtime after three hours', () => {
@@ -2254,7 +2254,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2268,7 +2268,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - CHELTENHAM')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -2282,7 +2282,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - ESSENDON')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2296,7 +2296,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - MALVERN')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2310,7 +2310,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'TODO - OVERTIME - AFTER THREE HOURS - MOBILE')
+            strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Mobile')
         })
     })
 
@@ -2320,7 +2320,7 @@ describe('Timesheet suite', () => {
             lastName: 'Saffer',
             dateOfBirth: DateTime.fromObject({ day: 2, month: 5, year: 1993 }).toISO(),
         }
-        it('should not reach overtime - 30 hours', () => {
+        it('should not reach overtime - 30 hours - non casual', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2354,7 +2354,7 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
-                true,
+                false,
                 timesheets,
                 'Australia/Melbourne'
             )
@@ -2362,17 +2362,17 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(result.length, 3)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[2].hours, 10)
         })
 
-        it('should reach overtime - 40 hours - first overtime shift over 3 hours', () => {
+        it('should reach overtime - 40 hours - first overtime shift over 3 hours - non casual', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2427,7 +2427,7 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
-                true,
+                false,
                 timesheets,
                 'Australia/Melbourne'
             )
@@ -2435,29 +2435,29 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(result.length, 7)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[2].hours, 8)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[3].hours, 2)
 
-            strictEqual(result[4].payItem, 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN')
+            strictEqual(result[4].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
             strictEqual(result[4].hours, 3)
 
-            strictEqual(result[5].payItem, 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN')
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
             strictEqual(result[5].hours, 2)
 
-            strictEqual(result[6].payItem, 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN')
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
             strictEqual(result[6].hours, 5)
         })
 
-        it('should reach overtime - 40 hours - first overtime shift under 3 hours', () => {
+        it('should reach overtime - 40 hours - first overtime shift under 3 hours - non casual', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2512,13 +2512,98 @@ describe('Timesheet suite', () => {
                 xeroUser.firstName,
                 xeroUser.lastName,
                 DateTime.fromISO(xeroUser.dateOfBirth),
-                true,
+                false,
                 timesheets,
                 'Australia/Melbourne'
             )
 
             // then
             strictEqual(result.length, 7)
+
+            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 8)
+
+            strictEqual(result[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 2)
+
+            strictEqual(result[4].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[4].hours, 2)
+
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[5].hours, 1)
+
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[6].hours, 4)
+        })
+
+        it('should not go into overtime if employee is casual', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                },
+                {
+                    // 8 hours
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T18:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                },
+                {
+                    // 4 hours (should not go into overtime)
+                    dtstart: '2023-05-04T10:00:00+10:00',
+                    dtend: '2023-05-04T14:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                },
+                {
+                    // 5 hours (should still not be in overtime)
+                    dtstart: '2023-05-05T10:00:00+10:00',
+                    dtend: '2023-05-05T15:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows(
+                xeroUser.firstName,
+                xeroUser.lastName,
+                DateTime.fromISO(xeroUser.dateOfBirth),
+                true,
+                timesheets,
+                'Australia/Melbourne'
+            )
+
+            // then
+            strictEqual(result.length, 5)
 
             strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[0].hours, 10)
@@ -2530,16 +2615,10 @@ describe('Timesheet suite', () => {
             strictEqual(result[2].hours, 8)
 
             strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 2)
+            strictEqual(result[3].hours, 4)
 
-            strictEqual(result[4].payItem, 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN')
-            strictEqual(result[4].hours, 2)
-
-            strictEqual(result[5].payItem, 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN')
-            strictEqual(result[5].hours, 1)
-
-            strictEqual(result[6].payItem, 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN')
-            strictEqual(result[6].hours, 4)
+            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[4].hours, 5)
         })
     })
 })
