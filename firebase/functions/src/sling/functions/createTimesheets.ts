@@ -2,7 +2,7 @@ import { https, logger } from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { XeroClient } from 'xero-node'
 import { SlingClientImpl as SlingClient } from '../core/slingClient'
-import { TimesheetRow, createTimesheetRows, getWeeks } from '../core/timesheets'
+import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../core/timesheets'
 
 export const exportTimesheets = https.onRequest(async (req, res) => {
     console.log('started')
@@ -84,26 +84,33 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
                     )
                 }
 
+                // calculate if the user has a birthday during this fortnight
+                const dob = DateTime.fromJSDate(new Date(xeroUser.dateOfBirth))
+                const hasBirthdayDuringPayrun = hasBirthdayDuring(dob, startDate, endDate)
+
                 // only bonnie is not casual
                 const isCasual = slingUser.employeeId !== '1551679a-9e81-47d3-b019-906d7ce617f1'
 
                 rows = [
                     ...rows,
-                    ...createTimesheetRows(
-                        xeroUser.firstName,
-                        xeroUser.lastName,
-                        DateTime.fromISO(xeroUser.dateOfBirth),
+                    ...createTimesheetRows({
+                        firstName: xeroUser.firstName,
+                        lastName: xeroUser.lastName,
+                        dob,
                         isCasual,
+                        hasBirthdayDuringPayrun,
                         usersTimesheets,
-                        slingUser.timezone
-                    ),
+                        timezone: slingUser.timezone,
+                    }),
                 ]
             })
         }
 
         rows.map((row) => {
             console.log(
-                `[${row.firstName}, ${row.lastname}, ${row.payItem}, ${row.date.toLocaleString()}, ${row.hours}]`
+                `[${row.firstName}, ${row.lastname}, ${row.payItem}, ${row.date.toLocaleString()}, ${row.hours}, ${
+                    row.hasBirthdayDuringPayrun && 'HAS BIRTHDAY DURING PAY RUN'
+                }]`
             )
         })
         res.status(200).send(slingUsers)

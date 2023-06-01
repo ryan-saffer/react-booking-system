@@ -2,13 +2,13 @@ import { strictEqual } from 'assert'
 import { DateTime } from 'luxon'
 import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { Timesheet } from '../core/types'
-import { Position, TimesheetRow, Location, createTimesheetRows } from '../core/timesheets'
+import { Position, TimesheetRow, Location, createTimesheetRows, hasBirthdayDuring } from '../core/timesheets'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
 const youngerThan18 = DateTime.fromObject({ year: 2015, day: 1, month: 1 })
 
 describe('Timesheet suite', () => {
-    describe('TimesheetRow maps to correct pay item', () => {
+    describe('Pay Item mappings', () => {
         it('should map on call for all locations mon-sat - over 18', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -16,6 +16,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
@@ -30,6 +31,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
@@ -44,6 +46,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
@@ -58,6 +61,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
@@ -72,6 +76,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
@@ -88,6 +93,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
@@ -102,6 +108,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
@@ -116,6 +123,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
@@ -130,6 +138,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
@@ -144,6 +153,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
@@ -160,6 +170,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
@@ -174,6 +185,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
@@ -188,6 +200,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
@@ -202,6 +215,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
@@ -216,6 +230,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
@@ -232,6 +247,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
@@ -246,6 +262,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
@@ -260,6 +277,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
@@ -274,6 +292,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
@@ -288,6 +307,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
@@ -304,6 +324,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -318,6 +339,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -332,6 +354,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -346,6 +369,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -360,6 +384,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -376,6 +401,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -390,6 +416,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -404,6 +431,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -418,6 +446,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -432,6 +461,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -448,6 +478,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -462,6 +493,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -476,6 +508,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -490,6 +523,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -504,6 +538,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -520,6 +555,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -534,6 +570,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -548,6 +585,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -562,6 +600,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -576,6 +615,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -592,6 +632,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -606,6 +647,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -620,6 +662,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -634,6 +677,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -648,6 +692,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -664,6 +709,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -678,6 +724,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -692,6 +739,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -706,6 +754,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -720,6 +769,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -736,6 +786,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -750,6 +801,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -764,6 +816,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -778,6 +831,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -792,6 +846,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -808,6 +863,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -822,6 +878,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -836,6 +893,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -850,6 +908,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -864,6 +923,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -880,6 +940,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -894,6 +955,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -908,6 +970,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -922,6 +985,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -936,6 +1000,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -952,6 +1017,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -966,6 +1032,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -980,6 +1047,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -994,6 +1062,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -1008,6 +1077,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -1024,6 +1094,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -1038,6 +1109,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1052,6 +1124,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1066,6 +1139,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -1080,6 +1154,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -1096,6 +1171,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
@@ -1110,6 +1186,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1124,6 +1201,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1138,6 +1216,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
@@ -1152,6 +1231,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
@@ -1168,6 +1248,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -1182,6 +1263,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1196,6 +1278,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1210,6 +1293,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -1224,6 +1308,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -1240,6 +1325,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -1254,6 +1340,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1268,6 +1355,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1282,6 +1370,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -1296,6 +1385,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -1312,6 +1402,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -1326,6 +1417,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1340,6 +1432,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1354,6 +1447,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -1368,6 +1462,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -1384,6 +1479,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
@@ -1398,6 +1494,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1412,6 +1509,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1426,6 +1524,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
@@ -1440,6 +1539,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
@@ -1456,6 +1556,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
@@ -1470,6 +1571,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1484,6 +1586,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1498,6 +1601,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
@@ -1512,6 +1616,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
@@ -1528,6 +1633,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
@@ -1542,6 +1648,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1556,6 +1663,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1570,6 +1678,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
@@ -1584,6 +1693,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
@@ -1600,6 +1710,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
@@ -1614,6 +1725,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1628,6 +1740,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1642,6 +1755,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
@@ -1656,6 +1770,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
@@ -1672,6 +1787,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
@@ -1686,6 +1802,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
@@ -1700,6 +1817,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
@@ -1714,6 +1832,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
@@ -1728,6 +1847,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
@@ -1744,6 +1864,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -1758,6 +1879,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -1772,6 +1894,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -1786,6 +1909,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -1800,6 +1924,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -1816,6 +1941,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -1830,6 +1956,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -1844,6 +1971,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -1858,6 +1986,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -1872,6 +2001,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -1888,6 +2018,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -1902,6 +2033,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -1916,6 +2048,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -1930,6 +2063,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -1944,6 +2078,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -1960,6 +2095,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -1974,6 +2110,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -1988,6 +2125,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -2002,6 +2140,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -2016,6 +2155,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: youngerThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -2032,6 +2172,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -2046,6 +2187,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -2060,6 +2202,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -2074,6 +2217,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -2088,6 +2232,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -2104,6 +2249,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -2118,6 +2264,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -2132,6 +2279,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -2146,6 +2294,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -2160,6 +2309,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -2176,6 +2326,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -2190,6 +2341,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -2204,6 +2356,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -2218,6 +2371,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -2232,6 +2386,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -2248,6 +2403,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
@@ -2262,6 +2418,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
@@ -2276,6 +2433,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
@@ -2290,6 +2448,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
@@ -2304,6 +2463,7 @@ describe('Timesheet suite', () => {
                 lastName: 'Saffer',
                 dob: olderThan18,
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
@@ -2314,7 +2474,7 @@ describe('Timesheet suite', () => {
         })
     })
 
-    describe('creating timesheet rows', () => {
+    describe('Creating timesheet rows', () => {
         const xeroUser: Employee = {
             firstName: 'Ryan',
             lastName: 'Saffer',
@@ -2350,14 +2510,15 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows(
-                xeroUser.firstName,
-                xeroUser.lastName,
-                DateTime.fromISO(xeroUser.dateOfBirth),
-                false,
-                timesheets,
-                'Australia/Melbourne'
-            )
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
 
             // then
             strictEqual(result.length, 3)
@@ -2423,14 +2584,15 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows(
-                xeroUser.firstName,
-                xeroUser.lastName,
-                DateTime.fromISO(xeroUser.dateOfBirth),
-                false,
-                timesheets,
-                'Australia/Melbourne'
-            )
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
 
             // then
             strictEqual(result.length, 7)
@@ -2508,14 +2670,15 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows(
-                xeroUser.firstName,
-                xeroUser.lastName,
-                DateTime.fromISO(xeroUser.dateOfBirth),
-                false,
-                timesheets,
-                'Australia/Melbourne'
-            )
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
 
             // then
             strictEqual(result.length, 7)
@@ -2593,14 +2756,15 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows(
-                xeroUser.firstName,
-                xeroUser.lastName,
-                DateTime.fromISO(xeroUser.dateOfBirth),
-                true,
-                timesheets,
-                'Australia/Melbourne'
-            )
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
 
             // then
             strictEqual(result.length, 5)
@@ -2619,6 +2783,86 @@ describe('Timesheet suite', () => {
 
             strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[4].hours, 5)
+        })
+    })
+
+    describe('Birthday calculations', () => {
+        it('should return true when birthday is in range', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 20, month: 4, year: 2023 })
+            const end = DateTime.fromObject({ day: 5, month: 5, year: 2023 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, true)
+        })
+
+        it('should return true when birthday is in range - start is birthday', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 2, month: 5, year: 2023 })
+            const end = DateTime.fromObject({ day: 20, month: 5, year: 2023 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, true)
+        })
+
+        it('should return true when birthday is in range - end is birthday', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 15, month: 4, year: 2023 })
+            const end = DateTime.fromObject({ day: 2, month: 5, year: 2023 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, true)
+        })
+
+        it('should return false when birthday is not range - day before', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 20, month: 4, year: 2023 })
+            const end = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, false)
+        })
+
+        it('should return false when birthday is not range - day after', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 3, month: 5, year: 2023 })
+            const end = DateTime.fromObject({ day: 20, month: 5, year: 2023 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, false)
+        })
+
+        it('should return false when birthday is not range - day before and after', () => {
+            // given
+            const birthday = DateTime.fromObject({ day: 2, month: 5, year: 1993 })
+            const start = DateTime.fromObject({ day: 3, month: 5, year: 2023 })
+            const end = DateTime.fromObject({ day: 1, month: 5, year: 2024 })
+
+            // when
+            const result = hasBirthdayDuring(birthday, start, end)
+
+            // then
+            strictEqual(result, false)
         })
     })
 })
