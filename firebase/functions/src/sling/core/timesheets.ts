@@ -51,6 +51,24 @@ export function createTimesheetRows(
         const end = DateTime.fromISO(timesheet.dtend, { zone: timezone })
         const shiftLengthInHours = end.diff(start, 'hours').hours
 
+        // only non casual staff need overtime calculations (for now)
+        if (isCasual) {
+            output.push(
+                new TimesheetRow({
+                    firstName,
+                    lastName,
+                    dob,
+                    date: start,
+                    isCasual,
+                    position,
+                    location,
+                    hours: shiftLengthInHours,
+                    overtime: { firstThreeHours: false, afterThreeHours: false },
+                })
+            )
+            return
+        }
+
         // calculate if this shift puts employee into overtime for the week
         const hoursUntilOvertime = 30 - totalHours
 
@@ -434,33 +452,33 @@ export class TimesheetRow {
         }
     }
 
-    private _getOvertimeFirstThreeHours(location: Location): OvertimeFirstThreeHours {
+    private _getOvertimeFirstThreeHours(location: Location): PTFTOvertimeFirstThreeHours {
         switch (location) {
             case Location.BALWYN:
-                return 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN'
+                return 'PT/FT Overtime Hours - First 3 Hrs - Balwyn'
             case Location.CHELTENHAM:
-                return 'TODO - OVERTIME - FIRST THREE HOURS - CHELTENHAM'
+                return 'PT/FT Overtime Hours - First 3 Hrs - Chelt'
             case Location.ESSENDON:
-                return 'TODO - OVERTIME - FIRST THREE HOURS - ESSENDON'
+                return 'PT/FT Overtime Hours - First 3 Hrs - Essendon'
             case Location.MALVERN:
-                return 'TODO - OVERTIME - FIRST THREE HOURS - MALVERN'
+                return 'PT/FT Overtime Hours - First 3 Hrs - Malvern'
             case Location.MOBILE:
-                return 'TODO - OVERTIME - FIRST THREE HOURS - MOBILE'
+                return 'PT/FT Overtime Hours - First 3 Hrs - Mobile'
         }
     }
 
-    private _getOvertimeAfterThreeHours(location: Location): OvertimeAfterThreeHours {
+    private _getOvertimeAfterThreeHours(location: Location): PTFTOvertimeAfterThreeHours {
         switch (location) {
             case Location.BALWYN:
-                return 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN'
+                return 'PT/FT Overtime Hours - After 3 Hrs - Balwyn'
             case Location.CHELTENHAM:
-                return 'TODO - OVERTIME - AFTER THREE HOURS - CHELTENHAM'
+                return 'PT/FT Overtime Hours - After 3 Hrs - Chelt'
             case Location.ESSENDON:
-                return 'TODO - OVERTIME - AFTER THREE HOURS - ESSENDON'
+                return 'PT/FT Overtime Hours - After 3 Hrs - Essendon'
             case Location.MALVERN:
-                return 'TODO - OVERTIME - AFTER THREE HOURS - MALVERN'
+                return 'PT/FT Overtime Hours - After 3 Hrs - Malvern'
             case Location.MOBILE:
-                return 'TODO - OVERTIME - AFTER THREE HOURS - MOBILE'
+                return 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
         }
     }
 }
@@ -592,19 +610,19 @@ type Under18CalledInOrdinaryHoursSunday =
     | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern'
     | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile'
 
-type OvertimeFirstThreeHours =
-    | 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN'
-    | 'TODO - OVERTIME - FIRST THREE HOURS - CHELTENHAM'
-    | 'TODO - OVERTIME - FIRST THREE HOURS - ESSENDON'
-    | 'TODO - OVERTIME - FIRST THREE HOURS - MALVERN'
-    | 'TODO - OVERTIME - FIRST THREE HOURS - MOBILE'
+type PTFTOvertimeFirstThreeHours =
+    | 'PT/FT Overtime Hours - First 3 Hrs - Balwyn'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Chelt'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Essendon'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Malvern'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Mobile'
 
-type OvertimeAfterThreeHours =
-    | 'TODO - OVERTIME - AFTER THREE HOURS - BALWYN'
-    | 'TODO - OVERTIME - AFTER THREE HOURS - CHELTENHAM'
-    | 'TODO - OVERTIME - AFTER THREE HOURS - ESSENDON'
-    | 'TODO - OVERTIME - AFTER THREE HOURS - MALVERN'
-    | 'TODO - OVERTIME - AFTER THREE HOURS - MOBILE'
+type PTFTOvertimeAfterThreeHours =
+    | 'PT/FT Overtime Hours - After 3 Hrs - Balwyn'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Chelt'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Essendon'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Malvern'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
 
 type OnCallPayItem =
     | OnCallCasualOrdinaryMonSat
@@ -618,7 +636,7 @@ type CalledInPayItem =
     | Under18CalledInOrdinaryHoursMonSat
     | Under18CalledInOrdinaryHoursSunday
 
-type OvertimePayItem = OvertimeFirstThreeHours | OvertimeAfterThreeHours
+type OvertimePayItem = PTFTOvertimeFirstThreeHours | PTFTOvertimeAfterThreeHours
 
 type OrdinaryPayItem =
     | CasualOrdinaryMonSat
