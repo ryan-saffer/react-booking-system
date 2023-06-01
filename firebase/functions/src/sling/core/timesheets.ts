@@ -35,6 +35,7 @@ export function createTimesheetRows(
     firstName: string,
     lastName: string,
     dob: DateTime,
+    isCasual: boolean,
     usersTimesheets: SlingTimesheet[],
     timezone: string
 ): TimesheetRow[] {
@@ -64,6 +65,7 @@ export function createTimesheetRows(
                         lastName,
                         dob,
                         date: start,
+                        isCasual,
                         position,
                         location,
                         hours: shiftLengthInHours,
@@ -78,6 +80,7 @@ export function createTimesheetRows(
                         firstName,
                         lastName,
                         dob,
+                        isCasual,
                         date: start,
                         position,
                         location,
@@ -86,9 +89,17 @@ export function createTimesheetRows(
                     })
                 )
 
-                createOvertimeTimesheetRows(overtimeHours, 30, firstName, lastName, dob, start, position, location).map(
-                    (row) => output.push(row)
-                )
+                createOvertimeTimesheetRows(
+                    overtimeHours,
+                    30,
+                    firstName,
+                    lastName,
+                    dob,
+                    isCasual,
+                    start,
+                    position,
+                    location
+                ).map((row) => output.push(row))
             }
         } else {
             // already in overtime
@@ -98,6 +109,7 @@ export function createTimesheetRows(
                 firstName,
                 lastName,
                 dob,
+                isCasual,
                 start,
                 position,
                 location
@@ -114,6 +126,7 @@ function createOvertimeTimesheetRows(
     firstName: string,
     lastName: string,
     dob: DateTime,
+    isCasual: boolean,
     date: DateTime,
     position: Position,
     location: Location
@@ -132,6 +145,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    isCasual,
                     date,
                     position,
                     location,
@@ -147,6 +161,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    isCasual,
                     date,
                     position,
                     location,
@@ -159,6 +174,7 @@ function createOvertimeTimesheetRows(
                     firstName,
                     lastName,
                     dob,
+                    isCasual,
                     date,
                     position,
                     location,
@@ -174,6 +190,7 @@ function createOvertimeTimesheetRows(
                 firstName,
                 lastName,
                 dob,
+                isCasual,
                 date,
                 position,
                 location,
@@ -197,6 +214,7 @@ export class TimesheetRow {
     dob: DateTime
     payItem: PayItem
     date: DateTime
+    isCasual: boolean
     hours: number
     overtime: Overtime
 
@@ -207,6 +225,7 @@ export class TimesheetRow {
         date,
         position,
         location,
+        isCasual,
         hours,
         overtime,
     }: {
@@ -216,6 +235,7 @@ export class TimesheetRow {
         date: DateTime
         position: Position
         location: Location
+        isCasual: boolean
         hours: number
         overtime: Overtime
     }) {
@@ -223,6 +243,7 @@ export class TimesheetRow {
         this.lastname = lastName
         this.dob = dob
         this.date = date
+        this.isCasual = isCasual
         this.hours = hours
         this.overtime = overtime
 
@@ -255,31 +276,71 @@ export class TimesheetRow {
         return DateTime.now().diff(this.dob, 'years').years < 18
     }
 
-    private _getOrdinaryPayItem(location: Location): CasualOrdinaryPayItem {
+    private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
         switch (location) {
             case Location.BALWYN:
-                if (this._isMonSat()) {
-                    return 'Casual Ordinary Hours - Mon to Sat - Balwyn'
-                } else return 'Casual Ordinary Hours - Sunday - Balwyn'
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
+                            : 'Casual Ordinary Hours - Sunday - Balwyn'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Balwyn'
+                        : 'Casual Ordinary Hours - Sunday - Balwyn'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
+                    : 'PT/FT Ordinary Hours - Sunday - Balwyn'
 
             case Location.CHELTENHAM:
-                if (this._isMonSat()) {
-                    return 'Casual Ordinary Hours - Mon to Sat - Chelt'
-                } else return 'Casual Ordinary Hours - Sunday - Chelt'
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
+                            : 'Casual Ordinary Hours - Sunday - Chelt'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Chelt'
+                        : 'Casual Ordinary Hours - Sunday - Chelt'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
+                    : 'PT/FT Ordinary Hours - Sunday - Chelt'
 
             case Location.ESSENDON:
-                if (this._isMonSat()) {
-                    return 'Casual Ordinary Hours - Mon to Sat - Essendon'
-                } else return 'Casual Ordinary Hours - Sunday - Essendon'
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
+                            : 'Casual Ordinary Hours - Sunday - Essendon'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Essendon'
+                        : 'Casual Ordinary Hours - Sunday - Essendon'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+                    : 'PT/FT Ordinary Hours - Sunday - Essendon'
 
             case Location.MALVERN:
-                if (this._isMonSat()) {
-                    return 'Casual Ordinary Hours - Mon to Sat - Malvern'
-                } else return 'Casual Ordinary Hours - Sunday - Malvern'
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
+                            : 'Casual Ordinary Hours - Sunday - Malvern'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Malvern'
+                        : 'Casual Ordinary Hours - Sunday - Malvern'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
+                    : 'PT/FT Ordinary Hours - Sunday - Malvern'
             case Location.MOBILE:
-                if (this._isMonSat()) {
-                    return 'Casual Ordinary Hours - Mon to Sat - Mobile'
-                } else return 'Casual Ordinary Hours - Sunday - Mobile'
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
+                            : 'Casual Ordinary Hours - Sunday - Mobile'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Mobile'
+                        : 'Casual Ordinary Hours - Sunday - Mobile'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+                    : 'PT/FT Ordinary Hours - Sunday - Mobile'
         }
     }
 
@@ -288,8 +349,8 @@ export class TimesheetRow {
             case Location.BALWYN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
+                        ? 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn'
+                        : 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
@@ -304,24 +365,24 @@ export class TimesheetRow {
             case Location.ESSENDON:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Essen'
+                        ? 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+                        : 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Essen'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
             case Location.MALVERN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
+                        ? 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
+                        : 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Malvern'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
             case Location.MOBILE:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+                        ? 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+                        : 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Mobile'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
@@ -331,23 +392,43 @@ export class TimesheetRow {
     private _getCalledInPayItem(location: Location): CalledInPayItem {
         switch (location) {
             case Location.BALWYN:
-                return this._isMonSat()
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn'
+                        : 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn'
+                    : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
             case Location.CHELTENHAM:
-                return this._isMonSat()
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
+                        : 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt'
+                    : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
             case Location.ESSENDON:
-                return this._isMonSat()
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+                        : 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen'
+                    : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
             case Location.MALVERN:
-                return this._isMonSat()
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern'
+                        : 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern'
+                    : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
             case Location.MOBILE:
-                return this._isMonSat()
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+                        : 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile'
+                    : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
         }
@@ -434,6 +515,20 @@ type CasualOrdinarySunday =
     | 'Casual Ordinary Hours - Sunday - Malvern'
     | 'Casual Ordinary Hours - Sunday - Mobile'
 
+type PTFTOrdinaryMonSat =
+    | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+
+type PTFTOrdinaryHoursSunday =
+    | 'PT/FT Ordinary Hours - Sunday - Balwyn'
+    | 'PT/FT Ordinary Hours - Sunday - Chelt'
+    | 'PT/FT Ordinary Hours - Sunday - Essendon'
+    | 'PT/FT Ordinary Hours - Sunday - Malvern'
+    | 'PT/FT Ordinary Hours - Sunday - Mobile'
+
 type OnCallCasualOrdinaryMonSat =
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
@@ -470,18 +565,32 @@ type Under18CasualOrdinaryHoursMonSat =
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
 
 type Under18OnCallOrdinaryHoursMonSat =
-    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
-    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
-    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
 
 type Under18OnCallOrdinaryHoursSunday =
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
     | 'On call - 16&17yo Csl Or Hs - Sunday - Chelt'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Essen'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Essen'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Malvern'
+    | 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+
+type Under18CalledInOrdinaryHoursMonSat =
+    | 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn'
+    | 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+    | 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern'
+    | 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+
+type Under18CalledInOrdinaryHoursSunday =
+    | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn'
+    | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt'
+    | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen'
+    | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern'
+    | 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile'
 
 type OvertimeFirstThreeHours =
     | 'TODO - OVERTIME - FIRST THREE HOURS - BALWYN'
@@ -497,16 +606,25 @@ type OvertimeAfterThreeHours =
     | 'TODO - OVERTIME - AFTER THREE HOURS - MALVERN'
     | 'TODO - OVERTIME - AFTER THREE HOURS - MOBILE'
 
-type CasualOrdinaryPayItem = CasualOrdinaryMonSat | CasualOrdinarySunday | Under18CasualOrdinaryHoursMonSat
-
 type OnCallPayItem =
     | OnCallCasualOrdinaryMonSat
     | OnCallCasualOrdinarySunday
     | Under18OnCallOrdinaryHoursMonSat
     | Under18OnCallOrdinaryHoursSunday
 
-type CalledInPayItem = CalledInCasualOrdinaryMonSat | CalledInCasualOrdinarySunday
+type CalledInPayItem =
+    | CalledInCasualOrdinaryMonSat
+    | CalledInCasualOrdinarySunday
+    | Under18CalledInOrdinaryHoursMonSat
+    | Under18CalledInOrdinaryHoursSunday
 
 type OvertimePayItem = OvertimeFirstThreeHours | OvertimeAfterThreeHours
 
-type PayItem = CasualOrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem
+type OrdinaryPayItem =
+    | CasualOrdinaryMonSat
+    | CasualOrdinarySunday
+    | Under18CasualOrdinaryHoursMonSat
+    | PTFTOrdinaryMonSat
+    | PTFTOrdinaryHoursSunday
+
+type PayItem = OrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem
