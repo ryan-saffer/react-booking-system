@@ -1,7 +1,7 @@
 import { https, logger } from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { XeroClient } from 'xero-node'
-import { SlingClientImpl as SlingClient } from '../core/slingClient'
+import { SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../core/timesheets'
 import path from 'path'
 import os from 'os'
@@ -13,20 +13,22 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
     console.log('started')
     const slingClient = new SlingClient()
 
-    // ensure dates start and end at midnight. End date should be midnight of the next day.
+    // ensure dates start and end at midnight
     const startDate = DateTime.fromISO(startDateInput).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-    const endDate = DateTime.fromISO(endDateInput)
-        .plus({ days: 1 })
-        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+    const endDate = DateTime.fromISO(endDateInput).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 
     // validate data
     if (startDate > endDate) {
-        throw new https.HttpsError('invalid-argument', 'start date must come before the end date')
+        throw new https.HttpsError('invalid-argument', 'start date must come before the end date', {
+            errorCode: 'invalid-range',
+        })
     }
 
     const diffInDays = endDate.diff(startDate, 'days').days
     if (diffInDays > 28) {
-        throw new https.HttpsError('invalid-argument', 'date range must be 28 days or less')
+        throw new https.HttpsError('invalid-argument', 'date range must be 28 days or less', {
+            errorCode: 'invalid-length',
+        })
     }
 
     // initialise xero
@@ -60,6 +62,9 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // to keep track of all rows
         let rows: TimesheetRow[] = []
 
+        // keeps tracked of users who couldnt be found in xero
+        const skippedUsers: string[] = []
+
         // calculate timesheets one week at a time
         for (const week of weeks) {
             // get all shifts for the time period
@@ -74,13 +79,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 const xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
                 if (!xeroUser) {
                     logger.error(`unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`)
-                    // res.status(500).send(
-                    //     `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
-                    // )
-                    // throw new https.HttpsError(
-                    //     'aborted',
-                    //     `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
-                    // )
+                    skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)
                     return
                 }
 
@@ -130,7 +129,9 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             expires: DateTime.now().plus({ days: 7 }).toISODate(),
         })
         const downloadUrl = url[0]
-        return { url: downloadUrl }
+
+        // remove duplicate skipped users
+        return { url: downloadUrl, skippedEmployees: [...new Set(skippedUsers)] }
     } catch (err) {
         console.error('error generating timesheets', err)
         throw new https.HttpsError('internal', 'error generating timesheets', err)
