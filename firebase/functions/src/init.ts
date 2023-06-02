@@ -11,3 +11,5 @@ admin.initializeApp({
 export const storage = admin.storage()
 export const db = admin.firestore()
 db.settings({ ignoreUndefinedProperties: true })
+
+export const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId

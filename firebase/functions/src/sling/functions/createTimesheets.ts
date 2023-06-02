@@ -3,6 +3,10 @@ import { DateTime } from 'luxon'
 import { XeroClient } from 'xero-node'
 import { SlingClientImpl as SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../core/timesheets'
+import path from 'path'
+import os from 'os'
+import fs from 'fs'
+import { projectName, storage } from '../../init'
 
 export const exportTimesheets = https.onRequest(async (req, res) => {
     console.log('started')
@@ -75,13 +79,14 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
                 const xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
                 if (!xeroUser) {
                     logger.error(`unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`)
-                    res.status(500).send(
-                        `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
-                    )
-                    throw new https.HttpsError(
-                        'aborted',
-                        `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
-                    )
+                    // res.status(500).send(
+                    //     `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
+                    // )
+                    // throw new https.HttpsError(
+                    //     'aborted',
+                    //     `unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`
+                    // )
+                    return
                 }
 
                 // calculate if the user has a birthday during this fortnight
@@ -106,14 +111,31 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
             })
         }
 
-        rows.map((row) => {
-            console.log(
-                `[${row.firstName}, ${row.lastname}, ${row.payItem}, ${row.date.toLocaleString()}, ${row.hours}, ${
-                    row.hasBirthdayDuringPayrun && 'HAS BIRTHDAY DURING PAY RUN'
-                }]`
+        // create the csv
+        const filename = `${startDate.toISODate()}:${DateTime.fromISO(endDateInput).toISODate()}.csv`
+        const tempFilePath = path.join(os.tmpdir(), filename)
+        console.log('temp file path:', tempFilePath)
+
+        fs.writeFileSync(tempFilePath, 'first_name,last_name,type, date,hours,has_birthday_during_payrun\n')
+        rows.map((row) =>
+            fs.appendFileSync(
+                tempFilePath,
+                `${row.firstName},${row.lastname},${row.payItem},${row.date.toFormat('d/M/y')},${row.hours},${
+                    row.hasBirthdayDuringPayrun
+                }\n`
             )
+        )
+
+        const [file] = await storage
+            .bucket(`${projectName}.appspot.com`)
+            .upload(tempFilePath, { destination: `payroll/${filename}` })
+
+        const url = await file.getSignedUrl({
+            action: 'read',
+            expires: DateTime.now().plus({ days: 7 }).toISODate(),
         })
-        res.status(200).send(slingUsers)
+        const downloadUrl = url[0]
+        res.status(200).send(downloadUrl)
     } catch (err) {
         console.error(err)
         res.status(500).send()
