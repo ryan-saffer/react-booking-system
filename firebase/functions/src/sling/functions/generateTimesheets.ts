@@ -7,13 +7,11 @@ import path from 'path'
 import os from 'os'
 import fs from 'fs'
 import { projectName, storage } from '../../init'
+import { onCall } from '../../utilities'
 
-export const exportTimesheets = https.onRequest(async (req, res) => {
+export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDateInput, endDateInput }) => {
     console.log('started')
     const slingClient = new SlingClient()
-
-    const startDateInput = new Date(2023, 4, 15).toISOString()
-    const endDateInput = new Date(2023, 4, 28).toISOString()
 
     // ensure dates start and end at midnight. End date should be midnight of the next day.
     const startDate = DateTime.fromISO(startDateInput).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
@@ -23,13 +21,11 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
 
     // validate data
     if (startDate > endDate) {
-        res.status(500).send('start date must come before the end date')
         throw new https.HttpsError('invalid-argument', 'start date must come before the end date')
     }
 
     const diffInDays = endDate.diff(startDate, 'days').days
     if (diffInDays > 28) {
-        res.status(500).send('date range must be 28 days or less')
         throw new https.HttpsError('invalid-argument', 'date range must be 28 days or less')
     }
 
@@ -47,7 +43,6 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
     } catch (err) {
         logger.error('error initialising xero api')
         logger.error(err)
-        res.status(500).send('error initialising xero api')
         throw new https.HttpsError('aborted', 'error initialising xero api')
     }
 
@@ -135,9 +130,9 @@ export const exportTimesheets = https.onRequest(async (req, res) => {
             expires: DateTime.now().plus({ days: 7 }).toISODate(),
         })
         const downloadUrl = url[0]
-        res.status(200).send(downloadUrl)
+        return { url: downloadUrl }
     } catch (err) {
-        console.error(err)
-        res.status(500).send()
+        console.error('error generating timesheets', err)
+        throw new https.HttpsError('internal', 'error generating timesheets', err)
     }
 })

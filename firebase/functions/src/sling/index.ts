@@ -1,1 +1,1 @@
-export * from './functions/createTimesheets'
+export * from './functions/generateTimesheets'
