@@ -139,6 +139,13 @@ const App = () => {
                 return { Component }
             },
         },
+        {
+            path: ROUTES.PAYROLL,
+            lazy: async () => {
+                const { Payroll: Component } = await import('../Payroll/Payroll')
+                return { Component }
+            },
+        },
     ])
 
     return (

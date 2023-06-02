@@ -5,7 +5,7 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/storage'
 
-const useEmulators = false
+const useEmulators = true
 
 class Firebase {
     auth: firebase.auth.Auth
