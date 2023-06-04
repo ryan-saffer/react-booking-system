@@ -11,11 +11,11 @@ import { Timesheet as SlingTimesheet } from './types'
 export function getWeeks(_start: DateTime, end: DateTime) {
     const output: Interval[] = []
     let start = _start
-    while (start < end) {
-        if (Interval.fromDateTimes(start, end).length('days') <= 7) {
+    while (start <= end) {
+        if (Interval.fromDateTimes(start, end).length('days') <= 6) {
             output.push(Interval.fromDateTimes(start, end))
         } else {
-            output.push(Interval.after(start, Duration.fromObject({ days: 7 })))
+            output.push(Interval.after(start, Duration.fromObject({ days: 6 })))
         }
         start = start.plus({ days: 7 })
     }

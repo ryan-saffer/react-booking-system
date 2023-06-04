@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
-import { Alert, Button, DatePicker } from 'antd'
+import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Result } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
 import useFirebase from '../Hooks/context/UseFirebase'
 import { GenerateTimesheetsResponse, Service } from 'fizz-kidz'
 import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
+import { useNavigate } from 'react-router-dom'
+import * as ROUTES from '../../constants/routes'
+import { DownloadOutlined } from '@ant-design/icons'
 
 const { RangePicker } = DatePicker
+const { Title, Paragraph, Text, Link } = Typography
+const { Header, Content } = Layout
 
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
@@ -17,8 +23,14 @@ type Props = {}
 export const Payroll: React.FC<Props> = ({}) => {
     const firebase = useFirebase()
 
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken()
+
+    const navigate = useNavigate()
+
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
-    const [result, setResult] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
+    const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
 
     const onChange: RangePickerProps['onChange'] = async (value, format) => {
         console.log(format)
@@ -26,17 +38,17 @@ export const Payroll: React.FC<Props> = ({}) => {
     }
 
     const generateTimesheets = async () => {
-        setResult({ status: 'loading' })
+        setTimesheetsService({ status: 'loading' })
 
         try {
             const result = await callFirebaseFunction(
                 'generateTimesheets',
                 firebase
             )({ startDateInput: selectedDates[0], endDateInput: selectedDates[1] })
-            setResult({ status: 'loaded', result: result.data })
+            setTimesheetsService({ status: 'loaded', result: result.data })
         } catch (error) {
             console.error(error)
-            setResult({ status: 'error', error })
+            setTimesheetsService({ status: 'error', error })
         }
     }
 
@@ -52,28 +64,92 @@ export const Payroll: React.FC<Props> = ({}) => {
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <RangePicker onChange={onChange} />
-            <Button
-                type="primary"
-                loading={result.status === 'loading'}
-                onClick={generateTimesheets}
-                disabled={selectedDates[0] === '' || selectedDates[1] === ''}
-            >
-                Generate Timesheets
-            </Button>
-            {result.status === 'error' && renderError(result.error.details)}
-            {result.status === 'loaded' && (
-                <div>
-                    <Button onClick={() => window.open(result.result.url, '_blank')}>Download Timesheets</Button>
-                    <p>
-                        The following employees timesheets were not generated because they could not be found in xero:
-                    </p>
-                    {result.result.skippedEmployees.map((employee) => (
-                        <p>{employee}</p>
-                    ))}
+        <Layout style={{ background: 'rgb(240, 242, 245)', height: '100vh' }}>
+            <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <img
+                    style={{ height: 50, cursor: 'pointer' }}
+                    src={Logo.default}
+                    onClick={() => navigate(ROUTES.LANDING)}
+                    alt="Fizz Kidz Logo"
+                />
+            </Header>
+            <Content style={{ background: colorBgContainer, padding: 32, margin: 32 }}>
+                <Title style={{ marginTop: 0 }}>Payroll</Title>
+                <Paragraph>
+                    This tool is a way to generate timesheets for{' '}
+                    <Link href="https://login.xero.com/identity/user/login">Xero</Link> based on the published roster in{' '}
+                    <Link href="https://app.getsling.com/">Sling</Link>.
+                </Paragraph>
+                <Paragraph>
+                    It will use the shifts location and position, as well as factor in the staffs age and overtime, to
+                    calculate how many hours each employee worked at which pay item.
+                </Paragraph>
+                <Paragraph>
+                    The tool will generate a csv file, ready for import into{' '}
+                    <Link href="https://app.upsheets.com/login">UpSheets.</Link>
+                </Paragraph>
+                <Divider />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                        <Text strong>Payroll period:</Text>
+                        <RangePicker onChange={onChange} format="DD/MM/YYYY" />
+                    </div>
+                    <Button
+                        type="primary"
+                        loading={timesheetsService.status === 'loading'}
+                        onClick={generateTimesheets}
+                        disabled={selectedDates[0] === '' || selectedDates[1] === ''}
+                    >
+                        Generate Timesheets
+                    </Button>
                 </div>
-            )}
-        </div>
+                <Divider />
+                {timesheetsService.status === 'error' && renderError(timesheetsService.error.details)}
+                {timesheetsService.status === 'loaded' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                        <Title level={3} style={{ margin: 0 }}>
+                            Result
+                        </Title>
+                        {timesheetsService.result.skippedEmployees.length !== 0 && (
+                            <Alert
+                                message="Skipped employees"
+                                description={
+                                    <>
+                                        <Paragraph>
+                                            The following employees timesheets were not generated because they could not
+                                            be found in xero:
+                                        </Paragraph>
+                                        <ul>
+                                            {timesheetsService.result.skippedEmployees.map((employee) => (
+                                                <li>{employee}</li>
+                                            ))}
+                                        </ul>
+                                    </>
+                                }
+                                type="warning"
+                            />
+                        )}
+                        {timesheetsService.result.employeesWithBirthday.length !== 0 && (
+                            <Card title="Employees with birthdays during pay run" size="small">
+                                <ul>
+                                    {timesheetsService.result.employeesWithBirthday.map((employee) => (
+                                        <li>{employee}</li>
+                                    ))}
+                                </ul>
+                            </Card>
+                        )}
+                        <Button
+                            shape="round"
+                            type="primary"
+                            block
+                            onClick={() => window.open(timesheetsService.result.url, '_blank')}
+                            icon={<DownloadOutlined />}
+                        >
+                            Download Timesheets
+                        </Button>
+                    </div>
+                )}
+            </Content>
+        </Layout>
     )
 }

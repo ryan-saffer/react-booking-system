@@ -14,8 +14,18 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
     const slingClient = new SlingClient()
 
     // ensure dates start and end at midnight
-    const startDate = DateTime.fromISO(startDateInput).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-    const endDate = DateTime.fromISO(endDateInput).set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+    const startDate = DateTime.fromFormat(startDateInput, 'dd/MM/yyyy').set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    const endDate = DateTime.fromFormat(endDateInput, 'dd/MM/yyyy').set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
 
     // validate data
     if (startDate > endDate) {
@@ -52,6 +62,9 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // break the time period into weeks
         const weeks = getWeeks(startDate, endDate)
 
+        console.log('weeks')
+        weeks.forEach((week) => console.log(week.start.toString(), week.end.toString()))
+
         // get all active users
         const slingUsers = await slingClient.getUsers()
         const activeSlingUsers = slingUsers.filter((user) => user.active)
@@ -62,8 +75,11 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // to keep track of all rows
         let rows: TimesheetRow[] = []
 
-        // keeps tracked of users who couldnt be found in xero
+        // keeps track of users who couldnt be found in xero
         const skippedUsers: string[] = []
+
+        // keeps track of users who have a birthday during the pay period
+        const employeesWithBirthday: string[] = []
 
         // calculate timesheets one week at a time
         for (const week of weeks) {
@@ -86,6 +102,11 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 // calculate if the user has a birthday during this fortnight
                 const dob = DateTime.fromJSDate(new Date(xeroUser.dateOfBirth))
                 const hasBirthdayDuringPayrun = hasBirthdayDuring(dob, startDate, endDate)
+                if (hasBirthdayDuringPayrun) {
+                    employeesWithBirthday.push(
+                        `${xeroUser.firstName} ${xeroUser.lastName} - ${dob.toLocaleString(DateTime.DATE_SHORT)}`
+                    )
+                }
 
                 // only bonnie is not casual
                 const isCasual = slingUser.employeeId !== '1551679a-9e81-47d3-b019-906d7ce617f1'
@@ -106,16 +127,20 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         }
 
         // create the csv
-        const filename = `${startDate.toISODate()}:${DateTime.fromISO(endDateInput).toISODate()}.csv`
+        const filename = `${startDate.toLocaleString(DateTime.DATE_SHORT)}:${endDate.toLocaleString(
+            DateTime.DATE_SHORT
+        )}.csv`
+            .split('/')
+            .join('-')
+        console.log(filename)
         const tempFilePath = path.join(os.tmpdir(), filename)
-        console.log('temp file path:', tempFilePath)
 
-        fs.writeFileSync(tempFilePath, 'first_name,last_name,type, date,hours,has_birthday_during_payrun\n')
+        fs.writeFileSync(tempFilePath, 'first_name,last_name,type, date,hours\n')
         rows.map((row) =>
             fs.appendFileSync(
                 tempFilePath,
-                `${row.firstName},${row.lastname},${row.payItem},${row.date.toFormat('d/M/y')},${row.hours},${
-                    row.hasBirthdayDuringPayrun
+                `${row.firstName},${row.lastname},${row.payItem},${row.date.toLocaleString(DateTime.DATE_SHORT)},${
+                    row.hours
                 }\n`
             )
         )
@@ -131,7 +156,11 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         const downloadUrl = url[0]
 
         // remove duplicate skipped users
-        return { url: downloadUrl, skippedEmployees: [...new Set(skippedUsers)] }
+        return {
+            url: downloadUrl,
+            skippedEmployees: [...new Set(skippedUsers)],
+            employeesWithBirthday: [...new Set(employeesWithBirthday)],
+        }
     } catch (err) {
         console.error('error generating timesheets', err)
         throw new https.HttpsError('internal', 'error generating timesheets', err)
