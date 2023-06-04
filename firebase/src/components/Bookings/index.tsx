@@ -22,7 +22,6 @@ import {
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
 
-import { withAuthorization } from '../Session'
 import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
@@ -37,7 +36,7 @@ import NewBookingDialog from './NewBookingDialog'
 import { useEvents } from './Events/UseEvents'
 import Events from './Events/Events'
 
-export const BookingsPage = withAuthorization(() => {
+export const BookingsPage = () => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -272,7 +271,7 @@ export const BookingsPage = withAuthorization(() => {
             </Grid>
         </div>
     )
-})
+}
 
 const drawerWidth = 320
 

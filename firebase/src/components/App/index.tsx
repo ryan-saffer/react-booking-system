@@ -4,8 +4,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core'
-import { withAuthentication } from '../Session'
+import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
+import { Roles } from '../../constants/roles'
 
 const App = () => {
     const theme = createMuiTheme({
@@ -36,8 +37,8 @@ const App = () => {
         {
             path: ROUTES.LANDING,
             lazy: async () => {
-                const { Navigation: Component } = await import('../Navigation')
-                return { Component }
+                const { Navigation } = await import('../Navigation')
+                return { Component: withAuthorization([], Navigation) }
             },
         },
         {
@@ -50,56 +51,50 @@ const App = () => {
         {
             path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
             lazy: async () => {
-                const { ScienceClubCheckinClassSelection: Component } = await import(
-                    '../ScienceClub/Checkin/SelectClass'
-                )
-                return { Component }
+                const { ScienceClubCheckinClassSelection } = await import('../ScienceClub/Checkin/SelectClass')
+                return { Component: withAuthorization([], ScienceClubCheckinClassSelection) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_CLASS_DETAILS,
             lazy: async () => {
-                const { ScienceClubCheckinClassDetails: Component } = await import(
-                    '../ScienceClub/Checkin/ClassDetails'
-                )
-                return { Component }
+                const { ScienceClubCheckinClassDetails } = await import('../ScienceClub/Checkin/ClassDetails')
+                return { Component: withAuthorization([], ScienceClubCheckinClassDetails) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
             lazy: async () => {
-                const { ScienceClubInvoicingClassSelection: Component } = await import(
-                    '../ScienceClub/Invoicing/SelectClass'
-                )
-                return { Component }
+                const { ScienceClubInvoicingClassSelection } = await import('../ScienceClub/Invoicing/SelectClass')
+                return { Component: withAuthorization([Roles.ADMIN], ScienceClubInvoicingClassSelection) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_INVOICING_STATUS,
             lazy: async () => {
-                const { ScienceClassDashboard: Component } = await import('../ScienceClub/Invoicing/InvoiceStatusPage')
-                return { Component }
+                const { ScienceClassDashboard } = await import('../ScienceClub/Invoicing/InvoiceStatusPage')
+                return { Component: withAuthorization([], ScienceClassDashboard) }
             },
         },
         {
             path: ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS,
             lazy: async () => {
-                const { HolidayProgramSelection: Component } = await import('../HolidayPrograms/SelectClass')
-                return { Component }
+                const { HolidayProgramSelection } = await import('../HolidayPrograms/SelectClass')
+                return { Component: withAuthorization([], HolidayProgramSelection) }
             },
         },
         {
             path: ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS,
             lazy: async () => {
-                const { ClassDetailsPage: Component } = await import('../HolidayPrograms/ClassDetails')
-                return { Component }
+                const { ClassDetailsPage } = await import('../HolidayPrograms/ClassDetails')
+                return { Component: withAuthorization([], ClassDetailsPage) }
             },
         },
         {
             path: ROUTES.BOOKINGS,
             lazy: async () => {
-                const { BookingsPage: Component } = await import('../Bookings')
-                return { Component }
+                const { BookingsPage } = await import('../Bookings')
+                return { Component: withAuthorization([], BookingsPage) }
             },
         },
         {
@@ -143,7 +138,7 @@ const App = () => {
             path: ROUTES.PAYROLL,
             lazy: async () => {
                 const { Payroll: Component } = await import('../Payroll/Payroll')
-                return { Component }
+                return { Component: withAuthorization([Roles.PAYROLL], Component) }
             },
         },
     ])
