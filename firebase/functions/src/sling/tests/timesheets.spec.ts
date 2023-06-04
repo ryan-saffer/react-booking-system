@@ -2,12 +2,78 @@ import { strictEqual } from 'assert'
 import { DateTime } from 'luxon'
 import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { Timesheet } from '../core/types'
-import { Position, TimesheetRow, Location, createTimesheetRows, hasBirthdayDuring } from '../core/timesheets'
+import { Position, TimesheetRow, Location, createTimesheetRows, hasBirthdayDuring, getWeeks } from '../core/timesheets'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
 const youngerThan18 = DateTime.fromObject({ year: 2015, day: 1, month: 1 })
 
 describe('Timesheet suite', () => {
+    describe('breaking down range to weeks', () => {
+        it('should be single range for 7 days', () => {
+            // given
+            const start = DateTime.fromObject({ day: 5, month: 6, year: 2023 })
+            const end = DateTime.fromObject({ day: 11, month: 6, year: 2023 })
+
+            // when
+            const result = getWeeks(start, end)
+
+            // then
+            strictEqual(result.length, 1)
+            strictEqual(result[0].start.toLocaleString(), '05/06/2023')
+            strictEqual(result[0].end.toLocaleString(), '11/06/2023')
+        })
+
+        it('should be two ranges for 8 days', () => {
+            // given
+            const start = DateTime.fromObject({ day: 5, month: 6, year: 2023 })
+            const end = DateTime.fromObject({ day: 12, month: 6, year: 2023 })
+
+            // when
+            const result = getWeeks(start, end)
+
+            // then
+            strictEqual(result.length, 2)
+            strictEqual(result[0].start.toLocaleString(), '05/06/2023')
+            strictEqual(result[0].end.toLocaleString(), '11/06/2023')
+            strictEqual(result[1].start.toLocaleString(), '12/06/2023')
+            strictEqual(result[1].end.toLocaleString(), '12/06/2023')
+        })
+
+        it('should be two ranges for 14 days', () => {
+            // given
+            const start = DateTime.fromObject({ day: 5, month: 6, year: 2023 })
+            const end = DateTime.fromObject({ day: 18, month: 6, year: 2023 })
+
+            // when
+            const result = getWeeks(start, end)
+
+            // then
+            strictEqual(result.length, 2)
+            strictEqual(result[0].start.toLocaleString(), '05/06/2023')
+            strictEqual(result[0].end.toLocaleString(), '11/06/2023')
+            strictEqual(result[1].start.toLocaleString(), '12/06/2023')
+            strictEqual(result[1].end.toLocaleString(), '18/06/2023')
+        })
+
+        it('should be three ranges for 15 days', () => {
+            // given
+            const start = DateTime.fromObject({ day: 5, month: 6, year: 2023 })
+            const end = DateTime.fromObject({ day: 19, month: 6, year: 2023 })
+
+            // when
+            const result = getWeeks(start, end)
+
+            // then
+            strictEqual(result.length, 3)
+            strictEqual(result[0].start.toLocaleString(), '05/06/2023')
+            strictEqual(result[0].end.toLocaleString(), '11/06/2023')
+            strictEqual(result[1].start.toLocaleString(), '12/06/2023')
+            strictEqual(result[1].end.toLocaleString(), '18/06/2023')
+            strictEqual(result[2].start.toLocaleString(), '19/06/2023')
+            strictEqual(result[2].end.toLocaleString(), '19/06/2023')
+        })
+    })
+
     describe('Pay Item mappings', () => {
         it('should map on call for all locations mon-sat - over 18', () => {
             // balwyn
