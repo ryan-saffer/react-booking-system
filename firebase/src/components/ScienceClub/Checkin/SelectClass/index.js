@@ -9,10 +9,9 @@ import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../../constants/routes'
 import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
-import { withAuthorization } from '../../../Session'
 import { useNavigate } from 'react-router-dom'
 
-export const ScienceClubCheckinClassSelection = withAuthorization(() => {
+export const ScienceClubCheckinClassSelection = () => {
     const cssClasses = useStyles()
 
     const navigate = useNavigate()
@@ -36,7 +35,7 @@ export const ScienceClubCheckinClassSelection = withAuthorization(() => {
             <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} classRequired={true} />
         </>
     )
-})
+}
 
 const useStyles = makeStyles((theme) => ({
     appBar: {

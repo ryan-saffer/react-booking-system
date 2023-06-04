@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export const Navigation = withAuthorization(() => {
+export const Navigation = () => {
     const classes = useStyles()
 
     const navigate = useNavigate()
@@ -135,4 +135,4 @@ export const Navigation = withAuthorization(() => {
             </div>
         </>
     )
-})
+}

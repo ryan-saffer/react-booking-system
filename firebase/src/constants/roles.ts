@@ -1,5 +1,6 @@
 export enum Roles {
-    ADMIN = "ADMIN",
-    RESTRICTED = "RESTRICTED",
-    BASIC = "BASIC"
+    ADMIN = 'ADMIN',
+    RESTRICTED = 'RESTRICTED',
+    BASIC = 'BASIC',
+    PAYROLL = 'PAYROLL',
 }

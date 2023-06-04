@@ -10,9 +10,7 @@ import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../../constants/routes'
 import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
-import { withAuthorization } from '../../../Session'
-
-export const ScienceClubInvoicingClassSelection = withAuthorization(() => {
+export const ScienceClubInvoicingClassSelection = () => {
     const cssClasses = useStyles()
 
     const navigate = useNavigate()
@@ -36,7 +34,7 @@ export const ScienceClubInvoicingClassSelection = withAuthorization(() => {
             <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} classRequired={false} />
         </>
     )
-})
+}
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
