@@ -10,7 +10,6 @@ import { projectName, storage } from '../../init'
 import { onCall } from '../../utilities'
 
 export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDateInput, endDateInput }) => {
-    console.log('started')
     const slingClient = new SlingClient()
 
     // ensure dates start and end at midnight
@@ -62,9 +61,6 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // break the time period into weeks
         const weeks = getWeeks(startDate, endDate)
 
-        console.log('weeks')
-        weeks.forEach((week) => console.log(week.start.toString(), week.end.toString()))
-
         // get all active users
         const slingUsers = await slingClient.getUsers()
         const activeSlingUsers = slingUsers.filter((user) => user.active)
@@ -94,7 +90,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
 
                 const xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
                 if (!xeroUser) {
-                    logger.error(`unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`)
+                    logger.log(`unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`)
                     skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)
                     return
                 }
@@ -132,7 +128,6 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         )}.csv`
             .split('/')
             .join('-')
-        console.log(filename)
         const tempFilePath = path.join(os.tmpdir(), filename)
 
         fs.writeFileSync(tempFilePath, 'first_name,last_name,type, date,hours\n')
