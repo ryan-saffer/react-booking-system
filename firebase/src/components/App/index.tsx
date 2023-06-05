@@ -3,13 +3,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import * as ROUTES from '../../constants/routes'
 import { ThemeProvider } from '@material-ui/styles'
-import { createMuiTheme } from '@material-ui/core'
+import { createTheme } from '@material-ui/core'
 import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
 import { Roles } from '../../constants/roles'
 
 const App = () => {
-    const theme = createMuiTheme({
+    const theme = createTheme({
         palette: {
             primary: {
                 light: '#515051',

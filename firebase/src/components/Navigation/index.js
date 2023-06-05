@@ -7,7 +7,6 @@ import Container from '@material-ui/core/Container'
 import LaunchIcon from '@material-ui/icons/Launch'
 
 import * as ROUTES from '../../constants/routes'
-import { withAuthorization } from '../Session'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import useRole from '../Hooks/UseRole'
 import { FirebaseContext } from '../Firebase'
