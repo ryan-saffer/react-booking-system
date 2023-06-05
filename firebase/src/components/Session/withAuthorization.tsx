@@ -4,17 +4,18 @@ import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import * as LogoGif from '../../drawables/fizz_logo.gif'
 import useFirebase from '../Hooks/context/UseFirebase'
-import { Roles } from '../../constants/roles'
+import { Role } from '../../constants/roles'
 import { useAuth } from '../Hooks/context/useAuth'
+import Unauthorised from './Unauthorised'
 
 /**
  * Wraps a component with authorised roles, to ensure only correct users see the content.
  *
- * @param roles
- * @param Component
- * @returns
+ * @param roles an array of roles allow to view this page. An empty array means any authenticated user can view this page.
+ * No need to provide Role.ADMIN, as admins can view everything.
+ * @param Component the component you want to wrap
  */
-const withAuthorization = (roles: Roles[], Component: React.FunctionComponent) => {
+const withAuthorization = (roles: Role[], Component: React.FunctionComponent) => {
     const WithAuthorization = (): React.JSX.Element => {
         const firebase = useFirebase()
         const authUser = useAuth()
@@ -32,7 +33,7 @@ const withAuthorization = (roles: Roles[], Component: React.FunctionComponent) =
 
         if (authUser) {
             // admin is allowed to view all pages
-            if (authUser.roles.ADMIN) return <Component />
+            if (authUser.role === Role.ADMIN) return <Component />
 
             // empty roles means any authenticated user can view it
             if (roles.length === 0) {
@@ -40,12 +41,9 @@ const withAuthorization = (roles: Roles[], Component: React.FunctionComponent) =
             }
 
             // otherwise check if the current user has the specified role
-            for (const [key, value] of Object.entries(authUser.roles)) {
-                if (roles.includes(key as Roles) && value) {
-                    return <Component />
-                }
-            }
-            return <h1>Not authorised!</h1>
+            if (roles.includes(authUser.role)) return <Component />
+
+            return <Unauthorised />
         } else {
             return (
                 <img

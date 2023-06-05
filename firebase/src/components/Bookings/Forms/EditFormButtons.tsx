@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button, CircularProgress, Fab, makeStyles } from '@material-ui/core'
-import useRole from '../../Hooks/UseRole'
-import { Roles } from '../../../constants/roles'
+import { Role } from '../../../constants/roles'
 import SaveIcon from '@material-ui/icons/Save'
 import CheckIcon from '@material-ui/icons/Check'
 import CreateIcon from '@material-ui/icons/Create'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { green, red } from '@material-ui/core/colors'
+import { useScopes } from '../../Hooks/UseScopes'
 
 type Props = {
     loading: boolean
@@ -28,9 +28,9 @@ const EditFormButtons: React.FC<Props> = ({
     onDelete,
 }) => {
     const classes = useStyles()
-    const isAdmin = useRole() === Roles.ADMIN
+    const canEdit = useScopes().CORE === 'write'
 
-    if (isAdmin) {
+    if (canEdit) {
         return (
             <div className={classes.saveButtonDiv}>
                 {!loading && !editing && (

@@ -8,9 +8,8 @@ import LaunchIcon from '@material-ui/icons/Launch'
 
 import * as ROUTES from '../../constants/routes'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import useRole from '../Hooks/UseRole'
 import { FirebaseContext } from '../Firebase'
-import { Roles } from '../../constants/roles'
+import { useScopes } from '../Hooks/UseScopes'
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -57,9 +56,11 @@ export const Navigation = () => {
 
     const navigate = useNavigate()
 
-    const role = useRole()
-    const isAdmin = role === Roles.ADMIN
-    const isRestricted = role === Roles.RESTRICTED
+    const scopes = useScopes()
+    const hasCoreScopes = scopes.CORE !== 'none'
+    const isRestricted = scopes.CORE === 'restricted'
+    const hasCoreWriteScope = scopes.CORE === 'write'
+    const hasPayrollWriteScope = scopes.PAYROLL === 'write'
 
     const firebase = useContext(FirebaseContext)
 
@@ -77,56 +78,68 @@ export const Navigation = () => {
             </AppBar>
             <div className={classes.main}>
                 <Container component="main" maxWidth="sm">
-                    <Typography className={classes.heading} variant="h6">
-                        Programs
-                    </Typography>
-                    <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
-                        <Typography>Birthday Parties</Typography>
-                    </Paper>
-                    {!isRestricted && (
+                    {hasCoreScopes && (
                         <>
-                            <Paper
-                                className={classes.paper}
-                                onClick={() => navigateToRoute(ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS)}
-                            >
-                                <Typography>Holiday Programs</Typography>
+                            <Typography className={classes.heading} variant="h6">
+                                Programs
+                            </Typography>
+                            <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
+                                <Typography>Birthday Parties</Typography>
                             </Paper>
+                            {!isRestricted && (
+                                <>
+                                    <Paper
+                                        className={classes.paper}
+                                        onClick={() => navigateToRoute(ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS)}
+                                    >
+                                        <Typography>Holiday Programs</Typography>
+                                    </Paper>
+                                    <Paper
+                                        className={classes.paper}
+                                        onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}
+                                    >
+                                        <Typography>After School Science Program</Typography>
+                                    </Paper>
+                                </>
+                            )}
+                            <Typography className={classes.heading} variant="h6">
+                                Useful Links
+                            </Typography>
                             <Paper
                                 className={classes.paper}
-                                onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}
+                                onClick={() =>
+                                    window.open(
+                                        'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
+                                        '_blank'
+                                    )
+                                }
                             >
-                                <Typography>After School Science Program</Typography>
+                                <Typography>Incident Reporting</Typography>
+                                <LaunchIcon />
                             </Paper>
                         </>
                     )}
-                    <Typography className={classes.heading} variant="h6">
-                        Useful Links
-                    </Typography>
-                    <Paper
-                        className={classes.paper}
-                        onClick={() =>
-                            window.open(
-                                'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                                '_blank'
-                            )
-                        }
-                    >
-                        <Typography>Incident Reporting</Typography>
-                        <LaunchIcon />
-                    </Paper>
-                    {isAdmin && (
+                    {(hasCoreWriteScope || hasPayrollWriteScope) && (
                         <>
                             <Typography className={classes.heading} variant="h6">
                                 Admin
                             </Typography>
-                            <Paper
-                                className={classes.paper}
-                                onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS)}
-                            >
-                                <Typography>Invoicing - Science Club</Typography>
-                            </Paper>
+                            {hasCoreWriteScope && (
+                                <Paper
+                                    className={classes.paper}
+                                    onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS)}
+                                >
+                                    <Typography>Invoicing - Science Club</Typography>
+                                </Paper>
+                            )}
+                            {hasPayrollWriteScope && (
+                                <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.PAYROLL)}>
+                                    <Typography>Payroll</Typography>
+                                </Paper>
+                            )}
                         </>
                     )}
+
                     <Button className={classes.signOutButton} variant="contained" onClick={firebase.doSignOut}>
                         Sign out
                     </Button>
