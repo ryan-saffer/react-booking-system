@@ -6,7 +6,7 @@ import { ThemeProvider } from '@material-ui/styles'
 import { createTheme } from '@material-ui/core'
 import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
-import { Roles } from '../../constants/roles'
+import { Role } from '../../constants/roles'
 
 const App = () => {
     const theme = createTheme({
@@ -52,49 +52,49 @@ const App = () => {
             path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
             lazy: async () => {
                 const { ScienceClubCheckinClassSelection } = await import('../ScienceClub/Checkin/SelectClass')
-                return { Component: withAuthorization([], ScienceClubCheckinClassSelection) }
+                return { Component: withAuthorization([Role.BASIC], ScienceClubCheckinClassSelection) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_CLASS_DETAILS,
             lazy: async () => {
                 const { ScienceClubCheckinClassDetails } = await import('../ScienceClub/Checkin/ClassDetails')
-                return { Component: withAuthorization([], ScienceClubCheckinClassDetails) }
+                return { Component: withAuthorization([Role.BASIC], ScienceClubCheckinClassDetails) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
             lazy: async () => {
                 const { ScienceClubInvoicingClassSelection } = await import('../ScienceClub/Invoicing/SelectClass')
-                return { Component: withAuthorization([Roles.ADMIN], ScienceClubInvoicingClassSelection) }
+                return { Component: withAuthorization([Role.ADMIN], ScienceClubInvoicingClassSelection) }
             },
         },
         {
             path: ROUTES.SCIENCE_CLUB_INVOICING_STATUS,
             lazy: async () => {
                 const { ScienceClassDashboard } = await import('../ScienceClub/Invoicing/InvoiceStatusPage')
-                return { Component: withAuthorization([], ScienceClassDashboard) }
+                return { Component: withAuthorization([Role.ADMIN], ScienceClassDashboard) }
             },
         },
         {
             path: ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS,
             lazy: async () => {
                 const { HolidayProgramSelection } = await import('../HolidayPrograms/SelectClass')
-                return { Component: withAuthorization([], HolidayProgramSelection) }
+                return { Component: withAuthorization([Role.BASIC], HolidayProgramSelection) }
             },
         },
         {
             path: ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS,
             lazy: async () => {
                 const { ClassDetailsPage } = await import('../HolidayPrograms/ClassDetails')
-                return { Component: withAuthorization([], ClassDetailsPage) }
+                return { Component: withAuthorization([Role.BASIC], ClassDetailsPage) }
             },
         },
         {
             path: ROUTES.BOOKINGS,
             lazy: async () => {
                 const { BookingsPage } = await import('../Bookings')
-                return { Component: withAuthorization([], BookingsPage) }
+                return { Component: withAuthorization([Role.BASIC, Role.RESTRICTED], BookingsPage) }
             },
         },
         {
@@ -138,7 +138,7 @@ const App = () => {
             path: ROUTES.PAYROLL,
             lazy: async () => {
                 const { Payroll: Component } = await import('../Payroll/Payroll')
-                return { Component: withAuthorization([Roles.PAYROLL], Component) }
+                return { Component: withAuthorization([Role.BOOKKEEPER], Component) }
             },
         },
     ])
