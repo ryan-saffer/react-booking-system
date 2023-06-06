@@ -87,6 +87,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
@@ -102,6 +103,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt')
@@ -117,6 +119,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen')
@@ -132,6 +135,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv')
@@ -147,6 +151,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile')
@@ -164,6 +169,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw')
@@ -179,6 +185,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt')
@@ -194,6 +201,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
@@ -209,6 +217,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
@@ -224,6 +233,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
@@ -241,6 +251,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Balwyn')
@@ -256,6 +267,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Chelt')
@@ -271,6 +283,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Essend')
@@ -286,6 +299,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Malvern')
@@ -301,6 +315,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Mobile')
@@ -318,6 +333,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn')
@@ -333,6 +349,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Chelt')
@@ -348,6 +365,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Essendon')
@@ -363,6 +381,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Malvern')
@@ -378,6 +397,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Mobile')
@@ -395,6 +415,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
@@ -410,6 +431,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt')
@@ -425,6 +447,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen')
@@ -440,6 +463,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern')
@@ -455,6 +479,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
@@ -472,6 +497,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw')
@@ -487,6 +513,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
@@ -502,6 +529,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen')
@@ -517,6 +545,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv')
@@ -532,6 +561,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
@@ -549,6 +579,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
@@ -564,6 +595,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt')
@@ -579,6 +611,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen')
@@ -594,6 +627,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern')
@@ -609,6 +643,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
@@ -626,6 +661,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw')
@@ -641,6 +677,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
@@ -656,6 +693,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen')
@@ -671,6 +709,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv')
@@ -686,6 +725,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
@@ -703,6 +743,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
@@ -718,6 +759,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
@@ -733,6 +775,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
@@ -748,6 +791,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
@@ -763,6 +807,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
@@ -780,6 +825,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
@@ -795,6 +841,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
@@ -810,6 +857,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
@@ -825,6 +873,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
@@ -840,6 +889,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
@@ -857,6 +907,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
@@ -872,6 +923,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
@@ -887,6 +939,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
@@ -902,6 +955,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
@@ -917,6 +971,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
@@ -934,6 +989,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
@@ -949,6 +1005,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
@@ -964,6 +1021,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
@@ -979,6 +1037,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
@@ -994,6 +1053,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
@@ -1011,6 +1071,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
@@ -1026,6 +1087,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1041,6 +1103,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
@@ -1056,6 +1119,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
@@ -1071,6 +1135,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
@@ -1088,6 +1153,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
@@ -1103,6 +1169,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1118,6 +1185,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
@@ -1133,6 +1201,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
@@ -1148,6 +1217,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
@@ -1165,6 +1235,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1180,6 +1251,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1195,6 +1267,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1210,6 +1283,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1225,6 +1299,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1242,6 +1317,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1257,6 +1333,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1272,6 +1349,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1287,6 +1365,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1302,6 +1381,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1319,6 +1399,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
@@ -1334,6 +1415,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1349,6 +1431,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
@@ -1364,6 +1447,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
@@ -1379,6 +1463,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
@@ -1396,6 +1481,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
@@ -1411,6 +1497,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1426,6 +1513,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
@@ -1441,6 +1529,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
@@ -1456,6 +1545,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
@@ -1473,6 +1563,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1488,6 +1579,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1503,6 +1595,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1518,6 +1611,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1533,6 +1627,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1550,6 +1645,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1565,6 +1661,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1580,6 +1677,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1595,6 +1693,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1610,6 +1709,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1627,6 +1727,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
@@ -1642,6 +1743,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1657,6 +1759,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
@@ -1672,6 +1775,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
@@ -1687,6 +1791,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
@@ -1704,6 +1809,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
@@ -1719,6 +1825,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1734,6 +1841,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
@@ -1749,6 +1857,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
@@ -1764,6 +1873,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
@@ -1781,6 +1891,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1796,6 +1907,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1811,6 +1923,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1826,6 +1939,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1841,6 +1955,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1858,6 +1973,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -1873,6 +1989,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -1888,6 +2005,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -1903,6 +2021,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -1918,6 +2037,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -1935,6 +2055,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
@@ -1950,6 +2071,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -1965,6 +2087,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
@@ -1980,6 +2103,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
@@ -1995,6 +2119,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
@@ -2012,6 +2137,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
@@ -2027,6 +2153,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
@@ -2042,6 +2169,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
@@ -2057,6 +2185,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
@@ -2072,6 +2201,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
@@ -2089,6 +2219,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -2104,6 +2235,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -2119,6 +2251,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -2134,6 +2267,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -2149,6 +2283,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -2166,6 +2301,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
@@ -2181,6 +2317,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
@@ -2196,6 +2333,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
@@ -2211,6 +2349,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
@@ -2226,6 +2365,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
@@ -2243,6 +2383,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
@@ -2258,6 +2399,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Chelt')
@@ -2273,6 +2415,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Essendon')
@@ -2288,6 +2431,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Malvern')
@@ -2303,6 +2447,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Mobile')
@@ -2320,6 +2465,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Balwyn')
@@ -2335,6 +2481,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Chelt')
@@ -2350,6 +2497,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Essendon')
@@ -2365,6 +2513,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Malvern')
@@ -2380,6 +2529,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Mobile')
@@ -2397,6 +2547,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
@@ -2412,6 +2563,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Chelt')
@@ -2427,6 +2579,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Essendon')
@@ -2442,6 +2595,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Malvern')
@@ -2457,6 +2611,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - First 3 Hrs - Mobile')
@@ -2474,6 +2629,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
@@ -2489,6 +2645,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Chelt')
@@ -2504,6 +2661,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Essendon')
@@ -2519,6 +2677,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Malvern')
@@ -2534,6 +2693,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'PT/FT Overtime Hours - After 3 Hrs - Mobile')
@@ -2556,6 +2716,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     dtstart: '2023-05-02T10:00:00+10:00',
@@ -2564,6 +2725,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     dtstart: '2023-05-03T10:00:00+10:00',
@@ -2572,6 +2734,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
             ]
 
@@ -2610,6 +2773,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 10 hours
@@ -2619,6 +2783,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 8 hours
@@ -2628,6 +2793,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 7 hours (first 2 should okay, then next 5 overtime. first three should be under three hours, then last 2 over three hours)
@@ -2637,6 +2803,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 5 hours
@@ -2646,6 +2813,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
             ]
 
@@ -2696,6 +2864,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 10 hours
@@ -2705,6 +2874,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 8 hours
@@ -2714,6 +2884,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 4 hours (first 2 should okay, then next 2 overtime, under three hours.)
@@ -2723,6 +2894,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 5 hours (first hour under three hours overtime, next 4 over three hours)
@@ -2732,6 +2904,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
             ]
 
@@ -2782,6 +2955,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 10 hours
@@ -2791,6 +2965,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 8 hours
@@ -2800,6 +2975,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 4 hours (should not go into overtime)
@@ -2809,6 +2985,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
                 {
                     // 5 hours (should still not be in overtime)
@@ -2818,6 +2995,7 @@ describe('Timesheet suite', () => {
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
                     status: 'published',
+                    summary: '',
                 },
             ]
 
