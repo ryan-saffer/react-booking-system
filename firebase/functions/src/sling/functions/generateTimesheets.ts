@@ -61,9 +61,8 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // break the time period into weeks
         const weeks = getWeeks(startDate, endDate)
 
-        // get all active users
+        // get all sling users
         const slingUsers = await slingClient.getUsers()
-        const activeSlingUsers = slingUsers.filter((user) => user.active)
 
         // get all xero users
         const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
@@ -84,7 +83,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             const timesheets = allTimesheets.filter((it) => it.status === 'published')
 
             // for each user, get all their timesheets
-            activeSlingUsers.map((slingUser) => {
+            slingUsers.map((slingUser) => {
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
                 if (usersTimesheets.length === 0) return
 
