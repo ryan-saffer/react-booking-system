@@ -136,7 +136,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 tempFilePath,
                 `${row.firstName},${row.lastname},${row.payItem},${row.date.toLocaleString(DateTime.DATE_SHORT)},${
                     row.hours
-                },${row.summary}\n`
+                },${row.summary.replace(/[\r\n]+/gm, '')}\n`
             )
         )
 
