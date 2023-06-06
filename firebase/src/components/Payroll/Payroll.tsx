@@ -32,8 +32,7 @@ export const Payroll: React.FC<Props> = ({}) => {
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
     const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
 
-    const onChange: RangePickerProps['onChange'] = async (value, format) => {
-        console.log(format)
+    const onChange: RangePickerProps['onChange'] = async (_, format) => {
         setSelectedDates(format)
     }
 

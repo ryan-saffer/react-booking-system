@@ -166,7 +166,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw')
 
             // cheltenham
             row = new TimesheetRow({
@@ -196,7 +196,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
 
             // malvern
             row = new TimesheetRow({
@@ -211,7 +211,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -226,7 +226,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
         })
 
         it('should map on call for all locations on sunday - over 18', () => {
@@ -320,7 +320,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Balwyn')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -350,7 +350,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Essen')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -365,7 +365,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Malvern')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -380,7 +380,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - On call - 16&17yo Csl Or Hs - Sunday - Mobile')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Mobile')
         })
 
         it('should map called in party facilitator for all locations mon-sat - over 18', () => {
@@ -474,7 +474,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw')
 
             // cheltenham
             row = new TimesheetRow({
@@ -489,7 +489,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -519,7 +519,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv')
 
             // mobile
             row = new TimesheetRow({
@@ -534,7 +534,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
         })
 
         it('should map called in holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -628,7 +628,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw')
 
             // cheltenham
             row = new TimesheetRow({
@@ -643,7 +643,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -673,7 +673,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv')
 
             // mobile
             row = new TimesheetRow({
@@ -688,7 +688,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
         })
 
         it('should map called in party facilitator for all locations sunday - over 18', () => {
@@ -782,7 +782,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -797,7 +797,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -812,7 +812,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
 
             // malvern
             row = new TimesheetRow({
@@ -827,7 +827,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -842,7 +842,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
         })
 
         it('should map called in holiday program facilitator for all locations sunday - over 18', () => {
@@ -936,7 +936,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -951,7 +951,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Chelt')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -966,7 +966,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Essen')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Essend')
 
             // malvern
             row = new TimesheetRow({
@@ -981,7 +981,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Malvern')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -996,7 +996,7 @@ describe('Timesheet suite', () => {
                 hours: 8,
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'TODO - CALLED IN - 16&17 Cas Ord Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
         })
 
         it('should map party faciliator for all locations mon-sat - over 18', () => {
