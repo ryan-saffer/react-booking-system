@@ -7,6 +7,9 @@ declare global {
             ACUITY_API_KEY: string
             STRIPE_WEBHOOK_SECRET_PROD: string
             STRIPE_WEBHOOK_SECRET_DEV: string
+            SLING_API_KEY: string
+            XERO_CLIENT_ID: string
+            XERO_CLIENT_SECRET: string
         }
     }
 }

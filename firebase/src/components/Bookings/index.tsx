@@ -22,27 +22,26 @@ import {
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
 
-import { withAuthorization } from '../Session'
 import { Locations } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes'
 import DateNav from './BookingsNav'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import useRole from '../Hooks/UseRole'
 import Firebase, { FirebaseContext } from '../Firebase'
-import { Roles } from '../../constants/roles'
 import firebase from 'firebase/compat'
 import NewBookingDialog from './NewBookingDialog'
 import { useEvents } from './Events/UseEvents'
 import Events from './Events/Events'
+import { useScopes } from '../Hooks/UseScopes'
 
-export const BookingsPage = withAuthorization(() => {
+export const BookingsPage = () => {
     const classes = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const isAdmin = useRole() === Roles.ADMIN
+    const scopes = useScopes()
+    const writePermissions = scopes.CORE === 'write'
 
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
     const [events, setEventsDate] = useEvents()
@@ -169,8 +168,8 @@ export const BookingsPage = withAuthorization(() => {
                             alt="fizz kidz logo"
                         />
                     </div>
-                    <div className={isAdmin ? classes.authTopRight : classes.noAuthTopRight}>
-                        {isAdmin && (
+                    <div className={writePermissions ? classes.authTopRight : classes.noAuthTopRight}>
+                        {writePermissions && (
                             <Button className={classes.newBookingButton} color="inherit" onClick={handleOpenNewBooking}>
                                 New Booking
                             </Button>
@@ -272,7 +271,7 @@ export const BookingsPage = withAuthorization(() => {
             </Grid>
         </div>
     )
-})
+}
 
 const drawerWidth = 320
 

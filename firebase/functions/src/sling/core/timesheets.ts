@@ -1,0 +1,704 @@
+import { DateTime, Duration, Interval } from 'luxon'
+import { Timesheet as SlingTimesheet } from './types'
+
+/**
+ * Breaks the range down into weeks, and returns them as an array of intervals.
+ * If the range is not divisible by 7, the final interval will include only the remaining days.
+ *
+ * @param start
+ * @param end
+ */
+export function getWeeks(_start: DateTime, end: DateTime) {
+    const output: Interval[] = []
+    let start = _start
+    while (start <= end) {
+        if (Interval.fromDateTimes(start, end).length('days') <= 6) {
+            output.push(Interval.fromDateTimes(start, end))
+        } else {
+            output.push(Interval.after(start, Duration.fromObject({ days: 6 })))
+        }
+        start = start.plus({ days: 7 })
+    }
+    return output
+}
+
+/**
+ * Returns an array of timesheet rows based on the users timesheets for that week.
+ * Takes overtime into consideration.
+ *
+ * @param slingUser the user in sling
+ * @param xeroUser the user in xero
+ * @param usersTimesheets the users timesheets from sling
+ * @returns an array of timesheet rows
+ */
+export function createTimesheetRows({
+    firstName,
+    lastName,
+    dob,
+    hasBirthdayDuringPayrun,
+    isCasual,
+    usersTimesheets,
+    timezone,
+}: {
+    firstName: string
+    lastName: string
+    dob: DateTime
+    hasBirthdayDuringPayrun: boolean
+    isCasual: boolean
+    usersTimesheets: SlingTimesheet[]
+    timezone: string
+}): TimesheetRow[] {
+    const output: TimesheetRow[] = []
+
+    // keep track of hours worked this week
+    let totalHours = 0
+
+    usersTimesheets.map((timesheet) => {
+        const position = PositionMap[timesheet.position.id]
+        const location = LocationsMap[timesheet.location.id]
+        const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
+        const end = DateTime.fromISO(timesheet.dtend, { zone: timezone })
+        const shiftLengthInHours = end.diff(start, 'hours').hours
+
+        // only non casual staff need overtime calculations (for now)
+        if (isCasual) {
+            output.push(
+                new TimesheetRow({
+                    firstName,
+                    lastName,
+                    dob,
+                    hasBirthdayDuringPayrun,
+                    date: start,
+                    isCasual,
+                    position,
+                    location,
+                    hours: shiftLengthInHours,
+                    summary: timesheet.summary,
+                    overtime: { firstThreeHours: false, afterThreeHours: false },
+                })
+            )
+            return
+        }
+
+        // calculate if this shift puts employee into overtime for the week
+        const hoursUntilOvertime = 30 - totalHours
+
+        if (hoursUntilOvertime > 0) {
+            // overtime not yet reached
+            const overtimeHours = shiftLengthInHours - hoursUntilOvertime
+            if (overtimeHours <= 0) {
+                // entire shift fits before reaching overtime
+                output.push(
+                    new TimesheetRow({
+                        firstName,
+                        lastName,
+                        dob,
+                        hasBirthdayDuringPayrun,
+                        date: start,
+                        isCasual,
+                        position,
+                        location,
+                        hours: shiftLengthInHours,
+                        summary: timesheet.summary,
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+                )
+            } else {
+                // only part of the shift fits before reaching overtime.
+                // add until overtime, and then add the rest as overtime
+                output.push(
+                    new TimesheetRow({
+                        firstName,
+                        lastName,
+                        dob,
+                        hasBirthdayDuringPayrun,
+                        isCasual,
+                        date: start,
+                        position,
+                        location,
+                        hours: hoursUntilOvertime,
+                        summary: timesheet.summary,
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+                )
+
+                createOvertimeTimesheetRows(
+                    overtimeHours,
+                    30,
+                    firstName,
+                    lastName,
+                    dob,
+                    hasBirthdayDuringPayrun,
+                    isCasual,
+                    start,
+                    position,
+                    location,
+                    timesheet.summary
+                ).map((row) => output.push(row))
+            }
+        } else {
+            // already in overtime
+            createOvertimeTimesheetRows(
+                shiftLengthInHours,
+                totalHours,
+                firstName,
+                lastName,
+                dob,
+                hasBirthdayDuringPayrun,
+                isCasual,
+                start,
+                position,
+                location,
+                timesheet.summary
+            ).map((row) => output.push(row))
+        }
+        totalHours += shiftLengthInHours
+    })
+    return output
+}
+
+function createOvertimeTimesheetRows(
+    hours: number,
+    totalHours: number,
+    firstName: string,
+    lastName: string,
+    dob: DateTime,
+    hasBirthdayDuringPayrun: boolean,
+    isCasual: boolean,
+    date: DateTime,
+    position: Position,
+    location: Location,
+    summary: string
+) {
+    const output: TimesheetRow[] = []
+    // calculate if the hours puts employee into after three hours of overtime
+    const hoursUntilAfterThreeHours = 33 - totalHours
+
+    if (hoursUntilAfterThreeHours > 0) {
+        // after three hours not yet reached
+        const afterThreeHours = hours - hoursUntilAfterThreeHours
+        if (afterThreeHours <= 0) {
+            // entire time fits before reaching after three hours
+            output.push(
+                new TimesheetRow({
+                    firstName,
+                    lastName,
+                    dob,
+                    hasBirthdayDuringPayrun,
+                    isCasual,
+                    date,
+                    position,
+                    location,
+                    hours,
+                    summary,
+                    overtime: { firstThreeHours: true, afterThreeHours: false },
+                })
+            )
+        } else {
+            // only part of the shift fits before reaching after three hours.
+            // add until after three hours, and then add the rest as after three hours
+            output.push(
+                new TimesheetRow({
+                    firstName,
+                    lastName,
+                    dob,
+                    hasBirthdayDuringPayrun,
+                    isCasual,
+                    date,
+                    position,
+                    location,
+                    hours: hoursUntilAfterThreeHours,
+                    summary,
+                    overtime: { firstThreeHours: true, afterThreeHours: false },
+                })
+            )
+            output.push(
+                new TimesheetRow({
+                    firstName,
+                    lastName,
+                    dob,
+                    hasBirthdayDuringPayrun,
+                    isCasual,
+                    date,
+                    position,
+                    location,
+                    hours: afterThreeHours,
+                    summary,
+                    overtime: { firstThreeHours: false, afterThreeHours: true },
+                })
+            )
+        }
+    } else {
+        // already after three hours
+        output.push(
+            new TimesheetRow({
+                firstName,
+                lastName,
+                dob,
+                hasBirthdayDuringPayrun,
+                isCasual,
+                date,
+                position,
+                location,
+                hours,
+                summary,
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+        )
+    }
+
+    return output
+}
+
+type Overtime =
+    | { firstThreeHours: false; afterThreeHours: false }
+    | { firstThreeHours: true; afterThreeHours: false }
+    | { firstThreeHours: false; afterThreeHours: true }
+
+export class TimesheetRow {
+    firstName: string
+    lastname: string
+    dob: DateTime
+    hasBirthdayDuringPayrun: boolean
+    payItem: PayItem
+    date: DateTime
+    isCasual: boolean
+    hours: number
+    overtime: Overtime
+    summary: string
+
+    constructor({
+        firstName,
+        lastName,
+        dob,
+        hasBirthdayDuringPayrun,
+        date,
+        position,
+        location,
+        isCasual,
+        hours,
+        overtime,
+        summary,
+    }: {
+        firstName: string
+        lastName: string
+        dob: DateTime
+        hasBirthdayDuringPayrun: boolean
+        date: DateTime
+        position: Position
+        location: Location
+        isCasual: boolean
+        hours: number
+        overtime: Overtime
+        summary: string
+    }) {
+        this.firstName = firstName
+        this.lastname = lastName
+        this.dob = dob
+        this.hasBirthdayDuringPayrun = hasBirthdayDuringPayrun
+        this.date = date
+        this.isCasual = isCasual
+        this.hours = hours
+        this.overtime = overtime
+        this.summary = summary
+
+        // calculate pay item
+        this.payItem = this.getPayItem(position, location)
+    }
+
+    private getPayItem(position: Position, location: Location): PayItem {
+        // TODO - AGE CALC
+        // TODO - PUBLIC HOLIDAYS
+        // TODO - OVERTIME
+        if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
+        if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
+        if (position === Position.ON_CALL) return this._getOnCallPayItem(location)
+        if (
+            position === Position.CALLED_IN_PARTY_FACILITATOR ||
+            position === Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR
+        )
+            return this._getCalledInPayItem(location)
+
+        return this._getOrdinaryPayItem(location)
+    }
+
+    private _isMonSat() {
+        // Sunday is 7
+        return this.date.weekday !== 7
+    }
+
+    private _isYoungerThan18() {
+        return DateTime.now().diff(this.dob, 'years').years < 18
+    }
+
+    private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
+        switch (location) {
+            case Location.BALWYN:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
+                            : 'Casual Ordinary Hours - Sunday - Balwyn'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Balwyn'
+                        : 'Casual Ordinary Hours - Sunday - Balwyn'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
+                    : 'PT/FT Ordinary Hours - Sunday - Balwyn'
+
+            case Location.CHELTENHAM:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
+                            : 'Casual Ordinary Hours - Sunday - Chelt'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Chelt'
+                        : 'Casual Ordinary Hours - Sunday - Chelt'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
+                    : 'PT/FT Ordinary Hours - Sunday - Chelt'
+
+            case Location.ESSENDON:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
+                            : 'Casual Ordinary Hours - Sunday - Essendon'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Essendon'
+                        : 'Casual Ordinary Hours - Sunday - Essendon'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+                    : 'PT/FT Ordinary Hours - Sunday - Essendon'
+
+            case Location.MALVERN:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
+                            : 'Casual Ordinary Hours - Sunday - Malvern'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Malvern'
+                        : 'Casual Ordinary Hours - Sunday - Malvern'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
+                    : 'PT/FT Ordinary Hours - Sunday - Malvern'
+            case Location.MOBILE:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
+                            : 'Casual Ordinary Hours - Sunday - Mobile'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Mobile'
+                        : 'Casual Ordinary Hours - Sunday - Mobile'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+                    : 'PT/FT Ordinary Hours - Sunday - Mobile'
+        }
+    }
+
+    private _getOnCallPayItem(location: Location): OnCallPayItem {
+        switch (location) {
+            case Location.BALWYN:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
+                        : 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
+            case Location.CHELTENHAM:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
+                        : 'On call - 16&17yo Csl Or Hs - Sunday - Chelt'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
+            case Location.ESSENDON:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+                        : 'On call - 16&17yo Csl Or Hs - Sunday - Essendon'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
+            case Location.MALVERN:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
+                        : 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
+            case Location.MOBILE:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+                        : 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
+        }
+    }
+
+    private _getCalledInPayItem(location: Location): CalledInPayItem {
+        switch (location) {
+            case Location.BALWYN:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
+            case Location.CHELTENHAM:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
+            case Location.ESSENDON:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+            case Location.MALVERN:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
+            case Location.MOBILE:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
+        }
+    }
+
+    private _getOvertimeFirstThreeHours(location: Location): PTFTOvertimeFirstThreeHours {
+        switch (location) {
+            case Location.BALWYN:
+                return 'PT/FT Overtime Hours - First 3 Hrs - Balwyn'
+            case Location.CHELTENHAM:
+                return 'PT/FT Overtime Hours - First 3 Hrs - Chelt'
+            case Location.ESSENDON:
+                return 'PT/FT Overtime Hours - First 3 Hrs - Essendon'
+            case Location.MALVERN:
+                return 'PT/FT Overtime Hours - First 3 Hrs - Malvern'
+            case Location.MOBILE:
+                return 'PT/FT Overtime Hours - First 3 Hrs - Mobile'
+        }
+    }
+
+    private _getOvertimeAfterThreeHours(location: Location): PTFTOvertimeAfterThreeHours {
+        switch (location) {
+            case Location.BALWYN:
+                return 'PT/FT Overtime Hours - After 3 Hrs - Balwyn'
+            case Location.CHELTENHAM:
+                return 'PT/FT Overtime Hours - After 3 Hrs - Chelt'
+            case Location.ESSENDON:
+                return 'PT/FT Overtime Hours - After 3 Hrs - Essendon'
+            case Location.MALVERN:
+                return 'PT/FT Overtime Hours - After 3 Hrs - Malvern'
+            case Location.MOBILE:
+                return 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
+        }
+    }
+}
+
+/**
+ * Tells you if a birthday falls between two dates.
+ *
+ * @param dob the date of birth
+ * @param start start of the range
+ * @param end end of the range
+ * @returns true if users birthday falls within the range, false otherwise
+ */
+export function hasBirthdayDuring(dob: DateTime, start: DateTime, end: DateTime) {
+    let year = start.year
+
+    while (year <= end.year) {
+        const nextBirthday = DateTime.fromObject({
+            year,
+            month: dob.month,
+            day: dob.day,
+        })
+
+        if (start <= nextBirthday && nextBirthday <= end) {
+            return true
+        }
+
+        year++
+    }
+
+    return false
+}
+
+export enum Location {
+    BALWYN = 'BALWYN',
+    CHELTENHAM = 'CHELTENHAM',
+    ESSENDON = 'ESSENDON',
+    MALVERN = 'MALVERN',
+    MOBILE = 'MOBILE',
+}
+
+export enum Position {
+    PARTY_FACILITATOR = 'PARTY_FACILITATOR',
+    SCIENCE_CLUB_FACILITATOR = 'SCIENCE_CLUB_FACILITATOR',
+    HOLIDAY_PROGRAM_FACILITATOR = 'HOLIDAY_PROGRAM_FACILITATOR',
+    MISCELLANEOUS = 'MISCELLANEOUS',
+    ON_CALL = 'ON_CALL',
+    CALLED_IN_PARTY_FACILITATOR = 'CALLED_IN_PARTY_FACILITATOR',
+    CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR = 'CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR',
+}
+
+const PositionMap: { [key: number]: Position } = {
+    4809533: Position.PARTY_FACILITATOR,
+    5206290: Position.SCIENCE_CLUB_FACILITATOR,
+    5557194: Position.HOLIDAY_PROGRAM_FACILITATOR,
+    6161155: Position.MISCELLANEOUS,
+    13464907: Position.ON_CALL,
+    13464921: Position.CALLED_IN_PARTY_FACILITATOR,
+    13464944: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+} as const
+
+const LocationsMap: { [key: number]: Location } = {
+    4809521: Location.BALWYN,
+    11315826: Location.CHELTENHAM,
+    4895739: Location.ESSENDON,
+    4809537: Location.MALVERN,
+    5557282: Location.MOBILE,
+} as const
+
+type CasualOrdinaryMonSat =
+    | 'Casual Ordinary Hours - Mon to Sat - Balwyn'
+    | 'Casual Ordinary Hours - Mon to Sat - Chelt'
+    | 'Casual Ordinary Hours - Mon to Sat - Essendon'
+    | 'Casual Ordinary Hours - Mon to Sat - Malvern'
+    | 'Casual Ordinary Hours - Mon to Sat - Mobile'
+
+type CasualOrdinarySunday =
+    | 'Casual Ordinary Hours - Sunday - Balwyn'
+    | 'Casual Ordinary Hours - Sunday - Chelt'
+    | 'Casual Ordinary Hours - Sunday - Essendon'
+    | 'Casual Ordinary Hours - Sunday - Malvern'
+    | 'Casual Ordinary Hours - Sunday - Mobile'
+
+type PTFTOrdinaryMonSat =
+    | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+
+type PTFTOrdinaryHoursSunday =
+    | 'PT/FT Ordinary Hours - Sunday - Balwyn'
+    | 'PT/FT Ordinary Hours - Sunday - Chelt'
+    | 'PT/FT Ordinary Hours - Sunday - Essendon'
+    | 'PT/FT Ordinary Hours - Sunday - Malvern'
+    | 'PT/FT Ordinary Hours - Sunday - Mobile'
+
+type OnCallCasualOrdinaryMonSat =
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
+
+type OnCallCasualOrdinarySunday =
+    | 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Essend'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
+
+type CalledInCasualOrdinaryMonSat =
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
+
+type CalledInCasualOrdinarySunday =
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
+
+type Under18CasualOrdinaryHoursMonSat =
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
+
+type Under18OnCallOrdinaryHoursMonSat =
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+
+// DONT THINK WE NEED THIS  - SHOULD BE SAME AS OVER 18. CURRENTLY XERO HAS $2.11 - WHY? SHOULD BE 1.75 * 0.1 = 0.175
+type Under18OnCallOrdinaryHoursSunday =
+    | 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
+    | 'On call - 16&17yo Csl Or Hs - Sunday - Chelt'
+    | 'On call - 16&17yo Csl Or Hs - Sunday - Essendon'
+    | 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
+    | 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+
+type Under18CalledInOrdinaryHoursMonSat =
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+
+// RENAME THESE TO REMOVE 'PT/FT'
+type PTFTOvertimeFirstThreeHours =
+    | 'PT/FT Overtime Hours - First 3 Hrs - Balwyn'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Chelt'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Essendon'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Malvern'
+    | 'PT/FT Overtime Hours - First 3 Hrs - Mobile'
+
+type PTFTOvertimeAfterThreeHours =
+    | 'PT/FT Overtime Hours - After 3 Hrs - Balwyn'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Chelt'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Essendon'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Malvern'
+    | 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
+
+type OnCallPayItem =
+    | OnCallCasualOrdinaryMonSat
+    | OnCallCasualOrdinarySunday
+    | Under18OnCallOrdinaryHoursMonSat
+    | Under18OnCallOrdinaryHoursSunday
+
+type CalledInPayItem = CalledInCasualOrdinaryMonSat | CalledInCasualOrdinarySunday | Under18CalledInOrdinaryHoursMonSat
+
+type OvertimePayItem = PTFTOvertimeFirstThreeHours | PTFTOvertimeAfterThreeHours
+
+type OrdinaryPayItem =
+    | CasualOrdinaryMonSat
+    | CasualOrdinarySunday
+    | Under18CasualOrdinaryHoursMonSat
+    | PTFTOrdinaryMonSat
+    | PTFTOrdinaryHoursSunday
+
+type PayItem = OrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem

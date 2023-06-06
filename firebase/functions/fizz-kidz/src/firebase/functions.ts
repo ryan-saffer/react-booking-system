@@ -3,6 +3,8 @@ import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } fr
 import {
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
+    GenerateTimesheetsParams,
+    GenerateTimesheetsResponse,
     ScheduleScienceAppointmentParams,
     ScienceEnrolment,
     SendTermContinuationEmailsParams,
@@ -26,6 +28,7 @@ export interface FirebaseFunctions {
     bookEvent: CloudFunction<ScheduleEventParams, void>
     updateEvent: CloudFunction<EventBooking, void>
     deleteEvent: CloudFunction<EventBooking, void>
+    generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
 }
 
 export type CloudFunction<Input, Result> = {
