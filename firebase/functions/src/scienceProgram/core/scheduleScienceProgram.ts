@@ -1,11 +1,10 @@
 import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
-import { db, storage } from '../../init'
+import { db, projectName, storage } from '../../init'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
-const projectName = JSON.parse(process.env.FIREBASE_CONFIG).projectId
 const env = projectName === 'bookings-prod' ? 'prod' : 'dev'
 
 export default async function scheduleScienceProgram(

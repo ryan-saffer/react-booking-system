@@ -15,13 +15,12 @@ import { Skeleton } from '@material-ui/lab'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../constants/routes'
 
-import { withAuthorization } from '../../Session'
 import { Acuity, Service } from 'fizz-kidz'
 import { capitalise } from '../../../utilities/stringUtilities'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-export const HolidayProgramSelection = withAuthorization(() => {
+export const HolidayProgramSelection = () => {
     const cssClasses = useStyles()
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -159,7 +158,7 @@ export const HolidayProgramSelection = withAuthorization(() => {
             </Paper>
         </>
     )
-})
+}
 
 const useStyles = makeStyles((theme) => ({
     appBar: {

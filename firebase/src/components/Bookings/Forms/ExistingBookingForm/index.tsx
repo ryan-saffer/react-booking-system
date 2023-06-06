@@ -35,9 +35,8 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
 import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
-import useRole from '../../../Hooks/UseRole'
-import { Roles } from '../../../../constants/roles'
 import EditFormButtons from '../EditFormButtons'
+import { useScopes } from '../../../Hooks/UseScopes'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string
@@ -52,8 +51,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const role = useRole()
-    const isRestricted = role === Roles.RESTRICTED
+    const isRestricted = useScopes().CORE === 'restricted'
     const MASK = 'xxxxx'
 
     const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])

@@ -1,10 +1,11 @@
 import React from 'react'
-import { Roles } from '../../constants/roles'
+import { Role } from '../../constants/roles'
 
 export interface AuthUser {
-    roles: { [key in Roles]?: boolean }
+    uid: string
+    role: Role
 }
 
-const AuthUserContext = React.createContext<AuthUser>({ roles: {} })
+const AuthUserContext = React.createContext<AuthUser | null>(null)
 
 export default AuthUserContext

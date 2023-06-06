@@ -7,8 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid } from '@material-ui/core'
 import ExistingBookingForm from './Forms/ExistingBookingForm'
-import useRole from '../Hooks/UseRole'
-import { Roles } from '../../constants/roles'
+import { useScopes } from '../Hooks/UseScopes'
 
 var dateFormat = require('dateformat')
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const BookingPanel = (props) => {
     const classes = useStyles()
 
-    const isRestricted = useRole() === Roles.RESTRICTED
+    const isRestricted = useScopes().CORE === 'restricted'
 
     const { bookingId, booking } = props
 
