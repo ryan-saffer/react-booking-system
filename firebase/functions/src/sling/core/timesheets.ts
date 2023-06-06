@@ -405,7 +405,7 @@ export class TimesheetRow {
                 return this._isYoungerThan18()
                     ? this._isMonSat()
                         ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
@@ -413,7 +413,7 @@ export class TimesheetRow {
                 return this._isYoungerThan18()
                     ? this._isMonSat()
                         ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Chelt'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
@@ -421,7 +421,7 @@ export class TimesheetRow {
                 return this._isYoungerThan18()
                     ? this._isMonSat()
                         ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Essendon'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
@@ -429,7 +429,7 @@ export class TimesheetRow {
                 return this._isYoungerThan18()
                     ? this._isMonSat()
                         ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
@@ -437,7 +437,7 @@ export class TimesheetRow {
                 return this._isYoungerThan18()
                     ? this._isMonSat()
                         ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
-                        : 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
@@ -654,14 +654,6 @@ type Under18OnCallOrdinaryHoursMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
 
-// DONT THINK WE NEED THIS  - SHOULD BE SAME AS OVER 18. CURRENTLY XERO HAS $2.11 - WHY? SHOULD BE 1.75 * 0.1 = 0.175
-type Under18OnCallOrdinaryHoursSunday =
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Chelt'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Essendon'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
-    | 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
-
 type Under18CalledInOrdinaryHoursMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
@@ -684,11 +676,7 @@ type PTFTOvertimeAfterThreeHours =
     | 'PT/FT Overtime Hours - After 3 Hrs - Malvern'
     | 'PT/FT Overtime Hours - After 3 Hrs - Mobile'
 
-type OnCallPayItem =
-    | OnCallCasualOrdinaryMonSat
-    | OnCallCasualOrdinarySunday
-    | Under18OnCallOrdinaryHoursMonSat
-    | Under18OnCallOrdinaryHoursSunday
+type OnCallPayItem = OnCallCasualOrdinaryMonSat | OnCallCasualOrdinarySunday | Under18OnCallOrdinaryHoursMonSat
 
 type CalledInPayItem = CalledInCasualOrdinaryMonSat | CalledInCasualOrdinarySunday | Under18CalledInOrdinaryHoursMonSat
 

@@ -336,7 +336,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Balwyn')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -352,7 +352,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Chelt')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Chelt')
 
             // essendon
             row = new TimesheetRow({
@@ -368,7 +368,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Essendon')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Essend')
 
             // malvern
             row = new TimesheetRow({
@@ -384,7 +384,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Malvern')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -400,7 +400,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Sunday - Mobile')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Mobile')
         })
 
         it('should map called in party facilitator for all locations mon-sat - over 18', () => {
