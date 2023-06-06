@@ -14,4 +14,5 @@ export type Timesheet = {
     user: { id: number }
     position: { id: number }
     location: { id: number }
+    summary: string
 }

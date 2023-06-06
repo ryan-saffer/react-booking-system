@@ -130,13 +130,13 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             .join('-')
         const tempFilePath = path.join(os.tmpdir(), filename)
 
-        fs.writeFileSync(tempFilePath, 'first_name,last_name,type, date,hours\n')
+        fs.writeFileSync(tempFilePath, 'first_name,last_name,type,date,hours,notes\n')
         rows.map((row) =>
             fs.appendFileSync(
                 tempFilePath,
                 `${row.firstName},${row.lastname},${row.payItem},${row.date.toLocaleString(DateTime.DATE_SHORT)},${
                     row.hours
-                }\n`
+                },${row.summary}\n`
             )
         )
 

@@ -73,6 +73,7 @@ export function createTimesheetRows({
                     position,
                     location,
                     hours: shiftLengthInHours,
+                    summary: timesheet.summary,
                     overtime: { firstThreeHours: false, afterThreeHours: false },
                 })
             )
@@ -98,6 +99,7 @@ export function createTimesheetRows({
                         position,
                         location,
                         hours: shiftLengthInHours,
+                        summary: timesheet.summary,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
@@ -115,6 +117,7 @@ export function createTimesheetRows({
                         position,
                         location,
                         hours: hoursUntilOvertime,
+                        summary: timesheet.summary,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
@@ -129,7 +132,8 @@ export function createTimesheetRows({
                     isCasual,
                     start,
                     position,
-                    location
+                    location,
+                    timesheet.summary
                 ).map((row) => output.push(row))
             }
         } else {
@@ -144,7 +148,8 @@ export function createTimesheetRows({
                 isCasual,
                 start,
                 position,
-                location
+                location,
+                timesheet.summary
             ).map((row) => output.push(row))
         }
         totalHours += shiftLengthInHours
@@ -162,7 +167,8 @@ function createOvertimeTimesheetRows(
     isCasual: boolean,
     date: DateTime,
     position: Position,
-    location: Location
+    location: Location,
+    summary: string
 ) {
     const output: TimesheetRow[] = []
     // calculate if the hours puts employee into after three hours of overtime
@@ -184,6 +190,7 @@ function createOvertimeTimesheetRows(
                     position,
                     location,
                     hours,
+                    summary,
                     overtime: { firstThreeHours: true, afterThreeHours: false },
                 })
             )
@@ -201,6 +208,7 @@ function createOvertimeTimesheetRows(
                     position,
                     location,
                     hours: hoursUntilAfterThreeHours,
+                    summary,
                     overtime: { firstThreeHours: true, afterThreeHours: false },
                 })
             )
@@ -215,6 +223,7 @@ function createOvertimeTimesheetRows(
                     position,
                     location,
                     hours: afterThreeHours,
+                    summary,
                     overtime: { firstThreeHours: false, afterThreeHours: true },
                 })
             )
@@ -232,6 +241,7 @@ function createOvertimeTimesheetRows(
                 position,
                 location,
                 hours,
+                summary,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
         )
@@ -255,6 +265,7 @@ export class TimesheetRow {
     isCasual: boolean
     hours: number
     overtime: Overtime
+    summary: string
 
     constructor({
         firstName,
@@ -267,6 +278,7 @@ export class TimesheetRow {
         isCasual,
         hours,
         overtime,
+        summary,
     }: {
         firstName: string
         lastName: string
@@ -278,6 +290,7 @@ export class TimesheetRow {
         isCasual: boolean
         hours: number
         overtime: Overtime
+        summary: string
     }) {
         this.firstName = firstName
         this.lastname = lastName
@@ -287,6 +300,7 @@ export class TimesheetRow {
         this.isCasual = isCasual
         this.hours = hours
         this.overtime = overtime
+        this.summary = summary
 
         // calculate pay item
         this.payItem = this.getPayItem(position, location)
@@ -648,7 +662,6 @@ type Under18OnCallOrdinaryHoursSunday =
     | 'On call - 16&17yo Csl Or Hs - Sunday - Malvern'
     | 'On call - 16&17yo Csl Or Hs - Sunday - Mobile'
 
-// NEED THIS
 type Under18CalledInOrdinaryHoursMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
