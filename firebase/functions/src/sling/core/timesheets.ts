@@ -309,7 +309,8 @@ export class TimesheetRow {
     private getPayItem(position: Position, location: Location): PayItem {
         // TODO - AGE CALC
         // TODO - PUBLIC HOLIDAYS
-        // TODO - OVERTIME
+        // TODO - OVERTIME 10 HOUR SHIFT
+        // TODO - UNDER 18 AND OVER 30 HOURS NEED SUPER - SHOW THEM ON SCREEN
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
         if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
         if (position === Position.ON_CALL) return this._getOnCallPayItem(location)
