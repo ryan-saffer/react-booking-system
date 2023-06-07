@@ -2706,7 +2706,7 @@ describe('Timesheet suite', () => {
             lastName: 'Saffer',
             dateOfBirth: DateTime.fromObject({ day: 2, month: 5, year: 1993 }).toISO(),
         }
-        it('should not reach overtime - 30 hours - non casual', () => {
+        it('should not reach overtime - non casual - 30 hours', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2762,7 +2762,7 @@ describe('Timesheet suite', () => {
             strictEqual(result[2].hours, 10)
         })
 
-        it('should reach overtime - 40 hours - first overtime shift over 3 hours - non casual', () => {
+        it('should reach overtime - non casual - 40 hours - first overtime shift over 3 hours', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2853,7 +2853,7 @@ describe('Timesheet suite', () => {
             strictEqual(result[6].hours, 5)
         })
 
-        it('should reach overtime - 40 hours - first overtime shift under 3 hours - non casual', () => {
+        it('should reach overtime - non casual - 40 hours - first overtime shift under 3 hours', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2944,7 +2944,75 @@ describe('Timesheet suite', () => {
             strictEqual(result[6].hours, 4)
         })
 
-        it('should not go into overtime if employee is casual', () => {
+        it('should not reach overtime - casual - 38 hours', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    dtstart: '2023-05-04T10:00:00+10:00',
+                    dtend: '2023-05-04T18:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 4)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 10)
+
+            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 8)
+        })
+
+        it('should reach overtime - casual - 48 hours - first overtime shift over 3 hours', () => {
             // given
             const timesheets: Timesheet[] = [
                 {
@@ -2968,9 +3036,9 @@ describe('Timesheet suite', () => {
                     summary: '',
                 },
                 {
-                    // 8 hours
+                    // 10 hours
                     dtstart: '2023-05-03T10:00:00+10:00',
-                    dtend: '2023-05-03T18:00:00+10:00',
+                    dtend: '2023-05-03T20:00:00+10:00',
                     location: { id: 4809521 }, // balwyn
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
@@ -2978,9 +3046,9 @@ describe('Timesheet suite', () => {
                     summary: '',
                 },
                 {
-                    // 4 hours (should not go into overtime)
+                    // 6 hours
                     dtstart: '2023-05-04T10:00:00+10:00',
-                    dtend: '2023-05-04T14:00:00+10:00',
+                    dtend: '2023-05-04T16:00:00+10:00',
                     location: { id: 4809521 }, // balwyn
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
@@ -2988,9 +3056,19 @@ describe('Timesheet suite', () => {
                     summary: '',
                 },
                 {
-                    // 5 hours (should still not be in overtime)
+                    // 7 hours (first 2 should okay, then next 5 overtime. first three should be under three hours, then last 2 over three hours)
                     dtstart: '2023-05-05T10:00:00+10:00',
-                    dtend: '2023-05-05T15:00:00+10:00',
+                    dtend: '2023-05-05T17:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 5 hours
+                    dtstart: '2023-05-06T10:00:00+10:00',
+                    dtend: '2023-05-06T15:00:00+10:00',
                     location: { id: 4809521 }, // balwyn
                     position: { id: 4809533 }, // party facilitator
                     user: { id: 123 },
@@ -3011,7 +3089,7 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 5)
+            strictEqual(result.length, 8)
 
             strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(result[0].hours, 10)
@@ -3020,13 +3098,126 @@ describe('Timesheet suite', () => {
             strictEqual(result[1].hours, 10)
 
             strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 8)
+            strictEqual(result[2].hours, 10)
 
             strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 4)
+            strictEqual(result[3].hours, 6)
 
             strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 5)
+            strictEqual(result[4].hours, 2)
+
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[5].hours, 3)
+
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[6].hours, 2)
+
+            strictEqual(result[7].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[7].hours, 5)
+        })
+
+        it('should reach overtime - casual - 48 hours - first overtime shift under 3 hours', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 6 hours
+                    dtstart: '2023-05-04T10:00:00+10:00',
+                    dtend: '2023-05-04T16:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 4 hours (first 2 should okay, then next 2 overtime, under three hours.)
+                    dtstart: '2023-05-05T10:00:00+10:00',
+                    dtend: '2023-05-05T14:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 5 hours (first hour under three hours overtime, next 4 over three hours)
+                    dtstart: '2023-05-06T10:00:00+10:00',
+                    dtend: '2023-05-06T15:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 8)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 10)
+
+            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 6)
+
+            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[4].hours, 2)
+
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[5].hours, 2)
+
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[6].hours, 1)
+
+            strictEqual(result[7].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[7].hours, 4)
         })
     })
 

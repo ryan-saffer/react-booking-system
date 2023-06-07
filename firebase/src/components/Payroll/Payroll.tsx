@@ -86,6 +86,20 @@ export const Payroll: React.FC<Props> = ({}) => {
                     It will use the shifts location and position, as well as factor in the staffs age and overtime, to
                     calculate how many hours each employee worked at which pay item.
                 </Paragraph>
+                <Paragraph>Overtime is calculated in the following way:</Paragraph>
+                <ul>
+                    <li>Any hours worked above 10 hours in a day.</li>
+                    <li>
+                        Any hours worked above 38 hours in a single week.
+                        <br />
+                        <br />
+                        <em>
+                            Note: If a casual employees first three hours of overtime are on a Sunday, their pay item
+                            will be their Sunday rates. This is because the first three hours of overtime multiplier
+                            (1.5x) is less than their Sunday multipler (1.75x).
+                        </em>
+                    </li>
+                </ul>
                 <Paragraph>
                     The tool will generate a csv file, ready for import into{' '}
                     <Link href="https://app.upsheets.com/login">UpSheets.</Link>
