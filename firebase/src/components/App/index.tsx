@@ -137,8 +137,8 @@ const App = () => {
         {
             path: ROUTES.PAYROLL,
             lazy: async () => {
-                const { Payroll: Component } = await import('../Payroll/Payroll')
-                return { Component: withAuthorization([Role.BOOKKEEPER], Component) }
+                const { Payroll } = await import('../Payroll/Payroll')
+                return { Component: withAuthorization([Role.BOOKKEEPER], Payroll) }
             },
         },
     ])
