@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Result } from 'antd'
+import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Result, Collapse } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
 import useFirebase from '../Hooks/context/UseFirebase'
@@ -10,10 +10,12 @@ import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { DownloadOutlined } from '@ant-design/icons'
+import { makeStyles } from '@material-ui/core'
 
 const { RangePicker } = DatePicker
 const { Title, Paragraph, Text, Link } = Typography
 const { Header, Content } = Layout
+const { Panel } = Collapse
 
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
@@ -22,6 +24,7 @@ type Props = {}
 
 export const Payroll: React.FC<Props> = ({}) => {
     const firebase = useFirebase()
+    const classes = useStyles()
 
     const {
         token: { colorBgContainer },
@@ -55,7 +58,7 @@ export const Payroll: React.FC<Props> = ({}) => {
         let message = 'Error'
         let description = 'Something went wrong generating the timesheet'
 
-        if (error.errorCode === 'invalid-length') {
+        if (error?.errorCode === 'invalid-length') {
             message = 'Invalid range'
             description = 'The date range must be 28 days or less'
         }
@@ -63,8 +66,8 @@ export const Payroll: React.FC<Props> = ({}) => {
     }
 
     return (
-        <Layout style={{ background: 'rgb(240, 242, 245)', height: '100vh' }}>
-            <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Layout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
+            <Header className={classes.header}>
                 <img
                     style={{ height: 50, cursor: 'pointer' }}
                     src={Logo.default}
@@ -105,38 +108,119 @@ export const Payroll: React.FC<Props> = ({}) => {
                 <Divider />
                 {timesheetsService.status === 'error' && renderError(timesheetsService.error.details)}
                 {timesheetsService.status === 'loaded' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <Title level={3} style={{ margin: 0 }}>
                             Result
                         </Title>
-                        {timesheetsService.result.skippedEmployees.length !== 0 && (
-                            <Alert
-                                message="Skipped employees"
-                                description={
-                                    <>
+                        <Divider orientation="left">Skipped employees</Divider>
+                        {timesheetsService.result.skippedEmployees.length !== 0 ? (
+                            <div className={`${classes.flexCol} ${classes['gap-16']}`}>
+                                <Alert
+                                    description={
+                                        <>
+                                            <Paragraph>
+                                                The following employees timesheets were not generated because they could
+                                                not be found in xero:
+                                            </Paragraph>
+                                            <ul>
+                                                {timesheetsService.result.skippedEmployees.map((employee, idx) => (
+                                                    <li key={idx}>{employee}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    }
+                                    type="warning"
+                                    showIcon
+                                />
+                                <Collapse>
+                                    <Panel
+                                        key="1"
+                                        header={
+                                            <Paragraph style={{ margin: 0 }} strong>
+                                                How to resolve this
+                                            </Paragraph>
+                                        }
+                                    >
                                         <Paragraph>
-                                            The following employees timesheets were not generated because they could not
-                                            be found in xero:
+                                            Ensure that all of the following steps have been followed:
                                         </Paragraph>
-                                        <ul>
-                                            {timesheetsService.result.skippedEmployees.map((employee) => (
-                                                <li>{employee}</li>
-                                            ))}
-                                        </ul>
-                                    </>
-                                }
-                                type="warning"
-                            />
+                                        <ol className={classes.list}>
+                                            <li>
+                                                Employee has been created in Xero, along with tax details and a default
+                                                pay template for 'Staff - Ordinary Hours'
+                                            </li>
+                                            <li>
+                                                Inside Sling, the 'Employee ID' field has been provided under the
+                                                employees 'Work' tab. This ID should come from their profile in Xero.
+                                            </li>
+                                        </ol>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <Alert message="All employees successfully found in Xero." type="success" showIcon />
                         )}
-                        {timesheetsService.result.employeesWithBirthday.length !== 0 && (
-                            <Card title="Employees with birthdays during pay run" size="small">
-                                <ul>
-                                    {timesheetsService.result.employeesWithBirthday.map((employee) => (
-                                        <li>{employee}</li>
-                                    ))}
-                                </ul>
-                            </Card>
+                        <Divider orientation="left">Employee Birthdays</Divider>
+                        {timesheetsService.result.employeesWithBirthday.length !== 0 ? (
+                            <div className={`${classes.flexCol} ${classes['gap-16']}`}>
+                                <Alert
+                                    message="Some employees have birthdays during this pay cycle"
+                                    type="warning"
+                                    showIcon
+                                />
+                                <Card title="Employees with birthdays during pay run" size="small">
+                                    <ul>
+                                        {timesheetsService.result.employeesWithBirthday.map((employee, idx) => (
+                                            <li key={idx}>{employee}</li>
+                                        ))}
+                                    </ul>
+                                </Card>
+                                <Collapse>
+                                    <Panel
+                                        key="1"
+                                        header={
+                                            <Paragraph style={{ margin: 0 }} strong>
+                                                How to resolve this
+                                            </Paragraph>
+                                        }
+                                    >
+                                        <Paragraph>Perform the following steps:</Paragraph>
+                                        <ol className={classes.list}>
+                                            <li>
+                                                Does the employees rate need to change because of their birthday? If
+                                                not, do nothing.
+                                            </li>
+                                            <li>Change their pay template in Xero to their new Ordinary Rate.</li>
+                                            <li>
+                                                After downloading the timesheets below, remove all rows for this
+                                                employee for any hours worked <strong>before their birthday.</strong>{' '}
+                                                Make sure you keep a copy of these rows, as you will need them later.
+                                            </li>
+                                            <li>
+                                                Once the timesheets have been uploaded into Xero, and you have created
+                                                the pay run, add adjustments for this employee using the rows that were
+                                                removed in step 3. Ensure these adjustments are at the employees{' '}
+                                                <strong>previous rate.</strong>
+                                                <br />
+                                                <br />
+                                                <em>
+                                                    Note: If the employee turned 18, the pay items may need adjusting!
+                                                </em>
+                                            </li>
+                                        </ol>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        ) : (
+                            <Alert message="No birthdays during this pay cycle." type="success" showIcon />
                         )}
+                        <Divider orientation="left">Superannuation</Divider>
+                        <Alert
+                            type="warning"
+                            message="TODO - Show employees who are under 18 that worked over 30 hours in a single week"
+                            showIcon
+                        />
+                        <Divider />
                         <Button
                             shape="round"
                             type="primary"
@@ -152,3 +236,17 @@ export const Payroll: React.FC<Props> = ({}) => {
         </Layout>
     )
 }
+
+const useStyles = makeStyles({
+    header: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    flexCol: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    'gap-16': { gap: 16 },
+    list: {
+        '& li': {
+            marginBottom: 8,
+        },
+    },
+})
