@@ -2,7 +2,7 @@ import { https, logger } from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { XeroClient } from 'xero-node'
 import { SlingClient } from '../core/slingClient'
-import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../core/timesheets'
+import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'
 import path from 'path'
 import os from 'os'
 import fs from 'fs'
@@ -76,6 +76,9 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // keeps track of users who have a birthday during the pay period
         const employeesWithBirthday: string[] = []
 
+        // leeps track of users who are under 18, but worked for more than 30 hrs in a single week (in order to be paid super)
+        const employeesUnder18Over30Hrs: string[] = []
+
         // calculate timesheets one week at a time
         for (const week of weeks) {
             // get all shifts for the time period
@@ -106,18 +109,21 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 // only bonnie is not casual
                 const isCasual = slingUser.employeeId !== '1551679a-9e81-47d3-b019-906d7ce617f1'
 
-                rows = [
-                    ...rows,
-                    ...createTimesheetRows({
-                        firstName: xeroUser.firstName,
-                        lastName: xeroUser.lastName,
-                        dob,
-                        isCasual,
-                        hasBirthdayDuringPayrun,
-                        usersTimesheets,
-                        timezone: slingUser.timezone,
-                    }),
-                ]
+                const { rows: employeesRows, totalHours } = createTimesheetRows({
+                    firstName: xeroUser.firstName,
+                    lastName: xeroUser.lastName,
+                    dob,
+                    isCasual,
+                    hasBirthdayDuringPayrun,
+                    usersTimesheets,
+                    timezone: slingUser.timezone,
+                })
+
+                if (isYoungerThan18(dob) && totalHours > 30) {
+                    employeesUnder18Over30Hrs.push(`${xeroUser.firstName} ${xeroUser.lastName}`)
+                }
+
+                rows = [...rows, ...employeesRows]
             })
         }
 
@@ -154,6 +160,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             url: downloadUrl,
             skippedEmployees: [...new Set(skippedUsers)],
             employeesWithBirthday: [...new Set(employeesWithBirthday)],
+            employeesUnder18Over30Hrs: [...new Set(employeesUnder18Over30Hrs)],
         }
     } catch (err) {
         console.error('error generating timesheets', err)

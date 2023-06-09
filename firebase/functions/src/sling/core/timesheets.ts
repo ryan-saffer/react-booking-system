@@ -26,6 +26,13 @@ export function getWeeks(_start: DateTime, end: DateTime) {
 }
 
 /**
+ * Returns true if dob is more than 18 years ago (relative to today)
+ */
+export function isYoungerThan18(dob: DateTime) {
+    return DateTime.now().diff(dob, 'years').years < 18
+}
+
+/**
  * Returns an array of timesheet rows based on the users timesheets for that week.
  * Takes overtime into consideration.
  *
@@ -50,8 +57,8 @@ export function createTimesheetRows({
     isCasual: boolean
     usersTimesheets: SlingTimesheet[]
     timezone: string
-}): TimesheetRow[] {
-    const output: TimesheetRow[] = []
+}): { rows: TimesheetRow[]; totalHours: number } {
+    const rows: TimesheetRow[] = []
 
     // keep track of hours worked this week
     let totalHours = 0
@@ -80,7 +87,7 @@ export function createTimesheetRows({
                 const hoursAboveTen = shiftLengthInHours - 10
 
                 // first add up to the first 10 hours
-                output.push(
+                rows.push(
                     new TimesheetRow({
                         firstName,
                         lastName,
@@ -103,7 +110,7 @@ export function createTimesheetRows({
 
                     if (isMoreThanThreeHours) {
                         // first add the first three hours
-                        output.push(
+                        rows.push(
                             new TimesheetRow({
                                 firstName,
                                 lastName,
@@ -120,7 +127,7 @@ export function createTimesheetRows({
                         )
 
                         // then the rest
-                        output.push(
+                        rows.push(
                             new TimesheetRow({
                                 firstName,
                                 lastName,
@@ -137,7 +144,7 @@ export function createTimesheetRows({
                         )
                     } else {
                         // all hours above 10 fit within first three hours
-                        output.push(
+                        rows.push(
                             new TimesheetRow({
                                 firstName,
                                 lastName,
@@ -157,7 +164,7 @@ export function createTimesheetRows({
             } else {
                 // only part of the shift fits before reaching overtime.
                 // add until overtime, and then add the rest as overtime
-                output.push(
+                rows.push(
                     new TimesheetRow({
                         firstName,
                         lastName,
@@ -185,7 +192,7 @@ export function createTimesheetRows({
                     position,
                     location,
                     timesheet.summary
-                ).map((row) => output.push(row))
+                ).map((row) => rows.push(row))
             }
         } else {
             // already in overtime
@@ -201,11 +208,12 @@ export function createTimesheetRows({
                 position,
                 location,
                 timesheet.summary
-            ).map((row) => output.push(row))
+            ).map((row) => rows.push(row))
         }
         totalHours += shiftLengthInHours
     })
-    return output
+
+    return { rows, totalHours }
 }
 
 function createOvertimeTimesheetRows(
@@ -362,7 +370,6 @@ export class TimesheetRow {
 
     private getPayItem(position: Position, location: Location): PayItem {
         // TODO - PUBLIC HOLIDAYS
-        // TODO - OVERTIME 10 HOUR SHIFT
         // TODO - UNDER 18 AND OVER 30 HOURS NEED SUPER - SHOW THEM ON SCREEN
         // TODO - UNDER 18 WHO ARE OVER $18/HR MAP TO ORDINARY
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
@@ -383,7 +390,7 @@ export class TimesheetRow {
     }
 
     private _isYoungerThan18() {
-        return DateTime.now().diff(this.dob, 'years').years < 18
+        return isYoungerThan18(this.dob)
     }
 
     private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
