@@ -94,9 +94,11 @@ export const Payroll: React.FC<Props> = ({}) => {
                         <br />
                         <br />
                         <em>
-                            Note: If a casual employees first three hours of overtime are on a Sunday, their pay item
-                            will be their Sunday rates. This is because the first three hours of overtime multiplier
-                            (1.5x) is less than their Sunday multipler (1.75x).
+                            <strong>Note:</strong>
+                            <br />
+                            If an employees first three hours of overtime are on a Sunday, their pay item will be their
+                            Sunday rates. <br /> This is because the first three hours of overtime multiplier (1.5x) is
+                            less than their Sunday multiplier (1.75x).
                         </em>
                     </li>
                 </ul>
@@ -134,7 +136,7 @@ export const Payroll: React.FC<Props> = ({}) => {
                                         <>
                                             <Paragraph>
                                                 The following employees timesheets were not generated because they could
-                                                not be found in xero:
+                                                not be found in Xero:
                                             </Paragraph>
                                             <ul>
                                                 {timesheetsService.result.skippedEmployees.map((employee, idx) => (
@@ -161,12 +163,13 @@ export const Payroll: React.FC<Props> = ({}) => {
                                         <ol className={classes.list}>
                                             <li>
                                                 Employee has been created in Xero, along with tax details and a default
-                                                pay template for 'Staff - Ordinary Hours'
+                                                pay template for 'Staff - Ordinary Hours'.
                                             </li>
                                             <li>
                                                 Inside Sling, the 'Employee ID' field has been provided under the
                                                 employees 'Work' tab. This ID should come from their profile in Xero.
                                             </li>
+                                            <li>Regenarate the timesheets.</li>
                                         </ol>
                                     </Panel>
                                 </Collapse>
@@ -178,17 +181,21 @@ export const Payroll: React.FC<Props> = ({}) => {
                         {timesheetsService.result.employeesWithBirthday.length !== 0 ? (
                             <div className={`${classes.flexCol} ${classes['gap-16']}`}>
                                 <Alert
-                                    message="Some employees have birthdays during this pay cycle"
+                                    description={
+                                        <>
+                                            <Paragraph>
+                                                The following employees have birthdays during this pay cycle:
+                                            </Paragraph>
+                                            <ul>
+                                                {timesheetsService.result.employeesWithBirthday.map((employee, idx) => (
+                                                    <li key={idx}>{employee}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    }
                                     type="warning"
                                     showIcon
                                 />
-                                <Card title="Employees with birthdays during pay run" size="small">
-                                    <ul>
-                                        {timesheetsService.result.employeesWithBirthday.map((employee, idx) => (
-                                            <li key={idx}>{employee}</li>
-                                        ))}
-                                    </ul>
-                                </Card>
                                 <Collapse>
                                     <Panel
                                         key="1"
@@ -218,7 +225,8 @@ export const Payroll: React.FC<Props> = ({}) => {
                                                 <br />
                                                 <br />
                                                 <em>
-                                                    Note: If the employee turned 18, the pay items may need adjusting!
+                                                    <strong>Note:</strong>
+                                                    <br /> If the employee turned 18, the pay items may need adjusting!
                                                 </em>
                                             </li>
                                         </ol>
@@ -229,11 +237,65 @@ export const Payroll: React.FC<Props> = ({}) => {
                             <Alert message="No birthdays during this pay cycle." type="success" showIcon />
                         )}
                         <Divider orientation="left">Superannuation</Divider>
-                        <Alert
-                            type="warning"
-                            message="TODO - Show employees who are under 18 that worked over 30 hours in a single week"
-                            showIcon
-                        />
+                        {timesheetsService.result.employeesUnder18Over30Hrs.length > 0 ? (
+                            <>
+                                <Alert
+                                    description={
+                                        <>
+                                            <Paragraph>
+                                                The following employees are under 18 but worked more than 30 hours in a
+                                                single week within the pay cycle, and therefore need to be paid
+                                                superannuation:
+                                            </Paragraph>
+                                            <ul>
+                                                {timesheetsService.result.employeesUnder18Over30Hrs.map(
+                                                    (employee, idx) => (
+                                                        <li key={idx}>{employee}</li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        </>
+                                    }
+                                    type="warning"
+                                    showIcon
+                                />
+                            </>
+                        ) : (
+                            <Alert
+                                type="success"
+                                message="No employees under 18 worked more than 30 hours in a week."
+                                showIcon
+                            />
+                        )}
+                        <Divider />
+                        <Card title="Next Steps" size="small">
+                            <ol className={classes.list}>
+                                <li>Download the generated timesheets below.</li>
+                                <li>Double check all overtime pay items are correct.</li>
+                                <li>
+                                    If there are any birthdays, remove any lines before their birthday as described
+                                    above.
+                                </li>
+                                <li>
+                                    Upload the timesheets into{' '}
+                                    <Link href="https://app.upsheets.com/login">UpSheets</Link>, and import into Xero.
+                                </li>
+                                <li>Create the pay run.</li>
+                                <li>
+                                    Review the 'notes' column in the generated timesheets file for any reimbursements
+                                    required, such as petrol for KM's travelled.
+                                </li>
+                                <li>
+                                    For all employees with birthdays, add their shifts before their birthday as
+                                    adjustments, as described above.
+                                </li>
+                                <li>Add adjustments for all reimburesments.</li>
+                                <li>
+                                    Include superannuation for all employees under 18 who worked more than 30 hours, as
+                                    listed above.
+                                </li>
+                            </ol>
+                        </Card>
                         <Divider />
                         <Button
                             shape="round"

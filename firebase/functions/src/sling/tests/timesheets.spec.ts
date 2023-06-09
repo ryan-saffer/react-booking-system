@@ -2821,7 +2821,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -2832,16 +2832,16 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 3)
+            strictEqual(rows.length, 3)
 
-            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 10)
+            strictEqual(rows[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 10)
         })
 
         it('should reach overtime - non casual - 40 hours - first overtime shift over 3 hours', () => {
@@ -2900,7 +2900,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -2911,28 +2911,28 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 7)
+            strictEqual(rows.length, 7)
 
-            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 8)
+            strictEqual(rows[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 8)
 
-            strictEqual(result[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 2)
+            strictEqual(rows[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 2)
 
-            strictEqual(result[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 3)
+            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 3)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[5].hours, 2)
+            strictEqual(rows[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[5].hours, 2)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[6].hours, 5)
+            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].hours, 5)
         })
 
         it('should reach overtime - non casual - 40 hours - first overtime shift under 3 hours', () => {
@@ -2991,7 +2991,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3002,28 +3002,28 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 7)
+            strictEqual(rows.length, 7)
 
-            strictEqual(result[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 8)
+            strictEqual(rows[2].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 8)
 
-            strictEqual(result[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 2)
+            strictEqual(rows[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 2)
 
-            strictEqual(result[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 2)
+            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 2)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[5].hours, 1)
+            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].hours, 1)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[6].hours, 4)
+            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].hours, 4)
         })
 
         it('should not reach overtime - casual - 38 hours', () => {
@@ -3068,7 +3068,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3079,19 +3079,19 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 4)
+            strictEqual(rows.length, 4)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 10)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 10)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 8)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 8)
         })
 
         it('should reach overtime - casual - 48 hours - first overtime shift over 3 hours', () => {
@@ -3160,7 +3160,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3171,31 +3171,31 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 8)
+            strictEqual(rows.length, 8)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 10)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 10)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 6)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 6)
 
-            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 2)
+            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 2)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[5].hours, 3)
+            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].hours, 3)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[6].hours, 2)
+            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].hours, 2)
 
-            strictEqual(result[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[7].hours, 5)
+            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].hours, 5)
         })
 
         it('should reach overtime - casual - 48 hours - first overtime shift under 3 hours', () => {
@@ -3264,7 +3264,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3275,31 +3275,31 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 8)
+            strictEqual(rows.length, 8)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 10)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 10)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 6)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 6)
 
-            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 2)
+            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 2)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[5].hours, 2)
+            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].hours, 2)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[6].hours, 1)
+            strictEqual(rows[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[6].hours, 1)
 
-            strictEqual(result[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[7].hours, 4)
+            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].hours, 4)
         })
 
         it('should go into overtime if shift length is more than 10 hours - 3 hours over', () => {
@@ -3318,7 +3318,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3329,13 +3329,13 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 2)
+            strictEqual(rows.length, 2)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 3)
+            strictEqual(rows[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 3)
         })
 
         it('should go into overtime if shift length is more than 10 hours - 8 hours over', () => {
@@ -3354,7 +3354,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3365,16 +3365,16 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 3)
+            strictEqual(rows.length, 3)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 3)
+            strictEqual(rows[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 3)
 
-            strictEqual(result[2].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[2].hours, 5)
+            strictEqual(rows[2].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[2].hours, 5)
         })
 
         it('should calculate correct overtime if shift over 10 hours done within 10 hours of overtime', () => {
@@ -3433,7 +3433,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3444,28 +3444,28 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 7)
+            strictEqual(rows.length, 7)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 10)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 10)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 3)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 3)
 
-            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 5)
+            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 5)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[5].hours, 3)
+            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].hours, 3)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[6].hours, 4)
+            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].hours, 4)
         })
 
         it('should calculate correct overtime if shift over 10 hours (but 13 or under) done but not within 10 hours of overtime', () => {
@@ -3524,7 +3524,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3535,31 +3535,31 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 8)
+            strictEqual(rows.length, 8)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 4)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 4)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 10)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 10)
 
-            strictEqual(result[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 3)
+            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 3)
 
-            strictEqual(result[5].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[5].hours, 1)
+            strictEqual(rows[5].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[5].hours, 1)
 
-            strictEqual(result[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[6].hours, 3)
+            strictEqual(rows[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[6].hours, 3)
 
-            strictEqual(result[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[7].hours, 1)
+            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].hours, 1)
         })
 
         it('should calculate correct overtime if shift over 10 hours (above 13) done but not within 10 hours of overtime', () => {
@@ -3618,7 +3618,7 @@ describe('Timesheet suite', () => {
             ]
 
             // when
-            const result = createTimesheetRows({
+            const { rows } = createTimesheetRows({
                 firstName: xeroUser.firstName,
                 lastName: xeroUser.lastName,
                 dob: DateTime.fromISO(xeroUser.dateOfBirth),
@@ -3629,34 +3629,34 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(result.length, 9)
+            strictEqual(rows.length, 9)
 
-            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[0].hours, 10)
+            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].hours, 10)
 
-            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[1].hours, 10)
+            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].hours, 10)
 
-            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[2].hours, 3)
+            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].hours, 3)
 
-            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[3].hours, 10)
+            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].hours, 10)
 
-            strictEqual(result[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[4].hours, 3)
+            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].hours, 3)
 
-            strictEqual(result[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[5].hours, 1)
+            strictEqual(rows[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[5].hours, 1)
 
-            strictEqual(result[6].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
-            strictEqual(result[6].hours, 1)
+            strictEqual(rows[6].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[6].hours, 1)
 
-            strictEqual(result[7].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
-            strictEqual(result[7].hours, 3)
+            strictEqual(rows[7].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[7].hours, 3)
 
-            strictEqual(result[8].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
-            strictEqual(result[8].hours, 1)
+            strictEqual(rows[8].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[8].hours, 1)
         })
     })
 
