@@ -3219,6 +3219,363 @@ describe('Timesheet suite', () => {
             strictEqual(result[7].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
             strictEqual(result[7].hours, 4)
         })
+
+        it('should go into overtime if shift length is more than 10 hours - 3 hours over', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T23:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 2)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[1].hours, 3)
+        })
+
+        it('should go into overtime if shift length is more than 10 hours - 8 hours over', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 18 hours
+                    dtstart: '2023-05-01T00:00:00+10:00',
+                    dtend: '2023-05-01T18:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 3)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[1].hours, 3)
+
+            strictEqual(result[2].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[2].hours, 5)
+        })
+
+        it('should calculate correct overtime if shift over 10 hours done within 10 hours of overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 3 hours
+                    dtstart: '2023-05-04T10:00:00+10:00',
+                    dtend: '2023-05-04T13:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 12 hours - only 5 hours left until overtime
+                    dtstart: '2023-05-05T10:00:00+10:00',
+                    dtend: '2023-05-05T22:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 7)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 10)
+
+            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 3)
+
+            strictEqual(result[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[4].hours, 5)
+
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[5].hours, 3)
+
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[6].hours, 4)
+        })
+
+        it('should calculate correct overtime if shift over 10 hours (but 13 or under) done but not within 10 hours of overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 4 hours - 14 hours until overtime
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T14:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 13 hours - first 10 should be normal, then 3 hours overtime
+                    dtstart: '2023-05-04T00:00:00+10:00',
+                    dtend: '2023-05-04T13:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 5 hours - first hour normal, but then rest overtime
+                    dtstart: '2023-05-05T10:00:00+10:00',
+                    dtend: '2023-05-05T15:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 8)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 4)
+
+            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 10)
+
+            strictEqual(result[4].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[4].hours, 3)
+
+            strictEqual(result[5].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[5].hours, 1)
+
+            strictEqual(result[6].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[6].hours, 3)
+
+            strictEqual(result[7].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[7].hours, 1)
+        })
+
+        it('should calculate correct overtime if shift over 10 hours (above 13) done but not within 10 hours of overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                {
+                    // 10 hours
+                    dtstart: '2023-05-01T10:00:00+10:00',
+                    dtend: '2023-05-01T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 10 hours
+                    dtstart: '2023-05-02T10:00:00+10:00',
+                    dtend: '2023-05-02T20:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 3 hours - 15 hours until overtime
+                    dtstart: '2023-05-03T10:00:00+10:00',
+                    dtend: '2023-05-03T13:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 14 hours - first 10 should be normal, then 4 hours overtime
+                    dtstart: '2023-05-04T00:00:00+10:00',
+                    dtend: '2023-05-04T14:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+                {
+                    // 5 hours - first hour normal, but then rest overtime
+                    dtstart: '2023-05-05T10:00:00+10:00',
+                    dtend: '2023-05-05T15:00:00+10:00',
+                    location: { id: 4809521 }, // balwyn
+                    position: { id: 4809533 }, // party facilitator
+                    user: { id: 123 },
+                    status: 'published',
+                    summary: '',
+                },
+            ]
+
+            // when
+            const result = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                usersTimesheets: timesheets,
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(result.length, 9)
+
+            strictEqual(result[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[0].hours, 10)
+
+            strictEqual(result[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[1].hours, 10)
+
+            strictEqual(result[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[2].hours, 3)
+
+            strictEqual(result[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[3].hours, 10)
+
+            strictEqual(result[4].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[4].hours, 3)
+
+            strictEqual(result[5].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[5].hours, 1)
+
+            strictEqual(result[6].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(result[6].hours, 1)
+
+            strictEqual(result[7].payItem, 'PT/FT Overtime Hours - First 3 Hrs - Balwyn')
+            strictEqual(result[7].hours, 3)
+
+            strictEqual(result[8].payItem, 'PT/FT Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(result[8].hours, 1)
+        })
     })
 
     describe('Birthday calculations', () => {
