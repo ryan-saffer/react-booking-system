@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Result, Collapse } from 'antd'
+import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Collapse } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
 import useFirebase from '../Hooks/context/UseFirebase'
@@ -22,7 +22,7 @@ dayjs.updateLocale('en', { weekStart: 1 })
 
 type Props = {}
 
-export const Payroll: React.FC<Props> = ({}) => {
+export const Payroll: React.FC<Props> = () => {
     const firebase = useFirebase()
     const classes = useStyles()
 
@@ -135,8 +135,8 @@ export const Payroll: React.FC<Props> = ({}) => {
                                     description={
                                         <>
                                             <Paragraph>
-                                                The following employees timesheets were not generated because they could
-                                                not be found in Xero:
+                                                The following employees' timesheets were not generated because they
+                                                could not be found in Xero:
                                             </Paragraph>
                                             <ul>
                                                 {timesheetsService.result.skippedEmployees.map((employee, idx) => (
@@ -168,6 +168,12 @@ export const Payroll: React.FC<Props> = ({}) => {
                                             <li>
                                                 Inside Sling, the 'Employee ID' field has been provided under the
                                                 employees 'Work' tab. This ID should come from their profile in Xero.
+                                            </li>
+                                            <li>
+                                                Check if this is the first pay run for this employee. If not,{' '}
+                                                <strong>
+                                                    we will need to backpay them for any previously missed pay cycles.
+                                                </strong>
                                             </li>
                                             <li>Regenarate the timesheets.</li>
                                         </ol>
@@ -282,14 +288,13 @@ export const Payroll: React.FC<Props> = ({}) => {
                                 </li>
                                 <li>Create the pay run.</li>
                                 <li>
-                                    Review the 'notes' column in the generated timesheets file for any reimbursements
-                                    required, such as petrol for KM's travelled.
+                                    For all employees with birthdays, add their shifts before their birthday as
+                                    adjustments to their payslip, as described above.
                                 </li>
                                 <li>
-                                    For all employees with birthdays, add their shifts before their birthday as
-                                    adjustments, as described above.
+                                    Review the 'notes' column in the generated timesheets file for any reimbursements
+                                    required, such as petrol for KM's travelled, and add adjustments to their payslip.
                                 </li>
-                                <li>Add adjustments for all reimburesments.</li>
                                 <li>
                                     Include superannuation for all employees under 18 who worked more than 30 hours, as
                                     listed above.
