@@ -87,6 +87,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -103,6 +104,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -119,6 +121,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -135,6 +138,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -151,6 +155,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -169,6 +174,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -185,6 +191,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -201,6 +208,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -217,6 +225,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -233,6 +242,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -251,6 +261,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -267,6 +278,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -283,6 +295,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -299,6 +312,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -315,6 +329,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -333,6 +348,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -349,6 +365,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -365,6 +382,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -381,6 +399,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -397,6 +416,7 @@ describe('Timesheet suite', () => {
                 position: Position.ON_CALL,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -415,6 +435,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -431,6 +452,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -447,6 +469,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -463,6 +486,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -479,6 +503,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -497,6 +522,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -513,6 +539,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -529,6 +556,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -545,6 +573,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -561,6 +590,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -579,6 +609,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -595,6 +626,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -611,6 +643,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -627,6 +660,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -643,6 +677,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -661,6 +696,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -677,6 +713,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -693,6 +730,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -709,6 +747,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -725,6 +764,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -743,6 +783,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -759,6 +800,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -775,6 +817,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -791,6 +834,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -807,6 +851,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -825,6 +870,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -841,6 +887,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -857,6 +904,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -873,6 +921,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -889,6 +938,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -907,6 +957,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -923,6 +974,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -939,6 +991,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -955,6 +1008,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -971,6 +1025,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -989,6 +1044,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1005,6 +1061,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1021,6 +1078,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1037,6 +1095,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1053,6 +1112,7 @@ describe('Timesheet suite', () => {
                 position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1071,6 +1131,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1087,6 +1148,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1103,6 +1165,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1119,6 +1182,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1135,6 +1199,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1153,6 +1218,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1169,6 +1235,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1185,6 +1252,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1201,6 +1269,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1217,6 +1286,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1235,6 +1305,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1251,6 +1322,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1267,6 +1339,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1283,6 +1356,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1299,6 +1373,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1317,6 +1392,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1333,6 +1409,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1349,6 +1426,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1365,6 +1443,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1381,6 +1460,7 @@ describe('Timesheet suite', () => {
                 position: Position.PARTY_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1399,6 +1479,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1415,6 +1496,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1431,6 +1513,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1447,6 +1530,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1463,6 +1547,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1481,6 +1566,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1497,6 +1583,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1513,6 +1600,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1529,6 +1617,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1545,6 +1634,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1563,6 +1653,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1579,6 +1670,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1595,6 +1687,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1611,6 +1704,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1627,6 +1721,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1645,6 +1740,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1661,6 +1757,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1677,6 +1774,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1693,6 +1791,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1709,6 +1808,7 @@ describe('Timesheet suite', () => {
                 position: Position.HOLIDAY_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1727,6 +1827,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1743,6 +1844,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1759,6 +1861,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1775,6 +1878,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1791,6 +1895,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1809,6 +1914,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1825,6 +1931,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1841,6 +1948,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1857,6 +1965,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1873,6 +1982,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1891,6 +2001,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1907,6 +2018,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1923,6 +2035,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1939,6 +2052,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1955,6 +2069,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1973,6 +2088,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -1989,6 +2105,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2005,6 +2122,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2021,6 +2139,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2037,6 +2156,7 @@ describe('Timesheet suite', () => {
                 position: Position.SCIENCE_CLUB_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2055,6 +2175,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2071,6 +2192,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2087,6 +2209,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2103,6 +2226,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2119,6 +2243,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2137,6 +2262,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2153,6 +2279,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2169,6 +2296,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2185,6 +2313,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2201,6 +2330,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2219,6 +2349,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2235,6 +2366,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2251,6 +2383,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2267,6 +2400,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2283,6 +2417,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2301,6 +2436,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2317,6 +2453,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2333,6 +2470,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2349,6 +2487,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2365,6 +2504,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2383,6 +2523,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2399,6 +2540,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2415,6 +2557,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2431,6 +2574,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2447,6 +2591,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2465,6 +2610,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2481,6 +2627,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2497,6 +2644,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2513,6 +2661,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2529,6 +2678,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
@@ -2547,6 +2697,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2563,6 +2714,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2579,6 +2731,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2595,6 +2748,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2611,6 +2765,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2629,6 +2784,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2645,6 +2801,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2661,6 +2818,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2677,6 +2835,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2693,6 +2852,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
@@ -2711,6 +2871,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.BALWYN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
@@ -2727,6 +2888,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.CHELTENHAM,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
@@ -2743,6 +2905,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.ESSENDON,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
@@ -2759,6 +2922,7 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MALVERN,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
@@ -2775,10 +2939,359 @@ describe('Timesheet suite', () => {
                 position: Position.MISCELLANEOUS,
                 location: Location.MOBILE,
                 hours: 8,
+                rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Mobile')
+        })
+
+        it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+        })
+
+        it('should map casual ordinary hours for employees under 18 on a rate under $18 on mon-sat to under 18 mon-sat', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.ESSENDON,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MALVERN,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.MOBILE,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+        })
+
+        it('should map on call for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.BALWYN,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.ESSENDON,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MALVERN,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MOBILE,
+                hours: 8,
+                rate: 14.4,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile')
+        })
+
+        it('should map casual ordinary hours for employees under 18 on a rate under $18 on mon-sat to under 18 mon-sat', () => {
+            // balwyn
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.BALWYN,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw')
+
+            // cheltenham
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.CHELTENHAM,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt')
+
+            // essendon
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.ESSENDON,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen')
+
+            // malvern
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MALVERN,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern')
+
+            // mobile
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.MOBILE,
+                hours: 8,
+                rate: 14.3,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
         })
     })
 
@@ -2828,6 +3341,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: false,
                 isCasual: false,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -2907,6 +3421,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: false,
                 isCasual: false,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -2998,6 +3513,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3075,6 +3591,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3167,6 +3684,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3271,6 +3789,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3325,6 +3844,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3361,6 +3881,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3440,6 +3961,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3531,6 +4053,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
@@ -3625,6 +4148,7 @@ describe('Timesheet suite', () => {
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
                 usersTimesheets: timesheets,
+                rate: 'not required',
                 timezone: 'Australia/Melbourne',
             })
 
