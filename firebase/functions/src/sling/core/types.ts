@@ -16,3 +16,5 @@ export type Timesheet = {
     location: { id: number }
     summary: string
 }
+
+export type Rate = number | 'not required'

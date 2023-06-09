@@ -1,5 +1,5 @@
 import { DateTime, Duration, Interval } from 'luxon'
-import { Timesheet as SlingTimesheet } from './types'
+import { Rate, Timesheet as SlingTimesheet } from './types'
 
 const BONNIE_OVERTIME_START = 30
 const CASUAL_OVERTIME_START = 38
@@ -48,6 +48,7 @@ export function createTimesheetRows({
     hasBirthdayDuringPayrun,
     isCasual,
     usersTimesheets,
+    rate,
     timezone,
 }: {
     firstName: string
@@ -56,6 +57,7 @@ export function createTimesheetRows({
     hasBirthdayDuringPayrun: boolean
     isCasual: boolean
     usersTimesheets: SlingTimesheet[]
+    rate: Rate
     timezone: string
 }): { rows: TimesheetRow[]; totalHours: number } {
     const rows: TimesheetRow[] = []
@@ -99,6 +101,7 @@ export function createTimesheetRows({
                         location,
                         hours: isShiftAboveTenHours ? 10 : shiftLengthInHours,
                         summary: timesheet.summary,
+                        rate,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
@@ -122,6 +125,7 @@ export function createTimesheetRows({
                                 location,
                                 hours: 3,
                                 summary: timesheet.summary,
+                                rate,
                                 overtime: { firstThreeHours: true, afterThreeHours: false },
                             })
                         )
@@ -139,6 +143,7 @@ export function createTimesheetRows({
                                 location,
                                 hours: hoursAboveTen - 3,
                                 summary: timesheet.summary,
+                                rate,
                                 overtime: { firstThreeHours: false, afterThreeHours: true },
                             })
                         )
@@ -156,6 +161,7 @@ export function createTimesheetRows({
                                 location,
                                 hours: hoursAboveTen,
                                 summary: timesheet.summary,
+                                rate,
                                 overtime: { firstThreeHours: true, afterThreeHours: false },
                             })
                         )
@@ -176,6 +182,7 @@ export function createTimesheetRows({
                         location,
                         hours: hoursUntilWeeklyOvertime,
                         summary: timesheet.summary,
+                        rate,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
@@ -191,6 +198,7 @@ export function createTimesheetRows({
                     start,
                     position,
                     location,
+                    rate,
                     timesheet.summary
                 ).map((row) => rows.push(row))
             }
@@ -207,6 +215,7 @@ export function createTimesheetRows({
                 start,
                 position,
                 location,
+                rate,
                 timesheet.summary
             ).map((row) => rows.push(row))
         }
@@ -227,6 +236,7 @@ function createOvertimeTimesheetRows(
     date: DateTime,
     position: Position,
     location: Location,
+    rate: Rate,
     summary: string
 ) {
     const output: TimesheetRow[] = []
@@ -253,6 +263,7 @@ function createOvertimeTimesheetRows(
                     location,
                     hours,
                     summary,
+                    rate,
                     overtime: { firstThreeHours: true, afterThreeHours: false },
                 })
             )
@@ -271,6 +282,7 @@ function createOvertimeTimesheetRows(
                     location,
                     hours: hoursUntilAfterThreeHours,
                     summary,
+                    rate,
                     overtime: { firstThreeHours: true, afterThreeHours: false },
                 })
             )
@@ -286,6 +298,7 @@ function createOvertimeTimesheetRows(
                     location,
                     hours: afterThreeHours,
                     summary,
+                    rate,
                     overtime: { firstThreeHours: false, afterThreeHours: true },
                 })
             )
@@ -304,6 +317,7 @@ function createOvertimeTimesheetRows(
                 location,
                 hours,
                 summary,
+                rate,
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
         )
@@ -327,6 +341,7 @@ export class TimesheetRow {
     isCasual: boolean
     hours: number
     overtime: Overtime
+    rate: Rate
     summary: string
 
     constructor({
@@ -340,6 +355,7 @@ export class TimesheetRow {
         isCasual,
         hours,
         overtime,
+        rate,
         summary,
     }: {
         firstName: string
@@ -352,6 +368,7 @@ export class TimesheetRow {
         isCasual: boolean
         hours: number
         overtime: Overtime
+        rate: Rate
         summary: string
     }) {
         this.firstName = firstName
@@ -362,6 +379,7 @@ export class TimesheetRow {
         this.isCasual = isCasual
         this.hours = hours
         this.overtime = overtime
+        this.rate = rate
         this.summary = summary
 
         // calculate pay item
@@ -369,9 +387,6 @@ export class TimesheetRow {
     }
 
     private getPayItem(position: Position, location: Location): PayItem {
-        // TODO - PUBLIC HOLIDAYS
-        // TODO - UNDER 18 AND OVER 30 HOURS NEED SUPER - SHOW THEM ON SCREEN
-        // TODO - UNDER 18 WHO ARE OVER $18/HR MAP TO ORDINARY
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
         if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
         if (position === Position.ON_CALL) return this._getOnCallPayItem(location)
@@ -393,13 +408,21 @@ export class TimesheetRow {
         return isYoungerThan18(this.dob)
     }
 
+    // determine if the employees rate, when working mon-sat (1.25x) is above $18.00
+    private isRateAbove18() {
+        if (this.rate === 'not required') return false
+        return this.rate * 1.25 >= 18
+    }
+
     private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
         switch (location) {
             case Location.BALWYN:
                 return this.isCasual
                     ? this._isYoungerThan18()
                         ? this._isMonSat()
-                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Balwyn'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
                             : 'Casual Ordinary Hours - Sunday - Balwyn'
                         : this._isMonSat()
                         ? 'Casual Ordinary Hours - Mon to Sat - Balwyn'
@@ -412,7 +435,9 @@ export class TimesheetRow {
                 return this.isCasual
                     ? this._isYoungerThan18()
                         ? this._isMonSat()
-                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Chelt'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
                             : 'Casual Ordinary Hours - Sunday - Chelt'
                         : this._isMonSat()
                         ? 'Casual Ordinary Hours - Mon to Sat - Chelt'
@@ -425,7 +450,9 @@ export class TimesheetRow {
                 return this.isCasual
                     ? this._isYoungerThan18()
                         ? this._isMonSat()
-                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Essendon'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
                             : 'Casual Ordinary Hours - Sunday - Essendon'
                         : this._isMonSat()
                         ? 'Casual Ordinary Hours - Mon to Sat - Essendon'
@@ -438,7 +465,9 @@ export class TimesheetRow {
                 return this.isCasual
                     ? this._isYoungerThan18()
                         ? this._isMonSat()
-                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Malvern'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
                             : 'Casual Ordinary Hours - Sunday - Malvern'
                         : this._isMonSat()
                         ? 'Casual Ordinary Hours - Mon to Sat - Malvern'
@@ -450,7 +479,9 @@ export class TimesheetRow {
                 return this.isCasual
                     ? this._isYoungerThan18()
                         ? this._isMonSat()
-                            ? '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Mobile'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
                             : 'Casual Ordinary Hours - Sunday - Mobile'
                         : this._isMonSat()
                         ? 'Casual Ordinary Hours - Mon to Sat - Mobile'
@@ -466,7 +497,9 @@ export class TimesheetRow {
             case Location.BALWYN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
                         : 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
@@ -474,7 +507,9 @@ export class TimesheetRow {
             case Location.CHELTENHAM:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
                         : 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
@@ -482,7 +517,9 @@ export class TimesheetRow {
             case Location.ESSENDON:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
                         : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
@@ -490,7 +527,9 @@ export class TimesheetRow {
             case Location.MALVERN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
                         : 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
@@ -498,7 +537,9 @@ export class TimesheetRow {
             case Location.MOBILE:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
-                        ? 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
                         : 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'

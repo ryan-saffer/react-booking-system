@@ -1,6 +1,5 @@
 import { https, logger } from 'firebase-functions'
 import { DateTime } from 'luxon'
-import { XeroClient } from 'xero-node'
 import { SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'
 import path from 'path'
@@ -8,6 +7,11 @@ import os from 'os'
 import fs from 'fs'
 import { projectName, storage } from '../../init'
 import { onCall } from '../../utilities'
+import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+import { getXeroClient } from '../../xero/XeroClient'
+import { Rate } from '../core/types'
+
+type XeroUserCache = { [key: string]: Employee | undefined }
 
 export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDateInput, endDateInput }) => {
     const slingClient = new SlingClient()
@@ -40,22 +44,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         })
     }
 
-    // initialise xero
-    let xero: XeroClient
-    try {
-        xero = new XeroClient({
-            clientId: process.env.XERO_CLIENT_ID ?? '',
-            clientSecret: process.env.XERO_CLIENT_SECRET ?? '',
-            grantType: 'client_credentials',
-        })
-
-        const tokenSet = await xero.getClientCredentialsToken()
-        xero.setTokenSet(tokenSet)
-    } catch (err) {
-        logger.error('error initialising xero api')
-        logger.error(err)
-        throw new https.HttpsError('aborted', 'error initialising xero api')
-    }
+    const ORDINARY_PAY_EARNINGS_RATE_ID = '1ef5805a-5208-4d89-8f35-620104543ed4'
 
     try {
         // break the time period into weeks
@@ -64,7 +53,11 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // get all sling users
         const slingUsers = await slingClient.getUsers()
 
-        // get all xero users
+        // cache for xero users
+        const xeroUsersCache: XeroUserCache = {}
+
+        const xero = await getXeroClient()
+
         const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
 
         // to keep track of all rows
@@ -86,15 +79,15 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             const timesheets = allTimesheets.filter((it) => it.status === 'published')
 
             // for each user, get all their timesheets
-            slingUsers.map((slingUser) => {
+            for (const slingUser of slingUsers) {
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
-                if (usersTimesheets.length === 0) return
+                if (usersTimesheets.length === 0) continue
 
-                const xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
+                let xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
                 if (!xeroUser) {
-                    logger.log(`unable to find sling user in xero: ${slingUser.legalName} ${slingUser.lastname}`)
+                    logger.log(`unable to find sling user in Xero: ${slingUser.legalName} ${slingUser.lastname}`)
                     skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)
-                    return
+                    continue
                 }
 
                 // calculate if the user has a birthday during this fortnight
@@ -104,6 +97,25 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                     employeesWithBirthday.push(
                         `${xeroUser.firstName} ${xeroUser.lastName} - ${dob.toLocaleString(DateTime.DATE_SHORT)}`
                     )
+                }
+
+                // if the employee is under 18, fetch their pay template.
+                // this will help determine if they are already above the minimum $18/hr rate.
+                // only fetch under 18 year olds because this call is expensive.
+                let rate: Rate = 'not required'
+                if (isYoungerThan18(dob)) {
+                    xeroUser = await getAndCacheXeroUser(slingUser.employeeId, xeroUsersCache)
+                    const ordinaryRate = xeroUser.payTemplate?.earningsLines?.find(
+                        (line) => line.earningsRateID === ORDINARY_PAY_EARNINGS_RATE_ID
+                    )?.ratePerUnit
+                    if (!ordinaryRate) {
+                        logger.log(
+                            `unable to find ordinary earnings rate in Xero for user: ${slingUser.legalName} ${slingUser.lastname}`
+                        )
+                        skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)
+                        continue
+                    }
+                    rate = ordinaryRate
                 }
 
                 // only bonnie is not casual
@@ -116,6 +128,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                     isCasual,
                     hasBirthdayDuringPayrun,
                     usersTimesheets,
+                    rate,
                     timezone: slingUser.timezone,
                 })
 
@@ -124,7 +137,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 }
 
                 rows = [...rows, ...employeesRows]
-            })
+            }
         }
 
         // create the csv
@@ -167,3 +180,14 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         throw new https.HttpsError('internal', 'error generating timesheets', err)
     }
 })
+
+async function getAndCacheXeroUser(userId: string, cache: XeroUserCache) {
+    const cachedUser = cache[userId]
+    if (cachedUser) return cachedUser
+
+    const xero = await getXeroClient()
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
+    cache[userId] = employee
+    return employee
+}
