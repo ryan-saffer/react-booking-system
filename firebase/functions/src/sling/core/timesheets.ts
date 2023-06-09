@@ -66,13 +66,20 @@ export function createTimesheetRows({
         const shiftLengthInHours = end.diff(start, 'hours').hours
 
         // calculate if this shift puts employee into overtime for the week
-        const hoursUntilOvertime = overtimeStart - totalHours
+        const hoursUntilWeeklyOvertime = overtimeStart - totalHours
 
-        if (hoursUntilOvertime > 0) {
+        if (hoursUntilWeeklyOvertime > 0) {
             // overtime not yet reached
-            const overtimeHours = shiftLengthInHours - hoursUntilOvertime
+
+            const overtimeHours = shiftLengthInHours - hoursUntilWeeklyOvertime
             if (overtimeHours <= 0) {
                 // entire shift fits before reaching overtime
+
+                // any time above 10 hours in a single shift is overtime
+                const isShiftAboveTenHours = shiftLengthInHours > 10
+                const hoursAboveTen = shiftLengthInHours - 10
+
+                // first add up to the first 10 hours
                 output.push(
                     new TimesheetRow({
                         firstName,
@@ -83,11 +90,70 @@ export function createTimesheetRows({
                         isCasual,
                         position,
                         location,
-                        hours: shiftLengthInHours,
+                        hours: isShiftAboveTenHours ? 10 : shiftLengthInHours,
                         summary: timesheet.summary,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
+
+                // then add the remaining hours as overtime
+                if (isShiftAboveTenHours) {
+                    // check if the hours above 10 are more than 3 (to calculate first three vs after three hours)
+                    const isMoreThanThreeHours = hoursAboveTen > 3
+
+                    if (isMoreThanThreeHours) {
+                        // first add the first three hours
+                        output.push(
+                            new TimesheetRow({
+                                firstName,
+                                lastName,
+                                dob,
+                                hasBirthdayDuringPayrun,
+                                date: start,
+                                isCasual,
+                                position,
+                                location,
+                                hours: 3,
+                                summary: timesheet.summary,
+                                overtime: { firstThreeHours: true, afterThreeHours: false },
+                            })
+                        )
+
+                        // then the rest
+                        output.push(
+                            new TimesheetRow({
+                                firstName,
+                                lastName,
+                                dob,
+                                hasBirthdayDuringPayrun,
+                                date: start,
+                                isCasual,
+                                position,
+                                location,
+                                hours: hoursAboveTen - 3,
+                                summary: timesheet.summary,
+                                overtime: { firstThreeHours: false, afterThreeHours: true },
+                            })
+                        )
+                    } else {
+                        // all hours above 10 fit within first three hours
+                        output.push(
+                            new TimesheetRow({
+                                firstName,
+                                lastName,
+                                dob,
+                                hasBirthdayDuringPayrun,
+                                date: start,
+                                isCasual,
+                                position,
+                                location,
+                                hours: hoursAboveTen,
+                                summary: timesheet.summary,
+                                overtime: { firstThreeHours: true, afterThreeHours: false },
+                            })
+                        )
+                    }
+                }
             } else {
                 // only part of the shift fits before reaching overtime.
                 // add until overtime, and then add the rest as overtime
@@ -101,14 +167,14 @@ export function createTimesheetRows({
                         date: start,
                         position,
                         location,
-                        hours: hoursUntilOvertime,
+                        hours: hoursUntilWeeklyOvertime,
                         summary: timesheet.summary,
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
                 )
 
                 createOvertimeTimesheetRows(
-                    overtimeHours,
+                    shiftLengthInHours - hoursUntilWeeklyOvertime,
                     overtimeStart,
                     firstName,
                     lastName,
@@ -295,10 +361,10 @@ export class TimesheetRow {
     }
 
     private getPayItem(position: Position, location: Location): PayItem {
-        // TODO - AGE CALC
         // TODO - PUBLIC HOLIDAYS
         // TODO - OVERTIME 10 HOUR SHIFT
         // TODO - UNDER 18 AND OVER 30 HOURS NEED SUPER - SHOW THEM ON SCREEN
+        // TODO - UNDER 18 WHO ARE OVER $18/HR MAP TO ORDINARY
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
         if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
         if (position === Position.ON_CALL) return this._getOnCallPayItem(location)
