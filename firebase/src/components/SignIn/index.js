@@ -72,8 +72,7 @@ const SignInPage = () => {
 
         firebase
             .doSignInWithEmailAndPassword(email, password)
-            .then((authUser) => {
-                firebase.db.collection('users').doc(authUser.user.uid).set({ username: email }, { merge: true })
+            .then(() => {
                 setLoading(false)
                 navigate(ROUTES.LANDING)
             })
