@@ -41,12 +41,8 @@ const SignInGoogle = (props) => {
     const handleSubmit = (event) => {
         firebase
             .doSignInWithGoogle()
-            .then((socialAuthUser) => {
+            .then(() => {
                 setError(null)
-                firebase.db
-                    .collection('users')
-                    .doc(socialAuthUser.user.uid)
-                    .set({ email: socialAuthUser.user.email }, { merge: true })
                 navigate(ROUTES.LANDING)
             })
             .catch((error) => {

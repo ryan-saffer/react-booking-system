@@ -30,6 +30,8 @@ const withAuthentication = (Component) => {
                                 }
 
                                 this.setState({ authUser })
+                            } else {
+                                this.setState({ authUser: { uid: authUser.uid, email: authUser.email } })
                             }
                         })
                 } else {
