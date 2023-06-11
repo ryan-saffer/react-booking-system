@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import * as LogoGif from '../../drawables/fizz_logo.gif'
 import useFirebase from '../Hooks/context/UseFirebase'
-import { Role } from '../../constants/roles'
+import { ROLES, Role } from '../../constants/roles'
 import { useAuth } from '../Hooks/context/useAuth'
 import Unauthorised from './Unauthorised'
 
 /**
- * Wraps a component with authorised roles, to ensure only correct users see the content.
+ * Wraps component with authorised roles, to ensure only correct users see the content.
+ * Wrapped components will show the Fizzing logo until authentication has settled.
+ * Once settled, unauthorised users will be taken back to sign-in.
  *
  * @param roles an array of roles allow to view this page. An empty array means any authenticated user can view this page.
  * No need to provide Role.ADMIN, as admins can view everything.
@@ -32,8 +34,13 @@ const withAuthorization = (roles: Role[], Component: React.FunctionComponent) =>
         })
 
         if (authUser) {
-            // admin is allowed to view all pages
-            if (authUser.role === Role.ADMIN) return <Component />
+            if (!authUser.role || !ROLES.includes(authUser.role)) {
+                return <Unauthorised showLogout />
+            }
+
+            if (authUser.role === 'ADMIN')
+                // admin is allowed to view all pages
+                return <Component />
 
             // empty roles means any authenticated user can view it
             if (roles.length === 0) {

@@ -1,4 +1,3 @@
-import { Role } from '../../constants/roles'
 import { Scope } from '../../constants/scopes'
 import { useAuth } from './context/useAuth'
 
@@ -7,18 +6,20 @@ type Permission = 'read' | 'write' | 'restricted' | 'none'
 export function useScopes(): { [key in Scope]: Permission } {
     const authUser = useAuth()
 
-    const role = authUser?.role ?? Role.NONE
+    const role = authUser?.role
+
+    if (!role) {
+        return { [Scope.CORE]: 'none', [Scope.PAYROLL]: 'none' }
+    }
 
     switch (role) {
-        case Role.ADMIN:
+        case 'ADMIN':
             return { [Scope.CORE]: 'write', [Scope.PAYROLL]: 'write' }
-        case Role.BASIC:
+        case 'BASIC':
             return { [Scope.CORE]: 'read', [Scope.PAYROLL]: 'none' }
-        case Role.BOOKKEEPER:
+        case 'BOOKKEEPER':
             return { [Scope.CORE]: 'none', [Scope.PAYROLL]: 'write' }
-        case Role.RESTRICTED:
+        case 'RESTRICTED':
             return { [Scope.CORE]: 'restricted', [Scope.PAYROLL]: 'none' }
-        case Role.NONE:
-            return { [Scope.CORE]: 'none', [Scope.PAYROLL]: 'none' }
     }
 }
