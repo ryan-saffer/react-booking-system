@@ -10,6 +10,7 @@ declare global {
             SLING_API_KEY: string
             XERO_CLIENT_ID: string
             XERO_CLIENT_SECRET: string
+            ESIGNATURES_SECRET: string
         }
     }
 }
