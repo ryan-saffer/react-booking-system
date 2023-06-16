@@ -31,9 +31,9 @@ export class ESignatureClient {
                 template_id: FACILITATOR_CONTRACT_TEMPLATE_ID,
                 test: env === 'dev' ? 'yes' : 'no',
                 signers: [{ name: templateVariables.name, email, mobile }],
-                placeholder_fields: Object.keys(templateVariables).map((it) => ({
-                    api_key: it,
-                    value: templateVariables[it as keyof typeof templateVariables],
+                placeholder_fields: Object.keys(templateVariables).map((api_key) => ({
+                    api_key,
+                    value: templateVariables[api_key as keyof typeof templateVariables],
                 })),
             }),
         })
