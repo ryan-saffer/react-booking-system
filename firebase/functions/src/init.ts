@@ -5,6 +5,7 @@ export const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookin
 const databaseUrl =
     env === 'prod' ? 'https://bookings-prod.firebaseio.com' : 'https://booking-system-6435d.firebaseio.com'
 admin.initializeApp({
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     credential: admin.credential.cert(require(`../credentials/${env}_service_account_credentials.json`)),
     databaseURL: databaseUrl,
 })
