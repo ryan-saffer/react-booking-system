@@ -30,7 +30,7 @@ export const Confirmation: React.FC<Props> = () => {
             return
         }
 
-        const observer = firebase.db
+        const unsubscribe = firebase.db
             .collection('holidayProgramBookings')
             .doc(paymentIntentId)
             .onSnapshot(
@@ -56,9 +56,7 @@ export const Confirmation: React.FC<Props> = () => {
                     setLoading(false)
                 }
             )
-        return function unsubscribe() {
-            observer()
-        }
+        return unsubscribe
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
