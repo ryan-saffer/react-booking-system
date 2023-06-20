@@ -347,7 +347,7 @@ function sendFeedbackEmail(booking) {
   t.location = booking.location;
 
   const body = t.evaluate().getContent();
-  const subject = "We hope you enjoyed your party!";
+  const subject = "Review your Fizz Kidz experience and WIN!";
   const signature = getGmailSignature("lami");
 
   GmailApp.sendEmail(booking.parentEmail, subject, "", {
