@@ -22,7 +22,7 @@ export const Confirmation: React.FC<Props> = () => {
         let timeout = setTimeout(() => {
             setError(true)
             setLoading(false)
-        }, 10000)
+        }, 15000)
 
         if (isFree) {
             setLoading(false)
@@ -48,6 +48,7 @@ export const Confirmation: React.FC<Props> = () => {
                     if (booked) {
                         clearTimeout(timeout)
                         setLoading(false)
+                        setError(false)
                         return
                     }
                 },
