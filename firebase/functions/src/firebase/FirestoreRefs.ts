@@ -36,4 +36,11 @@ export class FirestoreRefs {
     static event(eventId: string) {
         return this.events().doc(eventId)
     }
+
+    static employees() {
+        return db.collection('employees')
+    }
+    static employee(employeeId: string) {
+        return this.employees().doc(employeeId)
+    }
 }

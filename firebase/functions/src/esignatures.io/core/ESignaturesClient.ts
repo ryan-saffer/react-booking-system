@@ -18,8 +18,8 @@ export class ESignatureClient {
             address: string
             commencementDate: string
             wage: string
-            sendersName: string
-            sendersPosition: string
+            senderName: string
+            senderPosition: string
         }
     }) {
         const response = await fetch(`https://esignatures.io/api/contracts?token=${process.env.ESIGNATURES_SECRET}`, {
@@ -30,13 +30,23 @@ export class ESignatureClient {
             body: JSON.stringify({
                 template_id: FACILITATOR_CONTRACT_TEMPLATE_ID,
                 test: env === 'dev' ? 'yes' : 'no',
-                signers: [{ name: templateVariables.name, email, mobile }],
+                signers: [
+                    {
+                        name: templateVariables.name,
+                        email,
+                        mobile,
+                        required_identification_methods: ['email'],
+                        signature_request_delivery_method: '',
+                        signed_document_delivery_method: 'email',
+                    },
+                ],
                 placeholder_fields: Object.keys(templateVariables).map((api_key) => ({
                     api_key,
                     value: templateVariables[api_key as keyof typeof templateVariables],
                 })),
             }),
         })
-        return response.json()
+        const result = await response.json()
+        return result.data.contract.signers[0].sign_page_url
     }
 }

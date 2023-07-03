@@ -16,8 +16,8 @@ export const sendContract = functions.region('australia-southeast1').https.onReq
                 commencementDate: '21/05/23',
                 managerName: 'Bonnie Rowe',
                 managerPosition: 'Malvern Studio Manager',
-                sendersName: 'Talia Meltzer',
-                sendersPosition: 'Managing Director',
+                senderName: 'Talia Meltzer',
+                senderPosition: 'Managing Director',
             },
         })
         console.log(result)

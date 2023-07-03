@@ -73,4 +73,11 @@ export type Emails = {
         emailMessage: string
         price: string
     }
+
+    // ONBOARDING
+    onboarding: {
+        employeeName: string
+        formUrl: string
+        senderName: string
+    }
 }
