@@ -206,7 +206,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
             },
             {
                 key: 'freeTrialEmailSent',
-                title: 'Free Trial Email Sent',
+                title: 'Enrolment Email Sent',
                 dataIndex: 'enrolment',
                 filters: [
                     {

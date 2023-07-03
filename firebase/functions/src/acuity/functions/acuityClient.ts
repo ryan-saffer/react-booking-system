@@ -36,7 +36,7 @@ export const acuityClient = functions.region('australia-southeast1').https.onCal
     } catch (err: any) {
         if (err.error === 'invalid_certificate') {
             // this is okay.
-            // we still want to throw as front end handles this, but not need for error log
+            // we still want to throw as front end handles this, but no need for error log
             functions.logger.log('invalid discount code requested', { details: err })
         } else {
             functions.logger.error(`error calling acuity client with method: ${data.method}`, { details: err })
