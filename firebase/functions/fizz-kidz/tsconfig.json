@@ -5,24 +5,13 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "lib": [
-            "es6",
-            "es2015"
-        ],
-        "types": [
-            "node"
-        ],
+        "lib": ["es6", "es2015"],
+        "types": ["node"],
         "declaration": true,
         "outDir": "lib",
         "rootDir": "src",
-        "strict": true,
+        "strict": true
     },
-    "exclude": [
-        "lib",
-        "node_modules",
-        "src/**/*.spec.ts"
-    ],
-    "include": [
-        "src"
-    ]
+    "exclude": ["lib", "node_modules", "src/**/*.spec.ts"],
+    "include": ["src"]
 }
