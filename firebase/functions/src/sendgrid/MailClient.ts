@@ -177,6 +177,20 @@ class MailClient {
                     template: 'too_many_creations_chosen.html',
                     useMjml: false,
                 }
+            case 'onboarding':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Onboarding',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'onboarding.html',
+                    useMjml: true,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
