@@ -23,7 +23,8 @@ export type Employee = {
     emergencyContactRelation?: string
     pdfSummary?: string
     contract?: string
-    wage: string
+    baseWage: string
+    saturdayRate: string
     commencementDate: string
     location: Locations
     managerName: string
