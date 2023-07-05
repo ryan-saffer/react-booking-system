@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { firestore } from 'firebase' // https://stackoverflow.com/a/51275905/7870403
+import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 import { Locations } from './Locations'
 import { Creations } from './Creations'
 import { CakeFlavours } from './CakeFlavours'

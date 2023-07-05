@@ -1,4 +1,4 @@
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, HolidayProgramBooking } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, HolidayProgramBooking, Employee } from 'fizz-kidz'
 import { db } from '../init'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
@@ -38,8 +38,9 @@ export class FirestoreRefs {
     }
 
     static employees() {
-        return db.collection('employees')
+        return db.collection('employees') as Collection<Employee>
     }
+
     static employee(employeeId: string) {
         return this.employees().doc(employeeId)
     }
