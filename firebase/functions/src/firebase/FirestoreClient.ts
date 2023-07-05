@@ -91,6 +91,14 @@ class Client {
     deleteEmployee(employeeId: string) {
         return FirestoreRefs.employee(employeeId).delete()
     }
+
+    getEmployee(employeeId: string) {
+        return this._getDocument(FirestoreRefs.employee(employeeId))
+    }
+
+    updateEmployee(employee: Partial<Employee>) {
+        return FirestoreRefs.employee(employee.id!).update(employee)
+    }
 }
 
 const FirestoreClient = new Client()
