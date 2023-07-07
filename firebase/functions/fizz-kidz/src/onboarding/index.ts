@@ -31,6 +31,8 @@ export type Employee = {
     managerPosition: string
     senderName: string
     senderPosition: string
+    slingUserId?: string
+    xeroUserId?: string
     status: 'form-sent' | 'generating-accounts' | 'verification' | 'complete'
 }
 
