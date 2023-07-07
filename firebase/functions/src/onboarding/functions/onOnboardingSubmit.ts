@@ -10,6 +10,7 @@ import { IncomeType } from 'xero-node/dist/gen/model/payroll-au/incomeType'
 import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 import { env } from '../../init'
 import { EarningsRateCalculationType } from 'xero-node/dist/gen/model/payroll-au/earningsRateCalculationType'
+import { SlingClient } from '../../sling/core/slingClient'
 
 type BasePFResponse = {
     custom_key: string
@@ -46,9 +47,10 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
     if (employee.status !== 'form-sent') {
         functions.logger.log(`employee form already submitted for ${employee.firstName} ${employee.lastName} - exiting`)
-        res.sendStatus(200)
         return
     }
+
+    const wwccPhoto = data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')?.value
 
     employee = {
         ...employee,
@@ -69,11 +71,13 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
         bsb: data.find((it): it is PFTextResponse => it.custom_key === 'bsb')!.value,
         accountNumber: data.find((it): it is PFTextResponse => it.custom_key === 'accountNumber')!.value,
         wwccStatus: data.find((it): it is PFTextResponse => it.custom_key === 'wwccStatus')!.value,
-        wwccPhoto: {
-            url: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.url,
-            filename: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.name,
-            mimeType: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.type,
-        },
+        ...(wwccPhoto && {
+            wwccPhoto: {
+                url: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.url,
+                filename: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.name,
+                mimeType: data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value.type,
+            },
+        }),
         wwccCardNumber: data.find((it): it is PFTextResponse => it.custom_key === 'wwccCardNumber')!.value,
         wwccApplicationNumber: data.find((it): it is PFTextResponse => it.custom_key === 'wwccApplicationNumber')!
             .value,
@@ -100,9 +104,9 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
         // TFN form
         await driveClient.uploadFileFromUrl(
-            employee.tfnForm!.url,
-            employee.tfnForm!.filename,
-            employee.tfnForm!.mimeType,
+            employee.tfnForm.url,
+            employee.tfnForm.filename,
+            employee.tfnForm.mimeType,
             folderId!
         )
 
@@ -119,7 +123,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
         // PDF summary
         await driveClient.uploadFileFromUrl(
-            employee.pdfSummary!,
+            employee.pdfSummary,
             `${employee.firstName} ${employee.lastName} Onboarding Form`,
             'application/pdf',
             folderId!
@@ -137,7 +141,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
     // - Holiday Group
     // - Tax declaration
     // - Super (Include adding it to pay template)
-    let employeeXeroId
+    let employeeXeroId: string
     try {
         const createEmployeeResult = await xeroClient.payrollAUApi.createEmployee('', [
             {
@@ -182,7 +186,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
                 },
             },
         ])
-        employeeXeroId = createEmployeeResult.body.employees![0].employeeID
+        employeeXeroId = createEmployeeResult.body.employees![0].employeeID!
     } catch (err) {
         functions.logger.error(`error creating employee in xero: ${employee.firstName} ${employee.lastName}`, {
             details: err,
@@ -196,7 +200,50 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
     console.log('XERO ID', employeeXeroId)
 
-    res.sendStatus(200)
+    // create employee in sling
+    const slingClient = new SlingClient()
+    try {
+        const slingResult = await slingClient.createUser({
+            name: employee.firstName,
+            legalName: employee.firstName,
+            lastname: employee.lastName,
+            email: employee.email,
+            countryCode: '+61',
+            countryISOCode: 'AU',
+            phone: employee.mobile,
+            timezone: 'Australia/Melbourne',
+            role: 'user',
+            employeeId: employeeXeroId,
+            accessToLaborCost: false,
+            timeclockEnabled: true,
+            invite: false,
+            groups: [
+                { id: 4809521 }, // balwyn
+                { id: 11315826 }, // cheltenham
+                { id: 4895739 }, // essendon
+                { id: 4809537 }, // malvern
+                { id: 5557282 }, // mobile
+                { id: 4809533 }, // party fac
+                { id: 5557194 }, // hol program fac
+                { id: 5206290 }, // science club fac
+                { id: 13464907 }, // on call
+                { id: 13464921 }, // called in party fac
+                { id: 13464944 }, // called in hol program fac
+                { id: 6161155 }, // miscellaneous
+                { id: 4809520 }, // everyone
+            ],
+        })
+        console.log(JSON.stringify(slingResult))
+    } catch (err) {
+        functions.logger.error(`error creating employee in sling: ${employee.firstName} ${employee.lastName}`)
+        throw new functions.https.HttpsError(
+            'internal',
+            `error creating employee in sling: ${employee.firstName} ${employee.lastName}`
+        )
+    }
+
+    await FirestoreClient.updateEmployee({ id: employee.id, xeroUserId: employeeXeroId, status: 'verification' })
+
     console.log('*** FINISHED ***')
 })
 
