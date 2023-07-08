@@ -9,6 +9,7 @@ export const initiateOnboarding = functions.region('australia-southeast1').https
     console.log('*** Running my server! ***')
 
     const employee = {
+        created: new Date().getTime(),
         firstName: 'Ryan',
         lastName: 'Saffer',
         email: 'ryansaffer@gmail.com',
@@ -23,6 +24,7 @@ export const initiateOnboarding = functions.region('australia-southeast1').https
         senderName: 'Bonnie Chuy',
         senderPosition: 'COO',
         status: 'form-sent',
+        contractSigned: false,
     } satisfies WithoutId<Employee>
 
     const {
@@ -65,6 +67,8 @@ export const initiateOnboarding = functions.region('australia-southeast1').https
         await FirestoreClient.deleteEmployee(id)
         throw new functions.https.HttpsError('internal', 'error creating contract', err)
     }
+
+    await FirestoreClient.updateEmployee({ id, contractUrl })
 
     const FORM_URL = 'https://fizz-kidz-onboarding.paperform.co'
 

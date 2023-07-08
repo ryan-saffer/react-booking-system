@@ -137,6 +137,11 @@ export const Navigation = () => {
                                     <Typography>Payroll</Typography>
                                 </Paper>
                             )}
+                            {hasCoreWriteScope && (
+                                <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.ONBOARDING)}>
+                                    <Typography>Onboarding</Typography>
+                                </Paper>
+                            )}
                         </>
                     )}
 

@@ -141,6 +141,13 @@ const App = () => {
                 return { Component: withAuthorization(['BOOKKEEPER'], Payroll) }
             },
         },
+        {
+            path: ROUTES.ONBOARDING,
+            lazy: async () => {
+                const { Onboarding } = await import('../Onboarding/Onboarding')
+                return { Component: withAuthorization([], Onboarding) }
+            },
+        },
     ])
 
     return (

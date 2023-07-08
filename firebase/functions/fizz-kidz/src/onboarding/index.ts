@@ -2,6 +2,7 @@ import { Locations } from '../booking/Locations'
 
 export type Employee = {
     id: string
+    created: number
     firstName: string
     lastName: string
     pronouns?: string
@@ -22,7 +23,8 @@ export type Employee = {
     emergencyContactMobile?: string
     emergencyContactRelation?: string
     pdfSummary?: string
-    contract?: string
+    contractUrl?: string
+    contractSigned: boolean
     baseWage: string
     saturdayRate: string
     commencementDate: string
