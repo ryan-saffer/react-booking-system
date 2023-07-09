@@ -5,6 +5,7 @@ export type Employee = {
     created: number
     firstName: string
     lastName: string
+    position: string
     pronouns?: string
     dob?: string
     email: string
@@ -26,7 +27,6 @@ export type Employee = {
     contractUrl?: string
     contractSigned: boolean
     baseWage: string
-    saturdayRate: string
     commencementDate: string
     location: Locations
     managerName: string

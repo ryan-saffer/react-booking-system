@@ -17,7 +17,8 @@ export class ESignatureClient {
             managerPosition: string
             address: string
             commencementDate: string
-            wage: string
+            saturdayWage: string
+            sundayWage: string
             senderName: string
             senderPosition: string
         }
