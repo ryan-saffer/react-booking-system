@@ -64,7 +64,7 @@ const EmployeeTable = () => {
             {
                 key: 'status',
                 dataIndex: 'employee',
-                title: 'Status',
+                title: 'Onboarding Status',
                 render: (employee: Employee) => renderBadge(employee),
             },
         ],
