@@ -179,7 +179,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
                     earningsLines: [
                         {
                             earningsRateID: STAFF_ORDINARY_HOURS_RATE_ID,
-                            ratePerUnit: parseFloat(employee.baseWage),
+                            ratePerUnit: employee.baseWage,
                             calculationType: EarningsRateCalculationType.ENTEREARNINGSRATE,
                         },
                     ],
@@ -203,7 +203,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
     // create employee in sling
     const slingClient = new SlingClient()
     try {
-        const slingResult = await slingClient.createUser({
+        await slingClient.createUser({
             name: employee.firstName,
             legalName: employee.firstName,
             lastname: employee.lastName,
@@ -233,7 +233,6 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
                 { id: 4809520 }, // everyone
             ],
         })
-        console.log(JSON.stringify(slingResult))
     } catch (err) {
         functions.logger.error(`error creating employee in sling: ${employee.firstName} ${employee.lastName}`)
         throw new functions.https.HttpsError(

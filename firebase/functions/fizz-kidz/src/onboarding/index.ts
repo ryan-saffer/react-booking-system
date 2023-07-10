@@ -26,9 +26,9 @@ export type Employee = {
     pdfSummary?: string
     contractUrl?: string
     contractSigned: boolean
-    baseWage: string
+    baseWage: number
     commencementDate: string
-    location: Locations
+    location: Exclude<Locations, 'mobile'>
     managerName: string
     managerPosition: string
     senderName: string
@@ -43,3 +43,5 @@ type File = {
     filename: string
     mimeType: string
 }
+
+export type NewEmployee = Omit<Employee, 'id' | 'status' | 'created' | 'contractSigned'>

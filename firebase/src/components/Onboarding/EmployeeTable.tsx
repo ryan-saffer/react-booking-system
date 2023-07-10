@@ -17,7 +17,6 @@ const useEmployees = () => {
             .orderBy('created')
             .onSnapshot((snap) => {
                 setEmployees(snap.docs.map((doc) => doc.data() as Employee))
-                console.log(snap.docs.map((doc) => doc.data()))
                 setLoading(false)
             })
 
@@ -56,7 +55,7 @@ const EmployeeTable = () => {
                 dataIndex: 'employee',
                 title: 'Contract Status',
                 render: (employee: Employee) => (
-                    <Tag color={employee.contractSigned ? 'green' : 'red'}>
+                    <Tag color={employee.contractSigned ? 'green' : 'orange'}>
                         {employee.contractSigned ? 'Signed' : 'Awaiting Signature'}
                     </Tag>
                 ),
@@ -80,7 +79,7 @@ const EmployeeTable = () => {
             case 'generating-accounts':
                 return <Tag color="volcano">Generating Accounts</Tag>
             case 'verification':
-                return <Tag color="red">Requires Verification</Tag>
+                return <Tag color="blue">Requires Verification</Tag>
             case 'complete':
                 return <Tag color="green">Onboarding Complete</Tag>
             default: {
@@ -100,7 +99,7 @@ const EmployeeTable = () => {
             size="small"
             expandable={{
                 expandRowByClick: true,
-                expandedRowRender: (columns) => <EmployeeDetails employee={columns.employee} />,
+                expandedRowRender: (record) => <EmployeeDetails employee={record.employee} />,
                 expandedRowKeys: expandedRows,
                 onExpand: (expanded, record) => setExpandedRows(expanded ? [record.key] : []),
             }}
