@@ -26,6 +26,7 @@ export type Employee = {
     pdfSummary?: string
     contractUrl?: string
     contractSigned: boolean
+    contractSignedUrl?: string
     baseWage: number
     commencementDate: string
     location: Exclude<Locations, 'mobile'>
