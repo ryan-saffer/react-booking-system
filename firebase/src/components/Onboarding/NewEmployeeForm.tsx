@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
 import React, { useState } from 'react'
 import { Dayjs } from 'dayjs'
 import { Locations } from 'fizz-kidz'
@@ -31,6 +31,7 @@ type Props = {
 const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
     const firebase = useFirebase()
     const [form] = Form.useForm<TNewEmployeeForm>()
+    const [messageApi] = message.useMessage()
 
     const [submitting, setSubmitting] = useState(false)
 
@@ -41,7 +42,6 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                 ...values,
                 commencementDate: values.commencementDate.format('YYYY-MM-DD'),
             }
-            console.log(formattedValues)
             setSubmitting(true)
             try {
                 await callFirebaseFunction('initiateOnboarding', firebase)(formattedValues)
@@ -49,6 +49,11 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                 form.resetFields()
             } catch (err) {
                 console.error(err)
+                messageApi.open({
+                    type: 'error',
+                    content: 'There was an error creating the employee',
+                    duration: 5,
+                })
             } finally {
                 setSubmitting(false)
             }
