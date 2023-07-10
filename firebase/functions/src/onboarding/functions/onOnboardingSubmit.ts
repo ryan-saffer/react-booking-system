@@ -141,12 +141,6 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
     // create user in xero
     const xeroClient = await getXeroClient()
-    // THINGS NEEDED TO BE MANUAL
-    // - Invite to 'Xero Me'
-    // - Emergency Contact
-    // - Holiday Group
-    // - Tax declaration
-    // - Super (Include adding it to pay template)
     let employeeXeroId: string
     try {
         const createEmployeeResult = await xeroClient.payrollAUApi.createEmployee('', [

@@ -4,6 +4,7 @@ import useFirebase from '../Hooks/context/UseFirebase'
 import { Employee } from 'fizz-kidz'
 import { ColumnsType } from 'antd/es/table'
 import { makeStyles } from '@material-ui/core'
+import VerificationButton from './VerificationButton'
 
 const useEmployees = () => {
     const firebase = useFirebase()
@@ -65,6 +66,13 @@ const EmployeeTable = () => {
                 dataIndex: 'employee',
                 title: 'Onboarding Status',
                 render: (employee: Employee) => renderBadge(employee),
+            },
+            {
+                key: 'action',
+                dataIndex: 'employee',
+                title: 'Action',
+                render: (employee: Employee) =>
+                    employee.status === 'verification' && <VerificationButton employee={employee} />,
             },
         ],
         []
