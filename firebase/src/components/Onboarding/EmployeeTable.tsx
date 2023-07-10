@@ -40,10 +40,24 @@ const EmployeeTable = () => {
     const columns = useMemo<ColumnsType<TableData>>(
         () => [
             {
+                key: 'created',
+                dataIndex: 'employee',
+                title: 'Created',
+                render: (employee: Employee) => new Date(employee.created).toLocaleDateString(),
+                sorter: {
+                    compare: (first, second) => first.employee.created - second.employee.created,
+                    multiple: 3,
+                },
+            },
+            {
                 key: 'firstName',
                 dataIndex: 'employee',
                 title: 'First Name',
                 render: (employee: Employee) => employee.firstName,
+                sorter: {
+                    compare: (first, second) => first.employee.firstName.localeCompare(second.employee.firstName),
+                    multiple: 1,
+                },
             },
             {
                 key: 'lastName',
@@ -66,6 +80,10 @@ const EmployeeTable = () => {
                 dataIndex: 'employee',
                 title: 'Onboarding Status',
                 render: (employee: Employee) => renderBadge(employee),
+                sorter: {
+                    compare: (first, second) => first.employee.status.localeCompare(second.employee.status),
+                    multiple: 2,
+                },
             },
             {
                 key: 'action',
