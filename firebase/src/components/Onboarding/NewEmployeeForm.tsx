@@ -1,6 +1,12 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Typography } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography } from 'antd'
 import React, { useState } from 'react'
 import { Dayjs } from 'dayjs'
+import { Locations } from 'fizz-kidz'
+import useFirebase from '../Hooks/context/UseFirebase'
+import { callFirebaseFunction } from '../../utilities/firebase/functions'
+import { capitalise } from '../../utilities/stringUtilities'
+
+const { Option } = Select
 
 type TNewEmployeeForm = {
     firstName: string
@@ -10,6 +16,7 @@ type TNewEmployeeForm = {
     baseWage: number
     position: string
     commencementDate: Dayjs
+    location: Exclude<Locations, 'mobile'>
     managerName: string
     managerPosition: string
     senderName: string
@@ -22,6 +29,7 @@ type Props = {
 }
 
 const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
+    const firebase = useFirebase()
     const [form] = Form.useForm<TNewEmployeeForm>()
 
     const [submitting, setSubmitting] = useState(false)
@@ -35,19 +43,23 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             }
             console.log(formattedValues)
             setSubmitting(true)
-            setTimeout(() => {
+            try {
+                await callFirebaseFunction('initiateOnboarding', firebase)(formattedValues)
                 onCancel()
                 form.resetFields()
+            } catch (err) {
+                console.error(err)
+            } finally {
                 setSubmitting(false)
-            }, 3000)
+            }
         } catch {
             return
         }
     }
 
     const cancel = () => {
-        form.resetFields()
         onCancel()
+        form.resetFields()
     }
 
     return (
@@ -118,11 +130,19 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     >
                         <DatePicker />
                     </Form.Item>
-                    <Form.Item
-                        label="Manager"
-                        rules={[{ required: true }]}
-                        extra="Name and position of the employees manager"
-                    >
+                    <Form.Item name="location" label="Studio" rules={[{ required: true }]}>
+                        <Select>
+                            {Object.values(Locations).map(
+                                (location) =>
+                                    location !== 'mobile' && (
+                                        <Option key={location} value={location}>
+                                            {capitalise(location)}
+                                        </Option>
+                                    )
+                            )}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="Manager" rules={[{ required: true }]}>
                         <Form.Item
                             name="managerName"
                             rules={[{ required: true, message: 'Please enter Manager Name' }]}
@@ -146,14 +166,14 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                         <Form.Item
                             name="senderName"
                             rules={[{ required: true, message: 'Please enter Sender Name' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: 0 }}
+                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px 0' }}
                         >
                             <Input placeholder="Sender Name" />
                         </Form.Item>
                         <Form.Item
                             name="senderPosition"
                             rules={[{ required: true, message: 'Please enter Sender Position' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px' }}
                         >
                             <Input placeholder="Sender Position" />
                         </Form.Item>

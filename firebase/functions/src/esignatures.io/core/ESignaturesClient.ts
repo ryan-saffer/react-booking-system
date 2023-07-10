@@ -3,7 +3,7 @@ import { env } from '../../init'
 const FACILITATOR_CONTRACT_TEMPLATE_ID = 'ae77f4ae-8a4d-438a-82b1-b27d49b45ea9'
 
 export class ESignatureClient {
-    async sendContract({
+    async createContract({
         email,
         mobile,
         templateVariables,
