@@ -7,8 +7,6 @@ import { getMailClient } from '../../sendgrid/MailClient'
 import { onCall } from '../../utilities'
 
 export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => {
-    console.log('*** Running my server! ***')
-
     const {
         firstName,
         lastName,
@@ -49,6 +47,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
     let contractUrl
     try {
         contractUrl = await esignaturesClient.createContract({
+            id,
             email: 'ryansaffer@gmail.com',
             mobile: '+61413892120',
             templateVariables: {
@@ -81,6 +80,5 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
     const mailClient = getMailClient()
     await mailClient.sendEmail('onboarding', email, { employeeName: firstName, formUrl, senderName })
 
-    console.log('*** FINISHED ***')
     return
 })

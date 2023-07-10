@@ -33,12 +33,10 @@ const STAFF_ORDINARY_HOURS_RATE_ID =
     env === 'prod' ? '1ef5805a-5208-4d89-8f35-620104543ed4' : '4b2bb657-a2be-40ff-a13d-3aeee69d34ce'
 const PAYROLL_CALENDAR_ID =
     env === 'prod' ? '76728c47-3451-42e7-93cc-d99fad85d4c2' : 'c44ebff9-c5ec-41de-9e13-0e55f6e11b2d'
+const PDF_KEY = '7843d2a'
 
 export const onOnboardingSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
-    console.log('*** STARTING ***')
     res.sendStatus(200)
-
-    const PDF_KEY = '7843d2a'
 
     const data = req.body.data as PFResponse[]
 
@@ -92,8 +90,6 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
 
     await FirestoreClient.updateEmployee(employee)
 
-    console.log(employee)
-
     // create google drive folder
     const driveClient = getDriveClient()
     try {
@@ -105,7 +101,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
         // TFN form
         await driveClient.uploadFileFromUrl(
             employee.tfnForm.url,
-            employee.tfnForm.filename,
+            `TFN & Super Declaration - ${employee.firstName} ${employee.lastName}`,
             employee.tfnForm.mimeType,
             folderId!
         )
@@ -128,6 +124,16 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
             'application/pdf',
             folderId!
         )
+
+        // Contract
+        if (employee.contractSignedUrl) {
+            await driveClient.uploadFileFromUrl(
+                employee.contractSignedUrl,
+                `${employee.firstName} ${employee.lastName} Signed Contract`,
+                'application/pdf',
+                folderId!
+            )
+        }
     } catch (err) {
         functions.logger.error('error creating employee folder and uploading files', { details: err })
         throw new functions.https.HttpsError('internal', 'unable to create employee folder', { details: err })
@@ -198,8 +204,6 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
         )
     }
 
-    console.log('XERO ID', employeeXeroId)
-
     // create employee in sling
     const slingClient = new SlingClient()
     try {
@@ -242,8 +246,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
     }
 
     await FirestoreClient.updateEmployee({ id: employee.id, xeroUserId: employeeXeroId, status: 'verification' })
-
-    console.log('*** FINISHED ***')
+    return
 })
 
 function getGenderEnum(pronouns: string) {
@@ -265,7 +268,7 @@ function getState(state: string) {
     if (lowercaseState.includes('tas')) return State.TAS
     if (lowercaseState.includes('queen') || lowercaseState.includes('qld')) return State.QLD
     if (lowercaseState.includes('act') || lowercaseState.includes('australian')) return State.ACT
-    if (lowercaseState.includes('nt') || lowercaseState.includes('northern')) return State.NT
+    if (lowercaseState === 'nt' || lowercaseState.includes('northern')) return State.NT
     if (lowercaseState === 'sa' || lowercaseState.includes('south')) return State.SA
-    if (lowercaseState.includes('western') || lowercaseState.includes('wa')) return State.WA
+    if (lowercaseState.includes('western') || lowercaseState === 'wa') return State.WA
 }
