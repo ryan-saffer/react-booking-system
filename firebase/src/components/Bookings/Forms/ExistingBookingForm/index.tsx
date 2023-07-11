@@ -37,6 +37,7 @@ import { ExistingBookingFormFields } from './types'
 import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
 import EditFormButtons from '../EditFormButtons'
 import { useScopes } from '../../../Hooks/UseScopes'
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string
@@ -179,11 +180,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         let bookingCopy = { ...booking }
         let mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
 
-        firebase.functions
-            .httpsCallable('updateBooking')({
-                auth: firebase.auth.currentUser?.toJSON(),
-                data: JSON.stringify({ bookingId: bookingId, booking: mergedBooking }),
-            })
+        callFirebaseFunction(
+            'updatePartyBooking',
+            firebase
+        )({ bookingId, booking: mergedBooking })
             .then((result) => {
                 console.log(result.data)
                 setLoading(false)

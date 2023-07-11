@@ -8,37 +8,6 @@ import { db } from '../init'
 
 import googleCredentials from '../../credentials/google-credentials.json'
 
-export const updateBooking = functions.region('australia-southeast1').https.onCall((data) => {
-    return new Promise((resolve, reject) => {
-        const partyDetails = JSON.parse(data.data)
-        const bookingId = partyDetails.bookingId
-        const booking = partyDetails.booking
-        booking.dateTime = new Date(booking.dateTime)
-        const documentRef = db.collection('bookings').doc(bookingId)
-        // update calendar event and any generated sheets on apps script
-        console.log('running apps script...')
-        runAppsScript(AppsScript.Functions.UPDATE_BOOKING, [data.data])
-            .then(() => {
-                console.log('finished apps script')
-                // then update database
-                documentRef
-                    .set({
-                        ...booking,
-                    })
-                    .then((writeResult) => {
-                        resolve(writeResult)
-                    })
-                    .catch((err) => {
-                        reject(err)
-                    })
-            })
-            .catch((err) => {
-                console.log('Error running AppsScript')
-                reject(err)
-            })
-    })
-})
-
 export const deleteBooking = functions.region('australia-southeast1').https.onCall((data) => {
     return new Promise((resolve, reject) => {
         const bookingId = data.data.bookingId
@@ -179,3 +148,4 @@ export function runAppsScript(functionName: string, parameters: any[]) {
 }
 
 export * from './functions/createPartyBooking'
+export * from './functions/updatePartyBooking'
