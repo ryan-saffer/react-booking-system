@@ -21,6 +21,7 @@ import { FormBookingFields, Locations } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
 const useStyles = makeStyles((theme) => ({
     confirmationEmailCheckbox: {
@@ -199,11 +200,10 @@ const NewBookingForm = (props) => {
         setLoading(true)
         var booking = mapFormToBooking(formValues)
 
-        firebase.functions
-            .httpsCallable('createBooking')({
-                auth: firebase.auth.currentUser.toJSON(),
-                data: JSON.stringify(booking),
-            })
+        callFirebaseFunction(
+            'createPartyBooking',
+            firebase
+        )(booking)
             .then((result) => {
                 console.log(result.data)
                 setLoading(false)

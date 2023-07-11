@@ -1,6 +1,7 @@
 import { EventBooking, ScheduleEventParams } from './../booking/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
+    Booking,
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
     GenerateTimesheetsParams,
@@ -31,6 +32,7 @@ export interface FirebaseFunctions {
     deleteEvent: CloudFunction<EventBooking, void>
     generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
     initiateOnboarding: CloudFunction<NewEmployee, void>
+    createPartyBooking: CloudFunction<Booking, void>
 }
 
 export type CloudFunction<Input, Result> = {

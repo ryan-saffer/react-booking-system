@@ -42,6 +42,24 @@ export type Emails = {
     }
 
     // BIRTHDAY PARTIES
+    partyBookingConfirmation: {
+        parentName: string
+        childName: string
+        childAge: string
+        startDate: string
+        startTime: string
+        endTime: string
+        address: string
+        location: string
+        isMobile: boolean
+        creationCount: string
+        managerName: string
+        managerMobile: string
+        managerEmail: string
+        numberOfKidsAllowed: string[]
+        studioPhotoUrl: string
+    }
+
     partyFormFilledInAgain: {
         parentName: string
         parentEmail: string

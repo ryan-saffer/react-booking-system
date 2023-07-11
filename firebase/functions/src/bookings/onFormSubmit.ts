@@ -1,11 +1,11 @@
-import { AppsScript, Booking } from 'fizz-kidz'
+import { AppsScript, Booking, getManager } from 'fizz-kidz'
 import * as functions from 'firebase-functions'
 import { runAppsScript } from './index'
 import { FormMapper } from './FormMapper'
 import { PFQuestion } from './types'
 import { FirestoreClient } from '../firebase/FirestoreClient'
 import { getMailClient } from '../sendgrid/MailClient'
-import { getBookingAdditions, getBookingCreations, getManagerEmail } from './utils'
+import { getBookingAdditions, getBookingCreations } from './utils'
 import { DateTime } from 'luxon'
 
 export const onFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
@@ -33,7 +33,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
         // form has been filled in before, notify manager of the change
         await mailClient.sendEmail(
             'partyFormFilledInAgain',
-            getManagerEmail(booking.location!),
+            getManager(booking.location!).email,
             {
                 parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
                 parentEmail: existingBooking.parentEmail,
@@ -66,7 +66,7 @@ export const onFormSubmit = functions.region('australia-southeast1').https.onReq
     if (choseThreeCreations && requiresTwoCreations) {
         await mailClient.sendEmail(
             'tooManyCreationsChosen',
-            getManagerEmail(fullBooking.location),
+            getManager(fullBooking.location).email,
             {
                 parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                 parentEmail: fullBooking.parentEmail,

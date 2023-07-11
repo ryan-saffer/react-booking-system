@@ -163,6 +163,21 @@ class MailClient {
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
                 }
+            case 'partyBookingConfirmation': {
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_booking_confirmation.html',
+                    useMjml: true,
+                }
+            }
             case 'tooManyCreationsChosen':
                 return {
                     emailInfo: {

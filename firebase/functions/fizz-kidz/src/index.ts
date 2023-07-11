@@ -41,6 +41,6 @@ export * from './holidayPrograms'
 
 export * from './timesheets'
 
-export * from './utilities/businessLogic'
+export * from './utilities'
 
 export * from './onboarding'

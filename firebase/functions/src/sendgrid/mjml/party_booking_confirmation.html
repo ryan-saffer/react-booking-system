@@ -1,0 +1,168 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+            color: #5e6ebf
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+            color: #888888
+            }
+        </mj-style>
+
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#eec73b" padding-bottom='0px'>
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    {{ childName }}'s party is booked in!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+            <mj-column width="100%">
+                <mj-text color="#637381" font-size="16px">
+                    Hi
+                    {{ parentName }},
+                </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    We're delighted to confirm
+                    {{ childName }}'s
+                    {{ childAge }}th Birthday Party at Fizz Kidz! We're so excited.
+                </mj-text>
+            </mj-column>
+
+            <mj-column width="50%">
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    Where
+                </mj-text>
+                <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+                    {{^isMobile}}
+                    Fizz Kidz {{ location }}
+                    <br />
+                    {{/isMobile}}
+                    {{ address }}
+                </mj-text>
+            </mj-column>
+            <mj-column width="50%">
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    When
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    {{ startDate }}
+                    <br />
+                    {{ startTime }} - {{ endTime }}
+                </mj-text>
+            </mj-column>
+            <mj-column width="100%">
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    Contact
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    Going forward, your best point of contact is our wonderful {{ location }}
+                    {{#isMobile}}party{{/isMobile}}{{^isMobile}}store{{/isMobile}} manager, {{ managerName }}.
+                    She will oversee the planning and running of {{ childName }}'s fabulous party!
+                    You can contact {{ managerName }} on {{ managerMobile }} or email her at {{ managerEmail }}.
+                    You can also just reply to this email directly :)
+                </mj-text>
+            </mj-column>
+
+            <mj-column width="100%">
+                <mj-text color="#637381" font-size="16px">
+                    <b>A week before the party</b>
+                    {{ managerName }} will email you a personalised online party form to fill out.
+                    The form will ask for:
+                    <ul style="margin-bottom:0px">
+                        <li>The approximate number of guests that will be attending</li>
+                        <li>The {{ creationCount }} creations that {{ childName }} would like to make</li>
+                        <li>Some super fun facts about the birthday child themselves</li>
+                        {{^isMobile}}
+                        <li>Which party food you would like to have at {{ childName }}'s party</li>
+                        {{/isMobile}}
+                        <li>Opportunity to add take home Fizz Kidz Activity Party Pack's for your guests. Read the
+                            attached FAQ's for more details!</li>
+                    </ul>
+                </mj-text>
+                {{^isMobile}}
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    Things to keep in mind
+                </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    <ul style="margin-bottom:0px;margin-top:0px">
+                        <li>
+                            Maximum numbers of kids
+                            <ul>
+                                {{#numberOfKidsAllowed}}
+                                <li>{{.}}</li>
+                                {{/numberOfKidsAllowed}}
+                            </ul>
+                        </li>
+                        <li>You're welcome to bring your own nut free cake, however please just remember to bring along
+                            some paper plates and spoons too!</li>
+                        <li>On the day, please arrive 10 minutes before the party starts, so we have enough time to make
+                            sure the venue is perfect for you.</li>
+                    </ul>
+                </mj-text>
+                {{/isMobile}}
+                <mj-text color="#637381" font-size="16px">
+                    Feel free to have a look at <a href="http://www.fizzkidz.com.au/">our website</a> for more
+                    information
+                    regarding our birthday parties and like our <a
+                        href="https://www.instagram.com/fizzkidzz/">Instagram</a> and
+                    <a href="https://www.facebook.com/fizzkidz/">Facebook</a> pages to check out more pictures of
+                    our creations!
+                </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    <strong>Useful Links</strong>
+                    <ul>
+                        {{^isMobile}}
+                        <li><a
+                                href="https://drive.google.com/file/d/123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD/view?usp=sharing">Here
+                                is a document of FAQs.</a> We highly recommend giving this a read over :)
+                        </li>
+                        <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
+                        {{/isMobile}}
+                        <li><a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our
+                            awesome printable
+                            invitations!</li>
+                    </ul>
+                </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    We can't wait to PARTY with you soon,
+                </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    Lami and the Fizz Kidz team
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link"
+                                href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

@@ -33,7 +33,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
         const calendarEventIds = await Promise.all(
             slots.map((slot) =>
                 calendarClient.createEvent(
-                    'events',
+                    { eventType: 'events' },
                     {
                         title: event.eventName,
                         location: event.location,
