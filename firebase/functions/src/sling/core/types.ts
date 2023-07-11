@@ -3,8 +3,14 @@ export type User = {
     active: boolean
     timezone: string
     legalName: string
+    name: string
+    email: string
     lastname: string
     employeeId: string
+    countryCode: string
+    countryISOCode: string
+    phone: string
+    role: string
 }
 
 export type Timesheet = {
@@ -18,3 +24,10 @@ export type Timesheet = {
 }
 
 export type Rate = number | 'not required'
+
+export type CreateUser = Omit<User, 'id' | 'active'> & {
+    groups: { id: number }[]
+    invite: false
+    accessToLaborCost: false
+    timeclockEnabled: true
+}

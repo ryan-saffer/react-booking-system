@@ -1,5 +1,5 @@
 import { EventBooking } from './../../fizz-kidz/src/booking/Event'
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { firestore } from 'firebase-admin'
@@ -80,6 +80,24 @@ class Client {
 
     deleteEventBooking(eventId: string) {
         return FirestoreRefs.event(eventId).delete()
+    }
+
+    async createEmployee(employee: WithoutId<Employee>) {
+        const ref = FirestoreRefs.employees().doc()
+        await ref.set({ id: ref.id, ...employee })
+        return ref.id
+    }
+
+    deleteEmployee(employeeId: string) {
+        return FirestoreRefs.employee(employeeId).delete()
+    }
+
+    getEmployee(employeeId: string) {
+        return this._getDocument(FirestoreRefs.employee(employeeId))
+    }
+
+    updateEmployee(employee: Partial<Employee>) {
+        return FirestoreRefs.employee(employee.id!).update(employee)
     }
 }
 

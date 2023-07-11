@@ -6,7 +6,7 @@ import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
 import UpdateLabelParams = Acuity.Client.UpdateLabelParams
 import Label = Acuity.Client.Label
 
-import AcuitySdk = require('acuityscheduling')
+import AcuitySdk from 'acuityscheduling'
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
 const acuity = AcuitySdk.basic({
     userId: acuityCredentials.user_id,
