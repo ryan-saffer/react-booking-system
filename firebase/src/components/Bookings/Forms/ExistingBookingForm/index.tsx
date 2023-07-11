@@ -208,11 +208,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
 
     const handleDeleteBooking = () => {
         setLoading(true)
-        firebase.functions
-            .httpsCallable('deleteBooking')({
-                auth: firebase.auth.currentUser?.toJSON(),
-                data: { bookingId, booking },
-            })
+        callFirebaseFunction(
+            'deletePartyBooking',
+            firebase
+        )({ bookingId, eventId: booking.eventId!, location: booking.location })
             .then((result) => {
                 console.log(result.data)
                 setLoading(false)

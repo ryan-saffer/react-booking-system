@@ -63,7 +63,7 @@ class CalendarClient {
 
         const result = useExponentialBackoff ? await withExponentialBackoff(insertFn, [403, 429]) : await insertFn()
 
-        return result.data.id
+        return result.data.id as string
     }
 
     updateEvent(eventId: string, calendar: CalendarParams, event: Event) {
@@ -80,7 +80,7 @@ class CalendarClient {
         })
     }
 
-    deleteEvent(eventId: string, calendar: { eventType: 'events' }) {
+    deleteEvent(eventId: string, calendar: CalendarParams) {
         return this.calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
     }
 

@@ -8,32 +8,6 @@ import { db } from '../init'
 
 import googleCredentials from '../../credentials/google-credentials.json'
 
-export const deleteBooking = functions.region('australia-southeast1').https.onCall((data) => {
-    return new Promise((resolve, reject) => {
-        const bookingId = data.data.bookingId
-        const booking = data.data.booking
-        const documentRef = db.collection('bookings').doc(bookingId)
-        console.log('running apps script...')
-        runAppsScript(AppsScript.Functions.DELETE_BOOKING, [booking])
-            .then(() => {
-                console.log('finished apps script')
-                // then update database
-                documentRef
-                    .delete()
-                    .then((writeResult) => {
-                        resolve(writeResult)
-                    })
-                    .catch((err) => {
-                        reject(err)
-                    })
-            })
-            .catch((err) => {
-                console.log('Error running AppsScript')
-                reject(err)
-            })
-    })
-})
-
 export const sendFeedbackEmails = functions
     .region('australia-southeast1')
     .pubsub.schedule('30 8 * * *')
@@ -149,3 +123,4 @@ export function runAppsScript(functionName: string, parameters: any[]) {
 
 export * from './functions/createPartyBooking'
 export * from './functions/updatePartyBooking'
+export * from './functions/deletePartyBooking'
