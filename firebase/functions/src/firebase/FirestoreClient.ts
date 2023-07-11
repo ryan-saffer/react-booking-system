@@ -1,5 +1,5 @@
 import { EventBooking } from './../../fizz-kidz/src/booking/Event'
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee } from 'fizz-kidz'
+import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee, FirestoreBooking } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { firestore } from 'firebase-admin'
@@ -34,6 +34,12 @@ class Client {
             }
         })
         return data
+    }
+
+    async createPartyBooking(booking: FirestoreBooking) {
+        const ref = FirestoreRefs.partyBookings().doc()
+        await ref.set(booking)
+        return ref.id
     }
 
     getPartyBooking(bookingId: string) {

@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import * as admin from 'firebase-admin'
+// import * as admin from 'firebase-admin'
 import { google } from 'googleapis'
 import { DateTime } from 'luxon'
 import { AppsScript } from 'fizz-kidz'
@@ -7,44 +7,6 @@ import { AppsScript } from 'fizz-kidz'
 import { db } from '../init'
 
 import googleCredentials from '../../credentials/google-credentials.json'
-
-export const createBooking = functions.region('australia-southeast1').https.onCall((data) => {
-    return new Promise((resolve, reject) => {
-        const partyDetails = JSON.parse(data.data)
-        partyDetails.dateTime = admin.firestore.Timestamp.fromDate(new Date(partyDetails.dateTime))
-        const doc = db.collection('bookings').doc()
-        doc.set({
-            ...partyDetails,
-        })
-            .then((writeResult) => {
-                console.log(`Write Result: ${JSON.stringify(writeResult)}`)
-                console.log('running apps script...')
-                runAppsScript(AppsScript.Functions.CREATE_BOOKING, [doc.id, data.data])
-                    .then((appsScriptResult) => {
-                        console.log('finished apps script')
-                        const parsedAppsScriptResult = JSON.parse(appsScriptResult)
-                        console.log(parsedAppsScriptResult)
-                        const eventId = parsedAppsScriptResult.response.result
-                        if (eventId) {
-                            doc.set({ eventId: eventId }, { merge: true })
-                                .then((updateResult) => {
-                                    resolve(updateResult)
-                                })
-                                .catch((err) => reject(err))
-                        } else {
-                            reject(appsScriptResult)
-                        }
-                    })
-                    .catch((err) => {
-                        console.log('Error running AppsScript')
-                        reject(err)
-                    })
-            })
-            .catch((err) => {
-                reject(err)
-            })
-    })
-})
 
 export const updateBooking = functions.region('australia-southeast1').https.onCall((data) => {
     return new Promise((resolve, reject) => {
@@ -215,3 +177,5 @@ export function runAppsScript(functionName: string, parameters: any[]) {
         )
     })
 }
+
+export * from './functions/createPartyBooking'

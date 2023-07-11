@@ -2,8 +2,7 @@ import { env } from './../init'
 import googleCredentials from '../../credentials/google-credentials.json'
 import { calendar_v3, google } from 'googleapis'
 import { withExponentialBackoff } from '../utilities'
-
-type Calendar = 'events'
+import { Locations } from 'fizz-kidz'
 
 type Event = {
     title: string
@@ -12,6 +11,15 @@ type Event = {
     end: Date
     description?: string
 }
+
+type CalendarParams =
+    | {
+          eventType: 'party-bookings'
+          location: Locations
+      }
+    | {
+          eventType: 'events'
+      }
 
 class CalendarClient {
     private calendar: calendar_v3.Calendar
@@ -31,7 +39,7 @@ class CalendarClient {
     }
 
     async createEvent(
-        calendar: Calendar,
+        calendar: CalendarParams,
         event: Event,
         options: {
             useExponentialBackoff?: boolean
@@ -58,7 +66,7 @@ class CalendarClient {
         return result.data.id
     }
 
-    updateEvent(eventId: string, calendar: Calendar, event: Event) {
+    updateEvent(eventId: string, calendar: CalendarParams, event: Event) {
         return this.calendar.events.update({
             eventId,
             calendarId: this.getCalendarId(calendar),
@@ -72,16 +80,47 @@ class CalendarClient {
         })
     }
 
-    deleteEvent(eventId: string, calendar: Calendar) {
+    deleteEvent(eventId: string, calendar: { eventType: 'events' }) {
         return this.calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
     }
 
-    private getCalendarId(calendar: Calendar) {
-        switch (calendar) {
+    private getCalendarId(eventType: CalendarParams) {
+        switch (eventType.eventType) {
             case 'events':
                 return env === 'dev'
                     ? 'c_8eb247b18db175af7a890c5def1e01eca4648a0dafb48a422877df1e650f3ad7@group.calendar.google.com'
                     : 'c_f6ec3f5b3114c1dc66d3b3018994a18504813f8650467741dba496c665d05774@group.calendar.google.com'
+            case 'party-bookings':
+                switch (eventType.location) {
+                    case Locations.BALWYN:
+                        return env === 'prod'
+                            ? 'fizzkidz.com.au_7vor3m1efd3fqbr0ola2jvglf8@group.calendar.google.com'
+                            : 'fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com'
+                    case Locations.CHELTENHAM:
+                        return env === 'prod'
+                            ? 'c_05efd7a4c88896e52d0e108168534ca1ef482ef43566ee6a35387a8e8069b831@group.calendar.google.com'
+                            : 'c_c760d908ac1b8659df09adef13067950a026a814b94f160e4ecb51d7b3229032@group.calendar.google.com'
+                    case Locations.ESSENDON:
+                        return env === 'prod'
+                            ? 'fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com'
+                            : 'c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com'
+                    case Locations.MALVERN:
+                        return env === 'prod'
+                            ? 'fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com'
+                            : 'fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com'
+                    case Locations.MOBILE:
+                        return env === 'prod'
+                            ? 'fizzkidz.com.au_b9aruprq8740cdamu63frgm0ck@group.calendar.google.com'
+                            : 'fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com'
+                    default: {
+                        const exhaustiveCheck: never = eventType.location
+                        throw new Error(`Unknown location found while getting calendar id: '${exhaustiveCheck}'`)
+                    }
+                }
+            default: {
+                const exhaustiveCheck: never = eventType
+                throw new Error(`unknown calendar type: '${exhaustiveCheck}'`)
+            }
         }
     }
 }
