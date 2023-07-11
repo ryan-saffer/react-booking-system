@@ -5,6 +5,7 @@ import {
     CreatePaymentIntentResponse,
     GenerateTimesheetsParams,
     GenerateTimesheetsResponse,
+    NewEmployee,
     ScheduleScienceAppointmentParams,
     ScienceEnrolment,
     SendTermContinuationEmailsParams,
@@ -29,6 +30,7 @@ export interface FirebaseFunctions {
     updateEvent: CloudFunction<EventBooking, void>
     deleteEvent: CloudFunction<EventBooking, void>
     generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
+    initiateOnboarding: CloudFunction<NewEmployee, void>
 }
 
 export type CloudFunction<Input, Result> = {

@@ -3,7 +3,7 @@
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": ["./firebase/functions/tsconfig.json"]
+        "project": ["./firebase/functions/tsconfig.json", "./firebase/functions/fizz-kidz/tsconfig.json"]
     },
     "plugins": ["@typescript-eslint"],
     "rules": {

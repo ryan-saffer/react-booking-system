@@ -8,8 +8,11 @@ declare global {
             STRIPE_WEBHOOK_SECRET_PROD: string
             STRIPE_WEBHOOK_SECRET_DEV: string
             SLING_API_KEY: string
+            DEV_XERO_CLIENT_ID: string
+            DEV_XERO_CLIENT_SECRET: string
             XERO_CLIENT_ID: string
             XERO_CLIENT_SECRET: string
+            ESIGNATURES_SECRET: string
         }
     }
 }
