@@ -50,6 +50,10 @@ class Client {
         return this._updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
 
+    deletePartyBooking(bookingId: string) {
+        return FirestoreRefs.partyBooking(bookingId).delete()
+    }
+
     getHolidayProgramBooking(paymentIntentId: string) {
         return this._getDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId))
     }

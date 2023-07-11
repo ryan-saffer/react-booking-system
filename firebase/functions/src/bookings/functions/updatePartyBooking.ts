@@ -1,4 +1,4 @@
-import { https } from 'firebase-functions'
+import { https, logger } from 'firebase-functions'
 import { getCalendarClient } from '../../calendar/CalendarClient'
 import { onCall } from '../../utilities'
 import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
@@ -16,15 +16,21 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
 
     if (!booking.eventId) throw new https.HttpsError('aborted', 'booking is missing event id')
 
-    await calendarClient.updateEvent(
-        booking.eventId,
-        { eventType: 'party-bookings', location: booking.location },
-        {
-            title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
-            location: booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
-            start: booking.dateTime,
-            end: getPartyEndDate(booking.dateTime, booking.partyLength),
-        }
-    )
+    try {
+        await calendarClient.updateEvent(
+            booking.eventId,
+            { eventType: 'party-bookings', location: booking.location },
+            {
+                title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
+                location:
+                    booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
+                start: booking.dateTime,
+                end: getPartyEndDate(booking.dateTime, booking.partyLength),
+            }
+        )
+    } catch (err) {
+        logger.error(`error creating calendar event for booking with id: '${bookingId}`)
+        throw new https.HttpsError('internal', 'error creating calendar event', { details: err })
+    }
     return
 })
