@@ -33,6 +33,7 @@ export interface FirebaseFunctions {
     generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
     initiateOnboarding: CloudFunction<NewEmployee, void>
     createPartyBooking: CloudFunction<Booking, void>
+    updatePartyBooking: CloudFunction<{ bookingId: string; booking: Booking }, void>
 }
 
 export type CloudFunction<Input, Result> = {
