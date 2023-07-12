@@ -11,6 +11,10 @@ import Mustache from 'mustache'
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
 type Options = {
+    from?: {
+        name: string
+        email: string
+    }
     subject?: string
     replyTo?: string
 }
@@ -62,7 +66,7 @@ class MailClient {
         template: string
         useMjml: boolean
     } {
-        const { subject, replyTo } = options
+        const { from, subject, replyTo } = options
         switch (email) {
             case 'holidayProgramConfirmation':
                 return {
@@ -175,6 +179,21 @@ class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'party_booking_confirmation.html',
+                    useMjml: true,
+                }
+            }
+            case 'partyForm': {
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your party is coming up!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form.html',
                     useMjml: true,
                 }
             }
