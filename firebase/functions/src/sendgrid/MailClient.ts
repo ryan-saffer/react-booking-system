@@ -251,6 +251,20 @@ class MailClient {
                     template: 'party_form_completed.html',
                     useMjml: true,
                 }
+            case 'partyFeedback':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: 'Review your Fizz Kidz experience and WIN!',
+                        replyTo: 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_feedback.html',
+                    useMjml: true,
+                }
             case 'onboarding':
                 return {
                     emailInfo: {

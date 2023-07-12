@@ -102,3 +102,23 @@ export function getPictureOfStudioUrl(location: Locations) {
         }
     }
 }
+
+export function getReviewUrl(location: Locations) {
+    switch (location) {
+        case Locations.BALWYN:
+            return 'https://search.google.com/local/writereview?placeid=ChIJRYl9pexB1moR5msbM8SdKVU'
+        case Locations.CHELTENHAM:
+            return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo'
+        case Locations.ESSENDON:
+            return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
+        case Locations.MALVERN:
+            return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
+        case Locations.MOBILE:
+            return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo' // chelt
+
+        default: {
+            const exhaustiveCheck: never = location
+            throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)
+        }
+    }
+}

@@ -128,6 +128,12 @@ export type Emails = {
         managerMobile: string
     }
 
+    partyFeedback: {
+        parentName: string
+        childName: string
+        reviewUrl: string
+    }
+
     // EVENTS
     eventBooking: {
         contactName: string
