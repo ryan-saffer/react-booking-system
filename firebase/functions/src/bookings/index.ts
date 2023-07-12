@@ -1,63 +1,5 @@
-import * as functions from 'firebase-functions'
-// import * as admin from 'firebase-admin'
 import { google } from 'googleapis'
-import { DateTime } from 'luxon'
-import { AppsScript } from 'fizz-kidz'
-
-import { db } from '../init'
-
 import googleCredentials from '../../credentials/google-credentials.json'
-
-export const sendFeedbackEmails = functions
-    .region('australia-southeast1')
-    .pubsub.schedule('30 8 * * *')
-    .timeZone('Australia/Melbourne')
-    .onRun(() => {
-        const startDate = DateTime.fromObject(
-            { hour: 0, minute: 0, second: 0 },
-            { zone: 'Australia/Melbourne' }
-        ).toJSDate()
-        startDate.setDate(startDate.getDate() - 1) // yesterday
-        const endDate = DateTime.fromObject(
-            { hour: 0, minute: 0, second: 0 },
-            { zone: 'Australia/Melbourne' }
-        ).toJSDate() // today
-
-        console.log('Start date:')
-        console.log(startDate)
-        console.log('End date:')
-        console.log(endDate)
-
-        const bookings: any[] = []
-
-        return new Promise<void>((resolve, reject) => {
-            db.collection('bookings')
-                .where('dateTime', '>', startDate)
-                .where('dateTime', '<', endDate)
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((documentSnapshot) => {
-                        const booking = documentSnapshot.data()
-                        booking.dateTime = booking.dateTime.toDate()
-                        bookings.push(booking)
-                    })
-                    console.log('running apps script...')
-                    runAppsScript(AppsScript.Functions.SEND_FEEDBACK_EMAILS, [bookings])
-                        .then(() => {
-                            console.log('finished apps script successfully')
-                            resolve()
-                        })
-                        .catch((err) => {
-                            console.log('Error running apps script')
-                            reject(err)
-                        })
-                })
-                .catch((err) => {
-                    console.log('Error fetching bookings from firestore')
-                    reject(err)
-                })
-        })
-    })
 
 export function runAppsScript(functionName: string, parameters: any[]) {
     const scriptId = '1nvPPH76NCCZfMYNWObohW4FmW-NjLWgtHk-WdBYh2McYSXnJlV5HTf42'
@@ -124,3 +66,4 @@ export function runAppsScript(functionName: string, parameters: any[]) {
 export * from './functions/createPartyBooking'
 export * from './functions/updatePartyBooking'
 export * from './functions/deletePartyBooking'
+export * from './functions/sendPartyForms'

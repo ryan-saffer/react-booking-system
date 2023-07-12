@@ -60,6 +60,20 @@ export type Emails = {
         studioPhotoUrl: string
     }
 
+    partyForm: {
+        parentName: string
+        childName: string
+        childAge: string
+        startDate: string
+        startTime: string
+        endTime: string
+        address: string
+        location: string
+        prefilledFormUrl: string
+        managerName: string
+        isMobile: boolean
+    }
+
     partyFormFilledInAgain: {
         parentName: string
         parentEmail: string
