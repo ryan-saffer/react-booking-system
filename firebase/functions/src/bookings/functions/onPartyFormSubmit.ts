@@ -1,10 +1,10 @@
 import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import * as functions from 'firebase-functions'
-import { FormMapper } from '../FormMapper'
-import { PFQuestion } from '../types'
+import { FormMapper } from '../core/FormMapper'
+import { PFQuestion } from '../core/types'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { getMailClient } from '../../sendgrid/MailClient'
-import { getBookingAdditions, getBookingCreations } from './../utils'
+import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 
 export const onPartyFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
