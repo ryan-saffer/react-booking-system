@@ -47,7 +47,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             }
         )
     } catch (err) {
-        logger.error(`unable to create event for party booking with id: '${bookingId}'`)
+        logger.error(`unable to create event for party booking with id: '${bookingId}'`, { details: err })
         throw new https.HttpsError('internal', 'unable to create calendar event', { details: err })
     }
 
@@ -88,7 +88,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
                 { replyTo: manager.email }
             )
         } catch (err) {
-            logger.error(`error sending confirmation email for party booking with id: '${bookingId}'`)
+            logger.error(`error sending confirmation email for party booking with id: '${bookingId}'`, { details: err })
             throw new https.HttpsError('internal', 'unable to send confirmation email', { details: err })
         }
     }

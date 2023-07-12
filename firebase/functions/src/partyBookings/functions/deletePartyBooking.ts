@@ -8,8 +8,7 @@ export const deletePartyBooking = onCall<'deletePartyBooking'>(async ({ bookingI
     try {
         await calendarClient.deleteEvent(eventId, { eventType: 'party-bookings', location })
     } catch (err) {
-        logger.error(`error deleting party booking with id: '${bookingId}'`)
-        logger.error(err)
+        logger.error(`error deleting party booking with id: '${bookingId}'`, { details: err })
         throw new https.HttpsError('internal', `error deleting party booking with id: '${bookingId}'`, { details: err })
     }
     await FirestoreClient.deletePartyBooking(bookingId)

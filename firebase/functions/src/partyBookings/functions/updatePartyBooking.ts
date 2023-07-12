@@ -29,7 +29,7 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
             }
         )
     } catch (err) {
-        logger.error(`error creating calendar event for booking with id: '${bookingId}`)
+        logger.error(`error updating calendar event for booking with id: '${bookingId}'`, { details: err })
         throw new https.HttpsError('internal', 'error creating calendar event', { details: err })
     }
     return
