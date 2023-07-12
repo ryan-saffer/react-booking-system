@@ -15,10 +15,6 @@ export * from './partyBookings/Event'
 export * as Acuity from './acuity'
 //#endregion
 
-//#region Apps Script
-export * as AppsScript from './appsscript'
-//#endregion
-
 //#region Science Club
 export * from './scienceclub/invoicing'
 //#endregion
