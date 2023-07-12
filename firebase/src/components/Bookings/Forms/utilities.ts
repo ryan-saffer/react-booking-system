@@ -272,6 +272,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        sendConfirmationEmail: {
+            value: true,
+            error: false,
+            errorText: '',
+        },
     }
 }
 
@@ -314,5 +319,6 @@ function getEmptyDomainBooking(): FormBooking {
         dinosaurBathBombPartyPack: false,
         slimePartyPack: false,
         partyFormFilledIn: false,
+        sendConfirmationEmail: true,
     }
 }

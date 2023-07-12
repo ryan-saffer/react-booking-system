@@ -1,4 +1,4 @@
-import { Additions, AdditionsDisplayValuesMap, BaseBooking, CreationDisplayValuesMap, Locations } from 'fizz-kidz'
+import { Additions, AdditionsDisplayValuesMap, BaseBooking, CreationDisplayValuesMap } from 'fizz-kidz'
 
 export const AdditionsFormMap: { [key: string]: Additions } = {
     'Chicken Nuggets - $35': Additions.chickenNuggets,
@@ -11,23 +11,6 @@ export const AdditionsFormMap: { [key: string]: Additions } = {
     'Wedges - $30': Additions.wedges,
     'Grazing Platter for Parents (Medium: 10-15 ppl) - $98': Additions.grazingPlatterMedium,
     'Grazing Platter for Parents (Large: 15-25 ppl) - $148': Additions.grazingPlatterLarge,
-}
-
-export function getManagerEmail(location: Locations) {
-    switch (location) {
-        case Locations.BALWYN:
-        case Locations.ESSENDON:
-        case Locations.MOBILE:
-            return 'bonnie@fizzkidz.com.au'
-        case Locations.CHELTENHAM:
-            return 'cheltenham@fizzkidz.com.au'
-        case Locations.MALVERN:
-            return 'malvern@fizzkidz.com.au'
-        default: {
-            const exhaustiveCheck: never = location
-            throw new Error(`Unknown location: ${exhaustiveCheck}`)
-        }
-    }
 }
 
 export function getBookingCreations(booking: BaseBooking) {

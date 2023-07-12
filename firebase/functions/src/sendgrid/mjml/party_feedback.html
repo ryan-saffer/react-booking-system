@@ -18,44 +18,47 @@
 
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
-        <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+        <mj-section background-color="#a0cc59" padding-bottom='0px'>
             <mj-column width="100%">
                 <mj-spacer height="30px" />
-                <mj-text font-family="Trebuchet MS" color="white" font-weight="bold" align="center" font-size="30px"
-                    line-height="40px">
-                    <?= childName ?> has been unenrolled
-                </mj-text>
             </mj-column>
         </mj-section>
         <mj-section background-color="#ffffff" padding-top="0">
             <mj-column>
-                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+                <mj-image src="https://imgur.com/BJa1hyf.png" width="600px" alt="" padding="0" />
             </mj-column>
         </mj-section>
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
-                        Hi
-                        <?= parentName ?>,
+                        Hi {{ parentName }},
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        This email is to confirm that
-                        <?= childName ?> has been unenrolled from the term.<br /><br />
-                        Below is the name of the class they have been unenrolled from.
-                    </mj-text>
-                    <mj-text align="center" color="#212b35" font-size="12px" text-transform="uppercase"
-                        font-weight="bold" padding-bottom="20px">
-                        <?= className ?>
+                        We hope {{ childName }} had a fabulous party at Fizz Kidz yesterday!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        We hope to see them again in the future.
+                        As we are a growing business we would thoroughly appreciate it if you could write a review about
+                        your Fizz Kidz experience by clicking on the button below:
+                    </mj-text>
+                    <mj-button background-color="#53c4d7" padding="20px" align="center" color="#ffffff" font-size="17px"
+                        font-weight="bold" href="{{ reviewUrl }}" width="300px">
+                        Leave a review ↗️
+                    </mj-button>
+                    <mj-text color="#637381" font-size="16px">
+                        As a thank you, if you leave a review we will enter you in a monthly draw to <strong>win a free
+                            holiday
+                            program session</strong>
+                        at Fizz Kidz!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        Thanks so much, and we hope you have a fizzing day!
+                        Thank you so much and we hope you have a fizzing day!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        Talia and the Fizz Kidz team 🌟
+                        Kindest regards,
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        The Fizz Kidz team
                     </mj-text>
                 </mj-column>
             </mj-section>
@@ -66,7 +69,7 @@
                     <mj-column width="100%" padding-right="0">
                         <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
                             <a class="footer-link"
-                                href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
                                 class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
                         </mj-text>
                     </mj-column>
