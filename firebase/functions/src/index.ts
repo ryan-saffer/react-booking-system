@@ -1,5 +1,5 @@
 export * from './acuity'
-export * from './bookings'
+export * from './partyBookings'
 export * from './stripe'
 export * from './scienceProgram'
 export * from './holidayPrograms'

@@ -1,4 +1,4 @@
-import { EventBooking, ScheduleEventParams } from './../booking/Event'
+import { EventBooking, ScheduleEventParams } from '../partyBookings/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
     Booking,

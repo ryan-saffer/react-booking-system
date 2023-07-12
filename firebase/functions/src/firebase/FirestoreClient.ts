@@ -1,4 +1,4 @@
-import { EventBooking } from './../../fizz-kidz/src/booking/Event'
+import { EventBooking } from 'fizz-kidz/src/partyBookings/Event'
 import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee, FirestoreBooking } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
 import { FirestoreRefs, Document } from './FirestoreRefs'
