@@ -22,7 +22,7 @@
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    <?= childName ?>'s party is coming up!
+                    {{ childName }}'s party is coming up!
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -36,19 +36,11 @@
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
                         Hi
-                        <?= parentName ?>,
+                        {{ parentName }},
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        <? if (location === 'malvern') { ?>
-                        Bonnie
-                        <? } else if (location === 'cheltenham') { ?>
-                        Maxie
-                        <? } else { ?>
-                        Bonnie
-                        <? } ?>
-                        here! We're very excited about
-                        <?= childName ?>'s
-                        <?= childAge ?>th birthday party! Just to confirm, below is the date and time of the party:
+                        {{ managerName }} here! We're very excited about {{ childName }}'s {{ childAge }}th birthday
+                        party! Just to confirm, below is the date and time of the party:
                     </mj-text>
                 </mj-column>
                 <mj-column width="50%">
@@ -57,12 +49,11 @@
                         Where
                     </mj-text>
                     <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-                        <? if (location !== 'mobile') { ?>
-                        Fizz Kidz
-                        <?= location ?>
+                        {{^isMobile}}
+                        Fizz Kidz {{ location }}
                         <br />
-                        <? } ?>
-                        <?= address ?>
+                        {{/isMobile}}
+                        {{ address }}
                     </mj-text>
                 </mj-column>
                 <mj-column width="50%">
@@ -71,10 +62,9 @@
                         When
                     </mj-text>
                     <mj-text color="#637381" font-size="14px" padding-top="0">
-                        <?= startDate ?>
+                        {{ startDate }}
                         <br />
-                        <?= startTime ?> -
-                        <?= endTime ?>
+                        {{ startTime }} - {{ endTime }}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
@@ -83,11 +73,13 @@
                         personalised online form by clicking on the button below:
                     </mj-text>
                     <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px"
-                        font-weight="bold" href="<?= preFilledUrl ?>" width="300px">
+                        font-weight="bold" href="{{ prefilledFormUrl }}" width="300px">
                         Party Form ↗️
                     </mj-button>
                     <mj-text color="#637381" font-size="16px">
-                        Just quickly - I have attached a presentation of frequently asked questions to this email. I
+                        Just quickly - <a
+                            href="https://drive.google.com/file/d/123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD/view?usp=sharing">here
+                            is a link to a document of some frequently asked questions</a>. I
                         suggest you have a read through it before filling in the form, as it may help answer some
                         pre-party planning questions. :)
                     </mj-text>
@@ -95,16 +87,7 @@
                         See you soon!
                     </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        <? if (location === 'malvern') { ?>
-                        Bonnie
-                        <? } else if (location === 'cheltenham') { ?>
-                        Maxie
-                        <? } else { ?>
-                        Bonnie
-                        <? } ?>
-                        and the Fizz Kidz team <img src="https://mail.google.com/mail/e/1f31f" alt="🌟"
-                            data-goomoji="1f31f" />
-                    </mj-text>
+                        {{ managerName }} and the Fizz Kidz team.
                 </mj-column>
             </mj-section>
         </mj-wrapper>

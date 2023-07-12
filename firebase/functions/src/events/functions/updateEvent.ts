@@ -9,13 +9,17 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
     event.endTime = new Date(event.endTime)
 
     try {
-        await getCalendarClient().updateEvent(event.calendarEventId, 'events', {
-            title: event.eventName,
-            location: event.location,
-            start: event.startTime,
-            end: event.endTime,
-            description: event.notes,
-        })
+        await getCalendarClient().updateEvent(
+            event.calendarEventId,
+            { eventType: 'events' },
+            {
+                title: event.eventName,
+                location: event.location,
+                start: event.startTime,
+                end: event.endTime,
+                description: event.notes,
+            }
+        )
 
         await FirestoreClient.updateEventBooking(event.id, event)
     } catch (err) {

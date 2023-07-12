@@ -1,16 +1,29 @@
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, HolidayProgramBooking, Employee } from 'fizz-kidz'
+import {
+    ScienceEnrolment,
+    PaidHolidayProgramBooking,
+    Booking,
+    HolidayProgramBooking,
+    Employee,
+    FirestoreBooking,
+} from 'fizz-kidz'
 import { db } from '../init'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
 export type Document<T> = FirebaseFirestore.DocumentReference<T>
 
 export class FirestoreRefs {
+    static partyBookings() {
+        return db.collection('bookings') as Collection<FirestoreBooking>
+    }
+
     static partyBooking(id: string) {
         return db.collection('bookings').doc(id) as Document<Booking>
     }
+
     static holidayProgramBooking(paymentIntentId: string) {
         return db.collection('holidayProgramBookings').doc(paymentIntentId) as Document<HolidayProgramBooking>
     }
+
     static holidayPrograms(paymentIntentId: string) {
         return this.holidayProgramBooking(paymentIntentId).collection(
             'programs'

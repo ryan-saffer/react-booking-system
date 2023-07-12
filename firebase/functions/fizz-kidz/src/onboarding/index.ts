@@ -1,4 +1,4 @@
-import { Locations } from '../booking/Locations'
+import { Locations } from '../partyBookings/Locations'
 
 export type Employee = {
     id: string

@@ -6,7 +6,6 @@ import { ThemeProvider } from '@material-ui/styles'
 import { createTheme } from '@material-ui/core'
 import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
-import { Role } from '../../constants/roles'
 
 const App = () => {
     const theme = createTheme({

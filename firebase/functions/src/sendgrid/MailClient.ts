@@ -11,6 +11,10 @@ import Mustache from 'mustache'
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
 type Options = {
+    from?: {
+        name: string
+        email: string
+    }
     subject?: string
     replyTo?: string
 }
@@ -62,7 +66,7 @@ class MailClient {
         template: string
         useMjml: boolean
     } {
-        const { subject, replyTo } = options
+        const { from, subject, replyTo } = options
         switch (email) {
             case 'holidayProgramConfirmation':
                 return {
@@ -163,6 +167,34 @@ class MailClient {
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
                 }
+            case 'partyBookingConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_booking_confirmation.html',
+                    useMjml: true,
+                }
+            case 'partyForm':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your party is coming up!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form.html',
+                    useMjml: true,
+                }
             case 'tooManyCreationsChosen':
                 return {
                     emailInfo: {
@@ -176,6 +208,62 @@ class MailClient {
                     },
                     template: 'too_many_creations_chosen.html',
                     useMjml: false,
+                }
+            case 'partyFormQuestions':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Questions asked in party form!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form_questions.html',
+                    useMjml: false,
+                }
+            case 'partyPackNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party packs ordered!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_pack_notification.html',
+                    useMjml: false,
+                }
+            case 'partyFormConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your Party Details',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form_completed.html',
+                    useMjml: true,
+                }
+            case 'partyFeedback':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: 'Review your Fizz Kidz experience and WIN!',
+                        replyTo: 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_feedback.html',
+                    useMjml: true,
                 }
             case 'onboarding':
                 return {

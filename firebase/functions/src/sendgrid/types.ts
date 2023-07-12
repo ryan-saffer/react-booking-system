@@ -42,6 +42,38 @@ export type Emails = {
     }
 
     // BIRTHDAY PARTIES
+    partyBookingConfirmation: {
+        parentName: string
+        childName: string
+        childAge: string
+        startDate: string
+        startTime: string
+        endTime: string
+        address: string
+        location: string
+        isMobile: boolean
+        creationCount: string
+        managerName: string
+        managerMobile: string
+        managerEmail: string
+        numberOfKidsAllowed: string[]
+        studioPhotoUrl: string
+    }
+
+    partyForm: {
+        parentName: string
+        childName: string
+        childAge: string
+        startDate: string
+        startTime: string
+        endTime: string
+        address: string
+        location: string
+        prefilledFormUrl: string
+        managerName: string
+        isMobile: boolean
+    }
+
     partyFormFilledInAgain: {
         parentName: string
         parentEmail: string
@@ -63,6 +95,43 @@ export type Emails = {
         childName: string
         dateTime: string
         chosenCreations: string[]
+    }
+
+    partyFormQuestions: {
+        dateTime: string
+        location: string
+        parentName: string
+        childName: string
+        questions: string
+        parentEmail: string
+    }
+
+    partyPackNotification: {
+        parentName: string
+        dateTime: string
+        location: string
+        mobile: string
+        email: string
+        partyPacks: string[]
+    }
+
+    partyFormConfirmation: {
+        parentName: string
+        numberOfChildren: string
+        creations: string[]
+        isTyeDyeParty: boolean
+        hasAdditions: boolean
+        additions: string[]
+        isMobile: boolean
+        hasQuestions: boolean
+        managerName: string
+        managerMobile: string
+    }
+
+    partyFeedback: {
+        parentName: string
+        childName: string
+        reviewUrl: string
     }
 
     // EVENTS
