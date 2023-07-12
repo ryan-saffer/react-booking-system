@@ -1,14 +1,14 @@
 //#region Bookings
-export { Additions } from './booking/Additions'
-export { CakeFlavours } from './booking/CakeFlavours'
-export { Creations } from './booking/Creations'
-export { CreationDisplayValuesMap } from './booking/CreationDisplayValuesMap'
-export { AdditionsDisplayValuesMapPrices } from './booking/AdditionsDisplayValuesMapPrices'
-export { AdditionsDisplayValuesMap } from './booking/AdditionsDisplayValuesMap'
-export { Locations } from './booking/Locations'
-export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './booking/booking'
-export { FormBookingFields, BookingFields } from './booking/booking'
-export * from './booking/Event'
+export { Additions } from './partyBookings/Additions'
+export { CakeFlavours } from './partyBookings/CakeFlavours'
+export { Creations } from './partyBookings/Creations'
+export { CreationDisplayValuesMap } from './partyBookings/CreationDisplayValuesMap'
+export { AdditionsDisplayValuesMapPrices } from './partyBookings/AdditionsDisplayValuesMapPrices'
+export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValuesMap'
+export { Locations } from './partyBookings/Locations'
+export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './partyBookings/booking'
+export { FormBookingFields, BookingFields } from './partyBookings/booking'
+export * from './partyBookings/Event'
 //#endregion
 
 //#region Acuity

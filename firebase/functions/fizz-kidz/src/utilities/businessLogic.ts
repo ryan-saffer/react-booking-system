@@ -1,5 +1,5 @@
-import { Locations } from '../booking/Locations'
-import { Booking } from '../booking/booking'
+import { Locations } from '../partyBookings/Locations'
+import { Booking } from '../partyBookings/booking'
 
 export function getLocationAddress(location: Exclude<Locations, 'mobile'>) {
     switch (location) {
