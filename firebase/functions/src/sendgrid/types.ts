@@ -97,6 +97,37 @@ export type Emails = {
         chosenCreations: string[]
     }
 
+    partyFormQuestions: {
+        dateTime: string
+        location: string
+        parentName: string
+        childName: string
+        questions: string
+        parentEmail: string
+    }
+
+    partyPackNotification: {
+        parentName: string
+        dateTime: string
+        location: string
+        mobile: string
+        email: string
+        partyPacks: string[]
+    }
+
+    partyFormConfirmation: {
+        parentName: string
+        numberOfChildren: string
+        creations: string[]
+        isTyeDyeParty: boolean
+        hasAdditions: boolean
+        additions: string[]
+        isMobile: boolean
+        hasQuestions: boolean
+        managerName: string
+        managerMobile: string
+    }
+
     // EVENTS
     eventBooking: {
         contactName: string

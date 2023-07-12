@@ -1,7 +1,6 @@
 {
-  "projects": {
-    "dev": "booking-system-6435d",
-    "prod": "bookings-prod",
-    "default": "booking-system-6435d"
-  }
+    "projects": {
+        "dev": "booking-system-6435d",
+        "prod": "bookings-prod"
+    }
 }

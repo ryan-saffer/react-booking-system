@@ -167,7 +167,7 @@ class MailClient {
                     template: 'event_booking_confirmation.html',
                     useMjml: true,
                 }
-            case 'partyBookingConfirmation': {
+            case 'partyBookingConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -181,8 +181,7 @@ class MailClient {
                     template: 'party_booking_confirmation.html',
                     useMjml: true,
                 }
-            }
-            case 'partyForm': {
+            case 'partyForm':
                 return {
                     emailInfo: {
                         to,
@@ -196,7 +195,6 @@ class MailClient {
                     template: 'party_form.html',
                     useMjml: true,
                 }
-            }
             case 'tooManyCreationsChosen':
                 return {
                     emailInfo: {
@@ -210,6 +208,48 @@ class MailClient {
                     },
                     template: 'too_many_creations_chosen.html',
                     useMjml: false,
+                }
+            case 'partyFormQuestions':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Questions asked in party form!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form_questions.html',
+                    useMjml: false,
+                }
+            case 'partyPackNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party packs ordered!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_pack_notification.html',
+                    useMjml: false,
+                }
+            case 'partyFormConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your Party Details',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form_completed.html',
+                    useMjml: true,
                 }
             case 'onboarding':
                 return {
