@@ -1,6 +1,5 @@
 export * from './acuity'
 export * from './bookings'
-export * from './mjml'
 export * from './stripe'
 export * from './scienceProgram'
 export * from './holidayPrograms'
