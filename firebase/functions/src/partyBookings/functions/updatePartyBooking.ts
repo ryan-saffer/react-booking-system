@@ -1,5 +1,5 @@
 import { https, logger } from 'firebase-functions'
-import { getCalendarClient } from '../../calendar/CalendarClient'
+import { getCalendarClient } from '../../google/CalendarClient'
 import { onCall } from '../../utilities'
 import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
