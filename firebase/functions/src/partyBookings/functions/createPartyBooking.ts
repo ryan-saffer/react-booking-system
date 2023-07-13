@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin'
-import { getCalendarClient } from '../../calendar/CalendarClient'
+import { getCalendarClient } from '../../google/CalendarClient'
 import { onCall } from '../../utilities'
 import {
     FirestoreBooking,

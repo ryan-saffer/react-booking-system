@@ -1,4 +1,4 @@
-import { env } from './../init'
+import { env } from '../init'
 import googleCredentials from '../../credentials/google-credentials.json'
 import { calendar_v3, google } from 'googleapis'
 import { withExponentialBackoff } from '../utilities'
