@@ -35,11 +35,11 @@ export class FirestoreRefs {
     }
 
     static scienceEnrolments() {
-        return db.collection('scienceAppointments')
+        return db.collection('scienceAppointments') as Collection<ScienceEnrolment>
     }
 
     static scienceEnrolment(appointmentId: string) {
-        return this.scienceEnrolments().doc(appointmentId) as Document<ScienceEnrolment>
+        return this.scienceEnrolments().doc(appointmentId)
     }
 
     static events() {
