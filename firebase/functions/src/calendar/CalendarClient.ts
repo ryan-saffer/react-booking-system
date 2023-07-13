@@ -81,7 +81,8 @@ class CalendarClient {
         })
     }
 
-    deleteEvent(eventId: string, calendar: CalendarParams) {
+    deleteEvent(_eventId: string, calendar: CalendarParams) {
+        const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
         return this.calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
     }
 
