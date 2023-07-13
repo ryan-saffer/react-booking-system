@@ -1,5 +1,5 @@
 import { https, logger } from 'firebase-functions/v1'
-import { getCalendarClient } from '../../calendar/CalendarClient'
+import { getCalendarClient } from '../../google/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
 

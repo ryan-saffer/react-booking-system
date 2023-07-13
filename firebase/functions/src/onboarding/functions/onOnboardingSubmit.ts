@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { getDriveClient } from '../../drive/DriveClient'
+import { getDriveClient } from '../../google/DriveClient'
 import { getXeroClient } from '../../xero/XeroClient'
 import { Employee } from 'fizz-kidz'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
