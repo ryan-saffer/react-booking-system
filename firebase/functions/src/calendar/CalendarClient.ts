@@ -66,7 +66,8 @@ class CalendarClient {
         return result.data.id as string
     }
 
-    updateEvent(eventId: string, calendar: CalendarParams, event: Event) {
+    updateEvent(_eventId: string, calendar: CalendarParams, event: Event) {
+        const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
         return this.calendar.events.update({
             eventId,
             calendarId: this.getCalendarId(calendar),
