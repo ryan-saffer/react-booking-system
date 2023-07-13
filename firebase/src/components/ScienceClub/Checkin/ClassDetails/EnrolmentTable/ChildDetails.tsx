@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions, Dropdown, MenuProps, Space, Tag, Typography } from 'antd'
 import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT_LG, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
-import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { DownOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
 import { MenuItemType } from 'antd/es/menu/hooks/useItems'
@@ -21,23 +20,8 @@ type MenuKey = 'sign-in' | 'sign-out' | 'not-attending' | 'attending' | 'not-con
 const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentLabel, updateEnrolment }) => {
     const classes = useStyles()
     const { width } = useWindowDimensions()
-    const firebase = useFirebase()
 
     const [loading, setLoading] = useState(false)
-    const [anaphylaxisUrl, setAnaphylaxisUrl] = useState('')
-
-    useEffect(() => {
-        async function getUrl() {
-            if (enrolment.child.isAnaphylactic) {
-                const url = await firebase.storage
-                    .ref(`anaphylaxisPlans/${enrolment.id}/${enrolment.child.anaphylaxisPlan}`)
-                    .getDownloadURL()
-                setAnaphylaxisUrl(url)
-            }
-        }
-        getUrl()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const handleMenuClick = async (key: MenuKey) => {
         setLoading(true)
@@ -105,9 +89,9 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                         </Descriptions.Item>
                     </>
                 )}
-                {enrolment.child.isAnaphylactic && (
+                {enrolment.child.anaphylaxisPlan && (
                     <Descriptions.Item label="Anaphylaxis Plan">
-                        <Button disabled={anaphylaxisUrl === ''} href={anaphylaxisUrl} target="_blank">
+                        <Button href={enrolment.child.anaphylaxisPlan} target="_blank">
                             View Plan
                         </Button>
                     </Descriptions.Item>
