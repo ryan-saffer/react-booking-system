@@ -1,10 +1,11 @@
 import * as functions from 'firebase-functions'
-import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment } from 'fizz-kidz'
+import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
 import { db, projectName, storage } from '../../init'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 import { getSheetsClient } from '../../google/SheetsClient'
+import { getHubspotClient } from '../../hubspot/HubspotClient'
 
 const env = projectName === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -126,6 +127,21 @@ export default async function scheduleScienceProgram(
         }
     }
 
+    try {
+        const hubspotClient = getHubspotClient()
+        await hubspotClient.addScienceProgramContact({
+            firstName: appointment.parent.firstName,
+            lastName: appointment.parent.lastName,
+            email: appointment.parent.email,
+            mobile: appointment.parent.phone,
+            calendarId: appointment.calendarId,
+        })
+    } catch (err) {
+        functions.logger.error(`unable to add science program enrolment to hubspot with id: ${appointment.id}`, {
+            details: err,
+        })
+    }
+
     // send the confirmation email
     if (sendConfirmationEmail) {
         try {
@@ -160,12 +176,11 @@ export default async function scheduleScienceProgram(
 
     if (sendPortalEmail) {
         try {
-            const baseUrl = env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
             await getMailClient().sendEmail('scienceParentPortalLink', input.parent.email, {
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
                 className: input.className,
-                portalUrl: `${baseUrl}/science-program-portal/${appointment.id}`,
+                portalUrl: `${getApplicationDomain(env)}/science-program-portal/${appointment.id}`,
             })
             appointment.emails.portalLinkEmailSent = true
             await newDoc.set(appointment, { merge: true })
