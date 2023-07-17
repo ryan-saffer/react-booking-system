@@ -1,5 +1,4 @@
 import { Client } from '@hubspot/api-client'
-// import * as functions from 'firebase-functions'
 import { Branch, Locations, Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -97,21 +96,3 @@ export function getHubspotClient() {
     hubspotClient = new HubspotClient()
     return hubspotClient
 }
-
-// export const test = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
-//     const _hubspotClient = getHubspotClient()
-
-//     try {
-//         await _hubspotClient.addScienceProgramContact({
-//             firstName: 'Ryan',
-//             lastName: 'Saffer',
-//             email: 'ryansaffer@gmail.com',
-//             mobile: '0413892120',
-//             calendarId: 3716165,
-//         })
-//     } catch (err) {
-//         console.error(err)
-//         res.sendStatus(500)
-//     }
-//     res.sendStatus(200)
-// })

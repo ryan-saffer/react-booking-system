@@ -31,6 +31,9 @@ export const SchoolCalendars: { [Key in SchoolBranch]: number } = {
     'Old Orchard Primary': 6311939,
     'Ripponlea Primary': 6947379,
     'St Kilda Primary': 7217388,
+    'East Bentleigh Primary': 8093329,
+    'King David': 3462186,
+    'Our Lady of Good Counsel': 7662138,
 }
 
 export const TestCalendarId = 3657946
