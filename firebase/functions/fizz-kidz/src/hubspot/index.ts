@@ -22,5 +22,8 @@ export type SchoolBranch =
     | 'Old Orchard Primary'
     | 'Ripponlea Primary'
     | 'St Kilda Primary'
+    | 'East Bentleigh Primary'
+    | 'King David'
+    | 'Our Lady of Good Counsel'
 
 export type Branch = StoreBranch | SchoolBranch
