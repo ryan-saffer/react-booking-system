@@ -69,7 +69,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             location: booking.location,
         })
     } catch (err) {
-        logger.error(`error adding contact to hubspot: '${booking.parentEmail}'`)
+        logger.error(`error adding contact to hubspot: '${booking.parentEmail}'`, { details: err })
     }
 
     const manager = getManager(booking.location)

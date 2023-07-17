@@ -17,19 +17,37 @@ class HubspotClient {
         this.#client = new Client({ accessToken: process.env.HUBSPOT_ACCESS_TOKEN })
     }
 
-    #addContact(values: WithBaseProps<{ test_service: string } & { [key: string]: string }>) {
+    async #addContact(values: WithBaseProps<{ test_service: string } & { [key: string]: string }>) {
         const { firstName, lastName, email, mobile, ...rest } = values
-        return this.#client.crm.contacts.basicApi.create({
-            properties: {
-                firstname: firstName,
-                lastname: lastName,
-                phone: mobile,
-                email,
-                ...rest,
-                customer_type: 'B2C',
-            },
-            associations: [],
-        })
+
+        const properties = {
+            firstname: firstName,
+            lastname: lastName,
+            phone: mobile,
+            email,
+            ...rest,
+            customer_type: 'B2C',
+        }
+
+        try {
+            await this.#client.crm.contacts.basicApi.create({
+                properties,
+                associations: [],
+            })
+        } catch (err: any) {
+            if (err.code === 409) {
+                // a way to update by email address. See 'Please note' section - https://developers.hubspot.com/docs/api/crm/contacts
+                await this.#client.apiRequest({
+                    method: 'PATCH',
+                    path: `/crm/v3/objects/contacts/${email}?idProperty=email`,
+                    body: {
+                        properties,
+                    },
+                })
+            } else {
+                throw err
+            }
+        }
     }
 
     addBirthdayPartyContact(
