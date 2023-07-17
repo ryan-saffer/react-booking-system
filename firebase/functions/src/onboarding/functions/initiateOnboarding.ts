@@ -44,9 +44,9 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
 
     const esignaturesClient = new ESignatureClient()
 
-    let contractUrl
+    let contractId, contractSignUrl
     try {
-        contractUrl = await esignaturesClient.createContract({
+        ;({ contractId, contractSignUrl } = await esignaturesClient.createContract({
             id,
             email: 'ryansaffer@gmail.com',
             mobile: '+61413892120',
@@ -62,19 +62,19 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
                 senderName,
                 senderPosition,
             },
-        })
+        }))
     } catch (err) {
         functions.logger.error('error creating contract', { details: err })
         await FirestoreClient.deleteEmployee(id)
         throw new functions.https.HttpsError('internal', 'error creating contract', err)
     }
 
-    await FirestoreClient.updateEmployee({ id, contractUrl })
+    await FirestoreClient.updateEmployee({ id, contractId, contractSignUrl })
 
     const FORM_URL = 'https://fizz-kidz-onboarding.paperform.co'
 
     const formUrl = `${FORM_URL}?id=${id}&firstName=${firstName}&lastName=${lastName}&email=${email}&mobile=${mobile}&contract=${encodeURIComponent(
-        contractUrl
+        contractSignUrl
     )}`
 
     const mailClient = getMailClient()

@@ -24,9 +24,10 @@ export type Employee = {
     emergencyContactMobile?: string
     emergencyContactRelation?: string
     pdfSummary?: string
-    contractUrl?: string
+    contractId?: string
+    contractSignUrl?: string // url of the contract for signing
     contractSigned: boolean
-    contractSignedUrl?: string
+    contractSignedUrl?: string // url of the signed contract. for upload to google drive.
     baseWage: number
     commencementDate: string
     location: Exclude<Locations, 'mobile'>

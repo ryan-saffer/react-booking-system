@@ -51,6 +51,6 @@ export class ESignatureClient {
             }),
         })
         const result = await response.json()
-        return result.data.contract.signers[0].sign_page_url
+        return { contractId: result.data.contract.id, contractSignUrl: result.data.contract.signers[0].sign_page_url }
     }
 }
