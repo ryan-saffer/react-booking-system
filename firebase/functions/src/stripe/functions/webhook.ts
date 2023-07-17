@@ -42,7 +42,14 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
             const metadata = paymentIntent.metadata as Metadata
             if (metadata.programType === 'holiday_program') {
                 console.log('beginning to book holiday programs')
-                await bookHolidayPrograms(paymentIntent.id)
+                try {
+                    await bookHolidayPrograms(paymentIntent.id)
+                } catch (err) {
+                    functions.logger.error(
+                        `there was an error booking in a holiday program with payment intent id: ${paymentIntent.id}`,
+                        { details: err }
+                    )
+                }
             }
             break
         }

@@ -27,6 +27,7 @@ import {
     FormBooking,
     Utilities,
     AdditionsDisplayValuesMap,
+    ObjectKeys,
 } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
@@ -232,10 +233,6 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
             .finally(() => {
                 console.log('finally')
             })
-    }
-
-    const isAddition = (key: string): key is Additions => {
-        return Object.keys(Additions).includes(key)
     }
 
     return (
@@ -635,29 +632,25 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         <Grid item xs={12}>
                             <Typography variant="h6">Additions</Typography>
                         </Grid>
-                        {Object.keys(Additions).map((addition) => {
-                            if (isAddition(addition)) {
-                                return (
-                                    <Grid item xs={6} sm={3} key={addition}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    id={createUniqueId(FormBookingFields[addition], bookingId)}
-                                                    color="secondary"
-                                                    name={FormBookingFields[addition]}
-                                                    checked={formValues[FormBookingFields[addition]].value ?? false}
-                                                    value={formValues[FormBookingFields[addition]].value}
-                                                    disabled={!editing}
-                                                    onChange={handleFormCheckboxChange}
-                                                />
-                                            }
-                                            label={AdditionsDisplayValuesMap[addition]}
-                                            classes={{ root: classes.disabled }}
+                        {ObjectKeys(Additions).map((addition) => (
+                            <Grid item xs={6} sm={3} key={addition}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            id={createUniqueId(FormBookingFields[addition], bookingId)}
+                                            color="secondary"
+                                            name={FormBookingFields[addition]}
+                                            checked={formValues[FormBookingFields[addition]].value ?? false}
+                                            value={formValues[FormBookingFields[addition]].value}
+                                            disabled={!editing}
+                                            onChange={handleFormCheckboxChange}
                                         />
-                                    </Grid>
-                                )
-                            } else return null
-                        })}
+                                    }
+                                    label={AdditionsDisplayValuesMap[addition]}
+                                    classes={{ root: classes.disabled }}
+                                />
+                            </Grid>
+                        ))}
                     </>
                 )}
                 {displayCake && (

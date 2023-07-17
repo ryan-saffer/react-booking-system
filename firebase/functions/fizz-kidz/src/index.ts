@@ -40,3 +40,5 @@ export * from './timesheets'
 export * from './utilities'
 
 export * from './onboarding'
+
+export * from './hubspot'

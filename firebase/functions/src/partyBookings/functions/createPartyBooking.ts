@@ -5,7 +5,7 @@ import {
     FirestoreBooking,
     Locations,
     capitalise,
-    getApplictionDomain,
+    getApplicationDomain,
     getLocationAddress,
     getManager,
     getPartyCreationCount,
@@ -18,6 +18,7 @@ import { env } from '../../init'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 import { https, logger } from 'firebase-functions'
+import { getHubspotClient } from '../../hubspot/HubspotClient'
 
 export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => {
     const booking = {
@@ -43,15 +44,33 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
                 end,
                 location:
                     booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
-                description: `${getApplictionDomain(env)}/bookings?id=${bookingId}`,
+                description: `${getApplicationDomain(env)}/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
         logger.error(`unable to create event for party booking with id: '${bookingId}'`, { details: err })
+        await FirestoreClient.deletePartyBooking(bookingId)
         throw new https.HttpsError('internal', 'unable to create calendar event', { details: err })
     }
 
     await FirestoreClient.updatePartyBooking(bookingId, { eventId: eventId })
+
+    const hubspotClient = getHubspotClient()
+    try {
+        await hubspotClient.addBirthdayPartyContact({
+            firstName: booking.parentFirstName,
+            lastName: booking.parentLastName,
+            email: booking.parentEmail,
+            mobile: booking.parentMobile,
+            childName: booking.childName,
+            childAge: booking.childAge,
+            service: booking.location === Locations.MOBILE ? 'mobile' : 'in-store',
+            partyDate: booking.dateTime.toDate(),
+            location: booking.location,
+        })
+    } catch (err) {
+        logger.error(`error adding contact to hubspot: '${booking.parentEmail}'`)
+    }
 
     const manager = getManager(booking.location)
 
@@ -89,7 +108,9 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             )
         } catch (err) {
             logger.error(`error sending confirmation email for party booking with id: '${bookingId}'`, { details: err })
-            throw new https.HttpsError('internal', 'unable to send confirmation email', { details: err })
+            throw new https.HttpsError('internal', 'party booked successfully, but unable to send confirmation email', {
+                details: err,
+            })
         }
     }
     return

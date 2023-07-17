@@ -1,10 +1,8 @@
 import * as functions from 'firebase-functions'
-import { ScienceEnrolment, SendTermContinuationEmailsParams } from 'fizz-kidz'
+import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
 import { onCall } from '../../utilities'
-import { db } from '../../init'
+import { db, env } from '../../init'
 import { getMailClient } from '../../sendgrid/MailClient'
-
-const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
     async (input: SendTermContinuationEmailsParams) => {
@@ -20,9 +18,7 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                 const encodedContinueQueryParams = Buffer.from(continueQueryParams).toString('base64')
                 const encodedUnenrollQueryParams = Buffer.from(unenrollQueryParams).toString('base64')
 
-                let baseUrl =
-                    env === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://booking-system-6435d.web.app'
-                baseUrl += '/science-club-enrolment'
+                const baseUrl = `${getApplicationDomain(env)}/science-club-enrolment`
 
                 try {
                     await getMailClient().sendEmail('termContinuationEmail', appointment.parent.email, {
