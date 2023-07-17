@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Descriptions, Table, Tag } from 'antd'
+import { Button, Descriptions, Table, Tag } from 'antd'
 import useFirebase from '../Hooks/context/UseFirebase'
 import { Employee } from 'fizz-kidz'
 import { ColumnsType } from 'antd/es/table'
@@ -147,6 +147,13 @@ const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
             <Descriptions.Item label="Address">{employee.address}</Descriptions.Item>
             <Descriptions.Item label="Base Wage">${employee.baseWage}</Descriptions.Item>
             <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>
+            {employee.contractId && (
+                <Descriptions.Item label="Contract">
+                    <Button href={`https://esignatures.io/contracts/${employee.contractId}`} target="_none">
+                        View Contract
+                    </Button>
+                </Descriptions.Item>
+            )}
         </Descriptions>
     )
 }
