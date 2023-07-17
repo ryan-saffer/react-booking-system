@@ -25,5 +25,6 @@ export type SchoolBranch =
     | 'East Bentleigh Primary'
     | 'King David'
     | 'Our Lady of Good Counsel'
+    | 'TEST'
 
 export type Branch = StoreBranch | SchoolBranch

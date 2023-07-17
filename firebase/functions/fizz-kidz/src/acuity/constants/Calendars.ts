@@ -34,6 +34,7 @@ export const SchoolCalendars: { [Key in SchoolBranch]: number } = {
     'East Bentleigh Primary': 8093329,
     'King David': 3462186,
     'Our Lady of Good Counsel': 7662138,
+    TEST: 3657946,
 }
 
 export const TestCalendarId = 3657946
