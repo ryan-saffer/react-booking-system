@@ -1,30 +1,7 @@
-export type ScheduleScienceAppointmentParams = {
-    appointmentTypeId: number
-    calendarId: number
-    parent: {
-        firstName: string
-        lastName: string
-        email: string
-        phone: string
-    }
-    child: {
-        firstName: string
-        lastName: string
-        age: string
-        grade: string
-        allergies: string
-        isAnaphylactic: boolean
-        anaphylaxisPlan: string
-        permissionToPhotograph: boolean
-    }
-    emergencyContact: {
-        name: string
-        relation: string
-        phone: string
-    }
-    className: string
-    pickupPeople: string[]
-}
+export type ScheduleScienceAppointmentParams = Pick<
+    ScienceEnrolment,
+    'appointmentTypeId' | 'calendarId' | 'parent' | 'child' | 'emergencyContact' | 'className' | 'pickupPeople'
+>
 
 export type SendTermContinuationEmailsParams = {
     appointmentIds: string[]
@@ -43,6 +20,7 @@ export type ScienceEnrolment = {
     // inactive status will mean they are deleted in acuity
     status: 'active' | 'inactive'
     appointmentTypeId: number
+    calendarId: number
     appointments: number[]
     parent: {
         firstName: string
