@@ -51,11 +51,14 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
     }
 
     const handleSignOut = async (pickupPerson: string, signature: string, staffReason: string = '') => {
-        await setAppointmentLabel(appointment.id, 'signed-out')
         await updateEnrolment({
             ...enrolment,
-            [appointment.id]: { pickupPerson, signature, timestamp: Date.now(), staffReason },
+            signatures: {
+                ...enrolment.signatures,
+                [appointment.id]: { pickupPerson, signature, timestamp: Date.now(), staffReason },
+            },
         })
+        await setAppointmentLabel(appointment.id, 'signed-out')
         setOpenSigDialog(false)
     }
 

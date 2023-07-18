@@ -76,13 +76,7 @@ const SignatureDialog = (props) => {
     }
 
     return (
-        <Dialog
-            onClick={(e) => e.stopPropagation()}
-            fullWidth={true}
-            maxWidth={'xl'}
-            open={props.open}
-            disableBackdropClick={true}
-        >
+        <Dialog onClick={(e) => e.stopPropagation()} fullWidth={true} maxWidth={'xl'} open={props.open}>
             <DialogTitle className={classes.title}>Initial Required</DialogTitle>
             <DialogContent className={classes.dialogContent}>
                 <DialogContentText className={classes.title}>Who is signing out the child?</DialogContentText>

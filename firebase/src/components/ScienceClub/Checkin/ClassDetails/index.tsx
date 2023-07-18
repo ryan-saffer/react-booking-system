@@ -39,6 +39,18 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
     const calendarName = decodeURIComponent(searchParams.get('calendarName')!)
     const classTime = decodeURIComponent(searchParams.get('classTime')!)
 
+    const updateAppointment = (newAppointment: Acuity.Appointment) => {
+        setAppointments((appointments) =>
+            appointments.map((oldAppointment) => {
+                if (oldAppointment.id === newAppointment.id) {
+                    return newAppointment
+                } else {
+                    return oldAppointment
+                }
+            })
+        )
+    }
+
     useEffect(() => {
         setLoading(true)
         let _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
@@ -73,25 +85,28 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
                     _enrolmentsMap[enrolment.id] = enrolment
                 })
 
-                // filter out appointments that are not stored in firestore
-                // side effect from migration. should be impossible. remove at end of term 4 22.
-                const filteredAppointments = _appointments.filter((it) => getEnrolment(it, _enrolmentsMap))
-
-                // sort appointments by child name
-                filteredAppointments.sort((a, b) => {
-                    const enrolment1 = getEnrolment(a, _enrolmentsMap)
-                    const enrolment2 = getEnrolment(b, _enrolmentsMap)
-                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], {
-                        numeric: false,
-                    })
-                })
-
-                _isFirstLoad = false
-                _appointments = filteredAppointments
-
                 setEnrolmentsMap(_enrolmentsMap)
-                setAppointments(filteredAppointments)
-                setLoading(false)
+
+                if (_isFirstLoad) {
+                    // filter out appointments that are not stored in firestore
+                    // side effect from migration. should be impossible. remove at end of term 4 22.
+                    const filteredAppointments = _appointments.filter((it) => getEnrolment(it, _enrolmentsMap))
+
+                    // sort appointments by child name
+                    filteredAppointments.sort((a, b) => {
+                        const enrolment1 = getEnrolment(a, _enrolmentsMap)
+                        const enrolment2 = getEnrolment(b, _enrolmentsMap)
+                        return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], {
+                            numeric: false,
+                        })
+                    })
+
+                    _isFirstLoad = false
+                    _appointments = filteredAppointments
+
+                    setAppointments(filteredAppointments)
+                    setLoading(false)
+                }
             })
         return unsubscribe
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +127,7 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
                         return (
                             <EnrolmentTable
                                 appointments={appointments}
-                                setAppointments={setAppointments}
+                                updateAppointment={updateAppointment}
                                 enrolmentsMap={enrolmentsMap}
                                 calendarName={calendarName}
                             />
