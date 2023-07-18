@@ -1,14 +1,14 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
-import { ColumnsType } from 'antd/es/table'
+import React, { useMemo, useState } from 'react'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Table, Tag, Typography } from 'antd'
 import ChildDetails from './ChildDetails'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import ActionButton from './ActionButton'
 import { EnrolmentsMap, getEnrolment } from '..'
-import { callAcuityClient, callFirebaseFunction } from '../../../../../utilities/firebase/functions'
+import { callAcuityClient } from '../../../../../utilities/firebase/functions'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { makeStyles } from '@material-ui/core'
+import { ColumnsType } from 'antd/es/table'
 
 const BREAKPOINT_SM = 370
 export const BREAKPOINT_MD = 420
@@ -16,7 +16,7 @@ export const BREAKPOINT_LG = 540
 
 type Props = {
     appointments: Acuity.Appointment[]
-    setAppointments: Dispatch<SetStateAction<Acuity.Appointment[]>>
+    updateAppointment: (appointment: Acuity.Appointment) => void
     enrolmentsMap: EnrolmentsMap
     calendarName: string
 }
@@ -31,7 +31,7 @@ export type SetAppointmentLabel = (id: number, label: 'signed-in' | 'signed-out'
 
 export type UpdateEnrolment = (enrolment: ScienceEnrolment) => void
 
-const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolmentsMap, calendarName }) => {
+const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enrolmentsMap, calendarName }) => {
     const firebase = useFirebase()
     const { width } = useWindowDimensions()
     const classes = useStyles()
@@ -66,28 +66,11 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolm
     }
 
     const updateEnrolment: UpdateEnrolment = async (enrolment: ScienceEnrolment) => {
-        await callFirebaseFunction(
-            'updateScienceEnrolment',
-            firebase
-        )({
-            ...enrolment,
-            id: enrolment.id,
-        })
+        await firebase.db.collection('scienceAppointments').doc(enrolment.id).update(enrolment)
     }
 
-    const updateAppointment = (newApt: Acuity.Appointment) => {
-        setAppointments((oldAppointments) =>
-            oldAppointments.map((existingApt) => {
-                if (newApt.id === existingApt.id) {
-                    return newApt
-                }
-                return existingApt
-            })
-        )
-    }
-
-    const columns: ColumnsType<TableData> = useMemo(() => {
-        const cols: any = []
+    const columns = useMemo(() => {
+        const cols: ColumnsType<TableData> = []
         cols.push({
             title: 'Child Name',
             dataIndex: 'acuityAppointment',
@@ -183,17 +166,17 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, setAppointments, enrolm
             bordered
             pagination={false}
             size="small"
-            title={() => (
+            caption={
                 <Typography.Title level={5} style={{ textAlign: 'center', margin: '9px 0' }}>
                     {calendarName}
                 </Typography.Title>
-            )}
+            }
             columns={columns}
             dataSource={data}
-            expandedRowKeys={expandedRows}
-            onExpand={handleExpandRow}
             expandable={{
                 expandRowByClick: true,
+                expandedRowKeys: expandedRows,
+                onExpand: handleExpandRow,
                 expandedRowRender: (columns) => {
                     const appointment = appointments.find((appointment) => appointment.id === columns.key)!!
                     const enrolment = getEnrolment(appointment, enrolmentsMap)
