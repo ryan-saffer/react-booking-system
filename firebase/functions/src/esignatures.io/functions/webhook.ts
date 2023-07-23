@@ -21,11 +21,15 @@ export const esignaturesWebhook = functions.region('australia-southeast1').https
     }
 
     if (req.body.status === 'contract-signed') {
-        const id = req.body.data.contract.metadata
-        await FirestoreClient.updateEmployee({
-            id,
-            contractSigned: true,
-            contractSignedUrl: req.body.data.contract.contract_pdf_url,
+        const employeeId = req.body.data.contract.metadata
+        const existingEmployee = await FirestoreClient.getEmployee(employeeId)
+        await FirestoreClient.updateEmployee(employeeId, {
+            contract: {
+                id: existingEmployee.contract.id,
+                signed: true,
+                signUrl: existingEmployee.contract.signUrl,
+                signedUrl: req.body.data.contract.contract_pdf_url,
+            },
         })
     }
     res.sendStatus(200)

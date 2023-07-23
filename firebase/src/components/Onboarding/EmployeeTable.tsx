@@ -70,8 +70,8 @@ const EmployeeTable = () => {
                 dataIndex: 'employee',
                 title: 'Contract Status',
                 render: (employee: Employee) => (
-                    <Tag color={employee.contractSigned ? 'green' : 'orange'}>
-                        {employee.contractSigned ? 'Signed' : 'Awaiting Signature'}
+                    <Tag color={employee.contract.signed ? 'green' : 'orange'}>
+                        {employee.contract.signed ? 'Signed' : 'Awaiting Signature'}
                     </Tag>
                 ),
             },
@@ -79,7 +79,7 @@ const EmployeeTable = () => {
                 key: 'status',
                 dataIndex: 'employee',
                 title: 'Onboarding Status',
-                render: (employee: Employee) => renderBadge(employee),
+                render: (employee: Employee) => renderBadge(employee.status),
                 sorter: {
                     compare: (first, second) => first.employee.status.localeCompare(second.employee.status),
                     multiple: 2,
@@ -98,8 +98,8 @@ const EmployeeTable = () => {
 
     const data = useMemo(() => employees.map((employee) => ({ key: employee.id, employee })), [employees])
 
-    const renderBadge = (employee: Employee) => {
-        switch (employee.status) {
+    const renderBadge = (status: Employee['status']) => {
+        switch (status) {
             case 'form-sent':
                 return <Tag color="orange">Form Sent</Tag>
             case 'generating-accounts':
@@ -109,7 +109,7 @@ const EmployeeTable = () => {
             case 'complete':
                 return <Tag color="green">Onboarding Complete</Tag>
             default: {
-                const exhaustive: never = employee.status
+                const exhaustive: never = status
                 console.error(`unknown employee status: '${exhaustive}`)
             }
         }
@@ -136,24 +136,28 @@ const EmployeeTable = () => {
 const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
     const classes = useStyles()
 
+    const hasFilledInForm = employee.status !== 'form-sent'
+
     return (
         <Descriptions bordered size="small" column={1} className={classes.details}>
             <Descriptions.Item label="First Name">{employee.firstName}</Descriptions.Item>
             <Descriptions.Item label="Last Name">{employee.lastName}</Descriptions.Item>
-            <Descriptions.Item label="Pronouns">{employee.pronouns}</Descriptions.Item>
-            <Descriptions.Item label="DOB">{employee.dob}</Descriptions.Item>
             <Descriptions.Item label="Email">{employee.email}</Descriptions.Item>
             <Descriptions.Item label="Phone">{employee.mobile}</Descriptions.Item>
-            <Descriptions.Item label="Address">{employee.address}</Descriptions.Item>
+            {hasFilledInForm && (
+                <>
+                    <Descriptions.Item label="Pronouns">{employee.pronouns}</Descriptions.Item>
+                    <Descriptions.Item label="DOB">{employee.dob}</Descriptions.Item>
+                    <Descriptions.Item label="Address">{employee.address}</Descriptions.Item>
+                </>
+            )}
             <Descriptions.Item label="Base Wage">${employee.baseWage}</Descriptions.Item>
             <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>
-            {employee.contractId && (
-                <Descriptions.Item label="Contract">
-                    <Button href={`https://esignatures.io/contracts/${employee.contractId}`} target="_none">
-                        View Contract
-                    </Button>
-                </Descriptions.Item>
-            )}
+            <Descriptions.Item label="Contract">
+                <Button href={`https://esignatures.io/contracts/${employee.contract.id}`} target="_none">
+                    View Contract
+                </Button>
+            </Descriptions.Item>
         </Descriptions>
     )
 }
