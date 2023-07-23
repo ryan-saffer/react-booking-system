@@ -5,7 +5,7 @@ import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoung
 import path from 'path'
 import os from 'os'
 import fs from 'fs'
-import { projectName, storage } from '../../init'
+import { projectId, storage } from '../../init'
 import { onCall } from '../../utilities'
 import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { getXeroClient } from '../../xero/XeroClient'
@@ -159,7 +159,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         )
 
         const [file] = await storage
-            .bucket(`${projectName}.appspot.com`)
+            .bucket(`${projectId}.appspot.com`)
             .upload(tempFilePath, { destination: `payroll/${filename}` })
 
         const url = await file.getSignedUrl({

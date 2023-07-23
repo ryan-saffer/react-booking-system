@@ -1,5 +1,7 @@
+import { PubSub } from '@google-cloud/pubsub'
 import * as functions from 'firebase-functions'
-import { FirebaseFunctions } from 'fizz-kidz'
+import { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
+import { projectId } from '../init'
 
 export function onCall<T extends keyof FirebaseFunctions>(
     fn: (
@@ -17,6 +19,21 @@ export function onRequest<T extends keyof FirebaseFunctions>(
     ) => void | Promise<void>
 ) {
     return functions.region('australia-southeast1').https.onRequest(fn)
+}
+
+export function onPubSub<T extends keyof PubSubFunctions>(
+    topic: T,
+    fn: (data: PubSubFunctions[T], context: functions.EventContext) => void
+) {
+    return functions
+        .region('australia-southeast1')
+        .pubsub.topic(topic)
+        .onPublish((message, context) => fn(message.json, context))
+}
+
+export function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
+    const pubsub = new PubSub({ projectId })
+    return pubsub.topic(topic).publishMessage({ data: Buffer.from(JSON.stringify(data)) })
 }
 
 /**

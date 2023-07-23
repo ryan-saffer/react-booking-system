@@ -5,7 +5,7 @@
         "build": "npm --prefix fizz-kidz run build && tslint --project tsconfig.json && npm run copy-files && tsc",
         "build:watch": "npm --prefix fizz-kidz run build:watch & tslint --project tsconfig.json && npm run copy-files & tsc --watch",
         "copy-files": "copyfiles -u 1 src/**/*.html lib/src && copyfiles -u 1 src/**/*.csv lib/src && copyfiles -u 1 credentials/**/*.json lib/credentials",
-        "serve": "npm run build:watch & firebase emulators:start --only functions --inspect-functions",
+        "serve": "npm run build:watch & firebase emulators:start --only functions,pubsub --inspect-functions",
         "shell": "firebase functions:shell",
         "start": "npm run shell",
         "deploy": "firebase deploy --only functions",
@@ -18,6 +18,7 @@
         "node": "18"
     },
     "dependencies": {
+        "@google-cloud/pubsub": "^3.7.1",
         "@hubspot/api-client": "^9.0.0",
         "@sendgrid/mail": "^7.7.0",
         "@types/express": "^4.17.6",

@@ -1,8 +1,13 @@
 import { EventBooking } from 'fizz-kidz/src/partyBookings/Event'
 import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee, FirestoreBooking } from 'fizz-kidz'
 import { WithoutId } from 'fizz-kidz/src/utilities'
-import { FirestoreRefs, Document } from './FirestoreRefs'
+import { FirestoreRefs, Document, Collection } from './FirestoreRefs'
 import { firestore } from 'firebase-admin'
+
+type CreateDocProps<T> = {
+    doc: WithoutId<T>
+    ref?: firestore.DocumentReference<T>
+}
 
 class Client {
     private async _getDocument<T>(ref: Document<T>) {
@@ -36,10 +41,26 @@ class Client {
         return data
     }
 
-    async createPartyBooking(booking: FirestoreBooking) {
-        const ref = FirestoreRefs.partyBookings().doc()
-        await ref.set(booking)
+    /**
+     * Create a firestore document. If `options.includeId` is used, it will add the id as part of the document.
+     *
+     * @returns the document id
+     */
+    private async _createDocument(
+        doc: any,
+        ref: firestore.DocumentReference<any>,
+        options: { includeId?: boolean } = { includeId: true }
+    ) {
+        if (options.includeId) {
+            await ref.set({ id: ref.id, ...doc })
+        } else {
+            await ref.set(doc)
+        }
         return ref.id
+    }
+
+    async createPartyBooking(booking: FirestoreBooking) {
+        return this._createDocument(booking, FirestoreRefs.partyBookings().doc(), { includeId: false })
     }
 
     getPartyBooking(bookingId: string) {
@@ -79,9 +100,7 @@ class Client {
     }
 
     async createEventBooking(booking: WithoutId<Omit<EventBooking, 'calendarEventId'>>) {
-        const ref = FirestoreRefs.events().doc()
-        await ref.set({ id: ref.id, ...booking })
-        return ref.id
+        return this._createDocument(booking, FirestoreRefs.events().doc())
     }
 
     updateEventBooking(eventId: string, booking: Partial<EventBooking>) {
@@ -92,22 +111,24 @@ class Client {
         return FirestoreRefs.event(eventId).delete()
     }
 
-    async createEmployee(employee: WithoutId<Employee>) {
-        const ref = FirestoreRefs.employees().doc()
-        await ref.set({ id: ref.id, ...employee })
-        return ref.id
-    }
-
     deleteEmployee(employeeId: string) {
         return FirestoreRefs.employee(employeeId).delete()
+    }
+
+    createEmployeeRef() {
+        return FirestoreRefs.employees().doc()
+    }
+
+    createEmployee(props: CreateDocProps<Employee>) {
+        return this._createDocument(props.doc, props.ref ?? FirestoreRefs.employees().doc())
     }
 
     getEmployee(employeeId: string) {
         return this._getDocument(FirestoreRefs.employee(employeeId))
     }
 
-    updateEmployee(employee: Partial<Employee>) {
-        return FirestoreRefs.employee(employee.id!).update(employee)
+    updateEmployee(employeeId: string, employee: Partial<Employee>) {
+        return FirestoreRefs.employee(employeeId).update(employee)
     }
 }
 

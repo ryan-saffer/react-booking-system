@@ -1,33 +1,13 @@
 import { Locations } from '../partyBookings/Locations'
 
-export type Employee = {
+interface BaseEmployee {
     id: string
     created: number
     firstName: string
     lastName: string
     position: string
-    pronouns?: string
-    dob?: string
     email: string
     mobile: string
-    address?: string
-    health?: string
-    tfnForm?: File
-    bankAccountName?: string
-    bsb?: string
-    accountNumber?: string
-    wwccStatus?: string
-    wwccPhoto?: File
-    wwccCardNumber?: string
-    wwccApplicationNumber?: string
-    emergencyContactName?: string
-    emergencyContactMobile?: string
-    emergencyContactRelation?: string
-    pdfSummary?: string
-    contractId?: string
-    contractSignUrl?: string // url of the contract for signing
-    contractSigned: boolean
-    contractSignedUrl?: string // url of the signed contract. for upload to google drive.
     baseWage: number
     commencementDate: string
     location: Exclude<Locations, 'mobile'>
@@ -35,9 +15,51 @@ export type Employee = {
     managerPosition: string
     senderName: string
     senderPosition: string
-    slingUserId?: string
-    xeroUserId?: string
-    status: 'form-sent' | 'generating-accounts' | 'verification' | 'complete'
+    contract: Contract
+}
+
+type EmployeeAdditionalInfo = BaseEmployee & {
+    pronouns: string
+    dob: string
+    address: {
+        full: string
+        addressLine1: string
+        city: string
+        region: number
+        postalCode: string
+    }
+    health: string
+    tfnForm: File
+    bankAccountName: string
+    bsb: string
+    accountNumber: string
+    wwcc: WWCC
+    emergencyContact: {
+        name: string
+        mobile: string
+        relation: string
+    }
+    pdfSummary: string
+}
+
+export type Employee =
+    | (BaseEmployee & { status: 'form-sent' })
+    | (EmployeeAdditionalInfo & { status: 'generating-accounts' })
+    | (EmployeeAdditionalInfo & { status: 'verification' | 'complete'; xeroUserId: string })
+
+export type InitiateEmployeeProps = {
+    firstName: string
+    lastName: string
+    position: string
+    email: string
+    mobile: string
+    baseWage: number
+    commencementDate: string
+    location: Exclude<Locations, 'mobile'>
+    managerName: string
+    managerPosition: string
+    senderName: string
+    senderPosition: string
 }
 
 type File = {
@@ -46,4 +68,29 @@ type File = {
     mimeType: string
 }
 
-export type NewEmployee = Omit<Employee, 'id' | 'status' | 'created' | 'contractSigned'>
+export type WWCC =
+    | {
+          status: 'I have a WWCC'
+          photo: File
+          cardNumber: string
+      }
+    | {
+          status: 'I have applied for a WWCC and have an application number'
+          applicationNumber: string
+      }
+
+type BaseContract = {
+    id: string
+    signUrl: string
+}
+
+type ContractNotSigned = BaseContract & {
+    signed: false
+}
+
+type ContractSigned = BaseContract & {
+    signed: true
+    signedUrl: string
+}
+
+type Contract = ContractNotSigned | ContractSigned
