@@ -19,8 +19,8 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
         setLoading(true)
         // timeout to make it feel like its thinking..
         setTimeout(async () => {
-            await firebase.db.doc(`employees/${employee.id}`).update({ status: 'complete' } satisfies Partial<Employee>)
             onCancel()
+            await firebase.db.doc(`employees/${employee.id}`).update({ status: 'complete' })
         }, 1000)
     }
 
@@ -63,13 +63,18 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
                         </ul>
                         <br />
                         <strong>
-                            <li>Verify the user was created in Xero, and add the following details:</li>
+                            <li>
+                                Add the employee to the{' '}
+                                <a href="https://docs.google.com/spreadsheets/d/1zvbJv3Cjrbs1tTy9UfUgZEIjf2aZEpWoPvbEBiXXcm4/edit#gid=1491182768">
+                                    Team Pay Rates Google sheet.
+                                </a>
+                            </li>
                         </strong>
                         <ul>
-                            <li>Their Tax details according to their TFN form in the 'Taxes' tab</li>
-                            <li>Their superannuation membership in the 'Employement' tab</li>
-                            <li>Add a superannuation line to their 'Pay Template'</li>
-                            <li>Invite the user to 'Xero Me'</li>
+                            <li>
+                                Add their name to the 'Recent Changes' tab so the bookkeeper can ensure they are
+                                correctly created.
+                            </li>
                         </ul>
                         <br />
                         <strong>

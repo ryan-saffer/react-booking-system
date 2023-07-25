@@ -120,7 +120,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
                     earningsLines: [
                         {
                             earningsRateID: STAFF_ORDINARY_HOURS_RATE_ID,
-                            ratePerUnit: employee.baseWage,
+                            ratePerUnit: 0,
                             calculationType: EarningsRateCalculationType.ENTEREARNINGSRATE,
                         },
                     ],
