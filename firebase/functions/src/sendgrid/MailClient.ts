@@ -269,6 +269,7 @@ class MailClient {
                 return {
                     emailInfo: {
                         to,
+                        bcc: 'people@fizzkidz.com.au',
                         from: {
                             name: 'Fizz Kidz',
                             email: 'people@fizzkidz.com.au',
