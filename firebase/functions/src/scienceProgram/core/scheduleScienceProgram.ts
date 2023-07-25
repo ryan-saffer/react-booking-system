@@ -1,13 +1,13 @@
 import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
-import { db, projectName, storage } from '../../init'
+import { db, projectId, storage } from '../../init'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 import { getSheetsClient } from '../../google/SheetsClient'
 import { getHubspotClient } from '../../hubspot/HubspotClient'
 
-const env = projectName === 'bookings-prod' ? 'prod' : 'dev'
+const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
 export default async function scheduleScienceProgram(
     input: ScheduleScienceAppointmentParams,
@@ -34,7 +34,7 @@ export default async function scheduleScienceProgram(
     if (input.child.anaphylaxisPlan) {
         try {
             const today = new Date()
-            const bucket = storage.bucket(`${projectName}.appspot.com`)
+            const bucket = storage.bucket(`${projectId}.appspot.com`)
             await bucket
                 .file(`anaphylaxisPlans/${input.child.anaphylaxisPlan}`)
                 .move(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`)

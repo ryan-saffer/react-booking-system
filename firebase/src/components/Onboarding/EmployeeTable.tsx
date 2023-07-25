@@ -5,6 +5,7 @@ import { Employee } from 'fizz-kidz'
 import { ColumnsType } from 'antd/es/table'
 import { makeStyles } from '@material-ui/core'
 import VerificationButton from './VerificationButton'
+import Loader from '../ScienceClub/shared/Loader'
 
 const useEmployees = () => {
     const firebase = useFirebase()
@@ -28,66 +29,55 @@ const useEmployees = () => {
     return { employees, loading }
 }
 
-type TableData = {
-    key: string
-    employee: Employee
-}
-
 const EmployeeTable = () => {
     const { employees, loading } = useEmployees()
     const [expandedRows, setExpandedRows] = useState<string[]>([])
 
-    const columns = useMemo<ColumnsType<TableData>>(
+    const columns = useMemo<ColumnsType<Employee>>(
         () => [
             {
                 key: 'created',
-                dataIndex: 'employee',
                 title: 'Created',
                 render: (employee: Employee) => new Date(employee.created).toLocaleDateString(),
                 sorter: {
-                    compare: (first, second) => first.employee.created - second.employee.created,
+                    compare: (first, second) => first.created - second.created,
                     multiple: 3,
                 },
             },
             {
                 key: 'firstName',
-                dataIndex: 'employee',
+                dataIndex: 'firstName',
                 title: 'First Name',
-                render: (employee: Employee) => employee.firstName,
                 sorter: {
-                    compare: (first, second) => first.employee.firstName.localeCompare(second.employee.firstName),
+                    compare: (first, second) => first.firstName.localeCompare(second.firstName),
                     multiple: 1,
                 },
             },
             {
                 key: 'lastName',
-                dataIndex: 'employee',
+                dataIndex: 'lastName',
                 title: 'Last Name',
-                render: (employee: Employee) => employee.lastName,
             },
             {
                 key: 'contract',
-                dataIndex: 'employee',
                 title: 'Contract Status',
                 render: (employee: Employee) => (
-                    <Tag color={employee.contractSigned ? 'green' : 'orange'}>
-                        {employee.contractSigned ? 'Signed' : 'Awaiting Signature'}
+                    <Tag color={employee.contract.signed ? 'green' : 'orange'}>
+                        {employee.contract.signed ? 'Signed' : 'Awaiting Signature'}
                     </Tag>
                 ),
             },
             {
                 key: 'status',
-                dataIndex: 'employee',
                 title: 'Onboarding Status',
-                render: (employee: Employee) => renderBadge(employee),
+                render: (employee: Employee) => renderBadge(employee.status),
                 sorter: {
-                    compare: (first, second) => first.employee.status.localeCompare(second.employee.status),
+                    compare: (first, second) => first.status.localeCompare(second.status),
                     multiple: 2,
                 },
             },
             {
                 key: 'action',
-                dataIndex: 'employee',
                 title: 'Action',
                 render: (employee: Employee) =>
                     employee.status === 'verification' && <VerificationButton employee={employee} />,
@@ -96,10 +86,10 @@ const EmployeeTable = () => {
         []
     )
 
-    const data = useMemo(() => employees.map((employee) => ({ key: employee.id, employee })), [employees])
+    // const data = useMemo(() => employees.map((employee) => ({ key: employee.id, employee })), [employees])
 
-    const renderBadge = (employee: Employee) => {
-        switch (employee.status) {
+    const renderBadge = (status: Employee['status']) => {
+        switch (status) {
             case 'form-sent':
                 return <Tag color="orange">Form Sent</Tag>
             case 'generating-accounts':
@@ -109,25 +99,31 @@ const EmployeeTable = () => {
             case 'complete':
                 return <Tag color="green">Onboarding Complete</Tag>
             default: {
-                const exhaustive: never = employee.status
+                const exhaustive: never = status
                 console.error(`unknown employee status: '${exhaustive}`)
             }
         }
     }
 
-    // its so fast that its better to show nothing than flash a loader
-    if (loading) return null
+    if (loading) return <Loader style={{ marginTop: '4rem' }} />
 
     return (
         <Table
             columns={columns}
-            dataSource={data}
+            dataSource={employees.map((employee) => ({ ...employee, key: employee.id }))}
             size="small"
             expandable={{
                 expandRowByClick: true,
-                expandedRowRender: (record) => <EmployeeDetails employee={record.employee} />,
+                expandedRowRender: (employee) => {
+                    console.log(employee)
+                    return <EmployeeDetails employee={employee} />
+                },
                 expandedRowKeys: expandedRows,
-                onExpand: (expanded, record) => setExpandedRows(expanded ? [record.key] : []),
+                onExpand: (expanded, employee) => {
+                    console.log('expanded:', expanded)
+                    console.log('employeeId:', employee.id)
+                    setExpandedRows(expanded ? [employee.id] : [])
+                },
             }}
         />
     )
@@ -136,24 +132,27 @@ const EmployeeTable = () => {
 const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
     const classes = useStyles()
 
+    const hasFilledInForm = employee.status !== 'form-sent'
+
     return (
         <Descriptions bordered size="small" column={1} className={classes.details}>
             <Descriptions.Item label="First Name">{employee.firstName}</Descriptions.Item>
             <Descriptions.Item label="Last Name">{employee.lastName}</Descriptions.Item>
-            <Descriptions.Item label="Pronouns">{employee.pronouns}</Descriptions.Item>
-            <Descriptions.Item label="DOB">{employee.dob}</Descriptions.Item>
             <Descriptions.Item label="Email">{employee.email}</Descriptions.Item>
             <Descriptions.Item label="Phone">{employee.mobile}</Descriptions.Item>
-            <Descriptions.Item label="Address">{employee.address}</Descriptions.Item>
-            <Descriptions.Item label="Base Wage">${employee.baseWage}</Descriptions.Item>
-            <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>
-            {employee.contractId && (
-                <Descriptions.Item label="Contract">
-                    <Button href={`https://esignatures.io/contracts/${employee.contractId}`} target="_none">
-                        View Contract
-                    </Button>
-                </Descriptions.Item>
+            {hasFilledInForm && (
+                <>
+                    <Descriptions.Item label="Pronouns">{employee.pronouns}</Descriptions.Item>
+                    <Descriptions.Item label="DOB">{employee.dob}</Descriptions.Item>
+                    <Descriptions.Item label="Address">{employee.address.full}</Descriptions.Item>
+                </>
             )}
+            <Descriptions.Item label="Manager">{employee.managerName}</Descriptions.Item>
+            <Descriptions.Item label="Contract">
+                <Button href={`https://esignatures.io/contracts/${employee.contract.id}`} target="_none">
+                    View Contract
+                </Button>
+            </Descriptions.Item>
         </Descriptions>
     )
 }

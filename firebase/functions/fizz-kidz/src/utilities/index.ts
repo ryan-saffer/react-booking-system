@@ -11,6 +11,10 @@ export function ObjectKeys<T extends object>(object: T) {
     return Object.keys(object) as (keyof T)[]
 }
 
+export type RecursivePartial<T> = {
+    [P in keyof T]?: RecursivePartial<T[P]>
+}
+
 export type WithoutId<T> = Omit<T, 'id'>
 
 export * from './businessLogic'
