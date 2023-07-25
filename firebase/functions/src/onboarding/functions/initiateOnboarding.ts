@@ -4,9 +4,10 @@ import { Employee, getLocationAddress } from 'fizz-kidz'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { onCall } from '../../utilities'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 
 export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => {
-    const employeeRef = FirestoreClient.createEmployeeRef()
+    const employeeRef = FirestoreRefs.employees().doc()
 
     const esignaturesClient = new ESignatureClient()
 
@@ -31,7 +32,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         }))
     } catch (err) {
         logger.error('error creating contract', { details: err })
-        throw new https.HttpsError('internal', 'error creating contract', err)
+        throw new https.HttpsError('internal', 'error creating contract', { details: err })
     }
 
     const employee = {
@@ -57,7 +58,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         },
     } satisfies Employee
 
-    await FirestoreClient.createEmployee({ doc: employee, ref: employeeRef })
+    await FirestoreClient.createEmployee(employee, { ref: employeeRef })
 
     const FORM_URL = 'https://fizz-kidz-onboarding.paperform.co'
 
