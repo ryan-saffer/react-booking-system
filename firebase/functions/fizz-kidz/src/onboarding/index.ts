@@ -8,7 +8,6 @@ interface BaseEmployee {
     position: string
     email: string
     mobile: string
-    baseWage: number
     commencementDate: string
     location: Exclude<Locations, 'mobile'>
     managerName: string
@@ -53,7 +52,6 @@ export type InitiateEmployeeProps = {
     position: string
     email: string
     mobile: string
-    baseWage: number
     commencementDate: string
     location: Exclude<Locations, 'mobile'>
     managerName: string
