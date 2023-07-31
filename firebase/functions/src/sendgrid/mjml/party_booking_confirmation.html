@@ -83,27 +83,21 @@
             </mj-column>
 
             <mj-column width="100%">
-                <mj-text color="#637381" font-size="16px">
-                    <b>A week before the party</b>
-                    {{ managerName }} will email you a personalised online party form to fill out.
-                    The form will ask for:
-                    <ul style="margin-bottom:0px">
-                        <li>The approximate number of guests that will be attending</li>
-                        <li>The {{ creationCount }} creations that {{ childName }} would like to make</li>
-                        <li>Some super fun facts about the birthday child themselves</li>
-                        {{^isMobile}}
-                        <li>Which party food you would like to have at {{ childName }}'s party</li>
-                        {{/isMobile}}
-                        <li>Opportunity to add take home Fizz Kidz Activity Party Pack's for your guests. Read the
-                            attached FAQ's for more details!</li>
-                    </ul>
+                <mj-text color="#637381" font-size="14px">
+                    <b style="color:#212b35">A week before the party</b>
+                    {{ managerName }} will email you a personalised online party form, where you can tell us the
+                    number
+                    of guests attending as well as pick your creations, additional food and party packs.
                 </mj-text>
-                {{^isMobile}}
+            </mj-column>
+
+            {{^isMobile}}
+            <mj-column width="100%">
                 <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
                     padding-bottom="0">
                     Things to keep in mind
                 </mj-text>
-                <mj-text color="#637381" font-size="16px">
+                <mj-text color="#637381" font-size="14px">
                     <ul style="margin-bottom:0px;margin-top:0px">
                         <li>
                             Maximum numbers of kids
@@ -113,23 +107,37 @@
                                 {{/numberOfKidsAllowed}}
                             </ul>
                         </li>
-                        <li>You're welcome to bring your own nut free cake, however please just remember to bring along
+                        <li>You're welcome to bring your own nut free cake, however please just remember to bring
+                            along
                             some paper plates and spoons too!</li>
-                        <li>On the day, please arrive 10 minutes before the party starts, so we have enough time to make
-                            sure the venue is perfect for you.</li>
                     </ul>
                 </mj-text>
-                {{/isMobile}}
-                <mj-text color="#637381" font-size="16px">
-                    Feel free to have a look at <a href="http://www.fizzkidz.com.au/">our website</a> for more
-                    information
-                    regarding our birthday parties and like our <a
-                        href="https://www.instagram.com/fizzkidzz/">Instagram</a> and
-                    <a href="https://www.facebook.com/fizzkidz/">Facebook</a> pages to check out more pictures of
-                    our creations!
+            </mj-column>
+            {{/isMobile}}
+            <mj-column width="100%">
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    Cancellation
                 </mj-text>
-                <mj-text color="#637381" font-size="16px">
-                    <strong>Useful Links</strong>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    While we would much prefer to not charge for a service that has not been received, please
+                    understand that a cancelled or rescheduled party would have otherwise been taken by another
+                    customer.
+                    <br /><br />
+                    A cancelled or rescheduled event may incur the following fees:
+                    <ul>
+                        <li>$150.00 if cancelled or rescheduled within 3 weeks of the event.</li>
+                        <li>$300.00 if cancelled or rescheduled within 2 weeks of the event.</li>
+                        <li>$450.00 if cancelled or rescheduled within 1 week of the event.</li>
+                    </ul>
+                </mj-text>
+            </mj-column>
+            <mj-column width="100%">
+                <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold"
+                    padding-bottom="0">
+                    Useful Links
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
                     <ul>
                         {{^isMobile}}
                         <li><a
@@ -138,7 +146,8 @@
                         </li>
                         <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
                         {{/isMobile}}
-                        <li><a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download our
+                        <li><a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download
+                            our
                             awesome printable
                             invitations!</li>
                     </ul>
