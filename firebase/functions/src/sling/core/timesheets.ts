@@ -1,9 +1,6 @@
 import { DateTime, Duration, Interval } from 'luxon'
 import { Rate, Timesheet as SlingTimesheet } from './types'
 
-const BONNIE_OVERTIME_START = 30
-const CASUAL_OVERTIME_START = 38
-
 /**
  * Breaks the range down into weeks, and returns them as an array of intervals.
  * If the range is not divisible by 7, the final interval will include only the remaining days.
@@ -47,6 +44,7 @@ export function createTimesheetRows({
     dob,
     hasBirthdayDuringPayrun,
     isCasual,
+    overtimeThreshold,
     usersTimesheets,
     rate,
     timezone,
@@ -56,6 +54,7 @@ export function createTimesheetRows({
     dob: DateTime
     hasBirthdayDuringPayrun: boolean
     isCasual: boolean
+    overtimeThreshold: number
     usersTimesheets: SlingTimesheet[]
     rate: Rate
     timezone: string
@@ -65,8 +64,6 @@ export function createTimesheetRows({
     // keep track of hours worked this week
     let totalHours = 0
 
-    const overtimeStart = isCasual ? CASUAL_OVERTIME_START : BONNIE_OVERTIME_START
-
     usersTimesheets.map((timesheet) => {
         const position = PositionMap[timesheet.position.id]
         const location = LocationsMap[timesheet.location.id]
@@ -75,7 +72,7 @@ export function createTimesheetRows({
         const shiftLengthInHours = end.diff(start, 'hours').hours
 
         // calculate if this shift puts employee into overtime for the week
-        const hoursUntilWeeklyOvertime = overtimeStart - totalHours
+        const hoursUntilWeeklyOvertime = overtimeThreshold - totalHours
 
         if (hoursUntilWeeklyOvertime > 0) {
             // overtime not yet reached
@@ -189,7 +186,8 @@ export function createTimesheetRows({
 
                 createOvertimeTimesheetRows(
                     shiftLengthInHours - hoursUntilWeeklyOvertime,
-                    overtimeStart,
+                    overtimeThreshold,
+                    overtimeThreshold,
                     firstName,
                     lastName,
                     dob,
@@ -207,6 +205,7 @@ export function createTimesheetRows({
             createOvertimeTimesheetRows(
                 shiftLengthInHours,
                 totalHours,
+                overtimeThreshold,
                 firstName,
                 lastName,
                 dob,
@@ -228,6 +227,7 @@ export function createTimesheetRows({
 function createOvertimeTimesheetRows(
     hours: number,
     totalHours: number,
+    overtimeThreshold: number,
     firstName: string,
     lastName: string,
     dob: DateTime,
@@ -241,10 +241,8 @@ function createOvertimeTimesheetRows(
 ) {
     const output: TimesheetRow[] = []
 
-    const overtimeStart = isCasual ? CASUAL_OVERTIME_START : BONNIE_OVERTIME_START
-
     // calculate if the hours puts employee into after three hours of overtime
-    const hoursUntilAfterThreeHours = overtimeStart + 3 - totalHours
+    const hoursUntilAfterThreeHours = overtimeThreshold + 3 - totalHours
 
     if (hoursUntilAfterThreeHours > 0) {
         // after three hours not yet reached
