@@ -11,6 +11,9 @@ import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { getXeroClient } from '../../xero/XeroClient'
 import { Rate } from '../core/types'
 
+const BONNIE_OVERTIME_START = 30
+const OVERTIME_START = 38
+
 type XeroUserCache = { [key: string]: Employee | undefined }
 
 export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDateInput, endDateInput }) => {
@@ -118,15 +121,20 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                     rate = ordinaryRate
                 }
 
-                // only bonnie is not casual
-                const isCasual = slingUser.employeeId !== '1551679a-9e81-47d3-b019-906d7ce617f1'
+                const BONNIE_ID = '1551679a-9e81-47d3-b019-906d7ce617f1'
+                const partTimeEmployees = [
+                    BONNIE_ID,
+                    'fa53fa93-ed63-4d20-bf99-e0996700044a', // ebony perkins
+                ]
+                const isCasual = !partTimeEmployees.includes(slingUser.employeeId)
 
                 const { rows: employeesRows, totalHours } = createTimesheetRows({
                     firstName: xeroUser.firstName,
                     lastName: xeroUser.lastName,
                     dob,
-                    isCasual,
                     hasBirthdayDuringPayrun,
+                    isCasual,
+                    overtimeThreshold: slingUser.employeeId === BONNIE_ID ? BONNIE_OVERTIME_START : OVERTIME_START,
                     usersTimesheets,
                     rate,
                     timezone: slingUser.timezone,
