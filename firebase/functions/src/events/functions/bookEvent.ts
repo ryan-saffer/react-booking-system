@@ -8,7 +8,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
     const { event } = input
     const { slots, ...rest } = event
 
-    const calendarClient = getCalendarClient()
+    const calendarClient = await getCalendarClient()
 
     // parse date strings back to date objects
     slots.forEach((slot) => {
@@ -63,7 +63,8 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
     // send confirmation email
     if (input.sendConfirmationEmail) {
         try {
-            await getMailClient().sendEmail('eventBooking', event.contactEmail, {
+            const mailClient = await getMailClient()
+            await mailClient.sendEmail('eventBooking', event.contactEmail, {
                 contactName: event.contactName,
                 location: event.location,
                 emailMessage: input.emailMessage,

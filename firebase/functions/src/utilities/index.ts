@@ -1,6 +1,6 @@
 import { PubSub } from '@google-cloud/pubsub'
 import * as functions from 'firebase-functions'
-import { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
+import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
 import { projectId } from '../init'
 
 export function onCall<T extends keyof FirebaseFunctions>(

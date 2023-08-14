@@ -5,13 +5,7 @@ import FetchAppointmentsParams = Acuity.Client.FetchAppointmentsParams
 import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
 import UpdateLabelParams = Acuity.Client.UpdateLabelParams
 import Label = Acuity.Client.Label
-
-import AcuitySdk from 'acuityscheduling'
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
-const acuity = AcuitySdk.basic({
-    userId: acuityCredentials.user_id,
-    apiKey: acuityCredentials.api_key,
-})
 
 type ScheduleAppointmentParams = {
     appointmentTypeID: number
@@ -27,9 +21,24 @@ type ScheduleAppointmentParams = {
 }
 
 class Client {
+    #client: any
+
+    get #acuity() {
+        if (this.#client) return this.#client
+        throw new Error('Acuity client not initialised')
+    }
+
+    async _initialise() {
+        const acuity = await import('acuityscheduling')
+        this.#client = acuity.basic({
+            userId: acuityCredentials.user_id,
+            apiKey: acuityCredentials.api_key,
+        })
+    }
+
     private _request<T>(path: string, options: Record<string, unknown> = {}): Promise<T> {
         return new Promise((resolve, reject) => {
-            acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
+            this.#acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
                 if (hasError(err, result)) {
                     reject(err ?? result)
                     return
@@ -117,5 +126,10 @@ class Client {
     }
 }
 
-const AcuityClient = new Client()
-export { AcuityClient }
+let client: Client
+export async function getAcuityClient() {
+    if (client) return client
+    client = new Client()
+    await client._initialise()
+    return client
+}

@@ -3,7 +3,8 @@ import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { onCall } from '../../utilities'
 
 export const deleteEvent = onCall<'deleteEvent'>(async (event) => {
-    await getCalendarClient().deleteEvent(event.calendarEventId, { eventType: 'events' })
+    const calendarClient = await getCalendarClient()
+    await calendarClient.deleteEvent(event.calendarEventId, { eventType: 'events' })
     await FirestoreClient.deleteEventBooking(event.id)
     return
 })

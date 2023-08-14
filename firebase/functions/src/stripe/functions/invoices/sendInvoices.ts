@@ -2,15 +2,18 @@ import * as StripeConfig from '../../../config/stripe'
 import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
-import { db, env } from '../../../init'
+import { getDb, env } from '../../../init'
 import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
 import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
 import { getStripeClient } from '../../core/StripeClient'
+
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
 export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
     const invoiceStatusMap: InvoiceStatusMap = {}
     try {
+        const stripe = await getStripeClient()
+        const db = await getDb()
         // send one at a time, because sending them all asynchronously leads
         // to very complicated edge cases when sending the same customer multiple invoices
         for (const invoiceData of input) {
@@ -23,7 +26,7 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
                 // first check status, cannot void a paid invoice
                 const existingInvoice = await retrieveLatestInvoice(enrolment.invoiceId)
                 if (existingInvoice.status === 'open') {
-                    await getStripeClient().invoices.voidInvoice(enrolment.invoiceId)
+                    await stripe.invoices.voidInvoice(enrolment.invoiceId)
                 }
             }
 

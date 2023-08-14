@@ -25,12 +25,11 @@ export const sendFeedbackEmails = functions
         console.log('End date:')
         console.log(endDate)
 
-        const querySnap = await FirestoreRefs.partyBookings()
-            .where('dateTime', '>', startDate)
-            .where('dateTime', '<', endDate)
-            .get()
+        const bookingsRef = await FirestoreRefs.partyBookings()
 
-        const mailClient = getMailClient()
+        const querySnap = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
+
+        const mailClient = await getMailClient()
 
         const result = await Promise.allSettled(
             querySnap.docs.map((docSnap) => {

@@ -5,9 +5,9 @@ import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoung
 import path from 'path'
 import os from 'os'
 import fs from 'fs'
-import { projectId, storage } from '../../init'
 import { onCall, throwError } from '../../utilities'
-import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+import { projectId, getStorage } from '../../init'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { getXeroClient } from '../../xero/XeroClient'
 import { Rate } from '../core/types'
 
@@ -165,6 +165,8 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
                 },${row.summary.replace(/[\r\n]+/gm, '')}\n`
             )
         )
+
+        const storage = await getStorage()
 
         const [file] = await storage
             .bucket(`${projectId}.appspot.com`)

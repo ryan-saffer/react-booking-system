@@ -1,5 +1,5 @@
-import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import * as functions from 'firebase-functions'
+import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { getMailClient } from '../../sendgrid/MailClient'
@@ -23,10 +23,8 @@ export const sendPartyForms = functions
         console.log('End date:')
         console.log(endDate)
 
-        const querySnapshot = await FirestoreRefs.partyBookings()
-            .where('dateTime', '>', startDate)
-            .where('dateTime', '<', endDate)
-            .get()
+        const bookingsRef = await FirestoreRefs.partyBookings()
+        const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
 
         const result = await Promise.allSettled(
             querySnapshot.docs.map((documentSnapshot) => {
@@ -50,7 +48,7 @@ export const sendPartyForms = functions
     })
 
 async function sendForm(bookingId: string, booking: Booking) {
-    const mailClient = getMailClient()
+    const mailClient = await getMailClient()
 
     const prefilledFormUrl = getPrefilledFormUrl(bookingId, booking)
     const manager = getManager(booking.location)

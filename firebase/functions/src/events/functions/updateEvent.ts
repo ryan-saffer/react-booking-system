@@ -8,7 +8,8 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
     event.endTime = new Date(event.endTime)
 
     try {
-        await getCalendarClient().updateEvent(
+        const calendarClient = await getCalendarClient()
+        await calendarClient.updateEvent(
             event.calendarEventId,
             { eventType: 'events' },
             {

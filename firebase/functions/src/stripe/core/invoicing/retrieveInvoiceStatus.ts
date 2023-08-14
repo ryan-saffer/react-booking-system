@@ -1,7 +1,8 @@
-import { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
+import type { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
 import { env } from '../../../init'
 import * as StripeConfig from '../../../config/stripe'
 import { retrieveLatestInvoice } from './retrieveLatestInvoice'
+
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
 export async function retrieveInvoiceStatus(enrolment: ScienceEnrolment): Promise<InvoiceStatus> {

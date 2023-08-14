@@ -1,12 +1,13 @@
-import * as functions from 'firebase-functions'
-import { InvoiceStatusMap, RetrieveInvoiceStatusesParams, ScienceEnrolment } from 'fizz-kidz'
+import type { InvoiceStatusMap, RetrieveInvoiceStatusesParams, ScienceEnrolment } from 'fizz-kidz'
 import { onCall } from '../../../utilities'
-import { db } from '../../../init'
+import { getDb } from '../../../init'
 import { retrieveInvoiceStatus } from '../../core/invoicing/retrieveInvoiceStatus'
 
 export const retrieveInvoiceStatuses = onCall<'retrieveInvoiceStatuses'>(
-    async (data: RetrieveInvoiceStatusesParams, _context: functions.https.CallableContext) => {
+    async (data: RetrieveInvoiceStatusesParams) => {
         const invoiceStatuses: InvoiceStatusMap = {}
+
+        const db = await getDb()
 
         await Promise.all(
             data.appointmentIds.map(async (appointmentId) => {

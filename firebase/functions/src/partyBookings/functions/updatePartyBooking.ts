@@ -11,7 +11,7 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
 
     await FirestoreClient.updatePartyBooking(bookingId, booking)
 
-    const calendarClient = getCalendarClient()
+    const calendarClient = await getCalendarClient()
 
     if (!booking.eventId) throwError('aborted', 'booking is missing event id')
 

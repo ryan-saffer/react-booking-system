@@ -1,5 +1,5 @@
-import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import * as functions from 'firebase-functions'
+import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
@@ -26,7 +26,7 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
         return
     }
 
-    const mailClient = getMailClient()
+    const mailClient = await getMailClient()
 
     // first check if the booking form has been filled in previously
     const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)

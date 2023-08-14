@@ -6,7 +6,7 @@ import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 
 export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => {
-    const employeeRef = FirestoreRefs.employees().doc()
+    const employeeRef = (await FirestoreRefs.employees()).doc()
 
     const esignaturesClient = new ESignatureClient()
 
@@ -62,7 +62,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         employee.lastName
     }&email=${employee.email}&mobile=${employee.mobile}&contract=${encodeURIComponent(contractSignUrl)}`
 
-    const mailClient = getMailClient()
+    const mailClient = await getMailClient()
     await mailClient.sendEmail('onboarding', employee.email, {
         employeeName: employee.firstName,
         formUrl,

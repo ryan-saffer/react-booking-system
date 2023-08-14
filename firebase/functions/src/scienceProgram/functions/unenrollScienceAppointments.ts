@@ -1,6 +1,6 @@
 import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { getAcuityClient } from '../../acuity/core/AcuityClient'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
@@ -16,7 +16,8 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             const appointmentIds = enrolment.appointments
 
             try {
-                await Promise.all(appointmentIds.map((id) => AcuityClient.cancelAppointment(id)))
+                const acuity = await getAcuityClient()
+                await Promise.all(appointmentIds.map((id) => acuity.cancelAppointment(id)))
             } catch (err) {
                 logError('error unenrolling from term.', err, { input })
                 throwError('internal', `error unenrolling from term. firestore id: ${appointmentId}`, err)
@@ -26,7 +27,8 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             if (enrolment.invoiceId) {
                 const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
                 if (invoice.status === 'open') {
-                    await getStripeClient().invoices.voidInvoice(invoice.id!)
+                    const stripe = await getStripeClient()
+                    await stripe.invoices.voidInvoice(invoice.id!)
                 }
             }
 
@@ -38,7 +40,8 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
 
             // 5. email confirmation
             try {
-                await getMailClient().sendEmail('scienceTermUnenrolmentConfirmation', enrolment.parent.email, {
+                const mailClient = await getMailClient()
+                await mailClient.sendEmail('scienceTermUnenrolmentConfirmation', enrolment.parent.email, {
                     parentName: enrolment.parent.firstName,
                     childName: enrolment.child.firstName,
                     className: enrolment.className,
