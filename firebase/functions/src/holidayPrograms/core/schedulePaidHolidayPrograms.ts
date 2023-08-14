@@ -1,5 +1,5 @@
 import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { getAcuityClient } from '../../acuity/core/AcuityClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
@@ -8,7 +8,7 @@ import { getHubspotClient } from '../../hubspot/HubspotClient'
 import { logError } from '../../utilities'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
-    const query = await FirestoreRefs.holidayProgramBooking(paymentIntentId).get()
+    const query = await (await FirestoreRefs.holidayProgramBooking(paymentIntentId)).get()
 
     console.log('query exists', query.exists)
     console.log('query booked', query.get('booked'))
@@ -31,7 +31,7 @@ async function scheduleHolidayPrograms(
     const result = await Promise.all(programs.map((it) => _scheduleHolidayProgram(it.program, it.id, paymentIntentId)))
 
     try {
-        const hubspotClient = getHubspotClient()
+        const hubspotClient = await getHubspotClient()
         const program = programs[0]
         if (program) {
             const { parentFirstName, parentLastName, parentEmail, parentPhone, calendarId } = program.program
@@ -52,13 +52,10 @@ async function scheduleHolidayPrograms(
     return true
 }
 
-async function _scheduleHolidayProgram(
-    program: PaidHolidayProgramBooking,
-    id: string,
-    paymentIntentId: string
-): Promise<Acuity.Appointment> {
+async function _scheduleHolidayProgram(program: PaidHolidayProgramBooking, id: string, paymentIntentId: string) {
     if (program.booked) {
-        return AcuityClient.getAppointment(program.appointmentId.toString())
+        const acuity = await getAcuityClient()
+        return acuity.getAppointment(program.appointmentId.toString())
     }
 
     const appointment = await scheduleHolidayProgram(program, paymentIntentId)

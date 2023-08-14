@@ -1,15 +1,7 @@
-import * as StripeConfig from '../../../config/stripe'
-import { CreatePaymentIntentParams } from 'fizz-kidz'
-import Stripe from 'stripe'
+import type { CreatePaymentIntentParams } from 'fizz-kidz'
 import { getOrCreateCustomer } from '../../core/customers'
 import { logError, onCall, throwError } from '../../../utilities'
-const stripeConfig =
-    JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-        ? StripeConfig.PROD_CONFIG
-        : StripeConfig.DEV_CONFIG
-const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})
+import { getStripeClient } from '../../core/StripeClient'
 
 export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: CreatePaymentIntentParams) => {
     // first create the customer
@@ -21,6 +13,8 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: Cr
         const key = `${it.childName.slice(0, 40 - it.dateTime.length - 3)} - ${it.dateTime}`
         programData[key] = it.amount
     })
+
+    const stripe = await getStripeClient()
     const description =
         data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', ')
     const paymentIntent = await stripe.paymentIntents.create({

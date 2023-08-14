@@ -1,14 +1,11 @@
-import { Emails } from './types'
+import type { Emails } from './types'
 import fs from 'fs'
 import path from 'path'
-import mjml2html from 'mjml'
-import sgMail from '@sendgrid/mail'
-import { MailData } from '@sendgrid/helpers/classes/mail'
+import type { MailService } from '@sendgrid/mail'
+import type { MailData } from '@sendgrid/helpers/classes/mail'
 import { env } from '../init'
 
 import Mustache from 'mustache'
-
-sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
 type Options = {
     from?: {
@@ -20,17 +17,30 @@ type Options = {
 }
 
 class MailClient {
+    #client: MailService | null = null
+
+    async _initialise() {
+        const sgMail = await import('@sendgrid/mail')
+        this.#client = sgMail.default
+        this.#client.setApiKey(process.env.SEND_GRID_API_KEY)
+    }
+
+    get #sgMail() {
+        if (this.#client) return this.#client
+        throw new Error('Mail client not initialised')
+    }
+
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
         console.log('generating html...')
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         try {
-            const html = this._generateHtml(template, values, useMjml)
+            const html = await this._generateHtml(template, values, useMjml)
             console.log('generated successfully!')
             console.log('sending email...')
             if (env === 'prod') {
-                await sgMail.send({ ...emailInfo, bcc: 'bookings@fizzkidz.com.au', html })
+                await this.#sgMail.send({ ...emailInfo, bcc: 'bookings@fizzkidz.com.au', html })
             } else {
-                await sgMail.send({ ...emailInfo, html })
+                await this.#sgMail.send({ ...emailInfo, html })
             }
             console.log('email sent successfully!')
         } catch (error) {
@@ -38,11 +48,12 @@ class MailClient {
         }
     }
 
-    private _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): string {
+    private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
         const mjml = fs.readFileSync(path.resolve(__dirname, `./mjml/${template}`), 'utf8')
         const output = Mustache.render(mjml, values)
         if (useMjml) {
-            const mjmlOutput = mjml2html(output)
+            const mjml2html = await import('mjml')
+            const mjmlOutput = mjml2html.default(output)
             if (mjmlOutput.errors.length > 0) {
                 mjmlOutput.errors.forEach((error) => {
                     console.log(error.formattedMessage)
@@ -289,8 +300,9 @@ class MailClient {
 }
 
 let mailClient: MailClient
-export function getMailClient() {
+export async function getMailClient() {
     if (mailClient) return mailClient
     mailClient = new MailClient()
+    await mailClient._initialise()
     return mailClient
 }

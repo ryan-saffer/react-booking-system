@@ -33,6 +33,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
     const handleSubmit = async () => {
         await form.validateFields()
         setLoading(true)
+        console.log(appointmentType.calendarIDs)
         onSubmit({
             appointmentTypeId: appointmentType.id,
             calendarId: appointmentType.calendarIDs[0],

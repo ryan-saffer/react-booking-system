@@ -1,3 +1,4 @@
+import { logger } from 'firebase-functions'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { getDriveClient } from '../../google/DriveClient'
 import { env } from '../../init'
@@ -25,7 +26,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
     }
 
     // create google drive folder
-    const driveClient = getDriveClient()
+    const driveClient = await getDriveClient()
     try {
         const folderId = await driveClient.createFolder(
             `${employee.firstName} ${employee.lastName}`,

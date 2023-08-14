@@ -1,13 +1,13 @@
 import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../utilities'
-import { db, env } from '../../init'
+import { getDb, env } from '../../init'
 import { getMailClient } from '../../sendgrid/MailClient'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
     async (input: SendTermContinuationEmailsParams) => {
         const results = await Promise.allSettled(
             input.appointmentIds.map(async (appointmentId) => {
-                const appointmentRef = db.collection('scienceAppointments').doc(appointmentId)
+                const appointmentRef = (await getDb()).collection('scienceAppointments').doc(appointmentId)
                 const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
 
                 const baseQueryParams = `?appointmentId=${appointmentId}`
@@ -20,7 +20,8 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                 const baseUrl = `${getApplicationDomain(env)}/science-club-enrolment`
 
                 try {
-                    await getMailClient().sendEmail('termContinuationEmail', appointment.parent.email, {
+                    const mailClient = await getMailClient()
+                    await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
                         parentName: appointment.parent.firstName,
                         className: appointment.className,
                         price: (parseInt(appointment.price) * appointment.appointments.length).toString(),

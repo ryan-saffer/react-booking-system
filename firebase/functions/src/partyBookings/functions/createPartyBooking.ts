@@ -1,4 +1,5 @@
-import * as admin from 'firebase-admin'
+import { Timestamp } from 'firebase-admin/firestore'
+import { https, logger } from 'firebase-functions'
 import { getCalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 import {
@@ -22,14 +23,14 @@ import { getHubspotClient } from '../../hubspot/HubspotClient'
 export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => {
     const booking = {
         ...input,
-        dateTime: admin.firestore.Timestamp.fromDate(new Date(input.dateTime)),
+        dateTime: Timestamp.fromDate(new Date(input.dateTime)),
     } satisfies FirestoreBooking
 
     const bookingId = await FirestoreClient.createPartyBooking(booking)
 
     const end = getPartyEndDate(booking.dateTime.toDate(), booking.partyLength)
 
-    const calendarClient = getCalendarClient()
+    const calendarClient = await getCalendarClient()
     let eventId: string
     try {
         eventId = await calendarClient.createEvent(
@@ -54,7 +55,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
 
     await FirestoreClient.updatePartyBooking(bookingId, { eventId: eventId })
 
-    const hubspotClient = getHubspotClient()
+    const hubspotClient = await getHubspotClient()
     try {
         await hubspotClient.addBirthdayPartyContact({
             firstName: booking.parentFirstName,
@@ -74,7 +75,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
     const manager = getManager(booking.location)
 
     if (booking.sendConfirmationEmail) {
-        const mailClient = getMailClient()
+        const mailClient = await getMailClient()
         try {
             await mailClient.sendEmail(
                 'partyBookingConfirmation',

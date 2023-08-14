@@ -1,4 +1,4 @@
-import { Client } from '@hubspot/api-client'
+import type { Client as TClient } from '@hubspot/api-client'
 import { Branch, Locations, Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -11,9 +11,15 @@ type BaseProps = {
 type WithBaseProps<T> = BaseProps & T
 
 class HubspotClient {
-    #client: Client
+    #client: TClient | null = null
 
-    constructor() {
+    get #hubspot() {
+        if (this.#client) return this.#client
+        throw new Error('Hubspot client not initialised')
+    }
+
+    async _initialise() {
+        const { Client } = await import('@hubspot/api-client')
         this.#client = new Client({ accessToken: process.env.HUBSPOT_ACCESS_TOKEN })
     }
 
@@ -30,14 +36,14 @@ class HubspotClient {
         }
 
         try {
-            await this.#client.crm.contacts.basicApi.create({
+            await this.#hubspot.crm.contacts.basicApi.create({
                 properties,
                 associations: [],
             })
         } catch (err: any) {
             if (err.code === 409) {
                 // a way to update by email address. See 'Please note' section - https://developers.hubspot.com/docs/api/crm/contacts
-                await this.#client.apiRequest({
+                await this.#hubspot.apiRequest({
                     method: 'PATCH',
                     path: `/crm/v3/objects/contacts/${email}?idProperty=email`,
                     body: {
@@ -109,8 +115,9 @@ class HubspotClient {
 }
 
 let hubspotClient: HubspotClient
-export function getHubspotClient() {
+export async function getHubspotClient() {
     if (hubspotClient) return hubspotClient
     hubspotClient = new HubspotClient()
+    await hubspotClient._initialise()
     return hubspotClient
 }

@@ -1,8 +1,15 @@
-import { EventBooking } from 'fizz-kidz/src/partyBookings/Event'
-import { ScienceEnrolment, PaidHolidayProgramBooking, Booking, Employee, FirestoreBooking } from 'fizz-kidz'
-import { RecursivePartial, WithoutId } from 'fizz-kidz/src/utilities'
+import type {
+    ScienceEnrolment,
+    PaidHolidayProgramBooking,
+    Booking,
+    Employee,
+    FirestoreBooking,
+    RecursivePartial,
+    WithoutId,
+    EventBooking,
+} from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
-import { firestore } from 'firebase-admin'
+import type { DocumentReference } from 'firebase-admin/firestore'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -14,12 +21,13 @@ class Client {
      *
      * @returns the document id
      */
-    async #createDocument(doc: any, ref: firestore.DocumentReference<any>) {
+    async #createDocument(doc: any, ref: DocumentReference<any>) {
         await ref.set({ id: ref.id, ...doc })
         return ref.id
     }
 
-    async #getDocument<T>(ref: Document<T>) {
+    async #getDocument<T>(refPromise: Promise<Document<T>>) {
+        const ref = await refPromise
         const snap = await ref.get()
         if (snap.exists) {
             return this.#convertTimestamps<T>(snap.data() as T)
@@ -28,22 +36,24 @@ class Client {
         }
     }
 
-    #updateDocument<T>(ref: Document<T>, data: RecursivePartial<T>) {
+    async #updateDocument<T>(refPromise: Promise<Document<T>>, data: RecursivePartial<T>) {
+        const ref = await refPromise
         return ref.set(data as any, { merge: true })
     }
 
     /**
      * Converts all firebase timestamps to javascript dates, including nested fields.
      */
-    #convertTimestamps<T>(obj: T): T {
+    async #convertTimestamps<T>(obj: T): Promise<T> {
         const data = obj as any
-        Object.keys(data).forEach((key) => {
+        const { Timestamp } = await import('firebase-admin/firestore')
+        Object.keys(data).forEach(async (key) => {
             const value = data[key]
             if (!value) return
             if (typeof value === 'object') {
                 data[key] = this.#convertTimestamps(value)
             }
-            if (value instanceof firestore.Timestamp) {
+            if (value instanceof Timestamp) {
                 data[key] = value.toDate()
             }
         })
@@ -51,7 +61,7 @@ class Client {
     }
 
     async createPartyBooking(booking: FirestoreBooking) {
-        const ref = FirestoreRefs.partyBookings().doc()
+        const ref = (await FirestoreRefs.partyBookings()).doc()
         await ref.set(booking)
         return ref.id
     }
@@ -64,20 +74,16 @@ class Client {
         return this.#updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
 
-    deletePartyBooking(bookingId: string) {
-        return FirestoreRefs.partyBooking(bookingId).delete()
-    }
-
-    getHolidayProgramBooking(paymentIntentId: string) {
-        return this.#getDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId))
+    async deletePartyBooking(bookingId: string) {
+        return (await FirestoreRefs.partyBooking(bookingId)).delete()
     }
 
     updateHolidayProgramBooking(paymentIntentId: string, data: { booked: boolean }) {
         return this.#updateDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId), data)
     }
 
-    getHolidayPrograms(paymentIntentId: string) {
-        return FirestoreRefs.holidayPrograms(paymentIntentId).get()
+    async getHolidayPrograms(paymentIntentId: string) {
+        return (await FirestoreRefs.holidayPrograms(paymentIntentId)).get()
     }
 
     updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<PaidHolidayProgramBooking>) {
@@ -93,23 +99,19 @@ class Client {
     }
 
     async createEventBooking(booking: WithoutId<Omit<EventBooking, 'calendarEventId'>>) {
-        return this.#createDocument(booking, FirestoreRefs.events().doc())
+        return this.#createDocument(booking, (await FirestoreRefs.events()).doc())
     }
 
     updateEventBooking(eventId: string, booking: RecursivePartial<EventBooking>) {
         return this.#updateDocument(FirestoreRefs.event(eventId), booking)
     }
 
-    deleteEventBooking(eventId: string) {
-        return FirestoreRefs.event(eventId).delete()
+    async deleteEventBooking(eventId: string) {
+        return (await FirestoreRefs.event(eventId)).delete()
     }
 
-    deleteEmployee(employeeId: string) {
-        return FirestoreRefs.employee(employeeId).delete()
-    }
-
-    createEmployee(employee: Employee, options: CreateDocOptions<Employee>) {
-        return this.#createDocument(employee, options.ref ?? FirestoreRefs.employees().doc())
+    async createEmployee(employee: Employee, options: CreateDocOptions<Employee>) {
+        return this.#createDocument(employee, options.ref ?? (await FirestoreRefs.employees()).doc())
     }
 
     getEmployee(employeeId: string) {
