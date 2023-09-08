@@ -34,7 +34,7 @@ export const acuityClient = functions.region('australia-southeast1').https.onCal
                 return await AcuityClient.searchForAppointments(input)
         }
     } catch (err: any) {
-        if (err.error === 'invalid_certificate') {
+        if (err.error === 'invalid_certificate' || err.error === 'certificate_uses') {
             // this is okay.
             // we still want to throw as front end handles this, but no need for error log
             functions.logger.log('invalid discount code requested', { details: err })
