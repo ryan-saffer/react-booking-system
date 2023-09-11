@@ -1,8 +1,7 @@
-import * as functions from 'firebase-functions'
 import * as StripeConfig from '../../../config/stripe'
 import { UpdatePaymentIntentParams } from 'fizz-kidz'
 import Stripe from 'stripe'
-import { onCall } from '../../../utilities'
+import { logError, onCall, throwError } from '../../../utilities'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
         ? StripeConfig.PROD_CONFIG
@@ -25,7 +24,7 @@ export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data: Up
         })
         return
     } catch (error) {
-        functions.logger.error('failed updating payment intent', data, error)
-        throw new functions.https.HttpsError('aborted', 'failed updating payment intent', error)
+        logError('failed updating payment intent', error, { input: data })
+        throwError('aborted', 'failed updating payment intent', error)
     }
 })

@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions'
 import { Acuity } from 'fizz-kidz'
 import { AcuityClient } from '../core/AcuityClient'
+import { logError, throwError } from '../../utilities'
 
 type AcuityClientParams = {
     method: keyof Acuity.Client.AcuityFunctions
@@ -39,10 +40,8 @@ export const acuityClient = functions.region('australia-southeast1').https.onCal
             // we still want to throw as front end handles this, but no need for error log
             functions.logger.log('invalid discount code requested', { details: err })
         } else {
-            functions.logger.error(`error calling acuity client with method: ${data.method}`, { details: err })
+            logError(`error calling acuity client with method: ${data.method}`, err)
         }
-        throw new functions.https.HttpsError('internal', `error calling acuity client with method: '${data.method}'`, {
-            details: err,
-        })
+        throwError('internal', `error calling acuity client with method: '${data.method}'`, err)
     }
 })

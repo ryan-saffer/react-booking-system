@@ -1,4 +1,4 @@
-import { https, logger } from 'firebase-functions'
+import { logger } from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'
@@ -6,7 +6,7 @@ import path from 'path'
 import os from 'os'
 import fs from 'fs'
 import { projectId, storage } from '../../init'
-import { onCall } from '../../utilities'
+import { onCall, throwError } from '../../utilities'
 import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { getXeroClient } from '../../xero/XeroClient'
 import { Rate } from '../core/types'
@@ -35,14 +35,14 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
 
     // validate data
     if (startDate > endDate) {
-        throw new https.HttpsError('invalid-argument', 'start date must come before the end date', {
+        throwError('invalid-argument', 'start date must come before the end date', {
             errorCode: 'invalid-range',
         })
     }
 
     const diffInDays = endDate.diff(startDate, 'days').days
     if (diffInDays > 28) {
-        throw new https.HttpsError('invalid-argument', 'date range must be 28 days or less', {
+        throwError('invalid-argument', 'date range must be 28 days or less', {
             errorCode: 'invalid-length',
         })
     }
@@ -185,7 +185,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         }
     } catch (err) {
         console.error('error generating timesheets', err)
-        throw new https.HttpsError('internal', 'error generating timesheets', err)
+        throwError('internal', 'error generating timesheets', err)
     }
 })
 

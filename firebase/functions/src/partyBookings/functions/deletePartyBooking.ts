@@ -1,15 +1,14 @@
 import { getCalendarClient } from '../../google/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { onCall } from '../../utilities'
-import { logger, https } from 'firebase-functions'
+import { logError, onCall, throwError } from '../../utilities'
 
 export const deletePartyBooking = onCall<'deletePartyBooking'>(async ({ bookingId, eventId, location }) => {
     const calendarClient = getCalendarClient()
     try {
         await calendarClient.deleteEvent(eventId, { eventType: 'party-bookings', location })
     } catch (err) {
-        logger.error(`error deleting party booking with id: '${bookingId}'`, { details: err })
-        throw new https.HttpsError('internal', `error deleting party booking with id: '${bookingId}'`, { details: err })
+        logError(`error deleting party booking with id: '${bookingId}'`, err)
+        throwError('internal', `error deleting party booking with id: '${bookingId}'`, err)
     }
     await FirestoreClient.deletePartyBooking(bookingId)
     return

@@ -2,8 +2,8 @@ import { AcuityWebhookData } from './../../acuity/functions/webhook'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { Acuity, Metadata } from 'fizz-kidz'
 import { RefundCalculator } from './RefundCalculator'
-import * as functions from 'firebase-functions'
 import { getStripeClient } from '../../stripe/core/StripeClient'
+import { logError } from '../../utilities'
 
 export async function cancelHolidayProgram(data: AcuityWebhookData) {
     try {
@@ -24,7 +24,7 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         // this can be used as a way to allow cancellation of bookings without triggering a refund.
         // useful in the case that a previous webhook failed, despite some appointments booking in successfully, which triggers a webhook retry.. and therefore duplicate bookings
         if (!paymentIntentId) {
-            functions.logger.error('No payment intent id found - skipping refund', appointment)
+            logError('No payment intent id found - skipping refund', null, { appointment })
             return
         }
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)

@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
+import { logError } from '../../utilities'
 
 export const sendFeedbackEmails = functions
     .region('australia-southeast1')
@@ -49,7 +50,7 @@ export const sendFeedbackEmails = functions
 
         result.map((it, idx) => {
             if (it.status === 'rejected') {
-                functions.logger.error(`error sending feedback email for booking with id: '${querySnap.docs[idx].id}'`)
+                logError(`error sending feedback email for booking with id: '${querySnap.docs[idx].id}'`)
             }
         })
         return

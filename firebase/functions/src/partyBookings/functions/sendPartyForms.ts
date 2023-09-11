@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { getMailClient } from '../../sendgrid/MailClient'
+import { logError } from '../../utilities'
 
 export const sendPartyForms = functions
     .region('australia-southeast1')
@@ -42,7 +43,7 @@ export const sendPartyForms = functions
 
         result.map((it, idx) => {
             if (it.status === 'rejected') {
-                functions.logger.error(`error sending party form for booking with id: '${querySnapshot.docs[idx].id}'`)
+                logError(`error sending party form for booking with id: '${querySnapshot.docs[idx].id}'`)
             }
         })
         return

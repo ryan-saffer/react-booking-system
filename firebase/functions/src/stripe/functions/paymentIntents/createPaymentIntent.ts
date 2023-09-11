@@ -1,9 +1,8 @@
-import * as functions from 'firebase-functions'
 import * as StripeConfig from '../../../config/stripe'
 import { CreatePaymentIntentParams } from 'fizz-kidz'
 import Stripe from 'stripe'
 import { getOrCreateCustomer } from '../../core/customers'
-import { onCall } from '../../../utilities'
+import { logError, onCall, throwError } from '../../../utilities'
 const stripeConfig =
     JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
         ? StripeConfig.PROD_CONFIG
@@ -44,7 +43,7 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: Cr
             clientSecret: paymentIntent.client_secret,
         }
     } else {
-        functions.logger.error('payment intent failed to create with secret', data)
-        throw new functions.https.HttpsError('aborted', 'payment intent failed to create with secret')
+        logError('payment intent failed to create with secret', null, { input: data })
+        throwError('aborted', 'payment intent failed to create with secret')
     }
 })

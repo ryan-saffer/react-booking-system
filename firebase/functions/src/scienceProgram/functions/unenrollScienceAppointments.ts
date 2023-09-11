@@ -1,5 +1,4 @@
-import * as functions from 'firebase-functions'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { getMailClient } from '../../sendgrid/MailClient'
@@ -19,12 +18,8 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             try {
                 await Promise.all(appointmentIds.map((id) => AcuityClient.cancelAppointment(id)))
             } catch (err) {
-                functions.logger.error('error unenrolling from term.', input, err)
-                throw new functions.https.HttpsError(
-                    'internal',
-                    `error unenrolling from term. firestore id: ${appointmentId}`,
-                    err
-                )
+                logError('error unenrolling from term.', err, { input })
+                throwError('internal', `error unenrolling from term. firestore id: ${appointmentId}`, err)
             }
 
             // 3. void invoice if needed
@@ -49,8 +44,8 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                     className: enrolment.className,
                 })
             } catch (err) {
-                functions.logger.error('error sending unenrolment confirmation', err)
-                throw new functions.https.HttpsError(
+                logError('error sending unenrolment confirmation', err)
+                throwError(
                     'internal',
                     `appointment with id ${appointmentId} cancelled, however an error occurred sending the confirmation email`,
                     err

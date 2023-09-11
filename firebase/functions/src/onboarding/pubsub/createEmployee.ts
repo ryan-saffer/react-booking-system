@@ -1,9 +1,8 @@
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { getDriveClient } from '../../google/DriveClient'
 import { env } from '../../init'
-import { onPubSub } from '../../utilities'
+import { logError, onPubSub } from '../../utilities'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
-import { logger } from 'firebase-functions'
 import { getXeroClient } from '../../xero/XeroClient'
 import { SlingClient } from '../../sling/core/slingClient'
 import { EmploymentType } from 'xero-node/dist/gen/model/payroll-au/employmentType'
@@ -21,9 +20,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
     const employee = await FirestoreClient.getEmployee(data.employeeId)
 
     if (employee.status !== 'generating-accounts') {
-        logger.error(
-            `employee creation began despite status not being 'generating-accounts'. Employee id: ${employee.id}`
-        )
+        logError(`employee creation began despite status not being 'generating-accounts'. Employee id: ${employee.id}`)
         return
     }
 
@@ -76,7 +73,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
             )
         }
     } catch (err) {
-        logger.error('error creating employee folder and uploading files', { details: err })
+        logError('error creating employee folder and uploading files', err)
         return
     }
 
@@ -129,9 +126,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
         ])
         employeeXeroId = createEmployeeResult.body.employees![0].employeeID!
     } catch (err) {
-        logger.error(`error creating employee in xero: ${employee.firstName} ${employee.lastName}`, {
-            details: err,
-        })
+        logError(`error creating employee in xero: ${employee.firstName} ${employee.lastName}`, err)
         return
     }
 
@@ -169,7 +164,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
             ],
         })
     } catch (err) {
-        logger.error(`error creating employee in sling: ${employee.firstName} ${employee.lastName}`)
+        logError(`error creating employee in sling: ${employee.firstName} ${employee.lastName}`)
         return
     }
 

@@ -6,6 +6,7 @@ import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
+import { logError } from '../../utilities'
 
 export const onPartyFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
     console.log(req.body.data)
@@ -21,7 +22,7 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
         booking.partyFormFilledIn = true
         console.log(booking)
     } catch (err) {
-        functions.logger.error('error handling party form submission', { details: err })
+        logError('error handling party form submission', err)
         return
     }
 
@@ -55,9 +56,9 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
                 }
             )
         } catch (err) {
-            functions.logger.error(
+            logError(
                 `error sending party form filled in again notificaiton for booking with id: '${formMapper.bookingId}'`,
-                { details: err }
+                err
             )
         }
     }
@@ -92,9 +93,9 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
                 }
             )
         } catch (err) {
-            functions.logger.error(
+            logError(
                 `error sending too many creations notification for booking with id: '${formMapper.bookingId}'`,
-                { details: err }
+                err
             )
         }
     }
@@ -121,9 +122,9 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
                 }
             )
         } catch (err) {
-            functions.logger.error(
+            logError(
                 `error sending party form questions notification for booking with id: '${formMapper.bookingId}'`,
-                { details: err }
+                err
             )
         }
     }
@@ -154,10 +155,7 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
                 }
             )
         } catch (err) {
-            functions.logger.error(
-                `error sending party pack notification for booking with id: '${formMapper.bookingId}'`,
-                { details: err }
-            )
+            logError(`error sending party pack notification for booking with id: '${formMapper.bookingId}'`, err)
         }
     }
 
@@ -186,10 +184,7 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
             }
         )
     } catch (err) {
-        functions.logger.error(
-            `error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`,
-            { details: err }
-        )
+        logError(`error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`, err)
     }
 
     return
