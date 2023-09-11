@@ -1,6 +1,5 @@
-import * as functions from 'firebase-functions'
 import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import { db, env } from '../../init'
 import { getMailClient } from '../../sendgrid/MailClient'
 
@@ -37,8 +36,8 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                     }
                     await appointmentRef.set({ ...updatedAppointment }, { merge: true })
                 } catch (err) {
-                    functions.logger.error(err)
-                    throw new functions.https.HttpsError(
+                    logError(`error sending term continuation email to appointment with id: ${appointmentId}`, err)
+                    throwError(
                         'internal',
                         `error sending term continutation email to appointment with id: ${appointmentId}`,
                         err

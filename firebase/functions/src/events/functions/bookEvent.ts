@@ -1,7 +1,6 @@
-import { https, logger } from 'firebase-functions/v1'
 import { getCalendarClient } from '../../google/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 
@@ -51,14 +50,14 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
             eventIds.map((eventId, idx) => {
                 const calendarEventId = calendarEventIds[idx]
                 if (!calendarEventId) {
-                    throw new https.HttpsError('internal', `error creating calendar event for event with id ${eventId}`)
+                    throwError('internal', `error creating calendar event for event with id ${eventId}`)
                 }
                 return FirestoreClient.updateEventBooking(eventId, { calendarEventId })
             })
         )
     } catch (err) {
-        logger.error('error creating event booking', event, err)
-        throw new https.HttpsError('internal', 'error creating event booking', err)
+        logError('error creating event booking', err, { event })
+        throwError('internal', 'error creating event booking', err)
     }
 
     // send confirmation email
@@ -93,7 +92,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
                 })),
             })
         } catch (err) {
-            logger.error('event booked successfully, but an error occurred sending the confirmation email', err)
+            logError('event booked successfully, but an error occurred sending the confirmation email', err)
         }
     }
 })

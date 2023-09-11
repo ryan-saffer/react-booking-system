@@ -43,11 +43,8 @@ export function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data:
  * @param backoffCodes the error codes you want to retry for. Any error codes faced that are not included here will not be retried.
  * @param retryCount keeps track of the number of times the function has been attempted.
  */
-export function withExponentialBackoff<T extends () => any>(
-    fn: T,
-    backoffCodes: number[],
-    retryCount = 0
-): Promise<ReturnType<T>> {
+export function withExponentialBackoff<T extends () => any>(fn: T, backoffCodes: number[]): Promise<ReturnType<T>> {
+    let retryCount = 0
     return new Promise((resolve, reject) => {
         const runFunction = async () => {
             try {
@@ -58,6 +55,7 @@ export function withExponentialBackoff<T extends () => any>(
                     if (retryCount <= 2) {
                         console.log(`Error code ${err.code} found. Running again, with retryCount of ${retryCount + 1}`)
                         setTimeout(runFunction, Math.pow(2, retryCount + 1))
+                        retryCount++
                     } else {
                         reject(err)
                     }
@@ -69,4 +67,70 @@ export function withExponentialBackoff<T extends () => any>(
 
         runFunction().catch(reject)
     })
+}
+
+export function logError(message: string, error?: unknown, additionalInfo: object = {}) {
+    const hasAdditionalInfo = Object.keys(additionalInfo).length !== 0
+    if (error) {
+        if (error instanceof Error) {
+            functions.logger.error(
+                message,
+                {
+                    errorDetails: { name: error.name, message: error.message },
+                },
+                { ...(hasAdditionalInfo && { additionalInfo }) }
+            )
+        } else if (typeof error === 'string') {
+            functions.logger.error(
+                message,
+                {
+                    errorDetails: error,
+                },
+                { ...(hasAdditionalInfo && { additionalInfo }) }
+            )
+        } else if (typeof error === 'object') {
+            functions.logger.error(
+                message,
+                { errorDetails: { ...error } },
+                { ...(hasAdditionalInfo && additionalInfo) }
+            )
+        } else {
+            functions.logger.error(message, { errorDetails: error }, { ...(hasAdditionalInfo && additionalInfo) })
+        }
+    } else {
+        functions.logger.error(message, { ...(hasAdditionalInfo && additionalInfo) })
+    }
+}
+export function throwError(
+    code: functions.https.FunctionsErrorCode,
+    message: string,
+    error?: unknown,
+    additionalInfo: object = {}
+): never {
+    const hasAdditionalInfo = Object.keys(additionalInfo).length !== 0
+    if (error) {
+        if (error instanceof Error) {
+            throw new functions.https.HttpsError(code, message, {
+                errorDetails: { name: error.name, message: error.message },
+                ...(hasAdditionalInfo && additionalInfo),
+            })
+        } else if (typeof error === 'string') {
+            throw new functions.https.HttpsError(code, message, {
+                errorDetails: error,
+                ...(hasAdditionalInfo && additionalInfo),
+            })
+        } else if (typeof error === 'object') {
+            throw new functions.https.HttpsError(code, message, {
+                errorDetails: { ...error },
+                ...(hasAdditionalInfo && additionalInfo),
+            })
+        } else {
+            throw new functions.https.HttpsError(code, message, {
+                errorDetails: error,
+                ...(hasAdditionalInfo && additionalInfo),
+            })
+        }
+    } else {
+        throw new functions.https.HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
+    }
 }

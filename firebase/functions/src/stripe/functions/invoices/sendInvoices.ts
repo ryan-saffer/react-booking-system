@@ -1,7 +1,6 @@
 import * as StripeConfig from '../../../config/stripe'
-import * as functions from 'firebase-functions'
 import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
-import { onCall } from '../../../utilities'
+import { logError, onCall, throwError } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
 import { db, env } from '../../../init'
 import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
@@ -63,7 +62,7 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
 
         return invoiceStatusMap
     } catch (err) {
-        console.error(err)
-        throw new functions.https.HttpsError('internal', `error occured sending invoice for an appointment`, err)
+        logError('error occured sending invoice for an appointment', err, { input })
+        throwError('internal', `error occured sending invoice for an appointment`, err)
     }
 })

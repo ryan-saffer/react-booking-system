@@ -3,6 +3,7 @@ import * as StripeConfig from '../../config/stripe'
 import { Metadata } from 'fizz-kidz'
 import Stripe from 'stripe'
 import { bookHolidayPrograms } from '../../holidayPrograms/core'
+import { logError } from '../../utilities'
 const isProd = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
 const stripeConfig = isProd ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 const stripe = new Stripe(stripeConfig.API_KEY, {
@@ -45,9 +46,9 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
                 try {
                     await bookHolidayPrograms(paymentIntent.id)
                 } catch (err) {
-                    functions.logger.error(
+                    logError(
                         `there was an error booking in a holiday program with payment intent id: ${paymentIntent.id}`,
-                        { details: err }
+                        err
                     )
                 }
             }

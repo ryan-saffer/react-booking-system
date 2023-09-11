@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin'
 import { getCalendarClient } from '../../google/CalendarClient'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import {
     FirestoreBooking,
     Locations,
@@ -17,7 +17,6 @@ import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { env } from '../../init'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
-import { https, logger } from 'firebase-functions'
 import { getHubspotClient } from '../../hubspot/HubspotClient'
 
 export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => {
@@ -48,9 +47,9 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             }
         )
     } catch (err) {
-        logger.error(`unable to create event for party booking with id: '${bookingId}'`, { details: err })
+        logError(`unable to create event for party booking with id: '${bookingId}'`, err)
         await FirestoreClient.deletePartyBooking(bookingId)
-        throw new https.HttpsError('internal', 'unable to create calendar event', { details: err })
+        throwError('internal', 'unable to create calendar event', { details: err })
     }
 
     await FirestoreClient.updatePartyBooking(bookingId, { eventId: eventId })
@@ -69,7 +68,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             location: booking.location,
         })
     } catch (err) {
-        logger.error(`error adding contact to hubspot: '${booking.parentEmail}'`, { details: err })
+        logError(`error adding contact to hubspot: '${booking.parentEmail}'`, err)
     }
 
     const manager = getManager(booking.location)
@@ -107,10 +106,8 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
                 { replyTo: manager.email }
             )
         } catch (err) {
-            logger.error(`error sending confirmation email for party booking with id: '${bookingId}'`, { details: err })
-            throw new https.HttpsError('internal', 'party booked successfully, but unable to send confirmation email', {
-                details: err,
-            })
+            logError(`error sending confirmation email for party booking with id: '${bookingId}'`, err)
+            throwError('internal', 'party booked successfully, but unable to send confirmation email', err)
         }
     }
     return

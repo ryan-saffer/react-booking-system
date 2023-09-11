@@ -1,11 +1,11 @@
 import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
-import * as functions from 'firebase-functions'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { getHubspotClient } from '../../hubspot/HubspotClient'
+import { logError } from '../../utilities'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
     const query = await FirestoreRefs.holidayProgramBooking(paymentIntentId).get()
@@ -44,10 +44,7 @@ async function scheduleHolidayPrograms(
             })
         }
     } catch (err) {
-        functions.logger.error(
-            `unable to add holiday program booking to hubspot with paymentIntentId ${paymentIntentId}`,
-            { details: err }
-        )
+        logError(`unable to add holiday program booking to hubspot with paymentIntentId ${paymentIntentId}`, err)
     }
     // send confirmation email
     await sendConfirmationEmail(result)

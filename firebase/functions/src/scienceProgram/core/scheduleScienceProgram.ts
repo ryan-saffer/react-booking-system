@@ -1,4 +1,3 @@
-import * as functions from 'firebase-functions'
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
 import { db, projectId, storage } from '../../init'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
@@ -6,6 +5,7 @@ import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 import { getSheetsClient } from '../../google/SheetsClient'
 import { getHubspotClient } from '../../hubspot/HubspotClient'
+import { logError, throwError } from '../../utilities'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -22,10 +22,7 @@ export default async function scheduleScienceProgram(
     const calendar = calendars.find((it) => it.id === input.calendarId)
 
     if (!calendar) {
-        throw new functions.https.HttpsError(
-            'aborted',
-            `could not find matching calendar in acuity with id: ${input.calendarId}`
-        )
+        throwError('aborted', `could not find matching calendar in acuity with id: ${input.calendarId}`)
     }
 
     // if an apaphylaxis plan was uploaded, move it into a directory under this booking
@@ -45,11 +42,8 @@ export default async function scheduleScienceProgram(
                 })
             )[0]
         } catch (err) {
-            functions.logger.error(
-                `error moving anaphylaxis plan in storage for science enrolment with id: '${newDoc.id}'`,
-                { details: err }
-            )
-            throw new functions.https.HttpsError('internal', 'There was an error enrolling', { details: err })
+            logError(`error moving anaphylaxis plan in storage for science enrolment with id: '${newDoc.id}'`, err)
+            throwError('internal', 'There was an error enrolling', err)
         }
     }
 
@@ -71,13 +65,10 @@ export default async function scheduleScienceProgram(
             )
         )
     } catch (err) {
-        functions.logger.error(`unable to book into acuity for science appointment`, {
+        logError(`unable to book into acuity for science appointment`, err, {
             appointment: input,
-            details: err,
         })
-        throw new functions.https.HttpsError('internal', 'There was an error enroling into the program', {
-            details: err,
-        })
+        throwError('internal', 'There was an error enroling into the program', err)
     }
 
     // save all details, including all appointment ids, into firestore
@@ -120,9 +111,9 @@ export default async function scheduleScienceProgram(
                 ],
             ])
         } catch (err) {
-            functions.logger.error(
+            logError(
                 `error updating anaphylactic spreadsheet for science appointment with id: '${appointment.id}'`,
-                { details: err }
+                err
             )
         }
     }
@@ -137,9 +128,7 @@ export default async function scheduleScienceProgram(
             calendarId: appointment.calendarId,
         })
     } catch (err) {
-        functions.logger.error(`unable to add science program enrolment to hubspot with id: ${appointment.id}`, {
-            details: err,
-        })
+        logError(`unable to add science program enrolment to hubspot with id: ${appointment.id}`, err)
     }
 
     // send the confirmation email
@@ -167,9 +156,9 @@ export default async function scheduleScienceProgram(
                 numberOfWeeks: appointments.length.toString(),
             })
         } catch (err) {
-            functions.logger.error(
+            logError(
                 `unable to send science enrolment confirmation email for enrolment with id: '${appointment.id}'`,
-                { details: err }
+                err
             )
         }
     }
@@ -185,10 +174,7 @@ export default async function scheduleScienceProgram(
             appointment.emails.portalLinkEmailSent = true
             await newDoc.set(appointment, { merge: true })
         } catch (err) {
-            functions.logger.error(
-                `unable to send science parent portal email for enrolment with id: '${appointment.id}'`,
-                { details: err }
-            )
+            logError(`unable to send science parent portal email for enrolment with id: '${appointment.id}'`, err)
         }
     }
 }

@@ -1,6 +1,5 @@
-import { https, logger } from 'firebase-functions'
 import { getCalendarClient } from '../../google/CalendarClient'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 
@@ -14,7 +13,7 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
 
     const calendarClient = getCalendarClient()
 
-    if (!booking.eventId) throw new https.HttpsError('aborted', 'booking is missing event id')
+    if (!booking.eventId) throwError('aborted', 'booking is missing event id')
 
     try {
         await calendarClient.updateEvent(
@@ -29,8 +28,8 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
             }
         )
     } catch (err) {
-        logger.error(`error updating calendar event for booking with id: '${bookingId}'`, { details: err })
-        throw new https.HttpsError('internal', 'error creating calendar event', { details: err })
+        logError(`error updating calendar event for booking with id: '${bookingId}'`, err)
+        throwError('internal', 'error creating calendar event', err)
     }
     return
 })

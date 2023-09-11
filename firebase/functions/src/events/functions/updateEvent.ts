@@ -1,7 +1,6 @@
-import { https, logger } from 'firebase-functions/v1'
 import { getCalendarClient } from '../../google/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { onCall } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 
 export const updateEvent = onCall<'updateEvent'>(async (event) => {
     // parse strings back into date
@@ -23,7 +22,7 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
 
         await FirestoreClient.updateEventBooking(event.id, event)
     } catch (err) {
-        logger.error(`error updating event with id ${event.id}`, err)
-        throw new https.HttpsError('internal', `error updating event with id ${event.id}`, err)
+        logError(`error updating event with id ${event.id}`, err)
+        throwError('internal', `error updating event with id ${event.id}`, err)
     }
 })
