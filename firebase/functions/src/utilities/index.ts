@@ -1,7 +1,6 @@
-import { PubSub } from '@google-cloud/pubsub'
 import * as functions from 'firebase-functions'
 import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
-import { projectId } from '../init'
+import { getPubSub } from '../init'
 
 export function onCall<T extends keyof FirebaseFunctions>(
     fn: (
@@ -31,8 +30,8 @@ export function onPubSub<T extends keyof PubSubFunctions>(
         .onPublish((message, context) => fn(message.json, context))
 }
 
-export function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
-    const pubsub = new PubSub({ projectId })
+export async function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
+    const pubsub = await getPubSub()
     return pubsub.topic(topic).publishMessage({ data: Buffer.from(JSON.stringify(data)) })
 }
 
