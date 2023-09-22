@@ -1,3 +1,4 @@
+import type { PubSub } from '@google-cloud/pubsub'
 import type { Storage } from 'firebase-admin/storage'
 import type { Firestore } from 'firebase-admin/firestore'
 
@@ -28,4 +29,12 @@ export async function getDb() {
     _db = (await import('firebase-admin/firestore')).getFirestore()
     _db.settings({ ignoreUndefinedProperties: true })
     return _db
+}
+
+let _pubsub: PubSub
+export async function getPubSub() {
+    if (_pubsub) return _pubsub
+    const { PubSub } = await import('@google-cloud/pubsub')
+    _pubsub = new PubSub({ projectId })
+    return _pubsub
 }
