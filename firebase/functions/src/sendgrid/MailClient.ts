@@ -301,8 +301,9 @@ class MailClient {
 
 let mailClient: MailClient
 export async function getMailClient() {
-    if (mailClient) return mailClient
-    mailClient = new MailClient()
-    await mailClient._initialise()
+    if (!mailClient) {
+        mailClient = new MailClient()
+        await mailClient._initialise()
+    }
     return mailClient
 }

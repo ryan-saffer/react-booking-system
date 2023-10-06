@@ -69,8 +69,9 @@ class DriveClient {
 let driveClient: DriveClient
 
 export async function getDriveClient() {
-    if (driveClient) return driveClient
-    driveClient = new DriveClient()
-    await driveClient._initialise()
+    if (!driveClient) {
+        driveClient = new DriveClient()
+        await driveClient._initialise()
+    }
     return driveClient
 }

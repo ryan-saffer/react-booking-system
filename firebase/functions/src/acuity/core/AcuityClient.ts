@@ -128,8 +128,9 @@ class Client {
 
 let client: Client
 export async function getAcuityClient() {
-    if (client) return client
-    client = new Client()
-    await client._initialise()
+    if (!client) {
+        client = new Client()
+        await client._initialise()
+    }
     return client
 }

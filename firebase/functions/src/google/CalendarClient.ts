@@ -136,8 +136,9 @@ class CalendarClient {
 let calendarClient: CalendarClient
 
 export async function getCalendarClient() {
-    if (calendarClient) return calendarClient
-    calendarClient = new CalendarClient()
-    await calendarClient._initialise()
+    if (!calendarClient) {
+        calendarClient = new CalendarClient()
+        await calendarClient._initialise()
+    }
     return calendarClient
 }
