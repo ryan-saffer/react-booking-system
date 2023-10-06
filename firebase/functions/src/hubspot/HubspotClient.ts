@@ -116,8 +116,9 @@ class HubspotClient {
 
 let hubspotClient: HubspotClient
 export async function getHubspotClient() {
-    if (hubspotClient) return hubspotClient
-    hubspotClient = new HubspotClient()
-    await hubspotClient._initialise()
+    if (!hubspotClient) {
+        hubspotClient = new HubspotClient()
+        await hubspotClient._initialise()
+    }
     return hubspotClient
 }

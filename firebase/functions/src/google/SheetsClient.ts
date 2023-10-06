@@ -44,8 +44,9 @@ class SheetsClient {
 
 let sheetsClient: SheetsClient
 export async function getSheetsClient() {
-    if (sheetsClient) return sheetsClient
-    sheetsClient = new SheetsClient()
-    await sheetsClient._initialise()
+    if (!sheetsClient) {
+        sheetsClient = new SheetsClient()
+        await sheetsClient._initialise()
+    }
     return sheetsClient
 }

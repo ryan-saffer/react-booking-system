@@ -18,23 +18,26 @@ initializeApp({
 
 let _storage: Storage
 export async function getStorage() {
-    if (_storage) return _storage
-    _storage = (await import('firebase-admin/storage')).getStorage()
+    if (!_storage) {
+        _storage = (await import('firebase-admin/storage')).getStorage()
+    }
     return _storage
 }
 
 let _db: Firestore
 export async function getDb() {
-    if (_db) return _db
-    _db = (await import('firebase-admin/firestore')).getFirestore()
-    _db.settings({ ignoreUndefinedProperties: true })
+    if (!_db) {
+        _db = (await import('firebase-admin/firestore')).getFirestore()
+        _db.settings({ ignoreUndefinedProperties: true })
+    }
     return _db
 }
 
 let _pubsub: PubSub
 export async function getPubSub() {
-    if (_pubsub) return _pubsub
-    const { PubSub } = await import('@google-cloud/pubsub')
-    _pubsub = new PubSub({ projectId })
+    if (!_pubsub) {
+        const { PubSub } = await import('@google-cloud/pubsub')
+        _pubsub = new PubSub({ projectId })
+    }
     return _pubsub
 }
