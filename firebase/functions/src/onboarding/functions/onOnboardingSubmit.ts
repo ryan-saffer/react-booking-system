@@ -1,4 +1,5 @@
-import * as functions from 'firebase-functions'
+import { onRequest } from 'firebase-functions/v2/https'
+import { logger } from 'firebase-functions/v2'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { Employee, WWCC } from 'fizz-kidz'
 import { publishToPubSub } from '../../utilities'
@@ -21,14 +22,14 @@ type PFTextResponse = BasePFResponse & {
 type PFResponse = PFFileResponse | PFTextResponse
 const PDF_KEY = '7843d2a'
 
-export const onOnboardingSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const onOnboardingSubmit = onRequest(async (req, res) => {
     const data = req.body.data as PFResponse[]
 
     const employeeId = data.find((it): it is PFTextResponse => it.custom_key === 'id')!.value
     const existingEmployee = await FirestoreClient.getEmployee(employeeId)
 
     if (existingEmployee.status !== 'form-sent') {
-        functions.logger.log(
+        logger.log(
             `employee form already submitted for ${existingEmployee.firstName} ${existingEmployee.lastName} - exiting`
         )
         return

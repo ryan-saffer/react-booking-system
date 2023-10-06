@@ -1,4 +1,5 @@
-import * as functions from 'firebase-functions'
+import { CallableRequest, onCall } from 'firebase-functions/v2/https'
+import { logger } from 'firebase-functions/v2'
 import { logError, throwError } from '../../utilities'
 import type { Acuity } from 'fizz-kidz'
 import { getAcuityClient } from '../core/AcuityClient'
@@ -8,7 +9,7 @@ type AcuityClientParams = {
     input: any
 }
 
-export const acuityClient = functions.region('australia-southeast1').https.onCall(async (data: AcuityClientParams) => {
+export const acuityClient = onCall(async ({ data }: CallableRequest<AcuityClientParams>) => {
     let input
     try {
         const acuity = await getAcuityClient()
@@ -39,7 +40,7 @@ export const acuityClient = functions.region('australia-southeast1').https.onCal
         if (err.error === 'invalid_certificate' || err.error === 'certificate_uses') {
             // this is okay.
             // we still want to throw as front end handles this, but no need for error log
-            functions.logger.log('invalid discount code requested', { details: err })
+            logger.log('invalid discount code requested', { details: err })
         } else {
             logError(`error calling acuity client with method: ${data.method}`, err)
         }

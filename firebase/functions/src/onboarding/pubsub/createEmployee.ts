@@ -1,8 +1,7 @@
-import { logger } from 'firebase-functions'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { getDriveClient } from '../../google/DriveClient'
 import { env } from '../../init'
-import { logError, onPubSub } from '../../utilities'
+import { logError, onMessagePublished } from '../../utilities'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { getXeroClient } from '../../xero/XeroClient'
 import { SlingClient } from '../../sling/core/slingClient'
@@ -17,7 +16,7 @@ const STAFF_ORDINARY_HOURS_RATE_ID =
 const PAYROLL_CALENDAR_ID =
     env === 'prod' ? '76728c47-3451-42e7-93cc-d99fad85d4c2' : 'c44ebff9-c5ec-41de-9e13-0e55f6e11b2d'
 
-export const createEmployee = onPubSub('createEmployee', async (data) => {
+export const createEmployee = onMessagePublished('createEmployee', async (data) => {
     const employee = await FirestoreClient.getEmployee(data.employeeId)
 
     if (employee.status !== 'generating-accounts') {

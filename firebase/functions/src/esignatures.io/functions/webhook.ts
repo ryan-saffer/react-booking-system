@@ -1,7 +1,7 @@
-import * as functions from 'firebase-functions'
+import { onRequest } from 'firebase-functions/v2/https'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 
-export const esignaturesWebhook = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const esignaturesWebhook = onRequest(async (req, res) => {
     // verify webhook is from esignatures
     const authToken = req.headers.authorization
     if (!authToken) {

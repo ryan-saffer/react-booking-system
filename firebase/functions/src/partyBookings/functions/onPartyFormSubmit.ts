@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions'
+import { onRequest } from 'firebase-functions/v2/https'
 import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
@@ -8,7 +8,7 @@ import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 import { logError } from '../../utilities'
 
-export const onPartyFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const onPartyFormSubmit = onRequest(async (req, res) => {
     console.log(req.body.data)
 
     res.status(200).send()
