@@ -18,22 +18,14 @@ export function sendConfirmationEmail(appointments: Acuity.Appointment[]) {
         return a.datetime < b.datetime ? -1 : a.datetime > b.datetime ? 1 : child1Name < child2Name ? 1 : -1
     })
     const bookings: Emails['holidayProgramConfirmation']['bookings'] = sortedAppointments.map((appointment) => {
-        const dateTime = DateTime.fromISO(appointment.datetime, {
-            setZone: true,
-        }).toLocaleString({
-            weekday: 'long',
-            month: 'short',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-        })
+        const startTime = DateTime.fromISO(appointment.datetime, { setZone: true })
+        const endTime = startTime.plus({ hours: 2, minutes: 30 })
         return {
             datetime: `${Acuity.Utilities.retrieveFormAndField(
                 appointment,
                 Acuity.Constants.Forms.CHILDREN_DETAILS,
                 Acuity.Constants.FormFields.CHILDREN_NAMES
-            )} - ${dateTime}`,
+            )} - ${startTime.toFormat('cccc, LLL L, t')} - ${endTime.toFormat('t')}`,
             confirmationPage: appointment.confirmationPage,
         }
     })

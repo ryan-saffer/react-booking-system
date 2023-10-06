@@ -51,7 +51,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
         () => calculateTotal(selectedClasses, discountedClasses, form.children.length, discount),
         [selectedClasses, discountedClasses, discount, form.children]
     )
-    const isFree = totalPrice == 0
+    const isFree = totalPrice === 0
 
     const summarisedList: ItemSummary[] = []
     let sortedSelectedClasses = selectedClasses.map((it) => it)

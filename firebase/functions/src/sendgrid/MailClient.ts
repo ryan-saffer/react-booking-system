@@ -79,7 +79,7 @@ class MailClient {
                         subject: subject || 'Holiday program booking confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'holiday_program_confirmation.html',
+                    template: 'holiday_program_confirmation.mjml',
                     useMjml: true,
                 }
             case 'scienceTermEnrolmentConfirmation':

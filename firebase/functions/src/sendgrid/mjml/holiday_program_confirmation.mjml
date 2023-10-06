@@ -2,17 +2,16 @@
   <mj-head>
     <mj-attributes>
       <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
-      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
-        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
     </mj-attributes>
     <mj-style inline="inline">
       .text-link {
-      color: #5e6ebf
+        color: #5e6ebf
       }
     </mj-style>
     <mj-style inline="inline">
       .footer-link {
-      color: #888888
+        color: #888888
       }
     </mj-style>
 
@@ -59,7 +58,7 @@
         </mj-text>
         <mj-text color="#637381" font-size="14px" padding-top="0">
           {{#bookings}}
-          <p>{{datetime}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
+            <p>{{datetime}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
           {{/bookings}}
         </mj-text>
       </mj-column>
@@ -74,10 +73,19 @@
           If your child is booked in for the day, <strong>please make sure they bring a packed lunch with them.</strong>
         </mj-text>
         <mj-text color="#637381" font-size="16px">
-          To see what we will be making on the day, you can have a <a
-            href="https://www.fizzkidz.com.au/holiday-programs/">look here</a> - just look for the date and time you
+          To see what we will be making on the day, you can have a <a href="https://www.fizzkidz.com.au/holiday-programs/">look here</a> - just look for the date and time you
           have selected!
         </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Cancellation Policy
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          A full refund will be automatically issued for cancellations made more than 24 hours before the program. Cancellations made less than 24 hours before the program will not be refunded.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
         <mj-text color="#637381" font-size="16px">
           If you have any questions, please feel free to contact us on <a href="tel:0390598144">(03) 9059 8144</a>.
         </mj-text>
@@ -94,9 +102,7 @@
         <mj-group>
           <mj-column width="100%" padding-right="0">
             <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-              <a class="footer-link"
-                href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
-                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+              <a class="footer-link" href="mailto:info@fizzkidz.com.au">info@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
             </mj-text>
           </mj-column>
         </mj-group>
