@@ -1,16 +1,12 @@
-import * as functions from 'firebase-functions'
-import * as StripeConfig from '../../config/stripe'
+import { onRequest } from 'firebase-functions/v2/https'
 import { Metadata } from 'fizz-kidz'
-import Stripe from 'stripe'
+import type { Stripe } from 'stripe'
 import { bookHolidayPrograms } from '../../holidayPrograms/core'
 import { logError } from '../../utilities'
-const isProd = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-const stripeConfig = isProd ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
-const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})
+import { getStripeClient } from '../core/StripeClient'
+import { env } from '../../init'
 
-export const stripeWebhook = functions.region('australia-southeast1').https.onRequest(async (request, response) => {
+export const stripeWebhook = onRequest(async (request, response) => {
     let event = request.body as Stripe.Event
 
     // Get the signature sent by Stripe
@@ -18,10 +14,11 @@ export const stripeWebhook = functions.region('australia-southeast1').https.onRe
     console.log(signature)
     if (signature) {
         try {
+            const stripe = await getStripeClient()
             event = stripe.webhooks.constructEvent(
                 request.rawBody.toString('utf8'),
                 signature,
-                isProd ? process.env.STRIPE_WEBHOOK_SECRET_PROD : process.env.STRIPE_WEBHOOK_SECRET_DEV
+                env === 'prod' ? process.env.STRIPE_WEBHOOK_SECRET_PROD : process.env.STRIPE_WEBHOOK_SECRET_DEV
             )
         } catch (err) {
             if (err instanceof Error) {

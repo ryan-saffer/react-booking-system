@@ -1,4 +1,3 @@
-import * as functions from 'firebase-functions'
 import { AcuityWebhookData } from './../../acuity/functions/webhook'
 import { getAcuityClient } from '../../acuity/core/AcuityClient'
 import { Acuity, Metadata } from 'fizz-kidz'

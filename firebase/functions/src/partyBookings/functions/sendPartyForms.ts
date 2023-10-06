@@ -1,15 +1,16 @@
-import * as functions from 'firebase-functions'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { logError } from '../../utilities'
 
-export const sendPartyForms = functions
-    .region('australia-southeast1')
-    .pubsub.schedule('30 8 * * 4')
-    .timeZone('Australia/Melbourne')
-    .onRun(async () => {
+export const sendPartyForms = onSchedule(
+    {
+        timeZone: 'Australia/Melbourne',
+        schedule: '30 8 * * 4',
+    },
+    async () => {
         const startDate = DateTime.fromObject(
             { hour: 0, minute: 0, second: 0 },
             { zone: 'Australia/Melbourne' }
@@ -45,7 +46,8 @@ export const sendPartyForms = functions
             }
         })
         return
-    })
+    }
+)
 
 async function sendForm(bookingId: string, booking: Booking) {
     const mailClient = await getMailClient()

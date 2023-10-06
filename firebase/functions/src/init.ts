@@ -1,8 +1,9 @@
-import type { PubSub } from '@google-cloud/pubsub'
+import type { PubSub as TPubSub } from '@google-cloud/pubsub'
 import type { Storage } from 'firebase-admin/storage'
 import type { Firestore } from 'firebase-admin/firestore'
 
 import { initializeApp, cert } from 'firebase-admin/app'
+import { setGlobalOptions } from 'firebase-functions/v2/options'
 
 export const env = JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod' ? 'prod' : 'dev'
 export const projectId = JSON.parse(process.env.FIREBASE_CONFIG).projectId
@@ -15,6 +16,8 @@ initializeApp({
     credential: cert(require(`../credentials/${env}_service_account_credentials.json`)),
     databaseURL,
 })
+
+setGlobalOptions({ region: 'australia-southeast1' })
 
 let _storage: Storage
 export async function getStorage() {
@@ -33,7 +36,7 @@ export async function getDb() {
     return _db
 }
 
-let _pubsub: PubSub
+let _pubsub: TPubSub
 export async function getPubSub() {
     if (!_pubsub) {
         const { PubSub } = await import('@google-cloud/pubsub')

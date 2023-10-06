@@ -1,4 +1,4 @@
-import { logger } from 'firebase-functions'
+import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
 import { SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'

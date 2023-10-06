@@ -1,5 +1,4 @@
 import { Timestamp } from 'firebase-admin/firestore'
-import { https, logger } from 'firebase-functions'
 import { getCalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 import {

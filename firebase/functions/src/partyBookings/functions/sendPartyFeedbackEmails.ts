@@ -1,15 +1,16 @@
-import * as functions from 'firebase-functions'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { DateTime } from 'luxon'
 import { getMailClient } from '../../sendgrid/MailClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
 import { logError } from '../../utilities'
 
-export const sendFeedbackEmails = functions
-    .region('australia-southeast1')
-    .pubsub.schedule('30 8 * * *')
-    .timeZone('Australia/Melbourne')
-    .onRun(async () => {
+export const sendFeedbackEmails = onSchedule(
+    {
+        timeZone: 'Australia/Melbourne',
+        schedule: '30 8 * * *',
+    },
+    async () => {
         const startDate = DateTime.fromObject(
             { hour: 0, minute: 0, second: 0 },
             { zone: 'Australia/Melbourne' }
@@ -53,4 +54,5 @@ export const sendFeedbackEmails = functions
             }
         })
         return
-    })
+    }
+)
