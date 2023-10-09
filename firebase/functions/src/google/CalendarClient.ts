@@ -3,6 +3,7 @@ import googleCredentials from '../../credentials/google-credentials.json'
 import type { calendar_v3 } from 'googleapis'
 import { withExponentialBackoff } from '../utilities'
 import { Locations } from 'fizz-kidz'
+import { ClientStatus } from '../utilities/types'
 
 type Event = {
     title: string
@@ -21,15 +22,33 @@ type CalendarParams =
           eventType: 'events'
       }
 
-class CalendarClient {
+export class CalendarClient {
+    private static instance: CalendarClient
+    #status: ClientStatus = 'not-initialised'
+
     #calendarClient: calendar_v3.Calendar | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!CalendarClient.instance) {
+            CalendarClient.instance = new CalendarClient()
+            await CalendarClient.instance.#initialise
+        }
+        while (CalendarClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return CalendarClient.instance
+    }
 
     get #calendar() {
         if (this.#calendarClient) return this.#calendarClient
         throw new Error('Calendar client not initialised')
     }
 
-    async _initialise() {
+    async #initialise() {
+        this.#status = 'initialising'
         const { google } = await import('googleapis')
         const OAuth2Client = new google.auth.OAuth2(
             googleCredentials.web.client_id,
@@ -42,6 +61,7 @@ class CalendarClient {
         })
 
         this.#calendarClient = google.calendar({ version: 'v3', auth: OAuth2Client })
+        this.#status = 'initialised'
     }
 
     async createEvent(
@@ -131,14 +151,4 @@ class CalendarClient {
             }
         }
     }
-}
-
-let calendarClient: CalendarClient
-
-export async function getCalendarClient() {
-    if (!calendarClient) {
-        calendarClient = new CalendarClient()
-        await calendarClient._initialise()
-    }
-    return calendarClient
 }

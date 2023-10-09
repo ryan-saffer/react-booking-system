@@ -1,7 +1,7 @@
 import type { CreatePaymentIntentParams } from 'fizz-kidz'
 import { getOrCreateCustomer } from '../../core/customers'
 import { logError, onCall, throwError } from '../../../utilities'
-import { getStripeClient } from '../../core/StripeClient'
+import { StripeClient } from '../../core/StripeClient'
 
 export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: CreatePaymentIntentParams) => {
     // first create the customer
@@ -14,7 +14,7 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: Cr
         programData[key] = it.amount
     })
 
-    const stripe = await getStripeClient()
+    const stripe = await StripeClient.getInstance()
     const description =
         data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', ')
     const paymentIntent = await stripe.paymentIntents.create({

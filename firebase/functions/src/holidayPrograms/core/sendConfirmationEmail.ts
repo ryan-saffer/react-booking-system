@@ -1,7 +1,7 @@
 import { Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { Emails } from '../../sendgrid/types'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function sendConfirmationEmail(appointments: Acuity.Appointment[]) {
     const sortedAppointments = appointments.sort((a, b) => {
@@ -30,7 +30,7 @@ export async function sendConfirmationEmail(appointments: Acuity.Appointment[]) 
         }
     })
 
-    const mailClient = await getMailClient()
+    const mailClient = await MailClient.getInstance()
     await mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
         parentName: appointments[0].firstName,
         location: `Fizz Kidz ${appointments[0].calendar}`,

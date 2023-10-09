@@ -6,6 +6,7 @@ import type { MailData } from '@sendgrid/helpers/classes/mail'
 import { env } from '../init'
 
 import Mustache from 'mustache'
+import { ClientStatus } from '../utilities/types'
 
 type Options = {
     from?: {
@@ -16,13 +17,32 @@ type Options = {
     replyTo?: string
 }
 
-class MailClient {
+export class MailClient {
+    private static instance: MailClient
+    #status: ClientStatus = 'not-initialised'
+
     #client: MailService | null = null
 
-    async _initialise() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!MailClient.instance) {
+            MailClient.instance = new MailClient()
+            await MailClient.instance.#initialise()
+        }
+        while (MailClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return MailClient.instance
+    }
+
+    async #initialise() {
+        this.#status = 'initialising'
         const sgMail = await import('@sendgrid/mail')
         this.#client = sgMail.default
         this.#client.setApiKey(process.env.SEND_GRID_API_KEY)
+        this.#status = 'initialised'
     }
 
     get #sgMail() {
@@ -297,13 +317,4 @@ class MailClient {
             }
         }
     }
-}
-
-let mailClient: MailClient
-export async function getMailClient() {
-    if (!mailClient) {
-        mailClient = new MailClient()
-        await mailClient._initialise()
-    }
-    return mailClient
 }

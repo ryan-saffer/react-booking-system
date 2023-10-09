@@ -2,8 +2,8 @@ import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const sendPartyForms = onSchedule(
     {
@@ -50,7 +50,7 @@ export const sendPartyForms = onSchedule(
 )
 
 async function sendForm(bookingId: string, booking: Booking) {
-    const mailClient = await getMailClient()
+    const mailClient = await MailClient.getInstance()
 
     const prefilledFormUrl = getPrefilledFormUrl(bookingId, booking)
     const manager = getManager(booking.location)

@@ -1,9 +1,9 @@
-import { getCalendarClient } from '../../google/CalendarClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { CalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 
 export const deletePartyBooking = onCall<'deletePartyBooking'>(async ({ bookingId, eventId, location }) => {
-    const calendarClient = await getCalendarClient()
+    const calendarClient = await CalendarClient.getInstance()
     try {
         await calendarClient.deleteEvent(eventId, { eventType: 'party-bookings', location })
     } catch (err) {

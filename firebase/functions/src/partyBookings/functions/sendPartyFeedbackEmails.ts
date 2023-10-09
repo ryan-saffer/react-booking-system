@@ -1,9 +1,9 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { DateTime } from 'luxon'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const sendFeedbackEmails = onSchedule(
     {
@@ -30,7 +30,7 @@ export const sendFeedbackEmails = onSchedule(
 
         const querySnap = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
 
-        const mailClient = await getMailClient()
+        const mailClient = await MailClient.getInstance()
 
         const result = await Promise.allSettled(
             querySnap.docs.map((docSnap) => {

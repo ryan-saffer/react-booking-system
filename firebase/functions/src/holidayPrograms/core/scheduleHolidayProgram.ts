@@ -1,8 +1,8 @@
 import { Acuity, HolidayProgramBooking } from 'fizz-kidz'
-import { getAcuityClient } from '../../acuity/core/AcuityClient'
+import { AcuityClient } from '../../acuity/core/AcuityClient'
 
 export async function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
-    const acuity = await getAcuityClient()
+    const acuity = await AcuityClient.getInstance()
     return acuity.scheduleAppointment({
         appointmentTypeID: booking.appointmentTypeId,
         datetime: booking.dateTime,

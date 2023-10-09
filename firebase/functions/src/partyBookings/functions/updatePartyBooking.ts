@@ -1,7 +1,7 @@
-import { getCalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { CalendarClient } from '../../google/CalendarClient'
 
 export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => {
     const { bookingId, booking } = input
@@ -11,7 +11,7 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
 
     await FirestoreClient.updatePartyBooking(bookingId, booking)
 
-    const calendarClient = await getCalendarClient()
+    const calendarClient = await CalendarClient.getInstance()
 
     if (!booking.eventId) throwError('aborted', 'booking is missing event id')
 

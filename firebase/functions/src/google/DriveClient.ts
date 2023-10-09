@@ -6,16 +6,35 @@ import os from 'os'
 import { Readable } from 'stream'
 import { finished } from 'stream/promises'
 import { ReadableStream } from 'stream/web'
+import { ClientStatus } from '../utilities/types'
 
-class DriveClient {
+export class DriveClient {
+    private static instance: DriveClient
+    #status: ClientStatus = 'not-initialised'
+
     #driveClient: drive_v3.Drive | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance(): Promise<DriveClient> {
+        if (!DriveClient.instance) {
+            DriveClient.instance = new DriveClient()
+            await DriveClient.instance.#initialise()
+        }
+        while (DriveClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return DriveClient.instance
+    }
 
     get #drive() {
         if (this.#driveClient) return this.#driveClient
         throw new Error('Drive client not initialised')
     }
 
-    async _initialise() {
+    async #initialise() {
+        this.#status = 'initialising'
         const { google } = await import('googleapis')
         const OAuth2Client = new google.auth.OAuth2(
             googleCredentials.web.client_id,
@@ -28,6 +47,7 @@ class DriveClient {
         })
 
         this.#driveClient = google.drive({ version: 'v3', auth: OAuth2Client })
+        this.#status = 'initialised'
     }
 
     async uploadFileFromUrl(url: string, filename: string, mimeType: string, folderId: string) {
@@ -64,14 +84,4 @@ class DriveClient {
 
         return folderId
     }
-}
-
-let driveClient: DriveClient
-
-export async function getDriveClient() {
-    if (!driveClient) {
-        driveClient = new DriveClient()
-        await driveClient._initialise()
-    }
-    return driveClient
 }

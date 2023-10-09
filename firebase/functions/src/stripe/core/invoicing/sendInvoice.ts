@@ -1,6 +1,6 @@
 import type Stripe from 'stripe'
 import { getOrCreateCustomer } from '../customers'
-import { getStripeClient } from '../StripeClient'
+import { StripeClient } from '../StripeClient'
 
 export async function sendInvoice(input: {
     firstName: string
@@ -17,7 +17,7 @@ export async function sendInvoice(input: {
     const customer = await getOrCreateCustomer(`${firstName} ${lastName}`, email, phone)
 
     // 2. create invoice items
-    const stripe = await getStripeClient()
+    const stripe = await StripeClient.getInstance()
     const invoiceItems = await stripe.invoiceItems.create({
         customer,
         description,
