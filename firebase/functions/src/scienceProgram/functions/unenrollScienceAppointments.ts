@@ -1,10 +1,10 @@
 import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
-import { getAcuityClient } from '../../acuity/core/AcuityClient'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { getStripeClient } from '../../stripe/core/StripeClient'
+import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { MailClient } from '../../sendgrid/MailClient'
+import { StripeClient } from '../../stripe/core/StripeClient'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(async (input) => {
     await Promise.all(
@@ -16,7 +16,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             const appointmentIds = enrolment.appointments
 
             try {
-                const acuity = await getAcuityClient()
+                const acuity = await AcuityClient.getInstance()
                 await Promise.all(appointmentIds.map((id) => acuity.cancelAppointment(id)))
             } catch (err) {
                 logError('error unenrolling from term.', err, { input })
@@ -27,7 +27,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             if (enrolment.invoiceId) {
                 const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
                 if (invoice.status === 'open') {
-                    const stripe = await getStripeClient()
+                    const stripe = await StripeClient.getInstance()
                     await stripe.invoices.voidInvoice(invoice.id!)
                 }
             }
@@ -40,7 +40,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
 
             // 5. email confirmation
             try {
-                const mailClient = await getMailClient()
+                const mailClient = await MailClient.getInstance()
                 await mailClient.sendEmail('scienceTermUnenrolmentConfirmation', enrolment.parent.email, {
                     parentName: enrolment.parent.firstName,
                     childName: enrolment.child.firstName,

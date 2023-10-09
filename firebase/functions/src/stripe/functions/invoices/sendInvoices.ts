@@ -5,14 +5,14 @@ import { PricesMap } from '../../core/pricesMap'
 import { getDb, env } from '../../../init'
 import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
 import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
-import { getStripeClient } from '../../core/StripeClient'
+import { StripeClient } from '../../core/StripeClient'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
 export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
     const invoiceStatusMap: InvoiceStatusMap = {}
     try {
-        const stripe = await getStripeClient()
+        const stripe = await StripeClient.getInstance()
         const db = await getDb()
         // send one at a time, because sending them all asynchronously leads
         // to very complicated edge cases when sending the same customer multiple invoices

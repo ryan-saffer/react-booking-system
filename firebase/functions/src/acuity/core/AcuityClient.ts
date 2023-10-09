@@ -6,6 +6,7 @@ import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
 import UpdateLabelParams = Acuity.Client.UpdateLabelParams
 import Label = Acuity.Client.Label
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
+import { ClientStatus } from '../../utilities/types'
 
 type ScheduleAppointmentParams = {
     appointmentTypeID: number
@@ -20,20 +21,42 @@ type ScheduleAppointmentParams = {
     fields?: { id: number; value: number | string }[]
 }
 
-class Client {
+export class AcuityClient {
+    private static instance: AcuityClient
+
     #client: any
+    #status: ClientStatus = 'not-initialised'
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!AcuityClient.instance) {
+            AcuityClient.instance = new AcuityClient()
+            await AcuityClient.instance.#initialise()
+        }
+        while (AcuityClient.instance.#status === 'initialising') {
+            // client is initialising in a separate execution context.
+            // add this context to the task queue, until it is initialised.
+            // use '20' to give the import task a chance to finish without clogging up the task queue
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return AcuityClient.instance
+    }
 
     get #acuity() {
         if (this.#client) return this.#client
         throw new Error('Acuity client not initialised')
     }
 
-    async _initialise() {
+    async #initialise() {
+        this.#status = 'initialising'
         const acuity = await import('acuityscheduling')
         this.#client = acuity.basic({
             userId: acuityCredentials.user_id,
             apiKey: acuityCredentials.api_key,
         })
+        this.#status = 'initialised'
     }
 
     private _request<T>(path: string, options: Record<string, unknown> = {}): Promise<T> {
@@ -124,13 +147,4 @@ class Client {
         const label = params.label === 'none' ? [] : [{ id: labelMap[params.label] }]
         return this.updateAppointment({ id: params.appointmentId, labels: label })
     }
-}
-
-let client: Client
-export async function getAcuityClient() {
-    if (!client) {
-        client = new Client()
-        await client._initialise()
-    }
-    return client
 }

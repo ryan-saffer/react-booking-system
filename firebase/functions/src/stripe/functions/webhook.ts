@@ -3,8 +3,8 @@ import { Metadata } from 'fizz-kidz'
 import type { Stripe } from 'stripe'
 import { bookHolidayPrograms } from '../../holidayPrograms/core'
 import { logError } from '../../utilities'
-import { getStripeClient } from '../core/StripeClient'
 import { env } from '../../init'
+import { StripeClient } from '../core/StripeClient'
 
 export const stripeWebhook = onRequest(async (request, response) => {
     let event = request.body as Stripe.Event
@@ -14,7 +14,7 @@ export const stripeWebhook = onRequest(async (request, response) => {
     console.log(signature)
     if (signature) {
         try {
-            const stripe = await getStripeClient()
+            const stripe = await StripeClient.getInstance()
             event = stripe.webhooks.constructEvent(
                 request.rawBody.toString('utf8'),
                 signature,

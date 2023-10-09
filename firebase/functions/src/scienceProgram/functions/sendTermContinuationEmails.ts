@@ -1,7 +1,7 @@
 import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../utilities'
 import { getDb, env } from '../../init'
-import { getMailClient } from '../../sendgrid/MailClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
     async (input: SendTermContinuationEmailsParams) => {
@@ -20,7 +20,7 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                 const baseUrl = `${getApplicationDomain(env)}/science-club-enrolment`
 
                 try {
-                    const mailClient = await getMailClient()
+                    const mailClient = await MailClient.getInstance()
                     await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
                         parentName: appointment.parent.firstName,
                         className: appointment.className,

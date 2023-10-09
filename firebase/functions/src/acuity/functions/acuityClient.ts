@@ -2,7 +2,7 @@ import { CallableRequest, onCall } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
 import { logError, throwError } from '../../utilities'
 import type { Acuity } from 'fizz-kidz'
-import { getAcuityClient } from '../core/AcuityClient'
+import { AcuityClient } from '../core/AcuityClient'
 
 type AcuityClientParams = {
     method: keyof Acuity.Client.AcuityFunctions
@@ -12,7 +12,7 @@ type AcuityClientParams = {
 export const acuityClient = onCall(async ({ data }: CallableRequest<AcuityClientParams>) => {
     let input
     try {
-        const acuity = await getAcuityClient()
+        const acuity = await AcuityClient.getInstance()
         switch (data.method) {
             case 'updateLabel':
                 input = data.input as Acuity.Client.UpdateLabelParams

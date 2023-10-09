@@ -5,11 +5,11 @@ import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoung
 import path from 'path'
 import os from 'os'
 import fs from 'fs'
-import { onCall, throwError } from '../../utilities'
+import { logError, onCall, throwError } from '../../utilities'
 import { projectId, getStorage } from '../../init'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
-import { getXeroClient } from '../../xero/XeroClient'
 import { Rate } from '../core/types'
+import { XeroClient } from '../../xero/XeroClient'
 
 const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38
@@ -59,7 +59,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         // cache for xero users
         const xeroUsersCache: XeroUserCache = {}
 
-        const xero = await getXeroClient()
+        const xero = await XeroClient.getInstance()
 
         const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
 
@@ -186,7 +186,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             employeesUnder18Over30Hrs: [...new Set(employeesUnder18Over30Hrs)],
         }
     } catch (err) {
-        console.error('error generating timesheets', err)
+        logError('error generating timesheets', err)
         throwError('internal', 'error generating timesheets', err)
     }
 })
@@ -195,7 +195,7 @@ async function getAndCacheXeroUser(userId: string, cache: XeroUserCache) {
     const cachedUser = cache[userId]
     if (cachedUser) return cachedUser
 
-    const xero = await getXeroClient()
+    const xero = await XeroClient.getInstance()
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
     cache[userId] = employee

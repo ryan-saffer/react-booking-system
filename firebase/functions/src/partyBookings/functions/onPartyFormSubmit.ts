@@ -3,10 +3,10 @@ import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const onPartyFormSubmit = onRequest(async (req, res) => {
     console.log(req.body.data)
@@ -26,7 +26,7 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
         return
     }
 
-    const mailClient = await getMailClient()
+    const mailClient = await MailClient.getInstance()
 
     // first check if the booking form has been filled in previously
     const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)

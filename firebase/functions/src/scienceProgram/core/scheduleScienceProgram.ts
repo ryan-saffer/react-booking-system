@@ -1,11 +1,11 @@
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
 import { getDb, projectId, getStorage } from '../../init'
-import { getAcuityClient } from '../../acuity/core/AcuityClient'
-import { getMailClient } from '../../sendgrid/MailClient'
+import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
-import { getSheetsClient } from '../../google/SheetsClient'
-import { getHubspotClient } from '../../hubspot/HubspotClient'
 import { logError, throwError } from '../../utilities'
+import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { SheetsClient } from '../../google/SheetsClient'
+import { HubspotClient } from '../../hubspot/HubspotClient'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -18,7 +18,7 @@ export default async function scheduleScienceProgram(
     const newDoc = (await getDb()).collection('scienceAppointments').doc()
 
     // get the calendar information from acuity
-    const acuityClient = await getAcuityClient()
+    const acuityClient = await AcuityClient.getInstance()
     const calendars = await acuityClient.getCalendars()
     const calendar = calendars.find((it) => it.id === input.calendarId)
 
@@ -99,7 +99,7 @@ export default async function scheduleScienceProgram(
     // write anaphylactic kids to spreadsheet
     if (appointment.child.isAnaphylactic) {
         try {
-            const sheetsClient = await getSheetsClient()
+            const sheetsClient = await SheetsClient.getInstance()
             await sheetsClient.addRowToSheet('anaphylacticChildrenChecklist', [
                 [
                     appointment.className,
@@ -121,7 +121,7 @@ export default async function scheduleScienceProgram(
     }
 
     try {
-        const hubspotClient = await getHubspotClient()
+        const hubspotClient = await HubspotClient.getInstance()
         await hubspotClient.addScienceProgramContact({
             firstName: appointment.parent.firstName,
             lastName: appointment.parent.lastName,
@@ -136,7 +136,7 @@ export default async function scheduleScienceProgram(
     // send the confirmation email
     if (sendConfirmationEmail) {
         try {
-            const mailClient = await getMailClient()
+            const mailClient = await MailClient.getInstance()
             await mailClient.sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
@@ -168,7 +168,7 @@ export default async function scheduleScienceProgram(
 
     if (sendPortalEmail) {
         try {
-            const mailClient = await getMailClient()
+            const mailClient = await MailClient.getInstance()
             await mailClient.sendEmail('scienceParentPortalLink', input.parent.email, {
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
