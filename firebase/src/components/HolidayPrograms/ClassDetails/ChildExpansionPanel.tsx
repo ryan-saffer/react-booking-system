@@ -69,16 +69,12 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const handleSignIn = (e: any) => {
         e.stopPropagation()
         setLoading(true)
-
         updateLabel('checked-in')
     }
 
     const handleSignOut = (e: any) => {
         e.stopPropagation()
         setLoading(true)
-
-        console.log(appointment.id)
-
         updateLabel('none')
     }
 
