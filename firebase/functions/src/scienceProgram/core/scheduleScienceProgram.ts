@@ -37,6 +37,7 @@ export default async function scheduleScienceProgram(
                 .move(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`)
             anaphylaxisPlanUrl = (
                 await bucket.file(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`).getSignedUrl({
+                    version: 'v2',
                     action: 'read',
                     expires: new Date(today.setMonth(today.getMonth() + 6)), // expires in 6 months
                 })
