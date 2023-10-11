@@ -1,4 +1,4 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
 import { logError, onMessagePublished } from '../../utilities'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
@@ -17,7 +17,7 @@ const PAYROLL_CALENDAR_ID =
     env === 'prod' ? '76728c47-3451-42e7-93cc-d99fad85d4c2' : 'c44ebff9-c5ec-41de-9e13-0e55f6e11b2d'
 
 export const createEmployee = onMessagePublished('createEmployee', async (data) => {
-    const employee = await FirestoreClient.getEmployee(data.employeeId)
+    const employee = await DatabaseClient.getEmployee(data.employeeId)
 
     if (employee.status !== 'generating-accounts') {
         logError(`employee creation began despite status not being 'generating-accounts'. Employee id: ${employee.id}`)
@@ -168,7 +168,7 @@ export const createEmployee = onMessagePublished('createEmployee', async (data) 
         return
     }
 
-    await FirestoreClient.updateEmployee(employee.id, {
+    await DatabaseClient.updateEmployee(employee.id, {
         xeroUserId: employeeXeroId,
         status: 'verification',
     })

@@ -1,7 +1,7 @@
 import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { StripeClient } from '../../stripe/core/StripeClient'
@@ -10,7 +10,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
     await Promise.all(
         input.appointmentIds.map(async (appointmentId) => {
             // 1. get appointment from firestore
-            const enrolment = await FirestoreClient.getScienceEnrolment(appointmentId)
+            const enrolment = await DatabaseClient.getScienceEnrolment(appointmentId)
 
             // 2. cancel each acuity appointment
             const appointmentIds = enrolment.appointments
@@ -36,7 +36,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
             const updatedAppointment: Partial<ScienceEnrolment> = {
                 status: 'inactive',
             }
-            await FirestoreClient.updateScienceEnrolment(appointmentId, updatedAppointment)
+            await DatabaseClient.updateScienceEnrolment(appointmentId, updatedAppointment)
 
             // 5. email confirmation
             try {

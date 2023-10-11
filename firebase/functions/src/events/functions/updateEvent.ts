@@ -1,4 +1,4 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 
@@ -21,7 +21,7 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
             }
         )
 
-        await FirestoreClient.updateEventBooking(event.id, event)
+        await DatabaseClient.updateEventBooking(event.id, event)
     } catch (err) {
         logError(`error updating event with id ${event.id}`, err)
         throwError('internal', `error updating event with id ${event.id}`, err)

@@ -2,10 +2,11 @@ import * as StripeConfig from '../../../config/stripe'
 import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../../utilities'
 import { PricesMap } from '../../core/pricesMap'
-import { getDb, env } from '../../../init'
+import { env } from '../../../init'
 import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
 import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
 import { StripeClient } from '../../core/StripeClient'
+import { FirestoreClient } from '../../../firebase/FirestoreClient'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
@@ -13,7 +14,7 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
     const invoiceStatusMap: InvoiceStatusMap = {}
     try {
         const stripe = await StripeClient.getInstance()
-        const db = await getDb()
+        const db = await FirestoreClient.getInstance()
         // send one at a time, because sending them all asynchronously leads
         // to very complicated edge cases when sending the same customer multiple invoices
         for (const invoiceData of input) {

@@ -1,7 +1,3 @@
-import type { PubSub as TPubSub } from '@google-cloud/pubsub'
-import type { Storage } from 'firebase-admin/storage'
-import type { Firestore } from 'firebase-admin/firestore'
-
 import { initializeApp, cert } from 'firebase-admin/app'
 import { setGlobalOptions } from 'firebase-functions/v2/options'
 
@@ -18,29 +14,3 @@ initializeApp({
 })
 
 setGlobalOptions({ region: 'australia-southeast1' })
-
-let _storage: Storage
-export async function getStorage() {
-    if (!_storage) {
-        _storage = (await import('firebase-admin/storage')).getStorage()
-    }
-    return _storage
-}
-
-let _db: Firestore
-export async function getDb() {
-    if (!_db) {
-        _db = (await import('firebase-admin/firestore')).getFirestore()
-        _db.settings({ ignoreUndefinedProperties: true })
-    }
-    return _db
-}
-
-let _pubsub: TPubSub
-export async function getPubSub() {
-    if (!_pubsub) {
-        const { PubSub } = await import('@google-cloud/pubsub')
-        _pubsub = new PubSub({ projectId })
-    }
-    return _pubsub
-}

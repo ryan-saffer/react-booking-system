@@ -1,4 +1,4 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { logError, onCall, throwError } from '../../utilities'
 
@@ -10,6 +10,6 @@ export const deletePartyBooking = onCall<'deletePartyBooking'>(async ({ bookingI
         logError(`error deleting party booking with id: '${bookingId}'`, err)
         throwError('internal', `error deleting party booking with id: '${bookingId}'`, err)
     }
-    await FirestoreClient.deletePartyBooking(bookingId)
+    await DatabaseClient.deletePartyBooking(bookingId)
     return
 })

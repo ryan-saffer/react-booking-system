@@ -1,13 +1,15 @@
 import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../utilities'
-import { getDb, env } from '../../init'
+import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
+import { FirestoreClient } from '../../firebase/FirestoreClient'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
     async (input: SendTermContinuationEmailsParams) => {
         const results = await Promise.allSettled(
             input.appointmentIds.map(async (appointmentId) => {
-                const appointmentRef = (await getDb()).collection('scienceAppointments').doc(appointmentId)
+                const firestoreClient = await FirestoreClient.getInstance()
+                const appointmentRef = firestoreClient.collection('scienceAppointments').doc(appointmentId)
                 const appointment = (await appointmentRef.get()).data() as ScienceEnrolment
 
                 const baseQueryParams = `?appointmentId=${appointmentId}`

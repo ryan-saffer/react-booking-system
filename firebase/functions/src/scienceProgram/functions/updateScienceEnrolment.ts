@@ -1,11 +1,11 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { onCall } from '../../utilities'
 
 export const updateScienceEnrolment = onCall<'updateScienceEnrolment'>(async (input) => {
     const { id, ...updatedEnrolment } = input
 
-    await FirestoreClient.updateScienceEnrolment(id, updatedEnrolment)
-    const enrolment = await FirestoreClient.getScienceEnrolment(id)
+    await DatabaseClient.updateScienceEnrolment(id, updatedEnrolment)
+    const enrolment = await DatabaseClient.getScienceEnrolment(id)
 
     return enrolment
 })

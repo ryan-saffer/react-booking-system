@@ -6,10 +6,11 @@ import path from 'path'
 import os from 'os'
 import fs from 'fs'
 import { logError, onCall, throwError } from '../../utilities'
-import { projectId, getStorage } from '../../init'
+import { projectId } from '../../init'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { Rate } from '../core/types'
 import { XeroClient } from '../../xero/XeroClient'
+import { StorageClient } from '../../firebase/StorageClient'
 
 const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38
@@ -166,7 +167,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             )
         )
 
-        const storage = await getStorage()
+        const storage = await StorageClient.getInstance()
 
         const [file] = await storage
             .bucket(`${projectId}.appspot.com`)

@@ -6,22 +6,22 @@ import type {
     Employee,
     FirestoreBooking,
 } from 'fizz-kidz'
-import { getDb } from '../init'
+import { FirestoreClient } from './FirestoreClient'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
 export type Document<T> = FirebaseFirestore.DocumentReference<T>
 
 export class FirestoreRefs {
     static async partyBookings() {
-        return (await getDb()).collection('bookings') as Collection<FirestoreBooking>
+        return (await FirestoreClient.getInstance()).collection('bookings') as Collection<FirestoreBooking>
     }
 
     static async partyBooking(id: string) {
-        return (await getDb()).collection('bookings').doc(id) as Document<Booking>
+        return (await FirestoreClient.getInstance()).collection('bookings').doc(id) as Document<Booking>
     }
 
     static async holidayProgramBooking(paymentIntentId: string) {
-        return (await getDb())
+        return (await FirestoreClient.getInstance())
             .collection('holidayProgramBookings')
             .doc(paymentIntentId) as Document<HolidayProgramBooking>
     }
@@ -37,7 +37,7 @@ export class FirestoreRefs {
     }
 
     static async scienceEnrolments() {
-        return (await getDb()).collection('scienceAppointments') as Collection<ScienceEnrolment>
+        return (await FirestoreClient.getInstance()).collection('scienceAppointments') as Collection<ScienceEnrolment>
     }
 
     static async scienceEnrolment(appointmentId: string) {
@@ -45,7 +45,7 @@ export class FirestoreRefs {
     }
 
     static async events() {
-        return (await getDb()).collection('events')
+        return (await FirestoreClient.getInstance()).collection('events')
     }
 
     static async event(eventId: string) {
@@ -53,7 +53,7 @@ export class FirestoreRefs {
     }
 
     static async employees() {
-        return (await getDb()).collection('employees') as Collection<Employee>
+        return (await FirestoreClient.getInstance()).collection('employees') as Collection<Employee>
     }
 
     static async employee(employeeId: string) {

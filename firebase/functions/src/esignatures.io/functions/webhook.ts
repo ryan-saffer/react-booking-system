@@ -1,5 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export const esignaturesWebhook = onRequest(async (req, res) => {
     // verify webhook is from esignatures
@@ -21,7 +21,7 @@ export const esignaturesWebhook = onRequest(async (req, res) => {
     }
 
     if (req.body.status === 'contract-signed') {
-        await FirestoreClient.updateEmployeeContract(
+        await DatabaseClient.updateEmployeeContract(
             req.body.data.contract.metadata,
             req.body.data.contract.contract_pdf_url
         )

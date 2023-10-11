@@ -1,5 +1,5 @@
 import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
@@ -14,12 +14,12 @@ export async function bookHolidayPrograms(paymentIntentId: string) {
     console.log('query booked', query.get('booked'))
 
     if (query.exists && !query.get('booked')) {
-        const programs = (await FirestoreClient.getHolidayPrograms(paymentIntentId)).docs.map((doc) => ({
+        const programs = (await DatabaseClient.getHolidayPrograms(paymentIntentId)).docs.map((doc) => ({
             program: doc.data(),
             id: doc.id,
         }))
         await scheduleHolidayPrograms(programs, paymentIntentId)
-        await FirestoreClient.updateHolidayProgramBooking(paymentIntentId, { booked: true })
+        await DatabaseClient.updateHolidayProgramBooking(paymentIntentId, { booked: true })
     }
 }
 
@@ -60,7 +60,7 @@ async function _scheduleHolidayProgram(program: PaidHolidayProgramBooking, id: s
 
     const appointment = await scheduleHolidayProgram(program, paymentIntentId)
 
-    await FirestoreClient.updateHolidayProgram(paymentIntentId, id, {
+    await DatabaseClient.updateHolidayProgram(paymentIntentId, id, {
         booked: true,
         appointmentId: appointment.id,
     })
