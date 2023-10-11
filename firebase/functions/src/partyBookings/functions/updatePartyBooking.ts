@@ -1,6 +1,6 @@
 import { logError, onCall, throwError } from '../../utilities'
 import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 
 export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => {
@@ -9,7 +9,7 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
     // serialize datetime back
     booking.dateTime = new Date(booking.dateTime)
 
-    await FirestoreClient.updatePartyBooking(bookingId, booking)
+    await DatabaseClient.updatePartyBooking(bookingId, booking)
 
     const calendarClient = await CalendarClient.getInstance()
 

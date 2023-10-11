@@ -7,9 +7,9 @@ import {
 } from 'firebase-functions/v2/https'
 import { onMessagePublished as fireOnMessagePublished } from 'firebase-functions/v2/pubsub'
 import { logger } from 'firebase-functions/v2'
-import { getPubSub } from '../init'
 import type { Response } from 'express'
 import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
+import { PubSubClient } from '../firebase/PubSubClient'
 
 export function onCall<T extends keyof FirebaseFunctions>(
     fn: (
@@ -30,7 +30,7 @@ export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn
 }
 
 export async function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
-    const pubsub = await getPubSub()
+    const pubsub = await PubSubClient.getInstance()
     return pubsub.topic(topic).publishMessage({ data: Buffer.from(JSON.stringify(data)) })
 }
 

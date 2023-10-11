@@ -1,11 +1,13 @@
 import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
-import { getDb, projectId, getStorage } from '../../init'
+import { projectId } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
 import { logError, throwError } from '../../utilities'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { SheetsClient } from '../../google/SheetsClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
+import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { StorageClient } from '../../firebase/StorageClient'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -15,7 +17,7 @@ export default async function scheduleScienceProgram(
     sendPortalEmail = true
 ) {
     // create a firestore document
-    const newDoc = (await getDb()).collection('scienceAppointments').doc()
+    const newDoc = (await FirestoreClient.getInstance()).collection('scienceAppointments').doc()
 
     // get the calendar information from acuity
     const acuityClient = await AcuityClient.getInstance()
@@ -32,7 +34,8 @@ export default async function scheduleScienceProgram(
     if (input.child.anaphylaxisPlan) {
         try {
             const today = new Date()
-            const bucket = (await getStorage()).bucket(`${projectId}.appspot.com`)
+            const storage = await StorageClient.getInstance()
+            const bucket = storage.bucket(`${projectId}.appspot.com`)
             await bucket
                 .file(`anaphylaxisPlans/${input.child.anaphylaxisPlan}`)
                 .move(`anaphylaxisPlans/${newDoc.id}/${input.child.anaphylaxisPlan}`)

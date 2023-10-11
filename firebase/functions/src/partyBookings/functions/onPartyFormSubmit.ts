@@ -2,7 +2,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 import { logError } from '../../utilities'
@@ -29,7 +29,7 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
     const mailClient = await MailClient.getInstance()
 
     // first check if the booking form has been filled in previously
-    const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
+    const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
     if (existingBooking.partyFormFilledIn) {
         // form has been filled in before, notify manager of the change
         try {
@@ -64,9 +64,9 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
     }
 
     // write to firestore
-    await FirestoreClient.updatePartyBooking(formMapper.bookingId, booking)
+    await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
 
-    const fullBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
+    const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     // if its a two creation party, but they picked three or more creations, notify manager
     const choseThreeCreations = booking.creation3 !== undefined

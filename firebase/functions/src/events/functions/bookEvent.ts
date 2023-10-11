@@ -1,4 +1,4 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { logError, onCall, throwError } from '../../utilities'
 import { DateTime } from 'luxon'
 import { CalendarClient } from '../../google/CalendarClient'
@@ -20,7 +20,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
         // create events in firestore
         const eventIds = await Promise.all(
             slots.map((slot) =>
-                FirestoreClient.createEventBooking({
+                DatabaseClient.createEventBooking({
                     ...rest,
                     startTime: slot.startTime,
                     endTime: slot.endTime,
@@ -52,7 +52,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
                 if (!calendarEventId) {
                     throwError('internal', `error creating calendar event for event with id ${eventId}`)
                 }
-                return FirestoreClient.updateEventBooking(eventId, { calendarEventId })
+                return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
             })
         )
     } catch (err) {

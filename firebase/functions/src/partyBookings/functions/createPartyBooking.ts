@@ -12,7 +12,7 @@ import {
     getNumberOfKidsAllowed,
     getPictureOfStudioUrl,
 } from 'fizz-kidz'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
@@ -25,7 +25,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         dateTime: Timestamp.fromDate(new Date(input.dateTime)),
     } satisfies FirestoreBooking
 
-    const bookingId = await FirestoreClient.createPartyBooking(booking)
+    const bookingId = await DatabaseClient.createPartyBooking(booking)
 
     const end = getPartyEndDate(booking.dateTime.toDate(), booking.partyLength)
 
@@ -48,11 +48,11 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         )
     } catch (err) {
         logError(`unable to create event for party booking with id: '${bookingId}'`, err)
-        await FirestoreClient.deletePartyBooking(bookingId)
+        await DatabaseClient.deletePartyBooking(bookingId)
         throwError('internal', 'unable to create calendar event', { details: err })
     }
 
-    await FirestoreClient.updatePartyBooking(bookingId, { eventId: eventId })
+    await DatabaseClient.updatePartyBooking(bookingId, { eventId: eventId })
 
     const hubspotClient = await HubspotClient.getInstance()
     try {

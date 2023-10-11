@@ -1,6 +1,6 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { Employee, WWCC } from 'fizz-kidz'
 import { publishToPubSub } from '../../utilities'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
@@ -26,7 +26,7 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
     const data = req.body.data as PFResponse[]
 
     const employeeId = data.find((it): it is PFTextResponse => it.custom_key === 'id')!.value
-    const existingEmployee = await FirestoreClient.getEmployee(employeeId)
+    const existingEmployee = await DatabaseClient.getEmployee(employeeId)
 
     if (existingEmployee.status !== 'form-sent') {
         logger.log(
@@ -91,7 +91,7 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
         status: 'generating-accounts',
     } satisfies Employee
 
-    await FirestoreClient.updateEmployee(employee.id, employee)
+    await DatabaseClient.updateEmployee(employee.id, employee)
 
     await publishToPubSub('createEmployee', {
         employeeId: employee.id,
