@@ -185,8 +185,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
             'updatePartyBooking',
             firebase
         )({ bookingId, booking: mergedBooking })
-            .then((result) => {
-                console.log(result.data)
+            .then(() => {
                 setLoading(false)
                 setSuccess(true)
                 setTimeout(() => {
@@ -197,13 +196,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 }, 1000)
             })
             .catch((err) => {
-                console.log(err)
+                console.error(err)
                 setLoading(false)
                 setSuccess(false)
                 props.displayError('Unable to update the booking. Please try again.\nError details: ' + err)
-            })
-            .finally(() => {
-                console.log('finally')
             })
     }
 
@@ -213,8 +209,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
             'deletePartyBooking',
             firebase
         )({ bookingId, eventId: booking.eventId!, location: booking.location })
-            .then((result) => {
-                console.log(result.data)
+            .then(() => {
                 setLoading(false)
                 setSuccess(true)
                 setTimeout(() => {
@@ -225,13 +220,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 }, 1000)
             })
             .catch((err) => {
-                console.log(err)
+                console.error(err)
                 setLoading(false)
                 setSuccess(false)
                 props.displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
-            })
-            .finally(() => {
-                console.log('finally')
             })
     }
 

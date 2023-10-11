@@ -19,7 +19,6 @@ const useInvoiceStatus = (
             setResult({ status: 'loaded', result: { [appointment.id]: { status: 'NOT_SENT' } } })
             return
         }
-        console.log('running retrieveInvoiceStatuses')
         callFirebaseFunction(
             'retrieveInvoiceStatuses',
             firebase

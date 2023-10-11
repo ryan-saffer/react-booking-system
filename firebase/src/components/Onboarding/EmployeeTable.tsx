@@ -115,13 +115,10 @@ const EmployeeTable = () => {
             expandable={{
                 expandRowByClick: true,
                 expandedRowRender: (employee) => {
-                    console.log(employee)
                     return <EmployeeDetails employee={employee} />
                 },
                 expandedRowKeys: expandedRows,
                 onExpand: (expanded, employee) => {
-                    console.log('expanded:', expanded)
-                    console.log('employeeId:', employee.id)
                     setExpandedRows(expanded ? [employee.id] : [])
                 },
             }}

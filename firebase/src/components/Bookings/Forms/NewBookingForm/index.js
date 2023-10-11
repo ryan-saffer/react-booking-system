@@ -204,8 +204,7 @@ const NewBookingForm = (props) => {
             'createPartyBooking',
             firebase
         )(booking)
-            .then((result) => {
-                console.log(result.data)
+            .then(() => {
                 setLoading(false)
                 setSuccess(true)
                 setTimeout(() => {
@@ -214,13 +213,10 @@ const NewBookingForm = (props) => {
                 }, 1000)
             })
             .catch((err) => {
-                console.log(err)
+                console.error(err)
                 setLoading(false)
                 setSuccess(false)
                 props.displayError('Party has not been booked in properly. Please try again.\nError details: ' + err)
-            })
-            .finally(() => {
-                console.log('finally')
             })
     }
 
