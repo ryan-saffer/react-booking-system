@@ -34,7 +34,7 @@ export class CalendarClient {
     static async getInstance() {
         if (!CalendarClient.instance) {
             CalendarClient.instance = new CalendarClient()
-            await CalendarClient.instance.#initialise
+            await CalendarClient.instance.#initialise()
         }
         while (CalendarClient.instance.#status === 'initialising') {
             await new Promise((resolve) => setTimeout(resolve, 20))

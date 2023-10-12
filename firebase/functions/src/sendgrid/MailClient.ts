@@ -53,23 +53,15 @@ export class MailClient {
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
         console.log('generating html...')
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
-        try {
-            const html = await this._generateHtml(template, values, useMjml)
-            console.log('generated successfully!')
-            console.log('sending email...')
-            if (env === 'prod') {
-                await this.#sgMail.send({ ...emailInfo, bcc: 'bookings@fizzkidz.com.au', html })
-            } else {
-                await this.#sgMail.send({ ...emailInfo, html })
-            }
-            console.log('email sent successfully!')
-        } catch (error) {
-            throw new Error(`unable to send email '${email}' to '${to}'`)
-        }
+        const html = await this._generateHtml(template, values, useMjml)
+        console.log('generated successfully!')
+        console.log('sending email...')
+        await this.#sgMail.send({ ...emailInfo, html, ...(env === 'prod' && { bcc: 'bookings@fizzkidz.com.au' }) })
+        console.log('email sent successfully!')
     }
 
     private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
-        const mjml = fs.readFileSync(path.resolve(__dirname, `./mjml/${template}`), 'utf8')
+        const mjml = fs.readFileSync(path.resolve(__dirname, `sendgrid/mjml/${template}`), 'utf-8')
         const output = Mustache.render(mjml, values)
         if (useMjml) {
             const mjml2html = await import('mjml')
