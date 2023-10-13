@@ -26,8 +26,8 @@ export class FirestoreClient {
 
     async #initialise() {
         this.#status = 'initialising'
-        const firestore = await import('firebase-admin/firestore')
-        this.#client = firestore.getFirestore()
+        const { getFirestore } = await import('firebase-admin/firestore')
+        this.#client = getFirestore()
         this.#client.settings({ ignoreUndefinedProperties: true })
         this.#status = 'initialised'
     }
