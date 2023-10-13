@@ -26,8 +26,8 @@ export class StorageClient {
 
     async #initialise() {
         this.#status = 'initialising'
-        const storage = await import('firebase-admin/storage')
-        this.#client = storage.getStorage()
+        const { getStorage } = await import('firebase-admin/storage')
+        this.#client = getStorage()
         this.#status = 'initialised'
     }
 }

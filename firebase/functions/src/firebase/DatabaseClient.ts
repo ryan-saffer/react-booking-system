@@ -9,7 +9,7 @@ import type {
     EventBooking,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
-import type { DocumentReference } from 'firebase-admin/firestore'
+import { Timestamp, type DocumentReference } from 'firebase-admin/firestore'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -29,8 +29,9 @@ class Client {
     async #getDocument<T>(refPromise: Promise<Document<T>>) {
         const ref = await refPromise
         const snap = await ref.get()
-        if (snap.exists) {
-            return this.#convertTimestamps<T>(snap.data() as T)
+        const data = snap.data()
+        if (data) {
+            return this.#convertTimestamps<T>(data)
         } else {
             throw new Error(`Cannot find document at path '${ref.path}' with id '${ref.id}'`)
         }
@@ -44,10 +45,9 @@ class Client {
     /**
      * Converts all firebase timestamps to javascript dates, including nested fields.
      */
-    async #convertTimestamps<T>(obj: T): Promise<T> {
+    #convertTimestamps<T>(obj: T): Promise<T> {
         const data = obj as any
-        const { Timestamp } = await import('firebase-admin/firestore')
-        Object.keys(data).forEach(async (key) => {
+        Object.keys(data).forEach((key) => {
             const value = data[key]
             if (!value) return
             if (typeof value === 'object') {
