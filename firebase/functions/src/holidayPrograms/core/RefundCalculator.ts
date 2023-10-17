@@ -1,4 +1,4 @@
-import { Metadata, Acuity } from 'fizz-kidz'
+import type { Metadata, Acuity } from 'fizz-kidz'
 
 /**
  * A class for calculating holiday program refunds

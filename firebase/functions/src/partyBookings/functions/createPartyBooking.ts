@@ -1,5 +1,4 @@
-import * as admin from 'firebase-admin'
-import { getCalendarClient } from '../../google/CalendarClient'
+import { Timestamp } from 'firebase-admin/firestore'
 import { logError, onCall, throwError } from '../../utilities'
 import {
     FirestoreBooking,
@@ -13,23 +12,24 @@ import {
     getNumberOfKidsAllowed,
     getPictureOfStudioUrl,
 } from 'fizz-kidz'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
-import { getMailClient } from '../../sendgrid/MailClient'
+import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
-import { getHubspotClient } from '../../hubspot/HubspotClient'
+import { CalendarClient } from '../../google/CalendarClient'
+import { HubspotClient } from '../../hubspot/HubspotClient'
 
 export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => {
     const booking = {
         ...input,
-        dateTime: admin.firestore.Timestamp.fromDate(new Date(input.dateTime)),
+        dateTime: Timestamp.fromDate(new Date(input.dateTime)),
     } satisfies FirestoreBooking
 
-    const bookingId = await FirestoreClient.createPartyBooking(booking)
+    const bookingId = await DatabaseClient.createPartyBooking(booking)
 
     const end = getPartyEndDate(booking.dateTime.toDate(), booking.partyLength)
 
-    const calendarClient = getCalendarClient()
+    const calendarClient = await CalendarClient.getInstance()
     let eventId: string
     try {
         eventId = await calendarClient.createEvent(
@@ -48,13 +48,13 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         )
     } catch (err) {
         logError(`unable to create event for party booking with id: '${bookingId}'`, err)
-        await FirestoreClient.deletePartyBooking(bookingId)
+        await DatabaseClient.deletePartyBooking(bookingId)
         throwError('internal', 'unable to create calendar event', { details: err })
     }
 
-    await FirestoreClient.updatePartyBooking(bookingId, { eventId: eventId })
+    await DatabaseClient.updatePartyBooking(bookingId, { eventId: eventId })
 
-    const hubspotClient = getHubspotClient()
+    const hubspotClient = await HubspotClient.getInstance()
     try {
         await hubspotClient.addBirthdayPartyContact({
             firstName: booking.parentFirstName,
@@ -74,7 +74,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
     const manager = getManager(booking.location)
 
     if (booking.sendConfirmationEmail) {
-        const mailClient = getMailClient()
+        const mailClient = await MailClient.getInstance()
         try {
             await mailClient.sendEmail(
                 'partyBookingConfirmation',

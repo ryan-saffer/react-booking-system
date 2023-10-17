@@ -1,11 +1,6 @@
-import * as StripeConfig from '../../../config/stripe'
-import Stripe from 'stripe'
+import type Stripe from 'stripe'
 import { getOrCreateCustomer } from '../customers'
-import { env } from '../../../init'
-const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
-const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})
+import { StripeClient } from '../StripeClient'
 
 export async function sendInvoice(input: {
     firstName: string
@@ -22,6 +17,7 @@ export async function sendInvoice(input: {
     const customer = await getOrCreateCustomer(`${firstName} ${lastName}`, email, phone)
 
     // 2. create invoice items
+    const stripe = await StripeClient.getInstance()
     const invoiceItems = await stripe.invoiceItems.create({
         customer,
         description,

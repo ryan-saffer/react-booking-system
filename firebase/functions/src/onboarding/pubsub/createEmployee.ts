@@ -1,14 +1,14 @@
-import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { getDriveClient } from '../../google/DriveClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
-import { logError, onPubSub } from '../../utilities'
+import { logError, onMessagePublished } from '../../utilities'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
-import { getXeroClient } from '../../xero/XeroClient'
 import { SlingClient } from '../../sling/core/slingClient'
 import { EmploymentType } from 'xero-node/dist/gen/model/payroll-au/employmentType'
 import { IncomeType } from 'xero-node/dist/gen/model/payroll-au/incomeType'
 import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 import { EarningsRateCalculationType } from 'xero-node/dist/gen/model/payroll-au/earningsRateCalculationType'
+import { DriveClient } from '../../google/DriveClient'
+import { XeroClient } from '../../xero/XeroClient'
 
 const CURRENT_STAFF_FOLDER_ID = '19pzxRIbp3jzM7HJAUMg6Bau5B_y5xjwt'
 const STAFF_ORDINARY_HOURS_RATE_ID =
@@ -16,8 +16,8 @@ const STAFF_ORDINARY_HOURS_RATE_ID =
 const PAYROLL_CALENDAR_ID =
     env === 'prod' ? '76728c47-3451-42e7-93cc-d99fad85d4c2' : 'c44ebff9-c5ec-41de-9e13-0e55f6e11b2d'
 
-export const createEmployee = onPubSub('createEmployee', async (data) => {
-    const employee = await FirestoreClient.getEmployee(data.employeeId)
+export const createEmployee = onMessagePublished('createEmployee', async (data) => {
+    const employee = await DatabaseClient.getEmployee(data.employeeId)
 
     if (employee.status !== 'generating-accounts') {
         logError(`employee creation began despite status not being 'generating-accounts'. Employee id: ${employee.id}`)
@@ -25,7 +25,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
     }
 
     // create google drive folder
-    const driveClient = getDriveClient()
+    const driveClient = await DriveClient.getInstance()
     try {
         const folderId = await driveClient.createFolder(
             `${employee.firstName} ${employee.lastName}`,
@@ -78,7 +78,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
     }
 
     // create user in xero
-    const xeroClient = await getXeroClient()
+    const xeroClient = await XeroClient.getInstance()
     let employeeXeroId: string
     try {
         const createEmployeeResult = await xeroClient.payrollAUApi.createEmployee('', [
@@ -168,7 +168,7 @@ export const createEmployee = onPubSub('createEmployee', async (data) => {
         return
     }
 
-    await FirestoreClient.updateEmployee(employee.id, {
+    await DatabaseClient.updateEmployee(employee.id, {
         xeroUserId: employeeXeroId,
         status: 'verification',
     })

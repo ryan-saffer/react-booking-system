@@ -1,13 +1,16 @@
 {
-  "name": "fizz-kidz",
-  "version": "1.0.0",
-  "description": "Shared value and types to be used across React and Functions",
-  "main": "lib",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "build:watch": "tsc --watch"
-  },
-  "author": "Ryan Saffer",
-  "license": "ISC"
+    "name": "fizz-kidz",
+    "version": "1.0.0",
+    "description": "Shared value and types to be used across React and Functions",
+    "main": "lib",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
+        "build:watch": "npm run build -- --watch"
+    },
+    "author": "Ryan Saffer",
+    "license": "ISC",
+    "devDependencies": {
+        "esbuild": "0.19.4"
+    }
 }

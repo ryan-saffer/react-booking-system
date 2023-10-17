@@ -1,6 +1,7 @@
-import { Client } from '@hubspot/api-client'
+import type { Client as TClient } from '@hubspot/api-client'
 import { Branch, Locations, Acuity } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import { ClientStatus } from '../utilities/types'
 
 type BaseProps = {
     firstName: string
@@ -10,11 +11,36 @@ type BaseProps = {
 }
 type WithBaseProps<T> = BaseProps & T
 
-class HubspotClient {
-    #client: Client
+export class HubspotClient {
+    private static instance: HubspotClient
+    #status: ClientStatus = 'not-initialised'
 
-    constructor() {
+    #client: TClient | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!HubspotClient.instance) {
+            HubspotClient.instance = new HubspotClient()
+            await HubspotClient.instance.#initialise()
+        }
+        while (HubspotClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return HubspotClient.instance
+    }
+
+    async #initialise() {
+        this.#status = 'initialising'
+        const { Client } = await import('@hubspot/api-client')
         this.#client = new Client({ accessToken: process.env.HUBSPOT_ACCESS_TOKEN })
+        this.#status = 'initialised'
+    }
+
+    get #hubspot() {
+        if (this.#client) return this.#client
+        throw new Error('Hubspot client not initialised')
     }
 
     async #addContact(values: WithBaseProps<{ test_service: string } & { [key: string]: string }>) {
@@ -30,14 +56,14 @@ class HubspotClient {
         }
 
         try {
-            await this.#client.crm.contacts.basicApi.create({
+            await this.#hubspot.crm.contacts.basicApi.create({
                 properties,
                 associations: [],
             })
         } catch (err: any) {
             if (err.code === 409) {
                 // a way to update by email address. See 'Please note' section - https://developers.hubspot.com/docs/api/crm/contacts
-                await this.#client.apiRequest({
+                await this.#hubspot.apiRequest({
                     method: 'PATCH',
                     path: `/crm/v3/objects/contacts/${email}?idProperty=email`,
                     body: {
@@ -106,11 +132,4 @@ class HubspotClient {
             }
         }
     }
-}
-
-let hubspotClient: HubspotClient
-export function getHubspotClient() {
-    if (hubspotClient) return hubspotClient
-    hubspotClient = new HubspotClient()
-    return hubspotClient
 }

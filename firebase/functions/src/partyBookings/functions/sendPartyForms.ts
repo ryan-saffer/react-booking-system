@@ -1,15 +1,16 @@
+import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
-import * as functions from 'firebase-functions'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
-export const sendPartyForms = functions
-    .region('australia-southeast1')
-    .pubsub.schedule('30 8 * * 4')
-    .timeZone('Australia/Melbourne')
-    .onRun(async () => {
+export const sendPartyForms = onSchedule(
+    {
+        timeZone: 'Australia/Melbourne',
+        schedule: '30 8 * * 4',
+    },
+    async () => {
         const startDate = DateTime.fromObject(
             { hour: 0, minute: 0, second: 0 },
             { zone: 'Australia/Melbourne' }
@@ -23,10 +24,8 @@ export const sendPartyForms = functions
         console.log('End date:')
         console.log(endDate)
 
-        const querySnapshot = await FirestoreRefs.partyBookings()
-            .where('dateTime', '>', startDate)
-            .where('dateTime', '<', endDate)
-            .get()
+        const bookingsRef = await FirestoreRefs.partyBookings()
+        const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
 
         const result = await Promise.allSettled(
             querySnapshot.docs.map((documentSnapshot) => {
@@ -47,10 +46,11 @@ export const sendPartyForms = functions
             }
         })
         return
-    })
+    }
+)
 
 async function sendForm(bookingId: string, booking: Booking) {
-    const mailClient = getMailClient()
+    const mailClient = await MailClient.getInstance()
 
     const prefilledFormUrl = getPrefilledFormUrl(bookingId, booking)
     const manager = getManager(booking.location)

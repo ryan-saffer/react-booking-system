@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions'
+import { onRequest } from 'firebase-functions/v2/https'
 import { Acuity } from 'fizz-kidz'
 import { cancelHolidayProgram } from '../../holidayPrograms/core/cancelHolidayProgram'
 
@@ -16,7 +16,7 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
-export const asWebhook = functions.region('australia-southeast1').https.onRequest(async (req, resp) => {
+export const asWebhook = onRequest(async (req, resp) => {
     console.log('STARTING WEBHOOK')
     console.log(req.body)
     const data = req.body as AcuityWebhookData

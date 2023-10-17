@@ -1,14 +1,14 @@
-import { getCalendarClient } from '../../google/CalendarClient'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { logError, onCall, throwError } from '../../utilities'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
+import { CalendarClient } from '../../google/CalendarClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const bookEvent = onCall<'bookEvent'>(async (input) => {
     const { event } = input
     const { slots, ...rest } = event
 
-    const calendarClient = getCalendarClient()
+    const calendarClient = await CalendarClient.getInstance()
 
     // parse date strings back to date objects
     slots.forEach((slot) => {
@@ -20,7 +20,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
         // create events in firestore
         const eventIds = await Promise.all(
             slots.map((slot) =>
-                FirestoreClient.createEventBooking({
+                DatabaseClient.createEventBooking({
                     ...rest,
                     startTime: slot.startTime,
                     endTime: slot.endTime,
@@ -52,7 +52,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
                 if (!calendarEventId) {
                     throwError('internal', `error creating calendar event for event with id ${eventId}`)
                 }
-                return FirestoreClient.updateEventBooking(eventId, { calendarEventId })
+                return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
             })
         )
     } catch (err) {
@@ -63,7 +63,8 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
     // send confirmation email
     if (input.sendConfirmationEmail) {
         try {
-            await getMailClient().sendEmail('eventBooking', event.contactEmail, {
+            const mailClient = await MailClient.getInstance()
+            await mailClient.sendEmail('eventBooking', event.contactEmail, {
                 contactName: event.contactName,
                 location: event.location,
                 emailMessage: input.emailMessage,

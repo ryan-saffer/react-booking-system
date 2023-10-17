@@ -25,7 +25,7 @@ const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
             <Descriptions.Item label="Child Age">{enrolment.child.age}</Descriptions.Item>
             <Descriptions.Item label="Parent Portal">
                 <Button
-                    href={`${getBaseUrl()}${ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL.split(':')[0]}/${enrolment.id}`}
+                    href={`${getBaseUrl()}${ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL.split(':')[0]}${enrolment.id}`}
                     target="_blank"
                     onClick={(e) => e.stopPropagation()}
                 >

@@ -1,5 +1,6 @@
-import * as functions from 'firebase-functions'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { onRequest } from 'firebase-functions/v2/https'
+import { logger } from 'firebase-functions/v2'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { Employee, WWCC } from 'fizz-kidz'
 import { publishToPubSub } from '../../utilities'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
@@ -21,14 +22,14 @@ type PFTextResponse = BasePFResponse & {
 type PFResponse = PFFileResponse | PFTextResponse
 const PDF_KEY = '7843d2a'
 
-export const onOnboardingSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const onOnboardingSubmit = onRequest(async (req, res) => {
     const data = req.body.data as PFResponse[]
 
     const employeeId = data.find((it): it is PFTextResponse => it.custom_key === 'id')!.value
-    const existingEmployee = await FirestoreClient.getEmployee(employeeId)
+    const existingEmployee = await DatabaseClient.getEmployee(employeeId)
 
     if (existingEmployee.status !== 'form-sent') {
-        functions.logger.log(
+        logger.log(
             `employee form already submitted for ${existingEmployee.firstName} ${existingEmployee.lastName} - exiting`
         )
         return
@@ -90,7 +91,7 @@ export const onOnboardingSubmit = functions.region('australia-southeast1').https
         status: 'generating-accounts',
     } satisfies Employee
 
-    await FirestoreClient.updateEmployee(employee.id, employee)
+    await DatabaseClient.updateEmployee(employee.id, employee)
 
     await publishToPubSub('createEmployee', {
         employeeId: employee.id,

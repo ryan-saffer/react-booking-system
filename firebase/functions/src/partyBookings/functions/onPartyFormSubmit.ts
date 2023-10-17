@@ -1,14 +1,14 @@
+import { onRequest } from 'firebase-functions/v2/https'
 import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
-import * as functions from 'firebase-functions'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { getMailClient } from '../../sendgrid/MailClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
-export const onPartyFormSubmit = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const onPartyFormSubmit = onRequest(async (req, res) => {
     console.log(req.body.data)
 
     res.status(200).send()
@@ -26,10 +26,10 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
         return
     }
 
-    const mailClient = getMailClient()
+    const mailClient = await MailClient.getInstance()
 
     // first check if the booking form has been filled in previously
-    const existingBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
+    const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
     if (existingBooking.partyFormFilledIn) {
         // form has been filled in before, notify manager of the change
         try {
@@ -64,9 +64,9 @@ export const onPartyFormSubmit = functions.region('australia-southeast1').https.
     }
 
     // write to firestore
-    await FirestoreClient.updatePartyBooking(formMapper.bookingId, booking)
+    await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
 
-    const fullBooking = await FirestoreClient.getPartyBooking(formMapper.bookingId)
+    const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     // if its a two creation party, but they picked three or more creations, notify manager
     const choseThreeCreations = booking.creation3 !== undefined

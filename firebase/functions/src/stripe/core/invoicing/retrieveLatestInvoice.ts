@@ -1,5 +1,6 @@
-import Stripe from 'stripe'
-import { getStripeClient } from '../StripeClient'
+import type Stripe from 'stripe'
+import { StripeClient } from '../StripeClient'
+
 /**
  * Recursively retrieves an invoices latest invoice until the latest is found
  *
@@ -8,7 +9,8 @@ import { getStripeClient } from '../StripeClient'
  * @return invoice
  */
 export async function retrieveLatestInvoice(invoiceId: string): Promise<Stripe.Invoice> {
-    const invoice = await getStripeClient().invoices.retrieve(invoiceId)
+    const stripe = await StripeClient.getInstance()
+    const invoice = await stripe.invoices.retrieve(invoiceId)
     if (invoice.latest_revision) {
         if (typeof invoice.latest_revision === 'string') {
             return retrieveLatestInvoice(invoice.latest_revision)

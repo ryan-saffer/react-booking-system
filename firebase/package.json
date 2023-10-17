@@ -5,7 +5,7 @@
     "scripts": {
         "build-fizz-kidz": "npm --prefix functions/fizz-kidz run build",
         "build-fizz-kidz:watch": "npm --prefix functions/fizz-kidz run build:watch",
-        "start": "npm run build-fizz-kidz:watch | REACT_APP_ENV=dev react-scripts start",
+        "start": "concurrently \"npm run build-fizz-kidz:watch\" \"REACT_APP_ENV=dev react-scripts start\"",
         "start:prod": "npm run build-fizz-kidz:watch | REACT_APP_ENV=prod react-scripts start",
         "build:prod": "npm run build-fizz-kidz && REACT_APP_ENV=prod react-scripts build",
         "build:dev": "npm run build-fizz-kidz && REACT_APP_ENV=dev react-scripts build",
@@ -49,6 +49,7 @@
         "@types/luxon": "^2.3.2",
         "@types/mixpanel-browser": "^2.38.0",
         "@types/recompose": "^0.30.7",
+        "concurrently": "^8.2.1",
         "postcss-flexbugs-fixes": "^5.0.2",
         "postcss-normalize": "^10.0.1",
         "postcss-preset-env": "^8.4.1",

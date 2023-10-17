@@ -1,4 +1,4 @@
-import { drive_v3, google } from 'googleapis'
+import type { drive_v3 } from 'googleapis'
 import googleCredentials from '../../credentials/google-credentials.json'
 import fs from 'fs'
 import path from 'path'
@@ -6,11 +6,36 @@ import os from 'os'
 import { Readable } from 'stream'
 import { finished } from 'stream/promises'
 import { ReadableStream } from 'stream/web'
+import { ClientStatus } from '../utilities/types'
 
-class DriveClient {
-    private drive: drive_v3.Drive
+export class DriveClient {
+    private static instance: DriveClient
+    #status: ClientStatus = 'not-initialised'
 
-    constructor() {
+    #driveClient: drive_v3.Drive | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance(): Promise<DriveClient> {
+        if (!DriveClient.instance) {
+            DriveClient.instance = new DriveClient()
+            await DriveClient.instance.#initialise()
+        }
+        while (DriveClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return DriveClient.instance
+    }
+
+    get #drive() {
+        if (this.#driveClient) return this.#driveClient
+        throw new Error('Drive client not initialised')
+    }
+
+    async #initialise() {
+        this.#status = 'initialising'
+        const { google } = await import('googleapis')
         const OAuth2Client = new google.auth.OAuth2(
             googleCredentials.web.client_id,
             googleCredentials.web.client_secret,
@@ -21,7 +46,8 @@ class DriveClient {
             refresh_token: googleCredentials.refresh_token,
         })
 
-        this.drive = google.drive({ version: 'v3', auth: OAuth2Client })
+        this.#driveClient = google.drive({ version: 'v3', auth: OAuth2Client })
+        this.#status = 'initialised'
     }
 
     async uploadFileFromUrl(url: string, filename: string, mimeType: string, folderId: string) {
@@ -33,7 +59,7 @@ class DriveClient {
         await finished(Readable.fromWeb(tfnFileResult.body as ReadableStream<any>).pipe(tfnFileStream))
 
         // upload
-        await this.drive.files.create({
+        await this.#drive.files.create({
             requestBody: {
                 name: filename,
                 parents: [folderId],
@@ -48,7 +74,7 @@ class DriveClient {
     async createFolder(folderName: string, parent: string) {
         const {
             data: { id: folderId },
-        } = await this.drive.files.create({
+        } = await this.#drive.files.create({
             requestBody: {
                 name: folderName,
                 parents: [parent],
@@ -58,12 +84,4 @@ class DriveClient {
 
         return folderId
     }
-}
-
-let driveClient: DriveClient
-
-export function getDriveClient() {
-    if (driveClient) return driveClient
-    driveClient = new DriveClient()
-    return driveClient
 }

@@ -1,8 +1,9 @@
 import { env } from '../init'
 import googleCredentials from '../../credentials/google-credentials.json'
-import { calendar_v3, google } from 'googleapis'
+import type { calendar_v3 } from 'googleapis'
 import { withExponentialBackoff } from '../utilities'
 import { Locations } from 'fizz-kidz'
+import { ClientStatus } from '../utilities/types'
 
 type Event = {
     title: string
@@ -21,10 +22,34 @@ type CalendarParams =
           eventType: 'events'
       }
 
-class CalendarClient {
-    private calendar: calendar_v3.Calendar
+export class CalendarClient {
+    private static instance: CalendarClient
+    #status: ClientStatus = 'not-initialised'
 
-    constructor() {
+    #calendarClient: calendar_v3.Calendar | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!CalendarClient.instance) {
+            CalendarClient.instance = new CalendarClient()
+            await CalendarClient.instance.#initialise()
+        }
+        while (CalendarClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return CalendarClient.instance
+    }
+
+    get #calendar() {
+        if (this.#calendarClient) return this.#calendarClient
+        throw new Error('Calendar client not initialised')
+    }
+
+    async #initialise() {
+        this.#status = 'initialising'
+        const { google } = await import('googleapis')
         const OAuth2Client = new google.auth.OAuth2(
             googleCredentials.web.client_id,
             googleCredentials.web.client_secret,
@@ -35,7 +60,8 @@ class CalendarClient {
             refresh_token: googleCredentials.refresh_token,
         })
 
-        this.calendar = google.calendar({ version: 'v3', auth: OAuth2Client })
+        this.#calendarClient = google.calendar({ version: 'v3', auth: OAuth2Client })
+        this.#status = 'initialised'
     }
 
     async createEvent(
@@ -47,7 +73,7 @@ class CalendarClient {
     ) {
         const { useExponentialBackoff = false } = options
         const insertFn = () =>
-            this.calendar.events.insert(
+            this.#calendar.events.insert(
                 {
                     calendarId: this.getCalendarId(calendar),
                     requestBody: {
@@ -68,7 +94,7 @@ class CalendarClient {
 
     updateEvent(_eventId: string, calendar: CalendarParams, event: Event) {
         const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
-        return this.calendar.events.update({
+        return this.#calendar.events.update({
             eventId,
             calendarId: this.getCalendarId(calendar),
             requestBody: {
@@ -83,7 +109,7 @@ class CalendarClient {
 
     deleteEvent(_eventId: string, calendar: CalendarParams) {
         const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
-        return this.calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
+        return this.#calendar.events.delete({ eventId, calendarId: this.getCalendarId(calendar) })
     }
 
     private getCalendarId(eventType: CalendarParams) {
@@ -125,12 +151,4 @@ class CalendarClient {
             }
         }
     }
-}
-
-let calendarClient: CalendarClient
-
-export function getCalendarClient() {
-    if (calendarClient) return calendarClient
-    calendarClient = new CalendarClient()
-    return calendarClient
 }

@@ -1,15 +1,8 @@
-import * as StripeConfig from '../../config/stripe'
-import Stripe from 'stripe'
-const stripeConfig =
-    JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-        ? StripeConfig.PROD_CONFIG
-        : StripeConfig.DEV_CONFIG
-const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})
+import { StripeClient } from './StripeClient'
 
 export async function getOrCreateCustomer(name: string, email: string, phone: string) {
     // first check if customer already exists
+    const stripe = await StripeClient.getInstance()
     const customersResponse = await stripe.customers.list({ email })
     let customer = customersResponse.data[0]
     if (customer) {

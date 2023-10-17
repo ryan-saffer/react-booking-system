@@ -61,12 +61,10 @@ export const CustomerBookingScreen = () => {
                 minDate: Date.now(),
             })
                 .then((result) => {
-                    console.log('succeeded')
-                    console.log(result.data)
                     setClasses(result.data)
                 })
                 .catch((err) => {
-                    console.log('failed')
+                    console.error(err)
                 })
                 .finally(() => {
                     setLoading(false)
@@ -195,7 +193,6 @@ export const CustomerBookingScreen = () => {
                             // (removing a child makes their values undefined.. so filter those out to be sure)
                             // let children = (formValues as Form).children.filter(child => child.childName !== undefined)
 
-                            // console.log('stepping')
                             if (formValues.children && formValues.children.length !== 0) {
                                 setStep(step + 1)
                             } else {
