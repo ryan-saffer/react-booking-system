@@ -1,6 +1,6 @@
-import { Grow, makeStyles, Slide } from '@material-ui/core'
+import { Grow, makeStyles } from '@material-ui/core'
 import { Card } from 'antd'
-import { Acuity, Calendar } from 'fizz-kidz'
+import { Acuity } from 'fizz-kidz'
 import React from 'react'
 
 type Props = {
@@ -24,7 +24,7 @@ const AppointmentTypeCard = React.forwardRef<HTMLDivElement, Props>(({ appointme
                             <p key={line}>{line}</p>
                         ))}
                     </div>
-                    <img className={classes.logo} src={logoUrl} />
+                    <img className={classes.logo} src={logoUrl} alt="School Logo" />
                 </div>
             </Card>
         </Grow>

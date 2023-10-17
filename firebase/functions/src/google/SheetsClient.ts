@@ -1,14 +1,34 @@
 import googleCredentials from '../../credentials/google-credentials.json'
-import { sheets_v4, google } from 'googleapis'
+import type { sheets_v4 } from 'googleapis'
+import { ClientStatus } from '../utilities/types'
 
 const SHEETS = {
     anaphylacticChildrenChecklist: '1-LYEEUh4jaXQhs9QgBLazzKG0VcAIYKhDvE6qkeDcWU',
 }
 
-class SheetsClient {
-    private _sheets: sheets_v4.Sheets
+export class SheetsClient {
+    private static instance: SheetsClient
+    #status: ClientStatus = 'not-initialised'
 
-    constructor() {
+    #sheetsClient: sheets_v4.Sheets | null = null
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private constructor() {}
+
+    static async getInstance() {
+        if (!SheetsClient.instance) {
+            SheetsClient.instance = new SheetsClient()
+            await SheetsClient.instance.#initialise()
+        }
+        while (SheetsClient.instance.#status === 'initialising') {
+            await new Promise((resolve) => setTimeout(resolve, 20))
+        }
+        return SheetsClient.instance
+    }
+
+    async #initialise() {
+        this.#status = 'initialising'
+        const { google } = await import('googleapis')
         const OAuth2Client = new google.auth.OAuth2(
             googleCredentials.web.client_id,
             googleCredentials.web.client_secret,
@@ -19,11 +39,17 @@ class SheetsClient {
             refresh_token: googleCredentials.refresh_token,
         })
 
-        this._sheets = google.sheets({ version: 'v4', auth: OAuth2Client })
+        this.#sheetsClient = google.sheets({ version: 'v4', auth: OAuth2Client })
+        this.#status = 'initialised'
+    }
+
+    get #sheets() {
+        if (this.#sheetsClient) return this.#sheetsClient
+        throw new Error('Sheets client not initialised')
     }
 
     addRowToSheet(sheet: keyof typeof SHEETS, values: string[][]) {
-        return this._sheets.spreadsheets.values.append(
+        return this.#sheets.spreadsheets.values.append(
             {
                 spreadsheetId: SHEETS[sheet],
                 range: 'A1',
@@ -34,11 +60,4 @@ class SheetsClient {
             undefined
         )
     }
-}
-
-let sheetsClient: SheetsClient
-export function getSheetsClient() {
-    if (sheetsClient) return sheetsClient
-    sheetsClient = new SheetsClient()
-    return sheetsClient
 }

@@ -1,38 +1,36 @@
-import { PubSub } from '@google-cloud/pubsub'
-import * as functions from 'firebase-functions'
-import { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
-import { projectId } from '../init'
+import {
+    HttpsError,
+    onCall as fireOnCall,
+    onRequest as fireOnRequest,
+    type FunctionsErrorCode,
+    type Request,
+} from 'firebase-functions/v2/https'
+import { onMessagePublished as fireOnMessagePublished } from 'firebase-functions/v2/pubsub'
+import { logger } from 'firebase-functions/v2'
+import type { Response } from 'express'
+import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
+import { PubSubClient } from '../firebase/PubSubClient'
 
 export function onCall<T extends keyof FirebaseFunctions>(
     fn: (
-        input: FirebaseFunctions[T]['input'],
-        _context: functions.https.CallableContext
+        input: FirebaseFunctions[T]['input']
     ) => FirebaseFunctions[T]['result']['data'] | Promise<FirebaseFunctions[T]['result']['data']>
 ) {
-    return functions.region('australia-southeast1').https.onCall(fn)
+    return fireOnCall((request) => fn(request.data))
 }
 
 export function onRequest<T extends keyof FirebaseFunctions>(
-    fn: (
-        req: functions.https.Request,
-        resp: functions.Response<FirebaseFunctions[T]['result']['data']>
-    ) => void | Promise<void>
+    fn: (req: Request, resp: Response<FirebaseFunctions[T]['result']['data']>) => void | Promise<void>
 ) {
-    return functions.region('australia-southeast1').https.onRequest(fn)
+    return fireOnRequest(fn)
 }
 
-export function onPubSub<T extends keyof PubSubFunctions>(
-    topic: T,
-    fn: (data: PubSubFunctions[T], context: functions.EventContext) => void
-) {
-    return functions
-        .region('australia-southeast1')
-        .pubsub.topic(topic)
-        .onPublish((message, context) => fn(message.json, context))
+export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
+    return fireOnMessagePublished(topic, (event) => fn(event.data.message.json))
 }
 
-export function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
-    const pubsub = new PubSub({ projectId })
+export async function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
+    const pubsub = await PubSubClient.getInstance()
     return pubsub.topic(topic).publishMessage({ data: Buffer.from(JSON.stringify(data)) })
 }
 
@@ -73,7 +71,7 @@ export function logError(message: string, error?: unknown, additionalInfo: objec
     const hasAdditionalInfo = Object.keys(additionalInfo).length !== 0
     if (error) {
         if (error instanceof Error) {
-            functions.logger.error(
+            logger.error(
                 message,
                 {
                     errorDetails: { name: error.name, message: error.message },
@@ -81,7 +79,7 @@ export function logError(message: string, error?: unknown, additionalInfo: objec
                 { ...(hasAdditionalInfo && { additionalInfo }) }
             )
         } else if (typeof error === 'string') {
-            functions.logger.error(
+            logger.error(
                 message,
                 {
                     errorDetails: error,
@@ -89,20 +87,16 @@ export function logError(message: string, error?: unknown, additionalInfo: objec
                 { ...(hasAdditionalInfo && { additionalInfo }) }
             )
         } else if (typeof error === 'object') {
-            functions.logger.error(
-                message,
-                { errorDetails: { ...error } },
-                { ...(hasAdditionalInfo && additionalInfo) }
-            )
+            logger.error(message, { errorDetails: { ...error } }, { ...(hasAdditionalInfo && additionalInfo) })
         } else {
-            functions.logger.error(message, { errorDetails: error }, { ...(hasAdditionalInfo && additionalInfo) })
+            logger.error(message, { errorDetails: error }, { ...(hasAdditionalInfo && additionalInfo) })
         }
     } else {
-        functions.logger.error(message, { ...(hasAdditionalInfo && additionalInfo) })
+        logger.error(message, { ...(hasAdditionalInfo && additionalInfo) })
     }
 }
 export function throwError(
-    code: functions.https.FunctionsErrorCode,
+    code: FunctionsErrorCode,
     message: string,
     error?: unknown,
     additionalInfo: object = {}
@@ -110,27 +104,27 @@ export function throwError(
     const hasAdditionalInfo = Object.keys(additionalInfo).length !== 0
     if (error) {
         if (error instanceof Error) {
-            throw new functions.https.HttpsError(code, message, {
+            throw new HttpsError(code, message, {
                 errorDetails: { name: error.name, message: error.message },
                 ...(hasAdditionalInfo && additionalInfo),
             })
         } else if (typeof error === 'string') {
-            throw new functions.https.HttpsError(code, message, {
+            throw new HttpsError(code, message, {
                 errorDetails: error,
                 ...(hasAdditionalInfo && additionalInfo),
             })
         } else if (typeof error === 'object') {
-            throw new functions.https.HttpsError(code, message, {
+            throw new HttpsError(code, message, {
                 errorDetails: { ...error },
                 ...(hasAdditionalInfo && additionalInfo),
             })
         } else {
-            throw new functions.https.HttpsError(code, message, {
+            throw new HttpsError(code, message, {
                 errorDetails: error,
                 ...(hasAdditionalInfo && additionalInfo),
             })
         }
     } else {
-        throw new functions.https.HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
+        throw new HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
     }
 }

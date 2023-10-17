@@ -85,7 +85,6 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         }
 
         const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
-            console.log(e)
             e.stopPropagation()
             if (listItems && !selectedListItem) {
                 setFormError(true)

@@ -1,12 +1,12 @@
 import { ESignatureClient } from '../../esignatures.io/core/ESignaturesClient'
 import { Employee, getLocationAddress } from 'fizz-kidz'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { logError, onCall, throwError } from '../../utilities'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => {
-    const employeeRef = FirestoreRefs.employees().doc()
+    const employeeRef = (await FirestoreRefs.employees()).doc()
 
     const esignaturesClient = new ESignatureClient()
 
@@ -54,7 +54,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         },
     } satisfies Employee
 
-    await FirestoreClient.createEmployee(employee, { ref: employeeRef })
+    await DatabaseClient.createEmployee(employee, { ref: employeeRef })
 
     const FORM_URL = 'https://fizz-kidz-onboarding.paperform.co'
 
@@ -62,7 +62,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         employee.lastName
     }&email=${employee.email}&mobile=${employee.mobile}&contract=${encodeURIComponent(contractSignUrl)}`
 
-    const mailClient = getMailClient()
+    const mailClient = await MailClient.getInstance()
     await mailClient.sendEmail('onboarding', employee.email, {
         employeeName: employee.firstName,
         formUrl,

@@ -1,7 +1,7 @@
-import * as functions from 'firebase-functions'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { onRequest } from 'firebase-functions/v2/https'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 
-export const esignaturesWebhook = functions.region('australia-southeast1').https.onRequest(async (req, res) => {
+export const esignaturesWebhook = onRequest(async (req, res) => {
     // verify webhook is from esignatures
     const authToken = req.headers.authorization
     if (!authToken) {
@@ -21,7 +21,7 @@ export const esignaturesWebhook = functions.region('australia-southeast1').https
     }
 
     if (req.body.status === 'contract-signed') {
-        await FirestoreClient.updateEmployeeContract(
+        await DatabaseClient.updateEmployeeContract(
             req.body.data.contract.metadata,
             req.body.data.contract.contract_pdf_url
         )

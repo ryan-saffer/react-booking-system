@@ -1,14 +1,6 @@
-import * as StripeConfig from '../../../config/stripe'
-import { UpdatePaymentIntentParams } from 'fizz-kidz'
-import Stripe from 'stripe'
+import type { UpdatePaymentIntentParams } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../../utilities'
-const stripeConfig =
-    JSON.parse(process.env.FIREBASE_CONFIG).projectId === 'bookings-prod'
-        ? StripeConfig.PROD_CONFIG
-        : StripeConfig.DEV_CONFIG
-const stripe = new Stripe(stripeConfig.API_KEY, {
-    apiVersion: '2022-08-01', // https://stripe.com/docs/api/versioning
-})
+import { StripeClient } from '../../core/StripeClient'
 
 export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data: UpdatePaymentIntentParams) => {
     const programData: { [key: string]: number } = {}
@@ -18,6 +10,7 @@ export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data: Up
         programData[key] = it.amount
     })
     try {
+        const stripe = await StripeClient.getInstance()
         await stripe.paymentIntents.update(data.id, {
             amount: data.amount,
             metadata: { ...programData, discount: JSON.stringify(data.discount) },

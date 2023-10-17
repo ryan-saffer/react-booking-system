@@ -1,15 +1,16 @@
-import * as functions from 'firebase-functions'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { DateTime } from 'luxon'
-import { getMailClient } from '../../sendgrid/MailClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
 import { logError } from '../../utilities'
+import { MailClient } from '../../sendgrid/MailClient'
 
-export const sendFeedbackEmails = functions
-    .region('australia-southeast1')
-    .pubsub.schedule('30 8 * * *')
-    .timeZone('Australia/Melbourne')
-    .onRun(async () => {
+export const sendFeedbackEmails = onSchedule(
+    {
+        timeZone: 'Australia/Melbourne',
+        schedule: '30 8 * * *',
+    },
+    async () => {
         const startDate = DateTime.fromObject(
             { hour: 0, minute: 0, second: 0 },
             { zone: 'Australia/Melbourne' }
@@ -25,12 +26,11 @@ export const sendFeedbackEmails = functions
         console.log('End date:')
         console.log(endDate)
 
-        const querySnap = await FirestoreRefs.partyBookings()
-            .where('dateTime', '>', startDate)
-            .where('dateTime', '<', endDate)
-            .get()
+        const bookingsRef = await FirestoreRefs.partyBookings()
 
-        const mailClient = getMailClient()
+        const querySnap = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
+
+        const mailClient = await MailClient.getInstance()
 
         const result = await Promise.allSettled(
             querySnap.docs.map((docSnap) => {
@@ -54,4 +54,5 @@ export const sendFeedbackEmails = functions
             }
         })
         return
-    })
+    }
+)

@@ -2,16 +2,16 @@
     "root": true,
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": ["./firebase/functions/tsconfig.json", "./firebase/functions/fizz-kidz/tsconfig.json"]
-    },
     "plugins": ["@typescript-eslint"],
     "rules": {
+        "no-extra-semi": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["off"],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-extra-semi": "off"
+        "@typescript-eslint/no-extra-semi": "off",
+        "no-duplicate-imports": ["error"],
+        "@typescript-eslint/no-shadow": ["error"]
     }
 }

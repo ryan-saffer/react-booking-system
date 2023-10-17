@@ -135,7 +135,7 @@ export const BookingForm = () => {
                         <Result
                             status="500"
                             title="Something went wrong"
-                            subTitle="We're sorry... it looks like something broke. Please try again later, or reach out via email at bookings@fizzkidz.com.au."
+                            subTitle="Please try again later, or reach out via email at bookings@fizzkidz.com.au."
                         />
                     )
                 }
