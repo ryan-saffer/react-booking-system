@@ -132,6 +132,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: 'Location cannot be empty',
         },
+        type: {
+            value: 'in-store',
+            error: false,
+            errorText: 'Party type cannot be empty',
+        },
         partyLength: {
             value: '1',
             error: false,
@@ -289,6 +294,7 @@ function getEmptyDomainBooking(): FormBooking {
         childName: '',
         childAge: '',
         location: Locations.BALWYN,
+        type: 'in-store',
         date: new Date(),
         time: '',
         partyLength: '1',

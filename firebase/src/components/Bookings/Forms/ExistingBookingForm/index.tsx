@@ -63,7 +63,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const displayAddress = formValues.location.value === 'mobile'
+    const displayAddress = formValues.type.value === 'mobile'
     const displayDateTimeLocation = editing
     const displayDateTimeLocationHeading = displayDateTimeLocation || displayAddress
     const displayNumberOfChildren = formValues.numberOfChildren.value || editing

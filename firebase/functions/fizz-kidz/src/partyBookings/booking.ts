@@ -17,6 +17,7 @@ export interface BaseBooking extends AdditionKeyValues {
     childName: string
     childAge: string
     location: Location
+    type: 'in-store' | 'mobile'
     partyLength: '1' | '1.5' | '2'
     address: string
     numberOfChildren: string
@@ -58,6 +59,7 @@ export const FormBookingFields: FormBookingKeys = {
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
+    type: 'type',
     address: 'address',
     date: 'date',
     time: 'time',
@@ -101,6 +103,7 @@ export const BookingFields: BookingKeys = {
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
+    type: 'type',
     address: 'address',
     dateTime: 'dateTime',
     partyLength: 'partyLength',

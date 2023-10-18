@@ -52,15 +52,11 @@ const Step1: React.FC<Props> = ({
                 <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
                         if (process.env.REACT_APP_ENV === 'prod') {
-                            return Object.values(Locations).map((location) => {
-                                if (location !== Locations.MOBILE) {
-                                    return (
-                                        <Option value={location} key={location}>
-                                            {capitalise(location)}
-                                        </Option>
-                                    )
-                                }
-                            })
+                            return Object.values(Locations).map((location) => (
+                                <Option value={location} key={location}>
+                                    {capitalise(location)}
+                                </Option>
+                            ))
                         } else {
                             return (
                                 <Option value="test" key="test">

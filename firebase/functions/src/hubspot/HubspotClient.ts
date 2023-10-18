@@ -1,5 +1,5 @@
 import type { Client as TClient } from '@hubspot/api-client'
-import { Branch, Locations, Acuity } from 'fizz-kidz'
+import { Branch, Locations, Acuity, Booking } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { ClientStatus } from '../utilities/types'
 
@@ -80,7 +80,7 @@ export class HubspotClient {
         props: WithBaseProps<{
             childName: string
             childAge: string
-            service: 'in-store' | 'mobile'
+            service: Booking['type']
             partyDate: Date
             location: Locations
         }>
@@ -124,8 +124,6 @@ export class HubspotClient {
                 return 'Essendon'
             case Locations.MALVERN:
                 return 'Malvern'
-            case Locations.MOBILE:
-                return 'Mobile'
             default: {
                 const exhaustiveCheck: never = location
                 throw new Error(`unrecognised location: '${exhaustiveCheck}'`)
