@@ -1,4 +1,4 @@
-import { Locations } from '../partyBookings/Locations'
+import { Location } from '../partyBookings/Locations'
 
 interface BaseEmployee {
     id: string
@@ -9,7 +9,7 @@ interface BaseEmployee {
     email: string
     mobile: string
     commencementDate: string
-    location: Exclude<Locations, 'mobile'>
+    location: Exclude<Location, 'mobile'>
     managerName: string
     managerPosition: string
     senderName: string
@@ -53,7 +53,7 @@ export type InitiateEmployeeProps = {
     email: string
     mobile: string
     commencementDate: string
-    location: Exclude<Locations, 'mobile'>
+    location: Exclude<Location, 'mobile'>
     managerName: string
     managerPosition: string
     senderName: string

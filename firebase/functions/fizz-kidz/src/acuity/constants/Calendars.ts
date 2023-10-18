@@ -1,8 +1,8 @@
 import { SchoolBranch } from '../../hubspot'
-import { Locations } from '../../partyBookings/Locations'
+import { Location } from '../../partyBookings/Locations'
 import { ValuesAsKeys } from '../../utilities'
 
-export const StoreCalendars: Omit<ValuesAsKeys<typeof Locations, number>, 'mobile'> = {
+export const StoreCalendars: Omit<ValuesAsKeys<typeof Location, number>, 'mobile'> = {
     balwyn: 3163510,
     cheltenham: 7382613,
     essendon: 3723560,
