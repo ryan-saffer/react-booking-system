@@ -54,8 +54,8 @@ export function getApplicationDomain(environment: 'prod' | 'dev') {
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
 }
 
-export function getPartyCreationCount(location: Location, partyLength: '1' | '1.5' | '2') {
-    if (location === Location.MOBILE) {
+export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {
+    if (type === 'mobile') {
         switch (partyLength) {
             case '1':
                 return 'two'
@@ -94,8 +94,6 @@ export function getPictureOfStudioUrl(location: Location) {
             return 'https://drive.google.com/file/d/1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g/view?usp=sharing'
         case Location.MALVERN:
             return 'https://drive.google.com/file/d/1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh/view?usp=sharing'
-        case Location.MOBILE:
-            return ''
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location: '${exhaustiveCheck}`)
@@ -113,9 +111,6 @@ export function getReviewUrl(location: Location) {
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
         case Location.MALVERN:
             return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
-        case Location.MOBILE:
-            return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo' // chelt
-
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)

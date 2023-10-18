@@ -122,14 +122,11 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     </Form.Item>
                     <Form.Item name="location" label="Studio" rules={[{ required: true }]}>
                         <Select>
-                            {Object.values(Locations).map(
-                                (location) =>
-                                    location !== 'mobile' && (
-                                        <Option key={location} value={location}>
-                                            {capitalise(location)}
-                                        </Option>
-                                    )
-                            )}
+                            {Object.values(Locations).map((location) => (
+                                <Option key={location} value={location}>
+                                    {capitalise(location)}
+                                </Option>
+                            ))}
                         </Select>
                     </Form.Item>
                     <Form.Item label="Manager" rules={[{ required: true }]}>
