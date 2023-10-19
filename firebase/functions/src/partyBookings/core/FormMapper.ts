@@ -4,7 +4,7 @@ import {
     Booking,
     CreationDisplayValuesMap,
     Creations,
-    Locations,
+    Location,
     AdditionsDisplayValuesMapPrices,
     AdditionsDisplayValuesMap,
 } from 'fizz-kidz'
@@ -27,12 +27,12 @@ export class FormMapper {
 
         // in-store parties use a multiple choice, while mobile use a dropdown
         booking['numberOfChildren'] =
-            booking.location === 'mobile'
+            booking.type === 'mobile'
                 ? this.getQuestionValue('number_of_children_mobile')
                 : this.getQuestionValue('number_of_children_in_store')
 
         // additions are only asked to in-store
-        if (booking.location !== 'mobile') {
+        if (booking.type !== 'mobile') {
             booking = {
                 ...booking,
                 ...this.getAdditions(),
@@ -146,8 +146,8 @@ export class FormMapper {
         }
     }
 
-    private isValidLocation(location: string): location is Locations {
-        return (<any>Object).values(Locations).includes(location)
+    private isValidLocation(location: string): location is Location {
+        return (<any>Object).values(Location).includes(location)
     }
 
     private mapProductToSku = (products: PFProduct[]) =>

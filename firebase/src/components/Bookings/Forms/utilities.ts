@@ -1,6 +1,6 @@
 import moment from 'moment'
 import dateFormat from 'dateformat'
-import { Booking, FirestoreBooking, FormBooking, Locations, Utilities } from 'fizz-kidz'
+import { Booking, FirestoreBooking, FormBooking, Location, Utilities } from 'fizz-kidz'
 import { ExistingBookingFormFields } from './ExistingBookingForm/types'
 
 /**
@@ -128,9 +128,14 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Time cannot be empty',
         },
         location: {
-            value: Locations.BALWYN,
+            value: Location.BALWYN,
             error: false,
             errorText: 'Location cannot be empty',
+        },
+        type: {
+            value: 'studio',
+            error: false,
+            errorText: 'Party type cannot be empty',
         },
         partyLength: {
             value: '1',
@@ -288,7 +293,8 @@ function getEmptyDomainBooking(): FormBooking {
         parentMobile: '',
         childName: '',
         childAge: '',
-        location: Locations.BALWYN,
+        location: Location.BALWYN,
+        type: 'studio',
         date: new Date(),
         time: '',
         partyLength: '1',

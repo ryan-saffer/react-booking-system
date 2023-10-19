@@ -1,4 +1,4 @@
-type StoreBranch = 'Balwyn' | 'Cheltenham' | 'Essendon' | 'Malvern' | 'Mobile'
+type StoreBranch = 'Balwyn' | 'Cheltenham' | 'Essendon' | 'Malvern'
 
 export type SchoolBranch =
     | 'Blackburn Primary'

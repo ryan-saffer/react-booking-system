@@ -201,7 +201,7 @@ export class MailClient {
                         subject: subject || 'Party Booking Confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'party_booking_confirmation.html',
+                    template: 'party_booking_confirmation.mjml',
                     useMjml: true,
                 }
             case 'partyForm':

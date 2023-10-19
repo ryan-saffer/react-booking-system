@@ -1,4 +1,4 @@
-import { FormBookingFields, Locations } from 'fizz-kidz'
+import { FormBookingFields } from 'fizz-kidz'
 
 /**
  * Validates the form values, sets any errors and error text messages.
@@ -17,6 +17,7 @@ export function validateFormOnChange(formValues, field, value) {
         case FormBookingFields.childAge:
         case FormBookingFields.time:
         case FormBookingFields.date:
+        case FormBookingFields.location:
         case FormBookingFields.address:
             formValues[field].error = value === ''
             break
@@ -46,7 +47,7 @@ export function validateFormOnChange(formValues, field, value) {
                 formValues[field].error = false
             }
             break
-        case FormBookingFields.location:
+        case FormBookingFields.type:
         case FormBookingFields.partyLength:
             // checks the location and length combination is valid
             formValues[field].error = value === ''
@@ -55,7 +56,7 @@ export function validateFormOnChange(formValues, field, value) {
                 var length = `${formValues[FormBookingFields.partyLength].value} hour`
                 if (formValues[FormBookingFields.partyLength].value > 1) length += 's'
                 formValues[FormBookingFields.partyLength].errorText = `A ${
-                    formValues[FormBookingFields.location].value
+                    formValues[FormBookingFields.type].value
                 } party cannot be of length ${length}`
                 break
             } else if (field === FormBookingFields.location) {
@@ -76,12 +77,13 @@ export function validateFormOnChange(formValues, field, value) {
  * @return {boolean} - whether or not the combination is valid
  */
 function locationAndTimeIsInvalid(formValues) {
-    var storeLocations = Object.values(Locations).filter((location) => location !== 'mobile')
-    var location = formValues[FormBookingFields.location].value
+    var type = formValues[FormBookingFields.type].value
     var length = formValues[FormBookingFields.partyLength].value
-    if (storeLocations.includes(location) && length === '1') {
+    if (type === 'studio' && length === '1') {
+        console.log('in store party of 1 hour - invalid')
         return true
-    } else if (location === 'mobile' && length === '2') {
+    } else if (type === 'mobile' && length === '2') {
+        console.log('mobile party of two hours - invalid')
         return true
     }
     return false
@@ -116,7 +118,7 @@ export function validateFormOnSubmit(formValues) {
     }
 
     // validate address here
-    if (formValues[FormBookingFields.location].value === 'mobile') {
+    if (formValues[FormBookingFields.type].value === 'mobile') {
         formValues[FormBookingFields.address].error = formValues[FormBookingFields.address].value === ''
     }
 

@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
-import { Locations } from './Locations'
+import { Location } from './Locations'
 import { Creations } from './Creations'
 import { CakeFlavours } from './CakeFlavours'
 import { Additions } from './Additions'
@@ -16,7 +16,8 @@ export interface BaseBooking extends AdditionKeyValues {
     parentMobile: string
     childName: string
     childAge: string
-    location: Locations
+    location: Location
+    type: 'studio' | 'mobile'
     partyLength: '1' | '1.5' | '2'
     address: string
     numberOfChildren: string
@@ -58,6 +59,7 @@ export const FormBookingFields: FormBookingKeys = {
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
+    type: 'type',
     address: 'address',
     date: 'date',
     time: 'time',
@@ -101,6 +103,7 @@ export const BookingFields: BookingKeys = {
     childName: 'childName',
     childAge: 'childAge',
     location: 'location',
+    type: 'type',
     address: 'address',
     dateTime: 'dateTime',
     partyLength: 'partyLength',
