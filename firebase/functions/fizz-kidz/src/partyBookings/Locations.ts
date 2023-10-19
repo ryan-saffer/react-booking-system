@@ -3,5 +3,4 @@ export enum Location {
     CHELTENHAM = 'cheltenham',
     ESSENDON = 'essendon',
     MALVERN = 'malvern',
-    // MOBILE = 'mobile',
 }
