@@ -1,7 +1,7 @@
 import { Location } from '../partyBookings/Locations'
 import { Booking } from '../partyBookings/booking'
 
-export function getLocationAddress(location: Exclude<Location, 'mobile'>) {
+export function getLocationAddress(location: Location) {
     switch (location) {
         case Location.BALWYN:
             return '184 Whitehorse Rd, Balwyn VIC 3103'
