@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         '& svg': { color: 'white' },
         fontWeight: 600,
     },
-    chipBlue: {
+    chipGreen: {
         backgroundColor: '#9ECC45',
         fontWeight: 600,
         '& svg': { color: 'white' },
@@ -63,7 +63,7 @@ const BookingPanel = (props) => {
                     <Chip
                         label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
                         variant="outlined"
-                        className={booking.type === 'studio' ? classes.chipPurple : classes.chipBlue}
+                        className={booking.type === 'studio' ? classes.chipPurple : classes.chipGreen}
                         icon={booking.type === 'studio' ? <StoreIcon /> : <DriveEtaIcon />}
                     />
                 </div>
