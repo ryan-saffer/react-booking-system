@@ -20,7 +20,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import {
     Additions,
     FormBookingFields,
-    Locations,
+    Location,
     FirestoreBooking,
     CakeFlavours,
     CreationDisplayValuesMap,
@@ -208,7 +208,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         callFirebaseFunction(
             'deletePartyBooking',
             firebase
-        )({ bookingId, eventId: booking.eventId!, location: booking.location })
+        )({ bookingId, eventId: booking.eventId!, location: booking.location, type: booking.type })
             .then(() => {
                 setLoading(false)
                 setSuccess(true)
@@ -430,7 +430,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                     error={formValues[FormBookingFields.location].error}
                                     onChange={handleFormChange}
                                 >
-                                    {Object.values(Locations).map((location) => (
+                                    {Object.values(Location).map((location) => (
                                         <MenuItem key={location} value={location}>
                                             {capitalise(location)}
                                         </MenuItem>

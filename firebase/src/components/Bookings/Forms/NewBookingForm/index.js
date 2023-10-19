@@ -17,7 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { FormBookingFields, Locations } from 'fizz-kidz'
+import { FormBookingFields, Location } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
@@ -92,6 +92,11 @@ const getEmptyValues = () => ({
         value: '',
         error: false,
         errorText: 'Location cannot be empty',
+    },
+    type: {
+        value: '',
+        error: false,
+        errorText: 'Party type cannot be empty',
     },
     partyLength: {
         value: '',
@@ -177,7 +182,7 @@ const NewBookingForm = (props) => {
         tmpValues = validateFormOnChange(tmpValues, field, value)
 
         // clear the value and errors of the address field if it is no longer required
-        if (field === 'location' && value !== 'mobile') {
+        if (field === 'location') {
             tmpValues.address.value = ''
             tmpValues.address.error = false
         }
@@ -350,7 +355,27 @@ const NewBookingForm = (props) => {
                         }}
                     />
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={6} sm={6}>
+                    <FormControl fullWidth>
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                            inputProps={{
+                                name: 'type',
+                                id: 'type',
+                                value: formValues.type.value ?? '',
+                            }}
+                            error={formValues.type.error}
+                            onChange={handleFormChange}
+                        >
+                            <MenuItem value="studio">Fizz Kidz Studio</MenuItem>
+                            <MenuItem value="mobile">Mobile</MenuItem>
+                        </Select>
+                        {formValues.type.error ? (
+                            <FormHelperText error={true}>{formValues.type.errorText}</FormHelperText>
+                        ) : null}
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6} sm={6}>
                     <FormControl fullWidth>
                         <InputLabel>Location</InputLabel>
                         <Select
@@ -362,7 +387,7 @@ const NewBookingForm = (props) => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(Locations).map((location) => (
+                            {Object.values(Location).map((location) => (
                                 <MenuItem key={location} value={location}>
                                     {capitalise(location)}
                                 </MenuItem>
@@ -373,7 +398,7 @@ const NewBookingForm = (props) => {
                         ) : null}
                     </FormControl>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={6} sm={6}>
                     <FormControl fullWidth>
                         <InputLabel>Party Length</InputLabel>
                         <Select
@@ -385,16 +410,16 @@ const NewBookingForm = (props) => {
                             error={formValues.partyLength.error}
                             onChange={handleFormChange}
                         >
-                            <MenuItem value={'1'}>1 hour</MenuItem>
-                            <MenuItem value={'1.5'}>1.5 hours</MenuItem>
-                            <MenuItem value={'2'}>2 hours</MenuItem>
+                            <MenuItem value="1">1 hour</MenuItem>
+                            <MenuItem value="1.5">1.5 hours</MenuItem>
+                            <MenuItem value="2">2 hours</MenuItem>
                         </Select>
                         {formValues.partyLength.error ? (
                             <FormHelperText error={true}>{formValues.partyLength.errorText}</FormHelperText>
                         ) : null}
                     </FormControl>
                 </Grid>
-                {formValues.location.value === 'mobile' && (
+                {formValues.type.value === 'mobile' && (
                     <Grid item xs={12}>
                         <TextField
                             id="address"

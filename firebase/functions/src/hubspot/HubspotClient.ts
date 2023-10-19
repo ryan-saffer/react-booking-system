@@ -1,5 +1,5 @@
 import type { Client as TClient } from '@hubspot/api-client'
-import { Branch, Locations, Acuity, Booking } from 'fizz-kidz'
+import { Branch, Location, Acuity, Booking } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { ClientStatus } from '../utilities/types'
 
@@ -82,21 +82,21 @@ export class HubspotClient {
             childAge: string
             service: Booking['type']
             partyDate: Date
-            location: Locations
+            location: Location
         }>
     ) {
         const { childName, childAge, service, partyDate, location, ...baseProps } = props
         return this.#addContact({
             child_name: childName,
             child_age: childAge,
-            test_service: service === 'in-store' ? 'In-store Party' : 'Mobile Party',
+            test_service: service === 'studio' ? 'In-store Party' : 'Mobile Party',
             party_date: DateTime.fromJSDate(partyDate).toISODate(),
             party_location: this.#getBranch(location),
             ...baseProps,
         })
     }
 
-    addHolidayProgramContact(props: WithBaseProps<{ location: Locations }>) {
+    addHolidayProgramContact(props: WithBaseProps<{ location: Location }>) {
         const { location, ...baseProps } = props
         return this.#addContact({
             test_service: 'Holiday Program',
@@ -114,15 +114,15 @@ export class HubspotClient {
         })
     }
 
-    #getBranch(location: Locations): Branch {
+    #getBranch(location: Location): Branch {
         switch (location) {
-            case Locations.BALWYN:
+            case Location.BALWYN:
                 return 'Balwyn'
-            case Locations.CHELTENHAM:
+            case Location.CHELTENHAM:
                 return 'Cheltenham'
-            case Locations.ESSENDON:
+            case Location.ESSENDON:
                 return 'Essendon'
-            case Locations.MALVERN:
+            case Location.MALVERN:
                 return 'Malvern'
             default: {
                 const exhaustiveCheck: never = location
