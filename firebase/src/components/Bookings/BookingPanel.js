@@ -5,21 +5,39 @@ import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid } from '@material-ui/core'
+import { Chip, Grid } from '@material-ui/core'
 import ExistingBookingForm from './Forms/ExistingBookingForm'
 import { useScopes } from '../Hooks/UseScopes'
+import StoreIcon from '@material-ui/icons/Store'
+import DriveEtaIcon from '@material-ui/icons/DriveEta'
 
 var dateFormat = require('dateformat')
 
 const useStyles = makeStyles((theme) => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
-        flexBasis: '40%',
-        flexShrink: 0,
     },
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
+    },
+    summary: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    chipPurple: {
+        backgroundColor: '#B14592',
+        color: 'white',
+        '& svg': { color: 'white' },
+        fontWeight: 600,
+    },
+    chipGreen: {
+        backgroundColor: '#9ECC45',
+        fontWeight: 600,
+        '& svg': { color: 'white' },
+        color: 'white',
     },
 }))
 
@@ -33,14 +51,22 @@ const BookingPanel = (props) => {
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography className={classes.heading}>
-                    {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
-                    {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
-                </Typography>
-                <Typography className={classes.secondaryHeading}>
-                    {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName}: {booking.childName}'s{' '}
-                    {booking.childAge}th
-                </Typography>
+                <div className={classes.summary}>
+                    <Typography className={classes.heading}>
+                        {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
+                        {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
+                    </Typography>
+                    <Typography className={classes.secondaryHeading}>
+                        {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName}: {booking.childName}
+                        's {booking.childAge}th
+                    </Typography>
+                    <Chip
+                        label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
+                        variant="outlined"
+                        className={booking.type === 'studio' ? classes.chipPurple : classes.chipGreen}
+                        icon={booking.type === 'studio' ? <StoreIcon /> : <DriveEtaIcon />}
+                    />
+                </div>
             </AccordionSummary>
             <AccordionDetails>
                 <Grid container spacing={3}>

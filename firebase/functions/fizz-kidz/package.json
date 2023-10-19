@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
-        "build:watch": "npm run build -- --watch"
+        "build:watch": "npm run build -- --sourcemap --watch"
     },
     "author": "Ryan Saffer",
     "license": "ISC",

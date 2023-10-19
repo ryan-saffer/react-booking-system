@@ -2,7 +2,6 @@ import { Timestamp } from 'firebase-admin/firestore'
 import { logError, onCall, throwError } from '../../utilities'
 import {
     FirestoreBooking,
-    Locations,
     capitalise,
     getApplicationDomain,
     getLocationAddress,
@@ -35,14 +34,14 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         eventId = await calendarClient.createEvent(
             {
                 eventType: 'party-bookings',
+                type: input.type,
                 location: booking.location,
             },
             {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
-                location:
-                    booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                 description: `${getApplicationDomain(env)}/bookings?id=${bookingId}`,
             }
         )
@@ -52,7 +51,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         throwError('internal', 'unable to create calendar event', { details: err })
     }
 
-    await DatabaseClient.updatePartyBooking(bookingId, { eventId: eventId })
+    await DatabaseClient.updatePartyBooking(bookingId, { eventId })
 
     const hubspotClient = await HubspotClient.getInstance()
     try {
@@ -63,7 +62,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             mobile: booking.parentMobile,
             childName: booking.childName,
             childAge: booking.childAge,
-            service: booking.location === Locations.MOBILE ? 'mobile' : 'in-store',
+            service: booking.type,
             partyDate: booking.dateTime.toDate(),
             location: booking.location,
         })
@@ -92,11 +91,10 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
                     endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
                         DateTime.TIME_SIMPLE
                     ),
-                    address:
-                        booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                     location: capitalise(booking.location),
-                    isMobile: booking.location === Locations.MOBILE,
-                    creationCount: getPartyCreationCount(booking.location, booking.partyLength),
+                    isMobile: booking.type === 'mobile',
+                    creationCount: getPartyCreationCount(booking.type, booking.partyLength),
                     managerName: manager.name,
                     managerEmail: manager.email,
                     managerMobile: manager.mobile,

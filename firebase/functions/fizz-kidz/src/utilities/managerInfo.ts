@@ -1,16 +1,14 @@
-import { Locations } from '../partyBookings/Locations'
+import { Location } from '../partyBookings/Locations'
 
-export function getManager(location: Locations) {
+export function getManager(location: Location) {
     switch (location) {
-        case Locations.BALWYN:
+        case Location.BALWYN:
             return { name: 'Bonnie', email: 'balwyn@fizzkidz.com.au', mobile: '0413 268 795' }
-        case Locations.ESSENDON:
+        case Location.ESSENDON:
             return { name: 'Ali', email: 'essendon@fizzkidz.com.au', mobile: '0438 328 327' }
-        case Locations.MOBILE:
-            return { name: 'Bonnie', email: 'bonnie@fizzkidz.com.au', mobile: '0413 268 795' }
-        case Locations.CHELTENHAM:
+        case Location.CHELTENHAM:
             return { name: 'Bronwyn', email: 'cheltenham@fizzkidz.com.au', mobile: '0431 379 953' }
-        case Locations.MALVERN:
+        case Location.MALVERN:
             return { name: 'Bonnie', email: 'malvern@fizzkidz.com.au', mobile: '0413 268 795' }
         default: {
             const exhaustiveCheck: never = location

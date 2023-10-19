@@ -1,15 +1,15 @@
-import { Locations } from '../partyBookings/Locations'
+import { Location } from '../partyBookings/Locations'
 import { Booking } from '../partyBookings/booking'
 
-export function getLocationAddress(location: Exclude<Locations, 'mobile'>) {
+export function getLocationAddress(location: Location) {
     switch (location) {
-        case Locations.BALWYN:
+        case Location.BALWYN:
             return '184 Whitehorse Rd, Balwyn VIC 3103'
-        case Locations.CHELTENHAM:
+        case Location.CHELTENHAM:
             return '273 Bay Rd, Cheltenham VIC 3192'
-        case Locations.ESSENDON:
+        case Location.ESSENDON:
             return '75 Raleigh St, Essendon VIC 3040'
-        case Locations.MALVERN:
+        case Location.MALVERN:
             return '20 Glenferrie Rd, Malvern VIC 3144'
         default: {
             const exhaustiveCheck: never = location
@@ -54,8 +54,8 @@ export function getApplicationDomain(environment: 'prod' | 'dev') {
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
 }
 
-export function getPartyCreationCount(location: Locations, partyLength: '1' | '1.5' | '2') {
-    if (location === Locations.MOBILE) {
+export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {
+    if (type === 'mobile') {
         switch (partyLength) {
             case '1':
                 return 'two'
@@ -76,26 +76,24 @@ export function getPartyCreationCount(location: Locations, partyLength: '1' | '1
     }
 }
 
-export function getNumberOfKidsAllowed(location: Locations) {
-    if (location === Locations.CHELTENHAM) {
+export function getNumberOfKidsAllowed(location: Location) {
+    if (location === Location.CHELTENHAM) {
         return ['4 and 5 years old - max 20 kids', '6 years plus - max 26 kids']
     } else {
         return ['4 and 5 years old - max 24 kids', '6 years plus - max 30 kids']
     }
 }
 
-export function getPictureOfStudioUrl(location: Locations) {
+export function getPictureOfStudioUrl(location: Location) {
     switch (location) {
-        case Locations.BALWYN:
+        case Location.BALWYN:
             return 'https://drive.google.com/file/d/14mqrG74qkbE43FGqexGS1_zfb11mOONy/view?usp=sharing'
-        case Locations.CHELTENHAM:
+        case Location.CHELTENHAM:
             return 'https://drive.google.com/file/d/1PLiZZEqr2yGBd-ipLixzfLkh5FkrO1oG/view?usp=sharing'
-        case Locations.ESSENDON:
+        case Location.ESSENDON:
             return 'https://drive.google.com/file/d/1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g/view?usp=sharing'
-        case Locations.MALVERN:
+        case Location.MALVERN:
             return 'https://drive.google.com/file/d/1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh/view?usp=sharing'
-        case Locations.MOBILE:
-            return ''
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location: '${exhaustiveCheck}`)
@@ -103,19 +101,16 @@ export function getPictureOfStudioUrl(location: Locations) {
     }
 }
 
-export function getReviewUrl(location: Locations) {
+export function getReviewUrl(location: Location) {
     switch (location) {
-        case Locations.BALWYN:
+        case Location.BALWYN:
             return 'https://search.google.com/local/writereview?placeid=ChIJRYl9pexB1moR5msbM8SdKVU'
-        case Locations.CHELTENHAM:
+        case Location.CHELTENHAM:
             return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo'
-        case Locations.ESSENDON:
+        case Location.ESSENDON:
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
-        case Locations.MALVERN:
+        case Location.MALVERN:
             return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
-        case Locations.MOBILE:
-            return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo' // chelt
-
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)

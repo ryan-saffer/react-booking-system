@@ -1,5 +1,5 @@
 import { logError, onCall, throwError } from '../../utilities'
-import { Locations, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
+import { getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 
@@ -13,16 +13,15 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
 
     const calendarClient = await CalendarClient.getInstance()
 
-    if (!booking.eventId) throwError('aborted', 'booking is missing event id')
+    if (!booking.eventId) throwError('aborted', 'booking is missing event id', null, input)
 
     try {
         await calendarClient.updateEvent(
             booking.eventId,
-            { eventType: 'party-bookings', location: booking.location },
+            { eventType: 'party-bookings', type: booking.type, location: booking.location },
             {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
-                location:
-                    booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                 start: booking.dateTime,
                 end: getPartyEndDate(booking.dateTime, booking.partyLength),
             }

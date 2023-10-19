@@ -1,11 +1,11 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { Booking, Locations, capitalise, getManager } from 'fizz-kidz'
+import { Booking, capitalise, getManager } from 'fizz-kidz'
 import { FormMapper } from '../core/FormMapper'
 import { PFQuestion } from '../core/types'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
-import { logError } from '../../utilities'
+import { logError, throwError } from '../../utilities'
 import { MailClient } from '../../sendgrid/MailClient'
 
 export const onPartyFormSubmit = onRequest(async (req, res) => {
@@ -64,15 +64,20 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
     }
 
     // write to firestore
-    await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
+    try {
+        await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
+    } catch (err) {
+        logError('error updating party booking', err, booking)
+        throwError('internal', 'error updating party booking', err, booking)
+    }
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     // if its a two creation party, but they picked three or more creations, notify manager
     const choseThreeCreations = booking.creation3 !== undefined
     const requiresTwoCreations =
-        (fullBooking.location === 'mobile' && fullBooking.partyLength === '1') ||
-        (fullBooking.location !== 'mobile' && fullBooking.partyLength === '1.5')
+        (fullBooking.type === 'mobile' && fullBooking.partyLength === '1') ||
+        (fullBooking.type !== 'mobile' && fullBooking.partyLength === '1.5')
     if (choseThreeCreations && requiresTwoCreations) {
         try {
             await mailClient.sendEmail(
@@ -170,7 +175,7 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
                 isTyeDyeParty: creations.find((it) => it.includes('Tie Dye')) !== undefined,
                 hasAdditions: additions.length !== 0,
                 additions,
-                isMobile: fullBooking.location === Locations.MOBILE,
+                isMobile: fullBooking.type === 'mobile',
                 hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
                 managerName: manager.name,
                 managerMobile: manager.mobile,

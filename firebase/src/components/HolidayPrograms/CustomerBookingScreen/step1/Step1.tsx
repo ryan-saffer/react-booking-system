@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Form, Checkbox, Select, Tag, Card } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { Acuity, Locations } from 'fizz-kidz'
+import { Acuity, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import { DISCOUNT_PRICE, getSameDayClasses } from '../utilities'
@@ -52,15 +52,11 @@ const Step1: React.FC<Props> = ({
                 <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
                         if (process.env.REACT_APP_ENV === 'prod') {
-                            return Object.values(Locations).map((location) => {
-                                if (location !== Locations.MOBILE) {
-                                    return (
-                                        <Option value={location} key={location}>
-                                            {capitalise(location)}
-                                        </Option>
-                                    )
-                                }
-                            })
+                            return Object.values(Location).map((location) => (
+                                <Option value={location} key={location}>
+                                    {capitalise(location)}
+                                </Option>
+                            ))
                         } else {
                             return (
                                 <Option value="test" key="test">
