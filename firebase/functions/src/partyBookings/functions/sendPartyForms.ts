@@ -89,7 +89,9 @@ async function sendForm(bookingId: string, booking: Booking) {
 }
 
 function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://fizzkidz.paperform.co/?location=${booking.location}&id=${bookingId}`
+    let url = `https://fizzkidz.paperform.co/?location=${
+        booking.type === 'studio' ? booking.location : 'mobile'
+    }&id=${bookingId}`
     const encodedParams: { [key: string]: string } = {
         parent_first_name: encodeURIComponent(booking.parentFirstName),
         parent_last_name: encodeURIComponent(booking.parentLastName),
