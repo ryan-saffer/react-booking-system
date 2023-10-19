@@ -182,7 +182,7 @@ const NewBookingForm = (props) => {
         tmpValues = validateFormOnChange(tmpValues, field, value)
 
         // clear the value and errors of the address field if it is no longer required
-        if (field === 'location') {
+        if (field === 'type') {
             tmpValues.address.value = ''
             tmpValues.address.error = false
         }
