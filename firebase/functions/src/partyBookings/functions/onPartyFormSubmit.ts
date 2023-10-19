@@ -5,7 +5,7 @@ import { PFQuestion } from '../core/types'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
-import { logError } from '../../utilities'
+import { logError, throwError } from '../../utilities'
 import { MailClient } from '../../sendgrid/MailClient'
 
 export const onPartyFormSubmit = onRequest(async (req, res) => {
@@ -64,7 +64,12 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
     }
 
     // write to firestore
-    await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
+    try {
+        await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
+    } catch (err) {
+        logError('error updating party booking', err, booking)
+        throwError('internal', 'error updating party booking', err, booking)
+    }
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
