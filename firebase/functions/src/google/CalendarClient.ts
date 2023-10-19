@@ -125,7 +125,6 @@ export class CalendarClient {
                     ? 'c_8eb247b18db175af7a890c5def1e01eca4648a0dafb48a422877df1e650f3ad7@group.calendar.google.com'
                     : 'c_f6ec3f5b3114c1dc66d3b3018994a18504813f8650467741dba496c665d05774@group.calendar.google.com'
             case 'party-bookings':
-                console.log('getting event id:', eventType.type)
                 if (eventType.type === 'mobile') {
                     return env === 'prod'
                         ? 'fizzkidz.com.au_b9aruprq8740cdamu63frgm0ck@group.calendar.google.com'
