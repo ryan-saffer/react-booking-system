@@ -1,7 +1,7 @@
 import { Button, DatePicker, Form, Input, Modal, Select, Typography, message } from 'antd'
 import React, { useState } from 'react'
 import { Dayjs } from 'dayjs'
-import { Locations } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import useFirebase from '../Hooks/context/UseFirebase'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
 import { capitalise } from '../../utilities/stringUtilities'
@@ -15,7 +15,7 @@ type TNewEmployeeForm = {
     email: string
     position: string
     commencementDate: Dayjs
-    location: Exclude<Locations, 'mobile'>
+    location: Location
     managerName: string
     managerPosition: string
     senderName: string
@@ -122,7 +122,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     </Form.Item>
                     <Form.Item name="location" label="Studio" rules={[{ required: true }]}>
                         <Select>
-                            {Object.values(Locations).map((location) => (
+                            {Object.values(Location).map((location) => (
                                 <Option key={location} value={location}>
                                     {capitalise(location)}
                                 </Option>

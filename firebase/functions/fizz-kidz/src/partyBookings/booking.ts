@@ -17,7 +17,7 @@ export interface BaseBooking extends AdditionKeyValues {
     childName: string
     childAge: string
     location: Location
-    type: 'in-store' | 'mobile'
+    type: 'studio' | 'mobile'
     partyLength: '1' | '1.5' | '2'
     address: string
     numberOfChildren: string

@@ -22,7 +22,7 @@ import {
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import { grey } from '@material-ui/core/colors'
 
-import { Locations } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes'
@@ -47,8 +47,8 @@ export const BookingsPage = () => {
     const [events, setEventsDate] = useEvents()
     const [date, setDate] = useState(new Date())
     const [loading, setLoading] = useState(true)
-    let initialLocations: { [key in Locations]?: boolean } = {}
-    Object.values(Locations).forEach((location) => (initialLocations[location] = true))
+    let initialLocations: { [key in Location]?: boolean } = {}
+    Object.values(Location).forEach((location) => (initialLocations[location] = true))
     const [selectedLocations, setSelectedLocations] = useState(initialLocations)
     const [eventsChecked, setEventsChecked] = useState(true)
 
@@ -119,9 +119,9 @@ export const BookingsPage = () => {
             .then((documentSnapshot) => {
                 setBookings([documentSnapshot])
                 setDate(documentSnapshot.get('dateTime').toDate())
-                let selectedLocations: { [key in Locations]?: boolean } = {}
-                Object.values(Locations).forEach((location) => (selectedLocations[location] = false))
-                selectedLocations[documentSnapshot.get('location') as Locations] = true
+                let selectedLocations: { [key in Location]?: boolean } = {}
+                Object.values(Location).forEach((location) => (selectedLocations[location] = false))
+                selectedLocations[documentSnapshot.get('location') as Location] = true
                 setSelectedLocations(selectedLocations)
             })
         setLoading(false)
@@ -254,7 +254,7 @@ export const BookingsPage = () => {
                     </FormGroup>
                     <Divider />
                     <Grid item xs sm md>
-                        {Object.values(Locations).map(
+                        {Object.values(Location).map(
                             (location) =>
                                 selectedLocations[location] && (
                                     <LocationBookings

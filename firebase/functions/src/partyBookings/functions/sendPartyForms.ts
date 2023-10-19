@@ -1,5 +1,5 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { Booking, Locations, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import { Booking, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { logError } from '../../utilities'
@@ -71,11 +71,11 @@ async function sendForm(bookingId: string, booking: Booking) {
             endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                 zone: 'Australia/Melbourne',
             }).toLocaleString(DateTime.TIME_SIMPLE),
-            address: booking.location === Locations.MOBILE ? booking.address : getLocationAddress(booking.location),
+            address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
             location: capitalise(booking.location),
             prefilledFormUrl,
             managerName: manager.name,
-            isMobile: booking.location === Locations.MOBILE,
+            isMobile: booking.type === 'mobile',
         },
         {
             from: {

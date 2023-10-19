@@ -7,7 +7,7 @@ import {
     GenerateTimesheetsParams,
     GenerateTimesheetsResponse,
     InitiateEmployeeProps,
-    Locations,
+    Location,
     ScheduleScienceAppointmentParams,
     ScienceEnrolment,
     SendTermContinuationEmailsParams,
@@ -35,7 +35,10 @@ export interface FirebaseFunctions {
     initiateOnboarding: CloudFunction<InitiateEmployeeProps, void>
     createPartyBooking: CloudFunction<Booking, void>
     updatePartyBooking: CloudFunction<{ bookingId: string; booking: Booking }, void>
-    deletePartyBooking: CloudFunction<{ bookingId: string; eventId: string; location: Locations }, void>
+    deletePartyBooking: CloudFunction<
+        { bookingId: string; eventId: string; location: Location; type: Booking['type'] },
+        void
+    >
 }
 
 export interface PubSubFunctions {

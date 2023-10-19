@@ -34,6 +34,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         eventId = await calendarClient.createEvent(
             {
                 eventType: 'party-bookings',
+                type: input.type,
                 location: booking.location,
             },
             {
@@ -50,7 +51,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         throwError('internal', 'unable to create calendar event', { details: err })
     }
 
-    await DatabaseClient.updatePartyBooking(bookingId, { eventId: eventId })
+    await DatabaseClient.updatePartyBooking(bookingId, { eventId })
 
     const hubspotClient = await HubspotClient.getInstance()
     try {

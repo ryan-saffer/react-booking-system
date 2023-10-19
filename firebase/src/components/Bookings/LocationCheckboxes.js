@@ -1,7 +1,7 @@
 import React from 'react'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-import { Locations } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import * as Utilities from '../../utilities/stringUtilities'
 
 const LocationCheckboxes = (props) => {
@@ -9,7 +9,7 @@ const LocationCheckboxes = (props) => {
 
     return (
         <>
-            {Object.values(Locations).map((location) => (
+            {Object.values(Location).map((location) => (
                 <FormControlLabel
                     key={location}
                     control={<Checkbox checked={values[location]} onChange={handleChange(location)} value={location} />}
