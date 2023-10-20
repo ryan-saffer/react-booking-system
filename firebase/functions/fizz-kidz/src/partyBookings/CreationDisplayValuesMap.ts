@@ -58,7 +58,7 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.tieDyeSocks]: 'Tie Dye Socks',
     [Creations.bugsInBathBombs]: 'Bugs in Bath Bombs',
     [Creations.sandSlime]: 'Sand Slime',
-    [Creations.sugarScrubLipBalm]: 'Sugar Scrub Lip-Balm',
+    [Creations.sugarScrubLipBalm]: 'Sugar Lip Scrub',
     [Creations.mermaidSugarScrub]: 'Mermaid Sugar Scrub',
     [Creations.goldSlime]: 'Gold Slime',
 }
