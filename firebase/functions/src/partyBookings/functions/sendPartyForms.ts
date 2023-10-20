@@ -4,6 +4,7 @@ import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { logError } from '../../utilities'
 import { MailClient } from '../../sendgrid/MailClient'
+import { logger } from 'firebase-functions/v2'
 
 export const sendPartyForms = onSchedule(
     {
@@ -19,10 +20,10 @@ export const sendPartyForms = onSchedule(
         const endDate = new Date(startDate)
         endDate.setDate(startDate.getDate() + 7)
 
-        console.log('Start date:')
-        console.log(startDate)
-        console.log('End date:')
-        console.log(endDate)
+        logger.log('Start date:')
+        logger.log(startDate)
+        logger.log('End date:')
+        logger.log(endDate)
 
         const bookingsRef = await FirestoreRefs.partyBookings()
         const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()

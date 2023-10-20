@@ -7,9 +7,10 @@ import { getBookingAdditions, getBookingCreations } from '../core/utils'
 import { DateTime } from 'luxon'
 import { logError, throwError } from '../../utilities'
 import { MailClient } from '../../sendgrid/MailClient'
+import { logger } from 'firebase-functions/v2'
 
 export const onPartyFormSubmit = onRequest(async (req, res) => {
-    console.log(req.body.data)
+    logger.log(req.body.data)
 
     res.status(200).send()
 
@@ -20,7 +21,7 @@ export const onPartyFormSubmit = onRequest(async (req, res) => {
     try {
         booking = formMapper.mapToBooking()
         booking.partyFormFilledIn = true
-        console.log(booking)
+        logger.log(booking)
     } catch (err) {
         logError('error handling party form submission', err)
         return

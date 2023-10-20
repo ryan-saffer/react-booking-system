@@ -1,6 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { Acuity } from 'fizz-kidz'
 import { cancelHolidayProgram } from '../../holidayPrograms/core/cancelHolidayProgram'
+import { logger } from 'firebase-functions/v2'
 
 export type AcuityWebhookData = {
     action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | 'order.completed'
@@ -17,8 +18,8 @@ function isHolidayProgram(appointmentTypeId: string) {
 }
 
 export const asWebhook = onRequest(async (req, resp) => {
-    console.log('STARTING WEBHOOK')
-    console.log(req.body)
+    logger.log('STARTING WEBHOOK')
+    logger.log(req.body)
     const data = req.body as AcuityWebhookData
 
     try {
@@ -29,12 +30,12 @@ export const asWebhook = onRequest(async (req, resp) => {
                     resp.status(200).send()
                     return
                 } else {
-                    console.log('ignoring cancelled program with id:', data.appointmentTypeID)
+                    logger.log('ignoring cancelled program with id:', data.appointmentTypeID)
                     resp.status(200).send()
                     return
                 }
             default:
-                console.log(`Ignoring action: ${data.action}`)
+                logger.log(`Ignoring action: ${data.action}`)
                 resp.status(200).send()
                 return
         }

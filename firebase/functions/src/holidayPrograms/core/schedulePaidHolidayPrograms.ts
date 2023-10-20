@@ -6,12 +6,13 @@ import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { logError } from '../../utilities'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
+import { logger } from 'firebase-functions/v2'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
     const query = await (await FirestoreRefs.holidayProgramBooking(paymentIntentId)).get()
 
-    console.log('query exists', query.exists)
-    console.log('query booked', query.get('booked'))
+    logger.log('query exists', query.exists)
+    logger.log('query booked', query.get('booked'))
 
     if (query.exists && !query.get('booked')) {
         const programs = (await DatabaseClient.getHolidayPrograms(paymentIntentId)).docs.map((doc) => ({

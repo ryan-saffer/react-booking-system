@@ -1,3 +1,4 @@
+import { logger } from 'firebase-functions/v2'
 import type { Metadata, Acuity } from 'fizz-kidz'
 
 /**
@@ -26,9 +27,9 @@ export class RefundCalculator {
      * @returns the amount to refund
      */
     calculateRefund() {
-        console.log('discount:', this.metadata.discount)
-        console.log(this.metadata.discount === '')
-        console.log('amount charged', this.amountCharged)
+        logger.log('discount:', this.metadata.discount)
+        logger.log(this.metadata.discount === '')
+        logger.log('amount charged', this.amountCharged)
         // check if there are any discounts.
         if (this.metadata.discount === '' || this.metadata.discount === 'null') {
             // sometimes 'null' is stored into stripe
