@@ -9,6 +9,7 @@ import {
     AdditionsDisplayValuesMap,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
+import { logger } from 'firebase-functions/v2'
 
 export class FormMapper {
     responses: PFQuestion<any>[]
@@ -94,7 +95,7 @@ export class FormMapper {
             if (this.isValidCreation(creation)) {
                 return creation
             } else {
-                console.log(`invalid creation SKU found: ${creation}`)
+                logger.log(`invalid creation SKU found: ${creation}`)
                 throw new Error(`invalid creation SKU found: ${creation}`)
             }
         })
@@ -132,7 +133,7 @@ export class FormMapper {
         if (response) {
             return response.value
         } else {
-            console.log(`IllegalArgumentError: No such key ${question}`)
+            logger.log(`IllegalArgumentError: No such key ${question}`)
             throw new Error(`IllegalArgumentError: No such key ${question}`)
         }
     }
@@ -141,7 +142,7 @@ export class FormMapper {
         if (this.isValidLocation(location)) {
             return location
         } else {
-            console.log(`Form included invalid location: ${location}`)
+            logger.log(`Form included invalid location: ${location}`)
             throw new Error(`Form included invalid location: ${location}`)
         }
     }

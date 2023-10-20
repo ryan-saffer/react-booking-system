@@ -51,7 +51,7 @@ export function withExponentialBackoff<T extends () => any>(fn: T, backoffCodes:
             } catch (err: any) {
                 if (backoffCodes.includes(err.code)) {
                     if (retryCount <= 2) {
-                        console.log(`Error code ${err.code} found. Running again, with retryCount of ${retryCount + 1}`)
+                        logger.log(`Error code ${err.code} found. Running again, with retryCount of ${retryCount + 1}`)
                         setTimeout(runFunction, Math.pow(2, retryCount + 1))
                         retryCount++
                     } else {

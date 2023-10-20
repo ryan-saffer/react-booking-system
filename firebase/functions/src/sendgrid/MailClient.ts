@@ -7,6 +7,7 @@ import { env } from '../init'
 
 import Mustache from 'mustache'
 import { ClientStatus } from '../utilities/types'
+import { logger } from 'firebase-functions/v2'
 
 type Options = {
     from?: {
@@ -51,13 +52,13 @@ export class MailClient {
     }
 
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
-        console.log('generating html...')
+        logger.log('generating html...')
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
-        console.log('generated successfully!')
-        console.log('sending email...')
+        logger.log('generated successfully!')
+        logger.log('sending email...')
         await this.#sgMail.send({ ...emailInfo, html, ...(env === 'prod' && { bcc: 'bookings@fizzkidz.com.au' }) })
-        console.log('email sent successfully!')
+        logger.log('email sent successfully!')
     }
 
     private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
@@ -68,9 +69,9 @@ export class MailClient {
             const mjmlOutput = mjml2html.default(output)
             if (mjmlOutput.errors.length > 0) {
                 mjmlOutput.errors.forEach((error) => {
-                    console.log(error.formattedMessage)
+                    logger.log(error.formattedMessage)
                 })
-                console.log('error converting mjml to html')
+                logger.log('error converting mjml to html')
                 throw new Error('error converting mjml to html')
             } else {
                 return mjmlOutput.html

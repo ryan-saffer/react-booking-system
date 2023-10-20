@@ -4,6 +4,7 @@ import { RefundCalculator } from './RefundCalculator'
 import { logError } from '../../utilities'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 import { StripeClient } from '../../stripe/core/StripeClient'
+import { logger } from 'firebase-functions/v2'
 
 export async function cancelHolidayProgram(data: AcuityWebhookData) {
     try {
@@ -42,7 +43,7 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         if (hoursBetweenDates > 24) {
             const refundCalulcator = new RefundCalculator(metadata, parseInt(amountCharged))
             const refundAmount = refundCalulcator.calculateRefund()
-            console.log('Performing refund of amount:', refundAmount)
+            logger.log('Performing refund of amount:', refundAmount)
 
             // perform the refund
             await stripe.refunds.create({
@@ -51,11 +52,11 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
                 reason: 'requested_by_customer',
             })
         } else {
-            console.log('Less than 24 hours before program, not performing refund.')
+            logger.log('Less than 24 hours before program, not performing refund.')
         }
 
         // update program count to one less, regardless if refunded or not.
-        console.log('program count before update is:', metadata.programCount)
+        logger.log('program count before update is:', metadata.programCount)
         await stripe.paymentIntents.update(paymentIntent.id, {
             metadata: { programCount: parseInt(metadata.programCount) - 1 },
         })

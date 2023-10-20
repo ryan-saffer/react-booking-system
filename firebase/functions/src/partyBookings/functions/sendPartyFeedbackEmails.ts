@@ -4,6 +4,7 @@ import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
 import { logError } from '../../utilities'
 import { MailClient } from '../../sendgrid/MailClient'
+import { logger } from 'firebase-functions/v2'
 
 export const sendFeedbackEmails = onSchedule(
     {
@@ -21,10 +22,10 @@ export const sendFeedbackEmails = onSchedule(
             { zone: 'Australia/Melbourne' }
         ).toJSDate() // today
 
-        console.log('Start date:')
-        console.log(startDate)
-        console.log('End date:')
-        console.log(endDate)
+        logger.log('Start date:')
+        logger.log(startDate)
+        logger.log('End date:')
+        logger.log(endDate)
 
         const bookingsRef = await FirestoreRefs.partyBookings()
 
