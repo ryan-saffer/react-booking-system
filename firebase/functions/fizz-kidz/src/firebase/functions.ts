@@ -1,3 +1,4 @@
+import { PFQuestion } from '../paperform'
 import { EventBooking, ScheduleEventParams } from '../partyBookings/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
@@ -42,6 +43,7 @@ export interface FirebaseFunctions {
 }
 
 export interface PubSubFunctions {
+    handlePartyFormSubmission: PFQuestion<any>[]
     createEmployee: { employeeId: string }
 }
 
