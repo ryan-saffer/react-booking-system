@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
-import DateFnsUtils from '@date-io/date-fns'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import {
     Grid,
     Hidden,
     Typography,
-    makeStyles,
     Drawer,
     CssBaseline,
     AppBar,
@@ -18,9 +16,10 @@ import {
     FormControlLabel,
     Checkbox,
     FormGroup,
-} from '@material-ui/core'
-import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
-import { grey } from '@material-ui/core/colors'
+    Box,
+} from '@mui/material'
+import { ExitToApp as ExitToAppIcon } from '@mui/icons-material'
+import { grey } from '@mui/material/colors'
 
 import { Location } from 'fizz-kidz'
 import * as ROUTES from '../../constants/routes'
@@ -34,10 +33,166 @@ import NewBookingDialog from './NewBookingDialog'
 import { useEvents } from './Events/UseEvents'
 import Events from './Events/Events'
 import { useScopes } from '../Hooks/UseScopes'
+import { StaticDatePicker } from '@mui/x-date-pickers'
+import { DateTime } from 'luxon'
+
+const PREFIX = 'BookingsPage'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    drawer: `${PREFIX}-drawer`,
+    drawerPaper: `${PREFIX}-drawerPaper`,
+    content: `${PREFIX}-content`,
+    appBar: `${PREFIX}-appBar`,
+    appBarToolbar: `${PREFIX}-appBarToolbar`,
+    logo: `${PREFIX}-logo`,
+    topLeft: `${PREFIX}-topLeft`,
+    topCenter: `${PREFIX}-topCenter`,
+    authTopRight: `${PREFIX}-authTopRight`,
+    noAuthTopRight: `${PREFIX}-noAuthTopRight`,
+    logoutIcon: `${PREFIX}-logoutIcon`,
+    toolbar: `${PREFIX}-toolbar`,
+    inlineDatePicker: `${PREFIX}-inlineDatePicker`,
+    location: `${PREFIX}-location`,
+    dialogueAppBar: `${PREFIX}-dialogueAppBar`,
+    divider: `${PREFIX}-divider`,
+    paper: `${PREFIX}-paper`,
+    layout: `${PREFIX}-layout`,
+    dialog: `${PREFIX}-dialog`,
+    linearProgressHidden: `${PREFIX}-linearProgressHidden`,
+}
+
+const Root = styled('div')(({ theme }) => ({
+    [`&.${classes.root}`]: {
+        display: 'flex',
+    },
+
+    [`& .${classes.drawer}`]: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+
+    [`& .${classes.drawerPaper}`]: {
+        width: drawerWidth,
+    },
+
+    [`& .${classes.content}`]: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        // padding: theme.spacing(3),
+    },
+
+    [`& .${classes.appBar}`]: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: 'white',
+    },
+
+    [`& .${classes.appBarToolbar}`]: {
+        display: 'flex',
+        '@media (max-width: 550px)': {
+            justifyContent: 'space-around',
+        },
+    },
+
+    [`& .${classes.logo}`]: {
+        height: 50,
+        cursor: 'pointer',
+    },
+
+    [`& .${classes.topLeft}`]: {
+        width: '33.3%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        '@media (max-width: 550px)': {
+            display: 'none',
+        },
+    },
+
+    [`& .${classes.topCenter}`]: {
+        width: '33.3%',
+        display: 'flex',
+        justifyContent: 'center',
+    },
+
+    [`& .${classes.authTopRight}`]: {
+        width: '33.3%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        '@media (max-width: 550px)': {
+            width: 'auto',
+        },
+    },
+
+    [`& .${classes.noAuthTopRight}`]: {
+        width: '33.3%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        '@media (max-width: 550px)': {
+            display: 'none',
+        },
+    },
+
+    [`& .${classes.logoutIcon}`]: {
+        paddingTop: theme.spacing(1),
+        paddingRight: '0px',
+        paddingBottom: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
+        '@media (max-width: 550px)': {
+            display: 'none',
+        },
+    },
+
+    [`& .${classes.toolbar}`]: theme.mixins.toolbar,
+
+    [`& .${classes.inlineDatePicker}`]: {
+        // marginTop: -20,
+        textAlign: 'center',
+    },
+
+    [`& .${classes.location}`]: {
+        paddingBottom: '100px',
+    },
+
+    [`& .${classes.dialogueAppBar}`]: {
+        position: 'relative',
+    },
+
+    [`& .${classes.divider}`]: {
+        marginBottom: 5,
+    },
+
+    [`& .${classes.paper}`]: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + parseInt(theme.spacing(3).substring(-2)) * 2)]: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+
+    [`& .${classes.layout}`]: {
+        width: 'auto',
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up(800 + parseInt(theme.spacing(2).substring(-2)) * 2)]: {
+            width: 800,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+
+    [`& .${classes.dialog}`]: {
+        backgroundColor: grey[200],
+    },
+
+    [`& .${classes.linearProgressHidden}`]: {
+        visibility: 'hidden',
+    },
+}))
 
 export const BookingsPage = () => {
-    const classes = useStyles()
-
     const firebase = useContext(FirebaseContext) as Firebase
 
     const scopes = useScopes()
@@ -45,7 +200,7 @@ export const BookingsPage = () => {
 
     const [bookings, setBookings] = useState<firebase.firestore.DocumentSnapshot[]>([])
     const [events, setEventsDate] = useEvents()
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(DateTime.now())
     const [loading, setLoading] = useState(true)
     let initialLocations: { [key in Location]?: boolean } = {}
     Object.values(Location).forEach((location) => (initialLocations[location] = true))
@@ -67,26 +222,10 @@ export const BookingsPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const handleDateChange = (date: Date) => {
+    const handleDateChange = (date: DateTime) => {
         setDate(date)
-        fetchBookingsByDate(date)
-        setEventsDate(date)
-    }
-
-    const handleNavigateBefore = () => {
-        const dayBefore = new Date(date)
-        dayBefore.setDate(dayBefore.getDate() - 1)
-        setDate(dayBefore)
-        setEventsDate(dayBefore)
-        fetchBookingsByDate(dayBefore)
-    }
-
-    const handleNavigateNext = () => {
-        const tomorrow = new Date(date)
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        setDate(tomorrow)
-        setEventsDate(tomorrow)
-        fetchBookingsByDate(tomorrow)
+        fetchBookingsByDate(date.toJSDate())
+        setEventsDate(date.toJSDate())
     }
 
     const handleLogout = () => {
@@ -99,7 +238,7 @@ export const BookingsPage = () => {
 
     const handleCloseBooking = (date?: Date) => {
         if (date instanceof Date) {
-            setDate(date)
+            setDate(DateTime.fromJSDate(date))
             fetchBookingsByDate(date)
             setEventsDate(date)
         }
@@ -151,7 +290,7 @@ export const BookingsPage = () => {
     }
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <CssBaseline />
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar className={classes.appBarToolbar}>
@@ -170,18 +309,26 @@ export const BookingsPage = () => {
                     </div>
                     <div className={writePermissions ? classes.authTopRight : classes.noAuthTopRight}>
                         {writePermissions && (
-                            <Button className={classes.newBookingButton} color="inherit" onClick={handleOpenNewBooking}>
+                            <Button
+                                onClick={handleOpenNewBooking}
+                                variant="outlined"
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                    '&:hover': { borderColor: 'white', background: grey[800] },
+                                }}
+                            >
                                 New Booking
                             </Button>
                         )}
-                        <IconButton className={classes.logoutIcon} onClick={handleLogout}>
+                        <IconButton className={classes.logoutIcon} onClick={handleLogout} size="large">
                             <ExitToAppIcon htmlColor={'white'} />
                         </IconButton>
                     </div>
                 </Toolbar>
             </AppBar>
             <NewBookingDialog open={openNewBooking} onBookingCreated={handleCloseBooking} />
-            <Hidden smDown>
+            <Hidden mdDown>
                 <Drawer
                     className={classes.drawer}
                     variant="permanent"
@@ -191,63 +338,27 @@ export const BookingsPage = () => {
                     anchor="left"
                 >
                     <div className={classes.toolbar} />
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="static"
-                            format="dd/MM/yyyy"
-                            margin="normal"
-                            id="date-picker"
-                            label="Date picker"
-                            autoOk={true}
-                            value={date}
-                            onChange={(date) => handleDateChange(new Date(date?.toISOString() ?? ''))}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
+                    <StaticDatePicker
+                        value={date}
+                        slotProps={{ actionBar: { actions: ['today'] } }}
+                        onChange={(date) => handleDateChange(date!)}
+                    />
                 </Drawer>
             </Hidden>
-            <Grid container>
-                <main className={classes.content}>
-                    <Hidden mdUp>
-                        <Grid item xs sm md>
-                            <div className={classes.toolbar} />
-                            <div className={classes.inlineDatePicker}>
-                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                    <KeyboardDatePicker
-                                        disableToolbar
-                                        variant="inline"
-                                        inputVariant="outlined"
-                                        format="dd/MM/yyyy"
-                                        margin="normal"
-                                        id="date-picker"
-                                        label="Date picker"
-                                        autoOk={true}
-                                        value={date}
-                                        onChange={(date) => handleDateChange(new Date(date?.toISOString() ?? ''))}
-                                        KeyboardButtonProps={{
-                                            'aria-label': 'change date',
-                                        }}
-                                    />
-                                </MuiPickersUtilsProvider>
-                            </div>
-                            <div className={classes.divider}>
-                                <Divider />
-                            </div>
-                        </Grid>
-                    </Hidden>
-                    <Hidden smDown>
-                        <div className={classes.toolbar} />
-                    </Hidden>
-                    <DateNav onNavigateBefore={handleNavigateBefore} onNavigateNext={handleNavigateNext} date={date} />
+            <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
+                <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
+                    <DateNav date={date} handleDateChange={handleDateChange} />
                     <LinearProgress className={loading ? '' : classes.linearProgressHidden} color="secondary" />
-                    <FormGroup row>
+                    <FormGroup row sx={{ padding: 1, gap: 1 }}>
                         <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                         <FormControlLabel
+                            sx={{ gap: 1 }}
                             control={
-                                <Checkbox checked={eventsChecked} onChange={() => setEventsChecked((it) => !it)} />
+                                <Checkbox
+                                    checked={eventsChecked}
+                                    onChange={() => setEventsChecked((it) => !it)}
+                                    color="secondary"
+                                />
                             }
                             label="Events"
                         />
@@ -267,125 +378,10 @@ export const BookingsPage = () => {
                         )}
                         {eventsChecked && <Events events={events} onDeleteEvent={handleCloseBooking} />}
                     </Grid>
-                </main>
+                </Box>
             </Grid>
-        </div>
+        </Root>
     )
 }
 
 const drawerWidth = 320
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    content: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
-        padding: theme.spacing(3),
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: 'white',
-    },
-    appBarToolbar: {
-        display: 'flex',
-        '@media (max-width: 550px)': {
-            justifyContent: 'space-around',
-        },
-    },
-    logo: {
-        height: 50,
-        cursor: 'pointer',
-    },
-    topLeft: {
-        width: '33.3%',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        '@media (max-width: 550px)': {
-            display: 'none',
-        },
-    },
-    topCenter: {
-        width: '33.3%',
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    authTopRight: {
-        width: '33.3%',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        '@media (max-width: 550px)': {
-            width: 'auto',
-        },
-    },
-    noAuthTopRight: {
-        width: '33.3%',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        '@media (max-width: 550px)': {
-            display: 'none',
-        },
-    },
-    newBookingButton: {
-        borderColor: 'white',
-        borderStyle: 'solid',
-        borderWidth: 'thin',
-    },
-    logoutIcon: {
-        paddingTop: theme.spacing(1),
-        paddingRight: '0px',
-        paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(2),
-        '@media (max-width: 550px)': {
-            display: 'none',
-        },
-    },
-    toolbar: theme.mixins.toolbar,
-    inlineDatePicker: {
-        marginTop: -20,
-        textAlign: 'center',
-    },
-    location: {
-        paddingBottom: '100px',
-    },
-    dialogueAppBar: {
-        position: 'relative',
-    },
-    divider: {
-        marginBottom: 5,
-    },
-    paper: {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    layout: {
-        width: 'auto',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(2) * 2)]: {
-            width: 800,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-    },
-    dialog: {
-        backgroundColor: grey[200],
-    },
-    linearProgressHidden: {
-        visibility: 'hidden',
-    },
-}))

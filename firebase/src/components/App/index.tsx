@@ -5,6 +5,8 @@ import * as ROUTES from '../../constants/routes'
 import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 
 const theme = createTheme({
     palette: {
@@ -155,7 +157,9 @@ const App = () => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <ConfigProvider theme={antdTheme}>
-                    <RouterProvider router={router} />
+                    <LocalizationProvider dateAdapter={AdapterLuxon}>
+                        <RouterProvider router={router} />
+                    </LocalizationProvider>
                 </ConfigProvider>
             </ThemeProvider>
         </StyledEngineProvider>
