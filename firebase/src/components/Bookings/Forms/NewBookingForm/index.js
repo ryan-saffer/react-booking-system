@@ -19,7 +19,6 @@ import { green } from '@material-ui/core/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { FormBookingFields, Location } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
-import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 
@@ -485,4 +484,4 @@ const NewBookingForm = (props) => {
     )
 }
 
-export default compose(WithErrorDialog)(NewBookingForm)
+export default WithErrorDialog(NewBookingForm)

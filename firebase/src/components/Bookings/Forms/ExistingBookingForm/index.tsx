@@ -1,6 +1,5 @@
 import React, { useState, useContext, useMemo, ChangeEvent, useCallback } from 'react'
 import 'typeface-roboto'
-import { compose } from 'recompose'
 import DateFnsUtils from '@date-io/date-fns'
 import {
     makeStyles,
@@ -767,4 +766,4 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default compose<ExistingBookingFormProps, {}>(WithErrorDialog, WithConfirmationDialog)(ExistingBookingForm)
+export default WithConfirmationDialog(WithErrorDialog(ExistingBookingForm))
