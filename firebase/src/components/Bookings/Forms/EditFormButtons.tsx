@@ -1,12 +1,64 @@
 import React from 'react'
-import { Button, CircularProgress, Fab, makeStyles } from '@material-ui/core'
-import { Role } from '../../../constants/roles'
-import SaveIcon from '@material-ui/icons/Save'
-import CheckIcon from '@material-ui/icons/Check'
-import CreateIcon from '@material-ui/icons/Create'
-import DeleteIcon from '@material-ui/icons/Delete'
-import { green, red } from '@material-ui/core/colors'
+import { styled } from '@mui/material/styles'
+import { Button, CircularProgress, Fab } from '@mui/material'
+import SaveIcon from '@mui/icons-material/Save'
+import CheckIcon from '@mui/icons-material/Check'
+import CreateIcon from '@mui/icons-material/Create'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { green, red } from '@mui/material/colors'
 import { useScopes } from '../../Hooks/UseScopes'
+
+const PREFIX = 'EditFormButtons'
+
+const classes = {
+    saveButtonDiv: `${PREFIX}-saveButtonDiv`,
+    saveButton: `${PREFIX}-saveButton`,
+    deleteButton: `${PREFIX}-deleteButton`,
+    progress: `${PREFIX}-progress`,
+    success: `${PREFIX}-success`,
+    editButton: `${PREFIX}-editButton`,
+    cancelButton: `${PREFIX}-cancelButton`,
+}
+
+const Root = styled('div')(({ theme }) => ({
+    [`&.${classes.saveButtonDiv}`]: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+
+    [`& .${classes.saveButton}`]: {
+        marginTop: theme.spacing(3),
+    },
+
+    [`& .${classes.deleteButton}`]: {
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        '&:hover': {
+            backgroundColor: red[800],
+        },
+    },
+
+    [`& .${classes.progress}`]: {
+        color: green[500],
+        position: 'absolute',
+        marginTop: '18px',
+        marginRight: '-6px',
+    },
+
+    [`& .${classes.success}`]: {
+        marginTop: theme.spacing(3),
+        backgroundColor: green[500],
+    },
+
+    [`& .${classes.editButton}`]: {
+        marginTop: theme.spacing(3),
+    },
+
+    [`& .${classes.cancelButton}`]: {
+        marginTop: theme.spacing(3),
+        marginRight: theme.spacing(3),
+    },
+}))
 
 type Props = {
     loading: boolean
@@ -27,12 +79,11 @@ const EditFormButtons: React.FC<Props> = ({
     onSave,
     onDelete,
 }) => {
-    const classes = useStyles()
     const canEdit = useScopes().CORE === 'write'
 
     if (canEdit) {
         return (
-            <div className={classes.saveButtonDiv}>
+            <Root className={classes.saveButtonDiv}>
                 {!loading && !editing && (
                     <Fab className={classes.deleteButton} aria-label="delete" color="primary" onClick={onDelete}>
                         <DeleteIcon />
@@ -68,49 +119,15 @@ const EditFormButtons: React.FC<Props> = ({
                         disabled={loading}
                         onClick={onStartEditing}
                     >
-                        {<CreateIcon />}
+                        <CreateIcon />
                     </Fab>
                 )}
                 {loading && <CircularProgress size={68} className={classes.progress} />}
-            </div>
+            </Root>
         )
     } else {
         return null
     }
 }
-
-const useStyles = makeStyles((theme) => ({
-    saveButtonDiv: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    saveButton: {
-        marginTop: theme.spacing(3),
-    },
-    deleteButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        '&:hover': {
-            backgroundColor: red[800],
-        },
-    },
-    progress: {
-        color: green[500],
-        position: 'absolute',
-        marginTop: '18px',
-        marginRight: '-6px',
-    },
-    success: {
-        marginTop: theme.spacing(3),
-        backgroundColor: green[500],
-    },
-    editButton: {
-        marginTop: theme.spacing(3),
-    },
-    cancelButton: {
-        marginTop: theme.spacing(3),
-        marginRight: theme.spacing(3),
-    },
-}))
 
 export default EditFormButtons

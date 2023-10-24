@@ -1,27 +1,33 @@
 import React, { useMemo } from 'react'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
+import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import BookingPanel from './BookingPanel'
 import * as Utilities from '../../utilities/stringUtilities'
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'LocationBookings'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    heading: `${PREFIX}-heading`,
+}
+
+const Root = styled('div')(({ theme }) => ({
+    [`&.${classes.root}`]: {
         paddingTop: theme.spacing(2),
     },
-    heading: {
+
+    [`& .${classes.heading}`]: {
         paddingBottom: theme.spacing(1),
     },
 }))
 
 const LocationBookings = (props) => {
-    const classes = useStyles()
-
     const { bookings, location } = props
 
     const filteredBookings = useMemo(() => bookings.filter((x) => x.data().location === location), [bookings, location])
 
     return (
-        <div className={classes.root}>
+        <Root className={classes.root}>
             <Typography className={classes.heading} variant="h6">
                 {Utilities.capitalise(location)}
             </Typography>
@@ -37,7 +43,7 @@ const LocationBookings = (props) => {
             ) : (
                 <Typography variant="overline">No parties</Typography>
             )}
-        </div>
+        </Root>
     )
 }
 

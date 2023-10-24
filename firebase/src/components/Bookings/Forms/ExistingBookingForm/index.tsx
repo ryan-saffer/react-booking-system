@@ -1,8 +1,7 @@
 import React, { useState, useContext, useMemo, ChangeEvent, useCallback } from 'react'
+import { styled } from '@mui/material/styles'
 import 'typeface-roboto'
-import DateFnsUtils from '@date-io/date-fns'
 import {
-    makeStyles,
     Grid,
     Typography,
     TextField,
@@ -13,8 +12,7 @@ import {
     Select,
     Checkbox,
     FormControl,
-} from '@material-ui/core'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+} from '@mui/material'
 
 import {
     Additions,
@@ -38,6 +36,23 @@ import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
 import EditFormButtons from '../EditFormButtons'
 import { useScopes } from '../../../Hooks/UseScopes'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { DateTime } from 'luxon'
+
+const PREFIX = 'index'
+
+const classes = {
+    disabled: `${PREFIX}-disabled`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.disabled}`]: {
+        '& .Mui-disabled': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
+    },
+}))
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string
@@ -46,8 +61,6 @@ interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogP
 }
 
 const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
-    const classes = useStyles()
-
     const { bookingId, booking } = props
 
     const firebase = useContext(FirebaseContext) as Firebase
@@ -92,14 +105,18 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         setEditing(false)
     }
 
-    const handleFormChange = (e: ChangeEvent<any>) => {
+    const handleFormChange = (e: any) => {
         if (Utilities.isObjKey(e.target.name, formValues)) {
             updateFormValues(e.target.name, e.target.value)
         }
     }
 
-    const handleFormDateChange = (date: Date | null) => {
-        updateFormValues('date', date)
+    const handleFormDateChange = (date: DateTime) => {
+        updateFormValues('date', date.toJSDate())
+    }
+
+    const handleFormTimeChange = (date: DateTime) => {
+        updateFormValues('time', date.toJSDate())
     }
 
     const handleFormCheckboxChange = (e: ChangeEvent<any>) => {
@@ -227,7 +244,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
     }
 
     return (
-        <>
+        <Root>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant="h6">Parent details</Typography>
@@ -364,34 +381,22 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 {displayDateTimeLocation && (
                     <>
                         <Grid item xs={6} sm={3}>
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <KeyboardDatePicker
-                                    fullWidth
-                                    disableToolbar
-                                    variant="inline"
-                                    format="dd/MM/yyyy"
-                                    id={createUniqueId(FormBookingFields.date, bookingId)}
-                                    label="Date of party"
-                                    autoOk={true}
-                                    size="small"
-                                    disabled={!editing}
-                                    // classes={{ root: classes.disabled }}
-                                    value={formValues[FormBookingFields.date].value}
-                                    error={formValues[FormBookingFields.date].error}
-                                    helperText={
-                                        formValues[FormBookingFields.date].error
-                                            ? formValues[FormBookingFields.date].errorText
-                                            : ''
-                                    }
-                                    onChange={handleFormDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                />
-                            </MuiPickersUtilsProvider>
+                            <DatePicker
+                                value={DateTime.fromJSDate(formValues[FormBookingFields.date].value)}
+                                slotProps={{ textField: { sx: { input: { height: 7 } }, fullWidth: true } }}
+                                disabled={!editing}
+                                onChange={(date) => handleFormDateChange(date!)}
+                                format="dd/LL/yy"
+                            />
                         </Grid>
                         <Grid item xs={6} sm={3}>
-                            <TextField
+                            <TimePicker
+                                value={DateTime.fromJSDate(formValues[FormBookingFields.time].value)}
+                                sx={{ width: 2 }}
+                                slotProps={{ textField: { sx: { input: { height: 7 } }, fullWidth: true } }}
+                                onChange={(date) => handleFormTimeChange(date!)}
+                            />
+                            {/* <TextField
                                 fullWidth
                                 id={createUniqueId(FormBookingFields.time, bookingId)}
                                 name={FormBookingFields.time}
@@ -414,7 +419,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                 inputProps={{
                                     step: 1800, // 5 min
                                 }}
-                            />
+                            /> */}
                         </Grid>
                         <Grid item xs={6} sm={3}>
                             <FormControl fullWidth size="small" classes={{ root: classes.disabled }}>
@@ -750,20 +755,12 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 }}
                 onSave={handleSubmit}
             />
-        </>
+        </Root>
     )
 }
 
 function createUniqueId(field: string, id: string) {
     return `${field}-${id}`
 }
-
-const useStyles = makeStyles((theme) => ({
-    disabled: {
-        '& .Mui-disabled': {
-            color: 'rgba(0, 0, 0, 0.87)',
-        },
-    },
-}))
 
 export default WithConfirmationDialog(WithErrorDialog(ExistingBookingForm))
