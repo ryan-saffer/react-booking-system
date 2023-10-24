@@ -1,30 +1,46 @@
 import React, { useContext } from 'react'
+import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 
-import { CssBaseline, AppBar, Toolbar, Typography, makeStyles, Paper, Button } from '@material-ui/core'
-import { grey, red } from '@material-ui/core/colors'
-import Container from '@material-ui/core/Container'
-import LaunchIcon from '@material-ui/icons/Launch'
+import { CssBaseline, AppBar, Toolbar, Typography, Paper, Button, Container } from '@mui/material'
+import { grey, red } from '@mui/material/colors'
+import { Launch as LaunchIcon } from '@mui/icons-material'
 
 import * as ROUTES from '../../constants/routes'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { FirebaseContext } from '../Firebase'
 import { useScopes } from '../Hooks/UseScopes'
 
-const useStyles = makeStyles((theme) => ({
-    appBar: {
+const PREFIX = 'Navigation'
+
+const classes = {
+    appBar: `${PREFIX}-appBar`,
+    toolbar: `${PREFIX}-toolbar`,
+    main: `${PREFIX}-main`,
+    paper: `${PREFIX}-paper`,
+    logo: `${PREFIX}-logo`,
+    heading: `${PREFIX}-heading`,
+    signOutButton: `${PREFIX}-signOutButton`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,
     },
-    toolbar: {
+
+    [`& .${classes.toolbar}`]: {
         justifyContent: 'center',
     },
-    main: {
+
+    [`& .${classes.main}`]: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         margin: theme.spacing(3),
     },
-    paper: {
+
+    [`& .${classes.paper}`]: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
         padding: theme.spacing(2),
@@ -35,25 +51,27 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
     },
-    logo: {
+
+    [`& .${classes.logo}`]: {
         height: 50,
     },
-    heading: {
+
+    [`& .${classes.heading}`]: {
         marginTop: 12,
     },
-    signOutButton: {
+
+    [`& .${classes.signOutButton}`]: {
         width: '100%',
         marginTop: theme.spacing(4),
         backgroundColor: red[400],
         '&:hover': {
             backgroundColor: red[500],
         },
+        color: 'black',
     },
 }))
 
 export const Navigation = () => {
-    const classes = useStyles()
-
     const navigate = useNavigate()
 
     const scopes = useScopes()
@@ -69,7 +87,7 @@ export const Navigation = () => {
     }
 
     return (
-        <>
+        <Root>
             <CssBaseline />
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar className={classes.toolbar}>
@@ -150,6 +168,6 @@ export const Navigation = () => {
                     </Button>
                 </Container>
             </div>
-        </>
+        </Root>
     )
 }
