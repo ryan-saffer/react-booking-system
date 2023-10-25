@@ -1,22 +1,50 @@
-import {
-    AppBar,
-    CssBaseline,
-    Dialog,
-    IconButton,
-    makeStyles,
-    Paper,
-    Slide,
-    Tab,
-    Tabs,
-    Toolbar,
-    Typography,
-} from '@material-ui/core'
-import { grey } from '@material-ui/core/colors'
-import { Close as CloseIcon } from '@material-ui/icons'
-import { TransitionProps } from '@material-ui/core/transitions'
+import { AppBar, CssBaseline, Dialog, IconButton, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { grey } from '@mui/material/colors'
+import { Close as CloseIcon } from '@mui/icons-material'
+import { TransitionProps } from '@mui/material/transitions'
 import React, { ReactElement, Ref, useState } from 'react'
 import NewBookingForm from './Forms/NewBookingForm'
 import NewEventForm from './Forms/EventForm/NewEventForm'
+
+const PREFIX = 'NewBookingDialog'
+
+const classes = {
+    layout: `${PREFIX}-layout`,
+    dialog: `${PREFIX}-dialog`,
+    appBar: `${PREFIX}-appBar`,
+    paper: `${PREFIX}-paper`,
+}
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    [`& .${classes.layout}`]: {
+        width: 'auto',
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up(800 + parseInt(theme.spacing(2).substring(-2)) * 2)]: {
+            width: 800,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+    },
+
+    [`& .MuiDialog-paper`]: {
+        backgroundColor: grey[200],
+    },
+
+    [`& .${classes.appBar}`]: {
+        position: 'relative',
+    },
+
+    [`& .${classes.paper}`]: {
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + parseInt(theme.spacing(3).substring(-2)) * 2)]: {
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+}))
 
 type Props = {
     open: boolean
@@ -24,14 +52,15 @@ type Props = {
 }
 
 const Transition = React.forwardRef(
-    (props: TransitionProps & { children?: ReactElement<any, any> }, ref: Ref<unknown>) => (
-        <Slide direction="up" ref={ref} {...props} />
-    )
+    (
+        props: TransitionProps & {
+            children: ReactElement<any, any>
+        },
+        ref: Ref<unknown>
+    ) => <Slide direction="up" ref={ref} {...props} />
 )
 
 const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
-    const classes = useStyles()
-
     // used to ensure form mounts on each open. See https://github.com/reactjs/react-modal/issues/106#issuecomment-546658885
     const [key, setKey] = useState(0)
     const [value, setValue] = useState(0)
@@ -42,18 +71,24 @@ const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
     }
 
     return (
-        <Dialog
+        <StyledDialog
             fullScreen
             open={open}
             onClose={() => handleBookingCreated()}
             TransitionComponent={Transition}
             disableAutoFocus={true}
-            PaperProps={{ classes: { root: classes.dialog } }}
+            slotProps={{}}
         >
             <CssBaseline />
             <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" onClick={() => handleBookingCreated()} aria-label="close">
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={() => handleBookingCreated()}
+                        aria-label="close"
+                        size="large"
+                    >
                         <CloseIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit">
@@ -71,35 +106,8 @@ const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
                     {value === 1 && <NewEventForm onSuccess={handleBookingCreated} />}
                 </Paper>
             </main>
-        </Dialog>
+        </StyledDialog>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    layout: {
-        width: 'auto',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(2) * 2)]: {
-            width: 800,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-    },
-    dialog: {
-        backgroundColor: grey[200],
-    },
-    appBar: {
-        position: 'relative',
-    },
-    paper: {
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-}))
 
 export default NewBookingDialog
