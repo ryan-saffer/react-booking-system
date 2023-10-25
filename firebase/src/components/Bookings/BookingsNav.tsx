@@ -31,7 +31,6 @@ const DateNav = ({ date, handleDateChange }: { date: DateTime; handleDateChange:
             </Button>
             <DatePicker
                 value={date}
-                label="Date"
                 slotProps={{
                     textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
                     actionBar: { actions: ['today'] },

@@ -396,40 +396,15 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                 slotProps={{ textField: { sx: { input: { height: 7 } }, fullWidth: true } }}
                                 onChange={(date) => handleFormTimeChange(date!)}
                             />
-                            {/* <TextField
-                                fullWidth
-                                id={createUniqueId(FormBookingFields.time, bookingId)}
-                                name={FormBookingFields.time}
-                                label="Party time"
-                                type="time"
-                                size="small"
-                                disabled={!editing}
-                                classes={{ root: classes.disabled }}
-                                value={formValues[FormBookingFields.time].value}
-                                error={formValues[FormBookingFields.time].error}
-                                helperText={
-                                    formValues[FormBookingFields.time].error
-                                        ? formValues[FormBookingFields.time].errorText
-                                        : ''
-                                }
-                                onChange={handleFormChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                inputProps={{
-                                    step: 1800, // 5 min
-                                }}
-                            /> */}
                         </Grid>
                         <Grid item xs={6} sm={3}>
                             <FormControl fullWidth size="small" classes={{ root: classes.disabled }}>
                                 <InputLabel>Location</InputLabel>
                                 <Select
-                                    inputProps={{
-                                        name: FormBookingFields.location,
-                                        id: FormBookingFields.location,
-                                        value: formValues[FormBookingFields.location].value || '',
-                                    }}
+                                    name={FormBookingFields.location}
+                                    id={FormBookingFields.location}
+                                    label="location"
+                                    value={formValues[FormBookingFields.location].value || ''}
                                     disabled={true}
                                     error={formValues[FormBookingFields.location].error}
                                     onChange={handleFormChange}
@@ -451,11 +426,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                             <FormControl fullWidth size="small" classes={{ root: classes.disabled }}>
                                 <InputLabel>Party length</InputLabel>
                                 <Select
-                                    inputProps={{
-                                        name: FormBookingFields.partyLength,
-                                        id: FormBookingFields.partyLength,
-                                        value: formValues[FormBookingFields.partyLength].value || '',
-                                    }}
+                                    name={FormBookingFields.partyLength}
+                                    id={FormBookingFields.partyLength}
+                                    label="party length"
+                                    value={formValues[FormBookingFields.partyLength].value || ''}
                                     disabled={!editing}
                                     error={formValues[FormBookingFields.partyLength].error}
                                     onChange={handleFormChange}
@@ -561,11 +535,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         >
                             <InputLabel>First Creation</InputLabel>
                             <Select
-                                inputProps={{
-                                    name: FormBookingFields.creation1,
-                                    id: createUniqueId(FormBookingFields.creation1, bookingId),
-                                    value: formValues[FormBookingFields.creation1].value || '',
-                                }}
+                                name={FormBookingFields.creation1}
+                                id={createUniqueId(FormBookingFields.creation1, bookingId)}
+                                label="first creation"
+                                value={formValues[FormBookingFields.creation1].value || ''}
                                 disabled={!editing}
                                 error={formValues[FormBookingFields.creation1].error}
                                 onChange={handleFormChange}
@@ -585,11 +558,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         >
                             <InputLabel>Second Creation</InputLabel>
                             <Select
-                                inputProps={{
-                                    name: FormBookingFields.creation2,
-                                    id: createUniqueId(FormBookingFields.creation2, bookingId),
-                                    value: formValues[FormBookingFields.creation2].value || '',
-                                }}
+                                name={FormBookingFields.creation2}
+                                id={createUniqueId(FormBookingFields.creation2, bookingId)}
+                                label="Second Creation"
+                                value={formValues[FormBookingFields.creation2].value || ''}
                                 disabled={!editing}
                                 error={formValues[FormBookingFields.creation2].error}
                                 onChange={handleFormChange}
@@ -609,11 +581,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         >
                             <InputLabel>Third Creation</InputLabel>
                             <Select
-                                inputProps={{
-                                    name: FormBookingFields.creation3,
-                                    id: createUniqueId(FormBookingFields.creation3, bookingId),
-                                    value: formValues[FormBookingFields.creation3].value || '',
-                                }}
+                                name={FormBookingFields.creation3}
+                                id={createUniqueId(FormBookingFields.creation3, bookingId)}
+                                label="third creation"
+                                value={formValues[FormBookingFields.creation3].value || ''}
                                 disabled={!editing || booking.partyLength !== '2'}
                                 error={formValues[FormBookingFields.creation3].error}
                                 onChange={handleFormChange}
@@ -678,11 +649,10 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                             >
                                 <InputLabel>Cake flavour</InputLabel>
                                 <Select
-                                    inputProps={{
-                                        name: FormBookingFields.cakeFlavour,
-                                        id: FormBookingFields.cakeFlavour,
-                                        value: formValues[FormBookingFields.cakeFlavour].value || '',
-                                    }}
+                                    name={FormBookingFields.cakeFlavour}
+                                    id={FormBookingFields.cakeFlavour}
+                                    label="cake flavour"
+                                    value={formValues[FormBookingFields.cakeFlavour].value || ''}
                                     disabled={!editing}
                                     error={formValues[FormBookingFields.cakeFlavour].error}
                                     onChange={(e) => handleFormChange(e)}
