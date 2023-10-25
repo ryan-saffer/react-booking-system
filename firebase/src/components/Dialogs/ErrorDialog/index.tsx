@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { makeStyles } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+const PREFIX = 'WithErrorDialog'
 
-const useStyles = makeStyles((theme) => ({
-    dialogContent: {
+const classes = {
+    dialogContent: `${PREFIX}-dialogContent`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.dialogContent}`]: {
         whiteSpace: 'pre-wrap',
     },
 }))
@@ -25,8 +31,6 @@ const WithErrorDialog = <P extends ErrorDialogProps>(
     Component: React.ComponentType<P>
 ): React.FC<Omit<P, keyof ErrorDialogProps>> => {
     const ComponentWithErrorDialog = (props: Omit<P, keyof ErrorDialogProps>) => {
-        const classes = useStyles()
-
         var [open, setOpen] = useState(false)
         var [errorMessage, setErrorMessage] = useState('')
 
@@ -40,7 +44,7 @@ const WithErrorDialog = <P extends ErrorDialogProps>(
         }
 
         return (
-            <>
+            <Root>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>{'Something went wrong'}</DialogTitle>
                     <DialogContent>
@@ -53,7 +57,7 @@ const WithErrorDialog = <P extends ErrorDialogProps>(
                     </DialogActions>
                 </Dialog>
                 <Component {...(props as P)} displayError={displayError} />
-            </>
+            </Root>
         )
     }
 
