@@ -1,4 +1,3 @@
-import { es } from 'date-fns/locale'
 import { Acuity } from 'fizz-kidz'
 
 export const PROGRAM_PRICE = 45
