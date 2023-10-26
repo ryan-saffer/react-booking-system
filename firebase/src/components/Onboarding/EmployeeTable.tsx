@@ -1,11 +1,28 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { Button, Descriptions, Table, Tag } from 'antd'
 import useFirebase from '../Hooks/context/UseFirebase'
 import { Employee } from 'fizz-kidz'
 import { ColumnsType } from 'antd/es/table'
-import { makeStyles } from '@material-ui/core'
 import VerificationButton from './VerificationButton'
 import Loader from '../ScienceClub/shared/Loader'
+
+const PREFIX = 'EmployeeTable'
+
+const classes = {
+    details: `${PREFIX}-details`,
+}
+
+const StyledDescriptions = styled(Descriptions)({
+    [`&.${classes.details}`]: {
+        '& th': {
+            width: '25%',
+            '& span': {
+                fontWeight: 700,
+            },
+        },
+    },
+})
 
 const useEmployees = () => {
     const firebase = useFirebase()
@@ -127,12 +144,10 @@ const EmployeeTable = () => {
 }
 
 const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
-    const classes = useStyles()
-
     const hasFilledInForm = employee.status !== 'form-sent'
 
     return (
-        <Descriptions bordered size="small" column={1} className={classes.details}>
+        <StyledDescriptions bordered size="small" column={1} className={classes.details}>
             <Descriptions.Item label="First Name">{employee.firstName}</Descriptions.Item>
             <Descriptions.Item label="Last Name">{employee.lastName}</Descriptions.Item>
             <Descriptions.Item label="Email">{employee.email}</Descriptions.Item>
@@ -150,19 +165,8 @@ const EmployeeDetails: React.FC<{ employee: Employee }> = ({ employee }) => {
                     View Contract
                 </Button>
             </Descriptions.Item>
-        </Descriptions>
+        </StyledDescriptions>
     )
 }
-
-const useStyles = makeStyles({
-    details: {
-        '& th': {
-            width: '25%',
-            '& span': {
-                fontWeight: 700,
-            },
-        },
-    },
-})
 
 export default EmployeeTable
