@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 import { Button, Layout, Typography } from 'antd'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import React, { useState } from 'react'
@@ -8,17 +8,45 @@ import EmployeeTable from './EmployeeTable'
 import { PlusOutlined } from '@ant-design/icons'
 import NewEmployeeForm from './NewEmployeeForm'
 
+const PREFIX = 'Onboarding'
+
+const classes = {
+    header: `${PREFIX}-header`,
+    flexCol: `${PREFIX}-flexCol`,
+    list: `${PREFIX}-list`,
+    'gap-16': `${PREFIX}-gap-16`,
+}
+
+const StyledLayout = styled(Layout)({
+    [`& .${classes.header}`]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    [`& .${classes.flexCol}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    [`& .${classes['gap-16']}`]: {
+        gap: 16,
+    },
+    [`& .${classes.list}`]: {
+        '& li': {
+            marginBottom: 8,
+        },
+    },
+})
+
 const { Header, Content } = Layout
 const { Title } = Typography
 
 export const Onboarding = () => {
-    const classes = useStyles()
     const navigate = useNavigate()
 
     const [showNewEmployeeModal, setShowNewEmployeeModal] = useState(false)
 
     return (
-        <Layout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
             <Header className={classes.header}>
                 <img
                     style={{ height: 50, cursor: 'pointer' }}
@@ -44,20 +72,6 @@ export const Onboarding = () => {
                 <EmployeeTable />
                 <NewEmployeeForm open={showNewEmployeeModal} onCancel={() => setShowNewEmployeeModal(false)} />
             </Content>
-        </Layout>
+        </StyledLayout>
     )
 }
-
-const useStyles = makeStyles({
-    header: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    flexCol: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    'gap-16': { gap: 16 },
-    list: {
-        '& li': {
-            marginBottom: 8,
-        },
-    },
-})
