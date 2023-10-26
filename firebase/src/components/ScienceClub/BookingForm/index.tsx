@@ -4,7 +4,7 @@ import { callAcuityClient, callFirebaseFunction } from '../../../utilities/fireb
 import Root from '../../Shared/Root'
 import { LeftOutlined } from '@ant-design/icons'
 import { Alert, Button, Result, Typography } from 'antd'
-import { Grow, makeStyles } from '@material-ui/core'
+import { Grow } from '@mui/material'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
 import Loader from '../shared/Loader'
@@ -15,8 +15,6 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 
 export const BookingForm = () => {
-    const classes = useStyles()
-
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -82,7 +80,7 @@ export const BookingForm = () => {
 
     const renderClassSelection = () => {
         if (loading) {
-            return <Loader className={classes.loader} />
+            return <Loader style={{ marginTop: 24 }} />
         }
         if (selectedClass && logoMap) {
             return (
@@ -126,7 +124,7 @@ export const BookingForm = () => {
 
     return (
         <Root color="green" width="centered">
-            <Typography.Title level={4} className={classes.title}>
+            <Typography.Title level={4} style={{ margin: 8, textAlign: 'center' }}>
                 Science Program Enrolment Form
             </Typography.Title>
             {(() => {
@@ -151,7 +149,7 @@ export const BookingForm = () => {
                 }
 
                 return (
-                    <div className={classes.root}>
+                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                         {renderClassSelection()}
                         {selectedClass && <FormSwitcher appointmentType={selectedClass} onSubmit={handleSubmit} />}
                     </div>
@@ -160,22 +158,3 @@ export const BookingForm = () => {
         </Root>
     )
 }
-
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-    },
-    title: {
-        margin: 8,
-        textAlign: 'center',
-    },
-    subtitle: {
-        textAlign: 'center',
-        margin: 0,
-    },
-    loader: {
-        marginTop: 24,
-    },
-})

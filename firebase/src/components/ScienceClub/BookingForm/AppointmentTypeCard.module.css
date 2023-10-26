@@ -1,0 +1,45 @@
+.card {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    width: '100%';
+}
+
+.card:hover {
+    background: whitesmoke;
+}
+
+.heading {
+    margin-bottom: 16px;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+}
+
+.description > p {
+    margin-bottom: 0;
+}
+
+.detailsContainer {
+    display: flex;
+
+    @media (min-width: 600px) {
+        justify-content: space-between;
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+}
+
+.logo {
+    height: fit-content;
+    width: fit-content;
+    max-width: 125px;
+
+    @media (max-width: 600px) {
+        margin-top: 12px;
+    }
+}

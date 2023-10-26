@@ -1,19 +1,17 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core'
 import { List, Result, Row, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import Loader from '../../shared/Loader'
 import AppointmentRow from './AppointmentRow'
+import styles from './ClassManager.module.css'
 
 type Props = {
     appointment: ScienceEnrolment
 }
 
 const ClassManager: React.FC<Props> = ({ appointment }) => {
-    const classes = useStyles()
-
     const appointments = useAcuityClient('getAppointments', { ids: appointment.appointments })
 
     const { ErrorModal, showError } = useErrorDialog()
@@ -24,20 +22,20 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
         case 'loaded':
             return (
                 <>
-                    <Row className={classes.row}>
-                        <Typography.Text className={classes.heading}>
+                    <Row className={styles.row}>
+                        <Typography.Text className={styles.heading}>
                             If {appointment.child.firstName} cannot attend on a given week,{' '}
                             <strong>let us know by toggling off that week.</strong> Otherwise, we will search for{' '}
                             {appointment.child.firstName} far and wide!
                         </Typography.Text>
-                        <Typography.Text style={{ marginTop: 12 }} className={classes.heading} italic>
+                        <Typography.Text style={{ marginTop: 12 }} className={styles.heading} italic>
                             ℹ️ Please note, we do not offer credits or refunds for missed weeks.
                         </Typography.Text>
                         <List
-                            className={classes.list}
+                            className={styles.list}
                             size="large"
                             header={
-                                <div className={classes.listHeader}>
+                                <div className={styles.listHeader}>
                                     <Typography.Text strong>Date</Typography.Text>
                                     <Typography.Text strong>Attending</Typography.Text>
                                 </div>
@@ -63,23 +61,5 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
             )
     }
 }
-
-const useStyles = makeStyles({
-    row: {
-        justifyContent: 'center',
-    },
-    heading: {
-        width: 1000,
-    },
-    list: {
-        marginTop: 12,
-        boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
-        width: 1000,
-    },
-    listHeader: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-})
 
 export default ClassManager

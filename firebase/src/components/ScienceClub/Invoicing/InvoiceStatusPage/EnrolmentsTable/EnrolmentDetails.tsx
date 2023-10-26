@@ -1,9 +1,24 @@
 import React from 'react'
+import { styled } from '@mui/material/styles';
 import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions } from 'antd'
-import { makeStyles } from '@material-ui/core'
 import { getBaseUrl } from '../../../../../utilities/firebase/env'
 import * as ROUTES from '../../../../../constants/routes'
+
+const PREFIX = 'EnrolmentDetails';
+
+const classes = {
+    description: `${PREFIX}-description`
+};
+
+const StyledDescriptions = styled(Descriptions)({
+    [`&.${classes.description}`]: {
+        '& th': {
+            backgroundColor: '#f7f7f7f7 !important',
+            fontWeight: 500,
+        },
+    },
+});
 
 type Props = {
     enrolment: ScienceEnrolment
@@ -11,11 +26,11 @@ type Props = {
 }
 
 const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
-    const classes = useStyles()
+
     const status = invoiceStatusMap[enrolment.id]
 
     return (
-        <Descriptions className={classes.description} bordered size="small" column={1}>
+        <StyledDescriptions className={classes.description} bordered size="small" column={1}>
             <Descriptions.Item label="Parent Phone">{enrolment.parent.phone}</Descriptions.Item>
             <Descriptions.Item label="Parent Email">{enrolment.parent.email}</Descriptions.Item>
             <Descriptions.Item label="Child Name">
@@ -39,17 +54,8 @@ const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
                     </Button>
                 </Descriptions.Item>
             )}
-        </Descriptions>
-    )
+        </StyledDescriptions>
+    );
 }
-
-const useStyles = makeStyles({
-    description: {
-        '& th': {
-            backgroundColor: '#f7f7f7f7 !important',
-            fontWeight: 500,
-        },
-    },
-})
 
 export default EnrolmentDetails

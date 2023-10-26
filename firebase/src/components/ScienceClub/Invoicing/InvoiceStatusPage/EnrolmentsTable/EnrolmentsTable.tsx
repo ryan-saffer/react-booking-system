@@ -1,15 +1,35 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
-import { Button, Dropdown, Menu, MenuProps, Space, Table, Tag, Typography } from 'antd'
+import { Button, Dropdown, MenuProps, Space, Table, Tag, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { CloseCircleOutlined, CheckCircleOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons'
 import InvoiceStatusCell from './InvoiceStatusCell'
 import { callFirebaseFunction } from '../../../../../utilities/firebase/functions'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
 import EnrolmentDetails from './EnrolmentDetails'
-import { makeStyles } from '@material-ui/core'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
 import useErrorDialog from '../../../../Hooks/UseErrorDialog'
+import styles from './EnrolmentsTable.module.css'
+
+const PREFIX = 'EnrolmentsTable'
+
+const classes = {
+    actionBtn: `${PREFIX}-actionBtn`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.actionBtn}`]: {
+        position: 'absolute',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        top: 0,
+        right: 32,
+        height: 61,
+    },
+})
 
 type Props = {
     enrolments: ScienceEnrolment[]
@@ -53,7 +73,6 @@ function getAppointmentWeekRange(enrolments: ScienceEnrolment[]) {
 }
 
 const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
-    const classes = useStyles()
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(true)
@@ -340,22 +359,23 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
     const hasSelected = selectedRowKeys.length > 0
 
     return (
-        <>
+        <Root>
             <Table
+                className={styles.table}
                 bordered
                 pagination={false}
                 size="small"
-                title={() => (
+                caption={
                     <>
-                        <Typography.Title level={5} className={classes.classTitle}>
+                        <Typography.Title level={5} style={{ textAlign: 'center', margin: 9 }}>
                             {calendar}
                         </Typography.Title>
                         <Dropdown
                             placement="bottomRight"
-                            overlay={<Menu items={menu} onClick={handleActionButtonClick} />}
+                            menu={{ items: menu, onClick: handleActionButtonClick }}
                             trigger={['click']}
                         >
-                            <div className={classes.actionBtn}>
+                            <div className={styles.actionButton}>
                                 <Button loading={loading} disabled={!hasSelected}>
                                     <Space>
                                         Action
@@ -365,10 +385,8 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
                             </div>
                         </Dropdown>
                     </>
-                )}
+                }
                 rowSelection={rowSelection}
-                expandedRowKeys={expandedRowKeys}
-                onExpand={handleExpand}
                 dataSource={data}
                 columns={columns}
                 expandable={{
@@ -376,27 +394,13 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
                     expandedRowRender: (columns) => {
                         return <EnrolmentDetails enrolment={columns.enrolment} invoiceStatusMap={invoiceStatusMap} />
                     },
+                    expandedRowKeys: expandedRowKeys,
+                    onExpand: handleExpand,
                 }}
             />
             <ErrorModal />
-        </>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    classTitle: {
-        textAlign: 'center',
-        margin: '9px 0',
-    },
-    actionBtn: {
-        position: 'absolute',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        top: 0,
-        right: 32,
-        height: 61,
-    },
-})
 
 export default WithConfirmationDialog(EnrolmentsTable)

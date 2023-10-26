@@ -1,6 +1,5 @@
 import React from 'react'
 import { LoadingOutlined } from '@ant-design/icons'
-import { makeStyles } from '@material-ui/core'
 import { Spin } from 'antd'
 
 type Props = {
@@ -20,23 +19,16 @@ const Loader: React.FC<Props> = (_props) => {
     }
 
     const { className, style, size } = props
-    const classes = useStyles()
 
     const antIcon = <LoadingOutlined style={{ fontSize: size === 'sm' ? 24 : 48 }} spin />
     return (
-        <div className={`${classes.loading} ${className}`} style={style}>
+        <div
+            className={className}
+            style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', ...style }}
+        >
             <Spin indicator={antIcon} />
         </div>
     )
 }
-
-const useStyles = makeStyles({
-    loading: {
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-})
 
 export default Loader
