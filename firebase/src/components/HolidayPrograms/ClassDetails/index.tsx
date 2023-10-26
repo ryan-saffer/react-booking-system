@@ -17,6 +17,7 @@ import useFetchAppointments from '../../Hooks/api/UseFetchAppointments'
 import { Card, Collapse, Empty } from 'antd'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { DateTime } from 'luxon'
+import * as ROUTES from '../../../constants/routes'
 
 const PREFIX = 'ClassDetailsPage'
 
@@ -119,7 +120,12 @@ export const ClassDetailsPage = () => {
                         </Typography>
                     </div>
                     <div style={{ flex: 1, textAlign: 'right' }}>
-                        <img src={Logo.default} style={{ maxWidth: 100 }} alt="fizz kidz logo" />
+                        <img
+                            src={Logo.default}
+                            style={{ maxWidth: 100, cursor: 'pointer' }}
+                            alt="fizz kidz logo"
+                            onClick={() => navigate(ROUTES.LANDING)}
+                        />
                     </div>
                 </Toolbar>
             </AppBar>

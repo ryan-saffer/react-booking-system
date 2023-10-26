@@ -34,8 +34,6 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
     const firebase = useFirebase()
     const { width } = useWindowDimensions()
 
-    console.log(width)
-
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
     const handleExpandRow = (expanded: boolean, record: TableData) => {

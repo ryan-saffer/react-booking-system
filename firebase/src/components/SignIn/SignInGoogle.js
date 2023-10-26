@@ -1,37 +1,49 @@
 import React, { useState, useContext } from 'react'
 
+import { styled } from '@mui/material/styles'
+
 import * as ROUTES from '../../constants/routes'
 import * as GoogleLogo from '../../drawables/google-logo.png'
 
-import { makeStyles } from '@material-ui/core/styles'
-import { Snackbar, Button } from '@material-ui/core'
-import { red } from '@material-ui/core/colors'
+import { Snackbar, Button } from '@mui/material'
+import { red } from '@mui/material/colors'
 import { FirebaseContext } from '../Firebase'
 import { useNavigate } from 'react-router-dom'
 
-const useStyles = makeStyles((theme) => ({
-    signInButton: {
+const PREFIX = 'SignInGoogle'
+
+const classes = {
+    signInButton: `${PREFIX}-signInButton`,
+    signInWithGoogleButton: `${PREFIX}-signInWithGoogleButton`,
+    googleLogo: `${PREFIX}-googleLogo`,
+    snackBar: `${PREFIX}-snackBar`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.signInButton}`]: {
         height: 36,
         marginTop: theme.spacing(2),
         '&:hover': {
             cursor: 'pointer',
         },
     },
-    signInWithGoogleButton: {
+
+    [`& .${classes.signInWithGoogleButton}`]: {
         height: 36,
         marginTop: theme.spacing(2),
     },
-    googleLogo: {
+
+    [`& .${classes.googleLogo}`]: {
         height: 30,
     },
-    snackBar: {
+
+    [`& .${classes.snackBar}`]: {
         backgroundColor: red[500],
     },
 }))
 
 const SignInGoogle = (props) => {
-    const classes = useStyles()
-
     const firebase = useContext(FirebaseContext)
 
     const navigate = useNavigate()
@@ -39,6 +51,7 @@ const SignInGoogle = (props) => {
     const [error, setError] = useState(null)
 
     const handleSubmit = (event) => {
+        event.preventDefault()
         firebase
             .doSignInWithGoogle()
             .then(() => {
@@ -48,11 +61,10 @@ const SignInGoogle = (props) => {
             .catch((error) => {
                 setError(error)
             })
-        event.preventDefault()
     }
 
     return (
-        <>
+        <Root style={{ width: '100%' }}>
             <Button
                 className={classes.signInWithGoogleButton}
                 onClick={handleSubmit}
@@ -70,7 +82,7 @@ const SignInGoogle = (props) => {
                 message={error && error.message}
                 onClose={() => setError(null)}
             />
-        </>
+        </Root>
     )
 }
 
