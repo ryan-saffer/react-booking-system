@@ -1,22 +1,36 @@
 import React, { useState, useContext } from 'react'
 
+import { styled } from '@mui/material/styles'
+
 import { Acuity } from 'fizz-kidz'
 
-import { makeStyles } from '@material-ui/styles'
 import { Collapse, Button as AntButton, List, Tag } from 'antd'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../utilities/stringUtilities'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
+
 const { Panel } = Collapse
+
+const PREFIX = 'ChildExpansionPanel'
+
+const classes = {
+    panel: `${PREFIX}-panel`,
+}
+
+const StyledPanel = styled(Panel)({
+    [`&.${classes.panel}`]: {
+        '& .ant-collapse-header': {
+            alignItems: 'center !important',
+        },
+    },
+})
 
 type Props = {
     appointment: Acuity.Appointment
 }
 
 const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment, ...props }) => {
-    const classes = useStyles()
-
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [appointment, setAppointment] = useState(originalAppointment)
@@ -134,7 +148,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     }
 
     return (
-        <Panel className={classes.panel} header={childName} key={appointment.id} {...props} extra={renderExtra()}>
+        <StyledPanel className={classes.panel} header={childName} key={appointment.id} {...props} extra={renderExtra()}>
             <List
                 dataSource={childInfo}
                 renderItem={(item) =>
@@ -156,16 +170,8 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                     </AntButton>
                 </div>
             )}
-        </Panel>
+        </StyledPanel>
     )
 }
-
-const useStyles = makeStyles({
-    panel: {
-        '& .ant-collapse-header': {
-            alignItems: 'center !important',
-        },
-    },
-})
 
 export default ChildExpansionPanel
