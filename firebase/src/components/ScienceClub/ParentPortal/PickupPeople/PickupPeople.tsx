@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { makeStyles, Theme } from '@material-ui/core'
 import { Button, Card, Form, Input, message, Row, Tooltip, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
@@ -9,6 +8,8 @@ import useMixpanel from '../../../Hooks/context/UseMixpanel'
 import useErrorDialog from '../../../Hooks/UseErrorDialog'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { MixpanelEvents } from '../../../Mixpanel/Events'
+import styles from './PickupPeople.module.css'
+
 const { useForm } = Form
 
 const BREAKPOINT = 430
@@ -17,13 +18,7 @@ type Props = {
     appointment: ScienceEnrolment
 }
 
-type ThemeProps = {
-    width: number
-}
-
 const PickupPeople: React.FC<Props> = ({ appointment }) => {
-    const classes = useStyles({ width: BREAKPOINT })
-
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -45,7 +40,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
             await callFirebaseFunction('updateScienceEnrolment', firebase)({ id: appointment.id, pickupPeople })
             message.success({
                 content: 'Pickup people updated',
-                className: classes.message,
+                className: styles.message,
             })
             setInitialValues({ pickupPeople: pickupPeople.map((person) => ({ person })) })
             mixpanel.track(MixpanelEvents.SCIENCE_PORTAL_PICKUP_PEOPLE_UPDATED, {
@@ -72,9 +67,9 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
     }
 
     return (
-        <Row className={classes.row}>
+        <Row className={styles.row}>
             <Card
-                className={classes.card}
+                className={styles.card}
                 title="Name and relation to child"
                 extra={
                     !editing && (
@@ -107,9 +102,9 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                         {(fields, { add, remove }) => (
                             <>
                                 {fields.map(({ key, name, ...restField }) => (
-                                    <div key={key} className={classes.wrapper}>
+                                    <div key={key} className={styles.wrapper}>
                                         <Form.Item
-                                            className={classes.spacer}
+                                            className={styles.spacer}
                                             {...restField}
                                             name={[name, 'person']}
                                             rules={[
@@ -127,7 +122,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                                         </Form.Item>
                                         <Tooltip title="Remove person">
                                             <Button
-                                                className={classes.removeButton}
+                                                className={styles.removeButton}
                                                 disabled={!editing}
                                                 type="text"
                                                 shape="circle"
@@ -137,7 +132,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                                     </div>
                                 ))}
 
-                                <Form.Item className={classes.addButton}>
+                                <Form.Item className={styles.addButton}>
                                     <Button
                                         disabled={!editing}
                                         type="dashed"
@@ -154,7 +149,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                     </Form.List>
 
                     <Form.Item>
-                        <div className={classes.buttons}>
+                        <div className={styles.buttons}>
                             <Button type="primary" htmlType="submit" loading={loading} disabled={!editing}>
                                 Save
                             </Button>
@@ -169,46 +164,5 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
         </Row>
     )
 }
-
-const useStyles = makeStyles<Theme, ThemeProps>(() => ({
-    row: {
-        justifyContent: 'center',
-    },
-    card: (props) => ({
-        boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
-        '& .ant-card-head': {
-            [`@media(max-width: ${props.width}px)`]: {
-                fontSize: 15,
-            },
-        },
-        width: 1000,
-    }),
-    spacer: {
-        flex: 1,
-        marginBottom: 0,
-        paddingRight: 32,
-    },
-    wrapper: {
-        display: 'flex',
-        marginBottom: 18,
-    },
-    removeButton: {
-        position: 'absolute',
-        right: 15,
-        marginTop: 3,
-    },
-    addButton: {
-        paddingRight: 32,
-    },
-    buttons: {
-        display: 'grid',
-        gridAutoFlow: 'column',
-        justifyContent: 'end',
-        gap: 16,
-    },
-    message: {
-        marginTop: '85vh',
-    },
-}))
 
 export default PickupPeople

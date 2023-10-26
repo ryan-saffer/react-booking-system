@@ -1,7 +1,21 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import { EventBooking, Service } from 'fizz-kidz'
 import React from 'react'
 import EventPanel from './EventPanel'
+
+const PREFIX = 'Events'
+
+const classes = {
+    heading: `${PREFIX}-heading`,
+}
+
+const Root = styled('h1')(({ theme }) => ({
+    [`& .${classes.heading}`]: {
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(1),
+    },
+}))
 
 type Props = {
     events: Service<EventBooking[]>
@@ -9,8 +23,6 @@ type Props = {
 }
 
 const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
-    const classes = useStyles()
-
     const title = () => (
         <Typography className={classes.heading} variant="h6">
             Events
@@ -38,15 +50,8 @@ const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
                 </>
             )
         default:
-            return <h1>Error</h1>
+            return <Root>Error</Root>
     }
 }
-
-const useStyles = makeStyles((theme) => ({
-    heading: {
-        paddingTop: theme.spacing(2),
-        paddingBottom: theme.spacing(1),
-    },
-}))
 
 export default Events

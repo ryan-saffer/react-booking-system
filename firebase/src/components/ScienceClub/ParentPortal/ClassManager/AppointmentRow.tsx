@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Acuity } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
-import { makeStyles } from '@material-ui/core'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import { WithErrorModal } from '../../../Hooks/UseErrorDialog'
 import { DateTime } from 'luxon'
@@ -14,8 +13,6 @@ type Props = {
 } & WithErrorModal
 
 const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
-    const classes = useStyles()
-
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -56,7 +53,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
 
     return (
         <>
-            <div className={classes.row}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography.Text>
                     {DateTime.fromISO(appointment.datetime).toLocaleString({
                         weekday: 'short',
@@ -72,14 +69,5 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
         </>
     )
 }
-
-const useStyles = makeStyles({
-    row: {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-})
 
 export default AppointmnetRow

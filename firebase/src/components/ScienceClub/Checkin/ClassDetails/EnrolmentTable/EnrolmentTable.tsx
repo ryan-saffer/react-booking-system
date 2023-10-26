@@ -7,10 +7,9 @@ import ActionButton from './ActionButton'
 import { EnrolmentsMap, getEnrolment } from '..'
 import { callAcuityClient } from '../../../../../utilities/firebase/functions'
 import useFirebase from '../../../../Hooks/context/UseFirebase'
-import { makeStyles } from '@material-ui/core'
 import { ColumnsType } from 'antd/es/table'
+import styles from './EnrolmentTable.module.css'
 
-const BREAKPOINT_SM = 370
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540
 
@@ -34,7 +33,6 @@ export type UpdateEnrolment = (enrolment: ScienceEnrolment) => void
 const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enrolmentsMap, calendarName }) => {
     const firebase = useFirebase()
     const { width } = useWindowDimensions()
-    const classes = useStyles()
 
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
@@ -162,7 +160,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
 
     return (
         <Table
-            className={width < BREAKPOINT_SM ? classes.table : ''}
+            className={styles.table}
             bordered
             pagination={false}
             size="small"
@@ -193,19 +191,5 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
         />
     )
 }
-
-const useStyles = makeStyles({
-    table: {
-        '& h5': {
-            fontSize: 14,
-        },
-        '& th, td': {
-            fontSize: 12,
-        },
-        '& .ant-tag': {
-            fontSize: 10,
-        },
-    },
-})
 
 export default EnrolmentTable

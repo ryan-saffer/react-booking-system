@@ -1,26 +1,58 @@
 import React, { useMemo, useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 import { Acuity } from 'fizz-kidz'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import CssBaseline from '@mui/material/CssBaseline'
+import Typography from '@mui/material/Typography'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SkeletonRows from '../../Shared/SkeletonRows'
 import useFetchAppointments from '../../Hooks/api/UseFetchAppointments'
 import { Card, Collapse, Empty } from 'antd'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { DateTime } from 'luxon'
+import * as ROUTES from '../../../constants/routes'
+
+const PREFIX = 'ClassDetailsPage'
+
+const classes = {
+    main: `${PREFIX}-main`,
+    root: `${PREFIX}-root`,
+    card: `${PREFIX}-card`,
+}
+
+const Root = styled('div')({
+    [`&.${classes.main}`]: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+    },
+    [`& .${classes.root}`]: {
+        // backgroundColor: '#f0f2f2',
+        backgroundImage: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        minHeight: '100vh',
+        paddingBottom: 24,
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    [`& .${classes.card}`]: {
+        width: '90%',
+        height: 'fit-content',
+        marginTop: 36,
+        borderRadius: 16,
+        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    },
+})
 
 export const ClassDetailsPage = () => {
-    const classes = useStyles()
-
     const { height } = useWindowDimensions()
 
     const [loading, setLoading] = useState(true)
@@ -70,12 +102,12 @@ export const ClassDetailsPage = () => {
     }) as Acuity.Appointment[]
 
     return (
-        <div className={classes.main}>
+        <Root className={classes.main}>
             <CssBaseline />
             <AppBar position="static">
                 <Toolbar style={{ display: 'flex' }}>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)}>
+                        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} size="large">
                             <ArrowBackIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit">
@@ -88,7 +120,12 @@ export const ClassDetailsPage = () => {
                         </Typography>
                     </div>
                     <div style={{ flex: 1, textAlign: 'right' }}>
-                        <img src={Logo.default} style={{ maxWidth: 100 }} alt="fizz kidz logo" />
+                        <img
+                            src={Logo.default}
+                            style={{ maxWidth: 100, cursor: 'pointer' }}
+                            alt="fizz kidz logo"
+                            onClick={() => navigate(ROUTES.LANDING)}
+                        />
                     </div>
                 </Toolbar>
             </AppBar>
@@ -107,31 +144,6 @@ export const ClassDetailsPage = () => {
                     {loading && <SkeletonRows rowCount={(height - 64) / 64} />}
                 </Card>
             </div>
-        </div>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    main: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-    },
-    root: {
-        // backgroundColor: '#f0f2f2',
-        backgroundImage: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
-        minHeight: '100vh',
-        paddingBottom: 24,
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    card: {
-        width: '90%',
-        height: 'fit-content',
-        marginTop: 36,
-        borderRadius: 16,
-        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-    },
-})

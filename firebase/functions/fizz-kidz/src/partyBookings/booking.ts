@@ -36,7 +36,7 @@ export interface BaseBooking extends AdditionKeyValues {
 // separates date and time into separate values, for better use in forms
 export interface FormBooking extends BaseBooking {
     date: Date
-    time: string
+    time: Date
 }
 
 // combines dateTime into single date

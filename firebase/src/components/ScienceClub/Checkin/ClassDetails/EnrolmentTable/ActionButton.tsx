@@ -1,12 +1,26 @@
 import React, { useMemo, useState } from 'react'
+import { styled } from '@mui/material/styles';
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button } from 'antd'
-import { makeStyles } from '@material-ui/core'
 import SignatureDialog from './SignatureDialog'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
 import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import { DateTime } from 'luxon'
+
+const PREFIX = 'ActionButton';
+
+const classes = {
+    circleBtn: `${PREFIX}-circleBtn`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.circleBtn}`]: {
+        display: 'block',
+        margin: 'auto',
+    },
+});
 
 type Props = {
     appointment: Acuity.Appointment
@@ -16,7 +30,7 @@ type Props = {
 }
 
 const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment, setAppointmentLabel }) => {
-    const classes = useStyles()
+
     const { width } = useWindowDimensions()
 
     const [loading, setLoading] = useState(false)
@@ -76,7 +90,7 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
     )
 
     return (
-        <>
+        (<Root>
             {(() => {
                 if (isNotAttending) return null
                 if (!isSignedIn && !isSignedOut) {
@@ -127,15 +141,8 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
                 onClose={() => setOpenSigDialog(false)}
                 onSignOut={handleSignOut}
             />
-        </>
-    )
+        </Root>)
+    );
 }
-
-const useStyles = makeStyles({
-    circleBtn: {
-        display: 'block',
-        margin: 'auto',
-    },
-})
 
 export default ActionButton

@@ -31,7 +31,8 @@ const withAuthorization = (roles: Role[], Component: React.FunctionComponent) =>
             })
 
             return unsubscribe
-        })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [])
 
         if (authUser) {
             if (!authUser.role || !ROLES.includes(authUser.role)) {

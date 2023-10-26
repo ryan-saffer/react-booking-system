@@ -1,8 +1,9 @@
 import React from 'react'
-import { Container, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
-import ErrorIcon from '@material-ui/icons/Error'
-import CheckCircleTwoTone from '@material-ui/icons/CheckCircleTwoTone'
+import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
+import ErrorIcon from '@mui/icons-material/Error'
+import CheckCircleTwoTone from '@mui/icons-material/CheckCircleTwoTone'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import styles from './Result.module.css'
 
 type ResultType = 'success' | 'error'
 
@@ -12,27 +13,25 @@ interface ResultProps {
 }
 
 const Result: React.FC<ResultProps> = ({ label, resultType, children }) => {
-    const classes = useStyles()
-
     return (
         <>
             <Container maxWidth="md">
-                <Grid container justify="center">
-                    <Grid className={classes.gridItem} item sm={6}>
-                        <Typography className={classes.error} variant="h4">
+                <Grid container justifyContent="center">
+                    <Grid className={styles.gridItem} item sm={6}>
+                        <Typography className={styles.error} variant="h4">
                             {label}
                         </Typography>
-                        {resultType === 'error' && <ErrorIcon className={classes.errorIcon} />}
-                        {resultType === 'success' && <CheckCircleTwoTone className={classes.successIcon} />}
+                        {resultType === 'error' && <ErrorIcon className={styles.errorIcon} />}
+                        {resultType === 'success' && <CheckCircleTwoTone className={styles.successIcon} />}
                     </Grid>
-                    <Grid className={classes.gridItem} item sm={6}>
-                        <Paper className={classes.paper} elevation={3}>
+                    <Grid className={styles.gridItem} item sm={6}>
+                        <Paper className={styles.paper} elevation={3}>
                             {children}
                         </Paper>
                     </Grid>
                 </Grid>
             </Container>
-            <Divider className={classes.divider} />
+            <Divider className={styles.divider} />
         </>
     )
 }
@@ -109,39 +108,3 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointment }) => 
         </Result>
     )
 }
-
-const useStyles = makeStyles({
-    gridItem: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    error: {
-        alignSelf: 'center',
-    },
-    successIcon: {
-        height: 60,
-        width: 60,
-        alignSelf: 'center',
-        color: 'green',
-        marginTop: 15,
-        marginBottom: 15,
-    },
-    errorIcon: {
-        height: 60,
-        width: 60,
-        alignSelf: 'center',
-        color: 'crimson',
-        marginTop: 15,
-        marginBottom: 15,
-    },
-    paper: {
-        padding: 32,
-    },
-    divider: {
-        alignSelf: 'center',
-        marginTop: 20,
-        marginBottom: 40,
-        width: '80%',
-    },
-})

@@ -1,12 +1,27 @@
-import DateFnsUtils from '@date-io/date-fns'
-import { Button, Grid, IconButton, TextField, Tooltip, Typography, makeStyles } from '@material-ui/core'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { styled } from '@mui/material/styles'
+import { Button, Grid, IconButton, TextField, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { Controller, useFormContext, UseFieldArrayReturn, Control } from 'react-hook-form'
-import AddIcon from '@material-ui/icons/Add'
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
-import moment from 'moment'
+import AddIcon from '@mui/icons-material/Add'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { capitalise } from '../../../../utilities/stringUtilities'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { DateTime } from 'luxon'
+
+const PREFIX = 'EventForm'
+
+const classes = {
+    disabled: `${PREFIX}-disabled`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.disabled}`]: {
+        '& .Mui-disabled': {
+            color: 'rgba(0, 0, 0, 0.87)',
+        },
+    },
+})
 
 export type Form = {
     eventName: string
@@ -16,7 +31,12 @@ export type Form = {
     organisation: string
     location: string
     price: string
-    slots: { startDate: Date | null; startTime: string; endDate: Date | null; endTime: string }[]
+    slots: {
+        startDate: DateTime | null
+        startTime: DateTime | null
+        endDate: DateTime | null
+        endTime: DateTime | null
+    }[]
     notes: string
 }
 
@@ -31,8 +51,6 @@ type ExistingProps = {
 }
 
 const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
-    const classes = useStyles()
-
     const {
         control,
         formState: { errors },
@@ -41,7 +59,7 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
     const disabled = props.isNew ? false : props.disabled
 
     return (
-        <>
+        <Root>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant="h6">Event Details</Typography>
@@ -208,8 +226,10 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                         xs={12}
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'flex-end',
-                                            padding: '0px 12px',
+                                            alignItems: 'center',
+                                            padding: '0px 24px',
+                                            marginTop: '12px',
+                                            ...(idx === 0 && { marginLeft: 20 }),
                                         }}
                                     >
                                         {idx > 0 && (
@@ -218,6 +238,7 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                                     aria-label="remove slot"
                                                     onClick={() => props.fieldArray.remove(idx)}
                                                     size="small"
+                                                    style={{ paddingLeft: 0 }}
                                                 >
                                                     <RemoveCircleOutlineIcon fontSize="inherit" />
                                                 </IconButton>
@@ -266,9 +287,9 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                 onClick={() =>
                                     props.fieldArray.append({
                                         startDate: null,
-                                        startTime: '',
+                                        startTime: null,
                                         endDate: null,
-                                        endTime: '',
+                                        endTime: null,
                                     })
                                 }
                             >
@@ -335,7 +356,7 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                     />
                 </Grid>
             </Grid>
-        </>
+        </Root>
     )
 }
 
@@ -356,37 +377,26 @@ const DateTimePicker = ({
     helperText: { date: string; time: string }
     disabled: boolean
 }) => {
-    const classes = useStyles()
     return (
         <>
             <Grid item xs={12} sm={6} md={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <Controller
-                        name={`slots.${idx}.${type}Date`}
-                        control={control}
-                        rules={{ required: true }}
-                        render={({ field: { onChange, value } }) => (
-                            <KeyboardDatePicker
-                                onChange={onChange}
-                                value={value}
-                                fullWidth
-                                disableToolbar
-                                variant="inline"
-                                format="dd/MM/yyyy"
-                                id={`${type}Date-${id}`}
-                                label={`${capitalise(type)} date`}
-                                autoOk={true}
-                                error={errors.date}
-                                helperText={helperText.date}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                                disabled={disabled}
-                                className={classes.disabled}
-                            />
-                        )}
-                    />
-                </MuiPickersUtilsProvider>
+                <Controller
+                    name={`slots.${idx}.${type}Date`}
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                        <DatePicker
+                            {...field}
+                            slotProps={{
+                                textField: { error: errors.date, helperText: helperText.date, autoComplete: 'off' },
+                            }}
+                            label={`${capitalise(type)} date`}
+                            disabled={disabled}
+                            disablePast
+                            format="dd/LL/yyyy"
+                        />
+                    )}
+                />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
                 <Controller
@@ -394,24 +404,13 @@ const DateTimePicker = ({
                     control={control}
                     rules={{ required: true }}
                     render={({ field }) => (
-                        <TextField
+                        <TimePicker
                             {...field}
-                            error={errors.time}
-                            helperText={helperText.time}
+                            slotProps={{
+                                textField: { error: errors.time, helperText: helperText.time, autoComplete: 'off' },
+                            }}
                             label={`${capitalise(type)} time`}
-                            fullWidth
-                            variant="outlined"
-                            autoComplete="off"
-                            id={`${type}Time-${id}`}
-                            type="time"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            inputProps={{
-                                step: 1800, // 5 min
-                            }}
                             disabled={disabled}
-                            classes={{ root: classes.disabled }}
                         />
                     )}
                 />
@@ -420,19 +419,17 @@ const DateTimePicker = ({
     )
 }
 
-export function combineDateAndTime(date: Date, time: string) {
-    const options = { timeZone: 'Australia/Melbourne' }
-    return moment
-        .tz(`${date.toLocaleDateString('en-au', options)} ${time}`, 'DD/MM/YYYY hh:mm', 'Australia/Melbourne')
-        .toDate()
-}
-
-const useStyles = makeStyles({
-    disabled: {
-        '& .Mui-disabled': {
-            color: 'rgba(0, 0, 0, 0.87)',
+export function combineDateAndTime(date: DateTime, time: DateTime) {
+    return DateTime.fromObject(
+        {
+            day: date.day,
+            month: date.month,
+            year: date.year,
+            hour: time.hour,
+            minute: time.minute,
         },
-    },
-})
+        { zone: 'Australia/Melbourne' }
+    ).toJSDate()
+}
 
 export default EventForm

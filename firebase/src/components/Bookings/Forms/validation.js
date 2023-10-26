@@ -136,7 +136,6 @@ export function errorFound(formValues) {
     for (let field in formValues) {
         if (formValues[field].error) {
             foundError = true
-            console.log(`Changing to invalid because ${field} has an error`)
         }
     }
     return foundError

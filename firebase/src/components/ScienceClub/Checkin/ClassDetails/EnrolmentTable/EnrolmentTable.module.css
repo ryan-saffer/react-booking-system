@@ -1,0 +1,23 @@
+.table h5 {
+    @media (max-width: 370px) {
+        font-size: 14px;
+    }
+}
+
+.table th {
+    @media (max-width: 370px) {
+        font-size: 14px;
+    }
+}
+
+.table td {
+    @media (max-width: 370px) {
+        font-size: 12px;
+    }
+}
+
+.table :global(.ant-tag) {
+    @media (max-width: 370px) {
+        font-size: 10px;
+    }
+}
