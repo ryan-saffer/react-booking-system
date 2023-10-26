@@ -1,0 +1,46 @@
+.row {
+    justify-content: center;
+}
+
+.card {
+    box-shadow: rgba(100, 100, 111, 0.15) 0px 7px 29px 0px;
+    width: 1000px;
+}
+
+.card :global(.ant-card-head) {
+    @media (max-width: 430px) {
+        font-size: 15px;
+    }
+}
+
+.spacer {
+    flex: 1;
+    margin-bottom: 0;
+    padding-right: 32px;
+}
+
+.wrapper {
+    display: flex;
+    margin-bottom: 18px;
+}
+
+.removeButton {
+    position: absolute;
+    right: 15px;
+    margin-top: 3px;
+}
+
+.addButton {
+    padding-right: 32px;
+}
+
+.buttons {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    gap: 16px;
+}
+
+.message {
+    margin-top: 85vh;
+}

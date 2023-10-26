@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
+import { styled } from '@mui/material/styles'
 import { Acuity } from 'fizz-kidz'
-import { Divider, makeStyles } from '@material-ui/core'
+import { Divider } from '@mui/material'
 
 import * as logo from '../../../drawables/fizz-logo.png'
 import Loading from './Loading'
@@ -10,6 +11,37 @@ import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '../../Mixpanel/Events'
 
+const PREFIX = 'EnrolmentPage'
+
+const classes = {
+    main: `${PREFIX}-main`,
+    logo: `${PREFIX}-logo`,
+    divider: `${PREFIX}-divider`,
+    sendEmailButton: `${PREFIX}-sendEmailButton`,
+}
+
+const Root = styled('div')({
+    [`&.${classes.main}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    [`& .${classes.logo}`]: {
+        margin: 'auto',
+        width: 200,
+    },
+    [`& .${classes.divider}`]: {
+        alignSelf: 'center',
+        marginTop: 20,
+        marginBottom: 40,
+        width: '80%',
+    },
+    [`& .${classes.sendEmailButton}`]: {
+        alignSelf: 'center',
+    },
+})
+
 /**
  * Page requires 2 URL query params:
  *
@@ -17,8 +49,6 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
  * @param continuing either 'yes' if they want to continue with the term, or ''
  */
 export const EnrolmentPage = () => {
-    const classes = useStyles()
-
     // remove first '?'
     const base64String = window.location.search.substring(1, window.location.search.length)
     const searchParams = new URLSearchParams(atob(base64String))
@@ -55,35 +85,13 @@ export const EnrolmentPage = () => {
     }, [service.status])
 
     return (
-        <div className={classes.main}>
+        <Root className={classes.main}>
             <img className={classes.logo} src={logo.default} alt="fizz kidz logo" />
             <Divider className={classes.divider} />
             {service.status === 'loading' && <Loading />}
             {service.status === 'loaded' && <Success continuing={continuingWithTerm} appointment={service.result} />}
             {service.status === 'error' && <ErrorResult />}
             <Footer />
-        </div>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    logo: {
-        margin: 'auto',
-        width: 200,
-    },
-    divider: {
-        alignSelf: 'center',
-        marginTop: 20,
-        marginBottom: 40,
-        width: '80%',
-    },
-    sendEmailButton: {
-        alignSelf: 'center',
-    },
-})

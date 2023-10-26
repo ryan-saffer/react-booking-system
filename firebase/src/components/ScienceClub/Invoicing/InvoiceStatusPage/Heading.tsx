@@ -1,17 +1,42 @@
 import React from 'react'
-import { AppBar, CssBaseline, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { styled } from '@mui/material/styles';
+import { AppBar, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate } from 'react-router-dom'
+
+const PREFIX = 'Heading';
+
+const classes = {
+    toolbar: `${PREFIX}-toolbar`,
+    backBtn: `${PREFIX}-backBtn`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.toolbar}`]: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    [`& .${classes.backBtn}`]: {
+        position: 'absolute',
+        left: 24,
+    },
+});
 
 const Heading: React.FC = () => {
     const navigate = useNavigate()
-    const classes = useStyles()
+
     return (
-        <>
+        <Root>
             <CssBaseline />
             <AppBar position="static">
                 <Toolbar className={classes.toolbar}>
-                    <IconButton className={classes.backBtn} edge="start" color="inherit" onClick={() => navigate(-1)}>
+                    <IconButton
+                        className={classes.backBtn}
+                        edge="start"
+                        color="inherit"
+                        onClick={() => navigate(-1)}
+                        size="large">
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit">
@@ -19,19 +44,8 @@ const Heading: React.FC = () => {
                     </Typography>
                 </Toolbar>
             </AppBar>
-        </>
-    )
+        </Root>
+    );
 }
-
-const useStyles = makeStyles({
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    backBtn: {
-        position: 'absolute',
-        left: 24,
-    },
-})
 
 export default Heading

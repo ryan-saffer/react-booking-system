@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 import { Divider, Result, Typography } from 'antd'
 import { useParams } from 'react-router-dom'
 import useFetchScienceAppointment from '../../Hooks/api/UseFetchScienceAppointment'
@@ -12,13 +12,41 @@ import useFirebase from '../../Hooks/context/UseFirebase'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
 import { MixpanelEvents } from '../../Mixpanel/Events'
 
+const PREFIX = 'ParentPortal'
+
+const classes = {
+    root: `${PREFIX}-root`,
+    summaryInvoice: `${PREFIX}-summaryInvoice`,
+    error: `${PREFIX}-error`,
+}
+
+const Root = styled('div')({
+    [`&.${classes.root}`]: {
+        width: 'auto',
+        marginTop: 24,
+        '@media(min-width: 550px)': {
+            marginLeft: 24,
+            marginRight: 24,
+        },
+    },
+    [`& .${classes.summaryInvoice}`]: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    [`& .${classes.error}`]: {
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+})
+
 type Params = {
     id: string
 }
 
 const ParentPortal: React.FC = () => {
-    const classes = useStyles()
-
     const { id } = useParams<Params>()
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
@@ -50,7 +78,7 @@ const ParentPortal: React.FC = () => {
         case 'loaded':
             const appointment = service.result
             return (
-                <div className={classes.root}>
+                <Root className={classes.root}>
                     <Typography.Title level={width > 450 ? 2 : 3}>
                         Hi {appointment.parent.firstName} 👋
                     </Typography.Title>
@@ -63,7 +91,7 @@ const ParentPortal: React.FC = () => {
                     <ClassManager appointment={appointment} />
                     <Divider>Manage Pickup People</Divider>
                     <PickupPeople appointment={appointment} />
-                </div>
+                </Root>
             )
 
         default: // error
@@ -78,27 +106,5 @@ const ParentPortal: React.FC = () => {
             )
     }
 }
-
-const useStyles = makeStyles({
-    root: {
-        width: 'auto',
-        marginTop: 24,
-        '@media(min-width: 550px)': {
-            marginLeft: 24,
-            marginRight: 24,
-        },
-    },
-    summaryInvoice: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    error: {
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-})
 
 export default ParentPortal

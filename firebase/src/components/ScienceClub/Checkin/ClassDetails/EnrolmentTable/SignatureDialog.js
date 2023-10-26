@@ -1,22 +1,63 @@
 import React, { useState } from 'react'
 
-import { makeStyles } from '@material-ui/styles'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
 import SignatureCanvas from 'react-signature-canvas'
-import { red } from '@material-ui/core/colors'
-import { TextField } from '@material-ui/core'
+import { red } from '@mui/material/colors'
+import { TextField } from '@mui/material'
+
+const PREFIX = 'SignatureDialog';
+
+const classes = {
+    signatureCanvas: `${PREFIX}-signatureCanvas`,
+    title: `${PREFIX}-title`,
+    dialogContent: `${PREFIX}-dialogContent`,
+    formControl: `${PREFIX}-formControl`,
+    error: `${PREFIX}-error`,
+    dialogActions: `${PREFIX}-dialogActions`
+};
+
+const StyledDialog = styled(Dialog)({
+    [`& .${classes.signatureCanvas}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        width: 'fit-content',
+    },
+    [`& .${classes.title}`]: {
+        textAlign: 'center',
+        marginBottom: 0,
+        paddingBottom: 0,
+    },
+    [`& .${classes.dialogContent}`]: {
+        paddingBottom: 0,
+    },
+    [`& .${classes.formControl}`]: {
+        width: '100%',
+        marginBottom: 8,
+    },
+    [`& .${classes.error}`]: {
+        color: red[500],
+        textAlign: 'right',
+        marginTop: 4,
+        marginBottom: 0,
+    },
+    [`& .${classes.dialogActions}`]: {
+        paddingTop: 0,
+    },
+});
 
 const SignatureDialog = (props) => {
-    const classes = useStyles()
+
 
     var sigPad = {}
 
@@ -76,7 +117,7 @@ const SignatureDialog = (props) => {
     }
 
     return (
-        <Dialog onClick={(e) => e.stopPropagation()} fullWidth={true} maxWidth={'xl'} open={props.open}>
+        <StyledDialog onClick={(e) => e.stopPropagation()} fullWidth={true} maxWidth={'xl'} open={props.open}>
             <DialogTitle className={classes.title}>Initial Required</DialogTitle>
             <DialogContent className={classes.dialogContent}>
                 <DialogContentText className={classes.title}>Who is signing out the child?</DialogContentText>
@@ -150,38 +191,8 @@ const SignatureDialog = (props) => {
                     Sign out
                 </Button>
             </DialogActions>
-        </Dialog>
-    )
+        </StyledDialog>
+    );
 }
-
-const useStyles = makeStyles({
-    signatureCanvas: {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: 'fit-content',
-    },
-    title: {
-        textAlign: 'center',
-        marginBottom: 0,
-        paddingBottom: 0,
-    },
-    dialogContent: {
-        paddingBottom: 0,
-    },
-    formControl: {
-        width: '100%',
-        marginBottom: 8,
-    },
-    error: {
-        color: red[500],
-        textAlign: 'right',
-        marginTop: 4,
-        marginBottom: 0,
-    },
-    dialogActions: {
-        paddingTop: 0,
-    },
-})
 
 export default SignatureDialog

@@ -1,0 +1,38 @@
+.gridItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.error {
+    align-self: center;
+}
+
+.successIcon {
+    height: 60px;
+    width: 60px;
+    align-self: center;
+    color: green;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.errorIcon {
+    height: 60px;
+    width: 60px;
+    align-self: center;
+    color: crimson;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.paper {
+    padding: 32px;
+}
+
+.divider {
+    align-self: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    width: 80%;
+}

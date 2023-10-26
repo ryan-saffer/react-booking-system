@@ -1,22 +1,34 @@
 import React from 'react'
+import { styled } from '@mui/material/styles';
 import { ScienceEnrolment } from 'fizz-kidz'
 import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatus'
 import { Card, Typography } from 'antd'
 import Loader from '../../shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
-import { makeStyles } from '@material-ui/core'
+const PREFIX = 'InvoiceDetails';
+
+const classes = {
+    card: `${PREFIX}-card`
+};
+
+const StyledCard = styled(Card)({
+    [`&.${classes.card}`]: {
+        height: '100%',
+        boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
+    },
+});
 
 type Props = {
     appointment: ScienceEnrolment
 }
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
-    const classes = useStyles()
+
 
     const [invoiceService] = useInvoiceStatus(appointment)
 
     return (
-        <Card className={classes.card} title="🧾 Invoice Status">
+        <StyledCard className={classes.card} title="🧾 Invoice Status">
             {(() => {
                 switch (invoiceService.status) {
                     case 'loading':
@@ -45,15 +57,8 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                         )
                 }
             })()}
-        </Card>
-    )
+        </StyledCard>
+    );
 }
-
-const useStyles = makeStyles({
-    card: {
-        height: '100%',
-        boxShadow: 'rgba(100, 100, 111, 0.15) 0px 7px 29px 0px',
-    },
-})
 
 export default InvoiceDetails

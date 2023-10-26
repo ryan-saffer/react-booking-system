@@ -1,22 +1,29 @@
-import { CircularProgress, makeStyles } from '@material-ui/core'
+import { CircularProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react'
 
-const Loading = () => {
-    const classes = useStyles()
+const PREFIX = 'Loading';
 
-    return (
-        <div className={classes.root}>
-            <CircularProgress />
-        </div>
-    )
-}
+const classes = {
+    root: `${PREFIX}-root`
+};
 
-const useStyles = makeStyles({
-    root: {
+const Root = styled('div')({
+    [`&.${classes.root}`]: {
         display: 'flex',
         justifyContent: 'center',
         marginTop: 24,
     },
-})
+});
+
+const Loading = () => {
+
+
+    return (
+        <Root className={classes.root}>
+            <CircularProgress />
+        </Root>
+    );
+}
 
 export default Loading

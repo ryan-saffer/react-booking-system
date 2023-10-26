@@ -1,25 +1,17 @@
 import React from 'react'
-import { IconButton, makeStyles } from '@material-ui/core'
-import LanguageIcon from '@material-ui/icons/Language'
-import InstagramIcon from '@material-ui/icons/Instagram'
+import { styled } from '@mui/material/styles'
+import { IconButton } from '@mui/material'
+import LanguageIcon from '@mui/icons-material/Language'
+import InstagramIcon from '@mui/icons-material/Instagram'
 
-const Footer = () => {
-    const classes = useStyles()
+const PREFIX = 'Footer'
 
-    return (
-        <div className={classes.footer}>
-            <IconButton onClick={() => (window.location.href = 'https://www.fizzkidz.com.au')}>
-                <LanguageIcon />
-            </IconButton>
-            <IconButton onClick={() => (window.location.href = 'https://www.instagram.com/fizzkidzz')}>
-                <InstagramIcon />
-            </IconButton>
-        </div>
-    )
+const classes = {
+    footer: `${PREFIX}-footer`,
 }
 
-const useStyles = makeStyles({
-    footer: {
+const Root = styled('div')({
+    [`&.${classes.footer}`]: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -38,5 +30,18 @@ const useStyles = makeStyles({
         },
     },
 })
+
+const Footer = () => {
+    return (
+        <Root className={classes.footer}>
+            <IconButton onClick={() => (window.location.href = 'https://www.fizzkidz.com.au')} size="large">
+                <LanguageIcon />
+            </IconButton>
+            <IconButton onClick={() => (window.location.href = 'https://www.instagram.com/fizzkidzz')} size="large">
+                <InstagramIcon />
+            </IconButton>
+        </Root>
+    )
+}
 
 export default Footer

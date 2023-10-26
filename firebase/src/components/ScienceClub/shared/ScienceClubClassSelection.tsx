@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { DateTime } from 'luxon'
-
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import { Button, Paper } from '@material-ui/core'
-import { Skeleton } from '@material-ui/lab'
+import { Skeleton, Typography, MenuItem, FormControl, Select, Button, Paper, SelectChangeEvent } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import { Acuity } from 'fizz-kidz'
+import styles from './ScienceClubClassSelection.module.css'
 
 type Props = {
     classRoute: string
@@ -19,10 +13,10 @@ type Props = {
 }
 
 const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
-    const cssClasses = useStyles()
-
     const firebase = useFirebase()
     const navigate = useNavigate()
+
+    const mounted = useRef(false)
 
     const [loading, setLoading] = useState({ appointmentTypes: true, classes: false })
     const [appointmentTypes, setAppointmentTypes] = useState<Acuity.AppointmentType[]>([])
@@ -31,6 +25,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     const [selectedClass, setSelectedClass] = useState<Acuity.Class | undefined>()
 
     useEffect(() => {
+        mounted.current = true
         const fetchAppointmentTypes = () => {
             callAcuityClient(
                 'getAppointmentTypes',
@@ -39,20 +34,29 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                 category: process.env.REACT_APP_ENV === 'prod' ? 'Science Club' : 'TEST',
             })
                 .then((result) => {
-                    setAppointmentTypes(result.data)
+                    if (mounted.current) {
+                        setAppointmentTypes(result.data)
+                    }
                 })
                 .catch((err) => {
                     console.error(err)
                 })
                 .finally(() => {
-                    setLoading({ appointmentTypes: false, classes: false })
+                    if (mounted.current) {
+                        setLoading({ appointmentTypes: false, classes: false })
+                    }
                 })
         }
 
         fetchAppointmentTypes()
+
+        return () => {
+            mounted.current = false
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const handleAppointmentTypeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
         const id = e.target.value as number
         setSelectedAppointmentType(appointmentTypes.find((it) => it.id === id))
         setSelectedClass(undefined)
@@ -61,8 +65,8 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
         fetchClasses(id)
     }
 
-    const handleClassChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        const id = e.target.value as number
+    const handleClassChange = (e: SelectChangeEvent<number>) => {
+        const id = e.target.value
         setSelectedClass(classes.find((it) => it.id === id))
     }
 
@@ -95,26 +99,30 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
             firebase
         )({ appointmentTypeId: id, minDate: Date.now(), includeUnavailable: true })
             .then((result) => {
-                setClasses(result.data)
+                if (mounted.current) {
+                    setClasses(result.data)
+                }
             })
             .catch(console.error)
             .finally(() => {
-                setLoading({
-                    ...loading,
-                    classes: false,
-                })
+                if (mounted.current) {
+                    setLoading({
+                        ...loading,
+                        classes: false,
+                    })
+                }
             })
     }
 
     return (
-        <Paper className={cssClasses.paper}>
-            <div className={cssClasses.main}>
+        <Paper className={styles.paper}>
+            <div className={styles.main}>
                 {appointmentTypes.length !== 0 && (
                     <>
-                        <Typography className={cssClasses.heading} variant="body1">
+                        <Typography className={styles.heading} variant="body1">
                             Select program:
                         </Typography>
-                        <FormControl className={cssClasses.formControl} variant="outlined">
+                        <FormControl className={styles.formControl} variant="outlined">
                             <Select
                                 id="programs-select"
                                 value={selectedAppointmentType?.id || ''}
@@ -134,10 +142,10 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
 
                 {classRequired && classes.length !== 0 && (
                     <>
-                        <Typography className={cssClasses.heading} variant="body1">
+                        <Typography className={styles.heading} variant="body1">
                             Select class:
                         </Typography>
-                        <FormControl className={cssClasses.formControl} variant="outlined">
+                        <FormControl className={styles.formControl} variant="outlined">
                             <Select
                                 id="classes-select"
                                 value={selectedClass?.id || ''}
@@ -156,7 +164,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                 {classRequired && loading.classes && <Skeleton height={80} />}
                 {(!classRequired || appointmentTypes.length !== 0) && (
                     <Button
-                        className={cssClasses.submitButton}
+                        className={styles.submitButton}
                         variant="contained"
                         color="primary"
                         disabled={!selectedAppointmentType || (classRequired && !selectedClass)}
@@ -169,33 +177,5 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
         </Paper>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        margin: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    heading: {
-        width: '100%',
-    },
-    formControl: {
-        marginTop: theme.spacing(1),
-        marginBottom: 16,
-        minWidth: 120,
-    },
-    submitButton: {
-        marginTop: 16,
-    },
-}))
 
 export default ScienceClubClassSelection
