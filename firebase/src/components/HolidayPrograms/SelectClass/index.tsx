@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { DateTime } from 'luxon'
 
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import { Button, Paper } from '@material-ui/core'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import { Skeleton } from '@material-ui/lab'
+import Typography from '@mui/material/Typography'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import { Button, Paper } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import { Skeleton } from '@mui/material'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import * as ROUTES from '../../../constants/routes'
 
@@ -20,9 +20,67 @@ import { capitalise } from '../../../utilities/stringUtilities'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-export const HolidayProgramSelection = () => {
-    const cssClasses = useStyles()
+const PREFIX = 'HolidayProgramSelection'
 
+const cssClasses = {
+    appBar: `${PREFIX}-appBar`,
+    toolbar: `${PREFIX}-toolbar`,
+    logo: `${PREFIX}-logo`,
+    paper: `${PREFIX}-paper`,
+    main: `${PREFIX}-main`,
+    heading: `${PREFIX}-heading`,
+    formControl: `${PREFIX}-formControl`,
+    submitButton: `${PREFIX}-submitButton`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${cssClasses.appBar}`]: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+
+    [`& .${cssClasses.toolbar}`]: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+
+    [`& .${cssClasses.logo}`]: {
+        height: 50,
+        cursor: 'pointer',
+    },
+
+    [`& .${cssClasses.paper}`]: {
+        margin: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + parseInt(theme.spacing(3).substring(-2)) * 2)]: {
+            marginTop: theme.spacing(6),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+
+    [`& .${cssClasses.main}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+
+    [`& .${cssClasses.heading}`]: {
+        width: '100%',
+    },
+
+    [`& .${cssClasses.formControl}`]: {
+        marginTop: theme.spacing(1),
+        marginBottom: 16,
+        minWidth: 120,
+    },
+
+    [`& .${cssClasses.submitButton}`]: {
+        marginTop: 16,
+    },
+}))
+
+export const HolidayProgramSelection = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const navigate = useNavigate()
@@ -70,7 +128,7 @@ export const HolidayProgramSelection = () => {
     }
 
     return (
-        <>
+        <Root>
             <CssBaseline />
             <AppBar className={cssClasses.appBar} position="static">
                 <Toolbar className={cssClasses.toolbar}>
@@ -156,45 +214,6 @@ export const HolidayProgramSelection = () => {
                     {selectedCalendar && classes.status === 'loading' && <Skeleton height={80} />}
                 </div>
             </Paper>
-        </>
+        </Root>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-    },
-    toolbar: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    logo: {
-        height: 50,
-        cursor: 'pointer',
-    },
-    paper: {
-        margin: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    heading: {
-        width: '100%',
-    },
-    formControl: {
-        marginTop: theme.spacing(1),
-        marginBottom: 16,
-        minWidth: 120,
-    },
-    submitButton: {
-        marginTop: 16,
-    },
-}))
