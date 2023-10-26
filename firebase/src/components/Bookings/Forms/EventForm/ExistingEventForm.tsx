@@ -7,6 +7,7 @@ import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialog
 import { useForm, FormProvider } from 'react-hook-form'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
+import { DateTime } from 'luxon'
 
 type Props = {
     event: EventBooking
@@ -32,10 +33,10 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
             price: event.price,
             slots: [
                 {
-                    startDate: event.startTime,
-                    startTime: event.startTime.toLocaleTimeString(['en-au'], { hourCycle: 'h24' }),
-                    endDate: event.endTime,
-                    endTime: event.endTime.toLocaleTimeString(['en-au'], { hourCycle: 'h24' }),
+                    startDate: DateTime.fromJSDate(event.startTime),
+                    startTime: DateTime.fromJSDate(event.startTime),
+                    endDate: DateTime.fromJSDate(event.endTime),
+                    endTime: DateTime.fromJSDate(event.endTime),
                 },
             ],
             notes: event.notes,
@@ -62,8 +63,8 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
                 contactEmail: values.contactEmail,
                 organisation: values.organisation,
                 location: values.location,
-                startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime),
-                endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime),
+                startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime!),
+                endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
             }
 
