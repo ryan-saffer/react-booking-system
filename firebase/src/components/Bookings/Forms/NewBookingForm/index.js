@@ -1,46 +1,65 @@
 import React, { useState, useContext } from 'react'
-import moment from 'moment-timezone'
+import { styled } from '@mui/material/styles'
 import { FirebaseContext } from '../../../Firebase'
 import 'typeface-roboto'
-import { makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
-import { InputLabel, MenuItem, FormHelperText, FormControlLabel, Checkbox } from '@material-ui/core'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import SaveIcon from '@material-ui/icons/Save'
-import CheckIcon from '@material-ui/icons/Check'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Fab from '@material-ui/core/Fab'
-import { green } from '@material-ui/core/colors'
+import {
+    InputLabel,
+    MenuItem,
+    FormHelperText,
+    FormControlLabel,
+    Checkbox,
+    Grid,
+    Typography,
+    TextField,
+    FormControl,
+    Select,
+    CircularProgress,
+    Fab,
+} from '@mui/material'
+import SaveIcon from '@mui/icons-material/Save'
+import CheckIcon from '@mui/icons-material/Check'
+import { green } from '@mui/material/colors'
 import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
 import { FormBookingFields, Location } from 'fizz-kidz'
 import { capitalise } from '../../../../utilities/stringUtilities'
-import { compose } from 'recompose'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { DateTime } from 'luxon'
 
-const useStyles = makeStyles((theme) => ({
-    confirmationEmailCheckbox: {
+const PREFIX = 'index'
+
+const classes = {
+    confirmationEmailCheckbox: `${PREFIX}-confirmationEmailCheckbox`,
+    saveButtonDiv: `${PREFIX}-saveButtonDiv`,
+    saveButton: `${PREFIX}-saveButton`,
+    progress: `${PREFIX}-progress`,
+    success: `${PREFIX}-success`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.confirmationEmailCheckbox}`]: {
         float: 'right',
     },
-    saveButtonDiv: {
+
+    [`& .${classes.saveButtonDiv}`]: {
         display: 'flex',
         justifyContent: 'flex-end',
     },
-    saveButton: {
+
+    [`& .${classes.saveButton}`]: {
         marginTop: theme.spacing(3),
     },
-    progress: {
+
+    [`& .${classes.progress}`]: {
         color: green[500],
         position: 'absolute',
         marginTop: '18px',
         marginRight: '-6px',
     },
-    success: {
+
+    [`& .${classes.success}`]: {
         marginTop: theme.spacing(3),
         backgroundColor: green[500],
     },
@@ -84,7 +103,7 @@ const getEmptyValues = () => ({
         errorText: 'Date cannot be empty',
     },
     time: {
-        value: '',
+        value: null,
         error: false,
         errorText: 'Time cannot be empty',
     },
@@ -140,14 +159,16 @@ const mapFormToBooking = (formValues) => {
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
-    var options = { timeZone: 'Australia/Melbourne' }
-    var dateTime = moment
-        .tz(
-            `${booking.date.toLocaleDateString('en-au', options)} ${booking.time}`,
-            'DD/MM/YYYY hh:mm',
-            'Australia/Melbourne'
-        )
-        .toDate()
+    const dateTime = DateTime.fromObject(
+        {
+            day: booking.date.getDate(),
+            month: booking.date.getMonth() + 1,
+            year: booking.date.getFullYear(),
+            hour: booking.time.getHours(),
+            minute: booking.time.getMinutes(),
+        },
+        { zone: 'Australia/Melbourne' }
+    ).toJSDate()
     delete booking.date
     delete booking.time
     booking['dateTime'] = dateTime
@@ -157,8 +178,6 @@ const mapFormToBooking = (formValues) => {
 
 /** The booking form component */
 const NewBookingForm = (props) => {
-    const classes = useStyles()
-
     const firebase = useContext(FirebaseContext)
 
     const [formValues, setFormValues] = useState(getEmptyValues)
@@ -166,12 +185,12 @@ const NewBookingForm = (props) => {
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const handleFormChange = (e) => {
-        const isDateField = e instanceof Date
-        let field = isDateField ? 'date' : e.target.name
+    const handleFormChange = (e, id) => {
+        const isDateOrTimeField = e instanceof DateTime
+        let field = isDateOrTimeField ? id : e.target.name
         let value
-        if (isDateField) {
-            value = e
+        if (isDateOrTimeField) {
+            value = e.toJSDate()
         } else if (field === 'sendConfirmationEmail') {
             value = e.target.checked
         } else {
@@ -226,7 +245,7 @@ const NewBookingForm = (props) => {
     }
 
     return (
-        <>
+        <Root>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography variant="h6">Parent Details</Typography>
@@ -317,41 +336,29 @@ const NewBookingForm = (props) => {
                     <Typography variant="h6">Date, Time & Location</Typography>
                 </Grid>
                 <Grid item xs={6} sm={3}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            fullWidth
-                            disableToolbar
-                            variant="inline"
-                            format="dd/MM/yyyy"
-                            id="date"
-                            label="Date of party"
-                            autoOk={true}
-                            value={formValues.date.value}
-                            error={formValues.date.error}
-                            helperText={formValues.date.error ? formValues.date.errorText : ''}
-                            onChange={handleFormChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
+                    <DatePicker
+                        label="Party date"
+                        value={formValues.date.value ? DateTime.fromJSDate(formValues.date.value) : null}
+                        onChange={(e) => handleFormChange(e, 'date')}
+                        format="dd/LL/yyyy"
+                        slotProps={{
+                            textField: {
+                                error: formValues.date.error,
+                                helperText: formValues.date.error ? formValues.date.errorText : '',
+                            },
+                        }}
+                    />
                 </Grid>
                 <Grid item xs={6} sm={3}>
-                    <TextField
-                        fullWidth
-                        id="time"
-                        name="time"
+                    <TimePicker
                         label="Party time"
-                        type="time"
-                        value={formValues.time.value}
-                        error={formValues.time.error}
-                        helperText={formValues.time.error ? formValues.time.errorText : ''}
-                        onChange={handleFormChange}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        inputProps={{
-                            step: 1800, // 5 min
+                        value={formValues.time.value ? DateTime.fromJSDate(formValues.time.value) : null}
+                        onChange={(e) => handleFormChange(e, 'time')}
+                        slotProps={{
+                            textField: {
+                                error: formValues.time.error,
+                                helperText: formValues.time.error ? formValues.time.errorText : '',
+                            },
                         }}
                     />
                 </Grid>
@@ -359,11 +366,10 @@ const NewBookingForm = (props) => {
                     <FormControl fullWidth>
                         <InputLabel>Type</InputLabel>
                         <Select
-                            inputProps={{
-                                name: 'type',
-                                id: 'type',
-                                value: formValues.type.value ?? '',
-                            }}
+                            name="type"
+                            id="type"
+                            label="type"
+                            value={formValues.type.value ?? ''}
                             error={formValues.type.error}
                             onChange={handleFormChange}
                         >
@@ -379,11 +385,10 @@ const NewBookingForm = (props) => {
                     <FormControl fullWidth>
                         <InputLabel>Location</InputLabel>
                         <Select
-                            inputProps={{
-                                name: 'location',
-                                id: 'location',
-                                value: formValues.location.value ? formValues.location.value : '',
-                            }}
+                            value={formValues.location.value ? formValues.location.value : ''}
+                            name="location"
+                            label="location"
+                            id="location"
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
@@ -402,11 +407,10 @@ const NewBookingForm = (props) => {
                     <FormControl fullWidth>
                         <InputLabel>Party Length</InputLabel>
                         <Select
-                            inputProps={{
-                                name: 'partyLength',
-                                id: 'partyLength',
-                                value: formValues.partyLength.value ? formValues.partyLength.value : '',
-                            }}
+                            name="partyLength"
+                            id="partyLength"
+                            label="party length"
+                            value={formValues.partyLength.value ? formValues.partyLength.value : ''}
                             error={formValues.partyLength.error}
                             onChange={handleFormChange}
                         >
@@ -481,8 +485,8 @@ const NewBookingForm = (props) => {
                 </Fab>
                 {loading && <CircularProgress size={68} className={classes.progress} />}
             </div>
-        </>
+        </Root>
     )
 }
 
-export default compose(WithErrorDialog)(NewBookingForm)
+export default WithErrorDialog(NewBookingForm)

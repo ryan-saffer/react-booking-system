@@ -1,9 +1,30 @@
-import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography } from '@material-ui/core'
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import React from 'react'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { EventBooking } from 'fizz-kidz'
 import dateFormat from 'dateformat'
 import ExistingEventForm from '../Forms/EventForm/ExistingEventForm'
+
+const PREFIX = 'EventPanel'
+
+const classes = {
+    heading: `${PREFIX}-heading`,
+    secondaryHeading: `${PREFIX}-secondaryHeading`,
+}
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    [`& .${classes.heading}`]: {
+        fontSize: theme.typography.pxToRem(15),
+        flexBasis: '40%',
+        flexShrink: 0,
+    },
+
+    [`& .${classes.secondaryHeading}`]: {
+        fontSize: theme.typography.pxToRem(15),
+        color: theme.palette.text.secondary,
+    },
+}))
 
 type Props = {
     event: EventBooking
@@ -11,10 +32,8 @@ type Props = {
 }
 
 const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
-    const classes = useStyles()
-
     return (
-        <Accordion>
+        <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography className={classes.heading}>
                     {(() => {
@@ -40,20 +59,8 @@ const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
                     <ExistingEventForm event={event} onDeleteEvent={onDeleteEvent} />
                 </div>
             </AccordionDetails>
-        </Accordion>
+        </StyledAccordion>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        flexBasis: '40%',
-        flexShrink: 0,
-    },
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-    },
-}))
 
 export default EventPanel

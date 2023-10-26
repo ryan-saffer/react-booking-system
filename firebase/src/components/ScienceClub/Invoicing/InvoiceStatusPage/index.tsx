@@ -19,7 +19,7 @@ export const ScienceClassDashboard: React.FC = () => {
     const [enrolmentsService, setEnrolmentsService] = useState<Service<ScienceEnrolment[]>>({ status: 'loading' })
 
     useEffect(() => {
-        firebase.db
+        const unsubscribe = firebase.db
             .collection('scienceAppointments')
             .where('appointmentTypeId', '==', appointmentTypeId)
             .where('status', '==', 'active')
@@ -33,6 +33,8 @@ export const ScienceClassDashboard: React.FC = () => {
                 enrolments = enrolments.sort((a, b) => a.parent.firstName.localeCompare(b.parent.firstName))
                 setEnrolmentsService({ status: 'loaded', result: enrolments })
             })
+
+        return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 import { Button } from 'antd'
 import { Acuity } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
@@ -9,6 +9,20 @@ import useFirebase from '../../../Hooks/context/UseFirebase'
 import Loader from '../../../ScienceClub/shared/Loader'
 import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
 
+const PREFIX = 'FreeConfirmationButton'
+
+const classes = {
+    primaryButton: `${PREFIX}-primaryButton`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.primaryButton}`]: {
+        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        borderColor: 'white',
+    },
+})
+
 type Props = {
     form: Form
     selectedClasses: Acuity.Class[]
@@ -18,7 +32,6 @@ type Props = {
 
 const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discountCode, setError }) => {
     const firebase = useFirebase()
-    const classes = useStyles()
 
     const navigate = useNavigate()
 
@@ -67,7 +80,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
     }
 
     return (
-        <>
+        <Root>
             <TermsCheckbox ref={termsRef} />
             <Button
                 className={classes.primaryButton}
@@ -81,15 +94,8 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                 {submitting && <Loader size="sm" />}
                 {!submitting && <strong>Confirm and register</strong>}
             </Button>
-        </>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    primaryButton: {
-        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
-        borderColor: 'white',
-    },
-})
 
 export default FreeConfirmationButton

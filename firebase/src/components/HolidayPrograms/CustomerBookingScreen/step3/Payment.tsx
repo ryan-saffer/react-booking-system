@@ -1,13 +1,27 @@
 import React, { useContext, useRef, useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { Button, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { Form } from '..'
 import Firebase, { FirebaseContext } from '../../../Firebase'
-import { makeStyles } from '@material-ui/core'
 import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import Loader from '../../../ScienceClub/shared/Loader'
 import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
+
+const PREFIX = 'Payment'
+
+const classes = {
+    primaryButton: `${PREFIX}-primaryButton`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.primaryButton}`]: {
+        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+        borderColor: 'white',
+    },
+})
 
 type Props = {
     form: Form
@@ -17,8 +31,6 @@ type Props = {
 }
 
 const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, discount }) => {
-    const classes = useStyles()
-
     const stripe = useStripe()
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
@@ -127,7 +139,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
     }
 
     return (
-        <>
+        <Root>
             <PaymentElement />
             <TermsCheckbox ref={termsRef} />
             {paymentError && (
@@ -147,15 +159,8 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 {submitting && <Loader size="sm" />}
                 {!submitting && <strong>Confirm and pay</strong>}
             </Button>
-        </>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    primaryButton: {
-        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
-        borderColor: 'white',
-    },
-})
 
 export default Payment

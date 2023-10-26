@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { styled } from '@mui/material/styles'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
-import { makeStyles } from '@material-ui/core/styles'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import Heading from './Header'
@@ -9,6 +9,57 @@ import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import { useSearchParams } from 'react-router-dom'
+
+const PREFIX = 'ScienceClubCheckinClassDetails'
+
+const classes = {
+    main: `${PREFIX}-main`,
+    root: `${PREFIX}-root`,
+    card: `${PREFIX}-card`,
+    noEnrolments: `${PREFIX}-noEnrolments`,
+}
+
+const Root = styled('div')({
+    [`&.${classes.main}`]: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+    },
+    [`& .${classes.root}`]: {
+        // backgroundColor: '#f0f2f2',
+        backgroundImage: 'linear-gradient(45deg, #2FEAA8, #028CF3)',
+        minHeight: '100vh',
+        paddingBottom: 24,
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    [`& .${classes.card}`]: {
+        marginLeft: 16,
+        marginRight: 16,
+        width: '100%',
+        height: 'fit-content',
+        marginTop: 36,
+        borderRadius: 16,
+        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+        '& .ant-card-body': {
+            padding: 12,
+        },
+    },
+    [`& .${classes.noEnrolments}`]: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        color: 'grey',
+        pointerEvents: 'none',
+    },
+})
 
 export type EnrolmentsMap = { [key: string]: ScienceEnrolment }
 
@@ -22,8 +73,6 @@ export function getEnrolment(appointment: Acuity.Appointment, enrolmentsMap: { [
 }
 
 export const ScienceClubCheckinClassDetails: React.FC = () => {
-    const classes = useStyles()
-
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -113,7 +162,7 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
     }, [])
 
     return (
-        <div className={classes.main}>
+        <Root className={classes.main}>
             <Heading time={classTime} />
             <div className={classes.root}>
                 <Card className={classes.card}>
@@ -135,48 +184,6 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
                     })()}
                 </Card>
             </div>
-        </div>
+        </Root>
     )
 }
-
-const useStyles = makeStyles({
-    main: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-    },
-    root: {
-        // backgroundColor: '#f0f2f2',
-        backgroundImage: 'linear-gradient(45deg, #2FEAA8, #028CF3)',
-        minHeight: '100vh',
-        paddingBottom: 24,
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    card: {
-        marginLeft: 16,
-        marginRight: 16,
-        width: '100%',
-        height: 'fit-content',
-        marginTop: 36,
-        borderRadius: 16,
-        boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-        '& .ant-card-body': {
-            padding: 12,
-        },
-    },
-    noEnrolments: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        color: 'grey',
-        pointerEvents: 'none',
-    },
-})

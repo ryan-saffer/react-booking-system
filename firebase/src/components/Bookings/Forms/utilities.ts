@@ -1,7 +1,6 @@
-import moment from 'moment'
-import dateFormat from 'dateformat'
 import { Booking, FirestoreBooking, FormBooking, Location, Utilities } from 'fizz-kidz'
 import { ExistingBookingFormFields } from './ExistingBookingForm/types'
+import { DateTime } from 'luxon'
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value
@@ -29,14 +28,16 @@ export function mapFormToBooking(formValues: ExistingBookingFormFields): Booking
 function convertFormBookingToBooking(formBooking: FormBooking): Booking {
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
-    let options = { timeZone: 'Australia/Melbourne' }
-    let dateTime = moment
-        .tz(
-            `${formBooking.date.toLocaleDateString('en-au', options)} ${formBooking.time}}`,
-            'DD/MM/YYYY hh:mm',
-            'Australia/Melbourne'
-        )
-        .toDate()
+    const dateTime = DateTime.fromObject(
+        {
+            day: formBooking.date.getDate(),
+            month: formBooking.date.getMonth() + 1,
+            year: formBooking.date.getFullYear(),
+            hour: formBooking.time.getHours(),
+            minute: formBooking.time.getMinutes(),
+        },
+        { zone: 'Australia/Melbourne' }
+    ).toJSDate()
 
     // downcast to any, since we know deleting date and time is safe.
     // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
@@ -79,7 +80,7 @@ function convertFirestoreBookingToFormBooking(firestoreBooking: FirestoreBooking
 
     const formBooking = booking as FormBooking
     formBooking.date = dateTime
-    formBooking.time = dateFormat(dateTime, 'HH:MM')
+    formBooking.time = dateTime
 
     return formBooking
 }
@@ -123,7 +124,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Date cannot be empty',
         },
         time: {
-            value: '',
+            value: new Date(),
             error: false,
             errorText: 'Time cannot be empty',
         },
@@ -296,7 +297,7 @@ function getEmptyDomainBooking(): FormBooking {
         location: Location.BALWYN,
         type: 'studio',
         date: new Date(),
-        time: '',
+        time: new Date(),
         partyLength: '1',
         address: '',
         numberOfChildren: '',

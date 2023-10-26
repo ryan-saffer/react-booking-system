@@ -1,39 +1,52 @@
 import React from 'react'
-import Accordion from '@material-ui/core/Accordion'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import { Chip, Grid } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Typography from '@mui/material/Typography'
+import { Chip, Grid } from '@mui/material'
 import ExistingBookingForm from './Forms/ExistingBookingForm'
 import { useScopes } from '../Hooks/UseScopes'
-import StoreIcon from '@material-ui/icons/Store'
-import DriveEtaIcon from '@material-ui/icons/DriveEta'
+import StoreIcon from '@mui/icons-material/Store'
+import DriveEtaIcon from '@mui/icons-material/DriveEta'
 
-var dateFormat = require('dateformat')
+const PREFIX = 'BookingPanel'
 
-const useStyles = makeStyles((theme) => ({
-    heading: {
+const classes = {
+    heading: `${PREFIX}-heading`,
+    secondaryHeading: `${PREFIX}-secondaryHeading`,
+    summary: `${PREFIX}-summary`,
+    chipPurple: `${PREFIX}-chipPurple`,
+    chipGreen: `${PREFIX}-chipGreen`,
+}
+
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    [`& .${classes.heading}`]: {
         fontSize: theme.typography.pxToRem(15),
     },
-    secondaryHeading: {
+
+    [`& .${classes.secondaryHeading}`]: {
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
-    summary: {
+
+    [`& .${classes.summary}`]: {
         display: 'flex',
         width: '100%',
         justifyContent: 'space-between',
         alignItems: 'center',
+        padding: '0 16px 0 16px',
     },
-    chipPurple: {
+
+    [`& .${classes.chipPurple}`]: {
         backgroundColor: '#B14592',
         color: 'white',
         '& svg': { color: 'white' },
         fontWeight: 600,
     },
-    chipGreen: {
+
+    [`& .${classes.chipGreen}`]: {
         backgroundColor: '#9ECC45',
         fontWeight: 600,
         '& svg': { color: 'white' },
@@ -41,16 +54,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-const BookingPanel = (props) => {
-    const classes = useStyles()
+var dateFormat = require('dateformat')
 
+const BookingPanel = (props) => {
     const isRestricted = useScopes().CORE === 'restricted'
 
     const { bookingId, booking } = props
 
     return (
-        <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <StyledAccordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ width: '100%' }}>
                 <div className={classes.summary}>
                     <Typography className={classes.heading}>
                         {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
@@ -75,7 +88,7 @@ const BookingPanel = (props) => {
                     </Grid>
                 </Grid>
             </AccordionDetails>
-        </Accordion>
+        </StyledAccordion>
     )
 }
 

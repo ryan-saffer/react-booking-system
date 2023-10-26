@@ -4,37 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import SignInGoogle from './SignInGoogle'
 import * as ROUTES from '../../constants/routes'
 import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
-
-import { makeStyles } from '@material-ui/core/styles'
-import { CssBaseline, TextField, Button, Snackbar } from '@material-ui/core'
-import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
-import { red } from '@material-ui/core/colors'
+import { CssBaseline, TextField, Button, Snackbar } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
 import { FirebaseContext } from '../Firebase'
-
-const useStyles = makeStyles((theme) => ({
-    main: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginTop: theme.spacing(6),
-    },
-    logo: {
-        maxWidth: 200,
-        margin: theme.spacing(2),
-    },
-    submitButton: {
-        marginTop: theme.spacing(1),
-        color: 'white',
-    },
-    snackBar: {
-        backgroundColor: red[500],
-    },
-}))
+import styles from './SignIn.module.css'
 
 const SignInPage = () => {
-    const classes = useStyles()
-
     const firebase = useContext(FirebaseContext)
 
     const navigate = useNavigate()
@@ -87,8 +63,8 @@ const SignInPage = () => {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <div className={classes.main}>
-                <img className={classes.logo} src={FizzLogo.default} alt="fizz kidz logo" />
+            <div className={styles.main}>
+                <img className={styles.logo} src={FizzLogo.default} alt="fizz kidz logo" />
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
@@ -125,7 +101,7 @@ const SignInPage = () => {
                     }}
                 />
                 <Button
-                    className={classes.submitButton}
+                    className={styles.submitButton}
                     type="submit"
                     fullWidth
                     variant="contained"
@@ -137,7 +113,7 @@ const SignInPage = () => {
                 </Button>
                 <SignInGoogle />
                 <Snackbar
-                    ContentProps={{ classes: { root: classes.snackBar } }}
+                    ContentProps={{ classes: { root: styles.snackBar } }}
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                     autoHideDuration={4000}
                     open={loginError}

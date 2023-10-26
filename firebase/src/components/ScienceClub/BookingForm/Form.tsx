@@ -1,12 +1,12 @@
 import { Acuity } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Checkbox, Divider, Form as AntdForm, Input, Modal, Select, Typography } from 'antd'
-import { makeStyles } from '@material-ui/core'
 import { PhoneRule, SimpleTextRule } from '../../HolidayPrograms/CustomerBookingScreen/step2/Step2'
 import Upload from './Upload'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import TermsAndConditions from './TermsAndConditions'
 import { FormSubmission } from '.'
+
 const { Text } = Typography
 const { Option } = Select
 const { TextArea } = Input
@@ -17,8 +17,6 @@ type Props = {
 }
 
 const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
-    const classes = useStyles()
-
     const [form] = AntdForm.useForm()
 
     const [loading, setLoading] = useState(false)
@@ -31,7 +29,11 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
     }, [])
 
     const handleSubmit = async () => {
-        await form.validateFields()
+        try {
+            await form.validateFields()
+        } catch (err) {
+            return
+        }
         setLoading(true)
         onSubmit({
             appointmentTypeId: appointmentType.id,
@@ -66,7 +68,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 
     return (
         <>
-            <AntdForm className={classes.form} layout="vertical" form={form}>
+            <AntdForm style={{ width: '100%', maxWidth: 500, alignSelf: 'center' }} layout="vertical" form={form}>
                 <Divider>Parent Details</Divider>
                 <AntdForm.Item
                     label="Parent First Name"
@@ -316,7 +318,6 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     </Checkbox>
                 </AntdForm.Item>
             </AntdForm>
-
             <Modal
                 title="Terms and conditions"
                 style={{ top: 20 }}
@@ -331,9 +332,12 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
             >
                 <TermsAndConditions />
             </Modal>
-
             <Button
-                className={classes.submitButton}
+                style={{
+                    marginBottom: 12,
+                    background: 'linear-gradient(270deg, #2FEAA8, #028CF3)',
+                    borderColor: 'white',
+                }}
                 block
                 loading={loading}
                 type="primary"
@@ -345,18 +349,5 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
         </>
     )
 }
-
-const useStyles = makeStyles({
-    form: {
-        width: '100%',
-        maxWidth: 500,
-        alignSelf: 'center',
-    },
-    submitButton: {
-        marginBottom: 12,
-        background: 'linear-gradient(270deg, #2FEAA8, #028CF3)',
-        borderColor: 'white',
-    },
-})
 
 export default Form

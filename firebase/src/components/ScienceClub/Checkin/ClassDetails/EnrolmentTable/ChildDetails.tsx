@@ -1,12 +1,43 @@
 import React, { useMemo, useState } from 'react'
+import { styled } from '@mui/material/styles';
 import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions, Dropdown, MenuProps, Space, Tag, Typography } from 'antd'
-import { makeStyles } from '@material-ui/core'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT_LG, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import { DownOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
 import { MenuItemType } from 'antd/es/menu/hooks/useItems'
+
+const PREFIX = 'ChildDetails';
+
+const classes = {
+    description: `${PREFIX}-description`,
+    dropdownBtn: `${PREFIX}-dropdownBtn`,
+    signatureWrapper: `${PREFIX}-signatureWrapper`,
+    signature: `${PREFIX}-signature`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.description}`]: {
+        '& th': {
+            backgroundColor: '#f7f7f7f7 !important',
+            fontWeight: 500,
+        },
+    },
+    [`& .${classes.dropdownBtn}`]: {
+        float: 'right',
+        paddingTop: 8,
+    },
+    [`& .${classes.signatureWrapper}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    [`& .${classes.signature}`]: {
+        maxWidth: 300,
+        width: 'fit-content',
+    },
+});
 
 type Props = {
     appointment: Acuity.Appointment
@@ -18,7 +49,7 @@ type Props = {
 type MenuKey = 'sign-in' | 'sign-out' | 'not-attending' | 'attending' | 'not-continuing'
 
 const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentLabel, updateEnrolment }) => {
-    const classes = useStyles()
+
     const { width } = useWindowDimensions()
 
     const [loading, setLoading] = useState(false)
@@ -77,7 +108,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
     }, [appointment])
 
     return (
-        <>
+        (<Root>
             <Descriptions className={classes.description} bordered size="small" column={1}>
                 {width < BREAKPOINT_LG && (
                     <>
@@ -150,29 +181,8 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                     </Button>
                 </div>
             </Dropdown>
-        </>
-    )
+        </Root>)
+    );
 }
-
-const useStyles = makeStyles({
-    description: {
-        '& th': {
-            backgroundColor: '#f7f7f7f7 !important',
-            fontWeight: 500,
-        },
-    },
-    dropdownBtn: {
-        float: 'right',
-        paddingTop: 8,
-    },
-    signatureWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    signature: {
-        maxWidth: 300,
-        width: 'fit-content',
-    },
-})
 
 export default ChildDetails

@@ -3,7 +3,6 @@ import { Acuity } from 'fizz-kidz'
 import useAcuityClient from '../../Hooks/api/UseAcuityClient'
 import Loader from '../shared/Loader'
 import Form from './Form'
-import { makeStyles } from '@material-ui/core'
 import { Alert, Typography } from 'antd'
 import useMixpanel from '../../Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '../../Mixpanel/Events'
@@ -19,8 +18,6 @@ type Props = {
  * or the waiting list form if the class is full.
  */
 const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
-    const classes = useStyles()
-
     const mixpanel = useMixpanel()
 
     const classesService = useAcuityClient('classAvailability', {
@@ -54,7 +51,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
 
     switch (classesService.status) {
         case 'loading':
-            return <Loader className={classes.topMargin} />
+            return <Loader style={{ marginTop: 24 }} />
         case 'loaded':
             if (classesService.result.length > 0) {
                 const spotsLeft = classesService.result[0].slotsAvailable
@@ -63,7 +60,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 if (spotsLeft > 0) {
                     return (
                         <>
-                            <Typography.Title className={classes.price} level={5}>
+                            <Typography.Title style={{ textAlign: 'center', marginBottom: 0, marginTop: 12 }} level={5}>
                                 ${parseInt(appointmentType.price) * numClasses} for {numClasses === 8 ? 'an' : 'a'}{' '}
                                 {numClasses} week term
                             </Typography.Title>
@@ -75,7 +72,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                     // this could be swapped out with a waiting list form in the future
                     return (
                         <Alert
-                            className={classes.topMargin}
+                            style={{ marginTop: 24 }}
                             message="Class Full"
                             description="Unfortunately this class is full for the term."
                             type="error"
@@ -86,7 +83,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 // no upcoming classes left
                 return (
                     <Alert
-                        className={classes.topMargin}
+                        style={{ marginTop: 24 }}
                         message="Class Full"
                         description="Unfortunately this class is full for the term."
                         type="error"
@@ -96,7 +93,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
         default: // error
             return (
                 <Alert
-                    className={classes.topMargin}
+                    style={{ marginTop: 24 }}
                     message="Something went wrong"
                     description="We're sorry. Something went wrong while retrieving this programs details. Please try again later."
                     type="error"
@@ -104,16 +101,5 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
             )
     }
 }
-
-const useStyles = makeStyles({
-    topMargin: {
-        marginTop: 24,
-    },
-    price: {
-        textAlign: 'center',
-        marginBottom: 0,
-        marginTop: 12,
-    },
-})
 
 export default FormSwitcher

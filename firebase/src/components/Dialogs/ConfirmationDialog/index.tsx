@@ -1,17 +1,27 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { makeStyles, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { styled } from '@mui/material/styles'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
 
-const useStyles = makeStyles((theme) => ({
-    deleteButton: {
+const PREFIX = 'WithConfirmationDialog'
+
+const classes = {
+    deleteButton: `${PREFIX}-deleteButton`,
+    form: `${PREFIX}-form`,
+}
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.deleteButton}`]: {
         color: 'red',
     },
-    form: {
+
+    [`& .${classes.form}`]: {
         width: '100%',
     },
 }))
@@ -44,8 +54,6 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
     Component: React.ComponentType<P>
 ): React.FC<Omit<P, keyof ConfirmationDialogProps>> => {
     const ComponentWithConfirmationDialog = (props: Omit<P, keyof ConfirmationDialogProps>) => {
-        const classes = useStyles()
-
         const [open, setOpen] = useState(false)
         const [title, setTitle] = useState('')
         const [content, setContent] = useState('')
@@ -79,8 +87,8 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             params.listItems && setListItems(params.listItems)
         }
 
-        const handleListItemChange = (event: ChangeEvent<{ value: unknown }>) => {
-            setSelectedListItem(event.target.value as string)
+        const handleListItemChange = (event: SelectChangeEvent<string>) => {
+            setSelectedListItem(event.target.value)
             setFormError(false)
         }
 
@@ -100,7 +108,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         }
 
         return (
-            <>
+            <Root>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
@@ -119,7 +127,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={(e) => handleConfirm(e)} classes={{ root: classes.deleteButton }}>
+                        <Button onClick={(e) => handleConfirm(e)} color="error" variant="contained">
                             {confirmButton}
                         </Button>
                         <Button onClick={(e) => handleClose(e)} color="primary">
@@ -128,7 +136,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                     </DialogActions>
                 </Dialog>
                 <Component {...(props as P)} showConfirmationDialog={handleShow} />
-            </>
+            </Root>
         )
     }
 

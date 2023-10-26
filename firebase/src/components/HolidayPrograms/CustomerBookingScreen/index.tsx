@@ -7,10 +7,10 @@ import { callAcuityClient } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
-import { makeStyles } from '@material-ui/core'
 import { LeftOutlined } from '@ant-design/icons'
 import Root from '../../Shared/Root'
 import Loader from '../../ScienceClub/shared/Loader'
+
 const { Step } = Steps
 
 export type Form = {
@@ -34,8 +34,6 @@ export const CustomerBookingScreen = () => {
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
     const [form] = AntdForm.useForm()
-
-    const styles = useStyles()
 
     const continueButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -183,7 +181,12 @@ export const CustomerBookingScreen = () => {
                     block
                     type="primary"
                     size="large"
-                    className={styles.primaryBtn}
+                    style={{
+                        marginTop: 24,
+                        marginBottom: 12,
+                        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
+                        borderColor: 'white',
+                    }}
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         setTimeout(() => continueButtonRef.current?.blur())
@@ -219,8 +222,8 @@ export const CustomerBookingScreen = () => {
                 <Step title="Your information" />
                 <Step title="Payment" />
             </Steps>
-            <div className={styles.wrapper}>
-                <div className={styles.form}>
+            <div style={{ width: '100%', maxWidth: 500, marginBottom: 36 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     {step > 1 && (
                         <Button
                             style={{ width: 'fit-content' }}
@@ -251,22 +254,3 @@ export const CustomerBookingScreen = () => {
         </Root>
     )
 }
-
-const useStyles = makeStyles({
-    wrapper: {
-        width: '100%',
-        maxWidth: 500,
-        marginBottom: 36,
-    },
-    form: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    primaryBtn: {
-        marginTop: 24,
-        marginBottom: 12,
-        background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
-        borderColor: 'white',
-    },
-})
