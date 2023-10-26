@@ -1,29 +1,40 @@
-import {
-    Checkbox,
-    CircularProgress,
-    Fab,
-    FormControlLabel,
-    Grid,
-    TextField,
-    Typography,
-    makeStyles,
-} from '@material-ui/core'
+import { Checkbox, CircularProgress, Fab, FormControlLabel, Grid, TextField, Typography, styled } from '@mui/material'
 import React, { useState } from 'react'
-import SaveIcon from '@material-ui/icons/Save'
-import CheckIcon from '@material-ui/icons/Check'
-import { green } from '@material-ui/core/colors'
+import SaveIcon from '@mui/icons-material/Save'
+import CheckIcon from '@mui/icons-material/Check'
+import { green } from '@mui/material/colors'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import EventForm, { Form, combineDateAndTime } from './EventForm'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 
+const PREFIX = 'NewEventForm'
+
+const classes = {
+    saveButtonDiv: `${PREFIX}-saveButtonDiv`,
+    success: `${PREFIX}-success`,
+    progress: `${PREFIX}-progress`,
+}
+
+const Root = styled('div')(({ theme }) => ({
+    [`& .${classes.saveButtonDiv}`]: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: 24,
+    },
+    [`& .${classes.success}`]: {
+        marginTop: theme.spacing(3),
+        backgroundColor: green[500],
+    },
+    [`& .${classes.progress}`]: {},
+}))
+
 type Props = {
     onSuccess: (date: Date) => void
 } & ErrorDialogProps
 
 const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
-    const classes = useStyles()
     const firebase = useFirebase()
 
     const [emailMessage, setEmailMessage] = useState('')
@@ -42,9 +53,9 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             slots: [
                 {
                     startDate: null,
-                    startTime: '',
+                    startTime: null,
                     endDate: null,
-                    endTime: '',
+                    endTime: null,
                 },
             ],
             notes: '',
@@ -85,8 +96,8 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     location: values.location,
                     price: values.price,
                     slots: values.slots.map((slot) => ({
-                        startTime: combineDateAndTime(slot.startDate!, slot.startTime),
-                        endTime: combineDateAndTime(slot.endDate!, slot.endTime),
+                        startTime: combineDateAndTime(slot.startDate!, slot.startTime!),
+                        endTime: combineDateAndTime(slot.endDate!, slot.endTime!),
                     })),
                     notes: values.notes,
                 },
@@ -95,7 +106,7 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             })
             setLoading(false)
             setSuccess(true)
-            setTimeout(() => onSuccess(values.slots[0].startDate!), 1000)
+            setTimeout(() => onSuccess(values.slots[0].startDate!.toJSDate()), 1000)
         } catch (err) {
             setLoading(false)
             displayError('There was an error booking in the event')
@@ -103,14 +114,14 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     }
 
     return (
-        <>
+        <Root>
             <FormProvider {...methods}>
                 <EventForm isNew={true} fieldArray={fieldArray} />
             </FormProvider>
             <Grid container spacing={3}>
                 {sendConfirmationEmail && (
                     <>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sx={{ marginTop: 2 }}>
                             <Typography variant="h6">Email Message</Typography>
                         </Grid>
                         <Grid item xs={12}>
@@ -165,26 +176,8 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                 </Fab>
                 {loading && <CircularProgress size={68} className={classes.progress} />}
             </div>
-        </>
+        </Root>
     )
 }
-
-const useStyles = makeStyles((theme) => ({
-    saveButtonDiv: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginTop: 24,
-    },
-    success: {
-        marginTop: theme.spacing(3),
-        backgroundColor: green[500],
-    },
-    progress: {
-        color: green[500],
-        position: 'absolute',
-        marginTop: '-6px',
-        marginRight: '-6px',
-    },
-}))
 
 export default WithErrorDialog(NewEventForm)
