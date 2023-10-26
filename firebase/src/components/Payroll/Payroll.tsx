@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { styled } from '@mui/material/styles'
 import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Collapse } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
 import { callFirebaseFunction } from '../../utilities/firebase/functions'
@@ -10,7 +11,28 @@ import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import { DownloadOutlined } from '@ant-design/icons'
-import { makeStyles } from '@material-ui/core'
+const PREFIX = 'Payroll'
+
+const classes = {
+    header: `${PREFIX}-header`,
+    flexCol: `${PREFIX}-flexCol`,
+    list: `${PREFIX}-list`,
+    'gap-16': `${PREFIX}-gap-16`,
+}
+
+const StyledLayout = styled(Layout)({
+    [`& .${classes.header}`]: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    [`& .${classes.flexCol}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    [`& .${classes['gap-16']}`]: { gap: 16 },
+    [`& .${classes.list}`]: {
+        '& li': {
+            marginBottom: 8,
+        },
+    },
+})
 
 const { RangePicker } = DatePicker
 const { Title, Paragraph, Text, Link } = Typography
@@ -24,7 +46,6 @@ type Props = {}
 
 export const Payroll: React.FC<Props> = () => {
     const firebase = useFirebase()
-    const classes = useStyles()
 
     const {
         token: { colorBgContainer },
@@ -66,7 +87,7 @@ export const Payroll: React.FC<Props> = () => {
     }
 
     return (
-        <Layout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
             <Header className={classes.header}>
                 <img
                     style={{ height: 50, cursor: 'pointer' }}
@@ -314,20 +335,6 @@ export const Payroll: React.FC<Props> = () => {
                     </div>
                 )}
             </Content>
-        </Layout>
+        </StyledLayout>
     )
 }
-
-const useStyles = makeStyles({
-    header: { display: 'flex', alignItems: 'center', justifyContent: 'center' },
-    flexCol: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    'gap-16': { gap: 16 },
-    list: {
-        '& li': {
-            marginBottom: 8,
-        },
-    },
-})
