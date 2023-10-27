@@ -112,7 +112,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
                 // ensure no one selected has a paid invoice
                 let includesPaidInvoice = false
                 selectedRowKeys.forEach((key) => {
-                    if (invoiceStatusMap[key].status === 'PAID') {
+                    if (invoiceStatusMap[key as string].status === 'PAID') {
                         includesPaidInvoice = true
                     }
                 })

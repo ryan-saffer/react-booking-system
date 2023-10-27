@@ -10,6 +10,7 @@ type ResultType = 'success' | 'error'
 interface ResultProps {
     label: string
     resultType: ResultType
+    children?: React.ReactNode
 }
 
 const Result: React.FC<ResultProps> = ({ label, resultType, children }) => {
