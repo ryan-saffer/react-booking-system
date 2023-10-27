@@ -6,6 +6,7 @@ type Props = {
     color: 'pink' | 'green'
     width?: 'centered' | 'full'
     logoSize?: 'sm' | 'lg'
+    children?: React.ReactNode
 }
 
 const defaultProps: Partial<Props> = {
