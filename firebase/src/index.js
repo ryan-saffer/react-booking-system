@@ -1,5 +1,4 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './components/App'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -14,13 +13,13 @@ mixpanel.init(
     { debug: process.env.REACT_APP_ENV === 'dev' }
 )
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'))
+root.render(
     <FirebaseContext.Provider value={new Firebase()}>
         <MixpanelContext.Provider value={mixpanel}>
             <App />
         </MixpanelContext.Provider>
-    </FirebaseContext.Provider>,
-    document.getElementById('root')
+    </FirebaseContext.Provider>
 )
 
 // If you want your app to work offline and load faster, you can change
