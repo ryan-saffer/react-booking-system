@@ -30,6 +30,7 @@ const DateNav = ({ date, handleDateChange }: { date: DateTime; handleDateChange:
                 <NavigateBefore />
             </Button>
             <DatePicker
+                closeOnSelect
                 value={date}
                 slotProps={{
                     textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
