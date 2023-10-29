@@ -34,8 +34,12 @@ const bathbombs = {
 ![Bath bomb](https://drive.google.com/uc?id=1rIf4fd-une_XvJEM7Sl6-JOSLGCgxNNw)
 ![Bath bomb](https://drive.google.com/uc?id=1e4CUnJzII0g4ZTaHOuE-HIVK51FF5oio)
 ![Bath bomb](https://drive.google.com/uc?id=1YhVuXgwxsYg3yefaFivVTL7K_ftqJ6Er)
+`,
+}
 
-# Expert Marble Bath Bombs
+const expertMarbleBathBombs = {
+    name: 'Expert Marble Bath Bombs',
+    markdown: `
 ### Ingredients
 * X 4 15ml Bicarbonate soda FLAT spoons
 * X 2 15ml Citric acid FLAT spoons
@@ -73,6 +77,7 @@ const bathbombs = {
 const fluffySlime = {
     name: 'Fluffy Slime',
     markdown: `
+> Fizz Tip: We can make ANY themed slime. Hulk slime, fairy slime, Watermelon slime. The key ingredient to making a specific slime that isn't listed on our website is putting a creative hat on and asking the child 'what would that look like?'
 ### Ingredients
 * White glue (can also use clear) x4 15ml BIG spoons
 * Sodium Bicarbonate x1 15ml FLAT spoon 
@@ -481,8 +486,12 @@ Larger size soap molds = 4 cubes and kids take ONE soap home
 
 ![soap](https://drive.google.com/uc?id=1shrg4icXgpEnAmK3WEZBu2HEew8_8PLP)
 ![soap](https://drive.google.com/uc?id=1-UruHqgNFdNfBZL_bW0VlbDUiUEBJlbk)
+`,
+}
 
-# Bug / Animal in Soap
+const bugAnimalInSoap = {
+    name: 'Bug / Animal in Soap',
+    markdown: `
 ### Ingredients
 * Vegetable Glycerin x 5 cubes (cut to size - see photo)
 * Scent (if requested)
@@ -513,7 +522,7 @@ Larger size soap molds = 4 cubes and kids take ONE soap home
 ![soap](https://drive.google.com/uc?id=1tUi7WG1jkBMDcT2zXUp3qP1XX80G-yrq)
 ![soap](https://drive.google.com/uc?id=1-IdUDVkGCgGEV2JbImO-_IQgsY2rf1UZ)
 ![soap](https://drive.google.com/uc?id=1p2x5BgyMvqUxo77ltIvBipJVAkWWNb4w)
-    `,
+`,
 }
 
 const sugarLipScrub = {
@@ -536,12 +545,11 @@ const sugarLipScrub = {
     `,
 }
 
-const themedSlimes = {
-    name: 'Theme Slimes',
+const monsterSlime = {
+    name: 'Monster Slime',
     markdown: `
 > Fizz Tip: We can make ANY themed slime. Hulk slime, fairy slime, Watermelon slime. The key ingredient to making a specific slime that isn't listed on our website is putting a creative hat on and asking the child 'what would that look like?'
 
-# Monster Slime
 ### Ingredients
 * Clear Glue (can also use white) x4 15ml BIG spoons
 * Sodium Bicarbonate x1 15ml FLAT spoon 
@@ -569,7 +577,13 @@ const themedSlimes = {
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
 ![monster slime](https://drive.google.com/uc?id=1Danrqphnc5falwlyVyG7xlDWt3si_4H6)
+`,
+}
 
+const frozenSlime = {
+    name: 'Frozen Slime',
+    markdown: `
+> Fizz Tip: We can make ANY themed slime. Hulk slime, fairy slime, Watermelon slime. The key ingredient to making a specific slime that isn't listed on our website is putting a creative hat on and asking the child 'what would that look like?'
 # Frozen Slime
 ### Ingredients
 * Clear Glue (can also use white) x4 15ml BIG spoons
@@ -596,7 +610,13 @@ const themedSlimes = {
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
 ![frozen slime](https://drive.google.com/uc?id=1bRdZ-Pwh7m-RLJ8Z-tqhWBcPeeIwO5hX)
+`,
+}
 
+const unicornSlime = {
+    name: 'Unicorn Slime',
+    markdown: `
+> Fizz Tip: We can make ANY themed slime. Hulk slime, fairy slime, Watermelon slime. The key ingredient to making a specific slime that isn't listed on our website is putting a creative hat on and asking the child 'what would that look like?'
 # Unicorn Slime
 ### Ingredients
 * Clear Glue (can also use white) x4 15ml BIG spoons
@@ -623,14 +643,14 @@ const themedSlimes = {
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
 ![unicorn slime](https://drive.google.com/uc?id=1PFBiFdxw0H_Pn5eQmZ1cKyBrOJl6WzpL)
-    `,
+}
+`,
 }
 
 const tieDye = {
     name: 'Tie Dye',
     markdown: `
 > Fizz Tip: This creation MUST have aprons and gloves worn by children UNLESS there is parental/guardian permission to not. Upon entry, it does well to flag with each parent, what is involved and what MIGHT happen if tie dye gets on clothes. NONE of this is to come into contact with food - this is to be prepared outside of the kitchen. Aprons on chairs as kids come into the venue to save time putting them on later.
-
 ### Ingredients
 * Whatever is being tie dyed PRE SOAKED in soda ash
 * Dye
@@ -756,20 +776,24 @@ const wobblySoap = {
 
 export const creations = [
     bathbombs,
+    bugAnimalInSoap,
+    expertMarbleBathBombs,
     fluffySlime,
+    frozenSlime,
     galaxySlime,
     glitterFacePaint,
     glitterSlime,
     instantSnowSlime,
     lipBalm,
+    monsterSlime,
     rainbowAndMarbleSoap,
     rainbowBathCrystals,
     rainbowTieDySlime,
     sandSlime,
     soap,
     sugarLipScrub,
-    themedSlimes,
     tieDye,
+    unicornSlime,
     volcano,
     wobblySoap,
 ]

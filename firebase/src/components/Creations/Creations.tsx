@@ -18,7 +18,7 @@ export const CreationsPage: React.FC<Props> = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h5" color="inherit">
-                        Creations
+                        Creation Instructions
                     </Typography>
                     <img
                         src={Logo.default}
