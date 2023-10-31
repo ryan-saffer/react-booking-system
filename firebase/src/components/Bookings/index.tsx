@@ -59,7 +59,6 @@ const classes = {
     paper: `${PREFIX}-paper`,
     layout: `${PREFIX}-layout`,
     dialog: `${PREFIX}-dialog`,
-    linearProgressHidden: `${PREFIX}-linearProgressHidden`,
 }
 
 const Root = styled('div')(({ theme }) => ({
@@ -186,10 +185,6 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${classes.dialog}`]: {
         backgroundColor: grey[200],
     },
-
-    [`& .${classes.linearProgressHidden}`]: {
-        visibility: 'hidden',
-    },
 }))
 
 export const BookingsPage = () => {
@@ -249,24 +244,20 @@ export const BookingsPage = () => {
         setSelectedLocations({ ...selectedLocations, [name]: e.target.checked })
     }
 
-    const fetchBooking = (id: any) => {
+    const fetchBooking = async (id: any) => {
         setLoading(true)
-        firebase.db
-            .collection('bookings')
-            .doc(id)
-            .get()
-            .then((documentSnapshot) => {
-                setBookings([documentSnapshot])
-                setDate(documentSnapshot.get('dateTime').toDate())
-                let selectedLocations: { [key in Location]?: boolean } = {}
-                Object.values(Location).forEach((location) => (selectedLocations[location] = false))
-                selectedLocations[documentSnapshot.get('location') as Location] = true
-                setSelectedLocations(selectedLocations)
-            })
+        const documentSnapshot = await firebase.db.collection('bookings').doc(id).get()
+        setBookings([documentSnapshot])
+        setDate(DateTime.fromJSDate(documentSnapshot.get('dateTime').toDate()))
+        let selectedLocations: { [key in Location]?: boolean } = {}
+        Object.values(Location).forEach((location) => (selectedLocations[location] = false))
+        selectedLocations[documentSnapshot.get('location') as Location] = true
+        setSelectedLocations(selectedLocations)
+        setEventsChecked(false)
         setLoading(false)
     }
 
-    const fetchBookingsByDate = (date: Date) => {
+    const fetchBookingsByDate = async (date: Date) => {
         // only show loading indicator if taking a while
         setLoading(true)
 
@@ -274,19 +265,17 @@ export const BookingsPage = () => {
         var nextDay = new Date(date.getTime())
         nextDay.setDate(nextDay.getDate() + 1)
 
-        firebase.db
+        const querySnapshot = await firebase.db
             .collection('bookings')
             .where('dateTime', '>', date)
             .where('dateTime', '<', nextDay)
             .get()
-            .then((querySnapshot) => {
-                var latestBookings: firebase.firestore.DocumentSnapshot[] = []
-                querySnapshot.forEach((documentSnapshot) => {
-                    latestBookings.push(documentSnapshot)
-                })
-                setBookings(latestBookings)
-                setLoading(false)
-            })
+        var latestBookings: firebase.firestore.DocumentSnapshot[] = []
+        querySnapshot.forEach((documentSnapshot) => {
+            latestBookings.push(documentSnapshot)
+        })
+        setBookings(latestBookings)
+        setLoading(false)
     }
 
     return (
@@ -348,8 +337,9 @@ export const BookingsPage = () => {
             <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
                 <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
                     <DateNav date={date} handleDateChange={handleDateChange} />
-                    <LinearProgress className={loading ? '' : classes.linearProgressHidden} color="secondary" />
-                    <FormGroup row sx={{ padding: 1, gap: 1 }}>
+                    {loading && <LinearProgress style={{ marginTop: 9 }} color="secondary" />}
+                    {!loading && <div style={{ height: 13 }} />}
+                    <FormGroup row sx={{ gap: 1 }}>
                         <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                         <FormControlLabel
                             sx={{ gap: 1 }}

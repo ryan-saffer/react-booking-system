@@ -30,12 +30,14 @@ const DateNav = ({ date, handleDateChange }: { date: DateTime; handleDateChange:
                 <NavigateBefore />
             </Button>
             <DatePicker
+                closeOnSelect
                 value={date}
                 slotProps={{
                     textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
                     actionBar: { actions: ['today'] },
                 }}
                 format="ccc, LLL d, y"
+                onChange={(date) => date && handleDateChange(date)}
             />
             <Button onClick={() => handleDateChange(date.plus({ days: 1 }))}>
                 <NavigateNext />

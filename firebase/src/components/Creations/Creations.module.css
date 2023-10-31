@@ -1,0 +1,45 @@
+.root {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    padding: 24px;
+    background: #f3f6fc;
+    flex-grow: 1;
+    min-height: calc(100vh - 64px - 48px);
+}
+
+.logo {
+    height: 50px;
+    cursor: pointer;
+    position: absolute;
+    right: 50%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.markdown {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.markdown blockquote {
+    padding: 0 1em;
+    color: #6a737d;
+    border-left: 0.25em solid #4bc5d9;
+}
+
+.markdown li::marker {
+    font-weight: 800;
+}
+
+.markdown h3 {
+    color: #b14592;
+}
+
+.markdown img {
+    aspect-ratio: inherit;
+    width: 250px;
+    border-radius: 10px;
+    border: 5px solid #4bc5d9;
+}
