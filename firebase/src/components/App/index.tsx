@@ -150,6 +150,13 @@ const router = createBrowserRouter([
             return { Component: withAuthorization([], Onboarding) }
         },
     },
+    {
+        path: ROUTES.CREATIONS,
+        lazy: async () => {
+            const { CreationsPage } = await import('../Creations/Creations')
+            return { Component: withAuthorization([], CreationsPage) }
+        },
+    },
 ])
 
 const App = () => {
