@@ -37,6 +37,7 @@ const DateNav = ({ date, handleDateChange }: { date: DateTime; handleDateChange:
                     actionBar: { actions: ['today'] },
                 }}
                 format="ccc, LLL d, y"
+                onChange={(date) => date && handleDateChange(date)}
             />
             <Button onClick={() => handleDateChange(date.plus({ days: 1 }))}>
                 <NavigateNext />
