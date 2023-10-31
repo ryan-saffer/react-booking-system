@@ -104,9 +104,6 @@ export const Navigation = () => {
                             <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
                                 <Typography>Parties & Events</Typography>
                             </Paper>
-                            <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.CREATIONS)}>
-                                <Typography>Creation Instructions</Typography>
-                            </Paper>
                             {!isRestricted && (
                                 <>
                                     <Paper
@@ -120,6 +117,12 @@ export const Navigation = () => {
                                         onClick={() => navigateToRoute(ROUTES.SCIENCE_CLUB_SELECT_CLASS)}
                                     >
                                         <Typography>After School Science Program</Typography>
+                                    </Paper>
+                                    <Typography className={classes.heading} variant="h6">
+                                        Creations
+                                    </Typography>
+                                    <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.CREATIONS)}>
+                                        <Typography>Creation Instructions</Typography>
                                     </Paper>
                                 </>
                             )}
