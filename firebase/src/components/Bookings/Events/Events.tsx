@@ -24,7 +24,7 @@ type Props = {
 
 const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
     const title = () => (
-        <Typography className={classes.heading} variant="h6">
+        <Typography style={{ paddingTop: 16, paddingBottom: 8 }} variant="h6">
             Events
         </Typography>
     )
