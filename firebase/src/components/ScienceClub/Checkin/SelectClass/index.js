@@ -29,7 +29,6 @@ const Root = styled('div')(({ theme }) => ({
 
     [`& .${cssClasses.toolbar}`]: {
         display: 'flex',
-        justifyContent: 'space-between',
     },
 
     [`& .${cssClasses.title}`]: {
@@ -40,6 +39,10 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${cssClasses.logo}`]: {
         height: 50,
         cursor: 'pointer',
+        position: 'absolute',
+        left: '50%',
+        right: '50%',
+        transform: 'translate(-50%)',
     },
 }))
 
