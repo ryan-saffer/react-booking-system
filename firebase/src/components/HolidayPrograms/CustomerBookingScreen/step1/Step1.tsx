@@ -48,7 +48,7 @@ const Step1: React.FC<Props> = ({
 
     return (
         <>
-            <Form.Item name="store" label="Which store do you want to book for?">
+            <Form.Item name="store" label="Which studio do you want to book for?">
                 <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
                         if (process.env.REACT_APP_ENV === 'prod') {
