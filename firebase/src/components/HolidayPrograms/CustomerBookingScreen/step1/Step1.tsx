@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Form, Checkbox, Select, Tag, Card } from 'antd'
+import { Form, Checkbox, Select, Tag, Card, Alert, Button } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Acuity, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
@@ -67,6 +67,18 @@ const Step1: React.FC<Props> = ({
                     })()}
                 </Select>
             </Form.Item>
+            {filteredClasses && filteredClasses.length !== 0 && (
+                <Alert
+                    type="info"
+                    message="Check our website to see what we will be making each day."
+                    action={
+                        <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs">
+                            View schedule
+                        </Button>
+                    }
+                    style={{ marginBottom: 16 }}
+                />
+            )}
             {filteredClasses?.map((klass) => {
                 let name = `${klass.id}-checkbox`
                 const slotsAvailable = getSlotsAvailable(klass)
