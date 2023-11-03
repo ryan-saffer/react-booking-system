@@ -1,7 +1,7 @@
 import { Acuity } from 'fizz-kidz'
 
-export const PROGRAM_PRICE = 45
-export const DISCOUNT_PRICE = 5
+export const PROGRAM_PRICE = 49
+export const DISCOUNT_PRICE = 4
 
 export function calculateTotal(
     selectedClasses: Acuity.Class[],

@@ -1,8 +1,7 @@
-import type { UpdatePaymentIntentParams } from 'fizz-kidz'
 import { logError, onCall, throwError } from '../../../utilities'
 import { StripeClient } from '../../core/StripeClient'
 
-export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data: UpdatePaymentIntentParams) => {
+export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data) => {
     const programData: { [key: string]: number } = {}
     data.programs.forEach((it) => {
         // slice childName since key must be under 40 chars

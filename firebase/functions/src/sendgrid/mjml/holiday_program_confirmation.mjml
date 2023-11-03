@@ -82,7 +82,7 @@
           Cancellation Policy
         </mj-text>
         <mj-text color="#637381" font-size="16px">
-          A full refund will be automatically issued for cancellations made more than 24 hours before the program. Cancellations made less than 24 hours before the program will not be refunded.
+          A full refund will be automatically issued for cancellations made more than 48 hours before the program. Cancellations made less than 48 hours before the program will not be refunded.
         </mj-text>
       </mj-column>
       <mj-column width="100%">

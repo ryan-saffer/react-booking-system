@@ -1,9 +1,8 @@
-import type { CreatePaymentIntentParams } from 'fizz-kidz'
 import { getOrCreateCustomer } from '../../core/customers'
 import { logError, onCall, throwError } from '../../../utilities'
 import { StripeClient } from '../../core/StripeClient'
 
-export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data: CreatePaymentIntentParams) => {
+export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) => {
     // first create the customer
     const customerId = await getOrCreateCustomer(data.name, data.email, data.phone)
 
