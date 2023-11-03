@@ -40,7 +40,7 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         // convert ms to hours
         const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
 
-        if (hoursBetweenDates > 24) {
+        if (hoursBetweenDates > 48) {
             const refundCalulcator = new RefundCalculator(metadata, parseInt(amountCharged))
             const refundAmount = refundCalulcator.calculateRefund()
             logger.log('Performing refund of amount:', refundAmount)
@@ -52,7 +52,7 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
                 reason: 'requested_by_customer',
             })
         } else {
-            logger.log('Less than 24 hours before program, not performing refund.')
+            logger.log('Less than 48 hours before program, not performing refund.')
         }
 
         // update program count to one less, regardless if refunded or not.

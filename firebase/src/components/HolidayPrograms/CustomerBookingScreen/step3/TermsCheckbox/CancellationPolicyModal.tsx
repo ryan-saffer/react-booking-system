@@ -21,9 +21,9 @@ const CancellationPolicyModal: React.FC<Props> = ({ open, onClose }) => {
             <strong>Cancellation Policy</strong>
             <p />
             <p>
-                A full refund will be automatically issued for cancellations made more than 24 hours before the program.
+                A full refund will be automatically issued for cancellations made more than 48 hours before the program.
             </p>
-            <p>Cancellations made less than 24 hours before the program will not be refunded.</p>
+            <p>Cancellations made less than 48 hours before the program will not be refunded.</p>
         </Modal>
     )
 }
