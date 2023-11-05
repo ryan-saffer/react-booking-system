@@ -25,7 +25,7 @@ export async function sendConfirmationEmail(appointments: Acuity.Appointment[]) 
                 appointment,
                 Acuity.Constants.Forms.CHILDREN_DETAILS,
                 Acuity.Constants.FormFields.CHILDREN_NAMES
-            )} - ${startTime.toFormat('cccc, LLL L, t')} - ${endTime.toFormat('t')}`,
+            )} - ${startTime.toFormat('cccc, LLL dd, t')} - ${endTime.toFormat('t')}`,
             confirmationPage: appointment.confirmationPage,
         }
     })
