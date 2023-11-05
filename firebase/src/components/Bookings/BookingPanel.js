@@ -5,11 +5,12 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Typography from '@mui/material/Typography'
-import { Chip, Grid } from '@mui/material'
+import { Chip, Grid, useMediaQuery } from '@mui/material'
 import ExistingBookingForm from './Forms/ExistingBookingForm'
 import { useScopes } from '../Hooks/UseScopes'
 import StoreIcon from '@mui/icons-material/Store'
 import DriveEtaIcon from '@mui/icons-material/DriveEta'
+import { Tag } from 'antd'
 
 const PREFIX = 'BookingPanel'
 
@@ -19,24 +20,19 @@ const classes = {
     summary: `${PREFIX}-summary`,
     chipPurple: `${PREFIX}-chipPurple`,
     chipGreen: `${PREFIX}-chipGreen`,
+    test: `${PREFIX}-test`,
+    accordionHeading: `${PREFIX}-accordionRow2`,
 }
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     [`& .${classes.heading}`]: {
         fontSize: theme.typography.pxToRem(15),
+        fontWeight: 500,
     },
 
     [`& .${classes.secondaryHeading}`]: {
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
-    },
-
-    [`& .${classes.summary}`]: {
-        display: 'flex',
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '0 16px 0 16px',
     },
 
     [`& .${classes.chipPurple}`]: {
@@ -52,6 +48,19 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         '& svg': { color: 'white' },
         color: 'white',
     },
+
+    [`& .${classes.summary}`]: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        gap: 8,
+    },
+
+    [`& .${classes.accordionHeading}`]: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
 }))
 
 var dateFormat = require('dateformat')
@@ -61,24 +70,44 @@ const BookingPanel = (props) => {
 
     const { bookingId, booking } = props
 
+    const isMobile = useMediaQuery('(max-width: 460px')
+
     return (
         <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ width: '100%' }}>
                 <div className={classes.summary}>
-                    <Typography className={classes.heading}>
-                        {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
-                        {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
-                    </Typography>
-                    <Typography className={classes.secondaryHeading}>
-                        {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName}: {booking.childName}
-                        's {booking.childAge}th
-                    </Typography>
-                    <Chip
-                        label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
-                        variant="outlined"
-                        className={booking.type === 'studio' ? classes.chipPurple : classes.chipGreen}
-                        icon={booking.type === 'studio' ? <StoreIcon /> : <DriveEtaIcon />}
-                    />
+                    <div className={classes.accordionHeading}>
+                        <Typography className={classes.heading}>
+                            {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
+                            {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
+                        </Typography>
+                        <Typography className={classes.secondaryHeading}>
+                            {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName} -{' '}
+                            {booking.childName}
+                            's {booking.childAge}th
+                        </Typography>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            ...(isMobile && { flexDirection: 'column-reverse', gap: 4 }),
+                        }}
+                    >
+                        <Tag
+                            color={booking.oldPrices ? 'volcano-inverse' : 'green-inverse'}
+                            style={{ textAlign: 'center', fontWeight: 600 }}
+                        >
+                            {booking.oldPrices ? 'OLD PRICE' : 'NEW PRICE'}
+                        </Tag>
+                        <Chip
+                            label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
+                            variant="outlined"
+                            className={booking.type === 'studio' ? classes.chipPurple : classes.chipGreen}
+                            icon={booking.type === 'studio' ? <StoreIcon /> : <DriveEtaIcon />}
+                        />
+                    </div>
                 </div>
             </AccordionSummary>
             <AccordionDetails>

@@ -17,6 +17,7 @@ import {
     Checkbox,
     FormGroup,
     Box,
+    useMediaQuery,
 } from '@mui/material'
 import { ExitToApp as ExitToAppIcon } from '@mui/icons-material'
 import { grey } from '@mui/material/colors'
@@ -206,6 +207,8 @@ export const BookingsPage = () => {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = urlSearchParams.get('id')
 
+    const isMobile = useMediaQuery('(max-width: 460px)')
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -339,12 +342,13 @@ export const BookingsPage = () => {
                     <DateNav date={date} handleDateChange={handleDateChange} />
                     {loading && <LinearProgress style={{ marginTop: 9 }} color="secondary" />}
                     {!loading && <div style={{ height: 13 }} />}
-                    <FormGroup row sx={{ gap: 1 }}>
+                    <FormGroup row sx={{ columnGap: 1 }}>
                         <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
                         <FormControlLabel
-                            sx={{ gap: 1 }}
+                            // sx={{ gap: 1 }}
                             control={
                                 <Checkbox
+                                    size={isMobile ? 'small' : 'medium'}
                                     checked={eventsChecked}
                                     onChange={() => setEventsChecked((it) => !it)}
                                     color="secondary"
