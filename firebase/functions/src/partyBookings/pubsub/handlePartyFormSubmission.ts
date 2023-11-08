@@ -8,11 +8,12 @@ import { DateTime } from 'luxon'
 import { getBookingAdditions, getBookingCreations } from '../core/utils'
 
 export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubmission', async (responses) => {
-    let booking: Partial<Booking> = {}
     const formMapper = new FormMapper(responses)
+    const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
+    let booking: Partial<Booking> = {}
     try {
-        booking = formMapper.mapToBooking()
+        booking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
         booking.partyFormFilledIn = true
         logger.log(booking)
     } catch (err) {
@@ -23,7 +24,6 @@ export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubm
     const mailClient = await MailClient.getInstance()
 
     // first check if the booking form has been filled in previously
-    const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
     if (existingBooking.partyFormFilledIn) {
         // form has been filled in before, notify manager of the change
         try {

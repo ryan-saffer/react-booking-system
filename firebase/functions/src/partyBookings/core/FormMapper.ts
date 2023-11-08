@@ -1,4 +1,3 @@
-import { PFProduct, PFQuestion, Questions } from './types'
 import {
     Additions,
     Booking,
@@ -7,6 +6,9 @@ import {
     Location,
     AdditionsDisplayValuesMapPrices,
     AdditionsDisplayValuesMap,
+    PFProduct,
+    PFQuestion,
+    Questions,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
 import { logger } from 'firebase-functions/v2'
@@ -20,20 +22,18 @@ export class FormMapper {
         this.bookingId = this.getQuestionValue('id')
     }
 
-    mapToBooking() {
+    mapToBooking(type: Booking['type'], location: Location) {
         // first get all questions shown to both in-store and mobile parties
-        let booking: Partial<Booking> = {
-            ...this.getSharedQuestions(),
-        }
+        let booking = this.getSharedQuestions(type, location)
 
         // in-store parties use a multiple choice, while mobile use a dropdown
         booking['numberOfChildren'] =
-            booking.type === 'mobile'
+            type === 'mobile'
                 ? this.getQuestionValue('number_of_children_mobile')
                 : this.getQuestionValue('number_of_children_in_store')
 
         // additions are only asked to in-store
-        if (booking.type !== 'mobile') {
+        if (type !== 'mobile') {
             booking = {
                 ...booking,
                 ...this.getAdditions(),
@@ -107,11 +107,11 @@ export class FormMapper {
      * Return a booking object with all values from questions
      * shared across both in-store and mobile
      */
-    private getSharedQuestions() {
+    private getSharedQuestions(type: Booking['type'], location: Location) {
         const creations = this.getCreations()
 
         const booking: Partial<Booking> = {
-            location: this.mapLocation(this.getQuestionValue('location')),
+            location: type === 'studio' ? this.mapLocation(this.getQuestionValue('location')) : location, // mobile party forms have 'location=mobile', so this fixes it
             parentFirstName: this.getQuestionValue('parent_first_name'),
             parentLastName: this.getQuestionValue('parent_last_name'),
             childName: this.getQuestionValue('child_name'),
