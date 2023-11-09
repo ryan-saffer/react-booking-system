@@ -28,10 +28,9 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 type Props = {
     event: EventBooking
-    onDeleteEvent: (date: Date) => void
 }
 
-const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
+const EventPanel: React.FC<Props> = ({ event }) => {
     return (
         <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -56,7 +55,7 @@ const EventPanel: React.FC<Props> = ({ event, onDeleteEvent }) => {
             </AccordionSummary>
             <AccordionDetails>
                 <div style={{ margin: 16 }}>
-                    <ExistingEventForm event={event} onDeleteEvent={onDeleteEvent} />
+                    <ExistingEventForm event={event} />
                 </div>
             </AccordionDetails>
         </StyledAccordion>

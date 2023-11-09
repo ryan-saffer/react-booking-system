@@ -113,7 +113,7 @@ const BookingPanel = (props) => {
             <AccordionDetails>
                 <Grid container spacing={3}>
                     <Grid item xs>
-                        <ExistingBookingForm onSuccess={props.onSuccess} bookingId={bookingId} booking={booking} />
+                        <ExistingBookingForm bookingId={bookingId} booking={booking} />
                     </Grid>
                 </Grid>
             </AccordionDetails>

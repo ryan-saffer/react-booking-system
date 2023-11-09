@@ -8,19 +8,21 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import { DateTime } from 'luxon'
+import { useDateNavigation } from '../../DateNavigation/DateNavigation'
 
 type Props = {
     event: EventBooking
-    onDeleteEvent: (date: Date) => void
 } & ConfirmationDialogProps &
     ErrorDialogProps
 
-const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onDeleteEvent, displayError }) => {
+const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false)
     const [success, setSuccess] = useState(false)
+
+    const { setDate } = useDateNavigation()
 
     const methods = useForm<Form>({
         defaultValues: {
@@ -86,7 +88,7 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, onD
         setLoading(true)
         try {
             await callFirebaseFunction('deleteEvent', firebase)(event)
-            onDeleteEvent(event.startTime)
+            setDate(DateTime.fromJSDate(event.startTime))
         } catch (err) {
             displayError('There was an error deleting the event')
         } finally {
