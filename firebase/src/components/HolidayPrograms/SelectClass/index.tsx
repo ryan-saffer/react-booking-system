@@ -200,7 +200,7 @@ export const HolidayProgramSelection = () => {
                                                     {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
                                                 </MenuItem>
                                             )
-                                        }
+                                        } else return ''
                                     })}
                                 </Select>
                             </FormControl>

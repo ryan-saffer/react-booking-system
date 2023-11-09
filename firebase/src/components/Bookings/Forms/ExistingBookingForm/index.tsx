@@ -25,6 +25,7 @@ import {
     Utilities,
     AdditionsDisplayValuesMap,
     ObjectKeys,
+    WithId,
 } from 'fizz-kidz'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
@@ -38,6 +39,7 @@ import { useScopes } from '../../../Hooks/UseScopes'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { DateTime } from 'luxon'
+import { useDateNavigation } from '../../DateNavigation/DateNavigation'
 
 const PREFIX = 'index'
 
@@ -46,18 +48,17 @@ const classes = {
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')(({ theme }) => ({
+const Root = styled('div')({
     [`& .${classes.disabled}`]: {
         '& .Mui-disabled': {
             color: 'rgba(0, 0, 0, 0.87)',
         },
     },
-}))
+})
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
     bookingId: string
-    booking: FirestoreBooking
-    onSuccess: (data: any) => void
+    booking: WithId<FirestoreBooking>
 }
 
 const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
@@ -70,6 +71,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
 
     const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
+
+    const { setDate } = useDateNavigation()
 
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -208,7 +211,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                     // let user see success for a second, then refesh
                     setEditing(false)
                     setSuccess(false)
-                    props.onSuccess(formValues.date.value)
+                    setDate(DateTime.fromJSDate(formValues.date.value))
                 }, 1000)
             })
             .catch((err) => {
@@ -232,7 +235,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                     // let user see success for a second, then refesh
                     setEditing(false)
                     setSuccess(false)
-                    props.onSuccess(formValues.date.value)
+                    setDate(DateTime.fromJSDate(formValues.date.value)) //  triggers firestore subscription to run again
                 }, 1000)
             })
             .catch((err) => {
