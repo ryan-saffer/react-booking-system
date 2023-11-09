@@ -24,22 +24,13 @@ const Root = styled('div')(({ theme }) => ({
 const LocationBookings = (props) => {
     const { bookings, location } = props
 
-    const filteredBookings = useMemo(() => bookings.filter((x) => x.data().location === location), [bookings, location])
-
     return (
         <Root className={classes.root}>
             <Typography className={classes.heading} variant="h6">
                 {Utilities.capitalise(location)}
             </Typography>
-            {filteredBookings.length > 0 ? (
-                filteredBookings.map((booking) => (
-                    <BookingPanel
-                        key={booking.id}
-                        onSuccess={props.onSuccess}
-                        bookingId={booking.id}
-                        booking={booking.data()}
-                    />
-                ))
+            {bookings.length > 0 ? (
+                bookings.map((booking) => <BookingPanel key={booking.id} bookingId={booking.id} booking={booking} />)
             ) : (
                 <Typography variant="overline">No parties</Typography>
             )}

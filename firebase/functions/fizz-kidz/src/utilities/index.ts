@@ -16,6 +16,7 @@ export type RecursivePartial<T> = {
 }
 
 export type WithoutId<T> = Omit<T, 'id'>
+export type WithId<T> = T & { id: string }
 
 export * from './businessLogic'
 export * from './managerInfo'

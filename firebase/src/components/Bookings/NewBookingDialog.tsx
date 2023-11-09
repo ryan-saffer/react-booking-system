@@ -6,6 +6,8 @@ import { TransitionProps } from '@mui/material/transitions'
 import React, { ReactElement, Ref, useState } from 'react'
 import NewBookingForm from './Forms/NewBookingForm'
 import NewEventForm from './Forms/EventForm/NewEventForm'
+import { useDateNavigation } from './DateNavigation/DateNavigation'
+import { DateTime } from 'luxon'
 
 const PREFIX = 'NewBookingDialog'
 
@@ -65,9 +67,14 @@ const NewBookingDialog: React.FC<Props> = ({ open, onBookingCreated }) => {
     const [key, setKey] = useState(0)
     const [value, setValue] = useState(0)
 
+    const { setDate } = useDateNavigation()
+
     function handleBookingCreated(date?: Date) {
         setKey(key + 1)
-        onBookingCreated(date)
+        onBookingCreated()
+        if (date) {
+            setDate(DateTime.fromJSDate(date))
+        }
     }
 
     return (
