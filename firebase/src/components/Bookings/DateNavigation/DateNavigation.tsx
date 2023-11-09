@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, ReactNode, createContext, useContext, useState } from 'react'
+import React, { FC, PropsWithChildren, createContext, useContext, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -161,6 +161,10 @@ type Props = {
     label: string
 } & (WithButton | WithoutButton)
 
+function midnight(date: DateTime) {
+    return date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+}
+
 export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { label, showButton, children } = props
 
@@ -169,11 +173,11 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const scopes = useScopes()
     const writePermissions = scopes.CORE === 'write'
 
-    const [date, setDate] = useState(DateTime.now())
+    const [date, setDate] = useState(midnight(DateTime.now()))
     const [loading, setLoading] = useState(true)
 
     const handleDateChange = (date: DateTime) => {
-        setDate(date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }))
+        setDate(midnight(date))
     }
 
     const handleLogout = () => {
