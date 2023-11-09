@@ -19,10 +19,9 @@ const Root = styled('h1')(({ theme }) => ({
 
 type Props = {
     events: Service<EventBooking[]>
-    onDeleteEvent: (date: Date) => void
 }
 
-const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
+const Events: React.FC<Props> = ({ events }) => {
     const title = () => (
         <Typography style={{ paddingTop: 16, paddingBottom: 8 }} variant="h6">
             Events
@@ -37,7 +36,7 @@ const Events: React.FC<Props> = ({ events, onDeleteEvent }) => {
                 <>
                     {title()}
                     {events.result.map((event) => (
-                        <EventPanel event={event} onDeleteEvent={onDeleteEvent} key={event.id} />
+                        <EventPanel event={event} key={event.id} />
                     ))}
                     {events.result.length === 0 && noEvents()}
                 </>

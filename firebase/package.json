@@ -5,8 +5,8 @@
     "scripts": {
         "build-fizz-kidz": "npm --prefix functions/fizz-kidz run build",
         "build-fizz-kidz:watch": "npm --prefix functions/fizz-kidz run build:watch",
-        "start": "concurrently \"npm run build-fizz-kidz:watch\" \"REACT_APP_ENV=dev BROWSER=none react-scripts start\"",
-        "start:prod": "npm run build-fizz-kidz:watch | REACT_APP_ENV=prod BROWSER=none react-scripts start",
+        "start": "concurrently \"npm run build-fizz-kidz:watch\" \"REACT_APP_ENV=dev BROWSER=none GENERATE_SOURCEMAP=true react-scripts start\"",
+        "start:prod": "npm run build-fizz-kidz:watch | REACT_APP_ENV=prod BROWSER=none GENERATE_SOURCEMAP=true react-scripts start",
         "build:prod": "npm run build-fizz-kidz && REACT_APP_ENV=prod react-scripts build",
         "build:dev": "npm run build-fizz-kidz && REACT_APP_ENV=dev react-scripts build",
         "test": "react-scripts test",

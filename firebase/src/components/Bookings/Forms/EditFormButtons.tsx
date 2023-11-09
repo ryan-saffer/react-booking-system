@@ -82,6 +82,21 @@ const EditFormButtons: React.FC<Props> = ({
     const canEdit = useScopes().CORE === 'write'
 
     if (canEdit) {
+        if (success) {
+            return (
+                <Root className={classes.saveButtonDiv}>
+                    <Fab
+                        className={classes.success}
+                        aria-label="save"
+                        color="secondary"
+                        type="submit"
+                        disabled={loading}
+                    >
+                        {<CheckIcon />}
+                    </Fab>
+                </Root>
+            )
+        }
         return (
             <Root className={classes.saveButtonDiv}>
                 {!loading && !editing && (
@@ -100,14 +115,14 @@ const EditFormButtons: React.FC<Props> = ({
                             Cancel
                         </Button>
                         <Fab
-                            className={success ? classes.success : classes.saveButton}
+                            className={classes.saveButton}
                             aria-label="save"
                             color="secondary"
                             type="submit"
                             disabled={loading}
                             onClick={onSave}
                         >
-                            {success ? <CheckIcon /> : <SaveIcon />}
+                            {<SaveIcon />}
                         </Fab>
                     </>
                 ) : (
