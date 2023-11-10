@@ -69,8 +69,11 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
     const isRestricted = useScopes().CORE === 'restricted'
     const MASK = 'xxxxx'
 
-    const bookingAsForm = useMemo(() => mapFirestoreBookingToFormValues(booking), [booking])
-    const [formValues, setFormValues] = useState<ExistingBookingFormFields>(bookingAsForm)
+    const [formValues, setFormValues] = useState<ExistingBookingFormFields>(getEmptyValues())
+
+    useEffect(() => {
+        setFormValues(mapFirestoreBookingToFormValues(booking))
+    }, [booking])
 
     const { setDate } = useDateNavigation()
 
