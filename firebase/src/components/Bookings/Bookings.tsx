@@ -39,8 +39,8 @@ const Bookings = () => {
     const bookings = usePartyBookings({ setSelectedLocations, setEventsChecked })
     const events = useEvents()
 
-    const handleLocationChange = (name: any) => (e: any) => {
-        setSelectedLocations({ ...selectedLocations, [name]: e.target.checked })
+    const handleLocationChange = (location: Location, checked: boolean) => {
+        setSelectedLocations({ ...selectedLocations, [location]: checked })
     }
 
     const isMobile = useMediaQuery('(max-width: 460px)')

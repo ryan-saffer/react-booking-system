@@ -11,6 +11,7 @@ import { useScopes } from '../Hooks/UseScopes'
 import StoreIcon from '@mui/icons-material/Store'
 import DriveEtaIcon from '@mui/icons-material/DriveEta'
 import { Tag } from 'antd'
+import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
 const PREFIX = 'BookingPanel'
 
@@ -65,10 +66,8 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 var dateFormat = require('dateformat')
 
-const BookingPanel = (props) => {
+const BookingPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     const isRestricted = useScopes().CORE === 'restricted'
-
-    const { bookingId, booking } = props
 
     const isMobile = useMediaQuery('(max-width: 460px')
 
@@ -113,7 +112,7 @@ const BookingPanel = (props) => {
             <AccordionDetails>
                 <Grid container spacing={3}>
                     <Grid item xs>
-                        <ExistingBookingForm bookingId={bookingId} booking={booking} />
+                        <ExistingBookingForm booking={booking} />
                     </Grid>
                 </Grid>
             </AccordionDetails>
@@ -126,7 +125,7 @@ const BookingPanel = (props) => {
  *
  * @returns {Date} the date and time the party ends
  */
-function getEndDate(dateTime, partyLength) {
+function getEndDate(dateTime: Date, partyLength: Booking['partyLength']) {
     // determine when party ends
     var lengthHours = 0
     var lengthMinutes = 0
