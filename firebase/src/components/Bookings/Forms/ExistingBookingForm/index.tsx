@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo, ChangeEvent, useCallback } from 'react'
+import React, { useState, useContext, ChangeEvent, useCallback, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import 'typeface-roboto'
 import {
@@ -33,7 +33,7 @@ import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
-import { mapFormToBooking, mapFirestoreBookingToFormValues } from '../utilities'
+import { mapFormToBooking, mapFirestoreBookingToFormValues, getEmptyValues } from '../utilities'
 import EditFormButtons from '../EditFormButtons'
 import { useScopes } from '../../../Hooks/UseScopes'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
@@ -57,13 +57,10 @@ const Root = styled('div')({
 })
 
 interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogProps {
-    bookingId: string
     booking: WithId<FirestoreBooking>
 }
 
-const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
-    const { bookingId, booking } = props
-
+const ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({ booking, displayError, showConfirmationDialog }) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const isRestricted = useScopes().CORE === 'restricted'
@@ -206,7 +203,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         callFirebaseFunction(
             'updatePartyBooking',
             firebase
-        )({ bookingId, booking: mergedBooking })
+        )({ bookingId: booking.id, booking: mergedBooking })
             .then(() => {
                 setLoading(false)
                 setSuccess(true)
@@ -221,7 +218,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 console.error(err)
                 setLoading(false)
                 setSuccess(false)
-                props.displayError('Unable to update the booking. Please try again.\nError details: ' + err)
+                displayError('Unable to update the booking. Please try again.\nError details: ' + err)
             })
     }
 
@@ -230,7 +227,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
         callFirebaseFunction(
             'deletePartyBooking',
             firebase
-        )({ bookingId, eventId: booking.eventId!, location: booking.location, type: booking.type })
+        )({ bookingId: booking.id, eventId: booking.eventId!, location: booking.location, type: booking.type })
             .then(() => {
                 setLoading(false)
                 setSuccess(true)
@@ -245,7 +242,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 console.error(err)
                 setLoading(false)
                 setSuccess(false)
-                props.displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
+                displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
             })
     }
 
@@ -257,7 +254,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.parentFirstName, bookingId)}
+                        id={createUniqueId(FormBookingFields.parentFirstName, booking.id)}
                         name={FormBookingFields.parentFirstName}
                         label="Parent first name"
                         fullWidth
@@ -278,7 +275,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.parentLastName, bookingId)}
+                        id={createUniqueId(FormBookingFields.parentLastName, booking.id)}
                         name={FormBookingFields.parentLastName}
                         label="Parent last name"
                         fullWidth
@@ -298,7 +295,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.parentEmail, bookingId)}
+                        id={createUniqueId(FormBookingFields.parentEmail, booking.id)}
                         name={FormBookingFields.parentEmail}
                         label="Parent email"
                         fullWidth
@@ -318,7 +315,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.parentMobile, bookingId)}
+                        id={createUniqueId(FormBookingFields.parentMobile, booking.id)}
                         name={FormBookingFields.parentMobile}
                         label="Parent mobile"
                         fullWidth
@@ -341,7 +338,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.childName, bookingId)}
+                        id={createUniqueId(FormBookingFields.childName, booking.id)}
                         name={FormBookingFields.childName}
                         label="Child name"
                         fullWidth
@@ -361,7 +358,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        id={createUniqueId(FormBookingFields.childAge, bookingId)}
+                        id={createUniqueId(FormBookingFields.childAge, booking.id)}
                         name={FormBookingFields.childAge}
                         label="Child age"
                         fullWidth
@@ -456,7 +453,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 {displayAddress && (
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(FormBookingFields.address, bookingId)}
+                            id={createUniqueId(FormBookingFields.address, booking.id)}
                             name={FormBookingFields.address}
                             label="Address"
                             fullWidth
@@ -482,7 +479,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={createUniqueId(FormBookingFields.numberOfChildren, bookingId)}
+                                id={createUniqueId(FormBookingFields.numberOfChildren, booking.id)}
                                 name={FormBookingFields.numberOfChildren}
                                 label="Number of children"
                                 fullWidth
@@ -509,7 +506,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                id={createUniqueId(FormBookingFields.notes, bookingId)}
+                                id={createUniqueId(FormBookingFields.notes, booking.id)}
                                 name={FormBookingFields.notes}
                                 label="Notes"
                                 fullWidth
@@ -542,7 +539,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                             <InputLabel>First Creation</InputLabel>
                             <Select
                                 name={FormBookingFields.creation1}
-                                id={createUniqueId(FormBookingFields.creation1, bookingId)}
+                                id={createUniqueId(FormBookingFields.creation1, booking.id)}
                                 label="first creation"
                                 value={formValues[FormBookingFields.creation1].value || ''}
                                 disabled={!editing}
@@ -565,7 +562,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                             <InputLabel>Second Creation</InputLabel>
                             <Select
                                 name={FormBookingFields.creation2}
-                                id={createUniqueId(FormBookingFields.creation2, bookingId)}
+                                id={createUniqueId(FormBookingFields.creation2, booking.id)}
                                 label="Second Creation"
                                 value={formValues[FormBookingFields.creation2].value || ''}
                                 disabled={!editing}
@@ -588,7 +585,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                             <InputLabel>Third Creation</InputLabel>
                             <Select
                                 name={FormBookingFields.creation3}
-                                id={createUniqueId(FormBookingFields.creation3, bookingId)}
+                                id={createUniqueId(FormBookingFields.creation3, booking.id)}
                                 label="third creation"
                                 value={formValues[FormBookingFields.creation3].value || ''}
                                 disabled={!editing || booking.partyLength !== '2'}
@@ -610,7 +607,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            id={createUniqueId(FormBookingFields[addition], bookingId)}
+                                            id={createUniqueId(FormBookingFields[addition], booking.id)}
                                             color="secondary"
                                             name={FormBookingFields[addition]}
                                             checked={formValues[FormBookingFields[addition]].value ?? false}
@@ -633,7 +630,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id={createUniqueId(FormBookingFields.cake, bookingId)}
+                                id={createUniqueId(FormBookingFields.cake, booking.id)}
                                 name={FormBookingFields.cake}
                                 label="Cake"
                                 fullWidth
@@ -681,7 +678,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 {displayQuestions && (
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(FormBookingFields.questions, bookingId)}
+                            id={createUniqueId(FormBookingFields.questions, booking.id)}
                             name={FormBookingFields.questions}
                             label="Questions"
                             fullWidth
@@ -700,7 +697,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 {displayFunFacts && (
                     <Grid item xs={12}>
                         <TextField
-                            id={createUniqueId(FormBookingFields.funFacts, bookingId)}
+                            id={createUniqueId(FormBookingFields.funFacts, booking.id)}
                             name={FormBookingFields.funFacts}
                             label="Fun Facts"
                             fullWidth
@@ -724,7 +721,7 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = (props) => {
                 onStartEditing={handleEdit}
                 onCancelEditing={cancelEdit}
                 onDelete={() => {
-                    props.showConfirmationDialog({
+                    showConfirmationDialog({
                         dialogTitle: 'Delete Booking',
                         dialogContent: 'Are you sure you want to delete this booking?',
                         confirmationButtonText: 'Delete',

@@ -5,9 +5,13 @@ import { Location } from 'fizz-kidz'
 import * as Utilities from '../../utilities/stringUtilities'
 import { useMediaQuery } from '@mui/material'
 
-const LocationCheckboxes = (props) => {
-    const { values, handleChange } = props
-
+const LocationCheckboxes = ({
+    values,
+    handleChange,
+}: {
+    values: { [key in Location]?: boolean }
+    handleChange: (location: Location, checked: boolean) => void
+}) => {
     const isMobile = useMediaQuery('(max-width: 460px)')
 
     return (
@@ -17,9 +21,10 @@ const LocationCheckboxes = (props) => {
                     key={location}
                     control={
                         <Checkbox
+                            id={location}
                             size={isMobile ? 'small' : 'medium'}
                             checked={values[location]}
-                            onChange={handleChange(location)}
+                            onChange={(e) => handleChange(location, e.target.checked)}
                             value={location}
                             color="secondary"
                         />
