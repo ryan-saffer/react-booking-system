@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { Service, EventBooking } from 'fizz-kidz'
 import { convertTimestamps } from '../../../utilities/firebase/converters'
-import { useDateNavigation } from '../DateNavigation/DateNavigation'
+import { useDateNavigation } from '../DateNavigation/DateNavigation.hooks'
 
 export function useEvents() {
     const firebase = useFirebase()

@@ -1,8 +1,7 @@
-import React from 'react'
-import { styled } from '@mui/material/styles'
-import { IconButton } from '@mui/material'
-import LanguageIcon from '@mui/icons-material/Language'
 import InstagramIcon from '@mui/icons-material/Instagram'
+import LanguageIcon from '@mui/icons-material/Language'
+import { IconButton } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
 const PREFIX = 'Footer'
 

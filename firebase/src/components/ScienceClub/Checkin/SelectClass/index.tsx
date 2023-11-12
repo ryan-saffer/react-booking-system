@@ -1,16 +1,16 @@
-import React from 'react'
-import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 
-import Typography from '@mui/material/Typography'
-import CssBaseline from '@mui/material/CssBaseline'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import AppBar from '@mui/material/AppBar'
+import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
-import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
-import * as ROUTES from '../../../../constants/routes'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+
 import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
 
-const PREFIX = 'ScienceClubInvoicingClassSelection'
+const PREFIX = 'ScienceClubCheckinClassSelection'
 
 const cssClasses = {
     appBar: `${PREFIX}-appBar`,
@@ -44,7 +44,7 @@ const Root = styled('div')(({ theme }) => ({
     },
 }))
 
-export const ScienceClubInvoicingClassSelection = () => {
+export const ScienceClubCheckinClassSelection = () => {
     const navigate = useNavigate()
 
     return (
@@ -53,7 +53,7 @@ export const ScienceClubInvoicingClassSelection = () => {
             <AppBar className={cssClasses.appBar} position="static">
                 <Toolbar className={cssClasses.toolbar}>
                     <Typography className={cssClasses.title} variant="h6" color="inherit">
-                        Invoicing - Science Club
+                        Science Club
                     </Typography>
                     <img
                         className={cssClasses.logo}
@@ -63,7 +63,7 @@ export const ScienceClubInvoicingClassSelection = () => {
                     />
                 </Toolbar>
             </AppBar>
-            <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} classRequired={false} />
+            <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} classRequired={true} />
         </Root>
     )
 }

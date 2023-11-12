@@ -1,4 +1,10 @@
-import { ScheduleScienceAppointmentParams, Acuity, ScienceEnrolment, getApplicationDomain } from 'fizz-kidz'
+import {
+    ScheduleScienceAppointmentParams,
+    AcuityConstants,
+    AcuityTypes,
+    ScienceEnrolment,
+    getApplicationDomain,
+} from 'fizz-kidz'
 import { projectId } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
@@ -53,7 +59,7 @@ export default async function scheduleScienceProgram(
     }
 
     // schedule into all appointments of the program, along with the document id
-    let appointments: Acuity.Appointment[]
+    let appointments: AcuityTypes.Api.Appointment[]
     try {
         const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
         appointments = await Promise.all(
@@ -65,7 +71,7 @@ export default async function scheduleScienceProgram(
                     lastName: input.parent.lastName,
                     email: input.parent.email,
                     phone: input.parent.phone,
-                    fields: [{ id: Acuity.Constants.FormFields.FIRESTORE_ID, value: newDoc.id }],
+                    fields: [{ id: AcuityConstants.FormFields.FIRESTORE_ID, value: newDoc.id }],
                 })
             )
         )

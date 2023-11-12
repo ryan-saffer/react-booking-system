@@ -1,4 +1,4 @@
-import { Acuity, HolidayProgramBooking } from 'fizz-kidz'
+import { AcuityConstants, HolidayProgramBooking } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
 
 export async function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
@@ -15,31 +15,31 @@ export async function scheduleHolidayProgram(booking: HolidayProgramBooking, pay
         paid: true,
         fields: [
             {
-                id: Acuity.Constants.FormFields.CHILDREN_NAMES,
+                id: AcuityConstants.FormFields.CHILDREN_NAMES,
                 value: booking.childName,
             },
             {
-                id: Acuity.Constants.FormFields.CHILDREN_AGES,
+                id: AcuityConstants.FormFields.CHILDREN_AGES,
                 value: booking.childAge,
             },
             {
-                id: Acuity.Constants.FormFields.CHILDREN_ALLERGIES,
+                id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,
                 value: booking.childAllergies,
             },
             {
-                id: Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME_HP,
+                id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NAME_HP,
                 value: booking.emergencyContactName,
             },
             {
-                id: Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
+                id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
                 value: booking.emergencyContactPhone,
             },
             {
-                id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
+                id: AcuityConstants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
                 value: booking.amountCharged,
             },
             {
-                id: Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
+                id: AcuityConstants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
                 value: paymentIntentId,
             },
         ],

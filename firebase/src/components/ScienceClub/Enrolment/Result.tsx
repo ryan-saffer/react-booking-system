@@ -1,8 +1,10 @@
+import { AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import React from 'react'
-import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
-import ErrorIcon from '@mui/icons-material/Error'
+
 import CheckCircleTwoTone from '@mui/icons-material/CheckCircleTwoTone'
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import ErrorIcon from '@mui/icons-material/Error'
+import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
+
 import styles from './Result.module.css'
 
 type ResultType = 'success' | 'error'
@@ -55,7 +57,7 @@ export const Error = () => (
 )
 
 interface SuccessProps {
-    continuing: Acuity.Client.ContinuingOption
+    continuing: AcuityTypes.Client.ContinuingOption
     appointment: ScienceEnrolment
 }
 

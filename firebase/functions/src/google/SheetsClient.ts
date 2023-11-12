@@ -12,7 +12,6 @@ export class SheetsClient {
 
     #sheetsClient: sheets_v4.Sheets | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {

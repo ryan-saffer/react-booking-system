@@ -1,15 +1,18 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Form, Checkbox, Select, Tag, Card, Alert, Button } from 'antd'
+import { Alert, Button, Card, Checkbox, Form, Select, Tag } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { Acuity, Location } from 'fizz-kidz'
+import { AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { capitalise } from '../../../../utilities/stringUtilities'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+
+import { capitalise } from '@utils/stringUtilities'
+
 import { DISCOUNT_PRICE, getSameDayClasses } from '../utilities'
+
 const { Option } = Select
 
 type Props = {
-    classes: Acuity.Class[]
-    selectedClasses: Acuity.Class[]
+    classes: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Api.Class[]
     selectedStore: string
     setSelectedStore: Dispatch<SetStateAction<string>>
     onClassSelectionChange: (e: CheckboxChangeEvent) => void
@@ -22,7 +25,7 @@ const Step1: React.FC<Props> = ({
     onClassSelectionChange,
     selectedClasses,
 }) => {
-    const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>()
+    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>()
 
     useEffect(() => {
         if (selectedStore !== '') {
@@ -33,7 +36,7 @@ const Step1: React.FC<Props> = ({
 
     const discountedClasses = getSameDayClasses(selectedClasses)
 
-    const getSlotsAvailable = (klass: Acuity.Class) => {
+    const getSlotsAvailable = (klass: AcuityTypes.Api.Class) => {
         if (klass.slotsAvailable === 0) {
             return 'No spots left'
         }
@@ -51,7 +54,7 @@ const Step1: React.FC<Props> = ({
             <Form.Item name="store" label="Which studio do you want to book for?">
                 <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
-                        if (process.env.REACT_APP_ENV === 'prod') {
+                        if (import.meta.env.VITE_ENV === 'prod') {
                             return Object.values(Location).map((location) => (
                                 <Option value={location} key={location}>
                                     {capitalise(location)}
@@ -80,7 +83,7 @@ const Step1: React.FC<Props> = ({
                 />
             )}
             {filteredClasses?.map((klass) => {
-                let name = `${klass.id}-checkbox`
+                const name = `${klass.id}-checkbox`
                 const slotsAvailable = getSlotsAvailable(klass)
                 return (
                     <Form.Item style={{ marginBottom: 4 }} key={klass.id} name={name} valuePropName="checked">

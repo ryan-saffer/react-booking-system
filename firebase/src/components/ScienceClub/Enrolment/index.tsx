@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react'
-import { styled } from '@mui/material/styles'
-import { Acuity } from 'fizz-kidz'
-import { Divider } from '@mui/material'
+import { AcuityTypes } from 'fizz-kidz'
+import { useEffect } from 'react'
 
-import * as logo from '../../../drawables/fizz-logo.png'
-import Loading from './Loading'
+import useFirebaseFunction from '@components/Hooks/api/UseFirebaseFunction'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import * as logo from '@drawables/fizz-logo.png'
+import { Divider } from '@mui/material'
+import { styled } from '@mui/material/styles'
+
 import Footer from './Footer'
-import { Success, Error as ErrorResult } from './Result'
-import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
-import useMixpanel from '../../Hooks/context/UseMixpanel'
-import { MixpanelEvents } from '../../Mixpanel/Events'
+import Loading from './Loading'
+import { Error as ErrorResult, Success } from './Result'
 
 const PREFIX = 'EnrolmentPage'
 
@@ -54,7 +55,7 @@ export const EnrolmentPage = () => {
     const searchParams = new URLSearchParams(atob(base64String))
 
     const appointmentId = searchParams.get('appointmentId')!
-    const continuingWithTerm = searchParams.get('continuing') as Acuity.Client.ContinuingOption
+    const continuingWithTerm = searchParams.get('continuing') as AcuityTypes.Client.ContinuingOption
 
     const mixpanel = useMixpanel()
 

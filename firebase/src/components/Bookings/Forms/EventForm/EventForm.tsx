@@ -251,7 +251,6 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     type="start"
                                     control={control}
                                     idx={idx}
-                                    id={slot.id}
                                     errors={{
                                         date: errors.slots?.[idx]?.startDate ? true : false,
                                         time: errors.slots?.[idx]?.startTime ? true : false,
@@ -266,7 +265,6 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     type="end"
                                     control={control}
                                     idx={idx}
-                                    id={slot.id}
                                     errors={{
                                         date: errors.slots?.[idx]?.endDate ? true : false,
                                         time: errors.slots?.[idx]?.endTime ? true : false,
@@ -304,7 +302,6 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                             type="start"
                             control={control}
                             idx={0}
-                            id="startDate"
                             errors={{
                                 date: errors.slots?.[0]?.startDate ? true : false,
                                 time: errors.slots?.[0]?.startTime ? true : false,
@@ -319,7 +316,6 @@ const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
                             type="end"
                             control={control}
                             idx={0}
-                            id="endTime"
                             errors={{
                                 date: errors.slots?.[0]?.endDate ? true : false,
                                 time: errors.slots?.[0]?.endTime ? true : false,
@@ -364,7 +360,6 @@ const DateTimePicker = ({
     control,
     type,
     idx,
-    id,
     errors,
     helperText,
     disabled,
@@ -372,7 +367,6 @@ const DateTimePicker = ({
     type: 'start' | 'end'
     control: Control<Form, any>
     idx: number
-    id: string
     errors: { date: boolean; time: boolean }
     helperText: { date: string; time: string }
     disabled: boolean
@@ -417,19 +411,6 @@ const DateTimePicker = ({
             </Grid>
         </>
     )
-}
-
-export function combineDateAndTime(date: DateTime, time: DateTime) {
-    return DateTime.fromObject(
-        {
-            day: date.day,
-            month: date.month,
-            year: date.year,
-            hour: time.hour,
-            minute: time.minute,
-        },
-        { zone: 'Australia/Melbourne' }
-    ).toJSDate()
 }
 
 export default EventForm

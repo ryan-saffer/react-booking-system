@@ -1,15 +1,17 @@
-import React, { useState, useContext, useEffect, useRef } from 'react'
-import Step1 from './step1/Step1'
-import { Form as AntdForm, Button, Steps, Modal, Card, Typography } from 'antd'
-import { Acuity } from 'fizz-kidz'
-import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
+import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import { useContext, useEffect, useRef, useState } from 'react'
+
+import { LeftOutlined } from '@ant-design/icons'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import Loader from '@components/ScienceClub/shared/Loader'
+import Root from '@components/Shared/Root'
+import { callAcuityClient } from '@utils/firebase/functions'
+
+import Step1 from './step1/Step1'
 import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
-import { LeftOutlined } from '@ant-design/icons'
-import Root from '../../Shared/Root'
-import Loader from '../../ScienceClub/shared/Loader'
 
 const { Step } = Steps
 
@@ -40,8 +42,8 @@ export const CustomerBookingScreen = () => {
     const [loading, setLoading] = useState(true)
     const [noUpcomingPrograms, setNoUpcomingPrograms] = useState(false)
     const [selectedStore, setSelectedStore] = useState('')
-    const [classes, setClasses] = useState<Acuity.Class[]>([])
-    const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
+    const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
+    const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
@@ -52,9 +54,9 @@ export const CustomerBookingScreen = () => {
                 firebase
             )({
                 appointmentTypeId:
-                    process.env.REACT_APP_ENV === 'prod'
-                        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                    import.meta.env.VITE_ENV === 'prod'
+                        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
                 includeUnavailable: true,
                 minDate: Date.now(),
             })
@@ -150,7 +152,7 @@ export const CustomerBookingScreen = () => {
                 initialValues={{ prefix: '61' }}
                 onValuesChange={(_, values) => {
                     // filter out any removed children with undefined values
-                    let children = values.children
+                    const children = values.children
                     if (children) {
                         values.children = children.filter((child: any) => child && child.childName !== undefined)
                     }

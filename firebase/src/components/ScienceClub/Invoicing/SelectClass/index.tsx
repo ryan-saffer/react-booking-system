@@ -1,18 +1,16 @@
-import React from 'react'
-
-import { styled } from '@mui/material/styles'
-
-import Typography from '@mui/material/Typography'
-import CssBaseline from '@mui/material/CssBaseline'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
-import * as ROUTES from '../../../../constants/routes'
-import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
-
 import { useNavigate } from 'react-router-dom'
 
-const PREFIX = 'ScienceClubCheckinClassSelection'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import AppBar from '@mui/material/AppBar'
+import CssBaseline from '@mui/material/CssBaseline'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+
+import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
+
+const PREFIX = 'ScienceClubInvoicingClassSelection'
 
 const cssClasses = {
     appBar: `${PREFIX}-appBar`,
@@ -46,7 +44,7 @@ const Root = styled('div')(({ theme }) => ({
     },
 }))
 
-export const ScienceClubCheckinClassSelection = () => {
+export const ScienceClubInvoicingClassSelection = () => {
     const navigate = useNavigate()
 
     return (
@@ -55,7 +53,7 @@ export const ScienceClubCheckinClassSelection = () => {
             <AppBar className={cssClasses.appBar} position="static">
                 <Toolbar className={cssClasses.toolbar}>
                     <Typography className={cssClasses.title} variant="h6" color="inherit">
-                        Science Club
+                        Invoicing - Science Club
                     </Typography>
                     <img
                         className={cssClasses.logo}
@@ -65,7 +63,7 @@ export const ScienceClubCheckinClassSelection = () => {
                     />
                 </Toolbar>
             </AppBar>
-            <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} classRequired={true} />
+            <ScienceClubClassSelection classRoute={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} classRequired={false} />
         </Root>
     )
 }

@@ -1,6 +1,7 @@
-import { useContext, useEffect, useState } from 'react'
 import { ScienceEnrolment, Service } from 'fizz-kidz'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import { useContext, useEffect, useState } from 'react'
+
+import Firebase, { FirebaseContext } from '@components/Firebase'
 
 const useFetchScienceAppointment = (id: string) => {
     const firebase = useContext(FirebaseContext) as Firebase

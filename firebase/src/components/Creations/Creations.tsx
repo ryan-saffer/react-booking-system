@@ -1,16 +1,15 @@
-import React from 'react'
 import Markdown from 'react-markdown'
+import { useNavigate } from 'react-router-dom'
+
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary, AppBar, Toolbar, Typography } from '@mui/material'
+
 import styles from './Creations.module.css'
 import { creations } from './creationMarkdown'
-import { Accordion, AccordionDetails, AccordionSummary, AppBar, Toolbar, Typography } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { useNavigate } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
-import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 
-type Props = {}
-
-export const CreationsPage: React.FC<Props> = () => {
+export const CreationsPage = () => {
     const navigate = useNavigate()
 
     return (

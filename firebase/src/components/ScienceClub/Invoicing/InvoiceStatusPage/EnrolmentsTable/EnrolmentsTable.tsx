@@ -1,16 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles'
-import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Dropdown, MenuProps, Space, Table, Tag, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { CloseCircleOutlined, CheckCircleOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons'
-import InvoiceStatusCell from './InvoiceStatusCell'
-import { callFirebaseFunction } from '../../../../../utilities/firebase/functions'
-import useFirebase from '../../../../Hooks/context/UseFirebase'
+import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
+import React, { useEffect, useMemo, useState } from 'react'
+
+import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
+import useErrorDialog from '@components/Hooks/UseErrorDialog'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { styled } from '@mui/material/styles'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+
 import EnrolmentDetails from './EnrolmentDetails'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
-import useErrorDialog from '../../../../Hooks/UseErrorDialog'
 import styles from './EnrolmentsTable.module.css'
+import InvoiceStatusCell from './InvoiceStatusCell'
 
 const PREFIX = 'EnrolmentsTable'
 
@@ -72,7 +74,7 @@ function getAppointmentWeekRange(enrolments: ScienceEnrolment[]) {
     return output.sort()
 }
 
-const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
+const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(true)
@@ -108,7 +110,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
     const handleActionButtonClick: MenuProps['onClick'] = (e) => {
         const key = e.key as MenuKey
         switch (key) {
-            case 'send-invoice':
+            case 'send-invoice': {
                 // ensure no one selected has a paid invoice
                 let includesPaidInvoice = false
                 selectedRowKeys.forEach((key) => {
@@ -139,6 +141,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
                     onConfirm: (selectedPrice) => sendInvoices(selectedPrice),
                 })
                 break
+            }
             case 'send-enrolment-email':
                 showConfirmationDialog({
                     dialogTitle: `Send term enrolment email to selected parents`,
@@ -403,4 +406,4 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
     )
 }
 
-export default WithConfirmationDialog(EnrolmentsTable)
+export const EnrolmentsTable = WithConfirmationDialog(_EnrolmentsTable)

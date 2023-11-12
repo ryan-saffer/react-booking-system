@@ -1,17 +1,19 @@
-import React from 'react'
-import { styled } from '@mui/material/styles'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import Typography from '@mui/material/Typography'
-import { Chip, Grid, useMediaQuery } from '@mui/material'
-import ExistingBookingForm from './Forms/ExistingBookingForm'
-import { useScopes } from '../Hooks/UseScopes'
-import StoreIcon from '@mui/icons-material/Store'
-import DriveEtaIcon from '@mui/icons-material/DriveEta'
 import { Tag } from 'antd'
+import dateFormat from 'dateformat'
 import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
+
+import DriveEtaIcon from '@mui/icons-material/DriveEta'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import StoreIcon from '@mui/icons-material/Store'
+import { Chip, Grid, useMediaQuery } from '@mui/material'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+
+import { useScopes } from '../Hooks/UseScopes'
+import { ExistingBookingForm } from './Forms/ExistingBookingForm'
 
 const PREFIX = 'BookingPanel'
 
@@ -63,8 +65,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         flexDirection: 'column',
     },
 }))
-
-var dateFormat = require('dateformat')
 
 const BookingPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     const isRestricted = useScopes().CORE === 'restricted'
@@ -127,8 +127,8 @@ const BookingPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
  */
 function getEndDate(dateTime: Date, partyLength: Booking['partyLength']) {
     // determine when party ends
-    var lengthHours = 0
-    var lengthMinutes = 0
+    let lengthHours = 0
+    let lengthMinutes = 0
     switch (partyLength) {
         case '1':
             lengthHours = 1
@@ -144,7 +144,7 @@ function getEndDate(dateTime: Date, partyLength: Booking['partyLength']) {
             break
     }
 
-    var endDate = new Date(
+    const endDate = new Date(
         dateTime.getFullYear(),
         dateTime.getMonth(),
         dateTime.getDate(),

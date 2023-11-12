@@ -1,19 +1,19 @@
-import { Acuity } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, AcuityTypes } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { Emails } from '../../sendgrid/types'
 import { MailClient } from '../../sendgrid/MailClient'
 
-export async function sendConfirmationEmail(appointments: Acuity.Appointment[]) {
+export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appointment[]) {
     const sortedAppointments = appointments.sort((a, b) => {
-        const child1Name = Acuity.Utilities.retrieveFormAndField(
+        const child1Name = AcuityUtilities.retrieveFormAndField(
             a,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         )
-        const child2Name = Acuity.Utilities.retrieveFormAndField(
+        const child2Name = AcuityUtilities.retrieveFormAndField(
             b,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         )
         return a.datetime < b.datetime ? -1 : a.datetime > b.datetime ? 1 : child1Name < child2Name ? 1 : -1
     })
@@ -21,10 +21,10 @@ export async function sendConfirmationEmail(appointments: Acuity.Appointment[]) 
         const startTime = DateTime.fromISO(appointment.datetime, { setZone: true })
         const endTime = startTime.plus({ hours: 2, minutes: 30 })
         return {
-            datetime: `${Acuity.Utilities.retrieveFormAndField(
+            datetime: `${AcuityUtilities.retrieveFormAndField(
                 appointment,
-                Acuity.Constants.Forms.CHILDREN_DETAILS,
-                Acuity.Constants.FormFields.CHILDREN_NAMES
+                AcuityConstants.Forms.CHILDREN_DETAILS,
+                AcuityConstants.FormFields.CHILDREN_NAMES
             )} - ${startTime.toFormat('cccc, LLL dd, t')} - ${endTime.toFormat('t')}`,
             confirmationPage: appointment.confirmationPage,
         }

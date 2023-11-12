@@ -39,7 +39,7 @@ import { useScopes } from '../../../Hooks/UseScopes'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { DateTime } from 'luxon'
-import { useDateNavigation } from '../../DateNavigation/DateNavigation'
+import { useDateNavigation } from '../../DateNavigation/DateNavigation.hooks'
 
 const PREFIX = 'index'
 
@@ -60,7 +60,11 @@ interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogP
     booking: WithId<FirestoreBooking>
 }
 
-const ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({ booking, displayError, showConfirmationDialog }) => {
+const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
+    booking,
+    displayError,
+    showConfirmationDialog,
+}) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const isRestricted = useScopes().CORE === 'restricted'
@@ -91,8 +95,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({ booking, disp
     const displayQuestions = formValues.questions.value || editing
     const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
-    var additionSelected = false
-    for (let addition of Object.values(Additions)) {
+    let additionSelected = false
+    for (const addition of Object.values(Additions)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -197,8 +201,8 @@ const ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({ booking, disp
 
         // merge booking object with form values - this ensures values not inform arent deleted such as eventId
         setLoading(true)
-        let bookingCopy = { ...booking }
-        let mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
+        const bookingCopy = { ...booking }
+        const mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
 
         callFirebaseFunction(
             'updatePartyBooking',
@@ -738,4 +742,4 @@ function createUniqueId(field: string, id: string) {
     return `${field}-${id}`
 }
 
-export default WithConfirmationDialog(WithErrorDialog(ExistingBookingForm))
+export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(_ExistingBookingForm))

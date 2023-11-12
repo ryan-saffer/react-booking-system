@@ -1,6 +1,7 @@
-import React from 'react'
-import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { Tag } from 'antd'
+import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
+import React from 'react'
+
 import Loader from '../../../shared/Loader'
 
 type Props = {

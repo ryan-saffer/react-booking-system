@@ -1,28 +1,31 @@
-import React, { useMemo, useState } from 'react'
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Table, Tag, Typography } from 'antd'
-import ChildDetails from './ChildDetails'
-import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import ActionButton from './ActionButton'
-import { EnrolmentsMap, getEnrolment } from '..'
-import { callAcuityClient } from '../../../../../utilities/firebase/functions'
-import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { ColumnsType } from 'antd/es/table'
+import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
+import React, { useMemo, useState } from 'react'
+
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { callAcuityClient } from '@utils/firebase/functions'
+
+import { getEnrolment } from '../ClassDetails.utils'
+import ActionButton from './ActionButton'
+import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
+import { EnrolmentsMap } from '..'
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540
 
 type Props = {
-    appointments: Acuity.Appointment[]
-    updateAppointment: (appointment: Acuity.Appointment) => void
+    appointments: AcuityTypes.Api.Appointment[]
+    updateAppointment: (appointment: AcuityTypes.Api.Appointment) => void
     enrolmentsMap: EnrolmentsMap
     calendarName: string
 }
 
 type TableData = {
     key: number
-    acuityAppointment: Acuity.Appointment
+    acuityAppointment: AcuityTypes.Api.Appointment
     enrolment: ScienceEnrolment
 }
 
@@ -52,11 +55,11 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
             id,
             labels:
                 label === 'signed-in'
-                    ? [{ id: Acuity.Constants.Labels.CHECKED_IN }]
+                    ? [{ id: AcuityConstants.Labels.CHECKED_IN }]
                     : label === 'signed-out'
-                    ? [{ id: Acuity.Constants.Labels.CHECKED_OUT }]
+                    ? [{ id: AcuityConstants.Labels.CHECKED_OUT }]
                     : label === 'not-attending'
-                    ? [{ id: Acuity.Constants.Labels.NOT_ATTENDING }]
+                    ? [{ id: AcuityConstants.Labels.NOT_ATTENDING }]
                     : [],
         })
 
@@ -73,10 +76,10 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
             title: 'Child Name',
             dataIndex: 'acuityAppointment',
             key: 'childName',
-            render: (appointment: Acuity.Appointment) => {
+            render: (appointment: AcuityTypes.Api.Appointment) => {
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
                 const name = `${enrolment.child.firstName} ${enrolment.child.lastName}`
-                const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
+                const notAttending = appointment.labels?.find((it) => it.id === AcuityConstants.Labels.NOT_ATTENDING)
                 if (notAttending || enrolment.continuingWithTerm === 'no') {
                     return <del>{name}</del>
                 } else {
@@ -110,9 +113,9 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
             title: 'Tags',
             dataIndex: 'acuityAppointment',
             key: 'tags',
-            render: (appointment: Acuity.Appointment) => {
+            render: (appointment: AcuityTypes.Api.Appointment) => {
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
-                const notAttending = appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)
+                const notAttending = appointment.labels?.find((it) => it.id === AcuityConstants.Labels.NOT_ATTENDING)
                 if (enrolment.continuingWithTerm === 'no') {
                     return <Tag color="volcano">NOT CONTINUING</Tag>
                 }
@@ -132,7 +135,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
             title: 'Action',
             dataIndex: 'acuityAppointment',
             key: 'status',
-            render: (appointment: Acuity.Appointment) => {
+            render: (appointment: AcuityTypes.Api.Appointment) => {
                 const enrolment = getEnrolment(appointment, enrolmentsMap)
                 return (
                     <ActionButton
@@ -176,7 +179,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
                 expandedRowKeys: expandedRows,
                 onExpand: handleExpandRow,
                 expandedRowRender: (columns) => {
-                    const appointment = appointments.find((appointment) => appointment.id === columns.key)!!
+                    const appointment = appointments.find((appointment) => appointment.id === columns.key)!
                     const enrolment = getEnrolment(appointment, enrolmentsMap)
                     return (
                         <ChildDetails

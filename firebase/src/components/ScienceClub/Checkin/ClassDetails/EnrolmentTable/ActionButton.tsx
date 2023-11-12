@@ -1,18 +1,20 @@
-import React, { useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles';
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
 import { Button } from 'antd'
-import SignatureDialog from './SignatureDialog'
-import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
-import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import React, { useMemo, useState } from 'react'
 
-const PREFIX = 'ActionButton';
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import { styled } from '@mui/material/styles'
+
+import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import SignatureDialog from './SignatureDialog'
+
+const PREFIX = 'ActionButton'
 
 const classes = {
-    circleBtn: `${PREFIX}-circleBtn`
-};
+    circleBtn: `${PREFIX}-circleBtn`,
+}
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
@@ -20,17 +22,16 @@ const Root = styled('div')({
         display: 'block',
         margin: 'auto',
     },
-});
+})
 
 type Props = {
-    appointment: Acuity.Appointment
+    appointment: AcuityTypes.Api.Appointment
     enrolment: ScienceEnrolment
     updateEnrolment: UpdateEnrolment
     setAppointmentLabel: SetAppointmentLabel
 }
 
 const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment, setAppointmentLabel }) => {
-
     const { width } = useWindowDimensions()
 
     const [loading, setLoading] = useState(false)
@@ -55,7 +56,7 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
     const handleSignOutButtonClick = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         e.stopPropagation()
         // check here for lunchtime classes, which don't require a sign out
-        let dateTime = DateTime.fromISO(appointment.datetime)
+        const dateTime = DateTime.fromISO(appointment.datetime)
         if (dateTime.hour < 14) {
             // class starts before 2pm, ie lunchtime class
             handleSignOut('N/A - Lunchtime class', '')
@@ -77,20 +78,20 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
     }
 
     const isSignedIn = useMemo(
-        () => appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.CHECKED_IN),
+        () => appointment.labels?.find((it) => it.id === AcuityConstants.Labels.CHECKED_IN),
         [appointment]
     )
     const isSignedOut = useMemo(
-        () => appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.CHECKED_OUT),
+        () => appointment.labels?.find((it) => it.id === AcuityConstants.Labels.CHECKED_OUT),
         [appointment]
     )
     const isNotAttending = useMemo(
-        () => appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING),
+        () => appointment.labels?.find((it) => it.id === AcuityConstants.Labels.NOT_ATTENDING),
         [appointment]
     )
 
     return (
-        (<Root>
+        <Root>
             {(() => {
                 if (isNotAttending) return null
                 if (!isSignedIn && !isSignedOut) {
@@ -141,8 +142,8 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
                 onClose={() => setOpenSigDialog(false)}
                 onSignOut={handleSignOut}
             />
-        </Root>)
-    );
+        </Root>
+    )
 }
 
 export default ActionButton

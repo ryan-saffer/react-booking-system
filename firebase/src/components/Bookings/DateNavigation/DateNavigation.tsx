@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, createContext, useContext, useState } from 'react'
+import { FC, PropsWithChildren, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -26,6 +26,7 @@ import * as ROUTES from '../../../constants/routes'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { useScopes } from '../../Hooks/UseScopes'
 import useFirebase from '../../Hooks/context/UseFirebase'
+import { DateNavigationContext } from './DateNavigation.context'
 
 const PREFIX = 'BookingsPage'
 
@@ -135,18 +136,6 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${classes.toolbar}`]: theme.mixins.toolbar,
 }))
 
-const DateNavigationContext = createContext<{
-    date: DateTime
-    setDate: (date: DateTime) => void
-    setLoading: (loading: boolean) => void
-} | null>(null)
-
-export function useDateNavigation() {
-    const date = useContext(DateNavigationContext)
-    if (date) return date
-    throw new Error('`useDateNavigation()` must be used within a `<DateNavigation />`')
-}
-
 type WithButton = {
     showButton: true
     buttonLabel: string
@@ -185,88 +174,88 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     }
 
     return (
-        <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
-            <Root className={classes.root}>
-                <CssBaseline />
-                <AppBar className={classes.appBar} position="fixed">
-                    <Toolbar className={classes.appBarToolbar}>
-                        <div className={classes.topLeft}>
-                            <Typography variant="h6" color="inherit">
-                                {label}
-                            </Typography>
-                        </div>
-                        <div className={classes.topCenter}>
-                            <img
-                                className={classes.logo}
-                                src={Logo.default}
-                                onClick={() => navigate(ROUTES.LANDING)}
-                                alt="fizz kidz logo"
-                            />
-                        </div>
-                        <div className={writePermissions ? classes.authTopRight : classes.noAuthTopRight}>
-                            {writePermissions && showButton && (
-                                <Button
-                                    onClick={props.onButtonPressed}
-                                    variant="outlined"
-                                    sx={{
-                                        color: 'white',
-                                        borderColor: 'white',
-                                        '&:hover': { borderColor: 'white', background: grey[800] },
-                                    }}
-                                >
-                                    {props.buttonLabel}
-                                </Button>
-                            )}
-                            <IconButton className={classes.logoutIcon} onClick={handleLogout} size="large">
-                                <ExitToAppIcon htmlColor={'white'} />
-                            </IconButton>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                <Hidden mdDown>
-                    <Drawer
-                        className={classes.drawer}
-                        variant="permanent"
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        anchor="left"
-                    >
-                        <div className={classes.toolbar} />
-                        <StaticDatePicker
-                            value={date}
-                            slotProps={{ actionBar: { actions: ['today'] } }}
-                            onChange={(date) => handleDateChange(date!)}
+        <Root className={classes.root}>
+            <CssBaseline />
+            <AppBar className={classes.appBar} position="fixed">
+                <Toolbar className={classes.appBarToolbar}>
+                    <div className={classes.topLeft}>
+                        <Typography variant="h6" color="inherit">
+                            {label}
+                        </Typography>
+                    </div>
+                    <div className={classes.topCenter}>
+                        <img
+                            className={classes.logo}
+                            src={Logo.default}
+                            onClick={() => navigate(ROUTES.LANDING)}
+                            alt="fizz kidz logo"
                         />
-                    </Drawer>
-                </Hidden>
-                <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
-                    <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Button onClick={() => handleDateChange(date.minus({ days: 1 }))}>
-                                <NavigateBefore />
-                            </Button>
-                            <DatePicker
-                                closeOnSelect
-                                value={date}
-                                slotProps={{
-                                    textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
-                                    actionBar: { actions: ['today'] },
+                    </div>
+                    <div className={writePermissions ? classes.authTopRight : classes.noAuthTopRight}>
+                        {writePermissions && showButton && (
+                            <Button
+                                onClick={props.onButtonPressed}
+                                variant="outlined"
+                                sx={{
+                                    color: 'white',
+                                    borderColor: 'white',
+                                    '&:hover': { borderColor: 'white', background: grey[800] },
                                 }}
-                                format="ccc, LLL d, y"
-                                onChange={(date) => date && handleDateChange(date)}
-                            />
-                            <Button onClick={() => handleDateChange(date.plus({ days: 1 }))}>
-                                <NavigateNext />
+                            >
+                                {props.buttonLabel}
                             </Button>
-                        </div>
-                        {loading && <LinearProgress style={{ marginTop: 9 }} color="secondary" />}
-                        {!loading && <div style={{ height: 13 }} />}
+                        )}
+                        <IconButton className={classes.logoutIcon} onClick={handleLogout} size="large">
+                            <ExitToAppIcon htmlColor={'white'} />
+                        </IconButton>
+                    </div>
+                </Toolbar>
+            </AppBar>
+            <Hidden mdDown>
+                <Drawer
+                    className={classes.drawer}
+                    variant="permanent"
+                    classes={{
+                        paper: classes.drawerPaper,
+                    }}
+                    anchor="left"
+                >
+                    <div className={classes.toolbar} />
+                    <StaticDatePicker
+                        value={date}
+                        slotProps={{ actionBar: { actions: ['today'] } }}
+                        onChange={(date) => handleDateChange(date!)}
+                    />
+                </Drawer>
+            </Hidden>
+            <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
+                <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Button onClick={() => handleDateChange(date.minus({ days: 1 }))}>
+                            <NavigateBefore />
+                        </Button>
+                        <DatePicker
+                            closeOnSelect
+                            value={date}
+                            slotProps={{
+                                textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
+                                actionBar: { actions: ['today'] },
+                            }}
+                            format="ccc, LLL d, y"
+                            onChange={(date) => date && handleDateChange(date)}
+                        />
+                        <Button onClick={() => handleDateChange(date.plus({ days: 1 }))}>
+                            <NavigateNext />
+                        </Button>
+                    </div>
+                    {loading && <LinearProgress style={{ marginTop: 9 }} color="secondary" />}
+                    {!loading && <div style={{ height: 13 }} />}
+                    <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}
-                    </Box>
-                </Grid>
-            </Root>
-        </DateNavigationContext.Provider>
+                    </DateNavigationContext.Provider>
+                </Box>
+            </Grid>
+        </Root>
     )
 }
 

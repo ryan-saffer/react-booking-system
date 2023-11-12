@@ -1,17 +1,18 @@
-import React, { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import SignInGoogle from './SignInGoogle'
-import * as ROUTES from '../../constants/routes'
-import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
-import { CssBaseline, TextField, Button, Snackbar } from '@mui/material'
-import Typography from '@mui/material/Typography'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import * as ROUTES from '@constants/routes'
+import * as FizzLogo from '@drawables/FizzKidzLogoHorizontal.png'
+import { Button, CssBaseline, Snackbar, TextField } from '@mui/material'
 import Container from '@mui/material/Container'
-import { FirebaseContext } from '../Firebase'
+import Typography from '@mui/material/Typography'
+
 import styles from './SignIn.module.css'
+import SignInGoogle from './SignInGoogle'
 
 const SignInPage = () => {
-    const firebase = useContext(FirebaseContext)
+    const firebase = useFirebase()
 
     const navigate = useNavigate()
 
@@ -23,16 +24,16 @@ const SignInPage = () => {
     const [loginError, setLoginError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
-    const onKeyDown = (e) => {
+    const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
         if (e.key === 'Enter') {
             e.preventDefault()
             e.stopPropagation()
-            handleSubmit(e)
+            handleSubmit()
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = () => {
         setLoading(true)
 
         if (email === '') {

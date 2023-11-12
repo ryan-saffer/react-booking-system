@@ -3,9 +3,10 @@
     "version": "1.0.0",
     "description": "Shared value and types to be used across React and Functions",
     "main": "lib",
+    "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
+        "build": "esbuild src/index.ts --sourcemap --bundle --format=esm --outdir=lib",
         "build:watch": "npm run build -- --sourcemap --watch"
     },
     "author": "Ryan Saffer",
