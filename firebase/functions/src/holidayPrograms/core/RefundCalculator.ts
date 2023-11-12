@@ -1,5 +1,5 @@
 import { logger } from 'firebase-functions/v2'
-import type { Metadata, Acuity } from 'fizz-kidz'
+import type { Metadata, AcuityTypes } from 'fizz-kidz'
 
 /**
  * A class for calculating holiday program refunds
@@ -36,7 +36,7 @@ export class RefundCalculator {
             // just refund the amount charged
             return this.amountCharged
         } else {
-            const discount = JSON.parse(this.metadata.discount) as Acuity.Certificate
+            const discount = JSON.parse(this.metadata.discount) as AcuityTypes.Api.Certificate
             switch (discount.discountType) {
                 case 'percentage':
                     return this.amountCharged * (1 - discount.discountAmount / 100)

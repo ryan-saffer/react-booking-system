@@ -4,7 +4,7 @@ import { Skeleton, Typography, MenuItem, FormControl, Select, Button, Paper, Sel
 import { useNavigate } from 'react-router-dom'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 import styles from './ScienceClubClassSelection.module.css'
 
 type Props = {
@@ -19,10 +19,12 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     const mounted = useRef(false)
 
     const [loading, setLoading] = useState({ appointmentTypes: true, classes: false })
-    const [appointmentTypes, setAppointmentTypes] = useState<Acuity.AppointmentType[]>([])
-    const [selectedAppointmentType, setSelectedAppointmentType] = useState<Acuity.AppointmentType | undefined>()
-    const [classes, setClasses] = useState<Acuity.Class[]>([])
-    const [selectedClass, setSelectedClass] = useState<Acuity.Class | undefined>()
+    const [appointmentTypes, setAppointmentTypes] = useState<AcuityTypes.Api.AppointmentType[]>([])
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState<
+        AcuityTypes.Api.AppointmentType | undefined
+    >()
+    const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
+    const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
     useEffect(() => {
         mounted.current = true
@@ -31,7 +33,7 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                 'getAppointmentTypes',
                 firebase
             )({
-                category: process.env.REACT_APP_ENV === 'prod' ? 'Science Club' : 'TEST',
+                category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
             })
                 .then((result) => {
                     if (mounted.current) {

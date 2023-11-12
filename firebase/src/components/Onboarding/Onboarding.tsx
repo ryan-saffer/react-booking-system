@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles'
 import { Button, Layout, Typography } from 'antd'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import EmployeeTable from './EmployeeTable'

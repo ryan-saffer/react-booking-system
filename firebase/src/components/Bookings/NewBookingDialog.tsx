@@ -4,10 +4,10 @@ import { grey } from '@mui/material/colors'
 import { Close as CloseIcon } from '@mui/icons-material'
 import { TransitionProps } from '@mui/material/transitions'
 import React, { ReactElement, Ref, useState } from 'react'
-import NewBookingForm from './Forms/NewBookingForm'
-import NewEventForm from './Forms/EventForm/NewEventForm'
-import { useDateNavigation } from './DateNavigation/DateNavigation'
+import { NewBookingForm } from './Forms/NewBookingForm'
+import { NewEventForm } from './Forms/EventForm/NewEventForm'
 import { DateTime } from 'luxon'
+import { useDateNavigation } from './DateNavigation/DateNavigation.hooks'
 
 const PREFIX = 'NewBookingDialog'
 

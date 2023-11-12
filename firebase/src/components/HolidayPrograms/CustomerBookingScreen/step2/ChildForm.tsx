@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Input, Select } from 'antd'
-import { SimpleTextRule } from './Step2'
+import { SimpleTextRule } from '@utils/formUtils'
 const { TextArea } = Input
 
 type Props = {

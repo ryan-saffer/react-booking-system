@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles';
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import { styled } from '@mui/material/styles'
+import { AcuityTypes, AcuityConstants, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions, Dropdown, MenuProps, Space, Tag, Typography } from 'antd'
 import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
 import { BREAKPOINT_LG, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
@@ -8,14 +8,14 @@ import { DownOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../../../utilities/stringUtilities'
 import { MenuItemType } from 'antd/es/menu/hooks/useItems'
 
-const PREFIX = 'ChildDetails';
+const PREFIX = 'ChildDetails'
 
 const classes = {
     description: `${PREFIX}-description`,
     dropdownBtn: `${PREFIX}-dropdownBtn`,
     signatureWrapper: `${PREFIX}-signatureWrapper`,
-    signature: `${PREFIX}-signature`
-};
+    signature: `${PREFIX}-signature`,
+}
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
@@ -37,10 +37,10 @@ const Root = styled('div')({
         maxWidth: 300,
         width: 'fit-content',
     },
-});
+})
 
 type Props = {
-    appointment: Acuity.Appointment
+    appointment: AcuityTypes.Api.Appointment
     enrolment: ScienceEnrolment
     setAppointmentLabel: SetAppointmentLabel
     updateEnrolment: UpdateEnrolment
@@ -49,7 +49,6 @@ type Props = {
 type MenuKey = 'sign-in' | 'sign-out' | 'not-attending' | 'attending' | 'not-continuing'
 
 const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentLabel, updateEnrolment }) => {
-
     const { width } = useWindowDimensions()
 
     const [loading, setLoading] = useState(false)
@@ -90,13 +89,13 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 label: 'Not Continuing With Term',
             })
         }
-        if (appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.CHECKED_IN)) {
+        if (appointment.labels?.find((it) => it.id === AcuityConstants.Labels.CHECKED_IN)) {
             items.push({ key: 'sign-out', label: 'Undo Sign In' })
         }
-        if (appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.CHECKED_OUT)) {
+        if (appointment.labels?.find((it) => it.id === AcuityConstants.Labels.CHECKED_OUT)) {
             items.push({ key: 'sign-in', label: 'Undo Sign Out' })
         }
-        if (appointment.labels?.find((it) => it.id === Acuity.Constants.Labels.NOT_ATTENDING)) {
+        if (appointment.labels?.find((it) => it.id === AcuityConstants.Labels.NOT_ATTENDING)) {
             items.push({ key: 'attending', label: 'Mark As Attending' })
         }
 
@@ -108,7 +107,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
     }, [appointment])
 
     return (
-        (<Root>
+        <Root>
             <Descriptions className={classes.description} bordered size="small" column={1}>
                 {width < BREAKPOINT_LG && (
                     <>
@@ -181,8 +180,8 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                     </Button>
                 </div>
             </Dropdown>
-        </Root>)
-    );
+        </Root>
+    )
 }
 
 export default ChildDetails

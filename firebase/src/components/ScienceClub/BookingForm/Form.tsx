@@ -1,7 +1,7 @@
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Checkbox, Divider, Form as AntdForm, Input, Modal, Select, Typography } from 'antd'
-import { PhoneRule, SimpleTextRule } from '../../HolidayPrograms/CustomerBookingScreen/step2/Step2'
+import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 import Upload from './Upload'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import TermsAndConditions from './TermsAndConditions'
@@ -12,7 +12,7 @@ const { Option } = Select
 const { TextArea } = Input
 
 type Props = {
-    appointmentType: Acuity.AppointmentType
+    appointmentType: AcuityTypes.Api.AppointmentType
     onSubmit: FormSubmission
 }
 

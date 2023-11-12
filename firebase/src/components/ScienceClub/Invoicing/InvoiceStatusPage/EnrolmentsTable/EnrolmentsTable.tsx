@@ -72,7 +72,7 @@ function getAppointmentWeekRange(enrolments: ScienceEnrolment[]) {
     return output.sort()
 }
 
-const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
+const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(true)
@@ -108,7 +108,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
     const handleActionButtonClick: MenuProps['onClick'] = (e) => {
         const key = e.key as MenuKey
         switch (key) {
-            case 'send-invoice':
+            case 'send-invoice': {
                 // ensure no one selected has a paid invoice
                 let includesPaidInvoice = false
                 selectedRowKeys.forEach((key) => {
@@ -139,6 +139,7 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
                     onConfirm: (selectedPrice) => sendInvoices(selectedPrice),
                 })
                 break
+            }
             case 'send-enrolment-email':
                 showConfirmationDialog({
                     dialogTitle: `Send term enrolment email to selected parents`,
@@ -403,4 +404,4 @@ const EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmati
     )
 }
 
-export default WithConfirmationDialog(EnrolmentsTable)
+export const EnrolmentsTable = WithConfirmationDialog(_EnrolmentsTable)

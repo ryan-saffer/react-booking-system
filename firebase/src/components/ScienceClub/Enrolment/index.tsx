@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { styled } from '@mui/material/styles'
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 import { Divider } from '@mui/material'
 
 import * as logo from '../../../drawables/fizz-logo.png'
@@ -54,7 +54,7 @@ export const EnrolmentPage = () => {
     const searchParams = new URLSearchParams(atob(base64String))
 
     const appointmentId = searchParams.get('appointmentId')!
-    const continuingWithTerm = searchParams.get('continuing') as Acuity.Client.ContinuingOption
+    const continuingWithTerm = searchParams.get('continuing') as AcuityTypes.Client.ContinuingOption
 
     const mixpanel = useMixpanel()
 

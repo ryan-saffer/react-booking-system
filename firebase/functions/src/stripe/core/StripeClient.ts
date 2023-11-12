@@ -9,7 +9,6 @@ export class StripeClient {
 
     #client: TStripe | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {

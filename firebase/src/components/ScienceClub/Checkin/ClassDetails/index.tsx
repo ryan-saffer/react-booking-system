@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
-import { Acuity, ScienceEnrolment } from 'fizz-kidz'
+import { AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import Heading from './Header'
@@ -9,6 +9,7 @@ import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import { useSearchParams } from 'react-router-dom'
+import { getEnrolment } from './ClassDetails.utils'
 
 const PREFIX = 'ScienceClubCheckinClassDetails'
 
@@ -63,15 +64,6 @@ const Root = styled('div')({
 
 export type EnrolmentsMap = { [key: string]: ScienceEnrolment }
 
-export function getEnrolment(appointment: Acuity.Appointment, enrolmentsMap: { [key: string]: ScienceEnrolment }) {
-    const firestoreId = Acuity.Utilities.retrieveFormAndField(
-        appointment,
-        Acuity.Constants.Forms.FIRESTORE,
-        Acuity.Constants.FormFields.FIRESTORE_ID
-    )
-    return enrolmentsMap[firestoreId]
-}
-
 export const ScienceClubCheckinClassDetails: React.FC = () => {
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
@@ -80,7 +72,7 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
-    const [appointments, setAppointments] = useState<Acuity.Appointment[]>([])
+    const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
 
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)
@@ -88,7 +80,7 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
     const calendarName = decodeURIComponent(searchParams.get('calendarName')!)
     const classTime = decodeURIComponent(searchParams.get('classTime')!)
 
-    const updateAppointment = (newAppointment: Acuity.Appointment) => {
+    const updateAppointment = (newAppointment: AcuityTypes.Api.Appointment) => {
         setAppointments((appointments) =>
             appointments.map((oldAppointment) => {
                 if (oldAppointment.id === newAppointment.id) {
@@ -102,7 +94,7 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
 
     useEffect(() => {
         setLoading(true)
-        let _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
+        const _enrolmentsMap: { [key: string]: ScienceEnrolment } = {}
         // needed to track within the scope of this render
         let _isFirstLoad = true
         let _appointments = appointments

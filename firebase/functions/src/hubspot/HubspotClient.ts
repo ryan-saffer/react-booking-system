@@ -1,5 +1,5 @@
 import type { Client as TClient } from '@hubspot/api-client'
-import { Branch, Location, Acuity, Booking } from 'fizz-kidz'
+import { Branch, Location, AcuityUtilities, Booking } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { ClientStatus } from '../utilities/types'
 
@@ -17,7 +17,6 @@ export class HubspotClient {
 
     #client: TClient | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {
@@ -108,7 +107,7 @@ export class HubspotClient {
     addScienceProgramContact(props: WithBaseProps<{ calendarId: number }>) {
         const { calendarId, ...baseProps } = props
         return this.#addContact({
-            party_location: Acuity.Utilities.getSchoolByCalendarId(calendarId),
+            party_location: AcuityUtilities.getSchoolByCalendarId(calendarId),
             test_service: 'School Science Program',
             ...baseProps,
         })

@@ -1,21 +1,24 @@
-import { EventBooking } from 'fizz-kidz'
 import React, { useState } from 'react'
-import EventForm, { Form, combineDateAndTime } from './EventForm'
-import EditFormButtons from '../EditFormButtons'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
 import { useForm, FormProvider } from 'react-hook-form'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import { DateTime } from 'luxon'
-import { useDateNavigation } from '../../DateNavigation/DateNavigation'
+import { EventBooking } from 'fizz-kidz'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
+import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
+import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import EditFormButtons from '@components/Bookings/Forms/EditFormButtons'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+import { combineDateAndTime } from '@utils/dateUtils'
+
+import EventForm, { Form } from './EventForm'
 
 type Props = {
     event: EventBooking
 } & ConfirmationDialogProps &
     ErrorDialogProps
 
-const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
+const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(false)
@@ -124,4 +127,4 @@ const ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, dis
     )
 }
 
-export default WithConfirmationDialog(WithErrorDialog(ExistingEventForm))
+export const ExistingEventForm = WithConfirmationDialog(WithErrorDialog(_ExistingEventForm))

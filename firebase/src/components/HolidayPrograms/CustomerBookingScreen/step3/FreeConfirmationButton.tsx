@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles'
 import { Button } from 'antd'
-import { Acuity } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form } from '..'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import Loader from '../../../ScienceClub/shared/Loader'
-import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
+import { TermsCheckboxHandle, TermsCheckbox } from './TermsCheckbox'
 
 const PREFIX = 'FreeConfirmationButton'
 
@@ -25,7 +25,7 @@ const Root = styled('div')({
 
 type Props = {
     form: Form
-    selectedClasses: Acuity.Class[]
+    selectedClasses: AcuityTypes.Api.Class[]
     discountCode: string
     setError: Dispatch<SetStateAction<boolean>>
 }

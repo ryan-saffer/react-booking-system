@@ -75,7 +75,7 @@ const ParentPortal: React.FC = () => {
         case 'loading':
             return <Loader />
 
-        case 'loaded':
+        case 'loaded': {
             const appointment = service.result
             return (
                 <Root className={classes.root}>
@@ -93,7 +93,7 @@ const ParentPortal: React.FC = () => {
                     <PickupPeople appointment={appointment} />
                 </Root>
             )
-
+        }
         default: // error
             return (
                 <div className={classes.error}>

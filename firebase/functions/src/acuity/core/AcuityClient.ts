@@ -1,10 +1,10 @@
 import { hasError } from './utilities'
-import { Acuity } from 'fizz-kidz'
-import UpdateAppointmentParams = Acuity.Client.UpdateAppointmentParams
-import FetchAppointmentsParams = Acuity.Client.FetchAppointmentsParams
-import GetAppointmentTypesParams = Acuity.Client.GetAppointmentTypesParams
-import UpdateLabelParams = Acuity.Client.UpdateLabelParams
-import Label = Acuity.Client.Label
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import UpdateAppointmentParams = AcuityTypes.Client.UpdateAppointmentParams
+import FetchAppointmentsParams = AcuityTypes.Client.FetchAppointmentsParams
+import GetAppointmentTypesParams = AcuityTypes.Client.GetAppointmentTypesParams
+import UpdateLabelParams = AcuityTypes.Client.UpdateLabelParams
+import Label = AcuityTypes.Client.Label
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
 import { ClientStatus } from '../../utilities/types'
 
@@ -27,7 +27,6 @@ export class AcuityClient {
     #client: any
     #status: ClientStatus = 'not-initialised'
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {
@@ -61,7 +60,7 @@ export class AcuityClient {
 
     private _request<T>(path: string, options: Record<string, unknown> = {}): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.#acuity.request(path, options, (err: any, _resp: any, result: T | Acuity.Error) => {
+            this.#acuity.request(path, options, (err: any, _resp: any, result: T | AcuityTypes.Api.Error) => {
                 if (hasError(err, result)) {
                     reject(err ?? result)
                     return
@@ -73,12 +72,12 @@ export class AcuityClient {
     }
 
     getAppointment(id: string) {
-        return this._request<Acuity.Appointment>(`/appointments/${id}`)
+        return this._request<AcuityTypes.Api.Appointment>(`/appointments/${id}`)
     }
 
     updateAppointment(params: UpdateAppointmentParams) {
         const { id, ...body } = params
-        return this._request<Acuity.Appointment>(`/appointments/${id}`, { method: 'PUT', body })
+        return this._request<AcuityTypes.Api.Appointment>(`/appointments/${id}`, { method: 'PUT', body })
     }
 
     getAppointments(ids: number[]) {
@@ -91,7 +90,7 @@ export class AcuityClient {
             const date = params.classTime.split('T')[0]
             path += `&minDate=${date}&maxDate=${date}`
         }
-        let result = await this._request<Acuity.Appointment[]>(path)
+        let result = await this._request<AcuityTypes.Api.Appointment[]>(path)
         if (params.classId) {
             result = result.filter((it) => it.classID === params.classId)
         }
@@ -99,7 +98,7 @@ export class AcuityClient {
     }
 
     async getAppointmentTypes(input: GetAppointmentTypesParams) {
-        let appointmentTypes = await this._request<Acuity.AppointmentType[]>(`/appointment-types`)
+        let appointmentTypes = await this._request<AcuityTypes.Api.AppointmentType[]>(`/appointment-types`)
         if (input.category) {
             appointmentTypes = appointmentTypes.filter((it) => it.category === input.category)
         }
@@ -110,7 +109,7 @@ export class AcuityClient {
     }
 
     scheduleAppointment(body: ScheduleAppointmentParams) {
-        return this._request<Acuity.Appointment>('/appointments?admin=true', { method: 'POST', body })
+        return this._request<AcuityTypes.Api.Appointment>('/appointments?admin=true', { method: 'POST', body })
     }
 
     cancelAppointment(id: number) {
@@ -125,24 +124,28 @@ export class AcuityClient {
         if (includeUnavailable) {
             path += `&includeUnavailable=true`
         }
-        return this._request<Acuity.Class[]>(path)
+        return this._request<AcuityTypes.Api.Class[]>(path)
     }
 
     getCalendars() {
-        return this._request<Acuity.Calendar[]>(`/calendars`)
+        return this._request<AcuityTypes.Api.Calendar[]>(`/calendars`)
     }
 
-    checkCertificate(certificate: string, appointmentTypeId: number, email: string): Promise<Acuity.Certificate> {
-        return this._request<Acuity.Certificate>(
+    checkCertificate(
+        certificate: string,
+        appointmentTypeId: number,
+        email: string
+    ): Promise<AcuityTypes.Api.Certificate> {
+        return this._request<AcuityTypes.Api.Certificate>(
             `/certificates/check?certificate=${certificate}&appointmentTypeID=${appointmentTypeId}&email=${email}`
         )
     }
 
     updateLabel(params: UpdateLabelParams) {
         const labelMap: { [key in Exclude<Label, 'none'>]: number } = {
-            'checked-in': Acuity.Constants.Labels.CHECKED_IN,
-            'checked-out': Acuity.Constants.Labels.CHECKED_OUT,
-            'not-attending': Acuity.Constants.Labels.NOT_ATTENDING,
+            'checked-in': AcuityConstants.Labels.CHECKED_IN,
+            'checked-out': AcuityConstants.Labels.CHECKED_OUT,
+            'not-attending': AcuityConstants.Labels.NOT_ATTENDING,
         }
         const label = params.label === 'none' ? [] : [{ id: labelMap[params.label] }]
         return this.updateAppointment({ id: params.appointmentId, labels: label })

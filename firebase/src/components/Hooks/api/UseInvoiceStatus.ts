@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-import { InvoiceStatus, InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
+import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { callFirebaseFunction } from '../../../utilities/firebase/functions'
 import { Service } from 'fizz-kidz'
 
@@ -29,7 +29,8 @@ const useInvoiceStatus = (
             .catch((error) => {
                 setResult({ status: 'error', error })
             })
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [invoiceId, appointment.invoiceId, appointment.id])
 
     return [result, setResult]
 }

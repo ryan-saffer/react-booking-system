@@ -1,6 +1,6 @@
-import firebase from 'firebase/compat'
+import firebase from 'firebase/compat/app'
 import Firebase from '../../components/Firebase'
-import { FirebaseFunctions, Acuity } from 'fizz-kidz'
+import { FirebaseFunctions, AcuityTypes } from 'fizz-kidz'
 
 export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, firebase: Firebase) {
     return function (input: FirebaseFunctions[K]['input']): Promise<FirebaseFunctions[K]['result']> {
@@ -16,19 +16,18 @@ export function callFirebaseFunction<K extends keyof FirebaseFunctions>(fn: K, f
     }
 }
 
-export function callAcuityClient<K extends keyof Acuity.Client.AcuityFunctions>(method: K, firebase: Firebase) {
+export function callAcuityClient<K extends keyof AcuityTypes.Client.AcuityFunctions>(method: K, firebase: Firebase) {
     return function (
-        input: Acuity.Client.AcuityFunctions[K]['input']
-    ): Promise<Acuity.Client.AcuityFunctions[K]['result']> {
+        input: AcuityTypes.Client.AcuityFunctions[K]['input']
+    ): Promise<AcuityTypes.Client.AcuityFunctions[K]['result']> {
         return new Promise((resolve, reject) => {
             firebase.functions
                 .httpsCallable('acuityClient')({ method, input })
                 .then((result) => resolve(result))
                 .catch((error) => {
                     if (isFunctionsError(error)) {
-                        const { details } = JSON.parse(JSON.stringify(error))
-                        logFunctionsError(method, error, details)
-                        reject(details)
+                        logFunctionsError(method, error)
+                        reject(error.details)
                     } else {
                         logGenericError(method, error)
                         reject(error)
@@ -49,7 +48,7 @@ function isFunctionsError(err: any): err is firebase.functions.HttpsError {
     )
 }
 
-function logFunctionsError(fn: string, error: firebase.functions.HttpsError, details: any) {
+function logFunctionsError(fn: string, error: firebase.functions.HttpsError) {
     console.error(
         `error running '${fn}'`,
         '--statusCode:',

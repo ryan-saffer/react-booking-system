@@ -5,7 +5,7 @@ import Firebase, { FirebaseContext } from '../../../Firebase'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import Payment from './Payment'
 import BookingSummary from './BookingSummary'
-import { Acuity } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
 import { Form } from '..'
 import { Result } from 'antd'
 import { calculateTotal, DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
@@ -15,12 +15,12 @@ import { capitalise } from '../../../../utilities/stringUtilities'
 import Loader from '../../../ScienceClub/shared/Loader'
 import FreeConfirmationButton from './FreeConfirmationButton'
 
-const isProd = process.env.REACT_APP_ENV === 'prod'
+const isProd = import.meta.env.VITE_ENV === 'prod'
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(
-    (isProd ? process.env.REACT_APP_STRIPE_API_KEY_PROD : process.env.REACT_APP_STRIPE_API_KEY_TEST) as string
+    (isProd ? import.meta.env.VITE_STRIPE_API_KEY_PROD : import.meta.env.VITE_STRIPE_API_KEY_TEST) as string
 )
 
 export type ItemSummary = { childName: string; dateTime: string; discounted: boolean }
@@ -28,7 +28,7 @@ type ChildForm = { childName: string }
 
 type Props = {
     form: Form
-    selectedClasses: Acuity.Class[]
+    selectedClasses: AcuityTypes.Api.Class[]
     selectedStore: string
 }
 
@@ -39,7 +39,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
         clientSecret: '',
     })
     const [error, setError] = useState(false)
-    const [discount, setDiscount] = useState<Acuity.Certificate | undefined>(undefined)
+    const [discount, setDiscount] = useState<AcuityTypes.Api.Certificate | undefined>(undefined)
 
     const options = {
         // passing the client secret obtained from the server
@@ -54,7 +54,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
     const isFree = totalPrice === 0
 
     const summarisedList: ItemSummary[] = []
-    let sortedSelectedClasses = selectedClasses.map((it) => it)
+    const sortedSelectedClasses = selectedClasses.map((it) => it)
     sortedSelectedClasses.sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0))
     sortedSelectedClasses.forEach((klass) => {
         form['children'].forEach((child: ChildForm) => {
@@ -90,7 +90,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
-                let result = await callFirebaseFunction(
+                const result = await callFirebaseFunction(
                     'createPaymentIntent',
                     firebase
                 )({
@@ -114,6 +114,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             }
         }
         createPaymentIntent(totalPrice)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -139,6 +140,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             return
         }
         updatePaymentIntent()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [discount])
 
     if (error) {

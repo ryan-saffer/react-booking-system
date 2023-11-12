@@ -1,5 +1,5 @@
-import { Acuity, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
-import React, { useEffect, useState } from 'react'
+import { AcuityTypes, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { useEffect, useState } from 'react'
 import { callAcuityClient, callFirebaseFunction } from '../../../utilities/firebase/functions'
 import Root from '../../Shared/Root'
 import { LeftOutlined } from '@ant-design/icons'
@@ -21,8 +21,8 @@ export const BookingForm = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
-    const [appointmentTypes, setAppointmentTypes] = useState<Acuity.AppointmentType[]>()
-    const [selectedClass, setSelectedClass] = useState<Acuity.AppointmentType>()
+    const [appointmentTypes, setAppointmentTypes] = useState<AcuityTypes.Api.AppointmentType[]>()
+    const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.AppointmentType>()
     const [logoMap, setLogoMap] = useState<{ [key: string]: string }>()
 
     useEffect(() => {
@@ -33,7 +33,7 @@ export const BookingForm = () => {
                         'getAppointmentTypes',
                         firebase
                     )({
-                        category: process.env.REACT_APP_ENV === 'prod' ? 'Science Club' : 'TEST',
+                        category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
                         availableToBook: true,
                     }),
                     firebase.db.collection('acuityCalendars').get(),

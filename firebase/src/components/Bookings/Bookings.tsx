@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Grid, Divider, FormGroup, FormControlLabel, Checkbox, useMediaQuery } from '@mui/material'
 import { Location, ObjectKeys } from 'fizz-kidz'
 

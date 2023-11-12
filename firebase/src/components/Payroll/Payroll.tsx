@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { Alert, Button, DatePicker, Typography, Layout, theme, Divider, Card, Collapse } from 'antd'
 import { RangePickerProps } from 'antd/es/date-picker'
@@ -42,9 +42,7 @@ const { Panel } = Collapse
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
 
-type Props = {}
-
-export const Payroll: React.FC<Props> = () => {
+export const Payroll = () => {
     const firebase = useFirebase()
 
     const {

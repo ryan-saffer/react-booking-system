@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 
 import { styled } from '@mui/material/styles'
 
-import { Acuity } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, AcuityTypes } from 'fizz-kidz'
 
 import { Collapse, Button as AntButton, List, Tag } from 'antd'
-import Firebase, { FirebaseContext } from '../../Firebase'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { formatMobileNumber } from '../../../utilities/stringUtilities'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
+import useFirebase from '../../Hooks/context/UseFirebase'
 
 const { Panel } = Collapse
 
@@ -27,42 +27,42 @@ const StyledPanel = styled(Panel)({
 })
 
 type Props = {
-    appointment: Acuity.Appointment
+    appointment: AcuityTypes.Api.Appointment
 }
 
 const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment, ...props }) => {
-    const firebase = useContext(FirebaseContext) as Firebase
+    const firebase = useFirebase()
 
     const [appointment, setAppointment] = useState(originalAppointment)
     const [loading, setLoading] = useState(false)
 
     const notSignedIn = appointment.labels === null
-    const isSignedIn = appointment.labels !== null && appointment.labels[0].id === Acuity.Constants.Labels.CHECKED_IN
+    const isSignedIn = appointment.labels !== null && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
 
-    const childName = Acuity.Utilities.retrieveFormAndField(
+    const childName = AcuityUtilities.retrieveFormAndField(
         appointment,
-        Acuity.Constants.Forms.CHILDREN_DETAILS,
-        Acuity.Constants.FormFields.CHILDREN_NAMES
+        AcuityConstants.Forms.CHILDREN_DETAILS,
+        AcuityConstants.FormFields.CHILDREN_NAMES
     )
-    const allergies = Acuity.Utilities.retrieveFormAndField(
+    const allergies = AcuityUtilities.retrieveFormAndField(
         appointment,
-        Acuity.Constants.Forms.CHILDREN_DETAILS,
-        Acuity.Constants.FormFields.CHILDREN_ALLERGIES
+        AcuityConstants.Forms.CHILDREN_DETAILS,
+        AcuityConstants.FormFields.CHILDREN_ALLERGIES
     )
-    const emergencyContactName = Acuity.Utilities.retrieveFormAndField(
+    const emergencyContactName = AcuityUtilities.retrieveFormAndField(
         appointment,
-        Acuity.Constants.Forms.HOLIDAY_PROGRAM_EMERGENCY_CONTACT,
-        Acuity.Constants.FormFields.EMERGENCY_CONTACT_NAME_HP
+        AcuityConstants.Forms.HOLIDAY_PROGRAM_EMERGENCY_CONTACT,
+        AcuityConstants.FormFields.EMERGENCY_CONTACT_NAME_HP
     )
-    const emergencyContactNumber = Acuity.Utilities.retrieveFormAndField(
+    const emergencyContactNumber = AcuityUtilities.retrieveFormAndField(
         appointment,
-        Acuity.Constants.Forms.HOLIDAY_PROGRAM_EMERGENCY_CONTACT,
-        Acuity.Constants.FormFields.EMERGENCY_CONTACT_NUMBER_HP
+        AcuityConstants.Forms.HOLIDAY_PROGRAM_EMERGENCY_CONTACT,
+        AcuityConstants.FormFields.EMERGENCY_CONTACT_NUMBER_HP
     )
     const hasAllergies = allergies !== ''
     const stayingAllDay = appointment.certificate === 'ALLDAY'
 
-    const updateLabel = async (value: Acuity.Client.Label) => {
+    const updateLabel = async (value: AcuityTypes.Client.Label) => {
         try {
             const result = await callAcuityClient(
                 'updateLabel',
