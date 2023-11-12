@@ -16,7 +16,7 @@ const classes = {
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')(({ theme }) => ({
+const Root = styled('div')({
     [`& .${classes.deleteButton}`]: {
         color: 'red',
     },
@@ -24,7 +24,7 @@ const Root = styled('div')(({ theme }) => ({
     [`& .${classes.form}`]: {
         width: '100%',
     },
-}))
+})
 
 /**
  * Higher-order-component that provides a confirmation dialog.

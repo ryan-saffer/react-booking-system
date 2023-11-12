@@ -14,7 +14,6 @@ export class DriveClient {
 
     #driveClient: drive_v3.Drive | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance(): Promise<DriveClient> {

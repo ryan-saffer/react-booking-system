@@ -1,4 +1,4 @@
-import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
+import { AcuityUtilities, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
@@ -41,7 +41,7 @@ async function scheduleHolidayPrograms(
                 lastName: parentLastName,
                 email: parentEmail,
                 mobile: parentPhone,
-                location: Acuity.Utilities.getStudioByCalendarId(calendarId),
+                location: AcuityUtilities.getStudioByCalendarId(calendarId),
             })
         }
     } catch (err) {

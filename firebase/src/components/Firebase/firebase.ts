@@ -15,7 +15,7 @@ class Firebase {
     storage: firebase.storage.Storage
 
     constructor() {
-        const app = firebase.initializeApp(process.env.REACT_APP_ENV === 'prod' ? config.prodConfig : config.devConfig)
+        const app = firebase.initializeApp(import.meta.env.VITE_ENV === 'prod' ? config.prodConfig : config.devConfig)
 
         this.auth = app.auth()
         this.db = app.firestore()

@@ -2,14 +2,14 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { List, Typography, Tag } from 'antd'
 import { ItemSummary } from './Step3'
 import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
-import { Acuity } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
 
 type Props = {
     summarisedItems: ItemSummary[]
     total: number
-    discount: Acuity.Certificate | undefined
+    discount: AcuityTypes.Api.Certificate | undefined
     originalTotal?: number
-    setDiscount: Dispatch<SetStateAction<Acuity.Certificate | undefined>>
+    setDiscount: Dispatch<SetStateAction<AcuityTypes.Api.Certificate | undefined>>
 }
 
 const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, originalTotal, setDiscount }) => {

@@ -5,7 +5,7 @@ import Heading from './Heading'
 import SkeletonRows from '../../../Shared/SkeletonRows'
 import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Result } from 'antd'
-import EnrolmentsTable from './EnrolmentsTable/EnrolmentsTable'
+import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
 import { useSearchParams } from 'react-router-dom'
 
 export const ScienceClassDashboard: React.FC = () => {

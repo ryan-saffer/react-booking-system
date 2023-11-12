@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Acuity } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
 import { callAcuityClient } from '../../../../utilities/firebase/functions'
 import { WithErrorModal } from '../../../Hooks/UseErrorDialog'
@@ -9,7 +9,7 @@ import useMixpanel from '../../../Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '../../../Mixpanel/Events'
 
 type Props = {
-    appointment: Acuity.Appointment
+    appointment: AcuityTypes.Api.Appointment
 } & WithErrorModal
 
 const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
@@ -19,7 +19,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
     const notAttending =
         appointment.labels &&
         appointment.labels.length > 0 &&
-        appointment.labels[0].id === Acuity.Constants.Labels.NOT_ATTENDING
+        appointment.labels[0].id === AcuityConstants.Labels.NOT_ATTENDING
 
     const [attending, setAttending] = useState(!notAttending)
     const [loading, setSetloading] = useState(false)
@@ -30,7 +30,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
             await callAcuityClient(
                 'updateAppointment',
                 firebase
-            )({ id: appointment.id, labels: checked ? [] : [{ id: Acuity.Constants.Labels.NOT_ATTENDING }] })
+            )({ id: appointment.id, labels: checked ? [] : [{ id: AcuityConstants.Labels.NOT_ATTENDING }] })
             if (checked) {
                 setAttending(true)
             } else {

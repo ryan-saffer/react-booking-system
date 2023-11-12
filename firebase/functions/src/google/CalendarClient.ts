@@ -34,7 +34,6 @@ export class CalendarClient {
 
     #calendarClient: calendar_v3.Calendar | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {

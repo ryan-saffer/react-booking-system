@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react'
-import { Acuity, Service } from 'fizz-kidz'
+import { AcuityTypes, Service } from 'fizz-kidz'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import Firebase, { FirebaseContext } from '../../Firebase'
 
-const useAcuityClient = <T extends keyof Acuity.Client.AcuityFunctions>(
+const useAcuityClient = <T extends keyof AcuityTypes.Client.AcuityFunctions>(
     method: T,
-    input: Acuity.Client.AcuityFunctions[T]['input']
+    input: AcuityTypes.Client.AcuityFunctions[T]['input']
 ) => {
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [service, setService] = useState<Service<Acuity.Client.AcuityFunctions[T]['result']['data']>>({
+    const [service, setService] = useState<Service<AcuityTypes.Client.AcuityFunctions[T]['result']['data']>>({
         status: 'loading',
     })
 

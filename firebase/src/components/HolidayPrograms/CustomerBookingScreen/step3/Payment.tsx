@@ -2,12 +2,12 @@ import React, { useContext, useRef, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { Button, Typography } from 'antd'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { Acuity, PaidHolidayProgramBooking } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { Form } from '..'
 import Firebase, { FirebaseContext } from '../../../Firebase'
 import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
 import Loader from '../../../ScienceClub/shared/Loader'
-import TermsCheckbox, { TermsCheckboxHandle } from './TermsCheckbox'
+import { TermsCheckboxHandle, TermsCheckbox } from './TermsCheckbox'
 
 const PREFIX = 'Payment'
 
@@ -25,9 +25,9 @@ const Root = styled('div')({
 
 type Props = {
     form: Form
-    selectedClasses: Acuity.Class[]
+    selectedClasses: AcuityTypes.Api.Class[]
     paymentIntentId: string
-    discount: Acuity.Certificate | undefined
+    discount: AcuityTypes.Api.Certificate | undefined
 }
 
 const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, discount }) => {
@@ -73,9 +73,9 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
         const programs: PaidHolidayProgramBooking[] = selectedClasses.flatMap((klass) =>
             form.children.map((child) => ({
                 appointmentTypeId:
-                    process.env.REACT_APP_ENV === 'prod'
-                        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                    import.meta.env.VITE_ENV === 'prod'
+                        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
                 dateTime: klass.time,
                 calendarId: klass.calendarID,
                 parentFirstName: form.parentFirstName,
@@ -102,11 +102,11 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
         const query = await firebase.db.collection('holidayProgramBookings').doc(paymentIntentId).get()
 
         if (!query.exists) {
-            let batch = firebase.db.batch()
-            let paymentIntentRef = firebase.db.collection('holidayProgramBookings').doc(paymentIntentId)
+            const batch = firebase.db.batch()
+            const paymentIntentRef = firebase.db.collection('holidayProgramBookings').doc(paymentIntentId)
             batch.set(paymentIntentRef, { booked: false })
             programs.forEach((program) => {
-                let programRef = paymentIntentRef.collection('programs').doc()
+                const programRef = paymentIntentRef.collection('programs').doc()
                 batch.set(programRef, { ...program })
             })
             try {

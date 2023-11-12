@@ -9,7 +9,7 @@ import { DateTime } from 'luxon'
  * @return {object} the booking ready to be written to firestore
  */
 export function mapFormToBooking(formValues: ExistingBookingFormFields): Booking {
-    let booking = getEmptyDomainBooking()
+    const booking = getEmptyDomainBooking()
     Object.keys(booking).forEach((key) => {
         if (Utilities.isObjKey(key, booking)) {
             booking[key] = formValues[key]?.value as never // safe given we know key is a keyof DomainBooking
@@ -41,20 +41,20 @@ function convertFormBookingToBooking(formBooking: FormBooking): Booking {
 
     // downcast to any, since we know deleting date and time is safe.
     // without the cast, the fields can't be deleted. If downcasting to BaseBooking, the fields dont exist.
-    let temp = formBooking as any
+    const temp = formBooking as any
     delete temp.date
     delete temp.time
 
-    let booking = temp as Booking
+    const booking = temp as Booking
     booking.dateTime = dateTime
     return booking
 }
 
 export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooking): ExistingBookingFormFields {
     const domainBooking = convertFirestoreBookingToFormBooking({ ...firestoreBooking }) // copy so as not to mutate original value
-    let formValues = getEmptyValues()
+    const formValues = getEmptyValues()
 
-    for (let field in formValues) {
+    for (const field in formValues) {
         if (Utilities.isObjKey(field, formValues)) {
             const val = domainBooking[field]
             if (val) {

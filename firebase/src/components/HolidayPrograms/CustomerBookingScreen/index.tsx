@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 import Step1 from './step1/Step1'
 import { Form as AntdForm, Button, Steps, Modal, Card, Typography } from 'antd'
-import { Acuity } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import Firebase, { FirebaseContext } from '../../Firebase'
 import { callAcuityClient } from '../../../utilities/firebase/functions'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -40,8 +40,8 @@ export const CustomerBookingScreen = () => {
     const [loading, setLoading] = useState(true)
     const [noUpcomingPrograms, setNoUpcomingPrograms] = useState(false)
     const [selectedStore, setSelectedStore] = useState('')
-    const [classes, setClasses] = useState<Acuity.Class[]>([])
-    const [selectedClasses, setSelectedClasses] = useState<Acuity.Class[]>([])
+    const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
+    const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
@@ -52,9 +52,9 @@ export const CustomerBookingScreen = () => {
                 firebase
             )({
                 appointmentTypeId:
-                    process.env.REACT_APP_ENV === 'prod'
-                        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                    import.meta.env.VITE_ENV === 'prod'
+                        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
                 includeUnavailable: true,
                 minDate: Date.now(),
             })
@@ -150,7 +150,7 @@ export const CustomerBookingScreen = () => {
                 initialValues={{ prefix: '61' }}
                 onValuesChange={(_, values) => {
                     // filter out any removed children with undefined values
-                    let children = values.children
+                    const children = values.children
                     if (children) {
                         values.children = children.filter((child: any) => child && child.childName !== undefined)
                     }

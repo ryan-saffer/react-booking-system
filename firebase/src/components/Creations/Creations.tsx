@@ -1,4 +1,3 @@
-import React from 'react'
 import Markdown from 'react-markdown'
 import styles from './Creations.module.css'
 import { creations } from './creationMarkdown'
@@ -8,9 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 
-type Props = {}
-
-export const CreationsPage: React.FC<Props> = () => {
+export const CreationsPage = () => {
     const navigate = useNavigate()
 
     return (

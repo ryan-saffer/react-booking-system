@@ -1,4 +1,3 @@
-import React, { useContext } from 'react'
 import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,8 +7,8 @@ import { Launch as LaunchIcon } from '@mui/icons-material'
 
 import * as ROUTES from '../../constants/routes'
 import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
-import { FirebaseContext } from '../Firebase'
 import { useScopes } from '../Hooks/UseScopes'
+import useFirebase from '../Hooks/context/UseFirebase'
 
 const PREFIX = 'Navigation'
 
@@ -80,9 +79,9 @@ export const Navigation = () => {
     const hasCoreWriteScope = scopes.CORE === 'write'
     const hasPayrollWriteScope = scopes.PAYROLL === 'write'
 
-    const firebase = useContext(FirebaseContext)
+    const firebase = useFirebase()
 
-    const navigateToRoute = (route) => {
+    const navigateToRoute = (route: string) => {
         navigate(route)
     }
 

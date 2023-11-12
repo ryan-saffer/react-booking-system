@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState } from 'react'
 
 import { styled } from '@mui/material/styles'
 
@@ -7,8 +7,8 @@ import * as GoogleLogo from '../../drawables/google-logo.png'
 
 import { Snackbar, Button } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { FirebaseContext } from '../Firebase'
 import { useNavigate } from 'react-router-dom'
+import useFirebase from '../Hooks/context/UseFirebase'
 
 const PREFIX = 'SignInGoogle'
 
@@ -43,14 +43,14 @@ const Root = styled('div')(({ theme }) => ({
     },
 }))
 
-const SignInGoogle = (props) => {
-    const firebase = useContext(FirebaseContext)
+const SignInGoogle = () => {
+    const firebase = useFirebase()
 
     const navigate = useNavigate()
 
-    const [error, setError] = useState(null)
+    const [error, setError] = useState<Error | null>(null)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         firebase
             .doSignInWithGoogle()
@@ -78,7 +78,7 @@ const SignInGoogle = (props) => {
                 ContentProps={{ classes: { root: classes.snackBar } }}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 autoHideDuration={4000}
-                open={error}
+                open={!!error}
                 message={error && error.message}
                 onClose={() => setError(null)}
             />

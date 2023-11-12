@@ -12,7 +12,9 @@ export * from './partyBookings/Event'
 //#endregion
 
 //#region Acuity
-export * as Acuity from './acuity'
+export * as AcuityUtilities from './acuity/utilities'
+export * as AcuityConstants from './acuity/constants'
+export * as AcuityTypes from './acuity/types'
 //#endregion
 
 //#region Science Club

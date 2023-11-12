@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 import useAcuityClient from '../../Hooks/api/UseAcuityClient'
 import Loader from '../shared/Loader'
 import Form from './Form'
@@ -9,7 +9,7 @@ import { MixpanelEvents } from '../../Mixpanel/Events'
 import { FormSubmission } from '.'
 
 type Props = {
-    appointmentType: Acuity.AppointmentType
+    appointmentType: AcuityTypes.Api.AppointmentType
     onSubmit: FormSubmission
 }
 

@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 import useWindowDimensions from '../../Hooks/UseWindowDimensions'
-import { Acuity } from 'fizz-kidz'
+import { AcuityUtilities, AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
 import CssBaseline from '@mui/material/CssBaseline'
 import Typography from '@mui/material/Typography'
@@ -78,16 +78,16 @@ export const ClassDetailsPage = () => {
 
     const navigate = useNavigate()
 
-    const sortByChildName = (a: Acuity.Appointment, b: Acuity.Appointment) => {
-        const aName = Acuity.Utilities.retrieveFormAndField(
+    const sortByChildName = (a: AcuityTypes.Api.Appointment, b: AcuityTypes.Api.Appointment) => {
+        const aName = AcuityUtilities.retrieveFormAndField(
             a,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         ) as string
-        const bName = Acuity.Utilities.retrieveFormAndField(
+        const bName = AcuityUtilities.retrieveFormAndField(
             b,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         ) as string
         return aName.toUpperCase() < bName.toUpperCase() ? -1 : aName > bName ? 1 : 0
     }
@@ -99,7 +99,7 @@ export const ClassDetailsPage = () => {
         classId,
         classTime,
         sorter: sortByChildName,
-    }) as Acuity.Appointment[]
+    }) as AcuityTypes.Api.Appointment[]
 
     return (
         <Root className={classes.main}>
