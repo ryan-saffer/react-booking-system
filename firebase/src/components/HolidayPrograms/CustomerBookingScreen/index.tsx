@@ -1,15 +1,17 @@
-import { useState, useContext, useEffect, useRef } from 'react'
-import Step1 from './step1/Step1'
-import { Form as AntdForm, Button, Steps, Modal, Card, Typography } from 'antd'
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
-import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
+import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import { useContext, useEffect, useRef, useState } from 'react'
+
+import { LeftOutlined } from '@ant-design/icons'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import Loader from '@components/ScienceClub/shared/Loader'
+import Root from '@components/Shared/Root'
+import { callAcuityClient } from '@utils/firebase/functions'
+
+import Step1 from './step1/Step1'
 import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
-import { LeftOutlined } from '@ant-design/icons'
-import Root from '../../Shared/Root'
-import Loader from '../../ScienceClub/shared/Loader'
 
 const { Step } = Steps
 

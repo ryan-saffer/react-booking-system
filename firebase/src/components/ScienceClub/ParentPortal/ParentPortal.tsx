@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
-import { styled } from '@mui/material/styles'
 import { Divider, Result, Typography } from 'antd'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import useFetchScienceAppointment from '../../Hooks/api/UseFetchScienceAppointment'
+
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFetchScienceAppointment from '@components/Hooks/api/UseFetchScienceAppointment'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import { styled } from '@mui/material/styles'
+
+import Loader from '../shared/Loader'
 import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
-import Loader from '../shared/Loader'
 import PickupPeople from './PickupPeople/PickupPeople'
-import useMixpanel from '../../Hooks/context/UseMixpanel'
-import useFirebase from '../../Hooks/context/UseFirebase'
-import useWindowDimensions from '../../Hooks/UseWindowDimensions'
-import { MixpanelEvents } from '../../Mixpanel/Events'
 
 const PREFIX = 'ParentPortal'
 

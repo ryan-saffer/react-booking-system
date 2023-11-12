@@ -1,11 +1,13 @@
-import { styled } from '@mui/material/styles'
 import { Button, Layout, Typography } from 'antd'
-import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
-import EmployeeTable from './EmployeeTable'
+
 import { PlusOutlined } from '@ant-design/icons'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import { styled } from '@mui/material/styles'
+
+import EmployeeTable from './EmployeeTable'
 import NewEmployeeForm from './NewEmployeeForm'
 
 const PREFIX = 'Onboarding'

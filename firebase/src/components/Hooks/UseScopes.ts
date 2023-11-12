@@ -1,4 +1,5 @@
-import { Scope } from '../../constants/scopes'
+import { Scope } from '@constants/scopes'
+
 import { useAuth } from './context/useAuth'
 
 type Permission = 'read' | 'write' | 'restricted' | 'none'

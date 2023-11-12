@@ -1,9 +1,10 @@
 import { Button, Layout, Result } from 'antd'
 import React from 'react'
-import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
 import { useNavigate } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
-import useFirebase from '../Hooks/context/UseFirebase'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 
 const { Header, Content } = Layout
 

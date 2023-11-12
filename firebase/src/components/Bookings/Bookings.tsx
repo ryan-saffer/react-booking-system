@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import { Grid, Divider, FormGroup, FormControlLabel, Checkbox, useMediaQuery } from '@mui/material'
 import { Location, ObjectKeys } from 'fizz-kidz'
+import { useState } from 'react'
 
+import { Checkbox, Divider, FormControlLabel, FormGroup, Grid, useMediaQuery } from '@mui/material'
+
+import { DateNavigation } from './DateNavigation/DateNavigation'
+import Events from './Events/Events'
+import { useEvents } from './Events/UseEvents'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes'
 import NewBookingDialog from './NewBookingDialog'
-import { DateNavigation } from './DateNavigation/DateNavigation'
 import { usePartyBookings } from './usePartyBookings'
-import { useEvents } from './Events/UseEvents'
-import Events from './Events/Events'
 
 export const BookingsPage = () => {
     const [openNewBooking, setOpenNewBooking] = useState(false)

@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import SignInGoogle from './SignInGoogle'
-import * as ROUTES from '../../constants/routes'
-import * as FizzLogo from '../../drawables/FizzKidzLogoHorizontal.png'
-import { CssBaseline, TextField, Button, Snackbar } from '@mui/material'
-import Typography from '@mui/material/Typography'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import * as ROUTES from '@constants/routes'
+import * as FizzLogo from '@drawables/FizzKidzLogoHorizontal.png'
+import { Button, CssBaseline, Snackbar, TextField } from '@mui/material'
 import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+
 import styles from './SignIn.module.css'
-import useFirebase from '../Hooks/context/UseFirebase'
+import SignInGoogle from './SignInGoogle'
 
 const SignInPage = () => {
     const firebase = useFirebase()

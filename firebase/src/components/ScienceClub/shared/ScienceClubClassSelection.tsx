@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { DateTime } from 'luxon'
-import { Skeleton, Typography, MenuItem, FormControl, Select, Button, Paper, SelectChangeEvent } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import useFirebase from '../../Hooks/context/UseFirebase'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
 import { AcuityTypes } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
+import { callAcuityClient } from '@utils/firebase/functions'
+
 import styles from './ScienceClubClassSelection.module.css'
 
 type Props = {

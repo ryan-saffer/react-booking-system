@@ -1,10 +1,13 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Form, Checkbox, Select, Tag, Card, Alert, Button } from 'antd'
+import { Alert, Button, Card, Checkbox, Form, Select, Tag } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { capitalise } from '../../../../utilities/stringUtilities'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+
+import { capitalise } from '@utils/stringUtilities'
+
 import { DISCOUNT_PRICE, getSameDayClasses } from '../utilities'
+
 const { Option } = Select
 
 type Props = {

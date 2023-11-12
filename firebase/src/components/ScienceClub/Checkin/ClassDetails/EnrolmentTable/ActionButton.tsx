@@ -1,12 +1,14 @@
-import React, { useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles'
-import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import { Button } from 'antd'
-import SignatureDialog from './SignatureDialog'
-import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
-import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import React, { useMemo, useState } from 'react'
+
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import { styled } from '@mui/material/styles'
+
+import { BREAKPOINT_MD, SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import SignatureDialog from './SignatureDialog'
 
 const PREFIX = 'ActionButton'
 

@@ -1,9 +1,11 @@
-import React, { Fragment, useState } from 'react'
-import { Form, Input, Button, Divider, Modal, Typography } from 'antd'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { ChildForm } from './ChildForm'
+import { Button, Divider, Form, Input, Modal, Typography } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
-import { SimpleTextRule, PhoneRule } from '@utils/formUtils'
+import React, { Fragment, useState } from 'react'
+
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
+
+import { ChildForm } from './ChildForm'
 const { Text } = Typography
 
 type Props = {

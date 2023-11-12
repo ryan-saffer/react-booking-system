@@ -61,5 +61,10 @@
         "postcss-preset-env": "^8.4.1",
         "typescript": "^5.0.4",
         "vite": "^4.4.5"
+    },
+    "importSort": {
+        ".ts, .tsx, .js, .jsx": {
+            "style": "import-sort-style-module-scoped"
+        }
     }
 }

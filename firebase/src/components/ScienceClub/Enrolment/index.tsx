@@ -1,15 +1,16 @@
-import { useEffect } from 'react'
-import { styled } from '@mui/material/styles'
 import { AcuityTypes } from 'fizz-kidz'
-import { Divider } from '@mui/material'
+import { useEffect } from 'react'
 
-import * as logo from '../../../drawables/fizz-logo.png'
-import Loading from './Loading'
+import useFirebaseFunction from '@components/Hooks/api/UseFirebaseFunction'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import * as logo from '@drawables/fizz-logo.png'
+import { Divider } from '@mui/material'
+import { styled } from '@mui/material/styles'
+
 import Footer from './Footer'
-import { Success, Error as ErrorResult } from './Result'
-import useFirebaseFunction from '../../Hooks/api/UseFirebaseFunction'
-import useMixpanel from '../../Hooks/context/UseMixpanel'
-import { MixpanelEvents } from '../../Mixpanel/Events'
+import Loading from './Loading'
+import { Error as ErrorResult, Success } from './Result'
 
 const PREFIX = 'EnrolmentPage'
 

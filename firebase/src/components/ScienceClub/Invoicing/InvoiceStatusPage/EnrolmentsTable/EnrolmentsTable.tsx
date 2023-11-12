@@ -1,16 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles'
-import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Dropdown, MenuProps, Space, Table, Tag, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { CloseCircleOutlined, CheckCircleOutlined, ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons'
-import InvoiceStatusCell from './InvoiceStatusCell'
-import { callFirebaseFunction } from '../../../../../utilities/firebase/functions'
-import useFirebase from '../../../../Hooks/context/UseFirebase'
+import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
+import React, { useEffect, useMemo, useState } from 'react'
+
+import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
+import useErrorDialog from '@components/Hooks/UseErrorDialog'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { styled } from '@mui/material/styles'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+
 import EnrolmentDetails from './EnrolmentDetails'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
-import useErrorDialog from '../../../../Hooks/UseErrorDialog'
 import styles from './EnrolmentsTable.module.css'
+import InvoiceStatusCell from './InvoiceStatusCell'
 
 const PREFIX = 'EnrolmentsTable'
 

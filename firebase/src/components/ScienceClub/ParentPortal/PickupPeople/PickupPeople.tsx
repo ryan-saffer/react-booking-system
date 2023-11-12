@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { Button, Card, Form, Input, message, Row, Tooltip, Typography } from 'antd'
+import { Button, Card, Form, Input, Row, Tooltip, Typography, message } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import useMixpanel from '../../../Hooks/context/UseMixpanel'
-import useErrorDialog from '../../../Hooks/UseErrorDialog'
-import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
-import { MixpanelEvents } from '../../../Mixpanel/Events'
+import React, { useState } from 'react'
+
+import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import useErrorDialog from '@components/Hooks/UseErrorDialog'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+
 import styles from './PickupPeople.module.css'
 
 const { useForm } = Form

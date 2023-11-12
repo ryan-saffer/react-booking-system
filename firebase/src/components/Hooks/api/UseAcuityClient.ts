@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
 import { AcuityTypes, Service } from 'fizz-kidz'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import { useContext, useEffect, useState } from 'react'
+
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callAcuityClient } from '@utils/firebase/functions'
 
 const useAcuityClient = <T extends keyof AcuityTypes.Client.AcuityFunctions>(
     method: T,

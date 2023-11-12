@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { Switch, Typography } from 'antd'
-import { callAcuityClient } from '../../../../utilities/firebase/functions'
-import { WithErrorModal } from '../../../Hooks/UseErrorDialog'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import useMixpanel from '../../../Hooks/context/UseMixpanel'
-import { MixpanelEvents } from '../../../Mixpanel/Events'
+import React, { useState } from 'react'
+
+import { WithErrorModal } from '@components/Hooks/UseErrorDialog'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import { callAcuityClient } from '@utils/firebase/functions'
 
 type Props = {
     appointment: AcuityTypes.Api.Appointment

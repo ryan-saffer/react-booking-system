@@ -1,8 +1,10 @@
-import React from 'react'
 import { List, Result, Row, Typography } from 'antd'
 import { ScienceEnrolment } from 'fizz-kidz'
-import useAcuityClient from '../../../Hooks/api/UseAcuityClient'
-import useErrorDialog from '../../../Hooks/UseErrorDialog'
+import React from 'react'
+
+import useErrorDialog from '@components/Hooks/UseErrorDialog'
+import useAcuityClient from '@components/Hooks/api/UseAcuityClient'
+
 import Loader from '../../shared/Loader'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'

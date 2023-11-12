@@ -1,13 +1,15 @@
-import { AppBar, CssBaseline, Dialog, IconButton, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import { grey } from '@mui/material/colors'
-import { Close as CloseIcon } from '@mui/icons-material'
-import { TransitionProps } from '@mui/material/transitions'
-import React, { ReactElement, Ref, useState } from 'react'
-import { NewBookingForm } from './Forms/NewBookingForm'
-import { NewEventForm } from './Forms/EventForm/NewEventForm'
 import { DateTime } from 'luxon'
+import React, { ReactElement, Ref, useState } from 'react'
+
+import { Close as CloseIcon } from '@mui/icons-material'
+import { AppBar, CssBaseline, Dialog, IconButton, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import { styled } from '@mui/material/styles'
+import { TransitionProps } from '@mui/material/transitions'
+
 import { useDateNavigation } from './DateNavigation/DateNavigation.hooks'
+import { NewEventForm } from './Forms/EventForm/NewEventForm'
+import { NewBookingForm } from './Forms/NewBookingForm'
 
 const PREFIX = 'NewBookingDialog'
 

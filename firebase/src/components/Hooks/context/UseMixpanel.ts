@@ -1,6 +1,7 @@
-import { Mixpanel } from './../../../../node_modules/@types/mixpanel-browser/index.d'
+import { Mixpanel } from 'mixpanel-browser'
 import { useContext } from 'react'
-import { MixpanelContext } from '../../Mixpanel/MixpanelContext'
+
+import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 
 const useMixpanel = () => {
     const mixpanel = useContext(MixpanelContext) as Mixpanel

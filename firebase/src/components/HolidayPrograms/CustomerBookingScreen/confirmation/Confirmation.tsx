@@ -1,9 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
 import { Result } from 'antd'
-import Root from '../../../Shared/Root'
-import Firebase, { FirebaseContext } from '../../../Firebase'
-import Loader from '../../../ScienceClub/shared/Loader'
+import { useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+
+import Loader from '@components/ScienceClub/shared/Loader'
+import Root from '@components/Shared/Root'
+
+import Firebase, { FirebaseContext } from '../../../Firebase'
 
 export const Confirmation = () => {
     const firebase = useContext(FirebaseContext) as Firebase

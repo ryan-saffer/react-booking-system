@@ -1,6 +1,7 @@
-import React from 'react'
 import { Card, Row } from 'antd'
-import * as Logo from '../../drawables/FizzKidzLogoHorizontal.png'
+import React from 'react'
+
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 
 type Props = {
     color: 'pink' | 'green'

@@ -1,4 +1,5 @@
-import Root from '../../Shared/Root'
+import Root from '@components/Shared/Root'
+
 import ParentPortalMain from './ParentPortal'
 
 export const ParentPortalRoot = () => {

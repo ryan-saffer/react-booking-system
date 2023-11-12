@@ -1,8 +1,10 @@
-import { styled } from '@mui/material/styles'
+import { FirestoreBooking, Location, WithId } from 'fizz-kidz'
+
 import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+import * as Utilities from '@utils/stringUtilities'
+
 import BookingPanel from './BookingPanel'
-import * as Utilities from '../../utilities/stringUtilities'
-import { FirestoreBooking, WithId, Location } from 'fizz-kidz'
 
 const PREFIX = 'LocationBookings'
 
