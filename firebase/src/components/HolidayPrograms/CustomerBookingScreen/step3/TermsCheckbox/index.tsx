@@ -1,5 +1,6 @@
 import { Checkbox, Typography } from 'antd'
-import React, { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useState } from 'react'
+import React, { ForwardRefRenderFunction, forwardRef, useImperativeHandle, useState } from 'react'
+
 import CancellationPolicyModal from './CancellationPolicyModal'
 import TermsAndConditionsModal from './TermsAndConditionsModal'
 

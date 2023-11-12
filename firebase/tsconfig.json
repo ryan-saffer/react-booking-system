@@ -9,6 +9,8 @@
         "baseUrl": ".",
         "paths": {
             "@components/*": ["src/components/*"],
+            "@constants/*": ["src/constants/*"],
+            "@drawables/*": ["src/drawables/*"],
             "@utils/*": ["src/utilities/*"],
             "fizz-kidz": ["./functions/fizz-kidz/src"]
         },

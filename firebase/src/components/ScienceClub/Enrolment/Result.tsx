@@ -1,8 +1,10 @@
-import React from 'react'
-import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
-import ErrorIcon from '@mui/icons-material/Error'
-import CheckCircleTwoTone from '@mui/icons-material/CheckCircleTwoTone'
 import { AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
+import React from 'react'
+
+import CheckCircleTwoTone from '@mui/icons-material/CheckCircleTwoTone'
+import ErrorIcon from '@mui/icons-material/Error'
+import { Container, Divider, Grid, Paper, Typography } from '@mui/material'
+
 import styles from './Result.module.css'
 
 type ResultType = 'success' | 'error'

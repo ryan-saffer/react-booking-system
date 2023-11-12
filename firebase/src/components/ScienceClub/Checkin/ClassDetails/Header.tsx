@@ -1,25 +1,22 @@
-import React from 'react'
-import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom'
-import { AppBar, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { DateTime } from 'luxon'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const PREFIX = 'Heading';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { AppBar, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+
+const PREFIX = 'Heading'
 
 const classes = {
     appBar: `${PREFIX}-appBar`,
     toolbar: `${PREFIX}-toolbar`,
     nav: `${PREFIX}-nav`,
-    calendarName: `${PREFIX}-calendarName`
-};
+    calendarName: `${PREFIX}-calendarName`,
+}
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')((
-    {
-        theme
-    }
-) => ({
+const Root = styled('div')(({ theme }) => ({
     [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,
     },
@@ -40,15 +37,14 @@ const Root = styled('div')((
         textAlign: 'center',
         marginTop: 10,
         marginBottom: 10,
-    }
-}));
+    },
+}))
 
 type Props = {
     time: string
 }
 
 const Heading: React.FC<Props> = ({ time }) => {
-
     const navigate = useNavigate()
     const formattedClass = DateTime.fromISO(time).toLocaleString({
         weekday: 'short',
@@ -75,7 +71,7 @@ const Heading: React.FC<Props> = ({ time }) => {
                 </Toolbar>
             </AppBar>
         </Root>
-    );
+    )
 }
 
 export default Heading

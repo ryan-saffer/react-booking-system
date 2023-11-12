@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { styled } from '@mui/material/styles'
-import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
-import { AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
-import SkeletonRows from '../../../Shared/SkeletonRows'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import Heading from './Header'
-import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import { Card, Result } from 'antd'
-import { callAcuityClient } from '../../../../utilities/firebase/functions'
+import { AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
+import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import SkeletonRows from '@components/Shared/SkeletonRows'
+import { styled } from '@mui/material/styles'
+import { callAcuityClient } from '@utils/firebase/functions'
+
 import { getEnrolment } from './ClassDetails.utils'
+import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
+import Heading from './Header'
 
 const PREFIX = 'ScienceClubCheckinClassDetails'
 

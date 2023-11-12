@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { List, Typography, Tag } from 'antd'
-import { ItemSummary } from './Step3'
-import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
+import { List, Tag, Typography } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
+import React, { Dispatch, SetStateAction } from 'react'
+
+import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
+import { ItemSummary } from './Step3'
 
 type Props = {
     summarisedItems: ItemSummary[]

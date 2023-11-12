@@ -1,4 +1,4 @@
-import { AcuityConstants, AcuityUtilities, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes, AcuityUtilities, ScienceEnrolment } from 'fizz-kidz'
 
 export function getEnrolment(
     appointment: AcuityTypes.Api.Appointment,

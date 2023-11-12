@@ -1,8 +1,9 @@
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 import { Location } from 'fizz-kidz'
-import * as Utilities from '../../utilities/stringUtilities'
+
 import { useMediaQuery } from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import * as Utilities from '@utils/stringUtilities'
 
 const LocationCheckboxes = ({
     values,

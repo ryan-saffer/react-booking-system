@@ -1,9 +1,11 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { Button, Input, Popover, Typography } from 'antd'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
-import { callAcuityClient } from '../../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../../Firebase'
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+
 import { InfoCircleOutlined } from '@ant-design/icons'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callAcuityClient } from '@utils/firebase/functions'
+
 import { calculateDiscountedAmount } from '../utilities'
 
 const AppointmentTypeId =

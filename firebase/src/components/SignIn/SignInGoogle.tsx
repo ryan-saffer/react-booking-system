@@ -1,14 +1,12 @@
 import { useState } from 'react'
-
-import { styled } from '@mui/material/styles'
-
-import * as ROUTES from '../../constants/routes'
-import * as GoogleLogo from '../../drawables/google-logo.png'
-
-import { Snackbar, Button } from '@mui/material'
-import { red } from '@mui/material/colors'
 import { useNavigate } from 'react-router-dom'
-import useFirebase from '../Hooks/context/UseFirebase'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import * as ROUTES from '@constants/routes'
+import * as GoogleLogo from '@drawables/google-logo.png'
+import { Button, Snackbar } from '@mui/material'
+import { red } from '@mui/material/colors'
+import { styled } from '@mui/material/styles'
 
 const PREFIX = 'SignInGoogle'
 

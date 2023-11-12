@@ -1,14 +1,14 @@
+import { useNavigate } from 'react-router-dom'
+
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import AppBar from '@mui/material/AppBar'
+import CssBaseline from '@mui/material/CssBaseline'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 
-import Typography from '@mui/material/Typography'
-import CssBaseline from '@mui/material/CssBaseline'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import * as Logo from '../../../../drawables/FizzKidzLogoHorizontal.png'
-import * as ROUTES from '../../../../constants/routes'
 import ScienceClubClassSelection from '../../shared/ScienceClubClassSelection'
-
-import { useNavigate } from 'react-router-dom'
 
 const PREFIX = 'ScienceClubCheckinClassSelection'
 

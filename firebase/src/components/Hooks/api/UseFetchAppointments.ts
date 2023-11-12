@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
 import { AcuityTypes } from 'fizz-kidz'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 
-import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callAcuityClient } from '@utils/firebase/functions'
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>

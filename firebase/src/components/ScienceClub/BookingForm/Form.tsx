@@ -1,10 +1,12 @@
+import { Form as AntdForm, Button, Checkbox, Divider, Input, Modal, Select, Typography } from 'antd'
 import { AcuityTypes } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
-import { Button, Checkbox, Divider, Form as AntdForm, Input, Modal, Select, Typography } from 'antd'
-import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
-import Upload from './Upload'
+
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
+
 import TermsAndConditions from './TermsAndConditions'
+import Upload from './Upload'
 import { FormSubmission } from '.'
 
 const { Text } = Typography

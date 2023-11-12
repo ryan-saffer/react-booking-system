@@ -1,9 +1,11 @@
-import { createRoot } from 'react-dom/client'
 import './index.css'
-import { App } from './components/App'
-import Firebase, { FirebaseContext } from './components/Firebase'
-import { MixpanelContext } from './components/Mixpanel/MixpanelContext'
+
 import mixpanel from 'mixpanel-browser'
+import { createRoot } from 'react-dom/client'
+
+import { App } from '@components/App'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'

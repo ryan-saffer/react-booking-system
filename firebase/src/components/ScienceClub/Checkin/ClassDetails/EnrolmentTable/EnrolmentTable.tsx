@@ -1,15 +1,17 @@
-import React, { useMemo, useState } from 'react'
-import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
 import { Table, Tag, Typography } from 'antd'
-import ChildDetails from './ChildDetails'
-import useWindowDimensions from '../../../../Hooks/UseWindowDimensions'
-import ActionButton from './ActionButton'
-import { EnrolmentsMap } from '..'
-import { getEnrolment } from '../ClassDetails.utils'
-import { callAcuityClient } from '../../../../../utilities/firebase/functions'
-import useFirebase from '../../../../Hooks/context/UseFirebase'
 import { ColumnsType } from 'antd/es/table'
+import { AcuityConstants, AcuityTypes, ScienceEnrolment } from 'fizz-kidz'
+import React, { useMemo, useState } from 'react'
+
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { callAcuityClient } from '@utils/firebase/functions'
+
+import { getEnrolment } from '../ClassDetails.utils'
+import ActionButton from './ActionButton'
+import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
+import { EnrolmentsMap } from '..'
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540

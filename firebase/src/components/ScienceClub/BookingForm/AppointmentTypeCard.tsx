@@ -1,7 +1,9 @@
-import { Grow } from '@mui/material'
 import { Card } from 'antd'
 import { AcuityTypes } from 'fizz-kidz'
 import React from 'react'
+
+import { Grow } from '@mui/material'
+
 import styles from './AppointmentTypeCard.module.css'
 
 type Props = {

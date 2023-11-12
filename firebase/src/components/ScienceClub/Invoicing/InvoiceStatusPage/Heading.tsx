@@ -1,15 +1,16 @@
 import React from 'react'
-import { styled } from '@mui/material/styles';
-import { AppBar, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate } from 'react-router-dom'
 
-const PREFIX = 'Heading';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { AppBar, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+
+const PREFIX = 'Heading'
 
 const classes = {
     toolbar: `${PREFIX}-toolbar`,
-    backBtn: `${PREFIX}-backBtn`
-};
+    backBtn: `${PREFIX}-backBtn`,
+}
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
@@ -21,7 +22,7 @@ const Root = styled('div')({
         position: 'absolute',
         left: 24,
     },
-});
+})
 
 const Heading: React.FC = () => {
     const navigate = useNavigate()
@@ -36,7 +37,8 @@ const Heading: React.FC = () => {
                         edge="start"
                         color="inherit"
                         onClick={() => navigate(-1)}
-                        size="large">
+                        size="large"
+                    >
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit">
@@ -45,7 +47,7 @@ const Heading: React.FC = () => {
                 </Toolbar>
             </AppBar>
         </Root>
-    );
+    )
 }
 
 export default Heading

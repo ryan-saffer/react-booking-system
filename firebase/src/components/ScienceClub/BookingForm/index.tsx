@@ -1,16 +1,18 @@
+import { Alert, Button, Result, Typography } from 'antd'
 import { AcuityTypes, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
-import { callAcuityClient, callFirebaseFunction } from '../../../utilities/firebase/functions'
-import Root from '../../Shared/Root'
+
 import { LeftOutlined } from '@ant-design/icons'
-import { Alert, Button, Result, Typography } from 'antd'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import Root from '@components/Shared/Root'
 import { Grow } from '@mui/material'
+import { callAcuityClient, callFirebaseFunction } from '@utils/firebase/functions'
+
+import Loader from '../shared/Loader'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
-import Loader from '../shared/Loader'
-import useMixpanel from '../../Hooks/context/UseMixpanel'
-import useFirebase from '../../Hooks/context/UseFirebase'
-import { MixpanelEvents } from '../../Mixpanel/Events'
 
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 

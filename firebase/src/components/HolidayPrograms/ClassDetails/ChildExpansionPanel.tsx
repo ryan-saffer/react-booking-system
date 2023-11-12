@@ -1,14 +1,12 @@
+import { Button as AntButton, Collapse, List, Tag } from 'antd'
+import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
 import React, { useState } from 'react'
 
-import { styled } from '@mui/material/styles'
-
-import { AcuityConstants, AcuityUtilities, AcuityTypes } from 'fizz-kidz'
-
-import { Collapse, Button as AntButton, List, Tag } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { formatMobileNumber } from '../../../utilities/stringUtilities'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
-import useFirebase from '../../Hooks/context/UseFirebase'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { styled } from '@mui/material/styles'
+import { callAcuityClient } from '@utils/firebase/functions'
+import { formatMobileNumber } from '@utils/stringUtilities'
 
 const { Panel } = Collapse
 

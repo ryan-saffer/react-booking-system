@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
 import { FirebaseFunctions, Service } from 'fizz-kidz'
-import Firebase, { FirebaseContext } from '../../Firebase'
-import { callFirebaseFunction } from '../../../utilities/firebase/functions'
+import { useContext, useEffect, useState } from 'react'
+
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callFirebaseFunction } from '@utils/firebase/functions'
 
 const useFirebaseFunction = <T extends keyof FirebaseFunctions>(method: T, input: FirebaseFunctions[T]['input']) => {
     const firebase = useContext(FirebaseContext) as Firebase

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import SignatureCanvas from 'react-signature-canvas'
 
-import { styled } from '@mui/material/styles';
+import { TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -8,12 +9,10 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-
-import SignatureCanvas from 'react-signature-canvas'
+import Select from '@mui/material/Select'
 import { red } from '@mui/material/colors'
-import { TextField } from '@mui/material'
+import { styled } from '@mui/material/styles';
 
 const PREFIX = 'SignatureDialog';
 

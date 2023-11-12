@@ -1,13 +1,15 @@
-import React, { useContext, useRef, useState } from 'react'
-import { styled } from '@mui/material/styles'
 import { Button, Typography } from 'antd'
-import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { AcuityConstants, AcuityTypes, PaidHolidayProgramBooking } from 'fizz-kidz'
+import React, { useContext, useRef, useState } from 'react'
+
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import Loader from '@components/ScienceClub/shared/Loader'
+import { styled } from '@mui/material/styles'
+import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
+
+import { DISCOUNT_PRICE, PROGRAM_PRICE, getSameDayClasses } from '../utilities'
+import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
 import { Form } from '..'
-import Firebase, { FirebaseContext } from '../../../Firebase'
-import { DISCOUNT_PRICE, getSameDayClasses, PROGRAM_PRICE } from '../utilities'
-import Loader from '../../../ScienceClub/shared/Loader'
-import { TermsCheckboxHandle, TermsCheckbox } from './TermsCheckbox'
 
 const PREFIX = 'Payment'
 

@@ -1,9 +1,9 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-import * as ROUTES from '../../constants/routes'
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+
+import { withAuthentication, withAuthorization } from '@components/Session'
+import * as ROUTES from '@constants/routes'
+import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 

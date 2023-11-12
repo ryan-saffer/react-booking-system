@@ -1,13 +1,15 @@
-import { styled } from '@mui/material/styles'
 import { Button } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import Loader from '@components/ScienceClub/shared/Loader'
+import { styled } from '@mui/material/styles'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+
+import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
 import { Form } from '..'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import Loader from '../../../ScienceClub/shared/Loader'
-import { TermsCheckboxHandle, TermsCheckbox } from './TermsCheckbox'
 
 const PREFIX = 'FreeConfirmationButton'
 

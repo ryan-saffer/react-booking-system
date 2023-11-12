@@ -1,8 +1,10 @@
-import React from 'react'
-import { styled } from '@mui/material/styles'
-import { ScienceEnrolment } from 'fizz-kidz'
-import useInvoiceStatus from '../../../Hooks/api/UseInvoiceStatus'
 import { Card, Typography } from 'antd'
+import { ScienceEnrolment } from 'fizz-kidz'
+import React from 'react'
+
+import useInvoiceStatus from '@components/Hooks/api/UseInvoiceStatus'
+import { styled } from '@mui/material/styles'
+
 import Loader from '../../shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
 const PREFIX = 'InvoiceDetails'
