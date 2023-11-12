@@ -1,15 +1,16 @@
-import React from 'react'
-import { styled } from '@mui/material/styles';
-import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
 import { Button, Descriptions } from 'antd'
-import { getBaseUrl } from '../../../../../utilities/firebase/env'
-import * as ROUTES from '../../../../../constants/routes'
+import { InvoiceStatusMap, ScienceEnrolment } from 'fizz-kidz'
+import React from 'react'
 
-const PREFIX = 'EnrolmentDetails';
+import * as ROUTES from '@constants/routes'
+import { styled } from '@mui/material/styles'
+import { getBaseUrl } from '@utils/firebase/env'
+
+const PREFIX = 'EnrolmentDetails'
 
 const classes = {
-    description: `${PREFIX}-description`
-};
+    description: `${PREFIX}-description`,
+}
 
 const StyledDescriptions = styled(Descriptions)({
     [`&.${classes.description}`]: {
@@ -18,7 +19,7 @@ const StyledDescriptions = styled(Descriptions)({
             fontWeight: 500,
         },
     },
-});
+})
 
 type Props = {
     enrolment: ScienceEnrolment
@@ -26,7 +27,6 @@ type Props = {
 }
 
 const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
-
     const status = invoiceStatusMap[enrolment.id]
 
     return (
@@ -55,7 +55,7 @@ const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
                 </Descriptions.Item>
             )}
         </StyledDescriptions>
-    );
+    )
 }
 
 export default EnrolmentDetails

@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
 import { Result } from 'antd'
-import Root from '../../../Shared/Root'
-import Firebase, { FirebaseContext } from '../../../Firebase'
-import Loader from '../../../ScienceClub/shared/Loader'
+import { useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-type Props = {}
+import Loader from '@components/ScienceClub/shared/Loader'
+import Root from '@components/Shared/Root'
 
-export const Confirmation: React.FC<Props> = () => {
+import Firebase, { FirebaseContext } from '../../../Firebase'
+
+export const Confirmation = () => {
     const firebase = useContext(FirebaseContext) as Firebase
 
     const [searchParams] = useSearchParams()
@@ -19,7 +19,7 @@ export const Confirmation: React.FC<Props> = () => {
 
     useEffect(() => {
         // a timeout to wait for the firestore document to be updated to 'booked'
-        let timeout = setTimeout(() => {
+        const timeout = setTimeout(() => {
             setError(true)
             setLoading(false)
         }, 15000)
@@ -41,7 +41,7 @@ export const Confirmation: React.FC<Props> = () => {
                         return
                     }
 
-                    let booked = snapshot.get('booked')
+                    const booked = snapshot.get('booked')
                     // on first snapshot read, this will be false (booking process still ongoing),
                     // and hence no 'else' statement to set the error.
                     // if however a second snapshot doesn't happen, the timeout above sets the error

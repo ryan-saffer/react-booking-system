@@ -177,7 +177,7 @@ const mapFormToBooking = (formValues) => {
 }
 
 /** The booking form component */
-const NewBookingForm = (props) => {
+const _NewBookingForm = (props) => {
     const firebase = useContext(FirebaseContext)
 
     const [formValues, setFormValues] = useState(getEmptyValues)
@@ -489,4 +489,4 @@ const NewBookingForm = (props) => {
     )
 }
 
-export default WithErrorDialog(NewBookingForm)
+export const NewBookingForm = WithErrorDialog(_NewBookingForm)

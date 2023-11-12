@@ -1,11 +1,11 @@
 import { CallableRequest, onCall } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
 import { logError, throwError } from '../../utilities'
-import type { Acuity } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityClient } from '../core/AcuityClient'
 
 type AcuityClientParams = {
-    method: keyof Acuity.Client.AcuityFunctions
+    method: keyof AcuityTypes.Client.AcuityFunctions
     input: any
 }
 
@@ -15,25 +15,25 @@ export const acuityClient = onCall(async ({ data }: CallableRequest<AcuityClient
         const acuity = await AcuityClient.getInstance()
         switch (data.method) {
             case 'updateLabel':
-                input = data.input as Acuity.Client.UpdateLabelParams
+                input = data.input as AcuityTypes.Client.UpdateLabelParams
                 return await acuity.updateLabel(input)
             case 'updateAppointment':
-                input = data.input as Acuity.Client.UpdateAppointmentParams
+                input = data.input as AcuityTypes.Client.UpdateAppointmentParams
                 return await acuity.updateAppointment(input)
             case 'classAvailability':
-                input = data.input as Acuity.Client.ClassAvailabilityParams
+                input = data.input as AcuityTypes.Client.ClassAvailabilityParams
                 return await acuity.getClasses(input.appointmentTypeId, input.includeUnavailable, input.minDate)
             case 'checkCertificate':
-                input = data.input as Acuity.Client.CheckCertificateParams
+                input = data.input as AcuityTypes.Client.CheckCertificateParams
                 return await acuity.checkCertificate(input.certificate, input.appointmentTypeId, input.email)
             case 'getAppointmentTypes':
-                input = data.input as Acuity.Client.GetAppointmentTypesParams
+                input = data.input as AcuityTypes.Client.GetAppointmentTypesParams
                 return await acuity.getAppointmentTypes(input)
             case 'getAppointments':
-                input = data.input as Acuity.Client.GetAppointmentsParams
+                input = data.input as AcuityTypes.Client.GetAppointmentsParams
                 return await acuity.getAppointments(input.ids)
             case 'searchForAppointments':
-                input = data.input as Acuity.Client.FetchAppointmentsParams
+                input = data.input as AcuityTypes.Client.FetchAppointmentsParams
                 return await acuity.searchForAppointments(input)
         }
     } catch (err: any) {

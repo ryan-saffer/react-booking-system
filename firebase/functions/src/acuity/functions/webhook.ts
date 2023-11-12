@@ -1,5 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
-import { Acuity } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 import { cancelHolidayProgram } from '../../holidayPrograms/core/cancelHolidayProgram'
 import { logger } from 'firebase-functions/v2'
 
@@ -12,8 +12,8 @@ export type AcuityWebhookData = {
 
 function isHolidayProgram(appointmentTypeId: string) {
     return (
-        appointmentTypeId === Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM.toString() ||
-        appointmentTypeId === Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM.toString()
+        appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM.toString() ||
+        appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM.toString()
     )
 }
 

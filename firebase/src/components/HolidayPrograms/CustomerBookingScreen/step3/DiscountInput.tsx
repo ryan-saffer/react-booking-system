@@ -1,19 +1,21 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
 import { Button, Input, Popover, Typography } from 'antd'
-import { Acuity } from 'fizz-kidz'
-import { callAcuityClient } from '../../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../../Firebase'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+
 import { InfoCircleOutlined } from '@ant-design/icons'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callAcuityClient } from '@utils/firebase/functions'
+
 import { calculateDiscountedAmount } from '../utilities'
 
 const AppointmentTypeId =
-    process.env.REACT_APP_ENV === 'prod'
-        ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-        : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
+    import.meta.env.VITE_ENV === 'prod'
+        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
 
 type Props = {
     email: string
-    setDiscount: Dispatch<SetStateAction<Acuity.Certificate | undefined>>
+    setDiscount: Dispatch<SetStateAction<AcuityTypes.Api.Certificate | undefined>>
     total: number
 }
 
@@ -36,7 +38,7 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
         setError('')
 
         try {
-            let result = await callAcuityClient(
+            const result = await callAcuityClient(
                 'checkCertificate',
                 firebase
             )({

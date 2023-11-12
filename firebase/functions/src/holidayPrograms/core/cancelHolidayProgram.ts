@@ -1,5 +1,5 @@
 import { AcuityWebhookData } from './../../acuity/functions/webhook'
-import { Acuity, Metadata } from 'fizz-kidz'
+import { AcuityUtilities, AcuityConstants, Metadata } from 'fizz-kidz'
 import { RefundCalculator } from './RefundCalculator'
 import { logError } from '../../utilities'
 import { AcuityClient } from '../../acuity/core/AcuityClient'
@@ -11,15 +11,15 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         const stripe = await StripeClient.getInstance()
         const acuity = await AcuityClient.getInstance()
         const appointment = await acuity.getAppointment(data.id)
-        const paymentIntentId = Acuity.Utilities.retrieveFormAndField(
+        const paymentIntentId = AcuityUtilities.retrieveFormAndField(
             appointment,
-            Acuity.Constants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
-            Acuity.Constants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID
+            AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+            AcuityConstants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID
         )
-        const amountCharged = Acuity.Utilities.retrieveFormAndField(
+        const amountCharged = AcuityUtilities.retrieveFormAndField(
             appointment,
-            Acuity.Constants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
-            Acuity.Constants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED
+            AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+            AcuityConstants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED
         )
 
         // if no payment intent id, it means it has been deleted from the appointment manually.

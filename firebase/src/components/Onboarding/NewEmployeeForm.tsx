@@ -1,10 +1,11 @@
 import { Button, DatePicker, Form, Input, Modal, Select, Typography, message } from 'antd'
-import React, { useState } from 'react'
 import { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
-import useFirebase from '../Hooks/context/UseFirebase'
-import { callFirebaseFunction } from '../../utilities/firebase/functions'
-import { capitalise } from '../../utilities/stringUtilities'
+import React, { useState } from 'react'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { callFirebaseFunction } from '@utils/firebase/functions'
+import { capitalise } from '@utils/stringUtilities'
 
 const { Option } = Select
 

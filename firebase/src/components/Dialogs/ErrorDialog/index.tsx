@@ -13,11 +13,11 @@ const classes = {
 }
 
 // TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
-const Root = styled('div')(({ theme }) => ({
+const Root = styled('div')({
     [`& .${classes.dialogContent}`]: {
         whiteSpace: 'pre-wrap',
     },
-}))
+})
 
 /**
  * Higher-order-component that provides an error dialog to display a message.
@@ -31,8 +31,8 @@ const WithErrorDialog = <P extends ErrorDialogProps>(
     Component: React.ComponentType<P>
 ): React.FC<Omit<P, keyof ErrorDialogProps>> => {
     const ComponentWithErrorDialog = (props: Omit<P, keyof ErrorDialogProps>) => {
-        var [open, setOpen] = useState(false)
-        var [errorMessage, setErrorMessage] = useState('')
+        const [open, setOpen] = useState(false)
+        const [errorMessage, setErrorMessage] = useState('')
 
         const displayError = (message: string) => {
             setErrorMessage(message)

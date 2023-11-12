@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext, Dispatch, SetStateAction } from 'react'
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 
-import Firebase, { FirebaseContext } from '../../Firebase'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import { callAcuityClient } from '@utils/firebase/functions'
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>
@@ -10,7 +10,7 @@ interface UseFetchAppointmentsProps {
     calendarId: number
     classId: number
     classTime?: string
-    sorter?: (a: Acuity.Appointment, b: Acuity.Appointment) => 0 | 1 | -1
+    sorter?: (a: AcuityTypes.Api.Appointment, b: AcuityTypes.Api.Appointment) => 0 | 1 | -1
 }
 
 const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
@@ -18,10 +18,10 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
 
     const firebase = useContext(FirebaseContext) as Firebase
 
-    const [appointments, setAppointments] = useState<Acuity.Appointment[] | null>([])
+    const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>([])
 
     useEffect(() => {
-        const fetchClients = (data: Acuity.Client.FetchAppointmentsParams) => {
+        const fetchClients = (data: AcuityTypes.Client.FetchAppointmentsParams) => {
             callAcuityClient(
                 'searchForAppointments',
                 firebase
@@ -40,6 +40,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
         }
 
         fetchClients({ appointmentTypeId, calendarId, classId, classTime })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return appointments

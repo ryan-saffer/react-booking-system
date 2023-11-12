@@ -1,8 +1,9 @@
-import { FirestoreBooking, WithId, Location } from 'fizz-kidz'
-import { useEffect, useRef, useState } from 'react'
-import useFirebase from '../Hooks/context/UseFirebase'
-import { useDateNavigation } from './DateNavigation/DateNavigation'
+import { FirestoreBooking, Location, WithId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import { useEffect, useRef, useState } from 'react'
+
+import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
+import useFirebase from '@components/Hooks/context/UseFirebase'
 
 export function usePartyBookings({
     setSelectedLocations,

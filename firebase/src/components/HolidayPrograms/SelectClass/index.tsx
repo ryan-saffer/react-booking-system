@@ -1,24 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { styled } from '@mui/material/styles'
-import { useNavigate } from 'react-router-dom'
+import { AcuityConstants, AcuityTypes, Service } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import Typography from '@mui/material/Typography'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
+import Firebase, { FirebaseContext } from '@components/Firebase'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import { Button, Paper } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
 import { Skeleton } from '@mui/material'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
-import * as ROUTES from '../../../constants/routes'
-
-import { Acuity, Service } from 'fizz-kidz'
-import { capitalise } from '../../../utilities/stringUtilities'
-import { callAcuityClient } from '../../../utilities/firebase/functions'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import AppBar from '@mui/material/AppBar'
+import CssBaseline from '@mui/material/CssBaseline'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+import { callAcuityClient } from '@utils/firebase/functions'
+import { capitalise } from '@utils/stringUtilities'
 
 const PREFIX = 'HolidayProgramSelection'
 
@@ -88,8 +87,8 @@ export const HolidayProgramSelection = () => {
 
     const navigate = useNavigate()
 
-    const [classes, setClasses] = useState<Service<Acuity.Class[]>>({ status: 'loading' })
-    const [filteredClasses, setFilteredClasses] = useState<Acuity.Class[]>([])
+    const [classes, setClasses] = useState<Service<AcuityTypes.Api.Class[]>>({ status: 'loading' })
+    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [selectedCalendar, setSelectedCalendar] = useState<string>('')
     const [selectedClass, setSelectedClass] = useState<string>('')
 
@@ -99,9 +98,9 @@ export const HolidayProgramSelection = () => {
             firebase
         )({
             appointmentTypeId:
-                process.env.REACT_APP_ENV === 'prod'
-                    ? Acuity.Constants.AppointmentTypes.HOLIDAY_PROGRAM
-                    : Acuity.Constants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                import.meta.env.VITE_ENV === 'prod'
+                    ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                    : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
             includeUnavailable: true,
             minDate: Date.now(),
         })
@@ -109,6 +108,7 @@ export const HolidayProgramSelection = () => {
                 setClasses({ status: 'loaded', result: result.data })
             })
             .catch((error) => setClasses({ status: 'error', error }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -159,18 +159,18 @@ export const HolidayProgramSelection = () => {
                                     value={selectedCalendar}
                                     onChange={(e) => setSelectedCalendar(e.target.value as string)}
                                 >
-                                    {process.env.REACT_APP_ENV === 'prod' &&
-                                        Object.entries(Acuity.Constants.StoreCalendars).map(([store, calendarId]) => {
+                                    {import.meta.env.VITE_ENV === 'prod' &&
+                                        Object.entries(AcuityConstants.StoreCalendars).map(([store, calendarId]) => {
                                             return (
                                                 <MenuItem key={calendarId} value={calendarId}>
                                                     {capitalise(store)}
                                                 </MenuItem>
                                             )
                                         })}
-                                    {process.env.REACT_APP_ENV === 'dev' && (
+                                    {import.meta.env.VITE_ENV === 'dev' && (
                                         <MenuItem
-                                            key={Acuity.Constants.TestCalendarId}
-                                            value={Acuity.Constants.TestCalendarId}
+                                            key={AcuityConstants.TestCalendarId}
+                                            value={AcuityConstants.TestCalendarId}
                                         >
                                             Test Calendar
                                         </MenuItem>

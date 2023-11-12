@@ -1,5 +1,6 @@
 import React from 'react'
-import { Role } from '../../constants/roles'
+
+import { Role } from '@constants/roles'
 
 export interface AuthUser {
     uid: string

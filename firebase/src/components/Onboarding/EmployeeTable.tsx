@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles'
 import { Button, Descriptions, Table, Tag } from 'antd'
-import useFirebase from '../Hooks/context/UseFirebase'
-import { Employee } from 'fizz-kidz'
 import { ColumnsType } from 'antd/es/table'
+import { Employee } from 'fizz-kidz'
+import React, { useEffect, useMemo, useState } from 'react'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import Loader from '@components/ScienceClub/shared/Loader'
+import { styled } from '@mui/material/styles'
+
 import VerificationButton from './VerificationButton'
-import Loader from '../ScienceClub/shared/Loader'
 
 const PREFIX = 'EmployeeTable'
 

@@ -6,8 +6,9 @@ import { green } from '@mui/material/colors'
 import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import useFirebase from '../../../Hooks/context/UseFirebase'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
-import EventForm, { Form, combineDateAndTime } from './EventForm'
+import EventForm, { Form } from './EventForm'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
+import { combineDateAndTime } from '@utils/dateUtils'
 
 const PREFIX = 'NewEventForm'
 
@@ -34,7 +35,7 @@ type Props = {
     onSuccess: (date: Date) => void
 } & ErrorDialogProps
 
-const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
+const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     const firebase = useFirebase()
 
     const [emailMessage, setEmailMessage] = useState('')
@@ -180,4 +181,4 @@ const NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     )
 }
 
-export default WithErrorDialog(NewEventForm)
+export const NewEventForm = WithErrorDialog(_NewEventForm)

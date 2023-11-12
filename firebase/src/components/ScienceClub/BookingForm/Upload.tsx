@@ -4,7 +4,6 @@ import { UploadOutlined } from '@ant-design/icons'
 import type { RcFile, UploadFile } from 'antd/es/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import Firebase, { FirebaseContext } from '../../Firebase'
-import firebase from 'firebase/compat'
 
 type Props = {
     onSuccess: (filename: string) => void
@@ -51,11 +50,11 @@ const Upload: React.FC<Props> = ({ onSuccess }) => {
         const uploadTask = storageRef.put(file as unknown as Blob, { contentType: 'application/pdf' })
         uploadTask.on(
             'state_changed',
-            (snapshot: firebase.storage.UploadTaskSnapshot) => {
+            (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                 setProgress(Math.round(progress))
             },
-            (error: Error) => {
+            (error) => {
                 console.error('error', error)
                 setUploading(false)
                 message.error('Error occured during upload')

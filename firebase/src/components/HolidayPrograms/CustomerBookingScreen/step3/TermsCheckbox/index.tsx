@@ -1,16 +1,15 @@
 import { Checkbox, Typography } from 'antd'
-import React, { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useState } from 'react'
+import React, { ForwardRefRenderFunction, forwardRef, useImperativeHandle, useState } from 'react'
+
 import CancellationPolicyModal from './CancellationPolicyModal'
 import TermsAndConditionsModal from './TermsAndConditionsModal'
-
-type Props = {}
 
 export type TermsCheckboxHandle = {
     isChecked: () => boolean
     showWarning: () => void
 }
 
-const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, ref) => {
+const _TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle> = (_, ref) => {
     const [termsChecked, setTermsChecked] = useState(false)
 
     useImperativeHandle(ref, () => ({
@@ -63,4 +62,4 @@ const TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, Props> = (_, 
     )
 }
 
-export default forwardRef(TermsCheckbox)
+export const TermsCheckbox = forwardRef(_TermsCheckbox)

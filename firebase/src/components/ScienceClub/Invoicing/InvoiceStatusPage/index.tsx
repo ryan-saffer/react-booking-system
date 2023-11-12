@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { ScienceEnrolment, Service } from 'fizz-kidz'
-import useFirebase from '../../../Hooks/context/UseFirebase'
-import Heading from './Heading'
-import SkeletonRows from '../../../Shared/SkeletonRows'
-import useWindowDimensions from '../../../Hooks/UseWindowDimensions'
 import { Result } from 'antd'
-import EnrolmentsTable from './EnrolmentsTable/EnrolmentsTable'
+import { ScienceEnrolment, Service } from 'fizz-kidz'
+import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import SkeletonRows from '@components/Shared/SkeletonRows'
+
+import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
+import Heading from './Heading'
 
 export const ScienceClassDashboard: React.FC = () => {
     const firebase = useFirebase()

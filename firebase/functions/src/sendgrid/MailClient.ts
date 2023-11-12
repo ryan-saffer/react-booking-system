@@ -24,7 +24,6 @@ export class MailClient {
 
     #client: MailService | null = null
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     private constructor() {}
 
     static async getInstance() {

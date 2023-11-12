@@ -1,22 +1,15 @@
+import { Button, Divider, Form, Input, Modal, Typography } from 'antd'
+import type { AcuityTypes } from 'fizz-kidz'
 import React, { Fragment, useState } from 'react'
-import { Form, Input, Button, Divider, Modal, Typography } from 'antd'
+
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
+
 import { ChildForm } from './ChildForm'
-import { Acuity } from 'fizz-kidz'
 const { Text } = Typography
 
-export const SimpleTextRule = {
-    pattern: /^[a-zA-Z0-9 -]+$/,
-    message: 'No special characters allowed.',
-}
-
-export const PhoneRule = {
-    pattern: /^[0-9]+$/,
-    message: 'Only numbers 0-9 allowed',
-}
-
 type Props = {
-    selectedClasses: Acuity.Class[]
+    selectedClasses: AcuityTypes.Api.Class[]
 }
 
 export const Step2: React.FC<Props> = ({ selectedClasses }) => {

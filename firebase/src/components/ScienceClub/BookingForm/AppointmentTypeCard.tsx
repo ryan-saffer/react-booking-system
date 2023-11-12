@@ -1,11 +1,13 @@
-import { Grow } from '@mui/material'
 import { Card } from 'antd'
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 import React from 'react'
+
+import { Grow } from '@mui/material'
+
 import styles from './AppointmentTypeCard.module.css'
 
 type Props = {
-    appointmentType: Acuity.AppointmentType
+    appointmentType: AcuityTypes.Api.AppointmentType
     logoUrl: string
     onClick: () => void
 }

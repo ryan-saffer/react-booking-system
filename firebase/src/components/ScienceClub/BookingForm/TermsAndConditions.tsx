@@ -1,27 +1,25 @@
-import React from 'react'
-
 const TermsAndConditions = () => {
     return (
         <>
             <p>
                 These terms and conditions apply to the after school program provided by Fizz Kidz Australia Pty Ltd
-                (ABN 40 611 366 075) in relation to which you are enrolling your child (the ‘Program’). These terms and
+                (ABN 40 611 366 075) in relation to which you are enrolling your child (the 'Program'). These terms and
                 conditions constitute a legally enforceable contract between you and Fizz Kidz. When you enrol your
-                child in the Program you consent to your child’s participation in the Program and confirm your agreement
+                child in the Program you consent to your child's participation in the Program and confirm your agreement
                 to be bound by these terms and conditions.
             </p>
             <p>
                 1. The Program 1.1. The Program is owned and operated by Fizz Kidz Australia Pty Ltd (referred to in
-                this document as ‘Fizz Kidz’, ‘we’, ‘us’ and ‘our’ as the context requires).  1.2. Details of the
+                this document as 'Fizz Kidz', 'we', 'us' and 'our' as the context requires). 1.2. Details of the
                 Program, including the activities it entails can be found here on our website [insert link]. It is
-                important that you familiarise yourself with the Program’s activities.   1.3. We may change or alter the
+                important that you familiarise yourself with the Program's activities. 1.3. We may change or alter the
                 Program at our discretion. Wherever possible and practicable to do so, we will provide notice of any
                 changes to you.
             </p>
             <p>
                 2. Important representations 2.1. In relation to each child that you enrol in the Program (each an
-                ‘enrolled child’) you represent and warrant to us as follows: 2.1.1. you have the lawful authority and
-                capacity as each enrolled child’s legal parent or guardian to enrol the child in the Program; 2.1.2. all
+                'enrolled child') you represent and warrant to us as follows: 2.1.1. you have the lawful authority and
+                capacity as each enrolled child's legal parent or guardian to enrol the child in the Program; 2.1.2. all
                 the information that you have provided to us in connection with the enrolled child, including but not
                 limited to medical information, medicines and allergies, is accurate and complete in all respects and
                 that you will immediately update this information to us if and when relevant; and 2.1.3. without
@@ -34,7 +32,7 @@ const TermsAndConditions = () => {
             </p>
             <p>
                 3. Medical and related issues 3.1. You authorise Fizz Kidz and our personnel and representatives: 3.1.1.
-                to consult with the enrolled child’s school regarding any behavioural or medical management issues
+                to consult with the enrolled child's school regarding any behavioural or medical management issues
                 necessary to provide consistency and to otherwise enhance the service provided to the enrolled child;
                 3.1.2. in the event of accident, illness or emergency, to administer first aid and to otherwise obtain
                 (or endeavour to obtain) the necessary and appropriate medical treatment for the enrolled child,
@@ -52,7 +50,7 @@ const TermsAndConditions = () => {
                 You must not bring the enrolled child back to the Program until 24 hours after the illness or disease
                 has passed (or until you have produced a medical certificate if requested by staff). 4.3. If the
                 enrolled child is subject to suspension or exclusion from the Program or is withdrawn from the Program
-                due to medical reasons, Fizz Kidz may disclose the enrolled child’s name and reasons for the suspension
+                due to medical reasons, Fizz Kidz may disclose the enrolled child's name and reasons for the suspension
                 or exclusion, or medical conditions, to persons in control of the school or other venue at which the
                 Program is operated.
             </p>
@@ -61,7 +59,7 @@ const TermsAndConditions = () => {
                 control of our staff. Further, if the enrolled child demonstrates unacceptable behaviour, you will be
                 notified by staff and may be required to collect the enrolled child. In such circumstances, you agree to
                 immediately make arrangements to collect the enrolled child from the Program. We reserve the right to
-                suspend or cancel the enrolled child’s participation in the Program.
+                suspend or cancel the enrolled child's participation in the Program.
             </p>
             <p>
                 6. Collecting children 6.1. You acknowledge and agree that the enrolled child is not under our
@@ -73,16 +71,16 @@ const TermsAndConditions = () => {
                 Program.
             </p>
             <p>
-                7. Photographs, video and sound recordings  7.1. Fizz Kidz typically takes photographs, videos and/or
+                7. Photographs, video and sound recordings 7.1. Fizz Kidz typically takes photographs, videos and/or
                 sound recordings in the activities associated with the Program. If you have ticked the relevant consent
                 on the enrolment form, you authorise us to take such photographs, videos and to create sound recordings
                 featuring the enrolled child for the following purposes: 7.1.1. as an essential or incidental part of
                 the activities and experience provided to the enrolled child and each other child participating in the
-                Program; 7.1.2. archival records of the enrolled child’s participation in the Program; 7.1.3. updating
+                Program; 7.1.2. archival records of the enrolled child's participation in the Program; 7.1.3. updating
                 and reporting to parents and guardians; and 7.1.4. sharing and promoting the Program and the enrolled
-                child’s experiences in the Program through various media such as newsletters, visual displays, emails to
+                child's experiences in the Program through various media such as newsletters, visual displays, emails to
                 families and social media. If you wish to revoke your consent to such uses it is your responsibility to
-                notify us in writing. Revocation of your consent may mean that the enrolled child cannot participate in
+                notify us in writing. Revocation of your consent may mean that the enrolled child cannot participate in
                 certain activities.
             </p>
             <p>
@@ -91,7 +89,7 @@ const TermsAndConditions = () => {
                 to them participating in the Program other than to the extent that the injury, damage or loss was caused
                 or contributed to by the proven negligence of Fizz Kidz its directors, officers, employees or
                 contractors, except as otherwise expressly required by law. 8.2. You must indemnify Fizz Kidz and our
-                directors, officers, employees and contractors (collectively ‘those indemnified’) against any and all
+                directors, officers, employees and contractors (collectively 'those indemnified') against any and all
                 costs, expenses, claims or liability incurred or suffered by those indemnified arising from any injury
                 to another child, our staff or any other person, or any loss or damage to property, which is caused or
                 suffered by the enrolled child at the Program.
@@ -102,7 +100,7 @@ const TermsAndConditions = () => {
                 in accordance with the cancellation policy or if you do not follow the cancellation procedures.
             </p>
             <p>
-                10. Consequences of non-payment You understand that if non-payment of fees occurs the enrolled child’s
+                10. Consequences of non-payment You understand that if non-payment of fees occurs the enrolled child's
                 enrolment in the Program may be suspended and/or cancelled. You understand if non-payment of fees
                 continues, the debt may be referred to a collection agency.
             </p>
@@ -110,7 +108,7 @@ const TermsAndConditions = () => {
                 11. Amendments to these terms Fizz Kidz reserves the right to vary these terms and conditions from time
                 to time. Changes may occur as a result of a change to government regulations or because of a change to
                 the Program and our activities. We will notify you of any changes to our terms and conditions and you
-                will have the right to cancel the enrolled child’s participation in the Program.
+                will have the right to cancel the enrolled child's participation in the Program.
             </p>
         </>
     )

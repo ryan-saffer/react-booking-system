@@ -1,15 +1,17 @@
+import { Alert, Typography } from 'antd'
+import { AcuityTypes } from 'fizz-kidz'
 import React, { useEffect } from 'react'
-import { Acuity } from 'fizz-kidz'
-import useAcuityClient from '../../Hooks/api/UseAcuityClient'
+
+import useAcuityClient from '@components/Hooks/api/UseAcuityClient'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+
 import Loader from '../shared/Loader'
 import Form from './Form'
-import { Alert, Typography } from 'antd'
-import useMixpanel from '../../Hooks/context/UseMixpanel'
-import { MixpanelEvents } from '../../Mixpanel/Events'
 import { FormSubmission } from '.'
 
 type Props = {
-    appointmentType: Acuity.AppointmentType
+    appointmentType: AcuityTypes.Api.AppointmentType
     onSubmit: FormSubmission
 }
 

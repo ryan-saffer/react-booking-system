@@ -1,10 +1,9 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-import * as ROUTES from '../../constants/routes'
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import { withAuthentication, withAuthorization } from '../Session'
 import { ConfigProvider, ThemeConfig } from 'antd'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+
+import { withAuthentication, withAuthorization } from '@components/Session'
+import * as ROUTES from '@constants/routes'
+import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 
@@ -53,7 +52,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
         lazy: async () => {
-            const { ScienceClubCheckinClassSelection } = await import('../ScienceClub/Checkin/SelectClass')
+            const { ScienceClubCheckinClassSelection } = await import('../ScienceClub/Checkin/SelectClass/index.jsx')
             return { Component: withAuthorization(['BASIC'], ScienceClubCheckinClassSelection) }
         },
     },
@@ -67,7 +66,9 @@ const router = createBrowserRouter([
     {
         path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
         lazy: async () => {
-            const { ScienceClubInvoicingClassSelection } = await import('../ScienceClub/Invoicing/SelectClass')
+            const { ScienceClubInvoicingClassSelection } = await import(
+                '../ScienceClub/Invoicing/SelectClass/index.jsx'
+            )
             return { Component: withAuthorization(['ADMIN'], ScienceClubInvoicingClassSelection) }
         },
     },
@@ -159,7 +160,7 @@ const router = createBrowserRouter([
     },
 ])
 
-const App = () => {
+const _App = () => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
@@ -173,4 +174,4 @@ const App = () => {
     )
 }
 
-export default withAuthentication(App)
+export const App = withAuthentication(_App)

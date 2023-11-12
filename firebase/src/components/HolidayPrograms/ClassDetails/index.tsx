@@ -1,23 +1,23 @@
-import React, { useMemo, useState } from 'react'
-import { styled } from '@mui/material/styles'
+import { Card, Collapse, Empty } from 'antd'
+import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import ChildExpansionPanel from './ChildExpansionPanel'
-import useWindowDimensions from '../../Hooks/UseWindowDimensions'
-import { Acuity } from 'fizz-kidz'
-
-import CssBaseline from '@mui/material/CssBaseline'
-import Typography from '@mui/material/Typography'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import useFetchAppointments from '@components/Hooks/api/UseFetchAppointments'
+import SkeletonRows from '@components/Shared/SkeletonRows'
+import * as ROUTES from '@constants/routes'
+import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import SkeletonRows from '../../Shared/SkeletonRows'
-import useFetchAppointments from '../../Hooks/api/UseFetchAppointments'
-import { Card, Collapse, Empty } from 'antd'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
-import { DateTime } from 'luxon'
-import * as ROUTES from '../../../constants/routes'
+import AppBar from '@mui/material/AppBar'
+import CssBaseline from '@mui/material/CssBaseline'
+import IconButton from '@mui/material/IconButton'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
+
+import ChildExpansionPanel from './ChildExpansionPanel'
 
 const PREFIX = 'ClassDetailsPage'
 
@@ -78,16 +78,16 @@ export const ClassDetailsPage = () => {
 
     const navigate = useNavigate()
 
-    const sortByChildName = (a: Acuity.Appointment, b: Acuity.Appointment) => {
-        const aName = Acuity.Utilities.retrieveFormAndField(
+    const sortByChildName = (a: AcuityTypes.Api.Appointment, b: AcuityTypes.Api.Appointment) => {
+        const aName = AcuityUtilities.retrieveFormAndField(
             a,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         ) as string
-        const bName = Acuity.Utilities.retrieveFormAndField(
+        const bName = AcuityUtilities.retrieveFormAndField(
             b,
-            Acuity.Constants.Forms.CHILDREN_DETAILS,
-            Acuity.Constants.FormFields.CHILDREN_NAMES
+            AcuityConstants.Forms.CHILDREN_DETAILS,
+            AcuityConstants.FormFields.CHILDREN_NAMES
         ) as string
         return aName.toUpperCase() < bName.toUpperCase() ? -1 : aName > bName ? 1 : 0
     }
@@ -99,7 +99,7 @@ export const ClassDetailsPage = () => {
         classId,
         classTime,
         sorter: sortByChildName,
-    }) as Acuity.Appointment[]
+    }) as AcuityTypes.Api.Appointment[]
 
     return (
         <Root className={classes.main}>

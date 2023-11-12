@@ -4,7 +4,7 @@ import React from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { EventBooking } from 'fizz-kidz'
 import dateFormat from 'dateformat'
-import ExistingEventForm from '../Forms/EventForm/ExistingEventForm'
+import { ExistingEventForm } from '../Forms/EventForm/ExistingEventForm'
 
 const PREFIX = 'EventPanel'
 

@@ -1,5 +1,6 @@
 import { useContext } from 'react'
-import { AuthUserContext } from '../../Session'
+
+import { AuthUserContext } from '@components/Session'
 
 export const useAuth = () => {
     const auth = useContext(AuthUserContext)

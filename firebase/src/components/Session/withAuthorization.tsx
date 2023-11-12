@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import * as ROUTES from '../../constants/routes'
-import * as LogoGif from '../../drawables/fizz_logo.gif'
-import useFirebase from '../Hooks/context/UseFirebase'
-import { ROLES, Role } from '../../constants/roles'
-import { useAuth } from '../Hooks/context/useAuth'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useAuth } from '@components/Hooks/context/useAuth'
+import { ROLES, Role } from '@constants/roles'
+import * as ROUTES from '@constants/routes'
+import * as LogoGif from '@drawables/fizz_logo.gif'
+
 import Unauthorised from './Unauthorised'
 
 /**
