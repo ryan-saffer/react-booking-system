@@ -35,7 +35,7 @@ const Root = styled('div')(({ theme }) => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        margin: theme.spacing(3),
+        padding: theme.spacing(3),
     },
 
     [`& .${classes.paper}`]: {
