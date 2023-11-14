@@ -1,31 +1,34 @@
-import React, { useState, useContext } from 'react'
-import { styled } from '@mui/material/styles'
-import { FirebaseContext } from '../../../Firebase'
 import 'typeface-roboto'
+
+import { FormBookingFields, Location } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import React, { useContext, useState } from 'react'
+
+import CheckIcon from '@mui/icons-material/Check'
+import SaveIcon from '@mui/icons-material/Save'
 import {
-    InputLabel,
-    MenuItem,
-    FormHelperText,
-    FormControlLabel,
     Checkbox,
-    Grid,
-    Typography,
-    TextField,
-    FormControl,
-    Select,
     CircularProgress,
     Fab,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
-import CheckIcon from '@mui/icons-material/Check'
 import { green } from '@mui/material/colors'
-import { validateFormOnChange, validateFormOnSubmit, errorFound } from '../validation'
-import { FormBookingFields, Location } from 'fizz-kidz'
+import { styled } from '@mui/material/styles'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+
+import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import { DateTime } from 'luxon'
+import { FirebaseContext } from '../../../Firebase'
+import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
 
 const PREFIX = 'index'
 
@@ -137,6 +140,11 @@ const getEmptyValues = () => ({
         error: false,
         errorText: '',
     },
+    oldPrices: {
+        value: false,
+        error: false,
+        errorText: ''
+    }
 })
 
 /**
