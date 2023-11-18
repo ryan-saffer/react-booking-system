@@ -30,7 +30,7 @@ export const CreationsPage = () => {
             <div className={styles.root}>
                 <div className={styles.main}>
                     {creations.map((creation, idx) => (
-                        <Accordion key={idx}>
+                        <Accordion key={idx} TransitionProps={{ unmountOnExit: true }}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography fontWeight={600}>{creation.name}</Typography>
                             </AccordionSummary>

@@ -1,11 +1,13 @@
-import * as config from '../../config'
-import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/storage'
 
-const useEmulators = false
+import firebase from 'firebase/compat/app'
+
+import * as config from '../../config'
+
+export const useEmulators = true
 
 class Firebase {
     auth: firebase.auth.Auth

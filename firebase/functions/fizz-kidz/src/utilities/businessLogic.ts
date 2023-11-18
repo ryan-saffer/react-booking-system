@@ -54,6 +54,12 @@ export function getApplicationDomain(environment: 'prod' | 'dev') {
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
 }
 
+export function getFunctionEmulatorDomain(env: 'prod' | 'dev') {
+    return env === 'prod'
+        ? 'http://127.0.0.1:5001/bookings-prod/australia-southeast1'
+        : 'http://127.0.0.1:5001/booking-system-6435d/australia-southeast1'
+}
+
 export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {
     if (type === 'mobile') {
         switch (partyLength) {
