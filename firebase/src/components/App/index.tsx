@@ -1,10 +1,10 @@
 import { ConfigProvider, ThemeConfig } from 'antd'
 import { getApplicationDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
-import { RequestInitEsque } from 'node_modules/@trpc/client/dist/internals/types.js'
 import { useState } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { useEmulators } from '@components/Firebase/firebase.js'
+import useFirebase from '@components/Hooks/context/UseFirebase.js'
 import { withAuthentication, withAuthorization } from '@components/Session'
 import Test from '@components/Test.js'
 import * as ROUTES from '@constants/routes'
@@ -12,9 +12,8 @@ import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { TRPCClientError, httpBatchLink, httpLink } from '@trpc/client'
-import { Procedure } from '@trpc/server'
-import { Procedures, trpc } from '@utils/trpc.js'
+import { httpLink } from '@trpc/client'
+import { trpc } from '@utils/trpc.js'
 
 const theme = createTheme({
     palette: {
@@ -183,46 +182,28 @@ const router = createBrowserRouter([
 // }
 
 const _App = () => {
+    const firebase = useFirebase()
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
                 httpLink({
-                    // url: `${getFunctionEmulatorDomain('dev')}/secondFunction`,
                     url: '',
-                    headers: {
-                        Authorization: '123',
+                    async headers() {
+                        const token = (await firebase.auth.currentUser?.getIdToken()) || ''
+                        return {
+                            authorization: token,
+                        }
                     },
-                    fetch(url, init) {
-                        console.log(init)
-                        console.log('url before:', url.toString())
+                    fetch(url, options) {
                         const normalisedUrl = url.toString().replace(/\./g, '/')
-                        console.log('normalised url:', normalisedUrl)
                         const [router, procedure] = [normalisedUrl.split('/')[1], normalisedUrl.split('/')[2]]
-                        console.log('router:', router)
-                        console.log('procedure:', procedure)
-                        // if (!isValidRouter(router)) {
-                        //     throw new TRPCClientError(`invalid router: '${router}'`)
-                        // }
-                        // const firebaseFunction = functionsMap[router]
                         const domain = useEmulators
                             ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
                             : getApplicationDomain(import.meta.env.VITE_ENV)
-                        return fetch(`${domain}/${router}/${procedure}`, init)
+                        return fetch(`${domain}/${router}/${procedure}`, options)
                     },
                 }),
-                // customLink(),
-                // httpBatchLink({
-                //     url: useEmulators
-                //         ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-                //         : getApplicationDomain(import.meta.env.VITE_ENV),
-                //     // You can pass any HTTP headers you wish here
-                //     async headers() {
-                //         return {
-                //             authorization: '123',
-                //         }
-                //     },
-                // }),
             ],
         })
     )
