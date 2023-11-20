@@ -2,7 +2,7 @@ import 'typeface-roboto'
 
 import { FormBookingFields, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 
 import CheckIcon from '@mui/icons-material/Check'
 import SaveIcon from '@mui/icons-material/Save'
@@ -24,11 +24,10 @@ import { green } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
-import { FirebaseContext } from '../../../Firebase'
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
+import { trpc } from '../../../../utilities/trpc'
 
 const PREFIX = 'index'
 
@@ -143,8 +142,8 @@ const getEmptyValues = () => ({
     oldPrices: {
         value: false,
         error: false,
-        errorText: ''
-    }
+        errorText: '',
+    },
 })
 
 /**
@@ -186,12 +185,12 @@ const mapFormToBooking = (formValues) => {
 
 /** The booking form component */
 const _NewBookingForm = (props) => {
-    const firebase = useContext(FirebaseContext)
-
     const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
+
+    const createBookingMutation = trpc.parties.createPartyBooking.useMutation()
 
     const handleFormChange = (e, id) => {
         const isDateOrTimeField = e instanceof DateTime
@@ -218,7 +217,7 @@ const _NewBookingForm = (props) => {
         setFormValues(tmpValues)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         var tmpFormValues = { ...formValues }
         tmpFormValues = validateFormOnSubmit(tmpFormValues)
         // if there is an error (fields are empty), update the values and return
@@ -232,24 +231,20 @@ const _NewBookingForm = (props) => {
         setLoading(true)
         var booking = mapFormToBooking(formValues)
 
-        callFirebaseFunction(
-            'createPartyBooking',
-            firebase
-        )(booking)
-            .then(() => {
-                setLoading(false)
-                setSuccess(true)
-                setTimeout(() => {
-                    // let user see success for a second, then close the dialog
-                    props.onSuccess(formValues.date.value)
-                }, 1000)
-            })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
-                setSuccess(false)
-                props.displayError('Party has not been booked in properly. Please try again.\nError details: ' + err)
-            })
+        try {
+            await createBookingMutation.mutateAsync(booking)
+            setLoading(false)
+            setSuccess(true)
+            setTimeout(() => {
+                // let user see success for a second, then close the dialog
+                props.onSuccess(formValues.date.value)
+            }, 1000)
+        } catch (err) {
+            console.error(err)
+            setLoading(false)
+            setSuccess(false)
+            props.displayError('Party has not been booked in properly. Please try again.\nError details: ' + err)
+        }
     }
 
     return (

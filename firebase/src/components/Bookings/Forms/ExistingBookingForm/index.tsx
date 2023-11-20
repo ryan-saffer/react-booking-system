@@ -1,4 +1,4 @@
-import React, { useState, useContext, ChangeEvent, useCallback, useEffect } from 'react'
+import React, { useState, ChangeEvent, useCallback, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import 'typeface-roboto'
 import {
@@ -31,15 +31,14 @@ import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { capitalise } from '../../../../utilities/stringUtilities'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
-import Firebase, { FirebaseContext } from '../../../Firebase'
 import { ExistingBookingFormFields } from './types'
 import { mapFormToBooking, mapFirestoreBookingToFormValues, getEmptyValues } from '../utilities'
 import EditFormButtons from '../EditFormButtons'
 import { useScopes } from '../../../Hooks/UseScopes'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { DateTime } from 'luxon'
 import { useDateNavigation } from '../../DateNavigation/DateNavigation.hooks'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'index'
 
@@ -65,8 +64,6 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     displayError,
     showConfirmationDialog,
 }) => {
-    const firebase = useContext(FirebaseContext) as Firebase
-
     const isRestricted = useScopes().CORE === 'restricted'
     const MASK = 'xxxxx'
 
@@ -75,6 +72,9 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     useEffect(() => {
         setFormValues(mapFirestoreBookingToFormValues(booking))
     }, [booking])
+
+    const updateBookingMutation = trpc.parties.updatePartyBooking.useMutation()
+    const deleteBookingMutation = trpc.parties.deletePartyBooking.useMutation()
 
     const { setDate } = useDateNavigation()
 
@@ -188,7 +188,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         }
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         let tmpFormValues = { ...formValues }
         tmpFormValues = validateFormOnSubmit(tmpFormValues) as ExistingBookingFormFields
         // if there is an error (fields are empty), update the values and return
@@ -204,50 +204,47 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         const bookingCopy = { ...booking }
         const mergedBooking = { ...bookingCopy, ...mapFormToBooking(formValues) }
 
-        callFirebaseFunction(
-            'updatePartyBooking',
-            firebase
-        )({ bookingId: booking.id, booking: mergedBooking })
-            .then(() => {
-                setLoading(false)
-                setSuccess(true)
-                setTimeout(() => {
-                    // let user see success for a second, then refesh
-                    setEditing(false)
-                    setSuccess(false)
-                    setDate(DateTime.fromJSDate(formValues.date.value))
-                }, 1000)
-            })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
+        try {
+            await updateBookingMutation.mutateAsync({ bookingId: booking.id, booking: mergedBooking })
+            setLoading(false)
+            setSuccess(true)
+            setTimeout(() => {
+                // let user see success for a second, then refesh
+                setEditing(false)
                 setSuccess(false)
-                displayError('Unable to update the booking. Please try again.\nError details: ' + err)
-            })
+                setDate(DateTime.fromJSDate(formValues.date.value))
+            }, 1000)
+        } catch (err) {
+            console.error(err)
+            setLoading(false)
+            setSuccess(false)
+            displayError('Unable to update the booking. Please try again.\nError details: ' + err)
+        }
     }
 
-    const handleDeleteBooking = () => {
+    const handleDeleteBooking = async () => {
         setLoading(true)
-        callFirebaseFunction(
-            'deletePartyBooking',
-            firebase
-        )({ bookingId: booking.id, eventId: booking.eventId!, location: booking.location, type: booking.type })
-            .then(() => {
-                setLoading(false)
-                setSuccess(true)
-                setTimeout(() => {
-                    // let user see success for a second, then refesh
-                    setEditing(false)
-                    setSuccess(false)
-                    setDate(DateTime.fromJSDate(formValues.date.value)) //  triggers firestore subscription to run again
-                }, 1000)
+        try {
+            await deleteBookingMutation.mutateAsync({
+                bookingId: booking.id,
+                eventId: booking.eventId!,
+                location: booking.location,
+                type: booking.type,
             })
-            .catch((err) => {
-                console.error(err)
-                setLoading(false)
+            setLoading(false)
+            setSuccess(true)
+            setTimeout(() => {
+                // let user see success for a second, then refesh
+                setEditing(false)
                 setSuccess(false)
-                displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
-            })
+                setDate(DateTime.fromJSDate(formValues.date.value)) //  triggers firestore subscription to run again
+            }, 1000)
+        } catch (err) {
+            console.error(err)
+            setLoading(false)
+            setSuccess(false)
+            displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
+        }
     }
 
     return (

@@ -1,9 +1,9 @@
-import { logError, onCall, throwError } from '../../utilities'
-import { getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
+import { logError, throwError } from '../../utilities'
+import { Booking, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 
-export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => {
+export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input
 
     // serialize datetime back
@@ -30,5 +30,4 @@ export const updatePartyBooking = onCall<'updatePartyBooking'>(async (input) => 
         logError(`error updating calendar event for booking with id: '${bookingId}'`, err)
         throwError('internal', 'error creating calendar event', err)
     }
-    return
-})
+}

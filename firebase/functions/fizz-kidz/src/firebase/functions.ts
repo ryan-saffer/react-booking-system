@@ -2,13 +2,11 @@ import { PFQuestion } from '../paperform'
 import { EventBooking, ScheduleEventParams } from '../partyBookings/Event'
 import { SendInvoiceParams, RetrieveInvoiceStatusesParams, InvoiceStatusMap } from '../scienceclub/invoicing'
 import {
-    Booking,
     CreatePaymentIntentParams,
     CreatePaymentIntentResponse,
     GenerateTimesheetsParams,
     GenerateTimesheetsResponse,
     InitiateEmployeeProps,
-    Location,
     ScheduleScienceAppointmentParams,
     ScienceEnrolment,
     SendTermContinuationEmailsParams,
@@ -34,12 +32,6 @@ export interface FirebaseFunctions {
     deleteEvent: CloudFunction<EventBooking, void>
     generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
     initiateOnboarding: CloudFunction<InitiateEmployeeProps, void>
-    createPartyBooking: CloudFunction<Booking, void>
-    updatePartyBooking: CloudFunction<{ bookingId: string; booking: Booking }, void>
-    deletePartyBooking: CloudFunction<
-        { bookingId: string; eventId: string; location: Location; type: Booking['type'] },
-        void
-    >
 }
 
 export interface PubSubFunctions {

@@ -6,7 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { useEmulators } from '@components/Firebase/firebase.js'
 import useFirebase from '@components/Hooks/context/UseFirebase.js'
 import { withAuthentication, withAuthorization } from '@components/Session'
-import Test from '@components/Test.js'
+// import Test from '@components/Test.js'
 import * as ROUTES from '@constants/routes'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -166,20 +166,7 @@ const router = createBrowserRouter([
             return { Component: withAuthorization([], CreationsPage) }
         },
     },
-    {
-        path: '/test',
-        element: <Test />,
-    },
 ])
-
-// const functionsMap: { [key in Procedures]: string } = {
-//     firstRouter: 'firstFunction',
-//     secondRouter: 'secondFunction',
-// }
-
-// function isValidRouter(procedure: string): procedure is Procedures {
-//     return procedure in functionsMap
-// }
 
 const _App = () => {
     const firebase = useFirebase()
@@ -196,7 +183,7 @@ const _App = () => {
                         }
                     },
                     fetch(url, options) {
-                        const normalisedUrl = url.toString().replace(/\./g, '/')
+                        const normalisedUrl = url.toString().replace(/\./g, '/') // replace '.' with '/'
                         const [router, procedure] = [normalisedUrl.split('/')[1], normalisedUrl.split('/')[2]]
                         const domain = useEmulators
                             ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)

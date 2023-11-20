@@ -1,9 +1,9 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { DateTime } from 'luxon'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { Booking, getReviewUrl } from 'fizz-kidz'
-import { logError } from '../../utilities'
-import { MailClient } from '../../sendgrid/MailClient'
+import { logError } from '../../../utilities'
+import { MailClient } from '../../../sendgrid/MailClient'
 import { logger } from 'firebase-functions/v2'
 
 export const sendFeedbackEmails = onSchedule(

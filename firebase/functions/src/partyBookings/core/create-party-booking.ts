@@ -1,27 +1,28 @@
 import { Timestamp } from 'firebase-admin/firestore'
-import { logError, onCall, throwError } from '../../utilities'
 import {
+    Booking,
     FirestoreBooking,
     capitalise,
     getApplicationDomain,
     getLocationAddress,
     getManager,
+    getNumberOfKidsAllowed,
     getPartyCreationCount,
     getPartyEndDate,
-    getNumberOfKidsAllowed,
     getPictureOfStudioUrl,
 } from 'fizz-kidz'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { env } from '../../init'
-import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
+import { env } from '../../init'
+import { MailClient } from '../../sendgrid/MailClient'
+import { logError, throwError } from '../../utilities'
 
-export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => {
+export async function createPartyBooking(_booking: Booking) {
     const booking = {
-        ...input,
-        dateTime: Timestamp.fromDate(new Date(input.dateTime)),
+        ..._booking,
+        dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
     const bookingId = await DatabaseClient.createPartyBooking(booking)
@@ -34,7 +35,7 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
         eventId = await calendarClient.createEvent(
             {
                 eventType: 'party-bookings',
-                type: input.type,
+                type: booking.type,
                 location: booking.location,
             },
             {
@@ -108,5 +109,4 @@ export const createPartyBooking = onCall<'createPartyBooking'>(async (input) => 
             throwError('internal', 'party booked successfully, but unable to send confirmation email', err)
         }
     }
-    return
-})
+}
