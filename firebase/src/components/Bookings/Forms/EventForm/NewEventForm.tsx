@@ -3,12 +3,11 @@ import React, { useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import CheckIcon from '@mui/icons-material/Check'
 import { green } from '@mui/material/colors'
-import { callFirebaseFunction } from '../../../../utilities/firebase/functions'
-import useFirebase from '../../../Hooks/context/UseFirebase'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import EventForm, { Form } from './EventForm'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'NewEventForm'
 
@@ -36,11 +35,11 @@ type Props = {
 } & ErrorDialogProps
 
 const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
-    const firebase = useFirebase()
-
     const [emailMessage, setEmailMessage] = useState('')
     const [emailMessageError, setEmailMessageError] = useState(false)
     const [sendConfirmationEmail, setSendConfirmationEmail] = useState(true)
+
+    const bookEventMutation = trpc.events.createEvent.useMutation()
 
     const methods = useForm<Form>({
         defaultValues: {
@@ -84,10 +83,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
 
         try {
             setLoading(true)
-            await callFirebaseFunction(
-                'bookEvent',
-                firebase
-            )({
+            await bookEventMutation.mutateAsync({
                 event: {
                     eventName: values.eventName,
                     contactName: values.contactName,

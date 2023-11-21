@@ -1,8 +1,9 @@
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
-import { logError, onCall, throwError } from '../../utilities'
+import { logError, throwError } from '../../utilities'
+import { UpdateEvent } from './events-router'
 
-export const updateEvent = onCall<'updateEvent'>(async (event) => {
+export async function updateEvent(event: UpdateEvent) {
     // parse strings back into date
     event.startTime = new Date(event.startTime)
     event.endTime = new Date(event.endTime)
@@ -26,4 +27,4 @@ export const updateEvent = onCall<'updateEvent'>(async (event) => {
         logError(`error updating event with id ${event.id}`, err)
         throwError('internal', `error updating event with id ${event.id}`, err)
     }
-})
+}

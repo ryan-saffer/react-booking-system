@@ -1,11 +1,11 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { logError, onCall, throwError } from '../../utilities'
 import { DateTime } from 'luxon'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { MailClient } from '../../sendgrid/MailClient'
+import { logError, throwError } from '../../utilities'
+import { CreateEvent } from './events-router'
 
-export const bookEvent = onCall<'bookEvent'>(async (input) => {
-    const { event } = input
+export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
     const { slots, ...rest } = event
 
     const calendarClient = await CalendarClient.getInstance()
@@ -61,13 +61,13 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
     }
 
     // send confirmation email
-    if (input.sendConfirmationEmail) {
+    if (sendConfirmationEmail) {
         try {
             const mailClient = await MailClient.getInstance()
             await mailClient.sendEmail('eventBooking', event.contactEmail, {
                 contactName: event.contactName,
                 location: event.location,
-                emailMessage: input.emailMessage,
+                emailMessage: emailMessage,
                 price: event.price,
                 slots: slots.map((slot) => ({
                     startTime: DateTime.fromJSDate(slot.startTime, {
@@ -96,4 +96,4 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
             logError('event booked successfully, but an error occurred sending the confirmation email', err)
         }
     }
-})
+}

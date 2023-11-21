@@ -3,15 +3,14 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { DateTime } from 'luxon'
 import { EventBooking } from 'fizz-kidz'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import EditFormButtons from '@components/Bookings/Forms/EditFormButtons'
-import { callFirebaseFunction } from '@utils/firebase/functions'
 import { combineDateAndTime } from '@utils/dateUtils'
 
 import EventForm, { Form } from './EventForm'
+import { trpc } from '@utils/trpc'
 
 type Props = {
     event: EventBooking
@@ -19,11 +18,12 @@ type Props = {
     ErrorDialogProps
 
 const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
-    const firebase = useFirebase()
-
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false)
     const [success, setSuccess] = useState(false)
+
+    const updateEventMutation = trpc.events.updateEvent.useMutation()
+    const deleteEventMutation = trpc.events.deleteEvent.useMutation()
 
     const { setDate } = useDateNavigation()
 
@@ -63,17 +63,19 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
         try {
             const updatedBooking: EventBooking = {
                 ...event,
+                eventName: values.eventName,
                 contactName: values.contactName,
                 contactNumber: values.contactNumber,
                 contactEmail: values.contactEmail,
                 organisation: values.organisation,
                 location: values.location,
+                price: values.price,
                 startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime!),
                 endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
             }
 
-            await callFirebaseFunction('updateEvent', firebase)(updatedBooking)
+            await updateEventMutation.mutateAsync(updatedBooking)
 
             setSuccess(true)
             setTimeout(() => {
@@ -90,7 +92,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     async function handleDelete() {
         setLoading(true)
         try {
-            await callFirebaseFunction('deleteEvent', firebase)(event)
+            await deleteEventMutation.mutateAsync(event)
             setDate(DateTime.fromJSDate(event.startTime))
         } catch (err) {
             displayError('There was an error deleting the event')

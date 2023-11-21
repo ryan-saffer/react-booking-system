@@ -1,5 +1,3 @@
-import { WithoutId } from '../utilities'
-
 export type EventBooking = {
     id: string
     eventName: string
@@ -13,15 +11,4 @@ export type EventBooking = {
     endTime: Date
     notes: string
     calendarEventId: string
-}
-
-export type ScheduleEventParams = {
-    event: WithoutId<Omit<EventBooking, 'startTime' | 'endTime' | 'calendarEventId'>> & {
-        slots: {
-            startTime: Date
-            endTime: Date
-        }[]
-    }
-    sendConfirmationEmail: boolean
-    emailMessage: string
 }

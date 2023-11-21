@@ -184,7 +184,8 @@ const _App = () => {
                     },
                     fetch(url, options) {
                         const normalisedUrl = url.toString().replace(/\./g, '/') // replace '.' with '/'
-                        const [router, procedure] = [normalisedUrl.split('/')[1], normalisedUrl.split('/')[2]]
+                        const splitUrl = normalisedUrl.split('/')
+                        const [router, procedure] = [splitUrl[1], splitUrl[2]]
                         const domain = useEmulators
                             ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
                             : getApplicationDomain(import.meta.env.VITE_ENV)

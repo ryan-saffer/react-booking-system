@@ -1,3 +1,2 @@
-export * from './functions/bookEvent'
-export * from './functions/updateEvent'
-export * from './functions/deleteEvent'
+// TRPC
+export * from './functions/trpc/events'
