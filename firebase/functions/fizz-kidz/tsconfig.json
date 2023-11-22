@@ -9,10 +9,11 @@
         "types": ["node"],
         "declaration": true,
         "outDir": "lib",
-        "rootDir": "src",
+        // "rootDir": "src",
         "strict": true,
         "skipLibCheck": true,
-        "noErrorTruncation": true
+        "noErrorTruncation": true,
+        "composite": true
     },
     "exclude": ["lib", "node_modules", "src/**/*.spec.ts"],
     "include": ["src"]

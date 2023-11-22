@@ -5,10 +5,11 @@
     "main": "lib/index.js",
     "scripts": {
         "bundle": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
-        "build": "npm run lint && npm --prefix fizz-kidz run build && npm run bundle && npm run copy-files",
+        "build": "npm run lint && npm --prefix fizz-kidz run build && npm run ts:check && npm run bundle && npm run copy-files",
         "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
         "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml lib",
         "deploy": "firebase deploy --only functions",
+        "ts:check": "tsc",
         "lint": "eslint -c .eslintrc.json --ext .ts src",
         "logs": "firebase functions:log",
         "serve": "concurrently \"npm run build:watch\" \"firebase emulators:start --only functions,pubsub --inspect-functions\"",

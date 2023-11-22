@@ -2,7 +2,7 @@ import { AcuityWebhookData } from './../../acuity/functions/webhook'
 import { AcuityUtilities, AcuityConstants, Metadata } from 'fizz-kidz'
 import { RefundCalculator } from './RefundCalculator'
 import { logError } from '../../utilities'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { AcuityClient } from '../../acuity/core/acuity-client'
 import { StripeClient } from '../../stripe/core/StripeClient'
 import { logger } from 'firebase-functions/v2'
 

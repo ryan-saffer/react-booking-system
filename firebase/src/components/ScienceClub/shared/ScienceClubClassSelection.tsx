@@ -8,6 +8,7 @@ import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skelet
 import { callAcuityClient } from '@utils/firebase/functions'
 
 import styles from './ScienceClubClassSelection.module.css'
+import { trpc } from '@utils/trpc'
 
 type Props = {
     classRoute: string
@@ -28,28 +29,25 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
     const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
+    const { refetch: getAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery(
+        {
+            category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
+        },
+        { enabled: false }
+    )
+
     useEffect(() => {
         mounted.current = true
-        const fetchAppointmentTypes = () => {
-            callAcuityClient(
-                'getAppointmentTypes',
-                firebase
-            )({
-                category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
-            })
-                .then((result) => {
-                    if (mounted.current) {
-                        setAppointmentTypes(result.data)
-                    }
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-                .finally(() => {
-                    if (mounted.current) {
-                        setLoading({ appointmentTypes: false, classes: false })
-                    }
-                })
+        const fetchAppointmentTypes = async () => {
+            try {
+                const { data } = await getAppointmentTypes()
+                setAppointmentTypes(data || [])
+            } catch (err) {
+                console.error(err)
+            }
+            if (mounted.current) {
+                setLoading({ appointmentTypes: false, classes: false })
+            }
         }
 
         fetchAppointmentTypes()

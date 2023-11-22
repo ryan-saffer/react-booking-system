@@ -1,5 +1,5 @@
 import { AcuityConstants, HolidayProgramBooking } from 'fizz-kidz'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { AcuityClient } from '../../acuity/core/acuity-client'
 
 export async function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
     const acuity = await AcuityClient.getInstance()

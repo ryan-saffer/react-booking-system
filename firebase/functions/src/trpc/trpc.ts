@@ -3,6 +3,7 @@ import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/
 import type { IncomingMessage, ServerResponse } from 'http'
 import { getAuth } from 'firebase-admin/auth'
 import { HttpsError } from 'firebase-functions/v2/https'
+import { AcuityClient } from '../acuity/core/acuity-client'
 
 // INITIALISATION
 const t = initTRPC.context<typeof createContext>().create()
@@ -29,3 +30,15 @@ const isAuthenticated = middleware(async ({ ctx, next }) => {
 // PROCEDURES
 export const publicProcedure = t.procedure
 export const authenticatedProcedure = publicProcedure.use(isAuthenticated)
+
+const acuityProcedure = publicProcedure.use(async ({ ctx, next }) => {
+    const acuityClient = await AcuityClient.getInstance()
+    return next({
+        ctx: {
+            ...ctx,
+            acuityClient,
+        },
+    })
+})
+export const acuityPublicProcedure = acuityProcedure
+export const acuityAuthenticatedProcedure = acuityProcedure.use(isAuthenticated)

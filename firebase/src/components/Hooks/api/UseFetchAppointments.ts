@@ -1,8 +1,7 @@
 import { AcuityTypes } from 'fizz-kidz'
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
-import Firebase, { FirebaseContext } from '@components/Firebase'
-import { callAcuityClient } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>
@@ -16,18 +15,16 @@ interface UseFetchAppointmentsProps {
 const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
     const { setLoading, appointmentTypeId, calendarId, classId, sorter, classTime } = props
 
-    const firebase = useContext(FirebaseContext) as Firebase
-
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>([])
+
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
 
     useEffect(() => {
         const fetchClients = (data: AcuityTypes.Client.FetchAppointmentsParams) => {
-            callAcuityClient(
-                'searchForAppointments',
-                firebase
-            )({ ...data })
+            searchForAppointmentsMutation
+                .mutateAsync(data)
                 .then((result) => {
-                    const appointments = result.data
+                    const appointments = result
                     if (sorter) {
                         appointments.sort(sorter)
                     }

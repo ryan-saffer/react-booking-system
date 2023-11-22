@@ -2,7 +2,7 @@ import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { AcuityClient } from '../../acuity/core/acuity-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { StripeClient } from '../../stripe/core/StripeClient'
 

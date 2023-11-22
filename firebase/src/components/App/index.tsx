@@ -170,6 +170,7 @@ const router = createBrowserRouter([
 
 const _App = () => {
     const firebase = useFirebase()
+
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         trpc.createClient({

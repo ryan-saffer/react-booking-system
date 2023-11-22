@@ -1,4 +1,4 @@
-import { Acuity } from 'fizz-kidz'
+import { AcuityTypes } from 'fizz-kidz'
 
 /**
  *
@@ -6,10 +6,10 @@ import { Acuity } from 'fizz-kidz'
  * @param object error from acuity
  * @returns
  */
-export function hasError(error: any, object: any | Acuity.Error): object is Acuity.Error {
+export function hasError(error: any, object: any | AcuityTypes.Api.Error): object is AcuityTypes.Api.Error {
     return error ? true : isAcuityError(object) ? true : false
 }
 
-export function isAcuityError(object: any | Acuity.Error): object is Acuity.Error {
+export function isAcuityError(object: any | AcuityTypes.Api.Error): object is AcuityTypes.Api.Error {
     return object.error !== undefined && object.status_code !== undefined && object.message !== undefined
 }

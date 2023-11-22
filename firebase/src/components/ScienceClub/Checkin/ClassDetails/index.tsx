@@ -7,11 +7,11 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { styled } from '@mui/material/styles'
-import { callAcuityClient } from '@utils/firebase/functions'
 
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 import Heading from './Header'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'ScienceClubCheckinClassDetails'
 
@@ -76,6 +76,8 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
 
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
+
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)
     const calendarId = parseInt(searchParams.get('calendarId')!)
@@ -107,15 +109,11 @@ export const ScienceClubCheckinClassDetails: React.FC = () => {
             .onSnapshot(async (snapshot) => {
                 if (_isFirstLoad) {
                     try {
-                        const result = await callAcuityClient(
-                            'searchForAppointments',
-                            firebase
-                        )({
+                        _appointments = await searchForAppointmentsMutation.mutateAsync({
                             appointmentTypeId,
                             calendarId,
                             classTime,
                         })
-                        _appointments = result.data
                     } catch (err) {
                         console.error(err)
                         setError(true)

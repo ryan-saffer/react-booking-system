@@ -7,7 +7,7 @@ import { WithErrorModal } from '@components/Hooks/UseErrorDialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
-import { callAcuityClient } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 type Props = {
     appointment: AcuityTypes.Api.Appointment
@@ -25,13 +25,15 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
     const [attending, setAttending] = useState(!notAttending)
     const [loading, setSetloading] = useState(false)
 
+    const updateAppointmentMutation = trpc.acuity.updateAppointment.useMutation()
+
     const toggle = async (checked: boolean) => {
         setSetloading(true)
         try {
-            await callAcuityClient(
-                'updateAppointment',
-                firebase
-            )({ id: appointment.id, labels: checked ? [] : [{ id: AcuityConstants.Labels.NOT_ATTENDING }] })
+            await updateAppointmentMutation.mutateAsync({
+                id: appointment.id,
+                labels: checked ? [] : [{ id: AcuityConstants.Labels.NOT_ATTENDING }],
+            })
             if (checked) {
                 setAttending(true)
             } else {

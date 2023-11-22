@@ -4,7 +4,7 @@ import { scheduleHolidayProgram } from './scheduleHolidayProgram'
 import { sendConfirmationEmail } from './sendConfirmationEmail'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { logError } from '../../utilities'
-import { AcuityClient } from '../../acuity/core/AcuityClient'
+import { AcuityClient } from '../../acuity/core/acuity-client'
 import { HubspotClient } from '../../hubspot/HubspotClient'
 import { logger } from 'firebase-functions/v2'
 

@@ -1,10 +1,11 @@
 {
     "compilerOptions": {
         "baseUrl": "./",
+        "rootDir": "src",
         "module": "commonjs",
         "noImplicitReturns": false,
         "noUnusedLocals": true,
-        "outDir": "lib",
+        "outDir": "lib-tsc",
         "sourceMap": true,
         "strict": true,
         "target": "es2020",
@@ -13,8 +14,11 @@
         "esModuleInterop": true,
         "paths": {
             "fizz-kidz": ["./fizz-kidz/src"]
-        }
+        },
+        // "noEmit": false,
+        "composite": true
     },
     "compileOnSave": true,
-    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts"]
+    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts", "credentials"],
+    "references": [{ "path": "fizz-kidz" }]
 }

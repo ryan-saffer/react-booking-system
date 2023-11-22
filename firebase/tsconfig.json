@@ -30,6 +30,7 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src"],
-    "references": [{ "path": "./tsconfig.node.json" }]
+    "include": ["src/", "functions/src/environment.d.ts", "functions/declarations/index.d.ts"],
+    "exclude": ["src/utilities/trpc"],
+    "references": [{ "path": "./tsconfig.node.json" }, { "path": "./functions" }]
 }

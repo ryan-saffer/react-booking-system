@@ -3,10 +3,9 @@ import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
 import React, { useState } from 'react'
 
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { styled } from '@mui/material/styles'
-import { callAcuityClient } from '@utils/firebase/functions'
 import { formatMobileNumber } from '@utils/stringUtilities'
+import { trpc } from '@utils/trpc'
 
 const { Panel } = Collapse
 
@@ -29,10 +28,10 @@ type Props = {
 }
 
 const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment, ...props }) => {
-    const firebase = useFirebase()
-
     const [appointment, setAppointment] = useState(originalAppointment)
     const [loading, setLoading] = useState(false)
+
+    const updateLabelMutation = trpc.acuity.updateLabel.useMutation()
 
     const notSignedIn = appointment.labels === null
     const isSignedIn = appointment.labels !== null && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
@@ -62,15 +61,12 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
 
     const updateLabel = async (value: AcuityTypes.Client.Label) => {
         try {
-            const result = await callAcuityClient(
-                'updateLabel',
-                firebase
-            )({
+            const result = await updateLabelMutation.mutateAsync({
                 appointmentId: appointment.id,
                 label: value,
             })
 
-            setAppointment(result.data)
+            setAppointment(result)
             setLoading(false)
         } catch (err) {
             console.error(err)

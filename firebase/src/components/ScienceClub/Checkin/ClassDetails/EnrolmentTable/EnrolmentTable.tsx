@@ -5,13 +5,13 @@ import React, { useMemo, useState } from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { callAcuityClient } from '@utils/firebase/functions'
 
 import { getEnrolment } from '../ClassDetails.utils'
 import ActionButton from './ActionButton'
 import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
 import { EnrolmentsMap } from '..'
+import { trpc } from '@utils/trpc'
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540
@@ -39,6 +39,8 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
 
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
+    const updateAppointmentMutation = trpc.acuity.updateAppointment.useMutation()
+
     const handleExpandRow = (expanded: boolean, record: TableData) => {
         if (expanded) {
             setExpandedRows([record.key])
@@ -48,10 +50,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
     }
 
     const setAppointmentLabel: SetAppointmentLabel = async (id, label) => {
-        const result = await callAcuityClient(
-            'updateAppointment',
-            firebase
-        )({
+        const result = await updateAppointmentMutation.mutateAsync({
             id,
             labels:
                 label === 'signed-in'
@@ -63,7 +62,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
                     : [],
         })
 
-        updateAppointment(result.data)
+        updateAppointment(result)
     }
 
     const updateEnrolment: UpdateEnrolment = async (enrolment: ScienceEnrolment) => {

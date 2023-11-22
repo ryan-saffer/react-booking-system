@@ -8,11 +8,12 @@ import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import Root from '@components/Shared/Root'
 import { Grow } from '@mui/material'
-import { callAcuityClient, callFirebaseFunction } from '@utils/firebase/functions'
+import { callFirebaseFunction } from '@utils/firebase/functions'
 
 import Loader from '../shared/Loader'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
+import { trpc } from '@utils/trpc'
 
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 
@@ -27,17 +28,21 @@ export const BookingForm = () => {
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.AppointmentType>()
     const [logoMap, setLogoMap] = useState<{ [key: string]: string }>()
 
+    const { refetch: getAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery(
+        {
+            category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
+            availableToBook: true,
+        },
+        {
+            enabled: false,
+        }
+    )
+
     useEffect(() => {
         async function fetchAppointmentTypes() {
             try {
                 const [appointmentTypes, calendars] = await Promise.all([
-                    callAcuityClient(
-                        'getAppointmentTypes',
-                        firebase
-                    )({
-                        category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
-                        availableToBook: true,
-                    }),
+                    getAppointmentTypes(),
                     firebase.db.collection('acuityCalendars').get(),
                 ])
                 setAppointmentTypes(appointmentTypes.data)

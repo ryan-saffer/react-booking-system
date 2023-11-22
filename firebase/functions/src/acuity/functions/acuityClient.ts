@@ -2,7 +2,7 @@ import { CallableRequest, onCall } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
 import { logError, throwError } from '../../utilities'
 import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityClient } from '../core/AcuityClient'
+import { AcuityClient } from '../core/acuity-client'
 
 type AcuityClientParams = {
     method: keyof AcuityTypes.Client.AcuityFunctions
@@ -14,27 +14,12 @@ export const acuityClient = onCall(async ({ data }: CallableRequest<AcuityClient
     try {
         const acuity = await AcuityClient.getInstance()
         switch (data.method) {
-            case 'updateLabel':
-                input = data.input as AcuityTypes.Client.UpdateLabelParams
-                return await acuity.updateLabel(input)
-            case 'updateAppointment':
-                input = data.input as AcuityTypes.Client.UpdateAppointmentParams
-                return await acuity.updateAppointment(input)
             case 'classAvailability':
                 input = data.input as AcuityTypes.Client.ClassAvailabilityParams
                 return await acuity.getClasses(input.appointmentTypeId, input.includeUnavailable, input.minDate)
             case 'checkCertificate':
                 input = data.input as AcuityTypes.Client.CheckCertificateParams
                 return await acuity.checkCertificate(input.certificate, input.appointmentTypeId, input.email)
-            case 'getAppointmentTypes':
-                input = data.input as AcuityTypes.Client.GetAppointmentTypesParams
-                return await acuity.getAppointmentTypes(input)
-            case 'getAppointments':
-                input = data.input as AcuityTypes.Client.GetAppointmentsParams
-                return await acuity.getAppointments(input.ids)
-            case 'searchForAppointments':
-                input = data.input as AcuityTypes.Client.FetchAppointmentsParams
-                return await acuity.searchForAppointments(input)
         }
     } catch (err: any) {
         if (err.error === 'invalid_certificate' || err.error === 'certificate_uses') {
