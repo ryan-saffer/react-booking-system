@@ -2,6 +2,7 @@
 */dist/*
 
 */.firebase/*
+.firebase/
 
 */.env
 *credentials.*
