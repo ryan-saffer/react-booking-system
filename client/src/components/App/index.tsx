@@ -183,7 +183,7 @@ const _App = () => {
                         }
                     },
                     fetch(url, options) {
-                        const normalisedUrl = url.toString().replace(/\./g, '/') // replace '.' with '/'
+                        const normalisedUrl = url.toString().replace('.', '/') // replace first '.' with '/'
                         const splitUrl = normalisedUrl.split('/')
                         const [router, procedure] = [splitUrl[1], splitUrl[2]]
                         const domain = useEmulators

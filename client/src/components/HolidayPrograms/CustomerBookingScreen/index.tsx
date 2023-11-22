@@ -1,13 +1,12 @@
 import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { LeftOutlined } from '@ant-design/icons'
-import Firebase, { FirebaseContext } from '@components/Firebase'
 import Loader from '@components/ScienceClub/shared/Loader'
 import Root from '@components/Shared/Root'
-import { callAcuityClient } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 import Step1 from './step1/Step1'
 import { Step2 } from './step2/Step2'
@@ -32,112 +31,90 @@ export type Form = {
 }
 
 export const CustomerBookingScreen = () => {
-    const firebase = useContext(FirebaseContext) as Firebase
+    const nowRef = useRef(Date.now())
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
     const [form] = AntdForm.useForm()
 
     const continueButtonRef = useRef<HTMLButtonElement>(null)
 
-    const [loading, setLoading] = useState(true)
-    const [noUpcomingPrograms, setNoUpcomingPrograms] = useState(false)
     const [selectedStore, setSelectedStore] = useState('')
-    const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
-    useEffect(() => {
-        const fetchAvailableSlots = async () => {
-            callAcuityClient(
-                'classAvailability',
-                firebase
-            )({
-                appointmentTypeId:
-                    import.meta.env.VITE_ENV === 'prod'
-                        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
-                includeUnavailable: true,
-                minDate: Date.now(),
-            })
-                .then((result) => {
-                    setClasses(result.data)
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
-        }
-
-        fetchAvailableSlots()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery({
+        appointmentTypeId:
+            import.meta.env.VITE_ENV === 'prod'
+                ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+        includeUnavailable: true,
+        minDate: nowRef.current,
+    })
 
     useEffect(() => {
         // whenever store selection changes, clear all selected classes
-        classes.forEach((klass) => {
+        data?.forEach((klass) => {
             form.resetFields([`${klass.id}-checkbox`])
         })
         setSelectedClasses([])
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedStore])
 
-    useEffect(() => {
-        if (classes.length === 0) {
-            setNoUpcomingPrograms(true)
-        } else {
-            setNoUpcomingPrograms(false)
-        }
-    }, [classes])
-
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
-        const selectedClass = classes.filter((it) => it.id === e.target.value)[0]
-        const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
-        if (e.target.checked) {
-            if (!classAlreadySelected) {
-                setSelectedClasses([...selectedClasses, selectedClass])
+        if (isSuccess) {
+            const selectedClass = data?.filter((it) => it.id === e.target.value)[0]
+            const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
+            if (e.target.checked) {
+                if (!classAlreadySelected) {
+                    setSelectedClasses([...selectedClasses, selectedClass])
+                }
+            } else {
+                setSelectedClasses(selectedClasses.filter((it) => it.id !== e.target.value))
             }
-        } else {
-            setSelectedClasses(selectedClasses.filter((it) => it.id !== e.target.value))
-        }
 
-        // Clear the list of children, to fix bug where you can add many children,
-        // 'go back' and then select a class without enough spots, and continue.
-        // Do it here (instead of when the hit the 'go back' button), because if they go back and
-        // don't change their selection, no need to clear the children.
-        setFormValues({ ...formValues, children: [] })
-        form.resetFields(['children'])
+            // Clear the list of children, to fix bug where you can add many children,
+            // 'go back' and then select a class without enough spots, and continue.
+            // Do it here (instead of when the hit the 'go back' button), because if they go back and
+            // don't change their selection, no need to clear the children.
+            setFormValues({ ...formValues, children: [] })
+            form.resetFields(['children'])
+        }
     }
 
     const renderStep = () => {
-        switch (step) {
-            case 1:
-                return (
-                    <Step1
-                        classes={classes}
-                        selectedClasses={selectedClasses}
-                        selectedStore={selectedStore}
-                        setSelectedStore={setSelectedStore}
-                        onClassSelectionChange={handleClassSelectionChange}
-                    />
-                )
-            case 2:
-                return <Step2 selectedClasses={selectedClasses} />
-            case 3:
-                return (
-                    <Step3 form={formValues as Form} selectedClasses={selectedClasses} selectedStore={selectedStore} />
-                )
+        if (isSuccess) {
+            switch (step) {
+                case 1:
+                    return (
+                        <Step1
+                            classes={data}
+                            selectedClasses={selectedClasses}
+                            selectedStore={selectedStore}
+                            setSelectedStore={setSelectedStore}
+                            onClassSelectionChange={handleClassSelectionChange}
+                        />
+                    )
+                case 2:
+                    return <Step2 selectedClasses={selectedClasses} />
+                case 3:
+                    return (
+                        <Step3
+                            form={formValues as Form}
+                            selectedClasses={selectedClasses}
+                            selectedStore={selectedStore}
+                        />
+                    )
+            }
         }
     }
 
     const renderForm = () => {
-        if (loading) {
+        if (isLoading) {
             return <Loader style={{ marginTop: 24, marginBottom: 24 }} />
         }
 
-        if (noUpcomingPrograms) {
+        if (data?.length === 0 || isError) {
             return (
                 <Card title="No programs available" style={{ marginBottom: 24 }}>
                     <p>There are no programs available at the moment.</p>

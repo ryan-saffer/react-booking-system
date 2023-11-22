@@ -2,13 +2,13 @@ import { Alert, Typography } from 'antd'
 import { AcuityTypes } from 'fizz-kidz'
 import React, { useEffect } from 'react'
 
-import useAcuityClient from '@components/Hooks/api/UseAcuityClient'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 
 import Loader from '../shared/Loader'
 import Form from './Form'
 import { FormSubmission } from '.'
+import { trpc } from '@utils/trpc'
 
 type Props = {
     appointmentType: AcuityTypes.Api.AppointmentType
@@ -22,16 +22,16 @@ type Props = {
 const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
     const mixpanel = useMixpanel()
 
-    const classesService = useAcuityClient('classAvailability', {
+    const { status, data: classes } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId: appointmentType.id,
         includeUnavailable: false,
     })
 
     // Mixpanel Tracking
     useEffect(() => {
-        if (classesService.status === 'loaded') {
-            if (classesService.result.length > 0) {
-                const spotsLeft = classesService.result[0].slotsAvailable
+        if (status === 'success') {
+            if (classes.length > 0) {
+                const spotsLeft = classes[0].slotsAvailable
                 if (spotsLeft < 0) {
                     mixpanel.track(MixpanelEvents.SCIENCE_FORM_CLASS_FULL, {
                         appointment_type: appointmentType.name,
@@ -43,21 +43,21 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                 })
             }
         }
-        if (classesService.status === 'error') {
+        if (status === 'error') {
             mixpanel.track(MixpanelEvents.SCIENCE_FORM_ERROR_LOADING_CLASSES, {
                 appointment_type: appointmentType.name,
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [classesService.status])
+    }, [status])
 
-    switch (classesService.status) {
+    switch (status) {
         case 'loading':
             return <Loader style={{ marginTop: 24 }} />
-        case 'loaded':
-            if (classesService.result.length > 0) {
-                const spotsLeft = classesService.result[0].slotsAvailable
-                const numClasses = classesService.result.length
+        case 'success':
+            if (classes.length > 0) {
+                const spotsLeft = classes[0].slotsAvailable
+                const numClasses = classes.length
 
                 if (spotsLeft > 0) {
                     return (

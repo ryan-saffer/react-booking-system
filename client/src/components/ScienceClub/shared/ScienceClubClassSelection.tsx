@@ -1,11 +1,9 @@
 import { AcuityTypes } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
-import { callAcuityClient } from '@utils/firebase/functions'
 
 import styles from './ScienceClubClassSelection.module.css'
 import { trpc } from '@utils/trpc'
@@ -16,60 +14,33 @@ type Props = {
 }
 
 const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
-    const firebase = useFirebase()
     const navigate = useNavigate()
 
-    const mounted = useRef(false)
+    const nowRef = useRef(Date.now())
 
-    const [loading, setLoading] = useState({ appointmentTypes: true, classes: false })
-    const [appointmentTypes, setAppointmentTypes] = useState<AcuityTypes.Api.AppointmentType[]>([])
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<
         AcuityTypes.Api.AppointmentType | undefined
     >()
-    const [classes, setClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
-    const { refetch: getAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery(
-        {
-            category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
-        },
-        { enabled: false }
-    )
-
-    useEffect(() => {
-        mounted.current = true
-        const fetchAppointmentTypes = async () => {
-            try {
-                const { data } = await getAppointmentTypes()
-                setAppointmentTypes(data || [])
-            } catch (err) {
-                console.error(err)
-            }
-            if (mounted.current) {
-                setLoading({ appointmentTypes: false, classes: false })
-            }
-        }
-
-        fetchAppointmentTypes()
-
-        return () => {
-            mounted.current = false
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
+        category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
+    })
+    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
+        appointmentTypeId: selectedAppointmentType?.id || 0,
+        includeUnavailable: true,
+        minDate: nowRef.current,
+    })
 
     const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
         const id = e.target.value as number
-        setSelectedAppointmentType(appointmentTypes.find((it) => it.id === id))
+        setSelectedAppointmentType(appointmentTypes?.find((it) => it.id === id))
         setSelectedClass(undefined)
-        // clear menu items
-        setClasses([])
-        fetchClasses(id)
     }
 
     const handleClassChange = (e: SelectChangeEvent<number>) => {
         const id = e.target.value
-        setSelectedClass(classes.find((it) => it.id === id))
+        setSelectedClass(classes?.find((it) => it.id === id))
     }
 
     const handleClassSelection = () => {
@@ -91,35 +62,10 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
         }
     }
 
-    const fetchClasses = (id: number) => {
-        setLoading({
-            ...loading,
-            classes: true,
-        })
-        callAcuityClient(
-            'classAvailability',
-            firebase
-        )({ appointmentTypeId: id, minDate: Date.now(), includeUnavailable: true })
-            .then((result) => {
-                if (mounted.current) {
-                    setClasses(result.data)
-                }
-            })
-            .catch(console.error)
-            .finally(() => {
-                if (mounted.current) {
-                    setLoading({
-                        ...loading,
-                        classes: false,
-                    })
-                }
-            })
-    }
-
     return (
         <Paper className={styles.paper}>
             <div className={styles.main}>
-                {appointmentTypes.length !== 0 && (
+                {appointmentTypes && appointmentTypes.length !== 0 && (
                     <>
                         <Typography className={styles.heading} variant="body1">
                             Select program:
@@ -129,9 +75,9 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                                 id="programs-select"
                                 value={selectedAppointmentType?.id || ''}
                                 onChange={handleAppointmentTypeChange}
-                                disabled={appointmentTypes.length === 0}
+                                disabled={appointmentTypes?.length === 0}
                             >
-                                {appointmentTypes.map((appointmentType) => (
+                                {appointmentTypes?.map((appointmentType) => (
                                     <MenuItem key={appointmentType.id} value={appointmentType.id}>
                                         {appointmentType.name}
                                     </MenuItem>
@@ -140,9 +86,9 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                         </FormControl>
                     </>
                 )}
-                {loading.appointmentTypes && <Skeleton height={80} />}
+                {loadingAppointmentTypes && <Skeleton height={80} />}
 
-                {classRequired && classes.length !== 0 && (
+                {classRequired && classes && classes.length !== 0 && (
                     <>
                         <Typography className={styles.heading} variant="body1">
                             Select class:
@@ -152,9 +98,9 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                                 id="classes-select"
                                 value={selectedClass?.id || ''}
                                 onChange={handleClassChange}
-                                disabled={classes.length === 0}
+                                disabled={classes?.length === 0}
                             >
-                                {classes.map((mClass) => (
+                                {classes?.map((mClass) => (
                                     <MenuItem key={mClass.id} value={mClass.id}>
                                         {DateTime.fromISO(mClass.time).toFormat('EEEE MMMM d, h:mm a, yyyy')}
                                     </MenuItem>
@@ -163,8 +109,8 @@ const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired 
                         </FormControl>
                     </>
                 )}
-                {classRequired && loading.classes && <Skeleton height={80} />}
-                {(!classRequired || appointmentTypes.length !== 0) && (
+                {classRequired && selectedAppointmentType && loadingClasses && <Skeleton height={80} />}
+                {(!classRequired || appointmentTypes?.length !== 0) && (
                     <Button
                         className={styles.submitButton}
                         variant="contained"

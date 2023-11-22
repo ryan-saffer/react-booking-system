@@ -1,12 +1,11 @@
 import { Button, Input, Popover, Typography } from 'antd'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
-import Firebase, { FirebaseContext } from '@components/Firebase'
-import { callAcuityClient } from '@utils/firebase/functions'
 
 import { calculateDiscountedAmount } from '../utilities'
+import { trpc } from '@utils/trpc'
 
 const AppointmentTypeId =
     import.meta.env.VITE_ENV === 'prod'
@@ -20,13 +19,16 @@ type Props = {
 }
 
 const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
-    const firebase = useContext(FirebaseContext) as Firebase
-
     const [value, setValue] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const validateDiscount = async (value: string) => {
+    const { refetch: checkCertificate } = trpc.acuity.checkCertificate.useQuery(
+        { appointmentTypeId: AppointmentTypeId, certificate: value, email },
+        { enabled: false }
+    )
+
+    const validateDiscount = async () => {
         // do not allow the 'allday' discount code
         if (value === 'allday') {
             setLoading(false)
@@ -37,31 +39,24 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
         setLoading(true)
         setError('')
 
-        try {
-            const result = await callAcuityClient(
-                'checkCertificate',
-                firebase
-            )({
-                appointmentTypeId: AppointmentTypeId,
-                certificate: value,
-                email: email,
-            })
-
-            if (total - calculateDiscountedAmount(total, result.data) < 0) {
-                setError(
-                    `Discount code amount of $${result.data.discountAmount} is greater than the total of $${total}.`
-                )
+        const { data, isError, isSuccess, error } = await checkCertificate()
+        if (isSuccess) {
+            if (total - calculateDiscountedAmount(total, data) < 0) {
+                setError(`Discount code amount of $${data.discountAmount} is greater than the total of $${total}.`)
             } else {
                 setValue('')
-                setDiscount(result.data)
+                setDiscount(data)
             }
-        } catch (error: any) {
+        }
+
+        if (isError) {
             if (error.message) {
                 setError(error.message)
             } else {
                 setError('Invalid discount code')
             }
         }
+
         setLoading(false)
     }
 

@@ -1,9 +1,8 @@
-import { AcuityConstants, AcuityTypes, Service } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { useContext, useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import Firebase, { FirebaseContext } from '@components/Firebase'
 import * as ROUTES from '@constants/routes'
 import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import { Button, Paper } from '@mui/material'
@@ -12,12 +11,12 @@ import AppBar from '@mui/material/AppBar'
 import CssBaseline from '@mui/material/CssBaseline'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
-import { callAcuityClient } from '@utils/firebase/functions'
 import { capitalise } from '@utils/stringUtilities'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'HolidayProgramSelection'
 
@@ -83,44 +82,39 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 export const HolidayProgramSelection = () => {
-    const firebase = useContext(FirebaseContext) as Firebase
+    const nowRef = useRef(Date.now())
 
     const navigate = useNavigate()
 
-    const [classes, setClasses] = useState<Service<AcuityTypes.Api.Class[]>>({ status: 'loading' })
     const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>([])
     const [selectedCalendar, setSelectedCalendar] = useState<string>('')
     const [selectedClass, setSelectedClass] = useState<string>('')
 
-    useEffect(() => {
-        callAcuityClient(
-            'classAvailability',
-            firebase
-        )({
-            appointmentTypeId:
-                import.meta.env.VITE_ENV === 'prod'
-                    ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
-                    : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
-            includeUnavailable: true,
-            minDate: Date.now(),
-        })
-            .then((result) => {
-                setClasses({ status: 'loaded', result: result.data })
-            })
-            .catch((error) => setClasses({ status: 'error', error }))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    const {
+        data: classes,
+        isLoading,
+        isSuccess,
+    } = trpc.acuity.classAvailability.useQuery({
+        appointmentTypeId:
+            import.meta.env.VITE_ENV === 'prod'
+                ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+        includeUnavailable: true,
+        minDate: nowRef.current,
+    })
 
-    useEffect(() => {
+    const handleCalendarChange = (event: SelectChangeEvent<string>) => {
+        const calendar = event.target.value
+        setSelectedCalendar(calendar)
         setSelectedClass('')
-        if (classes.status === 'loaded') {
-            setFilteredClasses(classes.result.filter((it) => it.calendarID === parseInt(selectedCalendar)))
+        if (isSuccess) {
+            setFilteredClasses(classes.filter((it) => it.calendarID === parseInt(calendar)))
         }
-    }, [selectedCalendar, classes])
+    }
 
     const handleClassSelection = () => {
-        if (classes.status === 'loaded') {
-            const klass = classes.result.find((it) => it.id === parseInt(selectedClass))
+        if (isSuccess) {
+            const klass = classes.find((it) => it.id === parseInt(selectedClass))
             if (!klass) return
             navigate(
                 `/holiday-program/class?appointmentTypeId=${klass.appointmentTypeID}&calendarId=${
@@ -154,11 +148,7 @@ export const HolidayProgramSelection = () => {
                                 Select location:
                             </Typography>
                             <FormControl className={cssClasses.formControl} variant="outlined">
-                                <Select
-                                    id="calendars-select"
-                                    value={selectedCalendar}
-                                    onChange={(e) => setSelectedCalendar(e.target.value as string)}
-                                >
+                                <Select id="calendars-select" value={selectedCalendar} onChange={handleCalendarChange}>
                                     {import.meta.env.VITE_ENV === 'prod' &&
                                         Object.entries(AcuityConstants.StoreCalendars).map(([store, calendarId]) => {
                                             return (
@@ -214,7 +204,7 @@ export const HolidayProgramSelection = () => {
                             </Button>
                         </>
                     )}
-                    {selectedCalendar && classes.status === 'loading' && <Skeleton height={80} />}
+                    {selectedCalendar && isLoading && <Skeleton height={80} />}
                 </div>
             </Paper>
         </Root>
