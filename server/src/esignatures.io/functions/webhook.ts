@@ -1,4 +1,5 @@
 import { onRequest } from 'firebase-functions/v2/https'
+
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export const esignaturesWebhook = onRequest(async (req, res) => {

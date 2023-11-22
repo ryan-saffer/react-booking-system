@@ -31,5 +31,5 @@
         "noFallthroughCasesInSwitch": true
     },
     "include": ["src/"],
-    "references": [{ "path": "./tsconfig.node.json" }, { "path": "../server" }]
+    "references": [{ "path": "./tsconfig.node.json" }, { "path": "../server" }, { "path": "../server/fizz-kidz" }]
 }

@@ -1,19 +1,18 @@
-import * as ROUTES from '@constants/routes'
-
 import { ConfigProvider, ThemeConfig } from 'antd'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
+import { useState } from 'react'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
-import { getApplicationDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
-import { withAuthentication, withAuthorization } from '@components/Session'
 
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { httpLink } from '@trpc/client'
-import { trpc } from '@utils/trpc.js'
 import { useEmulators } from '@components/Firebase/firebase.js'
 import useFirebase from '@components/Hooks/context/UseFirebase.js'
-import { useState } from 'react'
+import { withAuthentication, withAuthorization } from '@components/Session'
+import * as ROUTES from '@constants/routes'
+import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { httpLink } from '@trpc/client'
+import { trpc } from '@utils/trpc.js'
 
 const theme = createTheme({
     palette: {
@@ -178,9 +177,9 @@ const _App = () => {
                 httpLink({
                     url: '',
                     async headers() {
-                        const token = (await firebase.auth.currentUser?.getIdToken()) || ''
+                        const authToken = (await firebase.auth.currentUser?.getIdToken()) || ''
                         return {
-                            authorization: token,
+                            authorization: authToken,
                         }
                     },
                     fetch(url, options) {
@@ -189,7 +188,7 @@ const _App = () => {
                         const [router, procedure] = [splitUrl[1], splitUrl[2]]
                         const domain = useEmulators
                             ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-                            : getApplicationDomain(import.meta.env.VITE_ENV)
+                            : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
                         return fetch(`${domain}/${router}/${procedure}`, options)
                     },
                 }),

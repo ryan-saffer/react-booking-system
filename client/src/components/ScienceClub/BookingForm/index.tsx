@@ -1,19 +1,18 @@
-import { Alert, Button, Result, Typography } from 'antd'
 import { AcuityTypes, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
+import { Alert, Button, Result, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { LeftOutlined } from '@ant-design/icons'
-import useFirebase from '@components/Hooks/context/UseFirebase'
-import useMixpanel from '@components/Hooks/context/UseMixpanel'
-import { MixpanelEvents } from '@components/Mixpanel/Events'
-import Root from '@components/Shared/Root'
-import { Grow } from '@mui/material'
-import { callFirebaseFunction } from '@utils/firebase/functions'
-
-import Loader from '../shared/Loader'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
+import { Grow } from '@mui/material'
+import { LeftOutlined } from '@ant-design/icons'
+import Loader from '../shared/Loader'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import Root from '@components/Shared/Root'
+import { callFirebaseFunction } from '@utils/firebase/functions'
 import { trpc } from '@utils/trpc'
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import useMixpanel from '@components/Hooks/context/UseMixpanel'
 
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 
@@ -95,7 +94,10 @@ export const BookingForm = () => {
                     <Button
                         style={{ width: 'fit-content', marginBottom: 8 }}
                         icon={<LeftOutlined />}
-                        onClick={() => setSelectedClass(undefined)}
+                        onClick={() => {
+                            getAppointmentTypes()
+                            setSelectedClass(undefined)
+                        }}
                     >
                         Go back
                     </Button>

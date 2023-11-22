@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $GCLOUD_PROJECT == 'booking-system-6435d' ]]; then
-    cd client && npm run build:dev
+    cd client && rm -rf dist && npm run build:dev
     exit 0
 elif [[ $GCLOUD_PROJECT == 'bookings-prod' ]]; then
     cd client && npm run build:prod

@@ -1,5 +1,5 @@
-import { Location } from '../partyBookings/Locations'
 import { Booking } from '../partyBookings/booking'
+import { Location } from '../partyBookings/Locations'
 
 export function getLocationAddress(location: Location) {
     switch (location) {
@@ -52,6 +52,12 @@ export function getPartyEndDate(start: Date, partyLength: Booking['partyLength']
 
 export function getApplicationDomain(environment: 'prod' | 'dev') {
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
+}
+
+export function getCloudFunctionsDomain(env: 'prod' | 'dev') {
+    return env === 'prod'
+        ? 'https://australia-southeast1-bookings-prod.cloudfunctions.net'
+        : 'https://australia-southeast1-booking-system-6435d.cloudfunctions.net'
 }
 
 export function getFunctionEmulatorDomain(env: 'prod' | 'dev') {

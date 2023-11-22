@@ -6,8 +6,9 @@
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "esbuild src/index.ts --sourcemap --bundle --format=esm --outdir=lib",
-        "build:watch": "npm run build -- --sourcemap --watch"
+        "build": "npm run ts:check && esbuild src/index.ts --sourcemap --bundle --format=esm --outdir=lib",
+        "build:watch": "npm run build -- --sourcemap --watch",
+        "ts:check": "tsc"
     },
     "author": "Ryan Saffer",
     "license": "ISC",
