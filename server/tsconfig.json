@@ -4,7 +4,7 @@
     "module": "commonjs",
     "noImplicitReturns": false,
     "noUnusedLocals": true,
-    "outDir": "lib-tsc",
+    "outDir": "lib-tsc", // needed for 'composite', and esbuild will use 'lib', so this is only for type checking
     "sourceMap": true,
     "strict": true,
     "target": "es2020",
