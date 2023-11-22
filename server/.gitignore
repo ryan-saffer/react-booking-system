@@ -4,4 +4,7 @@ lib-tsc/
 coverage
 .nyc_output/
 src/scienceProgram/data/
-/tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
+firebase-debug.log
+pubsub-debug.log
+ui-debug.log

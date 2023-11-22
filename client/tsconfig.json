@@ -12,7 +12,7 @@
             "@constants/*": ["src/constants/*"],
             "@drawables/*": ["src/drawables/*"],
             "@utils/*": ["src/utilities/*"],
-            "fizz-kidz": ["../functions/fizz-kidz/src"]
+            "fizz-kidz": ["../server/fizz-kidz/src"]
         },
 
         /* Bundler mode */
@@ -30,7 +30,6 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/", "functions/src/environment.d.ts", "functions/declarations/index.d.ts"],
-    "exclude": ["src/utilities/trpc"],
-    "references": [{ "path": "./tsconfig.node.json" }, { "path": "../functions" }]
+    "include": ["src/"],
+    "references": [{ "path": "./tsconfig.node.json" }, { "path": "../server" }]
 }
