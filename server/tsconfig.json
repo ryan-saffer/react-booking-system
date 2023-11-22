@@ -1,31 +1,31 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "module": "commonjs",
-    "noImplicitReturns": false,
-    "noUnusedLocals": true,
-    "outDir": "lib-tsc", // needed for 'composite', and esbuild will use 'lib', so this is only for type checking
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2020",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "paths": {
-      "fizz-kidz": ["./fizz-kidz/src"]
+    "compilerOptions": {
+        "baseUrl": "./",
+        "module": "commonjs",
+        "noImplicitReturns": false,
+        "noUnusedLocals": true,
+        "outDir": "lib-tsc", // needed for 'composite', and esbuild will use 'lib', so this is only for type checking
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2020",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "paths": {
+            "fizz-kidz": ["./fizz-kidz/src"]
+        },
+        "composite": true
     },
-    "composite": true
-  },
-  "compileOnSave": true,
-  "include": [
-    "src",
-    "src/environment.d.ts",
-    "declarations/index.d.ts",
-    "credentials/acuity_credentials.json",
-    "credentials/google-credentials.json",
-    "credentials/dev_service_account_credentials.json",
-    "credentials/prod_service_account_credentials.json",
-    "credentials/stripe_credentials.ts"
-  ],
-  "references": [{ "path": "fizz-kidz" }]
+    "compileOnSave": true,
+    "include": [
+        "src",
+        "src/environment.d.ts",
+        "declarations/index.d.ts",
+        "credentials/acuity_credentials.json",
+        "credentials/google-credentials.json",
+        "credentials/dev_service_account_credentials.json",
+        "credentials/prod_service_account_credentials.json",
+        "credentials/stripe_credentials.ts"
+    ],
+    "references": [{ "path": "fizz-kidz" }]
 }
