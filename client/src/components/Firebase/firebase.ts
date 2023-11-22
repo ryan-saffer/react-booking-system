@@ -7,7 +7,7 @@ import firebase from 'firebase/compat/app'
 
 import * as config from '../../config'
 
-export const useEmulators = true
+export const useEmulators = false
 
 class Firebase {
     auth: firebase.auth.Auth
