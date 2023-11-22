@@ -1,0 +1,247 @@
+[debug] [2023-11-22T03:32:11.379Z] ----------------------------------------------------------------------
+[debug] [2023-11-22T03:32:11.380Z] Command:       /Users/rsaffer/.nvm/versions/node/v18.16.0/bin/node /Users/rsaffer/.nvm/versions/node/v18.16.0/bin/firebase emulators:start --only functions,pubsub --inspect-functions
+[debug] [2023-11-22T03:32:11.380Z] CLI Version:   12.4.7
+[debug] [2023-11-22T03:32:11.380Z] Platform:      darwin
+[debug] [2023-11-22T03:32:11.380Z] Node Version:  v18.16.0
+[debug] [2023-11-22T03:32:11.381Z] Time:          Wed Nov 22 2023 14:32:11 GMT+1100 (Australian Eastern Daylight Time)
+[debug] [2023-11-22T03:32:11.381Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-11-22T03:32:11.382Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2023-11-22T03:32:11.437Z] Field ".emulators.firestore.port" in "firebase.json" is possibly invalid: should be number
+[debug] [2023-11-22T03:32:11.443Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-22T03:32:11.444Z] > authorizing via signed-in user (info@fizzkidz.com.au)
+[info] i  emulators: Starting emulators: functions, pubsub {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, pubsub"}}
+[debug] [2023-11-22T03:32:11.761Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-11-22T03:32:11.761Z] [pubsub] Pub/Sub Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-11-22T03:32:11.761Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"pubsub":[{"address":"127.0.0.1","family":"IPv4","port":8085}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-11-22T03:32:11.766Z] [hub] writing locator at /var/folders/hd/40b2m77s6nb_sqd2qg2_yv8r0000gn/T/hub-booking-system-6435d.json
+[debug] [2023-11-22T03:32:11.913Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-11-22T03:32:11.913Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-11-22T03:32:11.913Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"pubsub":[{"address":"127.0.0.1","family":"IPv4","port":8085}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: You are running the Functions emulator in debug mode (port=9229). This means that functions will execute in sequence rather than in parallel. {"metadata":{"emulator":{"name":"functions"},"message":"You are running the Functions emulator in debug mode (port=9229). This means that functions will execute in sequence rather than in parallel."}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, firestore, database, hosting, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, firestore, database, hosting, storage\u001b[22m"}}
+[debug] [2023-11-22T03:32:11.915Z] defaultcredentials: writing to file /Users/rsaffer/.config/firebase/info_fizzkidz_com.au_application_default_credentials.json
+[debug] [2023-11-22T03:32:11.919Z] Setting GAC to /Users/rsaffer/.config/firebase/info_fizzkidz_com.au_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/rsaffer/.config/firebase/info_fizzkidz_com.au_application_default_credentials.json"}}
+[debug] [2023-11-22T03:32:11.920Z] > refreshing access token with scopes: []
+[debug] [2023-11-22T03:32:11.920Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-11-22T03:32:11.920Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-11-22T03:32:12.207Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-11-22T03:32:12.207Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-11-22T03:32:12.225Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/booking-system-6435d/adminSdkConfig [none]
+[debug] [2023-11-22T03:32:12.325Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2023-11-22T03:32:12.325Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2023-11-22T03:32:12.771Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/booking-system-6435d/adminSdkConfig 200
+[debug] [2023-11-22T03:32:12.772Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/booking-system-6435d/adminSdkConfig {"projectId":"booking-system-6435d","databaseURL":"https://booking-system-6435d.firebaseio.com","storageBucket":"booking-system-6435d.appspot.com","locationId":"australia-southeast1"}
+[debug] [2023-11-22T03:32:12.791Z] Ignoring unsupported arg: projectId {"metadata":{"emulator":{"name":"pubsub"},"message":"Ignoring unsupported arg: projectId"}}
+[debug] [2023-11-22T03:32:12.791Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"pubsub"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-11-22T03:32:12.791Z] Starting Pub/Sub Emulator with command {"binary":"/Users/rsaffer/.cache/firebase/emulators/pubsub-emulator-0.7.1/pubsub-emulator/bin/cloud-pubsub-emulator","args":["--host=127.0.0.1","--port=8085"],"optionalArgs":["port","host"],"joinArgs":true} {"metadata":{"emulator":{"name":"pubsub"},"message":"Starting Pub/Sub Emulator with command {\"binary\":\"/Users/rsaffer/.cache/firebase/emulators/pubsub-emulator-0.7.1/pubsub-emulator/bin/cloud-pubsub-emulator\",\"args\":[\"--host=127.0.0.1\",\"--port=8085\"],\"optionalArgs\":[\"port\",\"host\"],\"joinArgs\":true}"}}
+[info] i  pubsub: Pub/Sub Emulator logging to pubsub-debug.log {"metadata":{"emulator":{"name":"pubsub"},"message":"Pub/Sub Emulator logging to \u001b[1mpubsub-debug.log\u001b[22m"}}
+[debug] [2023-11-22T03:32:13.184Z] This is the Google Pub/Sub fake.
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"This is the Google Pub/Sub fake.\n"}}
+[debug] [2023-11-22T03:32:13.185Z] Implementation may be incomplete or differ from the real system.
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"Implementation may be incomplete or differ from the real system.\n"}}
+[debug] [2023-11-22T03:32:13.223Z] Nov 22, 2023 2:32:13 PM com.google.cloud.pubsub.testing.v1.Main main
+INFO: IAM integration is disabled. IAM policy methods and ACL checks are not supported
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"Nov 22, 2023 2:32:13 PM com.google.cloud.pubsub.testing.v1.Main main\nINFO: IAM integration is disabled. IAM policy methods and ACL checks are not supported\n"}}
+[debug] [2023-11-22T03:32:13.328Z] SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"SLF4J: Failed to load class \"org.slf4j.impl.StaticLoggerBinder\".\nSLF4J: Defaulting to no-operation (NOP) logger implementation\n"}}
+[debug] [2023-11-22T03:32:13.328Z] SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.\n"}}
+[debug] [2023-11-22T03:32:13.809Z] Nov 22, 2023 2:32:13 PM com.google.cloud.pubsub.testing.v1.Main main
+INFO: Server started, listening on 8085
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"Nov 22, 2023 2:32:13 PM com.google.cloud.pubsub.testing.v1.Main main\nINFO: Server started, listening on 8085\n"}}
+[debug] [2023-11-22T03:32:14.058Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-11-22T03:32:14.059Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-11-22T03:32:14.059Z] Starting Emulator UI with command {"binary":"node","args":["/Users/rsaffer/.cache/firebase/emulators/ui-v1.11.7/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/Users/rsaffer/.cache/firebase/emulators/ui-v1.11.7/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-11-22T03:32:14.148Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-11-22T03:32:14.148Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/Users/rsaffer/workspace/react-booking-system/firebase/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/rsaffer/workspace/react-booking-system/firebase/functions\" for Cloud Functions..."}}
+[debug] [2023-11-22T03:32:14.339Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-11-22T03:32:14.695Z] > [functions] package.json contents: {
+  "name": "functions",
+  "private": true,
+  "description": "Cloud Functions for Firebase",
+  "main": "lib/index.js",
+  "scripts": {
+    "bundle": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
+    "build": "npm run lint && npm --prefix fizz-kidz run build && npm run ts:check && npm run bundle && npm run copy-files",
+    "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
+    "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml lib",
+    "deploy": "firebase deploy --only functions",
+    "ts:check": "tsc",
+    "lint": "eslint -c .eslintrc.json --ext .ts src",
+    "logs": "firebase functions:log",
+    "serve": "concurrently \"npm run build:watch\" \"firebase emulators:start --only functions,pubsub --inspect-functions\"",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "test": "mocha",
+    "test:coverage": "nyc --reporter=lcov mocha"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^3.7.1",
+    "@hubspot/api-client": "^9.0.0",
+    "@sendgrid/mail": "^7.7.0",
+    "@trpc/server": "^10.43.3",
+    "acuityscheduling": "^0.1.9",
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.4.1",
+    "fizz-kidz": "file:fizz-kidz",
+    "googleapis": "^105.0.0",
+    "luxon": "^2.4.0",
+    "mjml": "^4.12.0",
+    "mustache": "^4.2.0",
+    "stripe": "^10.17.0",
+    "xero-node": "^4.34.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/firebase": "^3.2.1",
+    "@types/luxon": "^2.3.2",
+    "@types/mjml": "^4.7.0",
+    "@types/mocha": "^10.0.1",
+    "@types/mustache": "^4.2.2",
+    "@types/node": "^18.16.0",
+    "@types/request": "^2.48.8",
+    "@types/stripe": "^7.13.23",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "concurrently": "^8.2.1",
+    "copyfiles": "^2.4.1",
+    "csv-parse": "^5.3.0",
+    "esbuild": "0.19.4",
+    "eslint": "^8.51.0",
+    "firebase-functions-test": "^0.1.7",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.2",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": "18"
+  }
+}
+[debug] [2023-11-22T03:32:14.695Z] Building nodejs source
+[debug] [2023-11-22T03:32:14.695Z] Failed to find version of module node: reached end of search path /Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules
+[info] ✔  functions: Using node@18 from host. 
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2023-11-22T03:32:14.698Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-11-22T03:32:14.702Z] Found firebase-functions binary at '/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8089
+
+[debug] [2023-11-22T03:32:15.068Z] Got response from /__/functions.yaml {"endpoints":{"acuity":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"acuity"},"acuityClient":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"acuityClient"},"asWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"asWebhook"},"createEmployee":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"eventTrigger":{"eventType":"google.cloud.pubsub.topic.v1.messagePublished","eventFilters":{"topic":"createEmployee"},"retry":false},"entryPoint":"createEmployee"},"createPaymentIntent":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"createPaymentIntent"},"esignaturesWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"esignaturesWebhook"},"events":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"events"},"generateTimesheets":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"generateTimesheets"},"handlePartyFormSubmission":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"eventTrigger":{"eventType":"google.cloud.pubsub.topic.v1.messagePublished","eventFilters":{"topic":"handlePartyFormSubmission"},"retry":false},"entryPoint":"handlePartyFormSubmission"},"initiateOnboarding":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"initiateOnboarding"},"onOnboardingSubmit":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"onOnboardingSubmit"},"onPartyFormSubmit":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"onPartyFormSubmit"},"parties":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"parties"},"retrieveInvoiceStatuses":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"retrieveInvoiceStatuses"},"scheduleFreeHolidayPrograms":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"scheduleFreeHolidayPrograms"},"scheduleScienceAppointment":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"scheduleScienceAppointment"},"sendFeedbackEmails":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"scheduleTrigger":{"schedule":"30 8 * * *","retryConfig":{},"timeZone":"Australia/Melbourne"},"entryPoint":"sendFeedbackEmails"},"sendInvoices":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"sendInvoices"},"sendPartyForms":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"scheduleTrigger":{"schedule":"30 8 * * 4","retryConfig":{},"timeZone":"Australia/Melbourne"},"entryPoint":"sendPartyForms"},"sendTermContinuationEmails":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"sendTermContinuationEmails"},"stripeWebhook":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"httpsTrigger":{},"entryPoint":"stripeWebhook"},"unenrollScienceAppointments":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"unenrollScienceAppointments"},"updatePaymentIntent":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"updatePaymentIntent"},"updateScienceEnrolment":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["australia-southeast1"],"labels":{},"callableTrigger":{},"entryPoint":"updateScienceEnrolment"}},"specVersion":"v1alpha1","requiredAPIs":[{"api":"cloudscheduler.googleapis.com","reason":"Needed for scheduled functions."}]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: acuity, acuityClient, asWebhook, createEmployee, createPaymentIntent, esignaturesWebhook, events, generateTimesheets, handlePartyFormSubmission, initiateOnboarding, onOnboardingSubmit, onPartyFormSubmit, parties, retrieveInvoiceStatuses, scheduleFreeHolidayPrograms, scheduleScienceAppointment, sendFeedbackEmails, sendInvoices, sendPartyForms, sendTermContinuationEmails, stripeWebhook, unenrollScienceAppointments, updatePaymentIntent, updateScienceEnrolment. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: acuity, acuityClient, asWebhook, createEmployee, createPaymentIntent, esignaturesWebhook, events, generateTimesheets, handlePartyFormSubmission, initiateOnboarding, onOnboardingSubmit, onPartyFormSubmit, parties, retrieveInvoiceStatuses, scheduleFreeHolidayPrograms, scheduleScienceAppointment, sendFeedbackEmails, sendInvoices, sendPartyForms, sendTermContinuationEmails, stripeWebhook, unenrollScienceAppointments, updatePaymentIntent, updateScienceEnrolment."}}
+[info] ✔  functions[australia-southeast1-acuity]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/acuity). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/acuity)."}}
+[info] ✔  functions[australia-southeast1-acuityClient]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/acuityClient). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/acuityClient)."}}
+[info] ✔  functions[australia-southeast1-asWebhook]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/asWebhook). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/asWebhook)."}}
+[debug] [2023-11-22T03:32:15.080Z] addPubsubTrigger {"eventTrigger":{"eventType":"google.cloud.pubsub.topic.v1.messagePublished","resource":"projects/booking-system-6435d/topics/createEmployee","eventFilters":{"topic":"projects/booking-system-6435d/topics/createEmployee"}}}
+[debug] [2023-11-22T03:32:15.081Z] [pubsub] addTrigger(createEmployee, australia-southeast1-createEmployee-0, cloudevent)
+[debug] [2023-11-22T03:32:15.081Z] [pubsub] Creating topic: createEmployee
+[debug] [2023-11-22T03:32:15.126Z] Nov 22, 2023 2:32:15 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"pubsub"},"message":"Nov 22, 2023 2:32:15 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2023-11-22T03:32:15.184Z] [pubsub] Creating sub for topic: createEmployee
+[info] ✔  functions[australia-southeast1-createEmployee]: pubsub function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mpubsub\u001b[22m function initialized."}}
+[info] ✔  functions[australia-southeast1-createPaymentIntent]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/createPaymentIntent). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/createPaymentIntent)."}}
+[info] ✔  functions[australia-southeast1-esignaturesWebhook]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/esignaturesWebhook). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/esignaturesWebhook)."}}
+[info] ✔  functions[australia-southeast1-events]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/events). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/events)."}}
+[info] ✔  functions[australia-southeast1-generateTimesheets]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/generateTimesheets). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/generateTimesheets)."}}
+[debug] [2023-11-22T03:32:15.198Z] addPubsubTrigger {"eventTrigger":{"eventType":"google.cloud.pubsub.topic.v1.messagePublished","resource":"projects/booking-system-6435d/topics/handlePartyFormSubmission","eventFilters":{"topic":"projects/booking-system-6435d/topics/handlePartyFormSubmission"}}}
+[debug] [2023-11-22T03:32:15.198Z] [pubsub] addTrigger(handlePartyFormSubmission, australia-southeast1-handlePartyFormSubmission-0, cloudevent)
+[debug] [2023-11-22T03:32:15.199Z] [pubsub] Creating topic: handlePartyFormSubmission
+[debug] [2023-11-22T03:32:15.207Z] [pubsub] Creating sub for topic: handlePartyFormSubmission
+[info] ✔  functions[australia-southeast1-handlePartyFormSubmission]: pubsub function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mpubsub\u001b[22m function initialized."}}
+[info] ✔  functions[australia-southeast1-initiateOnboarding]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/initiateOnboarding). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/initiateOnboarding)."}}
+[info] ✔  functions[australia-southeast1-onOnboardingSubmit]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/onOnboardingSubmit). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/onOnboardingSubmit)."}}
+[info] ✔  functions[australia-southeast1-onPartyFormSubmit]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/onPartyFormSubmit). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/onPartyFormSubmit)."}}
+[info] ✔  functions[australia-southeast1-parties]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/parties). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/parties)."}}
+[info] ✔  functions[australia-southeast1-retrieveInvoiceStatuses]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/retrieveInvoiceStatuses). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/retrieveInvoiceStatuses)."}}
+[info] ✔  functions[australia-southeast1-scheduleFreeHolidayPrograms]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/scheduleFreeHolidayPrograms). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/scheduleFreeHolidayPrograms)."}}
+[info] ✔  functions[australia-southeast1-scheduleScienceAppointment]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/scheduleScienceAppointment). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/scheduleScienceAppointment)."}}
+[debug] [2023-11-22T03:32:15.211Z] addPubsubTrigger {"eventTrigger":{"eventType":"pubsub","resource":""}}
+[debug] [2023-11-22T03:32:15.211Z] [pubsub] addTrigger(firebase-schedule-sendFeedbackEmails, australia-southeast1-sendFeedbackEmails-0, http)
+[debug] [2023-11-22T03:32:15.211Z] [pubsub] Creating topic: firebase-schedule-sendFeedbackEmails
+[debug] [2023-11-22T03:32:15.217Z] [pubsub] Creating sub for topic: firebase-schedule-sendFeedbackEmails
+[info] ✔  functions[australia-southeast1-sendFeedbackEmails]: pubsub function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mpubsub\u001b[22m function initialized."}}
+[info] ✔  functions[australia-southeast1-sendInvoices]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/sendInvoices). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/sendInvoices)."}}
+[debug] [2023-11-22T03:32:15.220Z] addPubsubTrigger {"eventTrigger":{"eventType":"pubsub","resource":""}}
+[debug] [2023-11-22T03:32:15.220Z] [pubsub] addTrigger(firebase-schedule-sendPartyForms, australia-southeast1-sendPartyForms-0, http)
+[debug] [2023-11-22T03:32:15.220Z] [pubsub] Creating topic: firebase-schedule-sendPartyForms
+[debug] [2023-11-22T03:32:15.224Z] [pubsub] Creating sub for topic: firebase-schedule-sendPartyForms
+[info] ✔  functions[australia-southeast1-sendPartyForms]: pubsub function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mpubsub\u001b[22m function initialized."}}
+[info] ✔  functions[australia-southeast1-sendTermContinuationEmails]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/sendTermContinuationEmails). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/sendTermContinuationEmails)."}}
+[info] ✔  functions[australia-southeast1-stripeWebhook]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/stripeWebhook). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/stripeWebhook)."}}
+[info] ✔  functions[australia-southeast1-unenrollScienceAppointments]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/unenrollScienceAppointments). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/unenrollScienceAppointments)."}}
+[info] ✔  functions[australia-southeast1-updatePaymentIntent]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/updatePaymentIntent). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/updatePaymentIntent)."}}
+[info] ✔  functions[australia-southeast1-updateScienceEnrolment]: http function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/updateScienceEnrolment). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/updateScienceEnrolment)."}}
+[info] i  functions: Loaded environment variables from .env. 
+[debug] [2023-11-22T03:32:15.230Z] [worker-pool] addWorker(~shared~) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(~shared~)"}}
+[debug] [2023-11-22T03:32:15.230Z] [worker-pool] Adding worker with key ~free~, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key ~free~, total=1"}}
+[info] >  Debugger listening on ws://127.0.0.1:9229/cdbf3ebb-f6fd-4dad-800a-6bdb8c776675 {"user":"Debugger listening on ws://127.0.0.1:9229/cdbf3ebb-f6fd-4dad-800a-6bdb8c776675","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m Debugger listening on ws://127.0.0.1:9229/cdbf3ebb-f6fd-4dad-800a-6bdb8c776675"}}
+[info] >  For help, see: https://nodejs.org/en/docs/inspector {"user":"For help, see: https://nodejs.org/en/docs/inspector","metadata":{"emulator":{"name":"functions"},"message":"\u001b[90m> \u001b[39m For help, see: https://nodejs.org/en/docs/inspector"}}
+[debug] [2023-11-22T03:32:15.769Z] [runtime-status] [29832] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.11.0","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.11.0\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.769Z] [runtime-status] [29832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.1","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.1\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.769Z] [runtime-status] [29832] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-11-22T03:32:15.770Z] [runtime-status] [29832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.1","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.1\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.847Z] [runtime-status] [29832] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-11-22T03:32:15.847Z] [runtime-status] [29832] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"4.4.1","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"4.4.1\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js\"}}"}}
+[debug] [2023-11-22T03:32:15.847Z] [runtime-status] [29832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.1","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.1\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.847Z] [runtime-status] [29832] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.11.0","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.11.0\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.849Z] [runtime-status] [29832] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.1","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.1\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-11-22T03:32:15.849Z] [runtime-status] [29832] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"11.11.0","resolution":"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"11.11.0\",\"resolution\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-11-22T03:32:15.883Z] [runtime-status] [29832] Functions runtime initialized. {"cwd":"/Users/rsaffer/workspace/react-booking-system/firebase/functions","node_version":"18.16.0"} {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Functions runtime initialized. {\"cwd\":\"/Users/rsaffer/workspace/react-booking-system/firebase/functions\",\"node_version\":\"18.16.0\"}"}}
+[debug] [2023-11-22T03:32:15.883Z] [runtime-status] [29832] Listening to port: /var/folders/hd/40b2m77s6nb_sqd2qg2_yv8r0000gn/T/fire_emu_f6740fb01f4d8fb8.sock {"metadata":{"emulator":{"name":"functions"},"message":"[runtime-status] [29832] Listening to port: /var/folders/hd/40b2m77s6nb_sqd2qg2_yv8r0000gn/T/fire_emu_f6740fb01f4d8fb8.sock"}}
+[debug] [2023-11-22T03:32:15.944Z] [worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE"}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Pub/Sub   │ 127.0.0.1:8085 │ n/a                             │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-11-22T03:32:16.049Z] [work-queue] {"queuedWork":["/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes-2023-11-22T03:32:16.049Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-11-22T03:32:16.049Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes-2023-11-22T03:32:16.049Z"],"workRunningCount":1}
+[debug] [2023-11-22T03:32:16.049Z] Accepted request OPTIONS /booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D --> australia-southeast1-acuity
+[debug] [2023-11-22T03:32:16.049Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-11-22T03:32:16.050Z] [functions] Got req.url=/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D, mapping to path=/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D, mapping to path=/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D"}}
+[debug] [2023-11-22T03:32:16.050Z] [worker-pool] submitRequest(triggerId=australia-southeast1-acuity) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=australia-southeast1-acuity)"}}
+[debug] [2023-11-22T03:32:16.050Z] [worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: BUSY"}}
+[debug] [2023-11-22T03:32:16.052Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=pause"}}
+[debug] [2023-11-22T03:32:16.053Z] [worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE"}}
+[debug] [2023-11-22T03:32:16.053Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=finish"}}
+[debug] [2023-11-22T03:32:16.053Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=close"}}
+[debug] [2023-11-22T03:32:16.053Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2023-11-22T03:32:16.054Z] [work-queue] {"queuedWork":["/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes-2023-11-22T03:32:16.054Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-11-22T03:32:16.054Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes-2023-11-22T03:32:16.054Z"],"workRunningCount":1}
+[debug] [2023-11-22T03:32:16.054Z] Accepted request GET /booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D --> australia-southeast1-acuity
+[debug] [2023-11-22T03:32:16.054Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-11-22T03:32:16.054Z] [functions] Got req.url=/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D, mapping to path=/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/booking-system-6435d/australia-southeast1/acuity/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D, mapping to path=/getAppointmentTypes?input=%7B%22category%22%3A%22TEST%22%2C%22availableToBook%22%3Atrue%7D"}}
+[debug] [2023-11-22T03:32:16.054Z] [worker-pool] submitRequest(triggerId=australia-southeast1-acuity) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=australia-southeast1-acuity)"}}
+[debug] [2023-11-22T03:32:16.054Z] [worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: BUSY {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: BUSY"}}
+[warn] ⚠  External network resource requested!
+   - URL: "https://acuityscheduling.com/api/v1/appointment-types"
+ - Be careful, this may be a production service. {"metadata":{"emulator":{"name":"functions"},"message":"External network resource requested!\n   - URL: \"https://acuityscheduling.com/api/v1/appointment-types\"\n - Be careful, this may be a production service."}}
+[debug] [2023-11-22T03:32:18.369Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=pause"}}
+[debug] [2023-11-22T03:32:18.369Z] [worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~free~-6af05b95-294a-4082-a09f-95c08a76c840]: IDLE"}}
+[debug] [2023-11-22T03:32:18.369Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=finish"}}
+[debug] [2023-11-22T03:32:18.370Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"message":"Finishing up request with event=close"}}
+[debug] [2023-11-22T03:32:18.370Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
