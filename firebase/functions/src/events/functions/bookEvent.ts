@@ -1,8 +1,9 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { logError, onCall, throwError } from '../../utilities'
 import { DateTime } from 'luxon'
+
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { MailClient } from '../../sendgrid/MailClient'
+import { logError, onCall, throwError } from '../../utilities'
 
 export const bookEvent = onCall<'bookEvent'>(async (input) => {
     const { event } = input
@@ -93,7 +94,7 @@ export const bookEvent = onCall<'bookEvent'>(async (input) => {
                 })),
             })
         } catch (err) {
-            logError('event booked successfully, but an error occurred sending the confirmation email', err)
+            logError('event booked successfully, but an error occurred sending the confirmation email', err, { event })
         }
     }
 })
