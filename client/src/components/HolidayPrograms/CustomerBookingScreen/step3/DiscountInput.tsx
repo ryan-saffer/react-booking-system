@@ -3,9 +3,9 @@ import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
+import { trpc } from '@utils/trpc'
 
 import { calculateDiscountedAmount } from '../utilities'
-import { trpc } from '@utils/trpc'
 
 const AppointmentTypeId =
     import.meta.env.VITE_ENV === 'prod'
@@ -23,10 +23,7 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const { refetch: checkCertificate } = trpc.acuity.checkCertificate.useQuery(
-        { appointmentTypeId: AppointmentTypeId, certificate: value, email },
-        { enabled: false }
-    )
+    const checkCertificateMutation = trpc.acuity.checkCertificate.useMutation()
 
     const validateDiscount = async () => {
         // do not allow the 'allday' discount code
@@ -39,17 +36,19 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
         setLoading(true)
         setError('')
 
-        const { data, isError, isSuccess, error } = await checkCertificate()
-        if (isSuccess) {
-            if (total - calculateDiscountedAmount(total, data) < 0) {
-                setError(`Discount code amount of $${data.discountAmount} is greater than the total of $${total}.`)
+        try {
+            const result = await checkCertificateMutation.mutateAsync({
+                appointmentTypeId: AppointmentTypeId,
+                certificate: value,
+                email,
+            })
+            if (total - calculateDiscountedAmount(total, result) < 0) {
+                setError(`Discount code amount of $${result.discountAmount} is greater than the total of $${total}.`)
             } else {
                 setValue('')
-                setDiscount(data)
+                setDiscount(result)
             }
-        }
-
-        if (isError) {
+        } catch (error: any) {
             if (error.message) {
                 setError(error.message)
             } else {

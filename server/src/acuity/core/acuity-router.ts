@@ -25,7 +25,7 @@ export const acuityRouter = router({
         ),
     checkCertificate: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.CheckCertificateParams)
-        .query(({ ctx, input }) =>
+        .mutation(({ ctx, input }) =>
             ctx.acuityClient.checkCertificate(input.certificate, input.appointmentTypeId, input.email)
         ),
 })

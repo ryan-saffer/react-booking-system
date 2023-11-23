@@ -6,7 +6,7 @@
     "scripts": {
         "build-fizz-kidz": "npm --prefix ../server/fizz-kidz run build",
         "build-fizz-kidz:watch": "npm --prefix ../server/fizz-kidz run build:watch",
-        "start": "concurrently \"npm run build-fizz-kidz:watch\" \"VITE_ENV=dev vite\"",
+        "start": "concurrently \"npm run build-fizz-kidz:watch\" \"npm run ts:check -- --watch\" \"VITE_ENV=dev vite\"",
         "start:prod": "concurrently \"npm run build-fizz-kidz:watch\" \"VITE_ENV=prod vite\"",
         "build:dev": "npm run lint && npm run build-fizz-kidz && npm run ts:check && VITE_ENV=dev vite build",
         "build:prod": "npm run lint && npm run build-fizz-kidz && npm run ts:check && VITE_ENV=prod vite build",
