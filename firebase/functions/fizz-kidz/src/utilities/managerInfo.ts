@@ -7,7 +7,7 @@ export function getManager(location: Location) {
         case Location.ESSENDON:
             return { name: 'Ali', email: 'essendon@fizzkidz.com.au', mobile: '0438 328 327' }
         case Location.CHELTENHAM:
-            return { name: 'Bronwyn', email: 'cheltenham@fizzkidz.com.au', mobile: '0431 379 953' }
+            return { name: 'Bronwyn', email: 'cheltenham@fizzkidz.com.au', mobile: '0435 906 395' }
         case Location.MALVERN:
             return { name: 'Emily', email: 'malvern@fizzkidz.com.au', mobile: '0413 268 795' }
         default: {
