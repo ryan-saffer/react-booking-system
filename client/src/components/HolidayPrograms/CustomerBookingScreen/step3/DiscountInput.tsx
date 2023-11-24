@@ -42,20 +42,21 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
                 certificate: value,
                 email,
             })
-            if (total - calculateDiscountedAmount(total, result) < 0) {
-                setError(`Discount code amount of $${result.discountAmount} is greater than the total of $${total}.`)
-            } else {
-                setValue('')
-                setDiscount(result)
+            if ('error' in result) {
+                setError(result.error || 'Invalid discount code')
+            } else if ('certificate' in result) {
+                if (total - calculateDiscountedAmount(total, result) < 0) {
+                    setError(
+                        `Discount code amount of $${result.discountAmount} is greater than the total of $${total}.`
+                    )
+                } else {
+                    setValue('')
+                    setDiscount(result)
+                }
             }
-        } catch (error: any) {
-            if (error.message) {
-                setError(error.message)
-            } else {
-                setError('Invalid discount code')
-            }
+        } catch (err: any) {
+            setError(err.message)
         }
-
         setLoading(false)
     }
 

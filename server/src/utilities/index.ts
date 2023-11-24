@@ -10,6 +10,8 @@ import { logger } from 'firebase-functions/v2'
 import type { Response } from 'express'
 import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
 import { PubSubClient } from '../firebase/PubSubClient'
+import { TRPCError } from '@trpc/server'
+import { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
 
 export function onCall<T extends keyof FirebaseFunctions>(
     fn: (
@@ -95,7 +97,7 @@ export function logError(message: string, error?: unknown, additionalInfo: objec
         logger.error(message, { ...(hasAdditionalInfo && additionalInfo) })
     }
 }
-export function throwError(
+export function throwFunctionsError(
     code: FunctionsErrorCode,
     message: string,
     error?: unknown,
@@ -125,6 +127,27 @@ export function throwError(
             })
         }
     } else {
-        throw new HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message, cause: { error, additionalInfo } })
+        // throw new HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
     }
+}
+
+/**
+ *
+ * @param code Error code
+ * @param message Error message
+ * @param error Error object
+ * @param additionalInfo Additional information other than the input, as this is already logged in the adapter.
+ */
+export function throwTrpcError(
+    code: TRPC_ERROR_CODE_KEY,
+    message: string,
+    error?: unknown,
+    additionalInfo: object = {}
+): never {
+    throw new TRPCError({
+        code,
+        message,
+        cause: { error, additionalInfo },
+    })
 }

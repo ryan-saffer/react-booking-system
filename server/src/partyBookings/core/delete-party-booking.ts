@@ -1,6 +1,6 @@
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
-import { logError, throwError } from '../../utilities'
+import { throwTrpcError } from '../../utilities'
 import { DeletePartyBooking } from './parties-router'
 
 export async function deletePartyBooking({ eventId, type, location, bookingId }: DeletePartyBooking) {
@@ -9,8 +9,7 @@ export async function deletePartyBooking({ eventId, type, location, bookingId }:
     try {
         await calendarClient.deleteEvent(eventId, { eventType: 'party-bookings', type, location })
     } catch (err) {
-        logError(`error deleting party booking with id: '${bookingId}'`, err)
-        throwError('internal', `error deleting party booking with id: '${bookingId}'`, err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', `error deleting party booking with id: '${bookingId}'`, err)
     }
     await DatabaseClient.deletePartyBooking(bookingId)
 }

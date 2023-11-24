@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
+
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
 import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwError } from '../../utilities'
+import { throwFunctionsError, throwTrpcError } from '../../utilities'
 import { CreateEvent } from './events-router'
 
 export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
@@ -50,14 +51,13 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
             eventIds.map((eventId, idx) => {
                 const calendarEventId = calendarEventIds[idx]
                 if (!calendarEventId) {
-                    throwError('internal', `error creating calendar event for event with id ${eventId}`)
+                    throwFunctionsError('internal', `error creating calendar event for event with id ${eventId}`)
                 }
                 return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
             })
         )
     } catch (err) {
-        logError('error creating event booking', err, { event })
-        throwError('internal', 'error creating event booking', err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating event booking', err)
     }
 
     // send confirmation email
@@ -93,7 +93,11 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
                 })),
             })
         } catch (err) {
-            logError('event booked successfully, but an error occurred sending the confirmation email', err)
+            throwTrpcError(
+                'INTERNAL_SERVER_ERROR',
+                'Event booked successfully, but an error occurred sending the confirmation email',
+                err
+            )
         }
     }
 }

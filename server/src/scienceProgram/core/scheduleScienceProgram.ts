@@ -1,19 +1,20 @@
 import {
-    ScheduleScienceAppointmentParams,
     AcuityConstants,
     AcuityTypes,
+    ScheduleScienceAppointmentParams,
     ScienceEnrolment,
     getApplicationDomain,
 } from 'fizz-kidz'
-import { projectId } from '../../init'
-import { MailClient } from '../../sendgrid/MailClient'
 import { DateTime } from 'luxon'
-import { logError, throwError } from '../../utilities'
+
 import { AcuityClient } from '../../acuity/core/acuity-client'
-import { SheetsClient } from '../../google/SheetsClient'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { StorageClient } from '../../firebase/StorageClient'
+import { SheetsClient } from '../../google/SheetsClient'
+import { HubspotClient } from '../../hubspot/HubspotClient'
+import { projectId } from '../../init'
+import { MailClient } from '../../sendgrid/MailClient'
+import { logError, throwFunctionsError } from '../../utilities'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -31,7 +32,7 @@ export default async function scheduleScienceProgram(
     const calendar = calendars.find((it) => it.id === input.calendarId)
 
     if (!calendar) {
-        throwError('aborted', `could not find matching calendar in acuity with id: ${input.calendarId}`)
+        throwFunctionsError('aborted', `could not find matching calendar in acuity with id: ${input.calendarId}`)
     }
 
     // if an apaphylaxis plan was uploaded, move it into a directory under this booking
@@ -54,7 +55,7 @@ export default async function scheduleScienceProgram(
             )[0]
         } catch (err) {
             logError(`error moving anaphylaxis plan in storage for science enrolment with id: '${newDoc.id}'`, err)
-            throwError('internal', 'There was an error enrolling', err)
+            throwFunctionsError('internal', 'There was an error enrolling', err)
         }
     }
 
@@ -79,7 +80,7 @@ export default async function scheduleScienceProgram(
         logError(`unable to book into acuity for science appointment`, err, {
             appointment: input,
         })
-        throwError('internal', 'There was an error enroling into the program', err)
+        throwFunctionsError('internal', 'There was an error enroling into the program', err)
     }
 
     // save all details, including all appointment ids, into firestore

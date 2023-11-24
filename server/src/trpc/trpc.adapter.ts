@@ -1,3 +1,4 @@
+import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
 import { AnyRouter } from '@trpc/server'
@@ -11,6 +12,14 @@ export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter) {
         createHTTPHandler({
             router,
             createContext,
+            onError: ({ error, input, path }) => {
+                logger.error(error.message, {
+                    path,
+                    input,
+                    errorCode: error.code,
+                    cause: error.cause,
+                })
+            },
         })
     )
 }

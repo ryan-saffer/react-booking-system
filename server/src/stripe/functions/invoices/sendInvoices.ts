@@ -1,12 +1,13 @@
-import * as StripeConfig from '../../../config/stripe'
 import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
-import { logError, onCall, throwError } from '../../../utilities'
-import { PricesMap } from '../../core/pricesMap'
-import { env } from '../../../init'
-import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
-import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
-import { StripeClient } from '../../core/StripeClient'
+
+import * as StripeConfig from '../../../config/stripe'
 import { FirestoreClient } from '../../../firebase/FirestoreClient'
+import { env } from '../../../init'
+import { logError, onCall, throwFunctionsError } from '../../../utilities'
+import { StripeClient } from '../../core/StripeClient'
+import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
+import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
+import { PricesMap } from '../../core/pricesMap'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
@@ -67,6 +68,6 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
         return invoiceStatusMap
     } catch (err) {
         logError('error occured sending invoice for an appointment', err, { input })
-        throwError('internal', `error occured sending invoice for an appointment`, err)
+        throwFunctionsError('internal', `error occured sending invoice for an appointment`, err)
     }
 })

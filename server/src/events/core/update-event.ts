@@ -1,6 +1,6 @@
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
-import { logError, throwError } from '../../utilities'
+import { throwTrpcError } from '../../utilities'
 import { UpdateEvent } from './events-router'
 
 export async function updateEvent(event: UpdateEvent) {
@@ -24,7 +24,6 @@ export async function updateEvent(event: UpdateEvent) {
 
         await DatabaseClient.updateEventBooking(event.id, event)
     } catch (err) {
-        logError(`error updating event with id ${event.id}`, err)
-        throwError('internal', `error updating event with id ${event.id}`, err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', `error updating event with id ${event.id}`, err)
     }
 }

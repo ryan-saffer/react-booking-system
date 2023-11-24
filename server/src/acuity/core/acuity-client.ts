@@ -2,7 +2,6 @@ import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
 import { ClientStatus } from '../../utilities/types'
-import { hasError } from './utilities'
 
 import UpdateAppointmentParams = AcuityTypes.Client.UpdateAppointmentParams
 import FetchAppointmentsParams = AcuityTypes.Client.FetchAppointmentsParams
@@ -157,4 +156,18 @@ export class AcuityClient {
         const label = params.label === 'none' ? [] : [{ id: labelMap[params.label] }]
         return this.updateAppointment({ id: params.appointmentId, labels: label })
     }
+}
+
+/**
+ *
+ * @param error error communicating with acuity
+ * @param object error from acuity
+ * @returns
+ */
+export function hasError(error: any, object: any | AcuityTypes.Api.Error): object is AcuityTypes.Api.Error {
+    return error ? true : isAcuityError(object) ? true : false
+}
+
+export function isAcuityError(object: any | AcuityTypes.Api.Error): object is AcuityTypes.Api.Error {
+    return object.error !== undefined && object.status_code !== undefined && object.message !== undefined
 }

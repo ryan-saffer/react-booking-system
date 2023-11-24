@@ -1,4 +1,4 @@
-import { logError, onCall, throwError } from '../../../utilities'
+import { logError, onCall, throwFunctionsError } from '../../../utilities'
 import { StripeClient } from '../../core/StripeClient'
 
 export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data) => {
@@ -17,6 +17,6 @@ export const updatePaymentIntent = onCall<'updatePaymentIntent'>(async (data) =>
         return
     } catch (error) {
         logError('failed updating payment intent', error, { input: data })
-        throwError('aborted', 'failed updating payment intent', error)
+        throwFunctionsError('aborted', 'failed updating payment intent', error)
     }
 })

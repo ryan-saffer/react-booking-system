@@ -1,6 +1,7 @@
 import { AcuityTypes } from 'fizz-kidz'
 
 import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../trpc/trpc'
+import { throwTrpcError } from '../../utilities'
 
 export const acuityRouter = router({
     updateLabel: acuityAuthenticatedProcedure
@@ -25,7 +26,20 @@ export const acuityRouter = router({
         ),
     checkCertificate: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.CheckCertificateParams)
-        .mutation(({ ctx, input }) =>
-            ctx.acuityClient.checkCertificate(input.certificate, input.appointmentTypeId, input.email)
-        ),
+        .mutation(async ({ ctx, input }) => {
+            try {
+                const result = await ctx.acuityClient.checkCertificate(
+                    input.certificate,
+                    input.appointmentTypeId,
+                    input.email
+                )
+                return result
+            } catch (err: any) {
+                if (err.error === 'invalid_certificate' || err.error === 'certificate_uses') {
+                    return { error: err.message }
+                } else {
+                    throwTrpcError('INTERNAL_SERVER_ERROR', err.message, err)
+                }
+            }
+        }),
 })

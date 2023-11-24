@@ -1,10 +1,11 @@
-import { logError, onCall, throwError } from '../../utilities'
 import { ScienceEnrolment } from 'fizz-kidz'
-import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
+
 import { AcuityClient } from '../../acuity/core/acuity-client'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { StripeClient } from '../../stripe/core/StripeClient'
+import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(async (input) => {
     await Promise.all(
@@ -20,7 +21,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                 await Promise.all(appointmentIds.map((id) => acuity.cancelAppointment(id)))
             } catch (err) {
                 logError('error unenrolling from term.', err, { input })
-                throwError('internal', `error unenrolling from term. firestore id: ${appointmentId}`, err)
+                throwFunctionsError('internal', `error unenrolling from term. firestore id: ${appointmentId}`, err)
             }
 
             // 3. void invoice if needed
@@ -48,7 +49,7 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                 })
             } catch (err) {
                 logError('error sending unenrolment confirmation', err)
-                throwError(
+                throwFunctionsError(
                     'internal',
                     `appointment with id ${appointmentId} cancelled, however an error occurred sending the confirmation email`,
                     err

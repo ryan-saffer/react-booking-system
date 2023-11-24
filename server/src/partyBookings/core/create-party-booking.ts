@@ -17,7 +17,7 @@ import { CalendarClient } from '../../google/CalendarClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwError } from '../../utilities'
+import { logError, throwTrpcError } from '../../utilities'
 
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
@@ -47,9 +47,8 @@ export async function createPartyBooking(_booking: Booking) {
             }
         )
     } catch (err) {
-        logError(`unable to create event for party booking with id: '${bookingId}'`, err)
         await DatabaseClient.deletePartyBooking(bookingId)
-        throwError('internal', 'unable to create calendar event', { details: err })
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'unable to create calendar event', err)
     }
 
     await DatabaseClient.updatePartyBooking(bookingId, { eventId })
@@ -105,8 +104,11 @@ export async function createPartyBooking(_booking: Booking) {
                 { replyTo: manager.email }
             )
         } catch (err) {
-            logError(`error sending confirmation email for party booking with id: '${bookingId}'`, err)
-            throwError('internal', 'party booked successfully, but unable to send confirmation email', err)
+            throwTrpcError(
+                'INTERNAL_SERVER_ERROR',
+                'party booked successfully, but unable to send confirmation email',
+                err
+            )
         }
     }
 }

@@ -1,16 +1,18 @@
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+
 import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+
+import { StorageClient } from '../../firebase/StorageClient'
+import { projectId } from '../../init'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
+import { XeroClient } from '../../xero/XeroClient'
 import { SlingClient } from '../core/slingClient'
 import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'
-import path from 'path'
-import os from 'os'
-import fs from 'fs'
-import { logError, onCall, throwError } from '../../utilities'
-import { projectId } from '../../init'
-import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import { Rate } from '../core/types'
-import { XeroClient } from '../../xero/XeroClient'
-import { StorageClient } from '../../firebase/StorageClient'
 
 const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38
@@ -36,14 +38,14 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
 
     // validate data
     if (startDate > endDate) {
-        throwError('invalid-argument', 'start date must come before the end date', {
+        throwFunctionsError('invalid-argument', 'start date must come before the end date', {
             errorCode: 'invalid-range',
         })
     }
 
     const diffInDays = endDate.diff(startDate, 'days').days
     if (diffInDays > 28) {
-        throwError('invalid-argument', 'date range must be 28 days or less', {
+        throwFunctionsError('invalid-argument', 'date range must be 28 days or less', {
             errorCode: 'invalid-length',
         })
     }
@@ -188,7 +190,7 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
         }
     } catch (err) {
         logError('error generating timesheets', err)
-        throwError('internal', 'error generating timesheets', err)
+        throwFunctionsError('internal', 'error generating timesheets', err)
     }
 })
 

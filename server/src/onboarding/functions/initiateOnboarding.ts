@@ -1,6 +1,6 @@
 import { ESignatureClient } from '../../esignatures.io/core/ESignaturesClient'
 import { Employee, getLocationAddress } from 'fizz-kidz'
-import { logError, onCall, throwError } from '../../utilities'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -29,7 +29,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         }))
     } catch (err) {
         logError('error creating contract', err)
-        throwError('internal', 'error creating contract', err)
+        throwFunctionsError('internal', 'error creating contract', err)
     }
 
     const employee = {

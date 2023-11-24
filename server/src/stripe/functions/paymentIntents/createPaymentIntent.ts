@@ -1,6 +1,6 @@
-import { getOrCreateCustomer } from '../../core/customers'
-import { logError, onCall, throwError } from '../../../utilities'
+import { logError, onCall, throwFunctionsError } from '../../../utilities'
 import { StripeClient } from '../../core/StripeClient'
+import { getOrCreateCustomer } from '../../core/customers'
 
 export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) => {
     // first create the customer
@@ -37,6 +37,6 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) =>
         }
     } else {
         logError('payment intent failed to create with secret', null, { input: data })
-        throwError('aborted', 'payment intent failed to create with secret')
+        throwFunctionsError('aborted', 'payment intent failed to create with secret')
     }
 })

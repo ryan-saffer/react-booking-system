@@ -1,44 +1,46 @@
-import React, { useState, ChangeEvent, useCallback, useEffect } from 'react'
-import { styled } from '@mui/material/styles'
 import 'typeface-roboto'
-import {
-    Grid,
-    Typography,
-    TextField,
-    InputLabel,
-    MenuItem,
-    FormHelperText,
-    FormControlLabel,
-    Select,
-    Checkbox,
-    FormControl,
-} from '@mui/material'
 
 import {
     Additions,
-    FormBookingFields,
-    Location,
-    FirestoreBooking,
+    AdditionsDisplayValuesMap,
     CakeFlavours,
     CreationDisplayValuesMap,
+    FirestoreBooking,
     FormBooking,
-    Utilities,
-    AdditionsDisplayValuesMap,
+    FormBookingFields,
+    Location,
     ObjectKeys,
+    Utilities,
     WithId,
 } from 'fizz-kidz'
-import { validateFormOnChange, validateFormOnSubmit } from '../validation'
-import { capitalise } from '../../../../utilities/stringUtilities'
-import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
-import { ExistingBookingFormFields } from './types'
-import { mapFormToBooking, mapFirestoreBookingToFormValues, getEmptyValues } from '../utilities'
-import EditFormButtons from '../EditFormButtons'
-import { useScopes } from '../../../Hooks/UseScopes'
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { DateTime } from 'luxon'
-import { useDateNavigation } from '../../DateNavigation/DateNavigation.hooks'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+
+import {
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { trpc } from '@utils/trpc'
+
+import { capitalise } from '../../../../utilities/stringUtilities'
+import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../Dialogs/ConfirmationDialog'
+import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
+import { useScopes } from '../../../Hooks/UseScopes'
+import { useDateNavigation } from '../../DateNavigation/DateNavigation.hooks'
+import EditFormButtons from '../EditFormButtons'
+import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
+import { validateFormOnChange, validateFormOnSubmit } from '../validation'
+import { ExistingBookingFormFields } from './types'
 
 const PREFIX = 'index'
 
@@ -589,7 +591,11 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 id={createUniqueId(FormBookingFields.creation3, booking.id)}
                                 label="third creation"
                                 value={formValues[FormBookingFields.creation3].value || ''}
-                                disabled={!editing || booking.partyLength !== '2'}
+                                disabled={
+                                    !editing || booking.type === 'studio'
+                                        ? booking.partyLength !== '2'
+                                        : booking.partyLength !== '1.5'
+                                }
                                 error={formValues[FormBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >

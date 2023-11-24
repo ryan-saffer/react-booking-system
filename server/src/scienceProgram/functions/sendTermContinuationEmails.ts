@@ -1,8 +1,9 @@
 import { ScienceEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
-import { logError, onCall, throwError } from '../../utilities'
+
+import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
 
 export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
     async (input: SendTermContinuationEmailsParams) => {
@@ -40,7 +41,7 @@ export const sendTermContinuationEmails = onCall<'sendTermContinuationEmails'>(
                     await appointmentRef.set({ ...updatedAppointment }, { merge: true })
                 } catch (err) {
                     logError(`error sending term continuation email to appointment with id: ${appointmentId}`, err)
-                    throwError(
+                    throwFunctionsError(
                         'internal',
                         `error sending term continutation email to appointment with id: ${appointmentId}`,
                         err

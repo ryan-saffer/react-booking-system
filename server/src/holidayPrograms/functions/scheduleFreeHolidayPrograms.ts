@@ -1,4 +1,4 @@
-import { logError, onCall, throwError } from '../../utilities'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
 import { scheduleHolidayProgram } from '../core/scheduleHolidayProgram'
 import { sendConfirmationEmail } from '../core/sendConfirmationEmail'
 
@@ -8,6 +8,6 @@ export const scheduleFreeHolidayPrograms = onCall<'scheduleFreeHolidayPrograms'>
         await sendConfirmationEmail(result)
     } catch (err) {
         logError(`error scheduling free holiday program for parent with email: ${input[0].parentEmail}`, err)
-        throwError('internal', 'there was an error booking into the holiday programs', err)
+        throwFunctionsError('internal', 'there was an error booking into the holiday programs', err)
     }
 })

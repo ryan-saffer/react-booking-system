@@ -1,10 +1,11 @@
-import { Booking, capitalise, getManager } from 'fizz-kidz'
-import { logError, onMessagePublished, throwError } from '../../../utilities'
-import { FormMapper } from '../../core/FormMapper'
 import { logger } from 'firebase-functions/v2'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { Booking, capitalise, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { MailClient } from '../../../sendgrid/MailClient'
+import { logError, onMessagePublished, throwFunctionsError } from '../../../utilities'
+import { FormMapper } from '../../core/FormMapper'
 import { getBookingAdditions, getBookingCreations } from '../../core/utils'
 
 export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubmission', async (responses) => {
@@ -62,7 +63,7 @@ export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubm
         await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
     } catch (err) {
         logError('error updating party booking', err, booking)
-        throwError('internal', 'error updating party booking', err, booking)
+        throwFunctionsError('internal', 'error updating party booking', err, booking)
     }
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
