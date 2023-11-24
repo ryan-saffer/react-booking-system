@@ -1,17 +1,18 @@
-import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
-
 import * as StripeConfig from '../../../config/stripe'
+
+import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment, SendInvoiceParams } from 'fizz-kidz'
+
 import { FirestoreClient } from '../../../firebase/FirestoreClient'
+import { PricesMap } from '../prices-map'
+import { StripeClient } from '../stripe-client'
 import { env } from '../../../init'
-import { logError, onCall, throwFunctionsError } from '../../../utilities'
-import { StripeClient } from '../../core/StripeClient'
-import { retrieveLatestInvoice } from '../../core/invoicing/retrieveLatestInvoice'
-import { sendInvoice as _sendInvoice } from '../../core/invoicing/sendInvoice'
-import { PricesMap } from '../../core/pricesMap'
+import { retrieveLatestInvoice } from './retrieve-latest-invoice'
+import { sendInvoice } from './send-invoice'
+import { throwTrpcError } from '../../../utilities'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
-export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
+export async function sendInvoices(input: SendInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}
     try {
         const stripe = await StripeClient.getInstance()
@@ -33,7 +34,7 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
             }
 
             // 3. send invoice
-            const invoice = await _sendInvoice({
+            const invoice = await sendInvoice({
                 firstName: enrolment.parent.firstName,
                 lastName: enrolment.parent.lastName,
                 email: enrolment.parent.email,
@@ -67,7 +68,6 @@ export const sendInvoices = onCall<'sendInvoices'>(async (input) => {
 
         return invoiceStatusMap
     } catch (err) {
-        logError('error occured sending invoice for an appointment', err, { input })
-        throwFunctionsError('internal', `error occured sending invoice for an appointment`, err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', `error occured sending invoice for an appointment`, err)
     }
-})
+}

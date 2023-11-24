@@ -1,13 +1,14 @@
-import { logError, onCall, throwFunctionsError } from '../../../utilities'
-import { StripeClient } from '../../core/StripeClient'
-import { getOrCreateCustomer } from '../../core/customers'
+import { CreatePaymentIntentParams } from 'fizz-kidz'
+import { StripeClient } from '../stripe-client'
+import { getOrCreateCustomer } from '../customers'
+import { throwTrpcError } from '../../../utilities'
 
-export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) => {
+export async function createPaymentIntent(input: CreatePaymentIntentParams) {
     // first create the customer
-    const customerId = await getOrCreateCustomer(data.name, data.email, data.phone)
+    const customerId = await getOrCreateCustomer(input.name, input.email, input.phone)
 
     const programData: { [key: string]: number } = {}
-    data.programs.forEach((it) => {
+    input.programs.forEach((it) => {
         // slice childName since key must be under 40 chars
         const key = `${it.childName.slice(0, 40 - it.dateTime.length - 3)} - ${it.dateTime}`
         programData[key] = it.amount
@@ -15,16 +16,16 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) =>
 
     const stripe = await StripeClient.getInstance()
     const description =
-        data.description + ' - ' + data.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', ')
+        input.description + ' - ' + input.programs.map((it) => `${it.childName} - ${it.dateTime}`).join(', ')
     const paymentIntent = await stripe.paymentIntents.create({
         customer: customerId,
-        amount: data.amount,
+        amount: input.amount,
         currency: 'aud',
         payment_method_types: ['card'],
         description: description.slice(0, 1000), // stripe accepts at most 1000 chars - happens on many (many) bookings at once
         metadata: {
-            programType: data.programType,
-            programCount: data.programs.length,
+            programType: input.programType,
+            programCount: input.programs.length,
             discount: null,
             ...programData,
         },
@@ -36,7 +37,6 @@ export const createPaymentIntent = onCall<'createPaymentIntent'>(async (data) =>
             clientSecret: paymentIntent.client_secret,
         }
     } else {
-        logError('payment intent failed to create with secret', null, { input: data })
-        throwFunctionsError('aborted', 'payment intent failed to create with secret')
+        throwTrpcError('UNPROCESSABLE_CONTENT', 'payment intent failed to create with secret')
     }
-})
+}

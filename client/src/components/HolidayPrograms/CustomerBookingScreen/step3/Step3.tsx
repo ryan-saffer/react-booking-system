@@ -1,21 +1,19 @@
-import { Result } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
-import { DateTime } from 'luxon'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
-
-import Firebase, { FirebaseContext } from '@components/Firebase'
-import Loader from '@components/ScienceClub/shared/Loader'
-import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
-import { callFirebaseFunction } from '@utils/firebase/functions'
-import { capitalise } from '@utils/stringUtilities'
-
 import { DISCOUNT_PRICE, PROGRAM_PRICE, calculateTotal, getSameDayClasses } from '../utilities'
+import React, { useEffect, useMemo, useState } from 'react'
+
+import type { AcuityTypes } from 'fizz-kidz'
 import BookingSummary from './BookingSummary'
+import { DateTime } from 'luxon'
 import DiscountInput from './DiscountInput'
-import FreeConfirmationButton from './FreeConfirmationButton'
-import Payment from './Payment'
+import { Elements } from '@stripe/react-stripe-js'
 import { Form } from '..'
+import FreeConfirmationButton from './FreeConfirmationButton'
+import Loader from '@components/ScienceClub/shared/Loader'
+import Payment from './Payment'
+import { Result } from 'antd'
+import { capitalise } from '@utils/stringUtilities'
+import { loadStripe } from '@stripe/stripe-js'
+import { trpc } from '@utils/trpc'
 
 const isProd = import.meta.env.VITE_ENV === 'prod'
 
@@ -35,13 +33,15 @@ type Props = {
 }
 
 const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
-    const firebase = useContext(FirebaseContext) as Firebase
     const [paymentIntent, setPaymentIntent] = useState({
         id: '',
         clientSecret: '',
     })
     const [error, setError] = useState(false)
     const [discount, setDiscount] = useState<AcuityTypes.Api.Certificate | undefined>(undefined)
+
+    const createPaymentIntentMutation = trpc.stripe.createPaymentIntent.useMutation()
+    const updatePaymentIntentMutation = trpc.stripe.updatePaymentIntent.useMutation()
 
     const options = {
         // passing the client secret obtained from the server
@@ -92,10 +92,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
-                const result = await callFirebaseFunction(
-                    'createPaymentIntent',
-                    firebase
-                )({
+                const result = await createPaymentIntentMutation.mutateAsync({
                     name: `${form.parentFirstName} ${form.parentLastName}`,
                     email: form.parentEmail,
                     phone: form.phone,
@@ -108,8 +105,8 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                     discount: discount,
                 })
                 setPaymentIntent({
-                    id: result.data.id,
-                    clientSecret: result.data.clientSecret,
+                    id: result.id,
+                    clientSecret: result.clientSecret,
                 })
             } catch {
                 setError(true)
@@ -123,10 +120,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
         async function updatePaymentIntent() {
             try {
                 if (paymentIntent.id !== '') {
-                    await callFirebaseFunction(
-                        'updatePaymentIntent',
-                        firebase
-                    )({
+                    await updatePaymentIntentMutation.mutateAsync({
                         id: paymentIntent.id,
                         amount: totalPrice * 100,
                         programs: createPriceMap(),

@@ -1,6 +1,6 @@
 import { Button, Dropdown, MenuProps, Space, Table, Tag, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
+import { PriceWeekMap, ScienceEnrolment } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
@@ -9,6 +9,7 @@ import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { styled } from '@mui/material/styles'
 import { callFirebaseFunction } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
 import styles from './EnrolmentsTable.module.css'
@@ -80,8 +81,21 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
     const [loading, setLoading] = useState(true)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
-    const [invoiceStatusMap, setInvoiceStatusMap] = useState<InvoiceStatusMap>({})
+    // const [invoiceStatusMap, setInvoiceStatusMap] = useState<InvoiceStatusMap>({})
     const { ErrorModal, showError } = useErrorDialog()
+
+    const {
+        data: invoiceStatusMap,
+        isLoading: isLoadingInvoices,
+        isSuccess,
+    } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
+        {
+            appointmentIds: enrolments.map((it) => it.id),
+        },
+        { initialData: {} }
+    )
+    const sendInvoicesMutation = trpc.stripe.sendInvoices.useMutation()
+    const trpcUtils = trpc.useUtils()
 
     const handleExpand = (expanded: boolean, record: TableData) => {
         if (expanded) {
@@ -92,54 +106,44 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
     }
 
     useEffect(() => {
-        async function retrieveInvoiceStatuses() {
-            const invoiceStatuses = await callFirebaseFunction(
-                'retrieveInvoiceStatuses',
-                firebase
-            )({
-                appointmentIds: enrolments.map((it) => it.id),
-            })
-
-            setInvoiceStatusMap(invoiceStatuses.data)
-            setLoading(false)
-        }
-        retrieveInvoiceStatuses()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        setLoading(isLoadingInvoices)
+    }, [isLoadingInvoices])
 
     const handleActionButtonClick: MenuProps['onClick'] = (e) => {
         const key = e.key as MenuKey
         switch (key) {
             case 'send-invoice': {
-                // ensure no one selected has a paid invoice
-                let includesPaidInvoice = false
-                selectedRowKeys.forEach((key) => {
-                    if (invoiceStatusMap[key as string].status === 'PAID') {
-                        includesPaidInvoice = true
-                    }
-                })
-
-                if (includesPaidInvoice) {
-                    showError({
-                        title: 'Invalid Selection',
-                        message:
-                            "You've selected someone who has already paid their invoice. Please unselect this person and try again.",
+                if (isSuccess) {
+                    // ensure no one selected has a paid invoice
+                    let includesPaidInvoice = false
+                    selectedRowKeys.forEach((key) => {
+                        if (invoiceStatusMap[key as string].status === 'PAID') {
+                            includesPaidInvoice = true
+                        }
                     })
-                    return
+
+                    if (includesPaidInvoice) {
+                        showError({
+                            title: 'Invalid Selection',
+                            message:
+                                "You've selected someone who has already paid their invoice. Please unselect this person and try again.",
+                        })
+                        return
+                    }
+                    showConfirmationDialog({
+                        dialogTitle: 'Send Invoices',
+                        dialogContent: `Select the amount you'd like to invoice the selected parents. This will also void any existing invoices. If sending to many people, this could take a while! (Up to 3 minutes)`,
+                        confirmationButtonText: 'Send Invoices',
+                        listItems: {
+                            title: 'Invoice Price',
+                            items: Object.entries(PriceWeekMap).map(([key, value]) => ({
+                                key,
+                                value: `$${key} (${value} weeks)`,
+                            })),
+                        },
+                        onConfirm: (selectedPrice) => sendInvoices(selectedPrice),
+                    })
                 }
-                showConfirmationDialog({
-                    dialogTitle: 'Send Invoices',
-                    dialogContent: `Select the amount you'd like to invoice the selected parents. This will also void any existing invoices. If sending to many people, this could take a while! (Up to 3 minutes)`,
-                    confirmationButtonText: 'Send Invoices',
-                    listItems: {
-                        title: 'Invoice Price',
-                        items: Object.entries(PriceWeekMap).map(([key, value]) => ({
-                            key,
-                            value: `$${key} (${value} weeks)`,
-                        })),
-                    },
-                    onConfirm: (selectedPrice) => sendInvoices(selectedPrice),
-                })
                 break
             }
             case 'send-enrolment-email':
@@ -163,11 +167,13 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
     const sendInvoices = async (price: string) => {
         setLoading(true)
         try {
-            const result = await callFirebaseFunction(
-                'sendInvoices',
-                firebase
-            )(selectedRowKeys.map((it) => ({ id: it.toString(), price })))
-            setInvoiceStatusMap((invoiceStatusMap) => ({ ...invoiceStatusMap, ...result.data }))
+            const result = await sendInvoicesMutation.mutateAsync(
+                selectedRowKeys.map((it) => ({ id: it.toString(), price }))
+            )
+            trpcUtils.stripe.retrieveInvoiceStatuses.setData(
+                { appointmentIds: enrolments.map((it) => it.id) },
+                (invoiceStatusMap) => ({ ...invoiceStatusMap, ...result })
+            )
             setSelectedRowKeys([])
         } catch {
             showError({ message: 'Some invoices failed to send. Please go through them to see which ones failed!' })
@@ -338,7 +344,7 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
                 ),
             },
         ],
-        [enrolments, invoiceStatusMap]
+        [enrolments, invoiceStatusMap, isSuccess]
     )
 
     const data = useMemo<TableData[]>(
@@ -395,7 +401,7 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
                 expandable={{
                     expandRowByClick: true,
                     expandedRowRender: (columns) => {
-                        return <EnrolmentDetails enrolment={columns.enrolment} invoiceStatusMap={invoiceStatusMap} />
+                        return <EnrolmentDetails enrolment={columns.enrolment} invoiceStatusMap={invoiceStatusMap!} />
                     },
                     expandedRowKeys: expandedRowKeys,
                     onExpand: handleExpand,

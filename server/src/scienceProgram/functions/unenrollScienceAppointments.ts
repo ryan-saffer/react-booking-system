@@ -1,11 +1,11 @@
-import { ScienceEnrolment } from 'fizz-kidz'
+import { logError, onCall, throwFunctionsError } from '../../utilities'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
-import { StripeClient } from '../../stripe/core/StripeClient'
-import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieveLatestInvoice'
-import { logError, onCall, throwFunctionsError } from '../../utilities'
+import { ScienceEnrolment } from 'fizz-kidz'
+import { StripeClient } from '../../stripe/core/stripe-client'
+import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieve-latest-invoice'
 
 export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(async (input) => {
     await Promise.all(

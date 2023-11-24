@@ -1,7 +1,9 @@
-import type { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
-import { env } from '../../../init'
 import * as StripeConfig from '../../../config/stripe'
-import { retrieveLatestInvoice } from './retrieveLatestInvoice'
+
+import type { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
+
+import { env } from '../../../init'
+import { retrieveLatestInvoice } from './retrieve-latest-invoice'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 

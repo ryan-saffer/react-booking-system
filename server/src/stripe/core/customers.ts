@@ -1,4 +1,4 @@
-import { StripeClient } from './StripeClient'
+import { StripeClient } from './stripe-client'
 
 export async function getOrCreateCustomer(name: string, email: string, phone: string) {
     // first check if customer already exists

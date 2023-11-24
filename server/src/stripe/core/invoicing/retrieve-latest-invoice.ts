@@ -1,5 +1,5 @@
 import type Stripe from 'stripe'
-import { StripeClient } from '../StripeClient'
+import { StripeClient } from '../stripe-client'
 
 /**
  * Recursively retrieves an invoices latest invoice until the latest is found

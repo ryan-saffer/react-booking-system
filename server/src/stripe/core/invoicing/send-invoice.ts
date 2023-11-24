@@ -1,6 +1,6 @@
 import type Stripe from 'stripe'
+import { StripeClient } from '../stripe-client'
 import { getOrCreateCustomer } from '../customers'
-import { StripeClient } from '../StripeClient'
 
 export async function sendInvoice(input: {
     firstName: string

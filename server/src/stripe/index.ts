@@ -1,5 +1,4 @@
-export * from './functions/paymentIntents/createPaymentIntent'
-export * from './functions/paymentIntents/updatePaymentIntent'
+// TRPC
+export { stripe } from './functions/trpc/trpc.stripe'
+
 export * from './functions/webhook'
-export * from './functions/invoices/retrieveInvoiceStatuses'
-export * from './functions/invoices/sendInvoices'

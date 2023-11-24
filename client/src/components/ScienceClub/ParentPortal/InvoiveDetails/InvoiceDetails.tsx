@@ -1,12 +1,12 @@
 import { Card, Typography } from 'antd'
-import { ScienceEnrolment } from 'fizz-kidz'
-import React from 'react'
 
-import useInvoiceStatus from '@components/Hooks/api/UseInvoiceStatus'
-import { styled } from '@mui/material/styles'
-
-import Loader from '../../shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
+import Loader from '../../shared/Loader'
+import React from 'react'
+import { ScienceEnrolment } from 'fizz-kidz'
+import { styled } from '@mui/material/styles'
+import { trpc } from '@utils/trpc'
+
 const PREFIX = 'InvoiceDetails'
 
 const classes = {
@@ -25,37 +25,45 @@ type Props = {
 }
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
-    const [invoiceService] = useInvoiceStatus(appointment)
+    const { data, isLoading, isSuccess, isError } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
+        {
+            appointmentIds: [appointment.id],
+        },
+        {
+            enabled: appointment.invoiceId !== '',
+            initialData: { [appointment.id]: { status: 'NOT_SENT' } },
+        }
+    )
 
     return (
         <StyledCard className={classes.card} title="🧾 Invoice Status">
             {(() => {
-                switch (invoiceService.status) {
-                    case 'loading':
-                        return <Loader />
-                    case 'loaded': {
-                        const invoiceStatus = invoiceService.result[appointment.id]
-                        switch (invoiceStatus.status) {
-                            case 'PAID':
-                                return <InvoiceStatistic invoice={invoiceStatus} status="PAID" />
-                            case 'UNPAID':
-                                return <InvoiceStatistic invoice={invoiceStatus} status="UNPAID" />
-                            default:
-                                return (
-                                    <>
-                                        <p>Invoice not yet sent.</p>
-                                        <p>
-                                            The price for {appointment.appointments.length} weeks is $
-                                            {parseInt(appointment.price) * appointment.appointments.length}
-                                        </p>
-                                    </>
-                                )
-                        }
+                if (isLoading) {
+                    return <Loader />
+                }
+
+                if (isError) {
+                    return <Typography.Text type="danger">There was an error retrieving your invoice.</Typography.Text>
+                }
+
+                if (isSuccess) {
+                    const invoiceStatus = data[appointment.id]
+                    switch (invoiceStatus.status) {
+                        case 'PAID':
+                            return <InvoiceStatistic invoice={invoiceStatus} status="PAID" />
+                        case 'UNPAID':
+                            return <InvoiceStatistic invoice={invoiceStatus} status="UNPAID" />
+                        default:
+                            return (
+                                <>
+                                    <p>Invoice not yet sent.</p>
+                                    <p>
+                                        The price for {appointment.appointments.length} weeks is $
+                                        {parseInt(appointment.price) * appointment.appointments.length}
+                                    </p>
+                                </>
+                            )
                     }
-                    default: // error
-                        return (
-                            <Typography.Text type="danger">There was an error retrieving your invoice.</Typography.Text>
-                        )
                 }
             })()}
         </StyledCard>
