@@ -1,15 +1,13 @@
-import { Button } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
+import type { AcuityTypes } from 'fizz-kidz'
+import { Button } from 'antd'
+import { Form } from '..'
 import Loader from '@components/ScienceClub/shared/Loader'
 import { styled } from '@mui/material/styles'
-import { callFirebaseFunction } from '@utils/firebase/functions'
-
-import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
-import { Form } from '..'
+import { trpc } from '@utils/trpc'
+import { useNavigate } from 'react-router-dom'
 
 const PREFIX = 'FreeConfirmationButton'
 
@@ -33,14 +31,14 @@ type Props = {
 }
 
 const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discountCode, setError }) => {
-    const firebase = useFirebase()
-
     const navigate = useNavigate()
 
     const termsRef = useRef<TermsCheckboxHandle>(null)
     const submitButtonRef = useRef<HTMLButtonElement>(null)
 
     const [submitting, setSubmitting] = useState(false)
+
+    const scheduleProgramsMutation = trpc.holidayPrograms.scheduleFreeHolidayPrograms.useMutation()
 
     const handleSubmit = async () => {
         setTimeout(() => submitButtonRef.current?.blur())
@@ -51,10 +49,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
 
         setSubmitting(true)
         try {
-            await callFirebaseFunction(
-                'scheduleFreeHolidayPrograms',
-                firebase
-            )(
+            await scheduleProgramsMutation.mutateAsync(
                 selectedClasses.flatMap((klass) =>
                     form.children.map((child) => ({
                         appointmentTypeId: klass.appointmentTypeID,
@@ -75,7 +70,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                 )
             )
             navigate('/holiday-programs/confirmation?free=true')
-        } catch (err) {
+        } catch {
             setError(true)
             setSubmitting(false)
         }

@@ -1,8 +1,10 @@
 import { Booking, Location } from 'fizz-kidz'
-import { authenticatedProcedure, router } from '../../trpc/trpc'
-import { createPartyBooking } from './create-party-booking'
-import { updatePartyBooking } from './update-party-booking'
-import { deletePartyBooking } from './delete-party-booking'
+import { authenticatedProcedure, router } from '../../../trpc/trpc'
+
+import { createPartyBooking } from '../../core/create-party-booking'
+import { deletePartyBooking } from '../../core/delete-party-booking'
+import { onRequestTrpc } from '../../../trpc/trpc.adapter'
+import { updatePartyBooking } from '../../core/update-party-booking'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -25,3 +27,5 @@ export const partiesRouter = router({
             await deletePartyBooking(input)
         }),
 })
+
+export const parties = onRequestTrpc(partiesRouter)

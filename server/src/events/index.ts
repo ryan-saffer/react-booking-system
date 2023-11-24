@@ -1,2 +1,2 @@
 // TRPC
-export * from './functions/trpc/events'
+export { events } from './functions/trpc/trpc.events'

@@ -1,1 +1,2 @@
-export * from './functions/scheduleFreeHolidayPrograms'
+// TRPC
+export { holidayPrograms } from './functions/trpc/trpc.holiday-programs'

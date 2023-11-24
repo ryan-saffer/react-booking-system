@@ -1,5 +1,5 @@
 // TRPC
-export * from './functions/trpc/parties'
+export { parties } from './functions/trpc/trpc.parties'
 
 // PUBSUB
 export * from './functions/pubsub/sendPartyForms'

@@ -1,8 +1,10 @@
 import { EventBooking, WithoutId } from 'fizz-kidz'
-import { authenticatedProcedure, router } from '../../trpc/trpc'
-import { createEvent } from './create-event'
-import { updateEvent } from './update-event'
-import { deleteEvent } from './delete-event'
+import { authenticatedProcedure, router } from '../../../trpc/trpc'
+
+import { createEvent } from '../../core/create-event'
+import { deleteEvent } from '../../core/delete-event'
+import { onRequestTrpc } from '../../../trpc/trpc.adapter'
+import { updateEvent } from '../../core/update-event'
 
 export type CreateEvent = {
     event: WithoutId<Omit<EventBooking, 'startTime' | 'endTime' | 'calendarEventId'>> & {
@@ -34,3 +36,5 @@ export const eventsRouter = router({
             await deleteEvent(input)
         }),
 })
+
+export const events = onRequestTrpc(eventsRouter)

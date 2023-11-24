@@ -1,11 +1,12 @@
+import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 import { Metadata } from 'fizz-kidz'
 import type { Stripe } from 'stripe'
-import { bookHolidayPrograms } from '../../holidayPrograms/core'
-import { logError } from '../../utilities'
+
+import { bookHolidayPrograms } from '../../holidayPrograms/core/schedule-paid-holiday-programs'
 import { env } from '../../init'
+import { logError } from '../../utilities'
 import { StripeClient } from '../core/StripeClient'
-import { logger } from 'firebase-functions/v2'
 
 export const stripeWebhook = onRequest(async (request, response) => {
     let event = request.body as Stripe.Event

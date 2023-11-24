@@ -1,7 +1,8 @@
-import { AcuityTypes } from 'fizz-kidz'
+import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../../trpc/trpc'
 
-import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../trpc/trpc'
-import { throwTrpcError } from '../../utilities'
+import { AcuityTypes } from 'fizz-kidz'
+import { onRequestTrpc } from '../../../trpc/trpc.adapter'
+import { throwTrpcError } from '../../../utilities'
 
 export const acuityRouter = router({
     updateLabel: acuityAuthenticatedProcedure
@@ -43,3 +44,5 @@ export const acuityRouter = router({
             }
         }),
 })
+
+export const acuity = onRequestTrpc(acuityRouter)

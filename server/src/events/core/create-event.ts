@@ -1,10 +1,10 @@
-import { DateTime } from 'luxon'
-
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { CalendarClient } from '../../google/CalendarClient'
-import { MailClient } from '../../sendgrid/MailClient'
 import { throwFunctionsError, throwTrpcError } from '../../utilities'
-import { CreateEvent } from './events-router'
+
+import { CalendarClient } from '../../google/CalendarClient'
+import { CreateEvent } from '../functions/trpc/trpc.events'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DateTime } from 'luxon'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
     const { slots, ...rest } = event

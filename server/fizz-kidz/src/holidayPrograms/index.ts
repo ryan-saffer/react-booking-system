@@ -1,4 +1,4 @@
-interface BaseHolidayProgramBooking {
+export interface BaseHolidayProgramBooking {
     appointmentTypeId: number
     dateTime: string
     calendarId: number

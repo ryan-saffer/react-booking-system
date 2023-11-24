@@ -1,7 +1,8 @@
+import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
-import { cancelHolidayProgram } from '../../holidayPrograms/core/cancelHolidayProgram'
-import { logger } from 'firebase-functions/v2'
+
+import { cancelHolidayProgram } from '../../holidayPrograms/core/cancel-holiday-program'
 
 export type AcuityWebhookData = {
     action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | 'order.completed'

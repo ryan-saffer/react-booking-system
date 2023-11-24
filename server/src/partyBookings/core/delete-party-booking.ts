@@ -1,7 +1,7 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DeletePartyBooking } from '../functions/trpc/trpc.parties'
 import { throwTrpcError } from '../../utilities'
-import { DeletePartyBooking } from './parties-router'
 
 export async function deletePartyBooking({ eventId, type, location, bookingId }: DeletePartyBooking) {
     const calendarClient = await CalendarClient.getInstance()

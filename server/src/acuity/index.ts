@@ -1,4 +1,4 @@
 // TRPC
-export * from './functions/trpc/acuity'
+export { acuity } from './functions/trpc/trpc.acuity'
 
 export * from './functions/webhook'

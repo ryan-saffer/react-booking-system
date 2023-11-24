@@ -1,12 +1,13 @@
-import { AcuityUtilities, PaidHolidayProgramBooking } from 'fizz-kidz'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { scheduleHolidayProgram } from './scheduleHolidayProgram'
-import { sendConfirmationEmail } from './sendConfirmationEmail'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { logError } from '../../utilities'
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { logger } from 'firebase-functions/v2'
+import { AcuityUtilities, PaidHolidayProgramBooking } from 'fizz-kidz'
+
+import { AcuityClient } from '../../acuity/core/acuity-client'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { HubspotClient } from '../../hubspot/HubspotClient'
+import { logError } from '../../utilities'
+import { scheduleHolidayProgram } from './schedule-holiday-program'
+import { sendConfirmationEmail } from './send-confirmation-email'
 
 export async function bookHolidayPrograms(paymentIntentId: string) {
     const query = await (await FirestoreRefs.holidayProgramBooking(paymentIntentId)).get()

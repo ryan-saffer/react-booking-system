@@ -1,7 +1,7 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { UpdateEvent } from '../functions/trpc/trpc.events'
 import { throwTrpcError } from '../../utilities'
-import { UpdateEvent } from './events-router'
 
 export async function updateEvent(event: UpdateEvent) {
     // parse strings back into date

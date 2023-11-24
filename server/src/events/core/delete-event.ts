@@ -1,7 +1,7 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DeleteEvent } from '../functions/trpc/trpc.events'
 import { throwTrpcError } from '../../utilities'
-import { DeleteEvent } from './events-router'
 
 export async function deleteEvent(event: DeleteEvent) {
     try {
