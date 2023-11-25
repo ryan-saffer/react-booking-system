@@ -1,0 +1,129 @@
+import { AcuityTypes } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import React, { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
+
+import styles from './ScienceClubClassSelection.module.css'
+import { trpc } from '@utils/trpc'
+
+type Props = {
+    classRoute: string
+    classRequired: boolean // true means its being used for class checkin, false for invoicing
+}
+
+const ScienceClubClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
+    const navigate = useNavigate()
+
+    const nowRef = useRef(Date.now())
+
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState<
+        AcuityTypes.Api.AppointmentType | undefined
+    >()
+    const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
+
+    const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
+        category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
+    })
+    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
+        appointmentTypeId: selectedAppointmentType?.id || 0,
+        includeUnavailable: true,
+        minDate: nowRef.current,
+    })
+
+    const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
+        const id = e.target.value as number
+        setSelectedAppointmentType(appointmentTypes?.find((it) => it.id === id))
+        setSelectedClass(undefined)
+    }
+
+    const handleClassChange = (e: SelectChangeEvent<number>) => {
+        const id = e.target.value
+        setSelectedClass(classes?.find((it) => it.id === id))
+    }
+
+    const handleClassSelection = () => {
+        // checkin
+        if (classRequired && selectedAppointmentType && selectedClass) {
+            navigate(
+                `${classRoute}?appointmentTypeId=${selectedAppointmentType.id}&calendarId=${
+                    selectedClass.calendarID
+                }&classId=${selectedClass.id}&calendarName=${encodeURIComponent(
+                    selectedAppointmentType.name
+                )}&classTime=${encodeURIComponent(selectedClass.time)}`
+            )
+        }
+        // invoicing
+        if (!classRequired && selectedAppointmentType) {
+            navigate(
+                `${classRoute}?appointmentTypeId=${selectedAppointmentType.id}&calendarName=${selectedAppointmentType.name}`
+            )
+        }
+    }
+
+    return (
+        <Paper className={styles.paper}>
+            <div className={styles.main}>
+                {appointmentTypes && appointmentTypes.length !== 0 && (
+                    <>
+                        <Typography className={styles.heading} variant="body1">
+                            Select program:
+                        </Typography>
+                        <FormControl className={styles.formControl} variant="outlined">
+                            <Select
+                                id="programs-select"
+                                value={selectedAppointmentType?.id || ''}
+                                onChange={handleAppointmentTypeChange}
+                                disabled={appointmentTypes?.length === 0}
+                            >
+                                {appointmentTypes?.map((appointmentType) => (
+                                    <MenuItem key={appointmentType.id} value={appointmentType.id}>
+                                        {appointmentType.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </>
+                )}
+                {loadingAppointmentTypes && <Skeleton height={80} />}
+
+                {classRequired && classes && classes.length !== 0 && (
+                    <>
+                        <Typography className={styles.heading} variant="body1">
+                            Select class:
+                        </Typography>
+                        <FormControl className={styles.formControl} variant="outlined">
+                            <Select
+                                id="classes-select"
+                                value={selectedClass?.id || ''}
+                                onChange={handleClassChange}
+                                disabled={classes?.length === 0}
+                            >
+                                {classes?.map((mClass) => (
+                                    <MenuItem key={mClass.id} value={mClass.id}>
+                                        {DateTime.fromISO(mClass.time).toFormat('EEEE MMMM d, h:mm a, yyyy')}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </>
+                )}
+                {classRequired && selectedAppointmentType && loadingClasses && <Skeleton height={80} />}
+                {(!classRequired || appointmentTypes?.length !== 0) && (
+                    <Button
+                        className={styles.submitButton}
+                        variant="contained"
+                        color="primary"
+                        disabled={!selectedAppointmentType || (classRequired && !selectedClass)}
+                        onClick={handleClassSelection}
+                    >
+                        Select
+                    </Button>
+                )}
+            </div>
+        </Paper>
+    )
+}
+
+export default ScienceClubClassSelection

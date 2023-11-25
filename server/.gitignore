@@ -1,0 +1,11 @@
+.env
+node_modules/
+lib/
+lib-tsc/
+coverage
+.nyc_output/
+src/scienceProgram/data/
+tsconfig.tsbuildinfo
+firebase-debug.log
+pubsub-debug.log
+ui-debug.log

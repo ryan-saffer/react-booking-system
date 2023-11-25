@@ -1,0 +1,18 @@
+{
+    "name": "fizz-kidz",
+    "version": "1.0.0",
+    "description": "Shared value and types to be used across React and Functions",
+    "main": "lib",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "npm run ts:check && esbuild src/index.ts --sourcemap --bundle --format=esm --outdir=lib",
+        "build:watch": "npm run build -- --sourcemap --watch",
+        "ts:check": "tsc"
+    },
+    "author": "Ryan Saffer",
+    "license": "ISC",
+    "devDependencies": {
+        "esbuild": "0.19.4"
+    }
+}
