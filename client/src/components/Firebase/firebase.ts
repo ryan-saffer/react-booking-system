@@ -3,9 +3,9 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/functions'
 import 'firebase/compat/storage'
 
-import firebase from 'firebase/compat/app'
-
 import * as config from '../../config'
+
+import firebase from 'firebase/compat/app'
 
 export const useEmulators = false
 
