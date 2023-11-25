@@ -1,18 +1,18 @@
-import { AcuityTypes, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import { Alert, Button, Result, Typography } from 'antd'
+import { AcuityTypes, Calendar, ScheduleScienceAppointmentParams } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
-import AppointmentTypeCard from './AppointmentTypeCard'
-import FormSwitcher from './FormSwitcher'
-import { Grow } from '@mui/material'
 import { LeftOutlined } from '@ant-design/icons'
-import Loader from '../shared/Loader'
-import { MixpanelEvents } from '@components/Mixpanel/Events'
-import Root from '@components/Shared/Root'
-import { callFirebaseFunction } from '@utils/firebase/functions'
-import { trpc } from '@utils/trpc'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import { MixpanelEvents } from '@components/Mixpanel/Events'
+import Root from '@components/Shared/Root'
+import { Grow } from '@mui/material'
+import { trpc } from '@utils/trpc'
+
+import Loader from '../shared/Loader'
+import AppointmentTypeCard from './AppointmentTypeCard'
+import FormSwitcher from './FormSwitcher'
 
 export type FormSubmission = (params: ScheduleScienceAppointmentParams) => void
 
@@ -36,6 +36,7 @@ export const BookingForm = () => {
             enabled: false,
         }
     )
+    const scheduleScienceEnrolmentMutation = trpc.scienceProgram.scheduleScienceAppointment.useMutation()
 
     useEffect(() => {
         async function fetchAppointmentTypes() {
@@ -73,7 +74,7 @@ export const BookingForm = () => {
             parent_email: params.parent.email,
         }
         try {
-            await callFirebaseFunction('scheduleScienceAppointment', firebase)(params)
+            await scheduleScienceEnrolmentMutation.mutateAsync(params)
             setSuccess(true)
             mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED, mixpanelProps)
         } catch (err) {

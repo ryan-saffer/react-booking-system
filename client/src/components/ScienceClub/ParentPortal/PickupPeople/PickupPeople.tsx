@@ -8,7 +8,7 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
-import { callFirebaseFunction } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 import styles from './PickupPeople.module.css'
 
@@ -35,11 +35,13 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
         pickupPeople: appointment.pickupPeople.map((person) => ({ person })),
     })
 
+    const updateEnrolmentMutation = trpc.scienceProgram.updateScienceEnrolment.useMutation()
+
     const onFinish = async (values: { pickupPeople: { person: string }[] }) => {
         setLoading(true)
         try {
             const pickupPeople = values.pickupPeople.map((it) => it.person)
-            await callFirebaseFunction('updateScienceEnrolment', firebase)({ id: appointment.id, pickupPeople })
+            await updateEnrolmentMutation.mutateAsync({ id: appointment.id, pickupPeople })
             message.success({
                 content: 'Pickup people updated',
                 className: styles.message,

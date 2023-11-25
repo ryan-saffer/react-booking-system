@@ -1,12 +1,12 @@
 import { AcuityTypes } from 'fizz-kidz'
 import { useEffect } from 'react'
 
-import useFirebaseFunction from '@components/Hooks/api/UseFirebaseFunction'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import * as logo from '@drawables/fizz-logo.png'
 import { Divider } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { trpc } from '@utils/trpc'
 
 import Footer from './Footer'
 import Loading from './Loading'
@@ -59,14 +59,19 @@ export const EnrolmentPage = () => {
 
     const mixpanel = useMixpanel()
 
-    const service = useFirebaseFunction('updateScienceEnrolment', { id: appointmentId, continuingWithTerm })
+    const { mutate, data, isLoading, isSuccess, isError } = trpc.scienceProgram.updateScienceEnrolment.useMutation()
+
+    useEffect(() => {
+        mutate({ id: appointmentId, continuingWithTerm })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // Mixpanel Tracking
     useEffect(() => {
-        if (service.status === 'loaded') {
+        if (isSuccess) {
             const props = {
-                distinct_id: service.result.parent.email,
-                appointment: service.result.className,
+                distinct_id: data.parent.email,
+                appointment: data.className,
             }
             if (continuingWithTerm === 'yes') {
                 mixpanel.track(MixpanelEvents.SCIENCE_ENROLMENT_CONFIRMED, props)
@@ -76,22 +81,22 @@ export const EnrolmentPage = () => {
             }
         }
 
-        if (service.status === 'error') {
+        if (isError) {
             mixpanel.track(MixpanelEvents.SCIENCE_ENROLMENT_ERROR, {
                 appointment_id: appointmentId,
                 continuing_with_term: continuingWithTerm,
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [service.status])
+    }, [isSuccess, isError])
 
     return (
         <Root className={classes.main}>
             <img className={classes.logo} src={logo.default} alt="fizz kidz logo" />
             <Divider className={classes.divider} />
-            {service.status === 'loading' && <Loading />}
-            {service.status === 'loaded' && <Success continuing={continuingWithTerm} appointment={service.result} />}
-            {service.status === 'error' && <ErrorResult />}
+            {isLoading && <Loading />}
+            {isSuccess && <Success continuing={continuingWithTerm} appointment={data} />}
+            {isError && <ErrorResult />}
             <Footer />
         </Root>
     )

@@ -6,9 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { styled } from '@mui/material/styles'
-import { callFirebaseFunction } from '@utils/firebase/functions'
 import { trpc } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
@@ -76,8 +74,6 @@ function getAppointmentWeekRange(enrolments: ScienceEnrolment[]) {
 }
 
 const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
-    const firebase = useFirebase()
-
     const [loading, setLoading] = useState(true)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
@@ -95,6 +91,8 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
         { initialData: {} }
     )
     const sendInvoicesMutation = trpc.stripe.sendInvoices.useMutation()
+    const sendContinuationEmailsMutation = trpc.scienceProgram.sendTermContinuationEmails.useMutation()
+    const unenrollMutation = trpc.scienceProgram.unenrollScienceAppointments.useMutation()
     const trpcUtils = trpc.useUtils()
 
     const handleExpand = (expanded: boolean, record: TableData) => {
@@ -184,12 +182,11 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
     const sendTermContinuationEmails = async () => {
         setLoading(true)
         try {
-            const result = await callFirebaseFunction(
-                'sendTermContinuationEmails',
-                firebase
-            )({ appointmentIds: selectedRowKeys.map((it) => it.toString()) })
+            const result = await sendContinuationEmailsMutation.mutateAsync({
+                appointmentIds: selectedRowKeys.map((it) => it.toString()),
+            })
 
-            if (result.data.length !== selectedRowKeys.length) {
+            if (result.length !== selectedRowKeys.length) {
                 showError({
                     message:
                         'Some of the emails were sent succesfully, but some failed. Please carefully review which did not send.',
@@ -204,10 +201,7 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
     const unenrollFromTerm = async () => {
         setLoading(true)
         try {
-            await callFirebaseFunction(
-                'unenrollScienceAppointments',
-                firebase
-            )({ appointmentIds: selectedRowKeys.map((it) => it.toString()) })
+            await unenrollMutation.mutateAsync({ appointmentIds: selectedRowKeys.map((it) => it.toString()) })
         } catch {
             showError({ message: 'There was an error unenrolling from the term.' })
         }
@@ -344,7 +338,7 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
                 ),
             },
         ],
-        [enrolments, invoiceStatusMap, isSuccess]
+        [enrolments, invoiceStatusMap]
     )
 
     const data = useMemo<TableData[]>(

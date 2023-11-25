@@ -1,13 +1,13 @@
-import { logError, onCall, throwFunctionsError } from '../../utilities'
+import { ScienceEnrolment, UnenrollScienceAppointmentsParams } from 'fizz-kidz'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
-import { ScienceEnrolment } from 'fizz-kidz'
-import { StripeClient } from '../../stripe/core/stripe-client'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieve-latest-invoice'
+import { StripeClient } from '../../stripe/core/stripe-client'
+import { throwTrpcError } from '../../utilities'
 
-export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>(async (input) => {
+export async function unenrollScienceAppointments(input: UnenrollScienceAppointmentsParams) {
     await Promise.all(
         input.appointmentIds.map(async (appointmentId) => {
             // 1. get appointment from firestore
@@ -20,8 +20,11 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                 const acuity = await AcuityClient.getInstance()
                 await Promise.all(appointmentIds.map((id) => acuity.cancelAppointment(id)))
             } catch (err) {
-                logError('error unenrolling from term.', err, { input })
-                throwFunctionsError('internal', `error unenrolling from term. firestore id: ${appointmentId}`, err)
+                throwTrpcError(
+                    'INTERNAL_SERVER_ERROR',
+                    `error unenrolling from term. firestore id: ${appointmentId}`,
+                    err
+                )
             }
 
             // 3. void invoice if needed
@@ -48,13 +51,12 @@ export const unenrollScienceAppointments = onCall<'unenrollScienceAppointments'>
                     className: enrolment.className,
                 })
             } catch (err) {
-                logError('error sending unenrolment confirmation', err)
-                throwFunctionsError(
-                    'internal',
+                throwTrpcError(
+                    'INTERNAL_SERVER_ERROR',
                     `appointment with id ${appointmentId} cancelled, however an error occurred sending the confirmation email`,
                     err
                 )
             }
         })
     )
-})
+}

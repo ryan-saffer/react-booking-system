@@ -1,11 +1,12 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { onCall } from '../../utilities'
+import { UpdateScienceEnrolmentParams } from 'fizz-kidz'
 
-export const updateScienceEnrolment = onCall<'updateScienceEnrolment'>(async (input) => {
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+
+export async function updateScienceEnrolment(input: UpdateScienceEnrolmentParams) {
     const { id, ...updatedEnrolment } = input
 
     await DatabaseClient.updateScienceEnrolment(id, updatedEnrolment)
     const enrolment = await DatabaseClient.getScienceEnrolment(id)
 
     return enrolment
-})
+}

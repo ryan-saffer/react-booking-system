@@ -1,21 +1,7 @@
 import { PFQuestion } from '../paperform'
-import {
-    GenerateTimesheetsParams,
-    GenerateTimesheetsResponse,
-    InitiateEmployeeProps,
-    ScheduleScienceAppointmentParams,
-    ScienceEnrolment,
-    SendTermContinuationEmailsParams,
-    UnenrollScienceAppointmentsParams,
-    UpdateScienceEnrolmentParams,
-} from '..'
+import { GenerateTimesheetsParams, GenerateTimesheetsResponse, InitiateEmployeeProps } from '..'
 
 export interface FirebaseFunctions {
-    sendTermContinuationEmails: CloudFunction<SendTermContinuationEmailsParams, string[]>
-    scheduleScienceAppointment: CloudFunction<ScheduleScienceAppointmentParams, void>
-    unenrollScienceAppointments: CloudFunction<UnenrollScienceAppointmentsParams, void>
-    updateScienceEnrolment: CloudFunction<UpdateScienceEnrolmentParams, ScienceEnrolment>
-    sendPortalLinks: CloudFunction<void, void>
     generateTimesheets: CloudFunction<GenerateTimesheetsParams, GenerateTimesheetsResponse>
     initiateOnboarding: CloudFunction<InitiateEmployeeProps, void>
 }
