@@ -5,16 +5,16 @@ import {
     ScienceEnrolment,
     getApplicationDomain,
 } from 'fizz-kidz'
-import { DateTime } from 'luxon'
+import { logError, throwTrpcError } from '../../utilities'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
+import { DateTime } from 'luxon'
 import { FirestoreClient } from '../../firebase/FirestoreClient'
-import { StorageClient } from '../../firebase/StorageClient'
-import { SheetsClient } from '../../google/SheetsClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
-import { projectId } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwFunctionsError } from '../../utilities'
+import { SheetsClient } from '../../google/SheetsClient'
+import { StorageClient } from '../../firebase/StorageClient'
+import { projectId } from '../../init'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -32,7 +32,7 @@ export default async function scheduleScienceProgram(
     const calendar = calendars.find((it) => it.id === input.calendarId)
 
     if (!calendar) {
-        throwFunctionsError('aborted', `could not find matching calendar in acuity with id: ${input.calendarId}`)
+        throwTrpcError('NOT_FOUND', `could not find matching calendar in acuity with id: ${input.calendarId}`)
     }
 
     // if an apaphylaxis plan was uploaded, move it into a directory under this booking
@@ -54,8 +54,9 @@ export default async function scheduleScienceProgram(
                 })
             )[0]
         } catch (err) {
-            logError(`error moving anaphylaxis plan in storage for science enrolment with id: '${newDoc.id}'`, err)
-            throwFunctionsError('internal', 'There was an error enrolling', err)
+            throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error enrolling', err, {
+                context: `error moving anaphylaxis plan in storage for science enrolment with id: '${newDoc.id}'`,
+            })
         }
     }
 
@@ -77,10 +78,9 @@ export default async function scheduleScienceProgram(
             )
         )
     } catch (err) {
-        logError(`unable to book into acuity for science appointment`, err, {
-            appointment: input,
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error enroling into the program', err, {
+            context: `unable to book into acuity for science appointment`,
         })
-        throwFunctionsError('internal', 'There was an error enroling into the program', err)
     }
 
     // save all details, including all appointment ids, into firestore

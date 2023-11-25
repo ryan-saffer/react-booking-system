@@ -1,8 +1,8 @@
 import { Booking, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
-import { throwFunctionsError, throwTrpcError } from '../../utilities'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { throwTrpcError } from '../../utilities'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input
@@ -14,7 +14,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
 
     const calendarClient = await CalendarClient.getInstance()
 
-    if (!booking.eventId) throwFunctionsError('aborted', 'booking is missing event id', null, input)
+    if (!booking.eventId) throwTrpcError('PRECONDITION_FAILED', 'booking is missing event id', null, input)
 
     try {
         await calendarClient.updateEvent(

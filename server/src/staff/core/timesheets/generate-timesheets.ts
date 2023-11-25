@@ -3,23 +3,24 @@ import os from 'os'
 import path from 'path'
 
 import { logger } from 'firebase-functions/v2'
+import { GenerateTimesheetsParams } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
-import { StorageClient } from '../../firebase/StorageClient'
-import { projectId } from '../../init'
-import { logError, onCall, throwFunctionsError } from '../../utilities'
-import { XeroClient } from '../../xero/XeroClient'
-import { SlingClient } from '../core/slingClient'
-import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from '../core/timesheets'
-import { Rate } from '../core/types'
+import { StorageClient } from '../../../firebase/StorageClient'
+import { projectId } from '../../../init'
+import { SlingClient } from '../../../sling/sling-client'
+import { throwTrpcError } from '../../../utilities'
+import { XeroClient } from '../../../xero/XeroClient'
+import { Rate } from './timesheets.types'
+import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from './timesheets.utils'
 
 const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38
 
 type XeroUserCache = { [key: string]: Employee | undefined }
 
-export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDateInput, endDateInput }) => {
+export async function generateTimesheets({ startDateInput, endDateInput }: GenerateTimesheetsParams) {
     const slingClient = new SlingClient()
 
     // ensure dates start and end at midnight
@@ -38,14 +39,14 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
 
     // validate data
     if (startDate > endDate) {
-        throwFunctionsError('invalid-argument', 'start date must come before the end date', {
+        throwTrpcError('BAD_REQUEST', 'start date must come before the end date', {
             errorCode: 'invalid-range',
         })
     }
 
     const diffInDays = endDate.diff(startDate, 'days').days
     if (diffInDays > 28) {
-        throwFunctionsError('invalid-argument', 'date range must be 28 days or less', {
+        throwTrpcError('BAD_REQUEST', 'date range must be 28 days or less', {
             errorCode: 'invalid-length',
         })
     }
@@ -189,10 +190,9 @@ export const generateTimesheets = onCall<'generateTimesheets'>(async ({ startDat
             employeesUnder18Over30Hrs: [...new Set(employeesUnder18Over30Hrs)],
         }
     } catch (err) {
-        logError('error generating timesheets', err)
-        throwFunctionsError('internal', 'error generating timesheets', err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'error generating timesheets', err)
     }
-})
+}
 
 async function getAndCacheXeroUser(userId: string, cache: XeroUserCache) {
     const cachedUser = cache[userId]

@@ -1,31 +1,10 @@
-import {
-    HttpsError,
-    onCall as fireOnCall,
-    onRequest as fireOnRequest,
-    type FunctionsErrorCode,
-    type Request,
-} from 'firebase-functions/v2/https'
+import { HttpsError, type FunctionsErrorCode } from 'firebase-functions/v2/https'
 import { onMessagePublished as fireOnMessagePublished } from 'firebase-functions/v2/pubsub'
 import { logger } from 'firebase-functions/v2'
-import type { Response } from 'express'
-import type { FirebaseFunctions, PubSubFunctions } from 'fizz-kidz'
+import type { PubSubFunctions } from 'fizz-kidz'
 import { PubSubClient } from '../firebase/PubSubClient'
 import { TRPCError } from '@trpc/server'
 import { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
-
-export function onCall<T extends keyof FirebaseFunctions>(
-    fn: (
-        input: FirebaseFunctions[T]['input']
-    ) => FirebaseFunctions[T]['result']['data'] | Promise<FirebaseFunctions[T]['result']['data']>
-) {
-    return fireOnCall((request) => fn(request.data))
-}
-
-export function onRequest<T extends keyof FirebaseFunctions>(
-    fn: (req: Request, resp: Response<FirebaseFunctions[T]['result']['data']>) => void | Promise<void>
-) {
-    return fireOnRequest(fn)
-}
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
     return fireOnMessagePublished(topic, (event) => fn(event.data.message.json))
@@ -97,6 +76,7 @@ export function logError(message: string, error?: unknown, additionalInfo: objec
         logger.error(message, { ...(hasAdditionalInfo && additionalInfo) })
     }
 }
+
 export function throwFunctionsError(
     code: FunctionsErrorCode,
     message: string,

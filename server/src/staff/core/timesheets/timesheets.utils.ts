@@ -1,5 +1,6 @@
 import { DateTime, Duration, Interval } from 'luxon'
-import type { Rate, Timesheet as SlingTimesheet } from './types'
+
+import type { Rate, Timesheet as SlingTimesheet } from './timesheets.types'
 
 /**
  * Breaks the range down into weeks, and returns them as an array of intervals.

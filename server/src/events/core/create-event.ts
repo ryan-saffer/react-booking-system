@@ -1,10 +1,9 @@
-import { throwFunctionsError, throwTrpcError } from '../../utilities'
-
 import { CalendarClient } from '../../google/CalendarClient'
 import { CreateEvent } from '../functions/trpc/trpc.events'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { DateTime } from 'luxon'
 import { MailClient } from '../../sendgrid/MailClient'
+import { throwTrpcError } from '../../utilities'
 
 export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
     const { slots, ...rest } = event
@@ -51,7 +50,10 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
             eventIds.map((eventId, idx) => {
                 const calendarEventId = calendarEventIds[idx]
                 if (!calendarEventId) {
-                    throwFunctionsError('internal', `error creating calendar event for event with id ${eventId}`)
+                    throwTrpcError(
+                        'INTERNAL_SERVER_ERROR',
+                        `error creating calendar event for event with id ${eventId}`
+                    )
                 }
                 return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
             })

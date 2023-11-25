@@ -1,11 +1,11 @@
-import { ESignatureClient } from '../../esignatures.io/core/ESignaturesClient'
-import { Employee, getLocationAddress } from 'fizz-kidz'
-import { logError, onCall, throwFunctionsError } from '../../utilities'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { MailClient } from '../../sendgrid/MailClient'
+import { Employee, InitiateEmployeeProps, getLocationAddress } from 'fizz-kidz'
+import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
+import { ESignatureClient } from '../../../esignatures.io/core/ESignaturesClient'
+import { throwTrpcError } from '../../../utilities'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { MailClient } from '../../../sendgrid/MailClient'
 
-export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => {
+export async function initiateOnboarding(input: InitiateEmployeeProps) {
     const employeeRef = (await FirestoreRefs.employees()).doc()
 
     const esignaturesClient = new ESignatureClient()
@@ -28,8 +28,7 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
             },
         }))
     } catch (err) {
-        logError('error creating contract', err)
-        throwFunctionsError('internal', 'error creating contract', err)
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating contract', err)
     }
 
     const employee = {
@@ -68,6 +67,4 @@ export const initiateOnboarding = onCall<'initiateOnboarding'>(async (input) => 
         formUrl,
         senderName: employee.senderName,
     })
-
-    return
-})
+}

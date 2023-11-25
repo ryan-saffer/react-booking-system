@@ -6,7 +6,7 @@
     "scripts": {
         "bundle": "esbuild src/index.ts --sourcemap --bundle --platform=node --packages=external --supported:dynamic-import=false --outdir=lib",
         "build": "npm run lint && npm --prefix fizz-kidz run build && npm run ts:check && npm run bundle && npm run copy-files",
-        "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
+        "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run ts:check -- --watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
         "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml lib",
         "deploy": "firebase deploy --only functions",
         "ts:check": "tsc",

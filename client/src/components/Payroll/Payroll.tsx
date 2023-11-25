@@ -7,11 +7,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { DownloadOutlined } from '@ant-design/icons'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import * as ROUTES from '@constants/routes'
 import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import { styled } from '@mui/material/styles'
-import { callFirebaseFunction } from '@utils/firebase/functions'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'Payroll'
 
@@ -45,8 +44,6 @@ dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
 
 export const Payroll = () => {
-    const firebase = useFirebase()
-
     const {
         token: { colorBgContainer },
     } = theme.useToken()
@@ -56,6 +53,8 @@ export const Payroll = () => {
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
     const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
 
+    const generateTimesheetsMutation = trpc.staff.generateTimesheets.useMutation()
+
     const onChange: RangePickerProps['onChange'] = async (_, format) => {
         setSelectedDates(format)
     }
@@ -64,11 +63,11 @@ export const Payroll = () => {
         setTimesheetsService({ status: 'loading' })
 
         try {
-            const result = await callFirebaseFunction(
-                'generateTimesheets',
-                firebase
-            )({ startDateInput: selectedDates[0], endDateInput: selectedDates[1] })
-            setTimesheetsService({ status: 'loaded', result: result.data })
+            const result = await generateTimesheetsMutation.mutateAsync({
+                startDateInput: selectedDates[0],
+                endDateInput: selectedDates[1],
+            })
+            setTimesheetsService({ status: 'loaded', result })
         } catch (error) {
             console.error(error)
             setTimesheetsService({ status: 'error', error })

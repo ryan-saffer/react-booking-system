@@ -1,14 +1,15 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { env } from '../../init'
-import { logError, onMessagePublished } from '../../utilities'
+import { EarningsRateCalculationType } from 'xero-node/dist/gen/model/payroll-au/earningsRateCalculationType'
 import { Employee as XeroEmployee } from 'xero-node/dist/gen/model/payroll-au/employee'
-import { SlingClient } from '../../sling/core/slingClient'
+import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 import { EmploymentType } from 'xero-node/dist/gen/model/payroll-au/employmentType'
 import { IncomeType } from 'xero-node/dist/gen/model/payroll-au/incomeType'
-import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
-import { EarningsRateCalculationType } from 'xero-node/dist/gen/model/payroll-au/earningsRateCalculationType'
-import { DriveClient } from '../../google/DriveClient'
-import { XeroClient } from '../../xero/XeroClient'
+
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { DriveClient } from '../../../google/DriveClient'
+import { env } from '../../../init'
+import { SlingClient } from '../../../sling/sling-client'
+import { logError, onMessagePublished } from '../../../utilities'
+import { XeroClient } from '../../../xero/XeroClient'
 
 const CURRENT_STAFF_FOLDER_ID = '19pzxRIbp3jzM7HJAUMg6Bau5B_y5xjwt'
 const STAFF_ORDINARY_HOURS_RATE_ID =

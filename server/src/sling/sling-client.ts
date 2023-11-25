@@ -1,4 +1,4 @@
-import type { Timesheet, User, CreateUser } from './types'
+import type { CreateUser, Timesheet, User } from '../staff/core/timesheets/timesheets.types'
 
 export class SlingClient {
     async #request(path: string, method: 'GET' | 'POST', data?: any) {

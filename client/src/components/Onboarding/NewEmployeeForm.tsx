@@ -3,9 +3,8 @@ import { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
 import React, { useState } from 'react'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
-import { callFirebaseFunction } from '@utils/firebase/functions'
 import { capitalise } from '@utils/stringUtilities'
+import { trpc } from '@utils/trpc'
 
 const { Option } = Select
 
@@ -29,11 +28,12 @@ type Props = {
 }
 
 const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
-    const firebase = useFirebase()
     const [form] = Form.useForm<TNewEmployeeForm>()
     const [messageApi] = message.useMessage()
 
     const [submitting, setSubmitting] = useState(false)
+
+    const initiateOnboardingMutation = trpc.staff.initiateOnboarding.useMutation()
 
     const submit = async () => {
         try {
@@ -44,7 +44,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             }
             setSubmitting(true)
             try {
-                await callFirebaseFunction('initiateOnboarding', firebase)(formattedValues)
+                await initiateOnboardingMutation.mutateAsync(formattedValues)
                 onCancel()
                 form.resetFields()
             } catch (err) {
