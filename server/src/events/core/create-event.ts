@@ -98,7 +98,8 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
             throwTrpcError(
                 'INTERNAL_SERVER_ERROR',
                 'Event booked successfully, but an error occurred sending the confirmation email',
-                err
+                err,
+                { event }
             )
         }
     }
