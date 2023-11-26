@@ -26,9 +26,7 @@ type Props = {
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
     const { data, isLoading, isSuccess, isError } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
-        {
-            appointmentIds: [appointment.id],
-        },
+        { appointmentIds: [appointment.id] },
         {
             enabled: appointment.invoiceId !== '',
             initialData: { [appointment.id]: { status: 'NOT_SENT' } },
