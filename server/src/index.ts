@@ -6,3 +6,5 @@ export * from './party-bookings'
 export * from './science-program'
 export * from './staff'
 export * from './stripe'
+
+export * from './square'

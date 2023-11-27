@@ -5,7 +5,7 @@ import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 import DriveEtaIcon from '@mui/icons-material/DriveEta'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import StoreIcon from '@mui/icons-material/Store'
-import { Chip, Grid, useMediaQuery } from '@mui/material'
+import { Button, Chip, Grid, useMediaQuery } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -94,6 +94,28 @@ const BookingPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             ...(isMobile && { flexDirection: 'column-reverse', gap: 4 }),
                         }}
                     >
+                        <Button
+                            href={`
+                            square-commerce-v1://payment/create?data=${encodeURIComponent(
+                                JSON.stringify({
+                                    amount_money: {
+                                        amount: '50000',
+                                        currency_code: 'AUD',
+                                    },
+                                    callback_url:
+                                        'https://9bdf-125-253-110-47.ngrok-free.app/booking-system-6435d/australia-southeast1/squareWebhook',
+                                    client_id: 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A',
+                                    version: '1.3',
+                                    notes: '15 kids @ $48/kid',
+                                    options: {
+                                        supported_tender_types: ['CREDIT_CARD'],
+                                    },
+                                })
+                            )}
+                        `}
+                        >
+                            Charge
+                        </Button>
                         <Tag
                             color={booking.oldPrices ? 'volcano-inverse' : 'green-inverse'}
                             style={{ textAlign: 'center', fontWeight: 600 }}
