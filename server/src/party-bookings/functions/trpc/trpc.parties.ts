@@ -13,19 +13,13 @@ export type DeletePartyBooking = { bookingId: string; eventId: string; location:
 export const partiesRouter = router({
     createPartyBooking: authenticatedProcedure
         .input((input: unknown) => input as CreatePartyBooking)
-        .mutation(async ({ input }) => {
-            await createPartyBooking(input)
-        }),
+        .mutation(({ input }) => createPartyBooking(input)),
     updatePartyBooking: authenticatedProcedure
         .input((input: unknown) => input as UpdatePartyBooking)
-        .mutation(async ({ input }) => {
-            await updatePartyBooking(input)
-        }),
+        .mutation(({ input }) => updatePartyBooking(input)),
     deletePartyBooking: authenticatedProcedure
         .input((input: unknown) => input as DeletePartyBooking)
-        .mutation(async ({ input }) => {
-            await deletePartyBooking(input)
-        }),
+        .mutation(({ input }) => deletePartyBooking(input)),
 })
 
 export const parties = onRequestTrpc(partiesRouter)
