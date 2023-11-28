@@ -15,7 +15,10 @@ export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>
 }
 
-export type WithoutId<T> = Omit<T, 'id'>
+// https://stackoverflow.com/a/57103940/7870403
+export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never
+
+export type WithoutId<T> = DistributiveOmit<T, 'id'>
 export type WithId<T> = T & { id: string }
 
 export * from './businessLogic'

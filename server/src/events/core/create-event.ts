@@ -1,12 +1,25 @@
+import { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
+
 import { CalendarClient } from '../../google/CalendarClient'
-import { CreateEvent } from '../functions/trpc/trpc.events'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { DateTime } from 'luxon'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
 
-export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
-    const { slots, ...rest } = event
+export type CreateEvent = {
+    event: WithoutId<DistributiveOmit<Event, 'eventId' | 'startTime' | 'endTime' | 'calendarEventId'>>
+    slots: {
+        startTime: Date
+        endTime: Date
+    }[]
+    sendConfirmationEmail: boolean
+    emailMessage: string
+}
+
+export async function createEvent({ event, slots, sendConfirmationEmail, emailMessage }: CreateEvent) {
+    if (event.type === 'incursion') {
+        console.log(event)
+    }
 
     const calendarClient = await CalendarClient.getInstance()
 
@@ -18,15 +31,10 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
 
     try {
         // create events in firestore
-        const eventIds = await Promise.all(
-            slots.map((slot) =>
-                DatabaseClient.createEventBooking({
-                    ...rest,
-                    startTime: slot.startTime,
-                    endTime: slot.endTime,
-                })
-            )
-        )
+        const { eventId, slotIds } = await DatabaseClient.createEventBooking(event, slots)
+
+        console.log('eventId:', eventId)
+        console.log('slotIds:', slotIds)
 
         // create events in calendar
         const calendarEventIds = await Promise.all(
@@ -47,15 +55,12 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
 
         // update calendar ids back into firestore
         await Promise.all(
-            eventIds.map((eventId, idx) => {
+            slotIds.map((slotId, idx) => {
                 const calendarEventId = calendarEventIds[idx]
                 if (!calendarEventId) {
-                    throwTrpcError(
-                        'INTERNAL_SERVER_ERROR',
-                        `error creating calendar event for event with id ${eventId}`
-                    )
+                    throwTrpcError('INTERNAL_SERVER_ERROR', `error creating calendar event for event with id ${slotId}`)
                 }
-                return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
+                return DatabaseClient.updateEventBooking(eventId, slotId, { calendarEventId })
             })
         )
     } catch (err) {

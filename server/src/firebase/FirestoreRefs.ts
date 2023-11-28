@@ -1,11 +1,13 @@
 import type {
-    ScienceEnrolment,
-    PaidHolidayProgramBooking,
     Booking,
-    HolidayProgramBooking,
     Employee,
+    Event,
     FirestoreBooking,
+    HolidayProgramBooking,
+    PaidHolidayProgramBooking,
+    ScienceEnrolment,
 } from 'fizz-kidz'
+
 import { FirestoreClient } from './FirestoreClient'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
@@ -45,11 +47,19 @@ export class FirestoreRefs {
     }
 
     static async events() {
-        return (await FirestoreClient.getInstance()).collection('events')
+        return (await FirestoreClient.getInstance()).collection('events-v2')
     }
 
     static async event(eventId: string) {
         return (await this.events()).doc(eventId)
+    }
+
+    static async eventSlots(eventId: string) {
+        return (await this.event(eventId)).collection('eventSlots') as Collection<Event>
+    }
+
+    static async eventSlot(eventId: string, slotId: string) {
+        return (await this.eventSlots(eventId)).doc(slotId)
     }
 
     static async employees() {

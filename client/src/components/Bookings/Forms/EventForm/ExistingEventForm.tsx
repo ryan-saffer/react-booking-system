@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { DateTime } from 'luxon'
-import { EventBooking } from 'fizz-kidz'
+import { Event } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
@@ -9,11 +9,11 @@ import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDial
 import EditFormButtons from '@components/Bookings/Forms/EditFormButtons'
 import { combineDateAndTime } from '@utils/dateUtils'
 
-import EventForm, { Form } from './EventForm'
+import BaseEventForm, { Form } from './BaseEventForm'
 import { trpc } from '@utils/trpc'
 
 type Props = {
-    event: EventBooking
+    event: Event
 } & ConfirmationDialogProps &
     ErrorDialogProps
 
@@ -61,7 +61,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
         setLoading(true)
 
         try {
-            const updatedBooking: EventBooking = {
+            const updatedBooking: Event = {
                 ...event,
                 eventName: values.eventName,
                 contactName: values.contactName,
@@ -81,6 +81,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
             setTimeout(() => {
                 setEditing(false)
                 setSuccess(false)
+                setDate(DateTime.fromJSDate(event.startTime))
             }, 1000)
         } catch {
             displayError('There was an error updating the event')
@@ -93,7 +94,12 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
         setLoading(true)
         try {
             await deleteEventMutation.mutateAsync(event)
-            setDate(DateTime.fromJSDate(event.startTime))
+            setSuccess(true)
+            setTimeout(() => {
+                setEditing(false)
+                setSuccess(false)
+                setDate(DateTime.fromJSDate(event.startTime))
+            }, 1000)
         } catch (err) {
             displayError('There was an error deleting the event')
         } finally {
@@ -104,7 +110,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     return (
         <>
             <FormProvider {...methods}>
-                <EventForm isNew={false} disabled={!editing || loading} />
+                <BaseEventForm isNew={false} disabled={!editing || loading} />
             </FormProvider>
             <EditFormButtons
                 loading={loading}

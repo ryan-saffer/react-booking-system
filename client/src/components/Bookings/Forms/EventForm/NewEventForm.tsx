@@ -4,10 +4,11 @@ import SaveIcon from '@mui/icons-material/Save'
 import CheckIcon from '@mui/icons-material/Check'
 import { green } from '@mui/material/colors'
 import WithErrorDialog, { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
-import EventForm, { Form } from './EventForm'
+import BaseEventForm, { Form } from './BaseEventForm'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { trpc } from '@utils/trpc'
+import { DateTime } from 'luxon'
 
 const PREFIX = 'NewEventForm'
 
@@ -43,22 +44,28 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
 
     const methods = useForm<Form>({
         defaultValues: {
-            eventName: '',
-            contactName: '',
-            contactNumber: '',
-            contactEmail: '',
-            organisation: '',
-            location: '',
-            price: '',
+            eventName: 'Ryans Test Event',
+            contactName: 'Ryan Saffer',
+            contactNumber: '0413892120',
+            contactEmail: 'ryansaffer@gmail.com',
+            organisation: 'Fizz Kidz',
+            location: 'Chadstone',
+            price: '$1800 + GST',
             slots: [
                 {
-                    startDate: null,
-                    startTime: null,
-                    endDate: null,
-                    endTime: null,
+                    startDate: DateTime.fromObject({ day: 29, month: 11, hour: 13, minute: 0, second: 0 }),
+                    startTime: DateTime.fromObject({ day: 29, month: 11, hour: 13, minute: 0, second: 0 }),
+                    endDate: DateTime.fromObject({ day: 29, month: 11, hour: 14, minute: 0, second: 0 }),
+                    endTime: DateTime.fromObject({ day: 29, month: 11, hour: 14, minute: 0, second: 0 }),
+                },
+                {
+                    startDate: DateTime.fromObject({ day: 29, month: 11, hour: 15, minute: 0, second: 0 }),
+                    startTime: DateTime.fromObject({ day: 29, month: 11, hour: 15, minute: 0, second: 0 }),
+                    endDate: DateTime.fromObject({ day: 29, month: 11, hour: 16, minute: 0, second: 0 }),
+                    endTime: DateTime.fromObject({ day: 29, month: 11, hour: 16, minute: 0, second: 0 }),
                 },
             ],
-            notes: '',
+            notes: 'Some notes...',
         } satisfies Form,
     })
     const {
@@ -92,12 +99,13 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     organisation: values.organisation,
                     location: values.location,
                     price: values.price,
-                    slots: values.slots.map((slot) => ({
-                        startTime: combineDateAndTime(slot.startDate!, slot.startTime!),
-                        endTime: combineDateAndTime(slot.endDate!, slot.endTime!),
-                    })),
                     notes: values.notes,
+                    type: 'standard',
                 },
+                slots: values.slots.map((slot) => ({
+                    startTime: combineDateAndTime(slot.startDate!, slot.startTime!),
+                    endTime: combineDateAndTime(slot.endDate!, slot.endTime!),
+                })),
                 sendConfirmationEmail,
                 emailMessage,
             })
@@ -113,7 +121,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
     return (
         <Root>
             <FormProvider {...methods}>
-                <EventForm isNew={true} fieldArray={fieldArray} />
+                <BaseEventForm isNew={true} fieldArray={fieldArray} />
             </FormProvider>
             <Grid container spacing={3}>
                 {sendConfirmationEmail && (

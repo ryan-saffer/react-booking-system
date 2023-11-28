@@ -1,12 +1,13 @@
-import { styled } from '@mui/material/styles'
 import { Button, Grid, IconButton, TextField, Tooltip, Typography } from '@mui/material'
-import React from 'react'
-import { Controller, useFormContext, UseFieldArrayReturn, Control } from 'react-hook-form'
+import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+
 import AddIcon from '@mui/icons-material/Add'
+import { DateTime } from 'luxon'
+import React from 'react'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { capitalise } from '../../../../utilities/stringUtilities'
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import { DateTime } from 'luxon'
+import { styled } from '@mui/material/styles'
 
 const PREFIX = 'EventForm'
 
@@ -50,7 +51,7 @@ type ExistingProps = {
     disabled: boolean
 }
 
-const EventForm: React.FC<NewProps | ExistingProps> = (props) => {
+const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
     const {
         control,
         formState: { errors },
@@ -413,4 +414,4 @@ const DateTimePicker = ({
     )
 }
 
-export default EventForm
+export default BaseEventForm

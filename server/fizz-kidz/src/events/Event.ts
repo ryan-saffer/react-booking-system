@@ -1,5 +1,6 @@
-export type EventBooking = {
+type BaseEvent = {
     id: string
+    eventId: string // id of parent document
     eventName: string
     contactName: string
     contactNumber: string
@@ -12,3 +13,14 @@ export type EventBooking = {
     notes: string
     calendarEventId: string
 }
+
+type StandardEvent = BaseEvent & {
+    type: 'standard'
+}
+
+type IncursionEvent = BaseEvent & {
+    type: 'incursion'
+    module: string
+}
+
+export type Event = StandardEvent | IncursionEvent
