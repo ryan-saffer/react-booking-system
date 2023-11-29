@@ -15,7 +15,7 @@ export async function updateEvent(event: Event) {
             { eventType: 'events' },
             {
                 title: event.eventName,
-                location: event.location,
+                location: event.address,
                 start: event.startTime,
                 end: event.endTime,
                 description: event.notes,
@@ -31,7 +31,7 @@ export async function updateEvent(event: Event) {
                     { eventType: 'events' },
                     {
                         title: event.eventName,
-                        location: event.location,
+                        location: event.address,
                         start: sibling.startTime,
                         end: sibling.endTime,
                         description: event.notes,

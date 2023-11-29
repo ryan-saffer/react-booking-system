@@ -51,7 +51,7 @@
                     Where
                 </mj-text>
                 <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-                    {{location}}
+                    {{address}}
                 </mj-text>
             </mj-column>
             <mj-column width="100%">

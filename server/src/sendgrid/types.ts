@@ -135,11 +135,22 @@ export type Emails = {
     }
 
     // EVENTS
-    eventBooking: {
+    standardEvent: {
         contactName: string
-        location: string
+        address: string
         slots: { startTime: string; endTime: string }[]
         emailMessage: string
+        price: string
+    }
+
+    incursionBooking: {
+        contactName: string
+        organisation: string
+        address: string
+        slots: { startTime: string; endTime: string }[]
+        emailMessage: string
+        incursion: string
+        module: string
         price: string
     }
 

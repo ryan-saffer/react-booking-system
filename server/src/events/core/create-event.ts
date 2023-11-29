@@ -1,4 +1,4 @@
-import { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
+import { DistributiveOmit, Event, ModuleIncursionMap, ModuleNameMap, WithoutId } from 'fizz-kidz'
 
 import { CalendarClient } from '../../google/CalendarClient'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
@@ -43,7 +43,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                     { eventType: 'events' },
                     {
                         title: event.eventName,
-                        location: event.location,
+                        location: event.address,
                         start: slot.startTime,
                         end: slot.endTime,
                         description: event.notes,
@@ -71,34 +71,44 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
     if (sendConfirmationEmail) {
         try {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('eventBooking', event.contactEmail, {
-                contactName: event.contactName,
-                location: event.location,
-                emailMessage: emailMessage,
-                price: event.price,
-                slots: slots.map((slot) => ({
-                    startTime: DateTime.fromJSDate(slot.startTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString({
-                        weekday: 'long',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    }),
-                    endTime: DateTime.fromJSDate(slot.endTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString({
-                        weekday: 'long',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    }),
-                })),
-            })
+
+            const { type } = event
+
+            switch (type) {
+                case 'standard': {
+                    await mailClient.sendEmail('standardEvent', event.contactEmail, {
+                        contactName: event.contactName,
+                        address: event.address,
+                        emailMessage: emailMessage,
+                        price: event.price,
+                        slots: slots.map((slot) => ({
+                            startTime: formatDate(slot.startTime),
+                            endTime: formatTime(slot.endTime),
+                        })),
+                    })
+                    break
+                }
+                case 'incursion': {
+                    await mailClient.sendEmail('incursionBooking', event.contactEmail, {
+                        contactName: event.contactName,
+                        organisation: event.organisation,
+                        address: event.address,
+                        slots: slots.map((slot) => ({
+                            startTime: formatDate(slot.startTime),
+                            endTime: formatTime(slot.endTime),
+                        })),
+                        emailMessage: emailMessage,
+                        incursion: ModuleIncursionMap[event.module],
+                        module: ModuleNameMap[event.module],
+                        price: event.price,
+                    })
+                    break
+                }
+                default: {
+                    const exhaustiveCheck: never = type
+                    throw new Error(`Unhandled event type: '${exhaustiveCheck}'`)
+                }
+            }
         } catch (err) {
             throwTrpcError(
                 'INTERNAL_SERVER_ERROR',
@@ -109,3 +119,24 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
         }
     }
 }
+
+const formatDate = (date: Date) =>
+    DateTime.fromJSDate(date, {
+        zone: 'Australia/Melbourne',
+    }).toLocaleString({
+        weekday: 'short',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    })
+
+const formatTime = (date: Date) =>
+    DateTime.fromJSDate(date, {
+        zone: 'Australia/Melbourne',
+    }).toLocaleString({
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    })

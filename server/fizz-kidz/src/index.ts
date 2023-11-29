@@ -47,3 +47,4 @@ export * from './hubspot'
 export * from './paperform'
 
 export * from './events/Event'
+export * from './events/incursion-module-map'

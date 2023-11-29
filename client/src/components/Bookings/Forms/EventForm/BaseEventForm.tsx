@@ -16,7 +16,7 @@ import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 
 import AddIcon from '@mui/icons-material/Add'
 import { DateTime } from 'luxon'
-import { Event } from 'fizz-kidz'
+import { Event, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
 import React from 'react'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { capitalise } from '../../../../utilities/stringUtilities'
@@ -43,9 +43,9 @@ export type Form = {
     contactNumber: string
     contactEmail: string
     organisation: string
-    location: string
+    address: string
     type: Event['type'] | ''
-    module: string
+    module: ScienceModule | ''
     price: string
     slots: {
         startDate: DateTime | null
@@ -133,23 +133,11 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                 rules={{ required: true }}
                                 render={({ field }) => (
                                     <Select {...field} label="module" disabled={disabled} error={!!errors.module}>
-                                        <MenuItem value="radical-reactions-f-2">Radical Reactions (F-2)</MenuItem>
-                                        <MenuItem value="radical-reactions-3-6">Radical Reactions (3-6)</MenuItem>
-                                        <MenuItem value="marvellous-matter-3-6">Marvellous Matter (3-6)</MenuItem>
-                                        <MenuItem value="fabulous-forces-f-2">Fabolous Forces (F-2)</MenuItem>
-                                        <MenuItem value="fabulous-forces-3-6">Fabulous Forces (3-6)</MenuItem>
-                                        <MenuItem value="electrifying-electricity-3-6">
-                                            Electrifying Electricity (3-6)
-                                        </MenuItem>
-                                        <MenuItem value="light-and-sound-f-2">Light and Sound (F-2)</MenuItem>
-                                        <MenuItem value="wild-and-wacky-weather-f-2">
-                                            Wild and Wacky Weather (F-2)
-                                        </MenuItem>
-                                        <MenuItem value="living-things-f-2">Living Things (F-2)</MenuItem>
-                                        <MenuItem value="sustainability-superpowers-f-6">
-                                            Sustainability Superpowers (F-6)
-                                        </MenuItem>
-                                        <MenuItem value="natural-disasters-3-6">Natural Disasters (3-6)</MenuItem>
+                                        {ObjectKeys(ModuleNameMap).map((key) => (
+                                            <MenuItem value={key} key={key}>
+                                                {ModuleNameMap[key]}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 )}
                             />
@@ -248,15 +236,15 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <Controller
-                        name="location"
+                        name="address"
                         control={control}
                         rules={{ required: true }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                label="Location"
-                                error={errors.location && true}
-                                helperText={errors.location && 'Location is required'}
+                                label="Address"
+                                error={errors.address && true}
+                                helperText={errors.address && 'Address is required'}
                                 fullWidth
                                 variant="outlined"
                                 autoComplete="off"

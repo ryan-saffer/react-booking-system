@@ -175,7 +175,7 @@ export class MailClient {
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
                 }
-            case 'eventBooking':
+            case 'standardEvent':
                 return {
                     emailInfo: {
                         to,
@@ -187,7 +187,22 @@ export class MailClient {
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
-                    template: 'event_booking_confirmation.html',
+                    template: 'event_booking_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'incursionBooking':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        bcc: 'programs@fizzkidz.com.au',
+                        subject: subject || 'Fizz Kidz Booking Confirmation',
+                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                    },
+                    template: 'incursion_booking_confirmation.mjml',
                     useMjml: true,
                 }
             case 'partyBookingConfirmation':

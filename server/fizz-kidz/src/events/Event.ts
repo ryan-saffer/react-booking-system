@@ -1,3 +1,5 @@
+import { ScienceModule } from '..'
+
 type BaseEvent = {
     id: string
     eventId: string // id of parent document
@@ -6,7 +8,7 @@ type BaseEvent = {
     contactNumber: string
     contactEmail: string
     organisation: string
-    location: string
+    address: string
     price: string
     startTime: Date
     endTime: Date
@@ -20,7 +22,7 @@ type StandardEvent = BaseEvent & {
 
 type IncursionEvent = BaseEvent & {
     type: 'incursion'
-    module: string
+    module: ScienceModule
 }
 
 export type Event = StandardEvent | IncursionEvent
