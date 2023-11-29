@@ -1,9 +1,10 @@
 import { Event, Service } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
-import { convertTimestamps } from '../../../utilities/firebase/converters'
-import { useDateNavigation } from '../DateNavigation/DateNavigation.hooks'
+import { convertTimestamps } from '@utils/firebase/converters'
+
 import useFirebase from '../../Hooks/context/UseFirebase'
+import { useDateNavigation } from '../DateNavigation/DateNavigation.hooks'
 
 export function useEvents() {
     const firebase = useFirebase()
@@ -39,16 +40,9 @@ export function useEvents() {
                         return null
                     })
                     .filter((it): it is Event => !!it)
-                // const deletedEvent = snap.docChanges().find((doc) => doc.type === 'removed')
-                // if (deletedEvent) {
-                //     console.log('FOUND DELETED EVENT!', deletedEvent.doc.data())
-                // }
                 setEvents({
                     status: 'loaded',
-                    result: [
-                        ...events,
-                        // ...(deletedEvent ? [{ ...(convertTimestamps(deletedEvent.doc.data()) as Event) }] : []),
-                    ],
+                    result: [...events],
                 })
             } catch (error) {
                 console.error(error)

@@ -1,9 +1,11 @@
+import dateFormat from 'dateformat'
+import { Event } from 'fizz-kidz'
+import React from 'react'
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import React from 'react'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { EventBooking } from 'fizz-kidz'
-import dateFormat from 'dateformat'
+
 import { ExistingEventForm } from '../Forms/EventForm/ExistingEventForm'
 
 const PREFIX = 'EventPanel'
@@ -27,7 +29,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }))
 
 type Props = {
-    event: EventBooking
+    event: Event
 }
 
 const EventPanel: React.FC<Props> = ({ event }) => {

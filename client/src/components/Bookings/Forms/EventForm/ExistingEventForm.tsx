@@ -28,13 +28,15 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     const { setDate } = useDateNavigation()
 
     const methods = useForm<Form>({
-        defaultValues: {
+        values: {
             eventName: event.eventName,
             contactName: event.contactName,
             contactNumber: event.contactNumber,
             contactEmail: event.contactEmail,
             organisation: event.organisation,
             location: event.location,
+            type: event.type,
+            module: event.type === 'incursion' ? event.module : '',
             price: event.price,
             slots: [
                 {
@@ -47,6 +49,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
             notes: event.notes,
         } satisfies Form,
     })
+
     const {
         formState: { isValid },
         handleSubmit,

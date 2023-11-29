@@ -1,7 +1,9 @@
+import { Event, Service } from 'fizz-kidz'
+import React from 'react'
+
 import { Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { EventBooking, Service } from 'fizz-kidz'
-import React from 'react'
+
 import EventPanel from './EventPanel'
 
 const PREFIX = 'Events'
@@ -18,7 +20,7 @@ const Root = styled('h1')(({ theme }) => ({
 }))
 
 type Props = {
-    events: Service<EventBooking[]>
+    events: Service<Event[]>
 }
 
 const Events: React.FC<Props> = ({ events }) => {

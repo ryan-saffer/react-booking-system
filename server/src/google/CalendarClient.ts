@@ -72,11 +72,9 @@ export class CalendarClient {
     async createEvent(
         calendar: CalendarParams,
         event: Event,
-        options: {
-            useExponentialBackoff?: boolean
-        } = {}
+        options: { useExponentialBackoff?: boolean } = { useExponentialBackoff: false }
     ) {
-        const { useExponentialBackoff = false } = options
+        const { useExponentialBackoff } = options
         const insertFn = () =>
             this.#calendar.events.insert(
                 {
@@ -101,9 +99,9 @@ export class CalendarClient {
         _eventId: string,
         calendar: CalendarParams,
         event: Event,
-        options: { useExponentialBackoff?: boolean } = {}
+        options: { useExponentialBackoff?: boolean } = { useExponentialBackoff: false }
     ) {
-        const { useExponentialBackoff = false } = options
+        const { useExponentialBackoff } = options
 
         const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
 

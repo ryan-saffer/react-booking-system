@@ -50,6 +50,8 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             contactEmail: 'ryansaffer@gmail.com',
             organisation: 'Fizz Kidz',
             location: 'Chadstone',
+            type: '',
+            module: '',
             price: '$1800 + GST',
             slots: [
                 {
@@ -100,7 +102,9 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     location: values.location,
                     price: values.price,
                     notes: values.notes,
-                    type: 'standard',
+                    ...(values.type === 'standard'
+                        ? { type: 'standard' }
+                        : { type: 'incursion', module: values.module }),
                 },
                 slots: values.slots.map((slot) => ({
                     startTime: combineDateAndTime(slot.startDate!, slot.startTime!),
