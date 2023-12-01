@@ -101,7 +101,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.BOOKINGS,
         lazy: async () => {
-            const { BookingsPage } = await import('../Bookings/parties/Bookings.js')
+            const { BookingsPage } = await import('../Bookings/bookings-page.js')
             return { Component: withAuthorization(['BASIC', 'RESTRICTED'], BookingsPage) }
         },
     },

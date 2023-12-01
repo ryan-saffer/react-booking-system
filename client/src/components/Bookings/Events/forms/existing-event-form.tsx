@@ -6,10 +6,10 @@ import { Event } from 'fizz-kidz'
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
-import EditFormButtons from '@components/Bookings/shared/EditFormButtons'
+import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
 import { combineDateAndTime } from '@utils/dateUtils'
 
-import BaseEventForm, { Form } from './BaseEventForm'
+import BaseEventForm, { Form } from './base-event-form'
 import { trpc } from '@utils/trpc'
 
 type Props = {

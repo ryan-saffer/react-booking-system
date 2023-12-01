@@ -1,4 +1,4 @@
-import { FirestoreBooking, Location, WithId } from 'fizz-kidz'
+import { FirestoreBooking, Location, Service, WithId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useRef, useState } from 'react'
 
@@ -6,9 +6,9 @@ import { useDateNavigation } from '@components/Bookings/date-navigation/date-nav
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
 export function usePartyBookings({
-    setSelectedLocations,
+    setLocation,
 }: {
-    setSelectedLocations: (locations: { [key in Location]?: boolean }) => void
+    setLocation: (location: Location, value: boolean) => void
     id?: string
 }) {
     const firebase = useFirebase()
@@ -16,9 +16,20 @@ export function usePartyBookings({
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = useRef(urlSearchParams.get('id'))
 
-    const [bookings, setBookings] = useState<WithId<FirestoreBooking>[]>([])
+    const [bookings, setBookings] = useState<Service<Record<Location, WithId<FirestoreBooking>[]>>>({
+        status: 'loading',
+    })
 
-    const { date, setDate, setLoading } = useDateNavigation()
+    const { date, setDate } = useDateNavigation()
+
+    const generateLocationsMap = (
+        bookings: WithId<FirestoreBooking>[]
+    ): Record<Location, WithId<FirestoreBooking>[]> => {
+        return Object.values(Location).reduce(
+            (acc, curr) => ({ ...acc, [curr]: bookings.filter((it) => it.location === curr) }),
+            {} as any
+        )
+    }
 
     const runSubscription = useRef(true)
 
@@ -28,7 +39,7 @@ export function usePartyBookings({
             return
         }
 
-        setLoading(true)
+        setBookings({ status: 'loading' })
 
         let unsubscribe = () => {}
 
@@ -38,22 +49,18 @@ export function usePartyBookings({
                 .doc(id.current)
                 .onSnapshot((snapshot) => {
                     if (!snapshot.exists) {
-                        setBookings([bookings[0] ?? []])
-                        setLoading(false)
+                        setBookings({
+                            status: 'loaded',
+                            result: generateLocationsMap([]),
+                        })
                         return
                     }
                     const booking = snapshot.data() as FirestoreBooking
                     setDate(DateTime.fromJSDate(booking.dateTime.toDate()))
                     runSubscription.current = false // since we changed the date, this stops an infinite loop
                     id.current = null
-                    setBookings([{ ...booking, id: snapshot.id }])
-                    setSelectedLocations(
-                        Object.values(Location).reduce(
-                            (acc, curr) => ({ ...acc, [curr]: booking.location === curr }),
-                            {}
-                        )
-                    )
-                    setLoading(false)
+                    setBookings({ status: 'loaded', result: generateLocationsMap([{ ...booking, id: snapshot.id }]) })
+                    Object.values(Location).forEach((location) => setLocation(location, booking.location === location))
                 })
         } else {
             const followingDate = date.plus({ days: 1 })
@@ -67,13 +74,15 @@ export function usePartyBookings({
                         id: doc.id,
                     }))
                     const deletedBooking = snapshot.docChanges().find((doc) => doc.type === 'removed')
-                    setBookings([
-                        ...bookings,
-                        ...(deletedBooking
-                            ? [{ ...(deletedBooking.doc.data() as FirestoreBooking), id: deletedBooking.doc.id }]
-                            : []),
-                    ])
-                    setLoading(false)
+                    setBookings({
+                        status: 'loaded',
+                        result: generateLocationsMap([
+                            ...bookings,
+                            ...(deletedBooking
+                                ? [{ ...(deletedBooking.doc.data() as FirestoreBooking), id: deletedBooking.doc.id }]
+                                : []),
+                        ]),
+                    })
                 })
         }
 

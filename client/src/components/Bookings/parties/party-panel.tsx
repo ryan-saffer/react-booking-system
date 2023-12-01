@@ -58,6 +58,8 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         justifyContent: 'space-between',
         width: '100%',
         gap: 8,
+        marginTop: 4,
+        marginBottom: 4,
     },
 
     [`& .${classes.accordionHeading}`]: {
@@ -66,7 +68,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
 }))
 
-const BookingPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
+const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     const isRestricted = useScopes().CORE === 'restricted'
 
     const isMobile = useMediaQuery('(max-width: 460px')
@@ -155,4 +157,4 @@ function getEndDate(dateTime: Date, partyLength: Booking['partyLength']) {
     return endDate
 }
 
-export default BookingPanel
+export default PartyPanel

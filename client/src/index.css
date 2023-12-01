@@ -18,3 +18,8 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.MuiAccordionSummary-content {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}

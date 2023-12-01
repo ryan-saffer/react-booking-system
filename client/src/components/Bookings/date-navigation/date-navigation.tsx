@@ -1,26 +1,15 @@
+import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
-import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
-import {
-    Grid,
-    Hidden,
-    Typography,
-    Drawer,
-    CssBaseline,
-    AppBar,
-    Button,
-    Toolbar,
-    IconButton,
-    Box,
-    LinearProgress,
-} from '@mui/material'
+
 import { ExitToApp as ExitToAppIcon } from '@mui/icons-material'
-import { grey } from '@mui/material/colors'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
+import { AppBar, Box, Button, CssBaseline, Drawer, Grid, Hidden, IconButton, Toolbar, Typography } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import { styled } from '@mui/material/styles'
 import { DatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
-import { DateTime } from 'luxon'
 
 import * as ROUTES from '../../../constants/routes'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
@@ -163,7 +152,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const writePermissions = scopes.CORE === 'write'
 
     const [date, setDate] = useState(midnight(DateTime.now()))
-    const [loading, setLoading] = useState(true)
+    const [, setLoading] = useState(true)
 
     const handleDateChange = (date: DateTime) => {
         setDate(midnight(date))
@@ -248,8 +237,6 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                             <NavigateNext />
                         </Button>
                     </div>
-                    {loading && <LinearProgress style={{ marginTop: 9 }} color="secondary" />}
-                    {!loading && <div style={{ height: 13 }} />}
                     <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}
                     </DateNavigationContext.Provider>

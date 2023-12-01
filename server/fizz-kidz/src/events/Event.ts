@@ -17,11 +17,11 @@ type BaseEvent = {
     calendarEventId: string
 }
 
-type StandardEvent = BaseEvent & {
+export type StandardEvent = BaseEvent & {
     type: 'standard'
 }
 
-type IncursionEvent = BaseEvent & {
+export type IncursionEvent = BaseEvent & {
     type: 'incursion'
     module: ScienceModule
 }

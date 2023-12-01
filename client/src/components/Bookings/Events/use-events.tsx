@@ -1,4 +1,4 @@
-import { Event, Service } from 'fizz-kidz'
+import { Event, IncursionEvent, Location, Service, StandardEvent } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
 import { convertTimestamps } from '@utils/firebase/converters'
@@ -6,15 +6,25 @@ import { convertTimestamps } from '@utils/firebase/converters'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
 
-export function useEvents(type: Event['type']) {
+export function useEvents<T extends Event['type']>(
+    type: T
+): Service<Record<Location, T extends 'standard' ? StandardEvent[] : IncursionEvent[]>> {
     const firebase = useFirebase()
 
-    const { date, setLoading } = useDateNavigation()
-    const [events, setEvents] = useState<Service<Event[]>>({ status: 'loading' })
+    const { date } = useDateNavigation()
+    const [events, setEvents] = useState<Service<Record<Location, Event[]>>>({ status: 'loading' })
+
+    const generateLocationsMap = (events: Event[]): Record<Location, Event[]> =>
+        Object.values(Location).reduce((acc, curr) => ({ ...acc, [curr]: events.filter((it) => it.studio === curr) }), {
+            balwyn: [],
+            cheltenham: [],
+            essendon: [],
+            malvern: [],
+        })
 
     useEffect(() => {
         async function fetchEvents() {
-            setLoading(true)
+            setEvents({ status: 'loading' })
             // since we need to get a range between startDate and endDate,
             // and firestore does not support equality operators '>', '<' on multiple fields,
             // fetch all events that may have already started, and filter the rest on the frontend
@@ -44,13 +54,11 @@ export function useEvents(type: Event['type']) {
                     .filter((it): it is Event => !!it)
                 setEvents({
                     status: 'loaded',
-                    result: [...events],
+                    result: generateLocationsMap([...events]),
                 })
             } catch (error) {
                 console.error(error)
                 setEvents({ status: 'error', error })
-            } finally {
-                setLoading(false)
             }
         }
 
@@ -59,5 +67,5 @@ export function useEvents(type: Event['type']) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [date])
 
-    return events
+    return events as any
 }
