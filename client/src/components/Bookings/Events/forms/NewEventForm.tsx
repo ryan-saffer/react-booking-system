@@ -9,7 +9,7 @@ import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { trpc } from '@utils/trpc'
 import { DateTime } from 'luxon'
-import { ScienceModule } from 'fizz-kidz'
+import { Location, ScienceModule } from 'fizz-kidz'
 
 const PREFIX = 'NewEventForm'
 
@@ -50,6 +50,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             contactNumber: '0413892120',
             contactEmail: 'ryansaffer@gmail.com',
             organisation: 'Fizz Kidz',
+            studio: '',
             address: 'Chadstone',
             type: '',
             module: '',
@@ -101,6 +102,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     contactEmail: values.contactEmail,
                     organisation: values.organisation,
                     address: values.address,
+                    studio: values.studio as Location,
                     price: values.price,
                     notes: values.notes,
                     ...(values.type === 'standard'

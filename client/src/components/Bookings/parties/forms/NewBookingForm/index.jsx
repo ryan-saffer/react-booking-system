@@ -24,10 +24,10 @@ import { green } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 
-import { capitalise } from '../../../../utilities/stringUtilities'
-import WithErrorDialog from '../../../Dialogs/ErrorDialog'
+import { capitalise } from '../../../../../utilities/stringUtilities'
+import { trpc } from '../../../../../utilities/trpc'
+import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
-import { trpc } from '../../../../utilities/trpc'
 
 const PREFIX = 'index'
 

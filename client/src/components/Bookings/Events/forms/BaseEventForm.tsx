@@ -13,10 +13,10 @@ import {
 } from '@mui/material'
 import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { Event, Location, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
 
 import AddIcon from '@mui/icons-material/Add'
 import { DateTime } from 'luxon'
-import { Event, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
 import React from 'react'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { capitalise } from '../../../../utilities/stringUtilities'
@@ -43,6 +43,7 @@ export type Form = {
     contactNumber: string
     contactEmail: string
     organisation: string
+    studio: Location | ''
     address: string
     type: Event['type'] | ''
     module: ScienceModule | ''
@@ -101,7 +102,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} sm={watch('type') !== 'incursion' ? 12 : 6}>
+                <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
                         <InputLabel>Type</InputLabel>
                         <Controller
@@ -123,8 +124,29 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         {errors.type && <FormHelperText error={true}>Type is required</FormHelperText>}
                     </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                        <InputLabel>Studio</InputLabel>
+                        <Controller
+                            name="studio"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    label="studio"
+                                    disabled={disabled || !props.isNew}
+                                    error={!!errors.studio}
+                                >
+                                    {Object.values(Location).map(location => <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>)}
+                                </Select>
+                            )}
+                        />
+                        {errors.studio && <FormHelperText error={true}>Studio is required</FormHelperText>}
+                    </FormControl>
+                </Grid>
                 {watch('type') === 'incursion' && (
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                         <FormControl fullWidth>
                             <InputLabel>Module</InputLabel>
                             <Controller

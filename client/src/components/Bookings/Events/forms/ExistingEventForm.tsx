@@ -3,10 +3,10 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { DateTime } from 'luxon'
 import { Event } from 'fizz-kidz'
 
-import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
+import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
-import EditFormButtons from '@components/Bookings/Forms/EditFormButtons'
+import EditFormButtons from '@components/Bookings/shared/EditFormButtons'
 import { combineDateAndTime } from '@utils/dateUtils'
 
 import BaseEventForm, { Form } from './BaseEventForm'
@@ -34,6 +34,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
             contactNumber: event.contactNumber,
             contactEmail: event.contactEmail,
             organisation: event.organisation,
+            studio: event.studio,
             address: event.address,
             type: event.type,
             module: event.type === 'incursion' ? event.module : '',

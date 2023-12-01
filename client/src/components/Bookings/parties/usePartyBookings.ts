@@ -2,14 +2,13 @@ import { FirestoreBooking, Location, WithId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useRef, useState } from 'react'
 
-import { useDateNavigation } from '@components/Bookings/DateNavigation/DateNavigation.hooks'
+import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
 export function usePartyBookings({
     setSelectedLocations,
 }: {
     setSelectedLocations: (locations: { [key in Location]?: boolean }) => void
-    setEventsChecked: (checked: boolean) => void
     id?: string
 }) {
     const firebase = useFirebase()

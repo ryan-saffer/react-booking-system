@@ -5,8 +5,7 @@ import React from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
-
-import { ExistingEventForm } from '../Forms/EventForm/ExistingEventForm'
+import { ExistingEventForm } from './forms/ExistingEventForm'
 
 const PREFIX = 'EventPanel'
 

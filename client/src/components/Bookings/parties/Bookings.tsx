@@ -1,14 +1,13 @@
 import { Location, ObjectKeys } from 'fizz-kidz'
 import { useState } from 'react'
 
-import { Checkbox, Divider, FormControlLabel, FormGroup, Grid, useMediaQuery } from '@mui/material'
+import { Grid } from '@mui/material'
 
-import { DateNavigation } from './DateNavigation/DateNavigation'
-import Events from './Events/Events'
-import { useEvents } from './Events/UseEvents'
+import NewBookingDialog from '../shared/NewBookingDialog'
+import { DateNavigation } from '../date-navigation/date-navigation'
 import LocationBookings from './LocationBookings'
 import LocationCheckboxes from './LocationCheckboxes'
-import NewBookingDialog from './NewBookingDialog'
+import BookingsSwitcher from '../shared/booking-switcher'
 import { usePartyBookings } from './usePartyBookings'
 
 export const BookingsPage = () => {
@@ -16,53 +15,34 @@ export const BookingsPage = () => {
     return (
         <>
             <DateNavigation
-                label="Party Bookings"
+                label="Parties, Events & Incursions"
                 showButton
                 buttonLabel="New Booking"
                 onButtonPressed={() => setOpenNewBooking(true)}
             >
-                <Bookings />
+                <BookingsSwitcher />
                 <NewBookingDialog open={openNewBooking} onBookingCreated={() => setOpenNewBooking(false)} />
             </DateNavigation>
         </>
     )
 }
 
-const Bookings = () => {
+export const Bookings = () => {
     const [selectedLocations, setSelectedLocations] = useState(
         ObjectKeys(Location).reduce<{ [key in Location]?: boolean }>(
             (acc, curr) => ({ ...acc, [Location[curr]]: true }),
             {}
         )
     )
-    const [eventsChecked, setEventsChecked] = useState(true)
-
-    const bookings = usePartyBookings({ setSelectedLocations, setEventsChecked })
-    const events = useEvents()
+    const bookings = usePartyBookings({ setSelectedLocations })
 
     const handleLocationChange = (location: Location, checked: boolean) => {
         setSelectedLocations({ ...selectedLocations, [location]: checked })
     }
 
-    const isMobile = useMediaQuery('(max-width: 460px)')
-
     return (
         <>
-            <FormGroup row sx={{ gap: 1 }}>
-                <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            size={isMobile ? 'small' : 'medium'}
-                            checked={eventsChecked}
-                            onChange={() => setEventsChecked((it) => !it)}
-                            color="secondary"
-                        />
-                    }
-                    label="Events"
-                />
-            </FormGroup>
-            <Divider />
+            <LocationCheckboxes values={selectedLocations} handleChange={handleLocationChange} />
             <Grid item xs sm md>
                 {Object.values(Location).map(
                     (location) =>
@@ -74,7 +54,6 @@ const Bookings = () => {
                             />
                         )
                 )}
-                {eventsChecked && <Events events={events} />}
             </Grid>
         </>
     )

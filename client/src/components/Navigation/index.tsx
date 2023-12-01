@@ -100,7 +100,7 @@ export const Navigation = () => {
                                 Programs
                             </Typography>
                             <Paper className={classes.paper} onClick={() => navigateToRoute(ROUTES.BOOKINGS)}>
-                                <Typography>Parties & Events</Typography>
+                                <Typography>Parties, Events & Incursions</Typography>
                             </Paper>
                             {!isRestricted && (
                                 <>

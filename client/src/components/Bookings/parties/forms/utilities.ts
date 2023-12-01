@@ -1,6 +1,7 @@
 import { Booking, FirestoreBooking, FormBooking, Location, Utilities } from 'fizz-kidz'
-import { ExistingBookingFormFields } from './ExistingBookingForm/types'
 import { DateTime } from 'luxon'
+
+import { ExistingBookingFormFields } from './ExistingBookingForm/types'
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value

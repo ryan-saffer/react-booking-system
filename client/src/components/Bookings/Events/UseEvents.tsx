@@ -4,16 +4,17 @@ import { useEffect, useState } from 'react'
 import { convertTimestamps } from '@utils/firebase/converters'
 
 import useFirebase from '../../Hooks/context/UseFirebase'
-import { useDateNavigation } from '../DateNavigation/DateNavigation.hooks'
+import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
 
-export function useEvents() {
+export function useEvents(type: Event['type']) {
     const firebase = useFirebase()
 
-    const { date } = useDateNavigation()
+    const { date, setLoading } = useDateNavigation()
     const [events, setEvents] = useState<Service<Event[]>>({ status: 'loading' })
 
     useEffect(() => {
         async function fetchEvents() {
+            setLoading(true)
             // since we need to get a range between startDate and endDate,
             // and firestore does not support equality operators '>', '<' on multiple fields,
             // fetch all events that may have already started, and filter the rest on the frontend
@@ -23,6 +24,7 @@ export function useEvents() {
 
             const snap = await firebase.db
                 .collectionGroup('eventSlots')
+                .where('type', '==', type)
                 .where('startTime', '<', nextDay.toJSDate())
                 .where('startTime', '>', ninetyDaysAgo.toJSDate())
                 .get()
@@ -47,6 +49,8 @@ export function useEvents() {
             } catch (error) {
                 console.error(error)
                 setEvents({ status: 'error', error })
+            } finally {
+                setLoading(false)
             }
         }
 

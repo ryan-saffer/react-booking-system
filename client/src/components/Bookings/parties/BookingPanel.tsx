@@ -12,8 +12,8 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 
-import { useScopes } from '../Hooks/UseScopes'
-import { ExistingBookingForm } from './Forms/ExistingBookingForm'
+import { useScopes } from '../../Hooks/UseScopes'
+import { ExistingBookingForm } from './forms/ExistingBookingForm'
 
 const PREFIX = 'BookingPanel'
 

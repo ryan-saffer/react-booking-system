@@ -26,7 +26,7 @@ import * as ROUTES from '../../../constants/routes'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { useScopes } from '../../Hooks/UseScopes'
 import useFirebase from '../../Hooks/context/UseFirebase'
-import { DateNavigationContext } from './DateNavigation.context'
+import { DateNavigationContext } from './date-navigation.context'
 
 const PREFIX = 'BookingsPage'
 

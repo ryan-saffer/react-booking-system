@@ -7,9 +7,9 @@ import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { TransitionProps } from '@mui/material/transitions'
 
-import { useDateNavigation } from './DateNavigation/DateNavigation.hooks'
-import { NewEventForm } from './Forms/EventForm/NewEventForm'
-import { NewBookingForm } from './Forms/NewBookingForm'
+import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
+import { NewEventForm } from '../events/forms/NewEventForm'
+import { NewBookingForm } from '../parties/forms/NewBookingForm'
 
 const PREFIX = 'NewBookingDialog'
 
