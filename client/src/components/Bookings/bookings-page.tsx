@@ -1,29 +1,22 @@
 import { useState } from 'react'
 
-import { DateNavigation } from './date-navigation/date-navigation'
-import NewBookingDialog from './new-booking-dialog'
 import { Chip } from '@mui/material'
-import { PartiesAndEvents } from './parties-and-events'
+
+import { DateNavigation } from './date-navigation/date-navigation'
 import Incursions from './events/incursions'
 import { FilterContextProvider } from './location-filter/location-filter.provider'
+import NewBookingDialog from './new-booking-dialog'
+import { PartiesAndEvents } from './parties-and-events'
 
 type Tab = 'parties' | 'incursions'
 
 export const BookingsPage = () => {
-    return (
-        <FilterContextProvider>
-            <_BookingsPage />
-        </FilterContextProvider>
-    )
-}
-
-const _BookingsPage = () => {
     const [openNewBooking, setOpenNewBooking] = useState(false)
 
     const [selectedTab, setSelectedTab] = useState<Tab>('parties')
 
     return (
-        <>
+        <FilterContextProvider>
             <DateNavigation
                 label="Bookings"
                 showButton
@@ -50,7 +43,7 @@ const _BookingsPage = () => {
                 {selectedTab === 'incursions' && <Incursions />}
                 <NewBookingDialog open={openNewBooking} onBookingCreated={() => setOpenNewBooking(false)} />
             </DateNavigation>
-        </>
+        </FilterContextProvider>
     )
 }
 
