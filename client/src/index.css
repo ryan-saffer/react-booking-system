@@ -19,7 +19,12 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.MuiAccordionSummary-content {
-    margin-top: 4px;
-    margin-bottom: 4px;
+@font-face {
+    font-family: 'LilitaOne';
+    src: local('LilitaOne'), url('/fonts/LilitaOne-Regular.ttf') format('truetype');
+}
+
+.lilita {
+    font-family: 'LilitaOne';
+    font-weight: 100;
 }

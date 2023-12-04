@@ -4,17 +4,15 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useLocationFilter } from '../location-filter/location-filter.hook'
 
-export function usePartyBookings({
-    setLocation,
-}: {
-    setLocation: (location: Location, value: boolean) => void
-    id?: string
-}) {
+export function usePartyBookings() {
     const firebase = useFirebase()
 
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = useRef(urlSearchParams.get('id'))
+
+    const { filterByLocation } = useLocationFilter()
 
     const [bookings, setBookings] = useState<Service<Record<Location, WithId<FirestoreBooking>[]>>>({
         status: 'loading',
@@ -60,7 +58,7 @@ export function usePartyBookings({
                     runSubscription.current = false // since we changed the date, this stops an infinite loop
                     id.current = null
                     setBookings({ status: 'loaded', result: generateLocationsMap([{ ...booking, id: snapshot.id }]) })
-                    Object.values(Location).forEach((location) => setLocation(location, booking.location === location))
+                    filterByLocation(booking.location)
                 })
         } else {
             const followingDate = date.plus({ days: 1 })

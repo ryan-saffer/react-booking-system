@@ -2,20 +2,36 @@ import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { ExitToApp as ExitToAppIcon } from '@mui/icons-material'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
-import { AppBar, Box, Button, CssBaseline, Drawer, Grid, Hidden, IconButton, Toolbar, Typography } from '@mui/material'
+import {
+    AppBar,
+    Box,
+    Button,
+    CssBaseline,
+    Drawer,
+    FormControl,
+    Grid,
+    Hidden,
+    MenuItem,
+    Select,
+    Toolbar,
+    useMediaQuery,
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
-import { DatePicker } from '@mui/x-date-pickers'
+import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 
 import * as ROUTES from '../../../constants/routes'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { useScopes } from '../../Hooks/UseScopes'
-import useFirebase from '../../Hooks/context/UseFirebase'
 import { DateNavigationContext } from './date-navigation.context'
+import { Location, capitalise } from 'fizz-kidz'
+import { useLocationFilter } from '../location-filter/location-filter.hook'
+import { LocationFilter } from '../location-filter/location-filter.context'
 
 const PREFIX = 'BookingsPage'
 
@@ -42,9 +58,13 @@ const classes = {
     dialog: `${PREFIX}-dialog`,
 }
 
+const StyledHeading = styled('h1')()
+
 const Root = styled('div')(({ theme }) => ({
     [`&.${classes.root}`]: {
         display: 'flex',
+        height: 'inherit',
+        background: '#F0F2F5',
     },
 
     [`& .${classes.drawer}`]: {
@@ -58,25 +78,21 @@ const Root = styled('div')(({ theme }) => ({
 
     [`& .${classes.content}`]: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: '#F0F2F5',
         // padding: theme.spacing(3),
     },
 
     [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,
-        color: 'white',
-    },
-
-    [`& .${classes.appBarToolbar}`]: {
-        display: 'flex',
-        '@media (max-width: 550px)': {
-            justifyContent: 'space-around',
-        },
     },
 
     [`& .${classes.logo}`]: {
         height: 50,
         cursor: 'pointer',
+        position: 'absolute',
+        left: '50%',
+        right: '50%',
+        transform: 'translate(-50%)',
     },
 
     [`& .${classes.topLeft}`]: {
@@ -144,9 +160,9 @@ function midnight(date: DateTime) {
 }
 
 export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
-    const { label, showButton, children } = props
+    const { showButton, children } = props
 
-    const firebase = useFirebase()
+    // const firebase = useFirebase()
     const navigate = useNavigate()
     const scopes = useScopes()
     const writePermissions = scopes.CORE === 'write'
@@ -158,46 +174,36 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
         setDate(midnight(date))
     }
 
-    const handleLogout = () => {
-        firebase.doSignOut()
-    }
+    const { selectedLocation, filterByLocation } = useLocationFilter()
+
+    const wrapFilter = useMediaQuery('(max-width: 550px)')
 
     return (
         <Root className={classes.root}>
             <CssBaseline />
             <AppBar className={classes.appBar} position="fixed">
                 <Toolbar className={classes.appBarToolbar}>
-                    <div className={classes.topLeft}>
-                        <Typography variant="h6" color="inherit">
-                            {label}
-                        </Typography>
-                    </div>
-                    <div className={classes.topCenter}>
-                        <img
-                            className={classes.logo}
-                            src={Logo.default}
-                            onClick={() => navigate(ROUTES.LANDING)}
-                            alt="fizz kidz logo"
-                        />
-                    </div>
-                    <div className={writePermissions ? classes.authTopRight : classes.noAuthTopRight}>
-                        {writePermissions && showButton && (
-                            <Button
-                                onClick={props.onButtonPressed}
-                                variant="outlined"
-                                sx={{
-                                    color: 'white',
-                                    borderColor: 'white',
-                                    '&:hover': { borderColor: 'white', background: grey[800] },
-                                }}
-                            >
-                                {props.buttonLabel}
-                            </Button>
-                        )}
-                        <IconButton className={classes.logoutIcon} onClick={handleLogout} size="large">
-                            <ExitToAppIcon htmlColor={'white'} />
-                        </IconButton>
-                    </div>
+                    <img
+                        className={classes.logo}
+                        src={Logo.default}
+                        onClick={() => navigate(ROUTES.LANDING)}
+                        alt="fizz kidz logo"
+                    />
+                    {writePermissions && showButton && (
+                        <Button
+                            onClick={props.onButtonPressed}
+                            variant="outlined"
+                            sx={{
+                                color: 'white',
+                                borderColor: 'white',
+                                '&:hover': { borderColor: 'white', background: grey[800] },
+                                position: 'absolute',
+                                right: 16,
+                            }}
+                        >
+                            <AddIcon />
+                        </Button>
+                    )}
                 </Toolbar>
             </AppBar>
             <Hidden mdDown>
@@ -219,23 +225,83 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
             </Hidden>
             <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
                 <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Button onClick={() => handleDateChange(date.minus({ days: 1 }))}>
-                            <NavigateBefore />
-                        </Button>
-                        <DatePicker
-                            closeOnSelect
-                            value={date}
-                            slotProps={{
-                                textField: { sx: { input: { textAlign: 'center' } }, fullWidth: true },
-                                actionBar: { actions: ['today'] },
+                    <StyledHeading
+                        className="lilita"
+                        sx={{
+                            marginBottom: 2,
+                            marginTop: 0,
+                            fontSize: {
+                                xs: 24,
+                                sm: 32,
+                            },
+                        }}
+                    >
+                        Parties, Events & Incursions
+                    </StyledHeading>
+                    <div style={{ display: 'flex', gap: 12, flexDirection: wrapFilter ? 'column' : 'row' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                gap: 8,
+                                flex: 2,
                             }}
-                            format="ccc, LLL d, y"
-                            onChange={(date) => date && handleDateChange(date)}
-                        />
-                        <Button onClick={() => handleDateChange(date.plus({ days: 1 }))}>
-                            <NavigateNext />
-                        </Button>
+                        >
+                            <Button
+                                onClick={() => handleDateChange(date.minus({ days: 1 }))}
+                                sx={{ background: 'white', borderRadius: 2, flexShrink: 2 }}
+                            >
+                                <NavigateBefore />
+                            </Button>
+                            <MobileDatePicker
+                                closeOnSelect
+                                value={date}
+                                sx={{ flexShrink: 1 }}
+                                slotProps={{
+                                    textField: {
+                                        sx: {
+                                            input: {
+                                                textAlign: 'center',
+                                                background: 'white',
+                                                borderWidth: 0,
+                                                borderRadius: 2,
+                                            },
+                                            fieldSet: {
+                                                borderWidth: 0,
+                                            },
+                                        },
+                                        fullWidth: true,
+                                    },
+                                    actionBar: { actions: ['today'] },
+                                }}
+                                format="ccc, LLL d, y"
+                                onChange={(date) => date && handleDateChange(date)}
+                            />
+                            <Button
+                                onClick={() => handleDateChange(date.plus({ days: 1 }))}
+                                sx={{ background: 'white', borderRadius: 2, flexShrink: 2 }}
+                            >
+                                <NavigateNext />
+                            </Button>
+                        </div>
+                        <FormControl sx={{ background: 'white', flex: 1 }}>
+                            <Select
+                                value={selectedLocation}
+                                onChange={(e) => filterByLocation(e.target.value as LocationFilter)}
+                            >
+                                <MenuItem value="all">
+                                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                        <LocationOnOutlinedIcon sx={{ color: '#0f172a' }} />
+                                        <div>All Locations</div>
+                                    </div>
+                                </MenuItem>
+                                {Object.values(Location).map((location) => (
+                                    <MenuItem key={location} value={location}>
+                                        {capitalise(location)}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </div>
                     <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}

@@ -46,10 +46,22 @@ const Incursions = () => {
     if (events.status === 'loaded') {
         return (
             <>
-                <Typography style={{ paddingTop: 16, paddingBottom: 8 }} variant="h6">
+                <h2 className="lilita" style={{ margin: 0, paddingTop: 16 }}>
                     Incursions
-                </Typography>
-                {combinedEvents.length === 0 && <Typography variant="overline">No incursions</Typography>}
+                </h2>
+                {combinedEvents.length === 0 && (
+                    <div
+                        style={{
+                            background: 'white',
+                            padding: 16,
+                            marginTop: 12,
+                            paddingLeft: 24,
+                            borderRadius: 12,
+                        }}
+                    >
+                        <Typography variant="overline">No incursions on this day.</Typography>
+                    </div>
+                )}
                 {combinedEvents.map((event) => (
                     <EventPanel key={event.id} event={event} />
                 ))}

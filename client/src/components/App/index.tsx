@@ -14,6 +14,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpLink } from '@trpc/client'
 import { trpc } from '@utils/trpc.js'
 
+import '/fonts/LilitaOne-Regular.ttf'
+
 const theme = createTheme({
     palette: {
         background: {

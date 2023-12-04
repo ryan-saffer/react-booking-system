@@ -1,11 +1,8 @@
-import { Tag } from 'antd'
 import dateFormat from 'dateformat'
 import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
-import DriveEtaIcon from '@mui/icons-material/DriveEta'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import StoreIcon from '@mui/icons-material/Store'
-import { Chip, Grid, useMediaQuery } from '@mui/material'
+import { Grid, useMediaQuery } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -25,6 +22,7 @@ const classes = {
     chipGreen: `${PREFIX}-chipGreen`,
     test: `${PREFIX}-test`,
     accordionHeading: `${PREFIX}-accordionRow2`,
+    root: `${PREFIX}-root`,
 }
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -58,8 +56,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
         justifyContent: 'space-between',
         width: '100%',
         gap: 8,
-        marginTop: 4,
-        marginBottom: 4,
     },
 
     [`& .${classes.accordionHeading}`]: {
@@ -75,7 +71,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
 
     return (
         <StyledAccordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ width: '100%' }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.summary}>
                     <div className={classes.accordionHeading}>
                         <Typography className={classes.heading}>
@@ -96,17 +92,13 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             ...(isMobile && { flexDirection: 'column-reverse', gap: 4 }),
                         }}
                     >
-                        <Tag
-                            color={booking.oldPrices ? 'volcano-inverse' : 'green-inverse'}
-                            style={{ textAlign: 'center', fontWeight: 600 }}
-                        >
-                            {booking.oldPrices ? 'OLD PRICE' : 'NEW PRICE'}
-                        </Tag>
-                        <Chip
+                        <CustomChip
+                            label={booking.oldPrices ? 'Old Price' : 'New Price'}
+                            color={booking.oldPrices ? '#FFC7EA' : '#FBF0B2'}
+                        />
+                        <CustomChip
                             label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
-                            variant="outlined"
-                            className={booking.type === 'studio' ? classes.chipPurple : classes.chipGreen}
-                            icon={booking.type === 'studio' ? <StoreIcon /> : <DriveEtaIcon />}
+                            color={booking.type === 'studio' ? '#CAEDFF' : '#D8B4F8'}
                         />
                     </div>
                 </div>
@@ -119,6 +111,27 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                 </Grid>
             </AccordionDetails>
         </StyledAccordion>
+    )
+}
+
+function CustomChip({ label, color }: { label: string; color: string }) {
+    return (
+        <Typography
+            variant="body1"
+            sx={{
+                fontWeight: 500,
+                fontSize: 14,
+                textAlign: 'center',
+                background: color,
+                px: 2,
+                py: 1,
+                borderRadius: 1,
+                marginRight: 1,
+                width: 120,
+            }}
+        >
+            {label}
+        </Typography>
     )
 }
 

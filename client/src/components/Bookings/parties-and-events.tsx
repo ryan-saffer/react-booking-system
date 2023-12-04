@@ -1,32 +1,20 @@
 import { Location, capitalise } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
-import FilterListIcon from '@mui/icons-material/FilterList'
-import FilterListOffIcon from '@mui/icons-material/FilterListOff'
-import { Button, Grid, Skeleton, Stack, Typography } from '@mui/material'
+import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 
 import EventPanel from './events/event-panel'
 import { useEvents } from './events/use-events'
-import { FilterDrawer } from './filter-drawer'
 import PartyPanel from './parties/party-panel'
 import { usePartyBookings } from './parties/use-party-bookings'
-import { useFilter } from './use-filter'
+import { useLocationFilter } from './location-filter/location-filter.hook'
 
 export const PartiesAndEvents = () => {
-    const {
-        selectedLocations,
-        filterActive,
-        setLocation,
-        toggleShowEvents,
-        toggleShowParties,
-        showParties,
-        showEvents,
-    } = useFilter()
+    const { selectedLocation } = useLocationFilter()
 
     const [loading, setLoading] = useState(true)
-    const [openFilter, setOpenFilter] = useState(false)
 
-    const bookings = usePartyBookings({ setLocation })
+    const bookings = usePartyBookings()
     const events = useEvents('standard')
 
     useEffect(() => {
@@ -39,74 +27,55 @@ export const PartiesAndEvents = () => {
 
     return (
         <>
-            <Button
-                sx={{
-                    float: 'right',
-                    marginRight: 2,
-                    marginTop: 1,
-                    background: filterActive ? '#EF4444' : 'primary',
-                }}
-                onClick={() => setOpenFilter(true)}
-                endIcon={filterActive ? <FilterListIcon /> : <FilterListOffIcon />}
-                variant={filterActive ? 'contained' : 'outlined'}
-                color={filterActive ? 'secondary' : 'primary'}
-            >
-                {filterActive ? 'filter on' : 'filter off'}
-            </Button>
-            <FilterDrawer
-                open={openFilter}
-                handleClose={() => setOpenFilter(false)}
-                showParties={showParties}
-                toggleShowParties={toggleShowParties}
-                showEvents={showEvents}
-                toggleShowEvents={toggleShowEvents}
-                selectedLocations={selectedLocations}
-                setLocation={setLocation}
-            />
             {loading && Array.from(Array(3)).map((_, idx) => <BookingsSkeleton key={idx} />)}
             {bookings.status === 'loaded' && events.status === 'loaded' && !loading && (
                 <Grid item xs sm md>
                     {Object.values(Location).map(
                         (location) =>
-                            selectedLocations[location] && (
+                            (selectedLocation === location || selectedLocation === 'all') && (
                                 <div key={location}>
-                                    <Typography variant="h5" sx={{ paddingTop: 2 }}>
+                                    <h2 className="lilita" style={{ margin: 0, paddingTop: 16 }}>
                                         {capitalise(location)} Studio
-                                    </Typography>
+                                    </h2>
                                     <div style={{ marginLeft: 8, paddingTop: 12 }}>
                                         {bookings.result[location].length === 0 &&
                                             events.result[location].length === 0 && (
-                                                <Typography variant="overline">No bookings</Typography>
+                                                <div
+                                                    style={{
+                                                        background: 'white',
+                                                        padding: 16,
+                                                        paddingLeft: 24,
+                                                        borderRadius: 12,
+                                                    }}
+                                                >
+                                                    <Typography variant="overline">No bookings on this day.</Typography>
+                                                </div>
                                             )}
-                                        {showParties && bookings.result[location].length > 0 && (
+                                        {bookings.result[location].length > 0 && (
                                             <div style={{ marginBottom: 8 }}>
-                                                <Typography variant="h6" sx={{ fontSize: 16, paddingBottom: 1 }}>
+                                                <h6
+                                                    className="lilita"
+                                                    style={{ fontSize: 16, margin: 0, paddingBottom: 8 }}
+                                                >
                                                     Parties
-                                                </Typography>
+                                                </h6>
                                                 {bookings.result[location].map((booking) => (
                                                     <PartyPanel key={booking.id} booking={booking} />
                                                 ))}
                                             </div>
                                         )}
-                                        {!showParties && bookings.result[location].length > 0 && (
-                                            <Typography variant="overline" sx={{ display: 'block' }}>
-                                                Hiding Parties
-                                            </Typography>
-                                        )}
-                                        {showEvents && events.result[location].length > 0 && (
+                                        {events.result[location].length > 0 && (
                                             <>
-                                                <Typography variant="h6" sx={{ fontSize: 16, paddingBottom: 1 }}>
+                                                <h6
+                                                    className="lilita"
+                                                    style={{ fontSize: 16, margin: 0, padding: '8px 0 8px 0' }}
+                                                >
                                                     Events
-                                                </Typography>
+                                                </h6>
                                                 {events.result[location].map((event) => (
                                                     <EventPanel key={event.id} event={event} />
                                                 ))}
                                             </>
-                                        )}
-                                        {!showEvents && events.result[location].length > 0 && (
-                                            <Typography variant="overline" sx={{ display: 'block' }}>
-                                                Hiding Events
-                                            </Typography>
                                         )}
                                     </div>
                                 </div>
