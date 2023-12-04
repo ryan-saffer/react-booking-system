@@ -15,6 +15,7 @@ import { httpLink } from '@trpc/client'
 import { trpc } from '@utils/trpc.js'
 
 import '/fonts/LilitaOne-Regular.ttf'
+import '/fonts/Gotham-Light.otf'
 
 const theme = createTheme({
     palette: {
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.LANDING,
         lazy: async () => {
-            const { Navigation } = await import('../Navigation/index.js')
+            const { Navigation } = await import('../Navigation/navigation.js')
             return { Component: withAuthorization([], Navigation) }
         },
     },

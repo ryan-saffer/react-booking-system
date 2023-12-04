@@ -67,7 +67,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     const isRestricted = useScopes().CORE === 'restricted'
 
-    const isMobile = useMediaQuery('(max-width: 460px')
+    const isMobile = useMediaQuery('(max-width: 540px')
 
     return (
         <StyledAccordion>
@@ -89,16 +89,18 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             display: 'flex',
                             justifyContent: 'flex-end',
                             alignItems: 'center',
-                            ...(isMobile && { flexDirection: 'column-reverse', gap: 4 }),
+                            ...(isMobile && { flexDirection: 'column', gap: 4 }),
                         }}
                     >
                         <CustomChip
                             label={booking.oldPrices ? 'Old Price' : 'New Price'}
-                            color={booking.oldPrices ? '#FFC7EA' : '#FBF0B2'}
+                            color={booking.oldPrices ? '#ffb380' : '#C1E1C1'}
+                            isMobile={isMobile}
                         />
                         <CustomChip
                             label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
                             color={booking.type === 'studio' ? '#CAEDFF' : '#D8B4F8'}
+                            isMobile={isMobile}
                         />
                     </div>
                 </div>
@@ -114,17 +116,18 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     )
 }
 
-function CustomChip({ label, color }: { label: string; color: string }) {
+function CustomChip({ label, color, isMobile }: { label: string; color: string; isMobile: boolean }) {
     return (
         <Typography
             variant="body1"
+            className="gotham"
             sx={{
-                fontWeight: 500,
+                fontWeight: 1000,
                 fontSize: 14,
                 textAlign: 'center',
                 background: color,
                 px: 2,
-                py: 1,
+                py: isMobile ? 0.5 : 1,
                 borderRadius: 1,
                 marginRight: 1,
                 width: 120,

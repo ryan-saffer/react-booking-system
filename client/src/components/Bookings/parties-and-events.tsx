@@ -5,9 +5,9 @@ import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 
 import EventPanel from './events/event-panel'
 import { useEvents } from './events/use-events'
+import { useLocationFilter } from './location-filter/location-filter.hook'
 import PartyPanel from './parties/party-panel'
 import { usePartyBookings } from './parties/use-party-bookings'
-import { useLocationFilter } from './location-filter/location-filter.hook'
 
 export const PartiesAndEvents = () => {
     const { selectedLocation } = useLocationFilter()
@@ -37,7 +37,7 @@ export const PartiesAndEvents = () => {
                                     <h2 className="lilita" style={{ margin: 0, paddingTop: 16 }}>
                                         {capitalise(location)} Studio
                                     </h2>
-                                    <div style={{ marginLeft: 8, paddingTop: 12 }}>
+                                    <div style={{ paddingTop: 12 }}>
                                         {bookings.result[location].length === 0 &&
                                             events.result[location].length === 0 && (
                                                 <div
@@ -48,11 +48,11 @@ export const PartiesAndEvents = () => {
                                                         borderRadius: 12,
                                                     }}
                                                 >
-                                                    <Typography variant="overline">No bookings on this day.</Typography>
+                                                    <Typography variant="overline">No bookings on this day</Typography>
                                                 </div>
                                             )}
                                         {bookings.result[location].length > 0 && (
-                                            <div style={{ marginBottom: 8 }}>
+                                            <div style={{ marginBottom: 8, marginLeft: 12 }}>
                                                 <h6
                                                     className="lilita"
                                                     style={{ fontSize: 16, margin: 0, paddingBottom: 8 }}
@@ -65,7 +65,7 @@ export const PartiesAndEvents = () => {
                                             </div>
                                         )}
                                         {events.result[location].length > 0 && (
-                                            <>
+                                            <div style={{ marginLeft: 12 }}>
                                                 <h6
                                                     className="lilita"
                                                     style={{ fontSize: 16, margin: 0, padding: '8px 0 8px 0' }}
@@ -75,7 +75,7 @@ export const PartiesAndEvents = () => {
                                                 {events.result[location].map((event) => (
                                                     <EventPanel key={event.id} event={event} />
                                                 ))}
-                                            </>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@ export const PartiesAndEvents = () => {
 
 const BookingsSkeleton = () => (
     <>
-        <Skeleton variant="rounded" width={100} height={30} sx={{ marginBottom: 1, marginTop: 2 }} />
+        <Skeleton variant="rounded" width={170} height={30} sx={{ marginBottom: 1, marginTop: 2 }} />
         <div style={{ marginLeft: 8 }}>
             <Stack gap={1}>
                 <Skeleton variant="rounded" height={20} width={80} />

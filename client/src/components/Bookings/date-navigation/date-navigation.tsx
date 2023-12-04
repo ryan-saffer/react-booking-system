@@ -1,7 +1,10 @@
+import { Location, capitalise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import AddIcon from '@mui/icons-material/Add'
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
 import {
@@ -18,20 +21,17 @@ import {
     Toolbar,
     useMediaQuery,
 } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
 import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 
 import * as ROUTES from '../../../constants/routes'
 import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
 import { useScopes } from '../../Hooks/UseScopes'
-import { DateNavigationContext } from './date-navigation.context'
-import { Location, capitalise } from 'fizz-kidz'
-import { useLocationFilter } from '../location-filter/location-filter.hook'
 import { LocationFilter } from '../location-filter/location-filter.context'
+import { useLocationFilter } from '../location-filter/location-filter.hook'
+import { DateNavigationContext } from './date-navigation.context'
 
 const PREFIX = 'BookingsPage'
 
@@ -58,7 +58,7 @@ const classes = {
     dialog: `${PREFIX}-dialog`,
 }
 
-const StyledHeading = styled('h1')()
+const StyledHeading = styled('h1')({})
 
 const Root = styled('div')(({ theme }) => ({
     [`&.${classes.root}`]: {
