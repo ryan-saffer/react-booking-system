@@ -7,19 +7,20 @@ import {
     AdditionsDisplayValuesMapPrices,
     AdditionsDisplayValuesMap,
     PFProduct,
-    PFQuestion,
-    Questions,
+    PartyForm,
+    PaperFormResponse,
+    getQuestionValue,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
 import { logger } from 'firebase-functions/v2'
 
-export class FormMapper {
-    responses: PFQuestion<any>[]
+export class PartyFormMapper {
+    responses: PaperFormResponse<PartyForm>
     bookingId: string
 
-    constructor(responses: PFQuestion<any>[]) {
+    constructor(responses: PaperFormResponse<PartyForm>) {
         this.responses = responses
-        this.bookingId = this.getQuestionValue('id')
+        this.bookingId = getQuestionValue(this.responses, 'id')
     }
 
     mapToBooking(type: Booking['type'], location: Location) {
@@ -29,8 +30,8 @@ export class FormMapper {
         // in-store parties use a multiple choice, while mobile use a dropdown
         booking['numberOfChildren'] =
             type === 'mobile'
-                ? this.getQuestionValue('number_of_children_mobile')
-                : this.getQuestionValue('number_of_children_in_store')
+                ? getQuestionValue(this.responses, 'number_of_children_mobile')
+                : getQuestionValue(this.responses, 'number_of_children_in_store')
 
         // additions are only asked to in-store
         if (type !== 'mobile') {
@@ -53,7 +54,7 @@ export class FormMapper {
     }
 
     getAdditionDisplayValues(showPrices: boolean) {
-        const additionKeys = this.getQuestionValue('additions')
+        const additionKeys = getQuestionValue(this.responses, 'additions')
         const displayValues: string[] = []
         additionKeys.forEach((addition) => {
             if (this.isValidAddition(addition)) {
@@ -65,7 +66,7 @@ export class FormMapper {
             }
         })
 
-        const partyPackKeys = this.mapProductToSku(this.getQuestionValue('party_packs'))
+        const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
         partyPackKeys.forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 displayValues.push(AdditionsDisplayValuesMapPrices[pack])
@@ -79,13 +80,13 @@ export class FormMapper {
      */
     private getCreations() {
         const creationSkus = [
-            ...this.mapProductToSku(this.getQuestionValue('glam_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('science_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('slime_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('safari_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('unicorn_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('tie_dye_creations')),
-            ...this.mapProductToSku(this.getQuestionValue('expert_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'glam_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'science_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'slime_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'safari_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'unicorn_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'expert_creations')),
         ]
 
         // filter out any duplicate creation selections
@@ -111,31 +112,20 @@ export class FormMapper {
         const creations = this.getCreations()
 
         const booking: Partial<Booking> = {
-            location: type === 'studio' ? this.mapLocation(this.getQuestionValue('location')) : location, // mobile party forms have 'location=mobile', so this fixes it
-            parentFirstName: this.getQuestionValue('parent_first_name'),
-            parentLastName: this.getQuestionValue('parent_last_name'),
-            childName: this.getQuestionValue('child_name'),
-            childAge: this.getQuestionValue('child_age'),
+            location: type === 'studio' ? this.mapLocation(getQuestionValue(this.responses, 'location')) : location, // mobile party forms have 'location=mobile', so this fixes it
+            parentFirstName: getQuestionValue(this.responses, 'parent_first_name'),
+            parentLastName: getQuestionValue(this.responses, 'parent_last_name'),
+            childName: getQuestionValue(this.responses, 'child_name'),
+            childAge: getQuestionValue(this.responses, 'child_age'),
             creation1: creations.length > 0 ? creations[0] : undefined,
             creation2: creations.length > 1 ? creations[1] : undefined,
             creation3: creations.length > 2 ? creations[2] : undefined,
-            funFacts: this.getQuestionValue('fun_facts'),
-            questions: this.getQuestionValue('questions'),
+            funFacts: getQuestionValue(this.responses, 'fun_facts'),
+            questions: getQuestionValue(this.responses, 'questions'),
             ...this.getPartyPacks(),
         }
 
         return booking
-    }
-
-    private getQuestionValue<T extends keyof Questions>(question: T): Questions[T] {
-        const response = this.responses.find((it): it is PFQuestion<T> => it.custom_key === question)
-
-        if (response) {
-            return response.value
-        } else {
-            logger.log(`IllegalArgumentError: No such key ${question}`)
-            throw new Error(`IllegalArgumentError: No such key ${question}`)
-        }
     }
 
     private mapLocation(location: string) {
@@ -152,16 +142,14 @@ export class FormMapper {
     }
 
     private mapProductToSku = (products: PFProduct[]) =>
-        products.map((it) => {
-            return it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU
-        })
+        products.map((it) => (it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU))
 
     private isValidCreation(creation: string): creation is Creations {
         return Object.keys(Creations).includes(creation)
     }
 
     private getAdditions() {
-        const additions = this.getQuestionValue('additions')
+        const additions = getQuestionValue(this.responses, 'additions')
         additions.forEach((addition, index, array) => (array[index] = AdditionsFormMap[addition]))
         const booking: Partial<Booking> = {}
         additions.forEach((addition) => {
@@ -179,7 +167,7 @@ export class FormMapper {
 
     private getPartyPacks() {
         const booking: Partial<Booking> = {}
-        this.mapProductToSku(this.getQuestionValue('party_packs')).forEach((pack) => {
+        this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 booking[pack] = true
             }

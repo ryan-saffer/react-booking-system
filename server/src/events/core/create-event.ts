@@ -1,8 +1,8 @@
 import { DistributiveOmit, Event, ModuleIncursionMap, ModuleNameMap, WithoutId } from 'fizz-kidz'
-
-import { CalendarClient } from '../../google/CalendarClient'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { DateTime } from 'luxon'
+
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { CalendarClient } from '../../google/CalendarClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
 
@@ -89,6 +89,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                     break
                 }
                 case 'incursion': {
+                    // TODO: Generate and include form
                     await mailClient.sendEmail('incursionBooking', event.contactEmail, {
                         contactName: event.contactName,
                         organisation: event.organisation,

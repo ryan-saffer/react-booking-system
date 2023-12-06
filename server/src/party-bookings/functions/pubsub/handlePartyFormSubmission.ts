@@ -5,11 +5,11 @@ import { DateTime } from 'luxon'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { MailClient } from '../../../sendgrid/MailClient'
 import { logError, onMessagePublished, throwFunctionsError } from '../../../utilities'
-import { FormMapper } from '../../core/form-mapper'
+import { PartyFormMapper } from '../../core/party-form-mapper'
 import { getBookingAdditions, getBookingCreations } from '../../core/utils'
 
 export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubmission', async (responses) => {
-    const formMapper = new FormMapper(responses)
+    const formMapper = new PartyFormMapper(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     let booking: Partial<Booking> = {}

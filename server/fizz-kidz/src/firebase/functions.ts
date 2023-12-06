@@ -1,6 +1,6 @@
-import { PFQuestion } from '../paperform'
+import { PaperFormResponse, PartyForm } from '../paperform'
 
 export interface PubSubFunctions {
-    handlePartyFormSubmission: PFQuestion<any>[]
+    handlePartyFormSubmission: PaperFormResponse<PartyForm>
     createEmployee: { employeeId: string }
 }
