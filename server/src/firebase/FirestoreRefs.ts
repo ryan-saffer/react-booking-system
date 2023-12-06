@@ -51,7 +51,7 @@ export class FirestoreRefs {
     }
 
     static async event(eventId: string) {
-        return (await this.events()).doc(eventId)
+        return (await this.events()).doc(eventId) as Document<{ id: string }>
     }
 
     static async eventSlots(eventId: string) {

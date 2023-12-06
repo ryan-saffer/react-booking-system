@@ -119,6 +119,22 @@ class Client {
         return { eventId, slotIds }
     }
 
+    /**
+     * Given an event id, returns the first slot of the event.
+     * This can be used to then update the slot, using {@link updateEventBooking()}, which in turn will update all other slots.
+     *
+     * @param eventId the id of the event (not the slotId)
+     */
+    async getFirstEventSlot(eventId: string) {
+        const eventSlotsRef = await FirestoreRefs.eventSlots(eventId)
+        const slots = await eventSlotsRef.get()
+        if (slots.docs.length > 0) {
+            return slots.docs[0].data()
+        } else {
+            throw new Error(`No slots found for event with id: '${eventId}'`)
+        }
+    }
+
     async updateEventBooking(eventId: string, slotId: string, event: RecursivePartial<Event>) {
         // first update this event
         await this.#updateDocument(FirestoreRefs.eventSlot(eventId, slotId), event)

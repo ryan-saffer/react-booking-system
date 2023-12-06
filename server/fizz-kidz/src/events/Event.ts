@@ -24,6 +24,13 @@ export type StandardEvent = BaseEvent & {
 export type IncursionEvent = BaseEvent & {
     type: 'incursion'
     module: ScienceModule
+    numberOfChildren?: string
+    location?: string // location within the school
+    parking?: string
+    expectedLearning?: string
+    teacherInformation?: string
+    additionalInformation?: string
+    hearAboutUs?: string
 }
 
 export type Event = StandardEvent | IncursionEvent

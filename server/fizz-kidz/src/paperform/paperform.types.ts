@@ -51,3 +51,16 @@ export type OnboardingForm = {
     emergencyContactMobile: string
     emergencyContactRelation: string
 }
+
+export type IncursionForm = {
+    id: string
+    organisation: string
+    address: string
+    numberOfChildren: string
+    location: string
+    parking: string
+    expectedLearning: string
+    teacherInformation: string
+    additionalInformation: string
+    hearAboutUs: string
+}

@@ -1,14 +1,14 @@
-import { logger } from 'firebase-functions/v2'
-import { Booking, capitalise, getManager } from 'fizz-kidz'
+import { Booking, PaperFormResponse, PartyForm, capitalise, getManager } from 'fizz-kidz'
+import { getBookingAdditions, getBookingCreations } from './utils'
+import { logError, throwFunctionsError } from '../../utilities'
+
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { DateTime } from 'luxon'
+import { MailClient } from '../../sendgrid/MailClient'
+import { PartyFormMapper } from './party-form-mapper'
+import { logger } from 'firebase-functions/v2'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { logError, onMessagePublished, throwFunctionsError } from '../../../utilities'
-import { PartyFormMapper } from '../../core/party-form-mapper'
-import { getBookingAdditions, getBookingCreations } from '../../core/utils'
-
-export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubmission', async (responses) => {
+export async function handlePartyFormSubmission(responses: PaperFormResponse<PartyForm>) {
     const formMapper = new PartyFormMapper(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
@@ -186,4 +186,4 @@ export const handlePartyFormSubmission = onMessagePublished('handlePartyFormSubm
     } catch (err) {
         logError(`error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`, err)
     }
-})
+}

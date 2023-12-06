@@ -1,6 +1,14 @@
-import { PaperFormResponse, PartyForm } from '../paperform'
+import { IncursionForm, PaperFormResponse, PartyForm } from '../paperform'
 
 export interface PubSubFunctions {
-    handlePartyFormSubmission: PaperFormResponse<PartyForm>
     createEmployee: { employeeId: string }
+    paperformSubmission:
+        | {
+              form: 'party'
+              data: PaperFormResponse<PartyForm>
+          }
+        | {
+              form: 'incursion'
+              data: PaperFormResponse<IncursionForm>
+          }
 }

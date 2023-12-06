@@ -61,5 +61,10 @@
     },
     "engines": {
         "node": "18"
+    },
+    "importSort": {
+        ".ts, .tsx, .js, .jsx": {
+            "style": "import-sort-style-module-scoped"
+        }
     }
 }
