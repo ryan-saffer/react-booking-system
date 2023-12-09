@@ -1,13 +1,15 @@
-import type { Emails } from './types'
 import fs from 'fs'
 import path from 'path'
-import type { MailService } from '@sendgrid/mail'
-import type { MailData } from '@sendgrid/helpers/classes/mail'
-import { env } from '../init'
 
-import Mustache from 'mustache'
-import { ClientStatus } from '../utilities/types'
 import { logger } from 'firebase-functions/v2'
+import Mustache from 'mustache'
+
+import type { MailData } from '@sendgrid/helpers/classes/mail'
+import type { MailService } from '@sendgrid/mail'
+
+import { env } from '../init'
+import { ClientStatus } from '../utilities/types'
+import type { Emails } from './types'
 
 type Options = {
     from?: {
@@ -175,7 +177,7 @@ export class MailClient {
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
                 }
-            case 'standardEvent':
+            case 'standardEventBookingConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -190,7 +192,7 @@ export class MailClient {
                     template: 'event_booking_confirmation.mjml',
                     useMjml: true,
                 }
-            case 'incursionBooking':
+            case 'incursionBookingConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -205,6 +207,37 @@ export class MailClient {
                     template: 'incursion_booking_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'incursionForm':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'program@fizzkidz.com.au',
+                        },
+                        bcc: ['programs@fizzkidz.com.au', 'bookings@fizzkidz.com.au'],
+                        subject: subject || 'Science incursion is coming up!',
+                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                    },
+                    template: 'incursion_form.mjml',
+                    useMjml: true,
+                }
+            case 'incursionFormCompleted': {
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'programs@fizzkidz.com.au',
+                        },
+                        bcc: ['programs@fizzkidz.com.au', 'bookigns@fizzkidz.com.au'],
+                        subject: subject || 'Submission Recieved',
+                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                    },
+                    template: 'incursion_form_completed.mjml',
+                    useMjml: true,
+                }
+            }
             case 'partyBookingConfirmation':
                 return {
                     emailInfo: {

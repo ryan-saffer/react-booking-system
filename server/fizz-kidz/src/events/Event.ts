@@ -24,6 +24,7 @@ export type StandardEvent = BaseEvent & {
 export type IncursionEvent = BaseEvent & {
     type: 'incursion'
     module: ScienceModule
+    incursionFormSent: boolean
     numberOfChildren?: string
     location?: string // location within the school
     parking?: string

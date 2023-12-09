@@ -1,6 +1,7 @@
 import { IncursionEvent, IncursionForm, PaperFormResponse, getQuestionValue } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function handleIncursionFormSubmission(response: PaperFormResponse<IncursionForm>) {
     const eventId = getQuestionValue(response, 'id')
@@ -13,18 +14,39 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
         throw new Error(`Cannot update an incursion event with id '${eventId}/${firstSlot.id}' with type 'standard'`)
     }
 
+    const organisation = getQuestionValue(response, 'organisation')
+    const address = getQuestionValue(response, 'address')
+    const numberOfChildren = getQuestionValue(response, 'numberOfChildren')
+    const location = getQuestionValue(response, 'location')
+    const parking = getQuestionValue(response, 'parking')
+    const expectedLearning = getQuestionValue(response, 'expectedLearning')
+    const teacherInformation = getQuestionValue(response, 'teacherInformation')
+    const additionalInformation = getQuestionValue(response, 'additionalInformation')
+    const hearAboutUs = getQuestionValue(response, 'hearAboutUs')
+
     const updatedSlot = {
         ...firstSlot,
-        organisation: getQuestionValue(response, 'organisation'),
-        address: getQuestionValue(response, 'address'),
-        numberOfChildren: getQuestionValue(response, 'numberOfChildren'),
-        location: getQuestionValue(response, 'location'),
-        parking: getQuestionValue(response, 'parking'),
-        expectedLearning: getQuestionValue(response, 'expectedLearning'),
-        teacherInformation: getQuestionValue(response, 'teacherInformation'),
-        additionalInformation: getQuestionValue(response, 'additionalInformation'),
-        hearAboutUs: getQuestionValue(response, 'hearAboutUs'),
+        organisation,
+        address,
+        numberOfChildren,
+        location,
+        parking,
+        expectedLearning,
+        teacherInformation,
+        additionalInformation,
+        hearAboutUs,
     } satisfies IncursionEvent
 
     await DatabaseClient.updateEventBooking(eventId, firstSlot.id, updatedSlot)
+
+    const mailClient = await MailClient.getInstance()
+    await mailClient.sendEmail('incursionFormCompleted', firstSlot.contactEmail, {
+        contactName: firstSlot.contactName,
+        numberOfChildren,
+        location,
+        parking,
+        expectedLearning,
+        teacherInformation,
+        additionalInformation,
+    })
 }

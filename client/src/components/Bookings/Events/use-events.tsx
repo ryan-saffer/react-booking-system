@@ -15,12 +15,10 @@ export function useEvents<T extends Event['type']>(
     const [events, setEvents] = useState<Service<Record<Location, Event[]>>>({ status: 'loading' })
 
     const generateLocationsMap = (events: Event[]): Record<Location, Event[]> =>
-        Object.values(Location).reduce((acc, curr) => ({ ...acc, [curr]: events.filter((it) => it.studio === curr) }), {
-            balwyn: [],
-            cheltenham: [],
-            essendon: [],
-            malvern: [],
-        })
+        Object.values(Location).reduce(
+            (acc, curr) => ({ ...acc, [curr]: events.filter((it) => it.studio === curr) }),
+            {} as any
+        )
 
     useEffect(() => {
         async function fetchEvents() {
@@ -54,7 +52,7 @@ export function useEvents<T extends Event['type']>(
                     .filter((it): it is Event => !!it)
                 setEvents({
                     status: 'loaded',
-                    result: generateLocationsMap([...events]),
+                    result: generateLocationsMap(events),
                 })
             } catch (error) {
                 console.error(error)

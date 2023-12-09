@@ -54,8 +54,23 @@ export class FirestoreRefs {
         return (await this.events()).doc(eventId) as Document<{ id: string }>
     }
 
-    static async eventSlots(eventId: string) {
-        return (await this.event(eventId)).collection('eventSlots') as Collection<Event>
+    /**
+     * All event slots for a given event
+     * @param eventId the id of the event
+     */
+    static async eventSlots(eventId: string): Promise<Collection<Event>>
+    /**
+     * Returns a collection reference to the 'eventSlots' collectionGroup
+     */
+    static async eventSlots(): Promise<Collection<Event>>
+    static async eventSlots(eventId?: string) {
+        if (eventId) {
+            const eventsRef = await this.events()
+            return eventsRef.doc(eventId).collection('eventSlots')
+        } else {
+            const client = await FirestoreClient.getInstance()
+            return client.collectionGroup('eventSlots')
+        }
     }
 
     static async eventSlot(eventId: string, slotId: string) {

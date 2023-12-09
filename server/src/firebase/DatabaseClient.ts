@@ -6,10 +6,12 @@ import type {
     FirestoreBooking,
     RecursivePartial,
     Event,
+    IncursionEvent,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
-import { Timestamp, type DocumentReference } from 'firebase-admin/firestore'
+import { Timestamp, type DocumentReference, Query } from 'firebase-admin/firestore'
 import { CreateEvent } from '../events/core/create-event'
+import { DateTime } from 'luxon'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -35,6 +37,11 @@ class Client {
         } else {
             throw new Error(`Cannot find document at path '${ref.path}' with id '${ref.id}'`)
         }
+    }
+
+    async #getDocuments<T>(query: Query<T>) {
+        const snap = await query.get()
+        return Promise.all(snap.docs.map((doc) => this.#convertTimestamps(doc.data())))
     }
 
     async #updateDocument<T>(refPromise: Promise<Document<T>> | Document<T>, data: RecursivePartial<T>) {
@@ -119,6 +126,11 @@ class Client {
         return { eventId, slotIds }
     }
 
+    async getEventSlots(eventId: string) {
+        const slotsRef = await FirestoreRefs.eventSlots(eventId)
+        return this.#getDocuments(slotsRef)
+    }
+
     /**
      * Given an event id, returns the first slot of the event.
      * This can be used to then update the slot, using {@link updateEventBooking()}, which in turn will update all other slots.
@@ -133,6 +145,22 @@ class Client {
         } else {
             throw new Error(`No slots found for event with id: '${eventId}'`)
         }
+    }
+
+    /**
+     * Gets all event slots between now and the given date.
+     *
+     * @param date
+     */
+    async getIncursionsBefore(date: DateTime) {
+        const eventSlotsCollectionGroupRef = await FirestoreRefs.eventSlots()
+        const slots = await this.#getDocuments(
+            eventSlotsCollectionGroupRef
+                .where('type', '==', 'incursion')
+                .where('startTime', '>', new Date())
+                .where('startTime', '<', date.toJSDate())
+        )
+        return slots as IncursionEvent[]
     }
 
     async updateEventBooking(eventId: string, slotId: string, event: RecursivePartial<Event>) {

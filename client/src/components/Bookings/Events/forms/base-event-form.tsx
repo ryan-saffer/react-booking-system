@@ -1,3 +1,10 @@
+import { Event, Location, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import React from 'react'
+import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
+
+import AddIcon from '@mui/icons-material/Add'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import {
     Button,
     FormControl,
@@ -11,16 +18,10 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material'
-import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
-import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import { Event, Location, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
-
-import AddIcon from '@mui/icons-material/Add'
-import { DateTime } from 'luxon'
-import React from 'react'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import { capitalise } from '../../../../utilities/stringUtilities'
 import { styled } from '@mui/material/styles'
+import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+
+import { capitalise } from '../../../../utilities/stringUtilities'
 
 const PREFIX = 'EventForm'
 
@@ -138,7 +139,11 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     disabled={disabled || !props.isNew}
                                     error={!!errors.studio}
                                 >
-                                    {Object.values(Location).map(location => <MenuItem key={location} value={location}>{capitalise(location)}</MenuItem>)}
+                                    {Object.values(Location).map((location) => (
+                                        <MenuItem key={location} value={location}>
+                                            {capitalise(location)}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             )}
                         />

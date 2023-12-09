@@ -76,7 +76,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
 
             switch (type) {
                 case 'standard': {
-                    await mailClient.sendEmail('standardEvent', event.contactEmail, {
+                    await mailClient.sendEmail('standardEventBookingConfirmation', event.contactEmail, {
                         contactName: event.contactName,
                         address: event.address,
                         emailMessage: emailMessage,
@@ -90,7 +90,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                 }
                 case 'incursion': {
                     // TODO: Generate and include form
-                    await mailClient.sendEmail('incursionBooking', event.contactEmail, {
+                    await mailClient.sendEmail('incursionBookingConfirmation', event.contactEmail, {
                         contactName: event.contactName,
                         organisation: event.organisation,
                         address: event.address,

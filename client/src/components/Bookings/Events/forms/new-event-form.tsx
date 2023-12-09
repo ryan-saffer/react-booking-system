@@ -57,16 +57,16 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             price: '$1800 + GST',
             slots: [
                 {
-                    startDate: DateTime.fromObject({ day: 29, month: 11, hour: 13, minute: 0, second: 0 }),
-                    startTime: DateTime.fromObject({ day: 29, month: 11, hour: 13, minute: 0, second: 0 }),
-                    endDate: DateTime.fromObject({ day: 29, month: 11, hour: 14, minute: 0, second: 0 }),
-                    endTime: DateTime.fromObject({ day: 29, month: 11, hour: 14, minute: 0, second: 0 }),
+                    startDate: DateTime.fromObject({ day: 28, month: 12, hour: 13, minute: 0, second: 0 }),
+                    startTime: DateTime.fromObject({ day: 28, month: 12, hour: 13, minute: 0, second: 0 }),
+                    endDate: DateTime.fromObject({ day: 28, month: 12, hour: 14, minute: 0, second: 0 }),
+                    endTime: DateTime.fromObject({ day: 28, month: 12, hour: 14, minute: 0, second: 0 }),
                 },
                 {
-                    startDate: DateTime.fromObject({ day: 29, month: 11, hour: 15, minute: 0, second: 0 }),
-                    startTime: DateTime.fromObject({ day: 29, month: 11, hour: 15, minute: 0, second: 0 }),
-                    endDate: DateTime.fromObject({ day: 29, month: 11, hour: 16, minute: 0, second: 0 }),
-                    endTime: DateTime.fromObject({ day: 29, month: 11, hour: 16, minute: 0, second: 0 }),
+                    startDate: DateTime.fromObject({ day: 29, month: 12, hour: 15, minute: 0, second: 0 }),
+                    startTime: DateTime.fromObject({ day: 29, month: 12, hour: 15, minute: 0, second: 0 }),
+                    endDate: DateTime.fromObject({ day: 29, month: 12, hour: 16, minute: 0, second: 0 }),
+                    endTime: DateTime.fromObject({ day: 29, month: 12, hour: 16, minute: 0, second: 0 }),
                 },
             ],
             notes: 'Some notes...',
@@ -107,7 +107,11 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     notes: values.notes,
                     ...(values.type === 'standard'
                         ? { type: 'standard' }
-                        : { type: 'incursion', module: values.module as ScienceModule }),
+                        : {
+                              type: 'incursion',
+                              module: values.module as ScienceModule,
+                              incursionFormSent: false,
+                          }),
                 },
                 slots: values.slots.map((slot) => ({
                     startTime: combineDateAndTime(slot.startDate!, slot.startTime!),
@@ -135,11 +139,21 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     <>
                         <Grid item xs={12} sx={{ marginTop: 2 }}>
                             <Typography variant="h6">Email Message</Typography>
+                            <Typography variant="body1" sx={{ fontSize: 12 }}>
+                                <i>
+                                    "Hi [name],
+                                    <br />
+                                    TODO SHOW DIFFERENT IF INCURSIONS This email is to confirm your booking with Fizz
+                                    Kidz.
+                                    <br />
+                                    [Email message goes here...]"
+                                </i>
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 label="Email Message"
-                                placeholder="This message will be included in the confirmation email"
+                                placeholder="We're delighted to run..."
                                 value={emailMessage}
                                 error={emailMessageError}
                                 helperText={

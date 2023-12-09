@@ -135,7 +135,7 @@ export type Emails = {
     }
 
     // EVENTS
-    standardEvent: {
+    standardEventBookingConfirmation: {
         contactName: string
         address: string
         slots: { startTime: string; endTime: string }[]
@@ -143,7 +143,7 @@ export type Emails = {
         price: string
     }
 
-    incursionBooking: {
+    incursionBookingConfirmation: {
         contactName: string
         organisation: string
         address: string
@@ -152,6 +152,24 @@ export type Emails = {
         incursion: string
         module: string
         price: string
+    }
+
+    incursionForm: {
+        contactName: string
+        incursionName: string
+        organisation: string
+        slots: string[]
+        formUrl: string
+    }
+
+    incursionFormCompleted: {
+        contactName: string
+        numberOfChildren: string
+        location: string
+        parking: string
+        expectedLearning: string
+        teacherInformation: string
+        additionalInformation: string
     }
 
     // ONBOARDING
