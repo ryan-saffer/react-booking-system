@@ -89,7 +89,6 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                     break
                 }
                 case 'incursion': {
-                    // TODO: Generate and include form
                     await mailClient.sendEmail('incursionBookingConfirmation', event.contactEmail, {
                         contactName: event.contactName,
                         organisation: event.organisation,

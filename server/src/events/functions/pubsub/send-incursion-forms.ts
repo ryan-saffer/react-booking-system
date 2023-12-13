@@ -24,6 +24,7 @@ export const sendIncursionForms = onSchedule(
         const notSentEvents = events.filter((it) => !it.incursionFormSent)
         if (notSentEvents.length === 0) {
             logger.log('all incursions within the next 3 weeks already sent incursion form')
+            return
         }
 
         // group all slots by event id
@@ -48,19 +49,18 @@ export const sendIncursionForms = onSchedule(
                 contactName: firstSlot.contactName,
                 incursionName: ModuleNameMap[firstSlot.module],
                 organisation: firstSlot.organisation,
-                slots: slots.map((slot) => {
-                    const time = `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
-                        'cccc, LLL dd, t'
-                    )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
-                    console.log(time)
-                    return time
-                }),
+                slots: slots.map(
+                    (slot) =>
+                        `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+                            'cccc, LLL dd, t'
+                        )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
+                ),
                 formUrl: generateFormUrl(eventId, firstSlot.organisation, firstSlot.address),
             })
 
             // mark all slots as having the form sent
             await DatabaseClient.updateEventBooking(eventId, firstSlot.id, {
-                $type: 'incursion',
+                $type: 'incursion', // needed to know next field is available
                 incursionFormSent: true,
             })
         }

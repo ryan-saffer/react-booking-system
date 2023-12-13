@@ -249,7 +249,12 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                         >
                             <Button
                                 onClick={() => handleDateChange(date.minus({ days: 1 }))}
-                                sx={{ background: 'white', borderRadius: 2, flexShrink: 2 }}
+                                sx={{
+                                    background: 'white',
+                                    borderRadius: 2,
+                                    flexShrink: 2,
+                                    ':hover': { border: '1px solid black' },
+                                }}
                             >
                                 <NavigateBefore />
                             </Button>
@@ -265,6 +270,12 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                                 background: 'white',
                                                 borderWidth: 0,
                                                 borderRadius: 2,
+                                                cursor: 'pointer',
+                                                ':hover': {
+                                                    background: '#E8EBED',
+                                                    border: '1px solid black',
+                                                    margin: '-1px',
+                                                },
                                             },
                                             fieldSet: {
                                                 borderWidth: 0,
@@ -279,7 +290,12 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                             />
                             <Button
                                 onClick={() => handleDateChange(date.plus({ days: 1 }))}
-                                sx={{ background: 'white', borderRadius: 2, flexShrink: 2 }}
+                                sx={{
+                                    background: 'white',
+                                    borderRadius: 2,
+                                    flexShrink: 2,
+                                    ':hover': { border: '1px solid black' },
+                                }}
                             >
                                 <NavigateNext />
                             </Button>
@@ -291,7 +307,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                             >
                                 <MenuItem value="all">
                                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                        <LocationOnOutlinedIcon sx={{ color: '#0f172a' }} />
+                                        <LocationOnOutlinedIcon sx={{ color: '#0f172a', width: 20, height: 20 }} />
                                         <div>All Locations</div>
                                     </div>
                                 </MenuItem>

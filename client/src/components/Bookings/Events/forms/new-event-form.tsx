@@ -76,6 +76,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
         control,
         formState: { isValid },
         handleSubmit,
+        watch,
     } = methods
 
     const fieldArray = useFieldArray({ control, name: 'slots', rules: { minLength: 1 } })
@@ -141,14 +142,24 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                         <Grid item xs={12} sx={{ marginTop: 2 }}>
                             <Typography variant="h6">Email Message</Typography>
                             <Typography variant="body1" sx={{ fontSize: 12 }}>
-                                <i>
-                                    "Hi [name],
-                                    <br />
-                                    TODO SHOW DIFFERENT IF INCURSIONS This email is to confirm your booking with Fizz
-                                    Kidz.
-                                    <br />
-                                    [Email message goes here...]"
-                                </i>
+                                {watch('type') === 'standard' ? (
+                                    <i>
+                                        "Hi [name],
+                                        <br />
+                                        This email is to confirm your booking with Fizz Kidz.
+                                        <br />
+                                        [Email message goes here...]"
+                                    </i>
+                                ) : (
+                                    <i>
+                                        "Hi [name],
+                                        <br />
+                                        We're delighted to confirm your booking. Seriously fun science is coming your
+                                        way!
+                                        <br />
+                                        [Email message goes here...]"
+                                    </i>
+                                )}
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
