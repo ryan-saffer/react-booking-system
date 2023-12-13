@@ -33,7 +33,7 @@ const classes = {
 const Root = styled('div')({
     [`& .${classes.disabled}`]: {
         '& .Mui-disabled': {
-            color: 'rgba(0, 0, 0, 0.87)',
+            WebkitTextFillColor: 'rgba(0, 0, 0, 0.87)',
         },
     },
 })
@@ -46,7 +46,7 @@ export type Form = {
     organisation: string
     studio: Location | ''
     address: string
-    type: Event['type'] | ''
+    type: Event['$type'] | ''
     module: ScienceModule | ''
     price: string
     slots: {
@@ -56,6 +56,13 @@ export type Form = {
         endTime: DateTime | null
     }[]
     notes: string
+    numberOfChildren?: string
+    location?: string
+    parking?: string
+    expectedLearning?: string
+    teacherInformation?: string
+    additionalInformation?: string
+    hearAboutUs?: string
 }
 
 type NewProps = {
@@ -116,6 +123,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     label="type"
                                     disabled={disabled || !props.isNew}
                                     error={!!errors.type}
+                                    classes={{ root: classes.disabled }}
                                 >
                                     <MenuItem value="standard">Standard</MenuItem>
                                     <MenuItem value="incursion">Incursion</MenuItem>
@@ -138,6 +146,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     label="studio"
                                     disabled={disabled || !props.isNew}
                                     error={!!errors.studio}
+                                    classes={{ root: classes.disabled }}
                                 >
                                     {Object.values(Location).map((location) => (
                                         <MenuItem key={location} value={location}>
@@ -159,7 +168,13 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                 control={control}
                                 rules={{ required: true }}
                                 render={({ field }) => (
-                                    <Select {...field} label="module" disabled={disabled} error={!!errors.module}>
+                                    <Select
+                                        {...field}
+                                        label="module"
+                                        disabled={disabled}
+                                        error={!!errors.module}
+                                        classes={{ root: classes.disabled }}
+                                    >
                                         {ObjectKeys(ModuleNameMap).map((key) => (
                                             <MenuItem value={key} key={key}>
                                                 {ModuleNameMap[key]}
@@ -439,6 +454,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         )}
                     />
                 </Grid>
+                {!props.isNew && <></>}
             </Grid>
         </Root>
     )
@@ -470,7 +486,12 @@ const DateTimePicker = ({
                         <DatePicker
                             {...field}
                             slotProps={{
-                                textField: { error: errors.date, helperText: helperText.date, autoComplete: 'off' },
+                                textField: {
+                                    error: errors.date,
+                                    helperText: helperText.date,
+                                    autoComplete: 'off',
+                                    classes: { root: classes.disabled },
+                                },
                             }}
                             label={`${capitalise(type)} date`}
                             disabled={disabled}
@@ -489,7 +510,12 @@ const DateTimePicker = ({
                         <TimePicker
                             {...field}
                             slotProps={{
-                                textField: { error: errors.time, helperText: helperText.time, autoComplete: 'off' },
+                                textField: {
+                                    error: errors.time,
+                                    helperText: helperText.time,
+                                    autoComplete: 'off',
+                                    classes: { root: classes.disabled },
+                                },
                             }}
                             label={`${capitalise(type)} time`}
                             disabled={disabled}

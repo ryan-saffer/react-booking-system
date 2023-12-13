@@ -6,7 +6,7 @@ import { convertTimestamps } from '@utils/firebase/converters'
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
 
-export function useEvents<T extends Event['type']>(
+export function useEvents<T extends Event['$type']>(
     type: T
 ): Service<Record<Location, T extends 'standard' ? StandardEvent[] : IncursionEvent[]>> {
     const firebase = useFirebase()
@@ -32,7 +32,7 @@ export function useEvents<T extends Event['type']>(
 
             const snap = await firebase.db
                 .collectionGroup('eventSlots')
-                .where('type', '==', type)
+                .where('$type', '==', type)
                 .where('startTime', '<', nextDay.toJSDate())
                 .where('startTime', '>', ninetyDaysAgo.toJSDate())
                 .get()

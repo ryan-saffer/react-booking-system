@@ -4,6 +4,8 @@
 */.firebase/*
 .firebase/
 
+.idea/
+
 */.env
 *credentials.*
 *service-key.*

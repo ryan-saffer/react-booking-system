@@ -60,7 +60,7 @@ export const sendIncursionForms = onSchedule(
 
             // mark all slots as having the form sent
             await DatabaseClient.updateEventBooking(eventId, firstSlot.id, {
-                type: 'incursion',
+                $type: 'incursion',
                 incursionFormSent: true,
             })
         }

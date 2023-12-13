@@ -10,7 +10,7 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
     // the database client handles updating all siblings.
     const firstSlot = await DatabaseClient.getFirstEventSlot(eventId)
 
-    if (firstSlot.type === 'standard') {
+    if (firstSlot.$type === 'standard') {
         throw new Error(`Cannot update an incursion event with id '${eventId}/${firstSlot.id}' with type 'standard'`)
     }
 
@@ -26,6 +26,7 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
 
     const updatedSlot = {
         ...firstSlot,
+        $incursionFormCompleted: true,
         organisation,
         address,
         numberOfChildren,

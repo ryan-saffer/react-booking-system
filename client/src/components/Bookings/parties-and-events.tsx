@@ -27,7 +27,7 @@ export const PartiesAndEvents = () => {
 
     return (
         <>
-            {loading && [1, 2, 3].map(idx => <BookingsSkeleton key={idx} />)}
+            {loading && [1, 2, 3].map((idx) => <BookingsSkeleton key={idx} />)}
             {bookings.status === 'loaded' && events.status === 'loaded' && !loading && (
                 <Grid item xs sm md>
                     {Object.values(Location).map(

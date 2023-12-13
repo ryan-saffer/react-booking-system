@@ -106,11 +106,12 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     price: values.price,
                     notes: values.notes,
                     ...(values.type === 'standard'
-                        ? { type: 'standard' }
+                        ? { $type: 'standard' }
                         : {
-                              type: 'incursion',
+                              $type: 'incursion',
                               module: values.module as ScienceModule,
                               incursionFormSent: false,
+                              $incursionFormCompleted: false,
                           }),
                 },
                 slots: values.slots.map((slot) => ({

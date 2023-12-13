@@ -17,7 +17,7 @@ export type CreateEvent = {
 }
 
 export async function createEvent({ event, slots, sendConfirmationEmail, emailMessage }: CreateEvent) {
-    if (event.type === 'incursion') {
+    if (event.$type === 'incursion') {
         console.log(event)
     }
 
@@ -72,7 +72,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
         try {
             const mailClient = await MailClient.getInstance()
 
-            const { type } = event
+            const { $type: type } = event
 
             switch (type) {
                 case 'standard': {

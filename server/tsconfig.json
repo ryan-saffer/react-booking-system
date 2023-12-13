@@ -14,7 +14,8 @@
         "paths": {
             "fizz-kidz": ["./fizz-kidz/src"]
         },
-        "composite": true
+        "composite": true,
+        "noErrorTruncation": true
     },
     "compileOnSave": true,
     "include": [

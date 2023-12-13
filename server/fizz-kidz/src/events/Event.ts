@@ -18,20 +18,30 @@ type BaseEvent = {
 }
 
 export type StandardEvent = BaseEvent & {
-    type: 'standard'
+    $type: 'standard'
 }
 
-export type IncursionEvent = BaseEvent & {
-    type: 'incursion'
+type BaseIncursionEvent = BaseEvent & {
+    $type: 'incursion'
     module: ScienceModule
     incursionFormSent: boolean
-    numberOfChildren?: string
-    location?: string // location within the school
-    parking?: string
-    expectedLearning?: string
-    teacherInformation?: string
-    additionalInformation?: string
-    hearAboutUs?: string
 }
+
+type IncursionEventFormIncomplete = BaseIncursionEvent & {
+    $incursionFormCompleted: false
+}
+
+type IncursionEventFormComplete = BaseIncursionEvent & {
+    $incursionFormCompleted: true
+    numberOfChildren: string
+    location: string // location within the school
+    parking: string
+    expectedLearning: string
+    teacherInformation: string
+    additionalInformation: string
+    hearAboutUs: string
+}
+
+export type IncursionEvent = IncursionEventFormIncomplete | IncursionEventFormComplete
 
 export type Event = StandardEvent | IncursionEvent

@@ -52,7 +52,7 @@ const classes = {
 const Root = styled('div')({
     [`& .${classes.disabled}`]: {
         '& .Mui-disabled': {
-            color: 'rgba(0, 0, 0, 0.87)',
+            WebkitTextFillColor: 'rgba(0, 0, 0, 0.87)',
         },
     },
 })
