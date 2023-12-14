@@ -1,14 +1,13 @@
+import { AfterSchoolEnrolment, InvoiceStatusMap, PriceWeekMap, SendInvoiceParams } from 'fizz-kidz'
+
 import * as StripeConfig from '../../../config/stripe'
-
-import { InvoiceStatusMap, PriceWeekMap, ScienceEnrolment, SendInvoiceParams } from 'fizz-kidz'
-
 import { FirestoreClient } from '../../../firebase/FirestoreClient'
+import { env } from '../../../init'
+import { throwTrpcError } from '../../../utilities'
 import { PricesMap } from '../prices-map'
 import { StripeClient } from '../stripe-client'
-import { env } from '../../../init'
 import { retrieveLatestInvoice } from './retrieve-latest-invoice'
 import { sendInvoice } from './send-invoice'
-import { throwTrpcError } from '../../../utilities'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
@@ -22,7 +21,7 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
         for (const invoiceData of input) {
             // 1. get enrolment
             const enrolmentRef = db.collection('scienceAppointments').doc(invoiceData.id)
-            const enrolment = (await enrolmentRef.get()).data() as ScienceEnrolment
+            const enrolment = (await enrolmentRef.get()).data() as AfterSchoolEnrolment
 
             // 2. void any existing invoice
             if (enrolment.invoiceId) {
@@ -47,7 +46,7 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
             })
 
             // 4. store id back into firestore
-            const updatedEnrolment: Partial<ScienceEnrolment> = {
+            const updatedEnrolment: Partial<AfterSchoolEnrolment> = {
                 invoiceId: invoice.id,
                 continuingWithTerm: 'yes',
                 emails: {

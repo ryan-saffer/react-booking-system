@@ -1,3 +1,6 @@
+import '/fonts/LilitaOne-Regular.ttf'
+import '/fonts/Gotham-Light.otf'
+
 import { ConfigProvider, ThemeConfig } from 'antd'
 import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { useState } from 'react'
@@ -13,9 +16,6 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpLink } from '@trpc/client'
 import { trpc } from '@utils/trpc.js'
-
-import '/fonts/LilitaOne-Regular.ttf'
-import '/fonts/Gotham-Light.otf'
 
 const theme = createTheme({
     palette: {
@@ -62,29 +62,37 @@ const router = createBrowserRouter([
     {
         path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
         lazy: async () => {
-            const { ScienceClubCheckinClassSelection } = await import('../ScienceClub/Checkin/SelectClass/index.js')
-            return { Component: withAuthorization(['BASIC'], ScienceClubCheckinClassSelection) }
+            const { AfterSchoolProgramCheckinClassSelection } = await import(
+                '../after-school-program/Checkin/SelectClass/index.js'
+            )
+            return { Component: withAuthorization(['BASIC'], AfterSchoolProgramCheckinClassSelection) }
         },
     },
     {
         path: ROUTES.SCIENCE_CLUB_CLASS_DETAILS,
         lazy: async () => {
-            const { ScienceClubCheckinClassDetails } = await import('../ScienceClub/Checkin/ClassDetails/index.js')
-            return { Component: withAuthorization(['BASIC'], ScienceClubCheckinClassDetails) }
+            const { AfterSchoolProgramCheckinClassDetails } = await import(
+                '../after-school-program/Checkin/ClassDetails/index.js'
+            )
+            return { Component: withAuthorization(['BASIC'], AfterSchoolProgramCheckinClassDetails) }
         },
     },
     {
         path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
         lazy: async () => {
-            const { ScienceClubInvoicingClassSelection } = await import('../ScienceClub/Invoicing/SelectClass/index.js')
-            return { Component: withAuthorization(['ADMIN'], ScienceClubInvoicingClassSelection) }
+            const { AfterSchoolProgramInvoicingClassSelection } = await import(
+                '../after-school-program/Invoicing/SelectClass/index.js'
+            )
+            return { Component: withAuthorization(['ADMIN'], AfterSchoolProgramInvoicingClassSelection) }
         },
     },
     {
         path: ROUTES.SCIENCE_CLUB_INVOICING_STATUS,
         lazy: async () => {
-            const { ScienceClassDashboard } = await import('../ScienceClub/Invoicing/InvoiceStatusPage/index.js')
-            return { Component: withAuthorization(['ADMIN'], ScienceClassDashboard) }
+            const { AfterSchoolProgramInvoicing } = await import(
+                '../after-school-program/Invoicing/InvoiceStatusPage/index.js'
+            )
+            return { Component: withAuthorization(['ADMIN'], AfterSchoolProgramInvoicing) }
         },
     },
     {
@@ -111,21 +119,21 @@ const router = createBrowserRouter([
     {
         path: ROUTES.SCIENCE_CLUB_ENROLMENT,
         lazy: async () => {
-            const { EnrolmentPage: Component } = await import('../ScienceClub/Enrolment/index.js')
+            const { EnrolmentPage: Component } = await import('../after-school-program/Enrolment/index.js')
             return { Component }
         },
     },
     {
         path: ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL,
         lazy: async () => {
-            const { ParentPortalRoot: Component } = await import('../ScienceClub/ParentPortal/index.js')
+            const { ParentPortalRoot: Component } = await import('../after-school-program/ParentPortal/index.js')
             return { Component }
         },
     },
     {
         path: ROUTES.SCIENCE_PROGRAM_BOOKING_FORM,
         lazy: async () => {
-            const { BookingForm: Component } = await import('../ScienceClub/BookingForm/index.js')
+            const { BookingForm: Component } = await import('../after-school-program/BookingForm/index.js')
             return { Component }
         },
     },

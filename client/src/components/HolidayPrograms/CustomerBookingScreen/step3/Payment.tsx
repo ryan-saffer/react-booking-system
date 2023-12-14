@@ -3,7 +3,7 @@ import { AcuityConstants, AcuityTypes, PaidHolidayProgramBooking } from 'fizz-ki
 import React, { useContext, useRef, useState } from 'react'
 
 import Firebase, { FirebaseContext } from '@components/Firebase'
-import Loader from '@components/ScienceClub/shared/Loader'
+import Loader from '@components/after-school-program/shared/Loader'
 import { styled } from '@mui/material/styles'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 

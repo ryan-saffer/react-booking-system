@@ -1,4 +1,4 @@
-import { InvoiceStatusMap, RetrieveInvoiceStatusesParams, ScienceEnrolment } from 'fizz-kidz'
+import { AfterSchoolEnrolment, InvoiceStatusMap, RetrieveInvoiceStatusesParams } from 'fizz-kidz'
 
 import { FirestoreClient } from '../../../firebase/FirestoreClient'
 import { retrieveInvoiceStatus } from './retrieve-invoice-status'
@@ -12,7 +12,7 @@ export async function retrieveInvoiceStatuses(input: RetrieveInvoiceStatusesPara
         input.appointmentIds.map(async (appointmentId) => {
             const enrolment = (
                 await db.collection('scienceAppointments').doc(appointmentId).get()
-            ).data() as ScienceEnrolment
+            ).data() as AfterSchoolEnrolment
 
             invoiceStatuses[enrolment.id] = await retrieveInvoiceStatus(enrolment)
         })

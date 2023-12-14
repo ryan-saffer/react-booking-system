@@ -1,13 +1,12 @@
+import type { AfterSchoolEnrolment, InvoiceStatus } from 'fizz-kidz'
+
 import * as StripeConfig from '../../../config/stripe'
-
-import type { InvoiceStatus, ScienceEnrolment } from 'fizz-kidz'
-
 import { env } from '../../../init'
 import { retrieveLatestInvoice } from './retrieve-latest-invoice'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
-export async function retrieveInvoiceStatus(enrolment: ScienceEnrolment): Promise<InvoiceStatus> {
+export async function retrieveInvoiceStatus(enrolment: AfterSchoolEnrolment): Promise<InvoiceStatus> {
     if (!enrolment.invoiceId) {
         return { status: 'NOT_SENT' }
     } else {

@@ -1,13 +1,14 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
-
-import type { AcuityTypes } from 'fizz-kidz'
 import { Button } from 'antd'
-import { Form } from '..'
-import Loader from '@components/ScienceClub/shared/Loader'
+import type { AcuityTypes } from 'fizz-kidz'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import Loader from '@components/after-school-program/shared/Loader'
 import { styled } from '@mui/material/styles'
 import { trpc } from '@utils/trpc'
-import { useNavigate } from 'react-router-dom'
+
+import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
+import { Form } from '..'
 
 const PREFIX = 'FreeConfirmationButton'
 
