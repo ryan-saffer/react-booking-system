@@ -156,7 +156,7 @@ class Client {
         const eventSlotsCollectionGroupRef = await FirestoreRefs.eventSlots()
         const slots = await this.#getDocuments(
             eventSlotsCollectionGroupRef
-                .where('type', '==', 'incursion')
+                .where('$type', '==', 'incursion')
                 .where('startTime', '>', new Date())
                 .where('startTime', '<', date.toJSDate())
         )
