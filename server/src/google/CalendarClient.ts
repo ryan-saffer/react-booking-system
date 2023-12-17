@@ -1,8 +1,9 @@
-import { env } from '../init'
-import googleCredentials from '../../credentials/google-credentials.json'
-import type { calendar_v3 } from 'googleapis'
-import { withExponentialBackoff } from '../utilities'
 import { Location } from 'fizz-kidz'
+import type { calendar_v3 } from 'googleapis'
+
+import googleCredentials from '../../credentials/google-credentials.json'
+import { env } from '../init'
+import { withExponentialBackoff } from '../utilities'
 import { ClientStatus } from '../utilities/types'
 
 type Event = {
@@ -72,11 +73,9 @@ export class CalendarClient {
     async createEvent(
         calendar: CalendarParams,
         event: Event,
-        options: {
-            useExponentialBackoff?: boolean
-        } = {}
+        options: { useExponentialBackoff?: boolean } = { useExponentialBackoff: false }
     ) {
-        const { useExponentialBackoff = false } = options
+        const { useExponentialBackoff } = options
         const insertFn = () =>
             this.#calendar.events.insert(
                 {
@@ -97,19 +96,32 @@ export class CalendarClient {
         return result.data.id as string
     }
 
-    updateEvent(_eventId: string, calendar: CalendarParams, event: Event) {
+    async updateEvent(
+        _eventId: string,
+        calendar: CalendarParams,
+        event: Event,
+        options: { useExponentialBackoff?: boolean } = { useExponentialBackoff: false }
+    ) {
+        const { useExponentialBackoff } = options
+
         const eventId = _eventId.endsWith('@google.com') ? _eventId.split('@')[0] : _eventId
-        return this.#calendar.events.update({
-            eventId,
-            calendarId: this.getCalendarId(calendar),
-            requestBody: {
-                summary: event.title,
-                location: event.location,
-                start: { dateTime: event.start.toISOString() },
-                end: { dateTime: event.end.toISOString() },
-                description: event.description,
-            },
-        })
+
+        const updateFn = () =>
+            this.#calendar.events.update({
+                eventId,
+                calendarId: this.getCalendarId(calendar),
+                requestBody: {
+                    summary: event.title,
+                    location: event.location,
+                    start: { dateTime: event.start.toISOString() },
+                    end: { dateTime: event.end.toISOString() },
+                    description: event.description,
+                },
+            })
+
+        const result = useExponentialBackoff ? await withExponentialBackoff(updateFn, [403, 429]) : await updateFn()
+
+        return result.data.id as string
     }
 
     deleteEvent(_eventId: string, calendar: CalendarParams) {

@@ -8,7 +8,6 @@ export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValue
 export { Location } from './partyBookings/Locations'
 export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './partyBookings/booking'
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
-export * from './partyBookings/Event'
 //#endregion
 
 //#region Acuity
@@ -46,3 +45,6 @@ export * from './onboarding'
 export * from './hubspot'
 
 export * from './paperform'
+
+export * from './events/Event'
+export * from './events/incursion-module-map'

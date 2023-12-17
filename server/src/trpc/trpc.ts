@@ -1,8 +1,11 @@
-import { initTRPC } from '@trpc/server'
-import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/node-http'
 import type { IncomingMessage, ServerResponse } from 'http'
+
 import { getAuth } from 'firebase-admin/auth'
 import { HttpsError } from 'firebase-functions/v2/https'
+
+import { initTRPC } from '@trpc/server'
+import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/node-http'
+
 import { AcuityClient } from '../acuity/core/acuity-client'
 
 // INITIALISATION

@@ -1,11 +1,14 @@
+import { CollectionGroup } from 'firebase-admin/firestore'
 import type {
-    ScienceEnrolment,
-    PaidHolidayProgramBooking,
     Booking,
-    HolidayProgramBooking,
     Employee,
+    Event,
     FirestoreBooking,
+    HolidayProgramBooking,
+    PaidHolidayProgramBooking,
+    ScienceEnrolment,
 } from 'fizz-kidz'
+
 import { FirestoreClient } from './FirestoreClient'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
@@ -49,7 +52,30 @@ export class FirestoreRefs {
     }
 
     static async event(eventId: string) {
-        return (await this.events()).doc(eventId)
+        return (await this.events()).doc(eventId) as Document<{ id: string }>
+    }
+
+    /**
+     * All event slots for a given event
+     * @param eventId the id of the event
+     */
+    static async eventSlots(eventId: string): Promise<Collection<Event>>
+    /**
+     * Returns a collection reference to the 'eventSlots' collectionGroup
+     */
+    static async eventSlots(): Promise<CollectionGroup<Event>>
+    static async eventSlots(eventId?: string) {
+        if (eventId) {
+            const eventsRef = await this.events()
+            return eventsRef.doc(eventId).collection('eventSlots')
+        } else {
+            const client = await FirestoreClient.getInstance()
+            return client.collectionGroup('eventSlots')
+        }
+    }
+
+    static async eventSlot(eventId: string, slotId: string) {
+        return (await this.eventSlots(eventId)).doc(slotId)
     }
 
     static async employees() {

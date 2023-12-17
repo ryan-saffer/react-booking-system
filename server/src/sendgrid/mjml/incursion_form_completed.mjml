@@ -1,0 +1,132 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .text-link {
+        color: #5e6ebf
+      }
+    </mj-style>
+    <mj-style inline="inline">
+      .footer-link {
+        color: #888888
+      }
+    </mj-style>
+
+  </mj-head>
+  <mj-body background-color="#E7E7E7" width="600px">
+    <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+      <mj-column width="100%">
+        <mj-spacer height="30px" />
+        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+          Submission Received!
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding-top="0">
+      <mj-column>
+        <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-wrapper padding-top="0" padding-bottom="0">
+      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+        <mj-column width="100%">
+          <mj-text color="#637381" font-size="16px">
+            Hi {{ contactName }},
+          </mj-text>
+          <mj-text color="#637381" font-size="16px">
+            Thank you for filling out the incursion form. Below is a summary of your responses:
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Number of Children
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ numberOfChildren }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Location
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ location }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Parking
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ parking }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Expected outcomes
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ expectedLearning }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Will a teacher be present?
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ teacherInformation }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" padding-bottom="0">
+            Additional Information
+          </mj-text>
+          <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+            <i>{{ additionalInformation }}</i>
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+            Payment
+          </mj-text>
+          <mj-text color="#637381" font-size="14px" padding-top="0">
+            Please note that we require full payment before the incursion begins. We ask you to please ensure the invoice has been paid.
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+            On the day
+          </mj-text>
+          <mj-text color="#637381" font-size="14px" padding-top="0">
+            Your wonderful Fizz Kidz facilitator will arrive 15 minutes before the first program starts to set up. A reminder that each program will require a teacher to be present to support general behaviour management if required.
+          </mj-text>
+        </mj-column>
+        <mj-column width="100%">
+          <mj-text color="#637381" font-size="16px">
+            We can't wait to see you soon!
+          </mj-text>
+          <mj-text color="#637381" font-size="16px">
+            Kind regards,
+          </mj-text>
+          <mj-text color="#637381" font-size="16px">
+            Ebony and the Fizz Kidz team
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-wrapper full-width="full-width">
+      <mj-section padding-top="0">
+        <mj-group>
+          <mj-column width="100%" padding-right="0">
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+            </mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

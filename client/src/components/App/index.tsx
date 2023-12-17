@@ -14,6 +14,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpLink } from '@trpc/client'
 import { trpc } from '@utils/trpc.js'
 
+import '/fonts/LilitaOne-Regular.ttf'
+import '/fonts/Gotham-Light.otf'
+
 const theme = createTheme({
     palette: {
         background: {
@@ -45,7 +48,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.LANDING,
         lazy: async () => {
-            const { Navigation } = await import('../Navigation/index.js')
+            const { Navigation } = await import('../Navigation/navigation.js')
             return { Component: withAuthorization([], Navigation) }
         },
     },
@@ -101,7 +104,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.BOOKINGS,
         lazy: async () => {
-            const { BookingsPage } = await import('../Bookings/Bookings.js')
+            const { BookingsPage } = await import('../Bookings/bookings-page.js')
             return { Component: withAuthorization(['BASIC', 'RESTRICTED'], BookingsPage) }
         },
     },

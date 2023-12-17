@@ -16,7 +16,9 @@
         "shell": "firebase functions:shell",
         "start": "npm run shell",
         "test": "mocha",
-        "test:coverage": "nyc --reporter=lcov mocha"
+        "test:coverage": "nyc --reporter=lcov mocha",
+        "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"dev\" }' ts-node --transpile-only ./src/_scripts/main.ts",
+        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' ts-node --transpile-only ./src/_scripts/main.ts"
     },
     "dependencies": {
         "@google-cloud/pubsub": "^3.7.1",
@@ -43,6 +45,7 @@
         "@types/mocha": "^10.0.1",
         "@types/mustache": "^4.2.2",
         "@types/node": "^18.16.0",
+        "@types/prompts": "^2.4.9",
         "@types/request": "^2.48.8",
         "@types/stripe": "^7.13.23",
         "@typescript-eslint/eslint-plugin": "^6.7.5",
@@ -55,11 +58,17 @@
         "firebase-functions-test": "^0.1.7",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
+        "prompts": "^2.4.2",
         "ts-node": "^10.9.1",
         "tslint": "^6.1.2",
         "typescript": "^5.0.4"
     },
     "engines": {
         "node": "18"
+    },
+    "importSort": {
+        ".ts, .tsx, .js, .jsx": {
+            "style": "import-sort-style-module-scoped"
+        }
     }
 }

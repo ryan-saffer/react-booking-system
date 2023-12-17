@@ -1,12 +1,25 @@
-import { CalendarClient } from '../../google/CalendarClient'
-import { CreateEvent } from '../functions/trpc/trpc.events'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DistributiveOmit, Event, ModuleIncursionMap, ModuleNameMap, WithoutId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { CalendarClient } from '../../google/CalendarClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
 
-export async function createEvent({ event, sendConfirmationEmail, emailMessage }: CreateEvent) {
-    const { slots, ...rest } = event
+export type CreateEvent = {
+    event: WithoutId<DistributiveOmit<Event, 'eventId' | 'startTime' | 'endTime' | 'calendarEventId'>>
+    slots: {
+        startTime: Date
+        endTime: Date
+    }[]
+    sendConfirmationEmail: boolean
+    emailMessage: string
+}
+
+export async function createEvent({ event, slots, sendConfirmationEmail, emailMessage }: CreateEvent) {
+    if (event.$type === 'incursion') {
+        console.log(event)
+    }
 
     const calendarClient = await CalendarClient.getInstance()
 
@@ -18,15 +31,10 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
 
     try {
         // create events in firestore
-        const eventIds = await Promise.all(
-            slots.map((slot) =>
-                DatabaseClient.createEventBooking({
-                    ...rest,
-                    startTime: slot.startTime,
-                    endTime: slot.endTime,
-                })
-            )
-        )
+        const { eventId, slotIds } = await DatabaseClient.createEventBooking(event, slots)
+
+        console.log('eventId:', eventId)
+        console.log('slotIds:', slotIds)
 
         // create events in calendar
         const calendarEventIds = await Promise.all(
@@ -35,7 +43,7 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
                     { eventType: 'events' },
                     {
                         title: event.eventName,
-                        location: event.location,
+                        location: event.address,
                         start: slot.startTime,
                         end: slot.endTime,
                         description: event.notes,
@@ -47,15 +55,12 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
 
         // update calendar ids back into firestore
         await Promise.all(
-            eventIds.map((eventId, idx) => {
+            slotIds.map((slotId, idx) => {
                 const calendarEventId = calendarEventIds[idx]
                 if (!calendarEventId) {
-                    throwTrpcError(
-                        'INTERNAL_SERVER_ERROR',
-                        `error creating calendar event for event with id ${eventId}`
-                    )
+                    throwTrpcError('INTERNAL_SERVER_ERROR', `error creating calendar event for event with id ${slotId}`)
                 }
-                return DatabaseClient.updateEventBooking(eventId, { calendarEventId })
+                return DatabaseClient.updateEventBooking(eventId, slotId, { calendarEventId })
             })
         )
     } catch (err) {
@@ -66,34 +71,44 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
     if (sendConfirmationEmail) {
         try {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('eventBooking', event.contactEmail, {
-                contactName: event.contactName,
-                location: event.location,
-                emailMessage: emailMessage,
-                price: event.price,
-                slots: slots.map((slot) => ({
-                    startTime: DateTime.fromJSDate(slot.startTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString({
-                        weekday: 'long',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    }),
-                    endTime: DateTime.fromJSDate(slot.endTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString({
-                        weekday: 'long',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    }),
-                })),
-            })
+
+            const { $type: type } = event
+
+            switch (type) {
+                case 'standard': {
+                    await mailClient.sendEmail('standardEventBookingConfirmation', event.contactEmail, {
+                        contactName: event.contactName,
+                        address: event.address,
+                        emailMessage: emailMessage,
+                        price: event.price,
+                        slots: slots.map((slot) => ({
+                            startTime: formatDate(slot.startTime),
+                            endTime: formatTime(slot.endTime),
+                        })),
+                    })
+                    break
+                }
+                case 'incursion': {
+                    await mailClient.sendEmail('incursionBookingConfirmation', event.contactEmail, {
+                        contactName: event.contactName,
+                        organisation: event.organisation,
+                        address: event.address,
+                        slots: slots.map((slot) => ({
+                            startTime: formatDate(slot.startTime),
+                            endTime: formatTime(slot.endTime),
+                        })),
+                        emailMessage: emailMessage,
+                        incursion: ModuleIncursionMap[event.module],
+                        module: ModuleNameMap[event.module],
+                        price: event.price,
+                    })
+                    break
+                }
+                default: {
+                    const exhaustiveCheck: never = type
+                    throw new Error(`Unhandled event type: '${exhaustiveCheck}'`)
+                }
+            }
         } catch (err) {
             throwTrpcError(
                 'INTERNAL_SERVER_ERROR',
@@ -104,3 +119,24 @@ export async function createEvent({ event, sendConfirmationEmail, emailMessage }
         }
     }
 }
+
+const formatDate = (date: Date) =>
+    DateTime.fromJSDate(date, {
+        zone: 'Australia/Melbourne',
+    }).toLocaleString({
+        weekday: 'short',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    })
+
+const formatTime = (date: Date) =>
+    DateTime.fromJSDate(date, {
+        zone: 'Australia/Melbourne',
+    }).toLocaleString({
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+    })

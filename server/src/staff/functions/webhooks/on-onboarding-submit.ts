@@ -1,31 +1,16 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { Employee, WWCC } from 'fizz-kidz'
+import { Employee, OnboardingForm, PaperFormResponse, WWCC, getQuestionValue } from 'fizz-kidz'
 import { publishToPubSub } from '../../../utilities'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 
-type BasePFResponse = {
-    custom_key: string
-}
-
-type PFFileResponse = BasePFResponse & {
-    type: 'file'
-    value: { url: string; name: string; type: string }
-}
-
-type PFTextResponse = BasePFResponse & {
-    type: 'text' | 'id' | 'address_street' | 'address_suburb' | 'address_state' | 'address_postcode'
-    value: string
-}
-
-type PFResponse = PFFileResponse | PFTextResponse
 const PDF_KEY = '7843d2a'
 
 export const onOnboardingSubmit = onRequest(async (req, res) => {
-    const data = req.body.data as PFResponse[]
+    const data = req.body.data as PaperFormResponse<OnboardingForm>
 
-    const employeeId = data.find((it): it is PFTextResponse => it.custom_key === 'id')!.value
+    const employeeId = getQuestionValue(data, 'id')
     const existingEmployee = await DatabaseClient.getEmployee(employeeId)
 
     if (existingEmployee.status !== 'form-sent') {
@@ -35,11 +20,11 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
         return
     }
 
-    const wwccStatus = data.find((it): it is PFTextResponse => it.custom_key === 'wwccStatus')!.value as WWCC['status']
+    const wwccStatus = getQuestionValue(data, 'wwccStatus')
     let wwcc: WWCC
 
     if (wwccStatus === 'I have a WWCC') {
-        const photo = data.find((it): it is PFFileResponse => it.custom_key === 'wwccPhoto')!.value
+        const photo = getQuestionValue(data, 'wwccPhoto')
         wwcc = {
             status: wwccStatus,
             photo: {
@@ -47,45 +32,44 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
                 filename: photo.name,
                 mimeType: photo.type,
             },
-            cardNumber: data.find((it): it is PFTextResponse => it.custom_key === 'wwccCardNumber')!.value,
+            cardNumber: getQuestionValue(data, 'wwccCardNumber'),
         }
     } else {
         wwcc = {
             status: wwccStatus,
-            applicationNumber: data.find((it): it is PFTextResponse => it.custom_key === 'wwccApplicationNumber')!
-                .value,
+            applicationNumber: getQuestionValue(data, 'wwccApplicationNumber'),
         }
     }
 
     const employee = {
         ...existingEmployee,
-        firstName: data.find((it): it is PFTextResponse => it.custom_key === 'firstName')!.value,
-        lastName: data.find((it): it is PFTextResponse => it.custom_key === 'lastName')!.value,
-        pronouns: data.find((it): it is PFTextResponse => it.custom_key === 'pronouns')!.value,
-        dob: data.find((it): it is PFTextResponse => it.custom_key === 'dob')!.value,
-        email: data.find((it): it is PFTextResponse => it.custom_key === 'email')!.value,
-        mobile: data.find((it): it is PFTextResponse => it.custom_key === 'mobile')!.value,
+        firstName: getQuestionValue(data, 'firstName'),
+        lastName: getQuestionValue(data, 'lastName'),
+        pronouns: getQuestionValue(data, 'pronouns'),
+        dob: getQuestionValue(data, 'dob'),
+        email: getQuestionValue(data, 'email'),
+        mobile: getQuestionValue(data, 'mobile'),
         address: {
-            full: data.find((it): it is PFTextResponse => it.custom_key === 'address')!.value,
-            addressLine1: data.find((it): it is PFTextResponse => it.type === 'address_street')!.value,
-            city: data.find((it): it is PFTextResponse => it.type === 'address_suburb')!.value,
-            region: getState(data.find((it): it is PFTextResponse => it.type === 'address_state')!.value)!,
-            postalCode: data.find((it): it is PFTextResponse => it.type === 'address_postcode')!.value,
+            full: getQuestionValue(data, 'address'),
+            addressLine1: getQuestionValue(data, 'address_street'),
+            city: getQuestionValue(data, 'address_suburb'),
+            region: getState(getQuestionValue(data, 'address_state'))!,
+            postalCode: getQuestionValue(data, 'address_postcode'),
         },
-        health: data.find((it): it is PFTextResponse => it.custom_key === 'health')!.value,
+        health: getQuestionValue(data, 'health'),
         tfnForm: {
-            url: data.find((it): it is PFFileResponse => it.custom_key === 'tfnForm')!.value.url,
-            filename: data.find((it): it is PFFileResponse => it.custom_key === 'tfnForm')!.value.name,
-            mimeType: data.find((it): it is PFFileResponse => it.custom_key === 'tfnForm')!.value.type,
+            url: getQuestionValue(data, 'tfnForm').url,
+            filename: getQuestionValue(data, 'tfnForm').name,
+            mimeType: getQuestionValue(data, 'tfnForm').type,
         },
-        bankAccountName: data.find((it): it is PFTextResponse => it.custom_key === 'bankAccountName')!.value,
-        bsb: data.find((it): it is PFTextResponse => it.custom_key === 'bsb')!.value,
-        accountNumber: data.find((it): it is PFTextResponse => it.custom_key === 'accountNumber')!.value,
+        bankAccountName: getQuestionValue(data, 'bankAccountName'),
+        bsb: getQuestionValue(data, 'bsb'),
+        accountNumber: getQuestionValue(data, 'accountNumber'),
         wwcc,
         emergencyContact: {
-            name: data.find((it): it is PFTextResponse => it.custom_key === 'emergencyContactName')!.value,
-            mobile: data.find((it): it is PFTextResponse => it.custom_key === 'emergencyContactMobile')!.value,
-            relation: data.find((it): it is PFTextResponse => it.custom_key === 'emergencyContactRelation')!.value,
+            name: getQuestionValue(data, 'emergencyContactName'),
+            mobile: getQuestionValue(data, 'emergencyContactMobile'),
+            relation: getQuestionValue(data, 'emergencyContactRelation'),
         },
         pdfSummary: req.body.pdfs[PDF_KEY].url,
         status: 'generating-accounts',

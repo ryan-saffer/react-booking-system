@@ -1,0 +1,159 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .text-link {
+        color: #5e6ebf
+      }
+    </mj-style>
+    <mj-style inline="inline">
+      .footer-link {
+        color: #888888
+      }
+    </mj-style>
+
+  </mj-head>
+  <mj-body background-color="#E7E7E7" width="600px">
+    <mj-section background-color="#eec73b" padding-bottom='0px'>
+      <mj-column width="100%">
+        <mj-spacer height="30px" />
+        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+          Fizz Kidz Booking Confirmation
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding-top="0">
+      <mj-column>
+        <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+      <mj-column width="100%">
+        <mj-text color="#637381" font-size="14px">
+          Hi
+          {{ contactName }},
+        </mj-text>
+        <mj-text color="#637381" font-size="14px">
+          We're delighted to confirm your booking. Seriously fun science is coming your way!
+        </mj-text>
+        <mj-text color="#637381" font-size="14px">
+          {{emailMessage}}
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Where
+        </mj-text>
+        <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+          {{ organisation }}
+          <br />
+          {{ address }}
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Price
+        </mj-text>
+        <mj-text color="#637381" font-size="14px" padding-top="0">
+          {{ price }}
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          When
+        </mj-text>
+        {{#slots}}
+          <mj-text color="#637381" font-size="14px" padding-top="0">
+            {{startTime}} - {{endTime}}
+          </mj-text>
+        {{/slots}}
+      </mj-column>
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Incursion
+        </mj-text>
+        <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+          {{ incursion }}
+        </mj-text>
+      </mj-column>
+      <mj-column width="50%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Module
+        </mj-text>
+        <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+          {{ module }}
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Important Note
+        </mj-text>
+        <mj-text color="#637381" font-size="14px">
+          <ul style="margin-bottom:0px;margin-top:0px">
+            <li>
+              All Chemical Science Incursions must have tables / chairs provided and run in a room with no carpet and access to water.
+            </li>
+            <li>
+              <strong>OR</strong> all Earth, Weather and Sustainability Incursions must have access to water.
+            </li>
+            <li>
+              <strong>OR</strong> it is ideal for any Light and Sound Incursions to have a large open space accessible for the introduction game.
+            </li>
+          </ul>
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Contact
+        </mj-text>
+        <mj-text color="#637381" font-size="14px" padding-top="0">
+          Going forward, your best point of contact is our Programs Manager, Ebony. Ebony will oversee the planning and running of your upcoming incursion! You can contact Ebony at <a href="mailto:programs@fizzkidz.com.au">programs@fizzkidz.com.au</a>. <strong>You can also reply to this email directly.</strong>
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="14px">
+          <strong>Three weeks before the incursion we will send you a personalised online incursion form. The form asks you for details we need to make sure we can provide your kids with the best experience. Please keep a lookout for this email.</strong>
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="100%">
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+          Things to keep in mind
+        </mj-text>
+        <mj-text color="#637381" font-size="14px" padding-top="0">
+          <ul>
+            <li>A session is for a single class of 25 - 30 kids</li>
+            <li>As our wonderful science facilitators will be running your incursion, we will require a teacher to be present to support general behaviour management if required.</li>
+            <li>All incursions require access to water</li>
+            <li>Fizz Kidz incursions are seriously fun, so please expect some noise</li>
+          </ul>
+        </mj-text>
+      </mj-column>
+
+      <mj-column width="100%">
+        <mj-text color="#637381" font-size="14px">
+          We can't wait to see you soon,
+        </mj-text>
+        <mj-text color="#637381" font-size="14px">
+          Lami and the Fizz Kidz team
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-wrapper full-width="full-width">
+      <mj-section padding-top="0">
+        <mj-group>
+          <mj-column width="100%" padding-right="0">
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+            </mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

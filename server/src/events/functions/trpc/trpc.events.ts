@@ -1,23 +1,10 @@
-import { EventBooking, WithoutId } from 'fizz-kidz'
+import { CreateEvent, createEvent } from '../../core/create-event'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
 
-import { createEvent } from '../../core/create-event'
+import { Event } from 'fizz-kidz'
 import { deleteEvent } from '../../core/delete-event'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { updateEvent } from '../../core/update-event'
-
-export type CreateEvent = {
-    event: WithoutId<Omit<EventBooking, 'startTime' | 'endTime' | 'calendarEventId'>> & {
-        slots: {
-            startTime: Date
-            endTime: Date
-        }[]
-    }
-    sendConfirmationEmail: boolean
-    emailMessage: string
-}
-export type UpdateEvent = EventBooking
-export type DeleteEvent = EventBooking
 
 export const eventsRouter = router({
     createEvent: authenticatedProcedure
@@ -26,12 +13,12 @@ export const eventsRouter = router({
             await createEvent(input)
         }),
     updateEvent: authenticatedProcedure
-        .input((input: unknown) => input as UpdateEvent)
+        .input((input: unknown) => input as Event)
         .mutation(async ({ input }) => {
             await updateEvent(input)
         }),
     deleteEvent: authenticatedProcedure
-        .input((input: unknown) => input as DeleteEvent)
+        .input((input: unknown) => input as Event)
         .mutation(async ({ input }) => {
             await deleteEvent(input)
         }),

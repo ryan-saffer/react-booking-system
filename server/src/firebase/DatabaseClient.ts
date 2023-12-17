@@ -5,11 +5,13 @@ import type {
     Employee,
     FirestoreBooking,
     RecursivePartial,
-    WithoutId,
-    EventBooking,
+    Event,
+    IncursionEvent,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
-import { Timestamp, type DocumentReference } from 'firebase-admin/firestore'
+import { Timestamp, type DocumentReference, Query } from 'firebase-admin/firestore'
+import { CreateEvent } from '../events/core/create-event'
+import { DateTime } from 'luxon'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -37,7 +39,12 @@ class Client {
         }
     }
 
-    async #updateDocument<T>(refPromise: Promise<Document<T>>, data: RecursivePartial<T>) {
+    async #getDocuments<T>(query: Query<T>) {
+        const snap = await query.get()
+        return Promise.all(snap.docs.map((doc) => this.#convertTimestamps(doc.data())))
+    }
+
+    async #updateDocument<T>(refPromise: Promise<Document<T>> | Document<T>, data: RecursivePartial<T>) {
         const ref = await refPromise
         return ref.set(data as any, { merge: true })
     }
@@ -98,16 +105,103 @@ class Client {
         return this.#updateDocument(FirestoreRefs.scienceEnrolment(appointmentId), data)
     }
 
-    async createEventBooking(booking: WithoutId<Omit<EventBooking, 'calendarEventId'>>) {
-        return this.#createDocument(booking, (await FirestoreRefs.events()).doc())
+    async createEventBooking(event: CreateEvent['event'], slots: CreateEvent['slots']) {
+        // create root doc
+        const eventId = (await FirestoreRefs.events()).doc().id
+        await this.#createDocument({}, await FirestoreRefs.event(eventId))
+        // add each slot within this doc
+        const slotIds = await Promise.all(
+            slots.map(async (slot) =>
+                this.#createDocument(
+                    {
+                        ...event,
+                        ...slot,
+                        eventId,
+                    },
+                    (await FirestoreRefs.event(eventId)).collection('eventSlots').doc()
+                )
+            )
+        )
+
+        return { eventId, slotIds }
     }
 
-    updateEventBooking(eventId: string, booking: RecursivePartial<EventBooking>) {
-        return this.#updateDocument(FirestoreRefs.event(eventId), booking)
+    async getEventSlots(eventId: string) {
+        const slotsRef = await FirestoreRefs.eventSlots(eventId)
+        return this.#getDocuments(slotsRef)
     }
 
-    async deleteEventBooking(eventId: string) {
-        return (await FirestoreRefs.event(eventId)).delete()
+    /**
+     * Given an event id, returns the first slot of the event.
+     * This can be used to then update the slot, using {@link updateEventBooking()}, which in turn will update all other slots.
+     *
+     * @param eventId the id of the event (not the slotId)
+     */
+    async getFirstEventSlot(eventId: string) {
+        const eventSlotsRef = await FirestoreRefs.eventSlots(eventId)
+        const slots = await eventSlotsRef.get()
+        if (slots.docs.length > 0) {
+            return slots.docs[0].data()
+        } else {
+            throw new Error(`No slots found for event with id: '${eventId}'`)
+        }
+    }
+
+    /**
+     * Gets all event slots between now and the given date.
+     *
+     * @param date
+     */
+    async getIncursionsBefore(date: DateTime) {
+        const eventSlotsCollectionGroupRef = await FirestoreRefs.eventSlots()
+        const slots = await this.#getDocuments(
+            eventSlotsCollectionGroupRef
+                .where('$type', '==', 'incursion')
+                .where('startTime', '>', new Date())
+                .where('startTime', '<', date.toJSDate())
+        )
+        return slots as IncursionEvent[]
+    }
+
+    async updateEventBooking(eventId: string, slotId: string, event: RecursivePartial<Event>) {
+        // first update this event
+        await this.#updateDocument(FirestoreRefs.eventSlot(eventId, slotId), event)
+
+        // then update all siblings, except for the id, times and calendarEventId
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, startTime, endTime, calendarEventId, ...rest } = event
+        const slots = await (await FirestoreRefs.eventSlots(eventId)).get()
+        const siblings = slots.docs.filter((it) => it.id !== slotId)
+        await Promise.all(
+            siblings.map((doc) => this.#updateDocument(FirestoreRefs.eventSlot(eventId, doc.data().id), rest))
+        )
+
+        // return all siblings, so calendar events for each sibling can be updated
+        return siblings.map((it) => {
+            const data = it.data()
+            const startTimeAsDate = (data.startTime as unknown as Timestamp).toDate()
+            const endTimeAsDate = (data.endTime as unknown as Timestamp).toDate()
+            return {
+                ...data,
+                startTime: startTimeAsDate,
+                endTime: endTimeAsDate,
+            }
+        })
+    }
+
+    async deleteEventBooking(eventId: string, slotId: string) {
+        // if its the last slot, delete the entire event
+        const eventRef = await FirestoreRefs.event(eventId)
+        const slotsRef = await FirestoreRefs.eventSlots(eventId)
+        const slots = await slotsRef.get()
+        const isLastSlot = slots.docs.length === 1
+
+        const slotRef = await FirestoreRefs.eventSlot(eventId, slotId)
+        await slotRef.delete()
+
+        if (isLastSlot) {
+            await eventRef.delete()
+        }
     }
 
     async createEmployee(employee: Employee, options: CreateDocOptions<Employee>) {
