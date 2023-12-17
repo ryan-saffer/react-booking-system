@@ -1,3 +1,4 @@
+import { CollectionGroup } from 'firebase-admin/firestore'
 import type {
     Booking,
     Employee,
@@ -62,7 +63,7 @@ export class FirestoreRefs {
     /**
      * Returns a collection reference to the 'eventSlots' collectionGroup
      */
-    static async eventSlots(): Promise<Collection<Event>>
+    static async eventSlots(): Promise<CollectionGroup<Event>>
     static async eventSlots(eventId?: string) {
         if (eventId) {
             const eventsRef = await this.events()

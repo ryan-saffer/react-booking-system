@@ -18,7 +18,7 @@
         "test": "mocha",
         "test:coverage": "nyc --reporter=lcov mocha",
         "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"dev\" }' ts-node --transpile-only ./src/_scripts/main.ts",
-        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"prod\" }' ts-node --transpile-only ./src/_scripts/main.ts"
+        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' ts-node --transpile-only ./src/_scripts/main.ts"
     },
     "dependencies": {
         "@google-cloud/pubsub": "^3.7.1",

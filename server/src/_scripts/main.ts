@@ -1,10 +1,8 @@
 import prompts from 'prompts'
+
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 
-main()
-
-async function main() {
-    console.log('asking for prompt...')
+;(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
@@ -35,4 +33,4 @@ async function main() {
     if (script === 'migrateLegacyEvents') {
         await migrateLegacyEvents()
     }
-}
+})()

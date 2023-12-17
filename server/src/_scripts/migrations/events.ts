@@ -1,7 +1,7 @@
+import { IncursionEvent, Location } from 'fizz-kidz'
 import fs from 'fs/promises'
 
 import { eventsRouter } from '../../events/functions/trpc/trpc.events'
-import { IncursionEvent, Location } from 'fizz-kidz'
 import { CalendarClient } from '../../google/CalendarClient'
 
 export async function groupEventsByContactEmail() {
@@ -62,6 +62,7 @@ export async function deleteFromLegacy() {
         const legacyEvents = data[email]
 
         for (const legacyEvent of legacyEvents) {
+            console.log('Deleting event with id:', legacyEvent.calendarEventId)
             await calendarClient.deleteEvent(legacyEvent.calendarEventId, {
                 eventType: 'events',
             })
@@ -83,10 +84,8 @@ export async function migrateLegacyEvents() {
 }
 
 async function bookIntoNewSystem(legacyEvents: LegacyEvent[]) {
-    console.log(legacyEvents)
     const caller = eventsRouter.createCaller({
-        authToken:
-            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjNhM2JkODk4ZGE1MGE4OWViOWUxY2YwYjdhN2VmZTM1OTNkNDEwNjgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiVGFsaWEgTWVsdHplciIsInBpY3R1cmUiOiJodHRwczovL2xoNS5nb29nbGV1c2VyY29udGVudC5jb20vLWZyRmhteGx3UzFzL0FBQUFBQUFBQUFJL0FBQUFBQUFBQVNVL0JEZzZVYmZVNnlBL3Bob3RvLmpwZyIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9ib29raW5nLXN5c3RlbS02NDM1ZCIsImF1ZCI6ImJvb2tpbmctc3lzdGVtLTY0MzVkIiwiYXV0aF90aW1lIjoxNzAxNjg4NjU0LCJ1c2VyX2lkIjoiQjA0RGpOTmlyTFRiajlSWmdDek4yTGtqT2N2MSIsInN1YiI6IkIwNERqTk5pckxUYmo5UlpnQ3pOMkxrak9jdjEiLCJpYXQiOjE3MDIyMTY3MzksImV4cCI6MTcwMjIyMDMzOSwiZW1haWwiOiJpbmZvQGZpenpraWR6LmNvbS5hdSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTE2NTQ1MzEwOTkxMDE0NTgxNTgzIl0sImVtYWlsIjpbImluZm9AZml6emtpZHouY29tLmF1Il19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.NL_wrR9LUOj9PQ4_kTrrMtS7nsF2KUAEK6_mhkp8eYQ3NVA_6dLdpPjmW-tDaKyDxBe6RDv9M4lVq0O7Fv2SDs-XyBzhijCGds_-xbE5CdaXBhRsM7AW7GgT8iwLI3yVLrRxvdOqxJWKsKH4Tfej_snXaE5YT02viX2lqIZqgdvAtzigJfDhKPV71VrPlGZW7P3lxIWWQ6K_uEeL9VOboeGZC1BGS6RBTAsnCBiVl1i4F0kMpH-QCIO7TSPUlGfUC2XgmG_1fbznt1jC5bFpImSwcTQoqBDeoLBPCN99TJ7d1yLb--dLORNupvFgsZlUlau5C2C8VGZLTfmTJ-a-4Q',
+        authToken: 'ADD AUTH TOKEN HERE',
     })
 
     const firstSlot = legacyEvents[0]
@@ -137,25 +136,4 @@ async function bookIntoNewSystem(legacyEvents: LegacyEvent[]) {
             emailMessage: '',
         })
     }
-
-    await caller.createEvent({
-        event: {
-            eventName: firstSlot.eventName,
-            contactName: firstSlot.contactName,
-            contactNumber: firstSlot.contactNumber,
-            contactEmail: firstSlot.contactEmail,
-            organisation: firstSlot.organisation,
-            studio: firstSlot.studio as Location,
-            address: firstSlot.address,
-            price: firstSlot.price,
-            notes: firstSlot.notes,
-            $type: 'standard',
-        },
-        slots: legacyEvents.map((event) => ({
-            startTime: new Date(event.startTime.__time__),
-            endTime: new Date(event.endTime.__time__),
-        })),
-        sendConfirmationEmail: false,
-        emailMessage: '',
-    })
 }
