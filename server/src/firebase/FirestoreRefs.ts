@@ -47,7 +47,7 @@ export class FirestoreRefs {
     }
 
     static async events() {
-        return (await FirestoreClient.getInstance()).collection('events-v2')
+        return (await FirestoreClient.getInstance()).collection('events')
     }
 
     static async event(eventId: string) {
