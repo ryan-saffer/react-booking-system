@@ -1,16 +1,17 @@
 import { Alert, Typography } from 'antd'
-import { AcuityTypes } from 'fizz-kidz'
+import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { useEffect } from 'react'
 
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
+import { trpc } from '@utils/trpc'
 
 import Loader from '../shared/Loader'
 import Form from './Form'
 import { FormSubmission } from '.'
-import { trpc } from '@utils/trpc'
 
 type Props = {
+    type: AfterSchoolEnrolment['type']
     appointmentType: AcuityTypes.Api.AppointmentType
     onSubmit: FormSubmission
 }
@@ -19,7 +20,7 @@ type Props = {
  * Decides whether to render the registration form,
  * or the waiting list form if the class is full.
  */
-const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
+const FormSwitcher: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
     const mixpanel = useMixpanel()
 
     const { status, data: classes } = trpc.acuity.classAvailability.useQuery({
@@ -66,7 +67,7 @@ const FormSwitcher: React.FC<Props> = ({ appointmentType, onSubmit }) => {
                                 ${parseInt(appointmentType.price) * numClasses} for {numClasses === 8 ? 'an' : 'a'}{' '}
                                 {numClasses} week term
                             </Typography.Title>
-                            <Form appointmentType={appointmentType} onSubmit={onSubmit} />
+                            <Form type={type} appointmentType={appointmentType} onSubmit={onSubmit} />
                         </>
                     )
                 } else {

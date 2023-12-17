@@ -41,7 +41,7 @@ export class FirestoreRefs {
 
     static async afterSchoolEnrolments() {
         return (await FirestoreClient.getInstance()).collection(
-            'scienceAppointments'
+            'afterSchoolEnrolments'
         ) as Collection<AfterSchoolEnrolment>
     }
 

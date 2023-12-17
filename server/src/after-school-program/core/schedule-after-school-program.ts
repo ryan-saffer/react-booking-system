@@ -8,7 +8,7 @@ import {
 import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { SheetsClient } from '../../google/SheetsClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
@@ -24,7 +24,7 @@ export default async function scheduleAfterSchoolProgram(
     sendPortalEmail = true
 ) {
     // create a firestore document
-    const newDoc = (await FirestoreClient.getInstance()).collection('scienceAppointments').doc()
+    const newDoc = (await FirestoreRefs.afterSchoolEnrolments()).doc()
 
     // get the calendar information from acuity
     const acuityClient = await AcuityClient.getInstance()

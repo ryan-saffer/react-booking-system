@@ -1,5 +1,5 @@
 import { Form as AntdForm, Button, Checkbox, Divider, Input, Modal, Select, Typography } from 'antd'
-import { AcuityTypes } from 'fizz-kidz'
+import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { Fragment, useEffect, useState } from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
@@ -14,11 +14,12 @@ const { Option } = Select
 const { TextArea } = Input
 
 type Props = {
+    type: AfterSchoolEnrolment['type']
     appointmentType: AcuityTypes.Api.AppointmentType
     onSubmit: FormSubmission
 }
 
-const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
+const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
     const [form] = AntdForm.useForm()
 
     const [loading, setLoading] = useState(false)
@@ -38,6 +39,7 @@ const Form: React.FC<Props> = ({ appointmentType, onSubmit }) => {
         }
         setLoading(true)
         onSubmit({
+            type,
             appointmentTypeId: appointmentType.id,
             calendarId: appointmentType.calendarIDs[0],
             parent: {

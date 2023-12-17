@@ -133,7 +133,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.SCIENCE_PROGRAM_BOOKING_FORM,
         lazy: async () => {
-            const { BookingForm: Component } = await import('../after-school-program/BookingForm/index.js')
+            const { BookingForm: Component } = await import('../after-school-program/booking-form/index.js')
             return { Component }
         },
     },

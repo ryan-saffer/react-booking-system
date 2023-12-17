@@ -1,6 +1,6 @@
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,
-    'appointmentTypeId' | 'calendarId' | 'parent' | 'child' | 'emergencyContact' | 'className' | 'pickupPeople'
+    'type' | 'appointmentTypeId' | 'calendarId' | 'parent' | 'child' | 'emergencyContact' | 'className' | 'pickupPeople'
 >
 
 export type SendTermContinuationEmailsParams = {
@@ -17,6 +17,7 @@ export type UpdateAfterSchoolEnrolmentParams = {
 
 export type AfterSchoolEnrolment = {
     id: string
+    type: 'science' | 'art'
     // inactive status will mean they are deleted in acuity
     status: 'active' | 'inactive'
     appointmentTypeId: number

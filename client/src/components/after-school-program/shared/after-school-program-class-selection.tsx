@@ -24,7 +24,7 @@ const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRe
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
     const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
-        category: import.meta.env.VITE_ENV === 'prod' ? 'Science Club' : 'TEST',
+        category: import.meta.env.VITE_ENV === 'prod' ? ['Science Club'] : ['TEST'],
     })
     const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId: selectedAppointmentType?.id || 0,
