@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
 import { trpc } from '@utils/trpc'
 
-import styles from './ScienceClubClassSelection.module.css'
+import styles from './after-school-program-class-selection.module.css'
 
 type Props = {
     classRoute: string

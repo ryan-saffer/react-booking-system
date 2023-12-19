@@ -1,6 +1,6 @@
-import { Alert, Button, Result, Select, Typography } from 'antd'
-import { AcuityTypes, Calendar, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
-import { useEffect, useState } from 'react'
+import { Alert, Button, Result, Typography } from 'antd'
+import { AcuityTypes, Calendar, ScheduleAfterSchoolEnrolmentParams, capitalise } from 'fizz-kidz'
+import { useCallback, useEffect, useState } from 'react'
 
 import { LeftOutlined } from '@ant-design/icons'
 import useFirebase from '@components/Hooks/context/UseFirebase'
@@ -13,6 +13,7 @@ import { trpc } from '@utils/trpc'
 import Loader from '../shared/Loader'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
+import styles from './main.module.css'
 
 export type FormSubmission = (params: ScheduleAfterSchoolEnrolmentParams) => void
 
@@ -39,19 +40,27 @@ export const BookingForm = () => {
     })
     const scheduleAfterSchoolEnrolmentMutation = trpc.afterSchoolProgram.scheduleAfterSchoolEnrolment.useMutation()
 
+    const filterAppointmentTypes = useCallback(
+        (type: 'science' | 'art' | '') => {
+            setAppointmentTypes(
+                data?.filter((it) => {
+                    if (['Science Club', 'TEST-science'].includes(it.category) && type === 'science') {
+                        return true
+                    }
+                    if (['Art Program', 'TEST-art'].includes(it.category) && type === 'art') {
+                        return true
+                    }
+                    return false
+                })
+            )
+            setClassType(type)
+        },
+        [data]
+    )
+
     useEffect(() => {
-        setAppointmentTypes(
-            data?.filter((it) => {
-                if (['Science Club', 'TEST-science'].includes(it.category) && classType === 'science') {
-                    return true
-                }
-                if (['Art Program', 'TEST-art'].includes(it.category) && classType === 'art') {
-                    return true
-                }
-                return false
-            })
-        )
-    }, [classType, data])
+        filterAppointmentTypes(classType)
+    }, [classType, data, filterAppointmentTypes])
 
     useEffect(() => {
         async function onLoad() {
@@ -199,17 +208,33 @@ export const BookingForm = () => {
 
                 if (classType === '') {
                     return (
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <Typography>Which program do you want to book for?</Typography>
-                            <Select
-                                onChange={(value) => {
-                                    setClassType(value)
-                                    // fetchAppointmentTypes()
-                                }}
-                            >
-                                <Select.Option value="science">Science Program</Select.Option>
-                                <Select.Option value="art">Art Program</Select.Option>
-                            </Select>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 12,
+                                marginTop: 18,
+                            }}
+                        >
+                            <Typography>Which program do you want to enrol into?</Typography>
+                            {(
+                                [
+                                    { program: 'science', icon: 'thermometer', color: '4BC5D9' },
+                                    { program: 'art', icon: 'palette', color: 'E91171' },
+                                ] as const
+                            ).map((it) => (
+                                <div
+                                    key={it.program}
+                                    className={styles.listItem}
+                                    onClick={() => filterAppointmentTypes(it.program)}
+                                >
+                                    <img
+                                        src={`https://api.dicebear.com/7.x/icons/svg?icon=${it.icon}&scale=100&backgroundColor=${it.color}`}
+                                        width={60}
+                                    />
+                                    <h4 className="gotham">{capitalise(it.program)} Program</h4>
+                                </div>
+                            ))}
                         </div>
                     )
                 }
