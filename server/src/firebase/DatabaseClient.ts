@@ -1,5 +1,5 @@
 import type {
-    ScienceEnrolment,
+    AfterSchoolEnrolment,
     PaidHolidayProgramBooking,
     Booking,
     Employee,
@@ -97,12 +97,12 @@ class Client {
         return this.#updateDocument(FirestoreRefs.holidayProgram(paymentIntentId, documentId), data)
     }
 
-    getScienceEnrolment(appointmentId: string) {
-        return this.#getDocument(FirestoreRefs.scienceEnrolment(appointmentId))
+    getAfterSchoolEnrolment(appointmentId: string) {
+        return this.#getDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId))
     }
 
-    updateScienceEnrolment(appointmentId: string, data: Partial<ScienceEnrolment>) {
-        return this.#updateDocument(FirestoreRefs.scienceEnrolment(appointmentId), data)
+    updateAfterSchoolEnrolment(appointmentId: string, data: Partial<AfterSchoolEnrolment>) {
+        return this.#updateDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId), data)
     }
 
     async createEventBooking(event: CreateEvent['event'], slots: CreateEvent['slots']) {

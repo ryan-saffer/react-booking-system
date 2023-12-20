@@ -104,11 +104,11 @@ export class HubspotClient {
         })
     }
 
-    addScienceProgramContact(props: WithBaseProps<{ calendarId: number }>) {
-        const { calendarId, ...baseProps } = props
+    addScienceProgramContact(props: WithBaseProps<{ calendarId: number; type: 'science' | 'art' }>) {
+        const { calendarId, type, ...baseProps } = props
         return this.#addContact({
             party_location: AcuityUtilities.getSchoolByCalendarId(calendarId),
-            test_service: 'School Science Program',
+            test_service: type === 'science' ? 'School Science Program' : 'Art Program',
             ...baseProps,
         })
     }

@@ -17,7 +17,7 @@ export * as AcuityTypes from './acuity/types'
 //#endregion
 
 //#region Science Club
-export * from './scienceclub/invoicing'
+export * from './after-school-program/invoicing'
 //#endregion
 
 //#region Firebase
@@ -32,7 +32,7 @@ export * as Utilities from './utilities'
 
 export * from './stripe'
 
-export * from './scienceclub'
+export * from './after-school-program'
 
 export * from './holidayPrograms'
 

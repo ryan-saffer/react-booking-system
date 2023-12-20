@@ -107,7 +107,7 @@ export class MailClient {
                     template: 'holiday_program_confirmation.mjml',
                     useMjml: true,
                 }
-            case 'scienceTermEnrolmentConfirmation':
+            case 'afterSchoolEnrolmentConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -118,7 +118,7 @@ export class MailClient {
                         subject: subject || 'Science Program Enrolment Confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'science_term_enrolment_confirmation.html',
+                    template: 'after_school_enrolment_confirmation.mjml',
                     useMjml: true,
                 }
             case 'termContinuationEmail':
@@ -135,7 +135,7 @@ export class MailClient {
                     template: 'term_continuation_email.html',
                     useMjml: true,
                 }
-            case 'scienceTermUnenrolmentConfirmation':
+            case 'afterSchoolUnenrolmentConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -146,10 +146,10 @@ export class MailClient {
                         subject: subject || 'Unenrolment Confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'term_unenrolment_confirmation.html',
+                    template: 'term_unenrolment_confirmation.mjml',
                     useMjml: true,
                 }
-            case 'scienceParentPortalLink':
+            case 'afterSchoolParentPortalLink':
                 return {
                     emailInfo: {
                         to,
@@ -160,7 +160,7 @@ export class MailClient {
                         subject: subject || 'Manage your enrolment',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'science_parent_portal.html',
+                    template: 'after_school_parent_portal.mjml',
                     useMjml: true,
                 }
             case 'partyFormFilledInAgain':

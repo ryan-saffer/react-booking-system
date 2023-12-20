@@ -1,12 +1,12 @@
 import { CollectionGroup } from 'firebase-admin/firestore'
 import type {
+    AfterSchoolEnrolment,
     Booking,
     Employee,
     Event,
     FirestoreBooking,
     HolidayProgramBooking,
     PaidHolidayProgramBooking,
-    ScienceEnrolment,
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
@@ -39,12 +39,14 @@ export class FirestoreRefs {
         return (await this.holidayPrograms(paymentIntentId)).doc(documentId)
     }
 
-    static async scienceEnrolments() {
-        return (await FirestoreClient.getInstance()).collection('scienceAppointments') as Collection<ScienceEnrolment>
+    static async afterSchoolEnrolments() {
+        return (await FirestoreClient.getInstance()).collection(
+            'afterSchoolEnrolments'
+        ) as Collection<AfterSchoolEnrolment>
     }
 
-    static async scienceEnrolment(appointmentId: string) {
-        return (await this.scienceEnrolments()).doc(appointmentId)
+    static async afterSchoolEnrolment(appointmentId: string) {
+        return (await this.afterSchoolEnrolments()).doc(appointmentId)
     }
 
     static async events() {

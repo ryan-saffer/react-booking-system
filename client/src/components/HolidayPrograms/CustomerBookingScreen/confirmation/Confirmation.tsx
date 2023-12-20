@@ -2,8 +2,8 @@ import { Result } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import Loader from '@components/ScienceClub/shared/Loader'
 import Root from '@components/Shared/Root'
+import Loader from '@components/after-school-program/shared/Loader'
 
 import Firebase, { FirebaseContext } from '../../../Firebase'
 

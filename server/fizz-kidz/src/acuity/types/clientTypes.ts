@@ -12,7 +12,7 @@ export type GetAppointmentsParams = {
 }
 
 export type GetAppointmentTypesParams = {
-    category?: 'Science Club' | 'TEST'
+    category?: Array<'Science Club' | 'Art Program' | 'TEST' | 'TEST-science' | 'TEST-art'>
     availableToBook?: boolean
 }
 
