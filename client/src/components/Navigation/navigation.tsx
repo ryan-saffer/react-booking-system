@@ -193,7 +193,7 @@ function ListItem({
 }) {
     return (
         <Link to={to || ''} className={styles.listItem} onClick={onClick}>
-            <img src={imgSrc} width={80} />
+            <img src={imgSrc} width={80} alt={`${title} icon`} />
             <h4 className="gotham">{title}</h4>
         </Link>
     )

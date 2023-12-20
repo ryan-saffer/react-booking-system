@@ -325,7 +325,13 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
             <Modal
                 title="Terms and conditions"
                 style={{ top: 20 }}
-                bodyStyle={{ top: 20, maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
+                styles={{
+                    body: {
+                        top: 20,
+                        maxHeight: 'calc(100vh - 200px)',
+                        overflow: 'auto',
+                    },
+                }}
                 open={showTermsModal}
                 footer={[
                     <Button key="ok" type="primary" onClick={() => setShowTermsModal(false)}>

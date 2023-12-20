@@ -149,7 +149,7 @@ export const AfterSchoolProgramCheckinClassDetails: React.FC = () => {
                     setLoading(false)
                 }
             })
-        return unsubscribe
+        return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -46,8 +46,7 @@ export const BookingForm = () => {
                 data?.filter((it) => {
                     if (['Science Club', 'TEST-science'].includes(it.category) && type === 'science') {
                         return true
-                    }
-                    if (['Art Program', 'TEST-art'].includes(it.category) && type === 'art') {
+                    } else if (['Art Program', 'TEST-art'].includes(it.category) && type === 'art') {
                         return true
                     }
                     return false
@@ -143,8 +142,7 @@ export const BookingForm = () => {
                         .filter((it) => {
                             if (['Science Club', 'TEST-science'].includes(it.category) && classType === 'science') {
                                 return true
-                            }
-                            if (['Art Program', 'TEST-art'].includes(it.category) && classType === 'art') {
+                            } else if (['Art Program', 'TEST-art'].includes(it.category) && classType === 'art') {
                                 return true
                             }
                             return false
@@ -232,6 +230,7 @@ export const BookingForm = () => {
                                     <img
                                         src={`https://api.dicebear.com/7.x/icons/svg?icon=${it.icon}&scale=100&backgroundColor=${it.color}`}
                                         width={60}
+                                        alt={`${it.program} icon`}
                                     />
                                     <h4 className="gotham">{capitalise(it.program)} Program</h4>
                                 </div>
