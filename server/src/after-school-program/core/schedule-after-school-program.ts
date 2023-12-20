@@ -3,7 +3,7 @@ import {
     AcuityTypes,
     AfterSchoolEnrolment,
     ScheduleAfterSchoolEnrolmentParams,
-    getApplicationDomain,
+    getApplicationDomain, capitalise,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -78,8 +78,8 @@ export default async function scheduleAfterSchoolProgram(
             )
         )
     } catch (err) {
-        throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error enroling into the program', err, {
-            context: `unable to book into acuity for science appointment`,
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error enrolling into the program', err, {
+            context: `unable to book into acuity for after school enrolment`,
         })
     }
 
@@ -138,16 +138,19 @@ export default async function scheduleAfterSchoolProgram(
             email: appointment.parent.email,
             mobile: appointment.parent.phone,
             calendarId: appointment.calendarId,
+            type: input.type,
         })
     } catch (err) {
-        logError(`unable to add science program enrolment to hubspot with id: ${appointment.id}`, err)
+        logError(`unable to add after school program enrolment to hubspot with id: ${appointment.id}`, err)
     }
 
     // send the confirmation email
     if (sendConfirmationEmail) {
         try {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('scienceTermEnrolmentConfirmation', input.parent.email, {
+            await mailClient.sendEmail('afterSchoolEnrolmentConfirmation', input.parent.email, {
+                isScience: input.type === 'science',
+                isArt: input.type === 'art',
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
                 className: input.className,
@@ -167,6 +170,8 @@ export default async function scheduleAfterSchoolProgram(
                 price: (parseInt(appointments[0].price) * appointments.length).toString(),
                 location: calendar.description,
                 numberOfWeeks: appointments.length.toString(),
+            }, {
+                subject: `${capitalise(input.type)} Program Enrolment Confirmation`
             })
         } catch (err) {
             logError(
@@ -179,16 +184,16 @@ export default async function scheduleAfterSchoolProgram(
     if (sendPortalEmail) {
         try {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('scienceParentPortalLink', input.parent.email, {
+            await mailClient.sendEmail('afterSchoolParentPortalLink', input.parent.email, {
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
                 className: input.className,
-                portalUrl: `${getApplicationDomain(env)}/science-program-portal/${appointment.id}`,
+                portalUrl: `${getApplicationDomain(env)}/parent-portal/${appointment.id}`,
             })
             appointment.emails.portalLinkEmailSent = true
             await newDoc.set(appointment, { merge: true })
         } catch (err) {
-            logError(`unable to send science parent portal email for enrolment with id: '${appointment.id}'`, err)
+            logError(`unable to send parent portal email for enrolment with id: '${appointment.id}'`, err)
         }
     }
 }

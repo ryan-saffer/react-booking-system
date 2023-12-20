@@ -63,7 +63,10 @@ export const AfterSchoolProgramInvoicingClassSelection = () => {
                     />
                 </Toolbar>
             </AppBar>
-            <AfterSchoolProgramClassSelection classRoute={ROUTES.SCIENCE_CLUB_INVOICING_STATUS} classRequired={false} />
+            <AfterSchoolProgramClassSelection
+                classRoute={ROUTES.AFTER_SCHOOL_PROGRAM_INVOICING_STATUS}
+                classRequired={false}
+            />
         </Root>
     )
 }

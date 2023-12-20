@@ -22,7 +22,7 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
 
     useEffect(() => {
         const unsubscribe = firebase.db
-            .collection('scienceAppointments')
+            .collection('afterSchoolEnrolments')
             .where('appointmentTypeId', '==', appointmentTypeId)
             .where('status', '==', 'active')
             .onSnapshot((snapshot) => {

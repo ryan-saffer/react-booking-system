@@ -1,16 +1,14 @@
 import { AfterSchoolEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
 
-import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export async function sendTermContinutationEmails(input: SendTermContinuationEmailsParams) {
     const results = await Promise.allSettled(
         input.appointmentIds.map(async (appointmentId) => {
-            const firestoreClient = await FirestoreClient.getInstance()
-            const appointmentRef = firestoreClient.collection('scienceAppointments').doc(appointmentId)
-            const appointment = (await appointmentRef.get()).data() as AfterSchoolEnrolment
+            const appointment = await DatabaseClient.getAfterSchoolEnrolment(appointmentId)
 
             const baseQueryParams = `?appointmentId=${appointmentId}`
             const continueQueryParams = baseQueryParams + `&continuing=yes`
@@ -19,7 +17,7 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
             const encodedContinueQueryParams = Buffer.from(continueQueryParams).toString('base64')
             const encodedUnenrollQueryParams = Buffer.from(unenrollQueryParams).toString('base64')
 
-            const baseUrl = `${getApplicationDomain(env)}/science-club-enrolment`
+            const baseUrl = `${getApplicationDomain(env)}/after-school-program-enrolment`
 
             try {
                 const mailClient = await MailClient.getInstance()
@@ -37,7 +35,7 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
                         continuingEmailSent: true,
                     },
                 }
-                await appointmentRef.set({ ...updatedAppointment }, { merge: true })
+                await DatabaseClient.updateAfterSchoolEnrolment(appointmentId, updatedAppointment)
             } catch (err) {
                 throwTrpcError(
                     'INTERNAL_SERVER_ERROR',

@@ -90,6 +90,7 @@ export const BookingForm = () => {
         try {
             await scheduleAfterSchoolEnrolmentMutation.mutateAsync(params)
             setSuccess(true)
+            window.scrollTo({ top: 0 })
             mixpanel.track(MixpanelEvents.SCIENCE_FORM_ENROLMENT_CONFIRMED, mixpanelProps)
         } catch (err) {
             console.error(err)

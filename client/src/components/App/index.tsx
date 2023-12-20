@@ -4,7 +4,7 @@ import '/fonts/Gotham-Light.otf'
 import { ConfigProvider, ThemeConfig } from 'antd'
 import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { useState } from 'react'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { useEmulators } from '@components/Firebase/firebase.js'
 import useFirebase from '@components/Hooks/context/UseFirebase.js'
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         },
     },
     {
-        path: ROUTES.SCIENCE_CLUB_SELECT_CLASS,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_SELECT_CLASS,
         lazy: async () => {
             const { AfterSchoolProgramCheckinClassSelection } = await import(
                 '../after-school-program/Checkin/SelectClass/index.js'
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
         },
     },
     {
-        path: ROUTES.SCIENCE_CLUB_CLASS_DETAILS,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_CLASS_DETAILS,
         lazy: async () => {
             const { AfterSchoolProgramCheckinClassDetails } = await import(
                 '../after-school-program/Checkin/ClassDetails/index.js'
@@ -78,7 +78,7 @@ const router = createBrowserRouter([
         },
     },
     {
-        path: ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_INVOICING_SELECT_CLASS,
         lazy: async () => {
             const { AfterSchoolProgramInvoicingClassSelection } = await import(
                 '../after-school-program/Invoicing/SelectClass/index.js'
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
         },
     },
     {
-        path: ROUTES.SCIENCE_CLUB_INVOICING_STATUS,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_INVOICING_STATUS,
         lazy: async () => {
             const { AfterSchoolProgramInvoicing } = await import(
                 '../after-school-program/Invoicing/InvoiceStatusPage/index.js'
@@ -117,25 +117,40 @@ const router = createBrowserRouter([
         },
     },
     {
-        path: ROUTES.SCIENCE_CLUB_ENROLMENT,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_ENROLMENT,
         lazy: async () => {
             const { EnrolmentPage: Component } = await import('../after-school-program/Enrolment/index.js')
             return { Component }
         },
     },
     {
-        path: ROUTES.SCIENCE_PROGRAM_PARENT_PORTAL,
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_PARENT_PORTAL,
         lazy: async () => {
             const { ParentPortalRoot: Component } = await import('../after-school-program/ParentPortal/index.js')
             return { Component }
         },
     },
+    // redirect to new portal link. can be deleted after term 1 2024.
     {
-        path: ROUTES.SCIENCE_PROGRAM_BOOKING_FORM,
+        path: '/science-program-portal/:id',
+        Component: () => {
+            const path = window.location.pathname
+            const newPath = ROUTES.AFTER_SCHOOL_PROGRAM_PARENT_PORTAL
+            const id = path.substring(path.lastIndexOf('/') + 1)
+            return <Navigate to={`${newPath.substring(0, newPath.length - 4)}/${id}`} replace />
+        },
+    },
+    {
+        path: ROUTES.AFTER_SCHOOL_PROGRAM_ENROLMENT_FORM,
         lazy: async () => {
             const { BookingForm: Component } = await import('../after-school-program/booking-form/index.js')
             return { Component }
         },
+    },
+    // redirect to new enrolment form url. can be deleted once website updated.
+    {
+        path: '/science-program-booking-form',
+        element: <Navigate to={ROUTES.AFTER_SCHOOL_PROGRAM_ENROLMENT_FORM} replace />,
     },
     {
         path: ROUTES.HOLIDAY_PROGRAM_CUSTOMER_BOOKING_SCREEN,

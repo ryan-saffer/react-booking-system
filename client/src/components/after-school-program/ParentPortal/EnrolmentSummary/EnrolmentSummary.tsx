@@ -33,12 +33,15 @@ const EnrolmentSummary: React.FC<Props> = ({ appointment }) => {
     return (
         <StyledRow justify="space-between" gutter={[32, 12]} style={{ marginTop: 24 }}>
             <Col span={width > BREAK_LARGE ? 9 : 24}>
-                <Card className={classes.card} title="🧪 Program">
+                <Card className={classes.card} title={(appointment.type === 'science' ? '🧪' : '🎨') + ' Program'}>
                     <p>{appointment.className}</p>
                 </Card>
             </Col>
             <Col span={width > BREAK_LARGE ? 9 : width > BREAK_SMALL ? 12 : 24}>
-                <Card className={classes.card} title="👩‍🔬 Child Enrolled">
+                <Card
+                    className={classes.card}
+                    title={(appointment.type === 'science' ? '👩‍🔬' : '🧑‍🎨') + ' Child Enrolled'}
+                >
                     <p>
                         {appointment.child.firstName} {appointment.child.lastName}
                     </p>

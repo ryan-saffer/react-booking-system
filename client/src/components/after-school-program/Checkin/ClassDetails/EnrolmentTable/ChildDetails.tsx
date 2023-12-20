@@ -121,14 +121,14 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                         </Descriptions.Item>
                     </>
                 )}
-                {enrolment.child.anaphylaxisPlan && (
+                {!!enrolment.child.anaphylaxisPlan && (
                     <Descriptions.Item label="Anaphylaxis Plan">
                         <Button href={enrolment.child.anaphylaxisPlan} target="_blank">
                             View Plan
                         </Button>
                     </Descriptions.Item>
                 )}
-                {enrolment.child.allergies && (
+                {!!enrolment.child.allergies && (
                     <Descriptions.Item label="Allergies:">{enrolment.child.allergies}</Descriptions.Item>
                 )}
                 <Descriptions.Item label="Parent Name:">
@@ -154,7 +154,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                         {formatMobileNumber(enrolment.emergencyContact.phone)}
                     </a>
                 </Descriptions.Item>
-                {enrolment.signatures[appointment.id] && (
+                {!!enrolment.signatures[appointment.id] && (
                     <Descriptions.Item label="Signature">
                         <div className={classes.signatureWrapper}>
                             {

@@ -85,7 +85,7 @@ const ParentPortal: React.FC = () => {
                         Hi {appointment.parent.firstName} 👋
                     </Typography.Title>
                     <Typography.Text strong>
-                        Use this portal to manage your Fizz Kidz science program enrolment.
+                        Use this portal to manage your Fizz Kidz program enrolment.
                     </Typography.Text>
                     <Divider>Enrolment Details</Divider>
                     <EnrolmentSummary appointment={appointment} />

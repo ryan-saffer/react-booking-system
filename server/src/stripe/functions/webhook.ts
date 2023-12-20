@@ -30,7 +30,7 @@ export const stripeWebhook = onRequest(async (request, response) => {
             return
         }
     } else {
-        logger.log(`⚠️ Webhook rewuest missing 'stripe-signature' in header`)
+        logger.log(`⚠️ Webhook request missing 'stripe-signature' in header`)
         response.sendStatus(400)
         return
     }

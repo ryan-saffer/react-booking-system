@@ -7,7 +7,7 @@ export type Emails = {
         bookings: { datetime: string; confirmationPage: string }[]
     }
 
-    // SCIENCE PROGRAM
+    // AFTER SCHOOL PROGRAM
     termContinuationEmail: {
         parentName: string
         className: string
@@ -17,7 +17,9 @@ export type Emails = {
         unenrollUrl: string
     }
 
-    scienceTermEnrolmentConfirmation: {
+    afterSchoolEnrolmentConfirmation: {
+        isScience: boolean
+        isArt: boolean
         parentName: string
         childName: string
         className: string
@@ -28,13 +30,13 @@ export type Emails = {
         numberOfWeeks: string
     }
 
-    scienceTermUnenrolmentConfirmation: {
+    afterSchoolUnenrolmentConfirmation: {
         parentName: string
         childName: string
         className: string
     }
 
-    scienceParentPortalLink: {
+    afterSchoolParentPortalLink: {
         parentName: string
         childName: string
         className: string

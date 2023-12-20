@@ -53,7 +53,7 @@ export const AfterSchoolProgramCheckinClassSelection = () => {
             <AppBar className={cssClasses.appBar} position="static">
                 <Toolbar className={cssClasses.toolbar}>
                     <Typography className={cssClasses.title} variant="h6" color="inherit">
-                        Science Club
+                        After School Program
                     </Typography>
                     <img
                         className={cssClasses.logo}
@@ -63,7 +63,10 @@ export const AfterSchoolProgramCheckinClassSelection = () => {
                     />
                 </Toolbar>
             </AppBar>
-            <AfterSchoolProgramClassSelection classRoute={ROUTES.SCIENCE_CLUB_CLASS_DETAILS} classRequired={true} />
+            <AfterSchoolProgramClassSelection
+                classRoute={ROUTES.AFTER_SCHOOL_PROGRAM_CLASS_DETAILS}
+                classRequired={true}
+            />
         </Root>
     )
 }

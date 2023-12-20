@@ -72,8 +72,8 @@ export const Success: React.FC<SuccessProps> = ({ continuing, appointment }) => 
                     {appointment.child.firstName}'s enrolment in the term has been confirmed.
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                    We are thrilled to have {appointment.child.firstName} part of the science program! We will send you
-                    an invoice for the term shortly.
+                    We are thrilled to have {appointment.child.firstName} part of the program! We will send you an
+                    invoice for the term shortly.
                 </Typography>
                 <Typography variant="button" gutterBottom>
                     The Fizz Kidz team

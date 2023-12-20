@@ -10,7 +10,7 @@ const useFetchAfterSchoolProgramEnrolment = (id: string) => {
 
     useEffect(() => {
         firebase.db
-            .doc(`scienceAppointments/${id}`)
+            .doc(`afterSchoolEnrolments/${id}`)
             .get()
             .then((result) => {
                 if (result.exists) {

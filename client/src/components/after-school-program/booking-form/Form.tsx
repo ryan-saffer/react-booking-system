@@ -249,7 +249,7 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                 </AntdForm.Item>
 
                 <Divider>Pickup People</Divider>
-                <p>Please list here anyone who you give permission to pickup your child from Science Club.</p>
+                <p>Please list here anyone who you give permission to pickup your child from the program.</p>
                 <p>You do not need to list yourself.</p>
                 <p>Example: 'Harry - Dad'</p>
                 <AntdForm.List name="pickupPeople">

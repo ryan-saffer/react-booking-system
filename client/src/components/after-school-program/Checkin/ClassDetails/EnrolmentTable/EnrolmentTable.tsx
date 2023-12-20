@@ -66,7 +66,7 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
     }
 
     const updateEnrolment: UpdateEnrolment = async (enrolment: AfterSchoolEnrolment) => {
-        await firebase.db.collection('scienceAppointments').doc(enrolment.id).update(enrolment)
+        await firebase.db.collection('afterSchoolEnrolments').doc(enrolment.id).update(enrolment)
     }
 
     const columns = useMemo(() => {

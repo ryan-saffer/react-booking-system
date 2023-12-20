@@ -109,8 +109,8 @@ export const Navigation = () => {
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
                                 />
                                 <ListItem
-                                    title="After School Science Program"
-                                    to={ROUTES.SCIENCE_CLUB_SELECT_CLASS}
+                                    title="After School Program"
+                                    to={ROUTES.AFTER_SCHOOL_PROGRAM_SELECT_CLASS}
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
                                 />
                             </div>
@@ -143,8 +143,8 @@ export const Navigation = () => {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 {hasCoreWriteScope && (
                                     <ListItem
-                                        title="Science Program Invoicing"
-                                        to={ROUTES.SCIENCE_CLUB_INVOICING_SELECT_CLASS}
+                                        title="After School Program Invoicing"
+                                        to={ROUTES.AFTER_SCHOOL_PROGRAM_INVOICING_SELECT_CLASS}
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
                                     />
                                 )}

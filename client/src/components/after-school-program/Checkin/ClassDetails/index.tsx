@@ -103,7 +103,7 @@ export const AfterSchoolProgramCheckinClassDetails: React.FC = () => {
         let _isFirstLoad = true
         let _appointments = appointments
         const unsubscribe = firebase.db
-            .collection('scienceAppointments')
+            .collection('afterSchoolEnrolments')
             .where('appointmentTypeId', '==', appointmentTypeId)
             .where('status', '==', 'active')
             .onSnapshot(async (snapshot) => {

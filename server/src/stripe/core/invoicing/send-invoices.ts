@@ -1,13 +1,13 @@
 import { AfterSchoolEnrolment, InvoiceStatusMap, PriceWeekMap, SendInvoiceParams } from 'fizz-kidz'
 
 import * as StripeConfig from '../../../config/stripe'
-import { FirestoreClient } from '../../../firebase/FirestoreClient'
 import { env } from '../../../init'
 import { throwTrpcError } from '../../../utilities'
 import { PricesMap } from '../prices-map'
 import { StripeClient } from '../stripe-client'
 import { retrieveLatestInvoice } from './retrieve-latest-invoice'
 import { sendInvoice } from './send-invoice'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
@@ -15,13 +15,11 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}
     try {
         const stripe = await StripeClient.getInstance()
-        const db = await FirestoreClient.getInstance()
         // send one at a time, because sending them all asynchronously leads
         // to very complicated edge cases when sending the same customer multiple invoices
         for (const invoiceData of input) {
             // 1. get enrolment
-            const enrolmentRef = db.collection('scienceAppointments').doc(invoiceData.id)
-            const enrolment = (await enrolmentRef.get()).data() as AfterSchoolEnrolment
+            const enrolment = await DatabaseClient.getAfterSchoolEnrolment(invoiceData.id)
 
             // 2. void any existing invoice
             if (enrolment.invoiceId) {
@@ -42,7 +40,7 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
                     PriceWeekMap[invoiceData.price]
                 } Weeks`,
                 price: PricesMap[invoiceData.price],
-                metadata: { programType: 'science_program' },
+                metadata: { programType: enrolment.type === 'science' ? 'science_program' : 'art_program' },
             })
 
             // 4. store id back into firestore
@@ -54,7 +52,7 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
                     continuingEmailSent: true,
                 },
             }
-            await enrolmentRef.update(updatedEnrolment)
+            await DatabaseClient.updateAfterSchoolEnrolment(invoiceData.id, updatedEnrolment)
 
             // 5. set the result
             invoiceStatusMap[invoiceData.id] = {
