@@ -1,6 +1,7 @@
 import prompts from 'prompts'
 
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
+import { migrateScienceEnrolments } from './migrations/after-school-program'
 
 ;(async () => {
     const { script } = await prompts({
@@ -21,6 +22,11 @@ import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from
                 title: 'Migrate legacy events to new events',
                 value: 'migrateLegacyEvents',
             },
+            {
+                title: 'Migrate science enrolments',
+                description: 'Moves scienceAppointments to afterSchoolEnrolments',
+                value: 'migrateScienceEnrolments',
+            },
         ],
     })
 
@@ -32,5 +38,8 @@ import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from
     }
     if (script === 'migrateLegacyEvents') {
         await migrateLegacyEvents()
+    }
+    if (script === 'migrateScienceEnrolments') {
+        await migrateScienceEnrolments()
     }
 })()
