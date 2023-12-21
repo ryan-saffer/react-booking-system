@@ -25,7 +25,7 @@
             Science Program Enrolment Confirmation
           {{/isScience}}
           {{#isArt}}
-            Art Program Enrolment Confirmation
+            Art & Makers Program Enrolment Confirmation
           {{/isArt}}
         </mj-text>
       </mj-column>
@@ -48,7 +48,7 @@
               begin our science adventure!
             {{/isScience}}
             {{#isArt}}
-              {{ childName }} is booked into the Fizz Kidz after school art program and we can't wait to
+              {{ childName }} is booked into the Fizz Kidz after school art & makers program and we can't wait to
               begin our art adventure!
             {{/isArt}}
           </mj-text>

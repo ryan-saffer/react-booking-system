@@ -1,5 +1,5 @@
 import { Alert, Button, Result, Typography } from 'antd'
-import { AcuityTypes, Calendar, ScheduleAfterSchoolEnrolmentParams, capitalise } from 'fizz-kidz'
+import { AcuityTypes, Calendar, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
 import { useCallback, useEffect, useState } from 'react'
 
 import { LeftOutlined } from '@ant-design/icons'
@@ -218,8 +218,18 @@ export const BookingForm = () => {
                             <Typography>Which program do you want to enrol into?</Typography>
                             {(
                                 [
-                                    { program: 'science', icon: 'thermometer', color: '4BC5D9' },
-                                    { program: 'art', icon: 'palette', color: 'E91171' },
+                                    {
+                                        program: 'science',
+                                        displayName: 'Science Program',
+                                        icon: 'thermometer',
+                                        color: '4BC5D9',
+                                    },
+                                    {
+                                        program: 'art',
+                                        displayName: 'Art & Makers Program',
+                                        icon: 'palette',
+                                        color: 'E91171',
+                                    },
                                 ] as const
                             ).map((it) => (
                                 <div
@@ -232,7 +242,7 @@ export const BookingForm = () => {
                                         width={60}
                                         alt={`${it.program} icon`}
                                     />
-                                    <h4 className="gotham">{capitalise(it.program)} Program</h4>
+                                    <h4 className="gotham">{it.displayName}</h4>
                                 </div>
                             ))}
                         </div>
