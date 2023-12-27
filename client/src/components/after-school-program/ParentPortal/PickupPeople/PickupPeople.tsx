@@ -72,9 +72,15 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
 
     return (
         <Row className={styles.row}>
+            <Typography.Text style={{ width: 1000 }}>
+                Only the people listed here will be allowed to pickup your child from the program.
+            </Typography.Text>
+            <Typography.Text style={{ width: 1000, margin: '12px 0' }}>
+                You do not need to list yourself.
+            </Typography.Text>
             <Card
                 className={styles.card}
-                title="Name and relation to child"
+                title="Pickup People"
                 extra={
                     !editing && (
                         <>
@@ -89,12 +95,11 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                     )
                 }
             >
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography.Text strong>You do not need to list yourself here</Typography.Text>
-                    <Typography.Text italic style={{ marginTop: 12 }}>
-                        Example: "John Smith - Grandfather"
-                    </Typography.Text>
-                </div>
+                {initialValues.pickupPeople.length === 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography.Text italic>No pickup people added yet.</Typography.Text>
+                    </div>
+                )}
                 <Form
                     form={form}
                     initialValues={initialValues}
@@ -114,12 +119,12 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                                             rules={[
                                                 {
                                                     required: true,
-                                                    message: 'Please enter a name and relation to child',
+                                                    message: 'Please enter a name and relation to child.',
                                                 },
                                             ]}
                                         >
                                             <Input
-                                                placeholder="Name and relation to child"
+                                                placeholder="Name and relation to child. Eg: 'John Smith - Grandfather'"
                                                 size="large"
                                                 disabled={!editing}
                                             />
