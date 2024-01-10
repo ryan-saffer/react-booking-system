@@ -19,7 +19,6 @@ const cssClasses = {
     logo: `${PREFIX}-logo`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')(({ theme }) => ({
     [`& .${cssClasses.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,

@@ -17,7 +17,6 @@ const classes = {
     snackBar: `${PREFIX}-snackBar`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')(({ theme }) => ({
     [`& .${classes.signInButton}`]: {
         height: 36,
