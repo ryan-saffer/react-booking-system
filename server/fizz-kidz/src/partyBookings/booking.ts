@@ -25,6 +25,7 @@ export interface BaseBooking extends AdditionKeyValues {
     creation1: Creations | undefined
     creation2: Creations | undefined
     creation3: Creations | undefined
+    menu: 'standard' | 'glutenFree' | 'vegan' | undefined
     cake: string
     cakeFlavour: CakeFlavours | undefined
     questions: string
@@ -72,14 +73,18 @@ export const FormBookingFields: FormBookingKeys = {
     creation1: 'creation1',
     creation2: 'creation2',
     creation3: 'creation3',
+    menu: 'menu',
     partyFormFilledIn: 'partyFormFilledIn',
     cake: 'cake',
     cakeFlavour: 'cakeFlavour',
     chickenNuggets: 'chickenNuggets',
     fairyBread: 'fairyBread',
     fruitPlatter: 'fruitPlatter',
+    glutenFreeFairyBread: 'glutenFreeFairyBread',
+    potatoGems: 'potatoGems',
     frankfurts: 'frankfurts',
     sandwichPlatter: 'sandwichPlatter',
+    vegetarianSpringRolls: 'vegetarianSpringRolls',
     veggiePlatter: 'veggiePlatter',
     vegetarianQuiche: 'vegetarianQuiche',
     watermelonPlatter: 'watermelonPlatter',
@@ -118,12 +123,16 @@ export const BookingFields: BookingKeys = {
     creation3: 'creation3',
     partyFormFilledIn: 'partyFormFilledIn',
     cake: 'cake',
+    menu: 'menu',
     cakeFlavour: 'cakeFlavour',
     chickenNuggets: 'chickenNuggets',
     fairyBread: 'fairyBread',
+    glutenFreeFairyBread: 'glutenFreeFairyBread',
+    potatoGems: 'potatoGems',
     fruitPlatter: 'fruitPlatter',
     frankfurts: 'frankfurts',
     sandwichPlatter: 'sandwichPlatter',
+    vegetarianSpringRolls: 'vegetarianSpringRolls',
     veggiePlatter: 'veggiePlatter',
     vegetarianQuiche: 'vegetarianQuiche',
     watermelonPlatter: 'watermelonPlatter',
