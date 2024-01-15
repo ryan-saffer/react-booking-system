@@ -15,7 +15,6 @@ const classes = {
     form: `${PREFIX}-form`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
     [`& .${classes.deleteButton}`]: {
         color: 'red',

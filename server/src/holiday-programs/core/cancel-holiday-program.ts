@@ -1,7 +1,7 @@
 import { AcuityConstants, AcuityUtilities, Metadata } from 'fizz-kidz'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
-import { AcuityWebhookData } from '../../acuity/functions/webhook'
+import { AcuityWebhookData } from '../../acuity'
 import { RefundCalculator } from './refund-calculator'
 import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError } from '../../utilities'

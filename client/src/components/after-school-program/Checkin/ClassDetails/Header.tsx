@@ -15,7 +15,6 @@ const classes = {
     calendarName: `${PREFIX}-calendarName`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')(({ theme }) => ({
     [`& .${classes.appBar}`]: {
         zIndex: theme.zIndex.drawer + 1,

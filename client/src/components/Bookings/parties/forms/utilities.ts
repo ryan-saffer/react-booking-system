@@ -174,12 +174,22 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        menu: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
         chickenNuggets: {
             value: false,
             error: false,
             errorText: '',
         },
         fairyBread: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
+        glutenFreeFairyBread: {
             value: false,
             error: false,
             errorText: '',
@@ -204,6 +214,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        vegetarianSpringRolls: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
         veggiePlatter: {
             value: false,
             error: false,
@@ -220,6 +235,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: '',
         },
         wedges: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
+        potatoGems: {
             value: false,
             error: false,
             errorText: '',
@@ -308,6 +328,7 @@ function getEmptyDomainBooking(): FormBooking {
         address: '',
         numberOfChildren: '',
         notes: '',
+        menu: undefined,
         creation1: undefined,
         creation2: undefined,
         creation3: undefined,
@@ -317,9 +338,12 @@ function getEmptyDomainBooking(): FormBooking {
         questions: '',
         chickenNuggets: false,
         fairyBread: false,
+        glutenFreeFairyBread: false,
         fruitPlatter: false,
         frankfurts: false,
+        potatoGems: false,
         veggiePlatter: false,
+        vegetarianSpringRolls: false,
         vegetarianQuiche: false,
         watermelonPlatter: false,
         wedges: false,

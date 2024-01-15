@@ -48,7 +48,6 @@ const classes = {
     disabled: `${PREFIX}-disabled`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
     [`& .${classes.disabled}`]: {
         '& .Mui-disabled': {
@@ -93,6 +92,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayCreation2 = formValues.creation2.value || editing
     const displayCreation3 = formValues.creation3.value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
+    const displayMenu = formValues.menu?.value || editing
     const displayCake = formValues.cake.value || editing
     const displayQuestions = formValues.questions.value || editing
     const displayFunFacts = formValues.funFacts.value || editing
@@ -603,6 +603,42 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             </Select>
                         </FormControl>
                     </Grid>
+                )}
+                {displayMenu && (
+                    <>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Food Menu</Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <FormControl
+                                fullWidth
+                                size="small"
+                                classes={{ root: classes.disabled }}
+                                variant={formValues[FormBookingFields.menu].value ? 'standard' : 'filled'}
+                            >
+                                <InputLabel>Menu</InputLabel>
+                                <Select
+                                    name={FormBookingFields.menu}
+                                    id={createUniqueId(FormBookingFields.menu, booking.id)}
+                                    label="food menu"
+                                    value={formValues[FormBookingFields.menu].value || ''}
+                                    disabled={!editing}
+                                    error={formValues[FormBookingFields.menu].error}
+                                    onChange={handleFormChange}
+                                >
+                                    <MenuItem key="standard" value="standard">
+                                        Standard
+                                    </MenuItem>
+                                    <MenuItem key="vegan" value="vegan">
+                                        Vegan
+                                    </MenuItem>
+                                    <MenuItem key="glutenFree" value="glutenFree">
+                                        Gluten Free
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </>
                 )}
                 {displayAdditions && (
                     <>

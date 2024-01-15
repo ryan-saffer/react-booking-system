@@ -90,6 +90,22 @@ export type Emails = {
         newAdditions: string[]
     }
 
+    partyFormFilledInAgainV2: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        dateTime: string
+        oldNumberOfKids: string
+        oldCreations: string[]
+        oldMenu: string
+        oldAdditions: string[]
+        newNumberOfKids: string
+        newCreations: string[]
+        newMenu: string
+        newAdditions: string[]
+    }
+
     tooManyCreationsChosen: {
         parentName: string
         parentEmail: string
@@ -122,6 +138,20 @@ export type Emails = {
         numberOfChildren: string
         creations: string[]
         isTyeDyeParty: boolean
+        hasAdditions: boolean
+        additions: string[]
+        isMobile: boolean
+        hasQuestions: boolean
+        managerName: string
+        managerMobile: string
+    }
+
+    partyFormConfirmationV2: {
+        parentName: string
+        numberOfChildren: string
+        creations: string[]
+        isTyeDyeParty: boolean
+        menu: string
         hasAdditions: boolean
         additions: string[]
         isMobile: boolean

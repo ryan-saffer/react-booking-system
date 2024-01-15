@@ -16,7 +16,6 @@ const classes = {
     primaryButton: `${PREFIX}-primaryButton`,
 }
 
-// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
 const Root = styled('div')({
     [`& .${classes.primaryButton}`]: {
         background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
