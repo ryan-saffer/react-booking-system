@@ -55,6 +55,7 @@ export type Form = {
         endTime: DateTime | null
     }[]
     notes: string
+    invoiceUrl?: string
     numberOfChildren?: string
     location?: string
     parking?: string

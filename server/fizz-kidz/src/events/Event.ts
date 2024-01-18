@@ -15,6 +15,7 @@ type BaseEvent = {
     endTime: Date
     notes: string
     calendarEventId: string
+    invoiceUrl?: string
 }
 
 export type StandardEvent = BaseEvent & {

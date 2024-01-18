@@ -52,7 +52,7 @@ export const PartiesAndEvents = () => {
                                                 </div>
                                             )}
                                         {bookings.result[location].length > 0 && (
-                                            <div style={{ marginBottom: 8, marginLeft: 12 }}>
+                                            <div style={{ marginBottom: 8 }}>
                                                 <h6
                                                     className="lilita"
                                                     style={{ fontSize: 16, margin: 0, paddingBottom: 8 }}
@@ -65,7 +65,7 @@ export const PartiesAndEvents = () => {
                                             </div>
                                         )}
                                         {events.result[location].length > 0 && (
-                                            <div style={{ marginLeft: 12 }}>
+                                            <div>
                                                 <h6
                                                     className="lilita"
                                                     style={{ fontSize: 16, margin: 0, padding: '8px 0 8px 0' }}

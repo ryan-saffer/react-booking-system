@@ -11,7 +11,8 @@ import { combineDateAndTime } from '@utils/dateUtils'
 
 import BaseEventForm, { Form } from './base-event-form'
 import { trpc } from '@utils/trpc'
-import { Grid, TextField, Typography, styled } from '@mui/material'
+import { Grid, IconButton, InputAdornment, TextField, Typography, styled } from '@mui/material'
+import LaunchIcon from '@mui/icons-material/Launch'
 
 type Props = {
     event: Event
@@ -65,6 +66,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
                 },
             ],
             notes: event.notes,
+            invoiceUrl: event.invoiceUrl,
             ...(event.$type === 'incursion' &&
                 event.$incursionFormCompleted && {
                     numberOfChildren: event.numberOfChildren,
@@ -105,6 +107,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
                 startTime: combineDateAndTime(values.slots[0].startDate!, values.slots[0].startTime!),
                 endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
+                invoiceUrl: values.invoiceUrl,
                 ...(event.$type === 'incursion' &&
                     event.$incursionFormCompleted && {
                         numberOfChildren: values.numberOfChildren,
@@ -153,6 +156,45 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
         <>
             <FormProvider {...methods}>
                 <BaseEventForm isNew={false} disabled={!editing || loading} />
+                <Grid container spacing={3} sx={{ marginTop: 0 }}>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">Invoice</Typography>
+                    </Grid>
+                    <Grid item sm={12}>
+                        <Controller
+                            name="invoiceUrl"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Invoice URL"
+                                    fullWidth
+                                    variant="outlined"
+                                    autoComplete="off"
+                                    disabled={disabled}
+                                    classes={{ root: classes.disabled }}
+                                    InputProps={{
+                                        endAdornment: field.value && !editing && (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="open invoice"
+                                                    onClick={() => {
+                                                        window
+                                                            .open(control._defaultValues.invoiceUrl, '_blank')
+                                                            ?.focus()
+                                                    }}
+                                                    edge="end"
+                                                >
+                                                    <LaunchIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            )}
+                        />
+                    </Grid>
+                </Grid>
                 {event.$type === 'incursion' && event.$incursionFormCompleted && (
                     <Root>
                         <Grid container spacing={3} sx={{ mt: 0 }}>
