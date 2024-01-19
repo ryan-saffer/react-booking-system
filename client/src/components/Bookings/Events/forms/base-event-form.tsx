@@ -4,6 +4,7 @@ import React from 'react'
 import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
 
 import AddIcon from '@mui/icons-material/Add'
+import LaunchIcon from '@mui/icons-material/Launch'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import {
     Button,
@@ -11,6 +12,7 @@ import {
     FormHelperText,
     Grid,
     IconButton,
+    InputAdornment,
     InputLabel,
     MenuItem,
     Select,
@@ -73,6 +75,7 @@ type NewProps = {
 type ExistingProps = {
     isNew: false
     disabled: boolean
+    editing: boolean
 }
 
 const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
@@ -454,7 +457,41 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         )}
                     />
                 </Grid>
-                {!props.isNew && <></>}
+                <Grid item xs={12}>
+                    <Typography variant="h6">Invoice</Typography>
+                </Grid>
+                <Grid item sm={12}>
+                    <Controller
+                        name="invoiceUrl"
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Invoice URL"
+                                fullWidth
+                                variant="outlined"
+                                autoComplete="off"
+                                disabled={disabled}
+                                classes={{ root: classes.disabled }}
+                                InputProps={{
+                                    endAdornment: !props.isNew && field.value && !props.editing && (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="open invoice"
+                                                onClick={() => {
+                                                    window.open(control._defaultValues.invoiceUrl, '_blank')?.focus()
+                                                }}
+                                                edge="end"
+                                            >
+                                                <LaunchIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        )}
+                    />
+                </Grid>
             </Grid>
         </Root>
     )

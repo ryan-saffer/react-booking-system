@@ -11,8 +11,7 @@ import { combineDateAndTime } from '@utils/dateUtils'
 
 import BaseEventForm, { Form } from './base-event-form'
 import { trpc } from '@utils/trpc'
-import { Grid, IconButton, InputAdornment, TextField, Typography, styled } from '@mui/material'
-import LaunchIcon from '@mui/icons-material/Launch'
+import { Grid, TextField, Typography, styled } from '@mui/material'
 
 type Props = {
     event: Event
@@ -155,46 +154,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     return (
         <>
             <FormProvider {...methods}>
-                <BaseEventForm isNew={false} disabled={!editing || loading} />
-                <Grid container spacing={3} sx={{ marginTop: 0 }}>
-                    <Grid item xs={12}>
-                        <Typography variant="h6">Invoice</Typography>
-                    </Grid>
-                    <Grid item sm={12}>
-                        <Controller
-                            name="invoiceUrl"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Invoice URL"
-                                    fullWidth
-                                    variant="outlined"
-                                    autoComplete="off"
-                                    disabled={disabled}
-                                    classes={{ root: classes.disabled }}
-                                    InputProps={{
-                                        endAdornment: field.value && !editing && (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="open invoice"
-                                                    onClick={() => {
-                                                        window
-                                                            .open(control._defaultValues.invoiceUrl, '_blank')
-                                                            ?.focus()
-                                                    }}
-                                                    edge="end"
-                                                >
-                                                    <LaunchIcon />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                            )}
-                        />
-                    </Grid>
-                </Grid>
+                <BaseEventForm isNew={false} disabled={!editing || loading} editing={editing} />
                 {event.$type === 'incursion' && event.$incursionFormCompleted && (
                     <Root>
                         <Grid container spacing={3} sx={{ mt: 0 }}>

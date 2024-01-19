@@ -2,7 +2,6 @@ import { createContext } from 'react'
 import { Location } from 'fizz-kidz'
 
 export type LocationFilter = Location | 'all'
-export type ProgramFilter = 'parties' | 'events' | 'all'
 
 export const FilterContext = createContext<{
     selectedLocation: LocationFilter

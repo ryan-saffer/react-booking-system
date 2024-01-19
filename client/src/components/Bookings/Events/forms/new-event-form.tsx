@@ -56,8 +56,10 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             price: '',
             slots: [],
             notes: '',
+            invoiceUrl: '',
         } satisfies Form,
     })
+
     const {
         control,
         formState: { isValid },
@@ -92,6 +94,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     studio: values.studio as Location,
                     price: values.price,
                     notes: values.notes,
+                    invoiceUrl: values.invoiceUrl,
                     ...(values.type === 'standard'
                         ? { $type: 'standard' }
                         : {
