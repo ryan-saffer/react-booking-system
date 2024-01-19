@@ -8,7 +8,6 @@ import BaseEventForm, { Form } from './base-event-form'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { trpc } from '@utils/trpc'
-import { DateTime } from 'luxon'
 import { Location, ScienceModule } from 'fizz-kidz'
 
 const PREFIX = 'NewEventForm'
@@ -45,31 +44,18 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
 
     const methods = useForm<Form>({
         defaultValues: {
-            eventName: 'Ryans Test Event',
-            contactName: 'Ryan Saffer',
-            contactNumber: '0413892120',
-            contactEmail: 'ryansaffer@gmail.com',
-            organisation: 'Fizz Kidz',
+            eventName: '',
+            contactName: '',
+            contactNumber: '',
+            contactEmail: '',
+            organisation: '',
             studio: '',
-            address: 'Chadstone',
+            address: '',
             type: '',
             module: '',
-            price: '$1800 + GST',
-            slots: [
-                {
-                    startDate: DateTime.fromObject({ day: 28, month: 12, hour: 13, minute: 0, second: 0 }),
-                    startTime: DateTime.fromObject({ day: 28, month: 12, hour: 13, minute: 0, second: 0 }),
-                    endDate: DateTime.fromObject({ day: 28, month: 12, hour: 14, minute: 0, second: 0 }),
-                    endTime: DateTime.fromObject({ day: 28, month: 12, hour: 14, minute: 0, second: 0 }),
-                },
-                {
-                    startDate: DateTime.fromObject({ day: 29, month: 12, hour: 15, minute: 0, second: 0 }),
-                    startTime: DateTime.fromObject({ day: 29, month: 12, hour: 15, minute: 0, second: 0 }),
-                    endDate: DateTime.fromObject({ day: 29, month: 12, hour: 16, minute: 0, second: 0 }),
-                    endTime: DateTime.fromObject({ day: 29, month: 12, hour: 16, minute: 0, second: 0 }),
-                },
-            ],
-            notes: 'Some notes...',
+            price: '',
+            slots: [],
+            notes: '',
         } satisfies Form,
     })
     const {
