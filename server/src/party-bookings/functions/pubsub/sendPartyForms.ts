@@ -5,6 +5,7 @@ import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { logError } from '../../../utilities'
 import { MailClient } from '../../../sendgrid/MailClient'
 import { logger } from 'firebase-functions/v2'
+import { getPrefilledFormUrl } from '../../core/utils'
 
 export const sendPartyForms = onSchedule(
     {
@@ -87,20 +88,4 @@ async function sendForm(bookingId: string, booking: Booking) {
             replyTo: manager.email,
         }
     )
-}
-
-function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://fizzkidz.paperform.co/?location=${
-        booking.type === 'studio' ? booking.location : 'mobile'
-    }&id=${bookingId}`
-    const encodedParams: { [key: string]: string } = {
-        parent_first_name: encodeURIComponent(booking.parentFirstName),
-        parent_last_name: encodeURIComponent(booking.parentLastName),
-        child_name: encodeURIComponent(booking.childName),
-        child_age: encodeURIComponent(booking.childAge),
-    }
-
-    Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))
-
-    return url
 }
