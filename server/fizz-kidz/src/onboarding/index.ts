@@ -46,7 +46,11 @@ type EmployeeAdditionalInfo = BaseEmployee & {
 export type Employee =
     | (BaseEmployee & { status: 'form-sent' })
     | (EmployeeAdditionalInfo & { status: 'generating-accounts' })
-    | (EmployeeAdditionalInfo & { status: 'verification' | 'complete'; xeroUserId: string })
+    | (EmployeeAdditionalInfo & {
+          status: 'verification' | 'complete'
+          driveFolderId: string
+          // xeroUserId: string;
+      })
 
 export type InitiateEmployeeProps = {
     firstName: string

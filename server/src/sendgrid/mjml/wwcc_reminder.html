@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+</head>
+
+<body>
+    This email is a reminder that the following employees provided their WWCC application number, however we do not yet
+    have a copy of their actual WWCC:
+
+    <ul>
+        {{#employees}}
+        <li>{{.}}</li>
+        {{/employees}}
+    </ul>
+
+    If an employee on this list has provided their WWCC, be sure to upload it to their folder on Google Drive, and then
+    go to the 'Onboarding' page on the Fizz Kidz Portal and mark them as having provided it. This will remove them from
+    this reminder.
+</body>
+
+</html>

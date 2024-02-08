@@ -214,4 +214,8 @@ export type Emails = {
     onboardingFormCompletedNotification: {
         employeeName: string
     }
+
+    wwccReminder: {
+        employees: string[]
+    }
 }

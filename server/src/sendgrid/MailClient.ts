@@ -393,6 +393,20 @@ export class MailClient {
                     template: 'onboarding_form_completed_notification.html',
                     useMjml: false,
                 }
+            case 'wwccReminder':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'WWCC Reminder',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'wwcc_reminder.html',
+                    useMjml: false,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

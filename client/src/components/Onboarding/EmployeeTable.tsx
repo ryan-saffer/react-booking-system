@@ -8,6 +8,7 @@ import Loader from '@components/after-school-program/shared/Loader'
 import { styled } from '@mui/material/styles'
 
 import VerificationButton from './VerificationButton'
+import { WWCCButton } from './wwcc-button'
 
 const PREFIX = 'EmployeeTable'
 
@@ -87,6 +88,21 @@ const EmployeeTable = () => {
                 ),
             },
             {
+                key: 'wwcc',
+                title: 'WWCC Status',
+                render: (employee: Employee) => {
+                    if (employee.status === 'form-sent') {
+                        return <Tag color="red">Not provided</Tag>
+                    } else {
+                        return (
+                            <Tag color={employee.wwcc.status === 'I have a WWCC' ? 'green' : 'orange'}>
+                                {employee.wwcc.status === 'I have a WWCC' ? 'Provided' : 'Applied'}
+                            </Tag>
+                        )
+                    }
+                },
+            },
+            {
                 key: 'status',
                 title: 'Onboarding Status',
                 render: (employee: Employee) => renderBadge(employee.status),
@@ -97,9 +113,16 @@ const EmployeeTable = () => {
             },
             {
                 key: 'action',
-                title: 'Action',
-                render: (employee: Employee) =>
-                    employee.status === 'verification' && <VerificationButton employee={employee} />,
+                title: 'Actions',
+                render: (employee: Employee) => (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        {employee.status === 'verification' && <VerificationButton employee={employee} />}
+                        {employee.status !== 'form-sent' &&
+                            employee.wwcc.status === 'I have applied for a WWCC and have an application number' && (
+                                <WWCCButton employee={employee} />
+                            )}
+                    </div>
+                ),
             },
         ],
         []
@@ -112,7 +135,7 @@ const EmployeeTable = () => {
             case 'form-sent':
                 return <Tag color="orange">Form Sent</Tag>
             case 'generating-accounts':
-                return <Tag color="volcano">Generating Accounts</Tag>
+                return <Tag color="volcano">Uploading Files</Tag>
             case 'verification':
                 return <Tag color="blue">Requires Verification</Tag>
             case 'complete':

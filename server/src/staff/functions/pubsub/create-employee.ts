@@ -19,11 +19,9 @@ export const createEmployee = onMessagePublished('createEmployee', async (data) 
 
     // create google drive folder
     const driveClient = await DriveClient.getInstance()
+    let folderId: string | null | undefined = null
     try {
-        const folderId = await driveClient.createFolder(
-            `${employee.firstName} ${employee.lastName}`,
-            CURRENT_STAFF_FOLDER_ID
-        )
+        folderId = await driveClient.createFolder(`${employee.firstName} ${employee.lastName}`, CURRENT_STAFF_FOLDER_ID)
 
         // TFN form
         if (employee.tfnForm) {
@@ -168,6 +166,7 @@ export const createEmployee = onMessagePublished('createEmployee', async (data) 
 
     await DatabaseClient.updateEmployee(employee.id, {
         // xeroUserId: employeeXeroId,
+        driveFolderId: folderId!,
         status: 'verification',
     })
 
