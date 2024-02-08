@@ -10,6 +10,8 @@ interface BaseEmployee {
     mobile: string
     commencementDate: string
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string
@@ -54,6 +56,8 @@ export type InitiateEmployeeProps = {
     mobile: string
     commencementDate: string
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string

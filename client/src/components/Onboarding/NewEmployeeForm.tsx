@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Select, Typography, message } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
 import { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
 import React, { useState } from 'react'
@@ -17,6 +17,8 @@ type TNewEmployeeForm = {
     customPosition?: string
     commencementDate: Dayjs
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string
@@ -149,6 +151,12 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                                 </Option>
                             ))}
                         </Select>
+                    </Form.Item>
+                    <Form.Item name="normalRate" label="Monday - Saturday Rate" rules={[{ required: true }]}>
+                        <InputNumber precision={2} />
+                    </Form.Item>
+                    <Form.Item name="sundayRate" label="Sunday Rate" rules={[{ required: true }]}>
+                        <InputNumber precision={2} />
                     </Form.Item>
                     <Form.Item label="Manager" rules={[{ required: true }]}>
                         <Form.Item
