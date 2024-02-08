@@ -20,8 +20,8 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
         setLoading(true)
         // timeout to make it feel like its thinking..
         setTimeout(async () => {
-            onCancel()
             await firebase.db.doc(`employees/${employee.id}`).update({ status: 'complete' })
+            onCancel()
         }, 1000)
     }
 
@@ -66,7 +66,7 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
                         <strong>
                             <li>
                                 Add the employee to the{' '}
-                                <a href="https://docs.google.com/spreadsheets/d/1zvbJv3Cjrbs1tTy9UfUgZEIjf2aZEpWoPvbEBiXXcm4/edit#gid=1491182768">
+                                <a href="https://docs.google.com/spreadsheets/d/1UZthrlCl9pajW7yCurD2x5EGd5tJZiKOHO75BxRZFok/edit#gid=633665538">
                                     Team Pay Rates Google sheet.
                                 </a>
                             </li>
@@ -79,9 +79,9 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
                         </ul>
                         <br />
                         <strong>
-                            <li>Verify the user is created in Sling</li>
+                            <li>Create and invite the user to Sling</li>
                         </strong>
-                        Once verified, be sure you <strong>invite the user to Sling.</strong>
+                        Be sure to add them to the appropriate locations and roles!
                     </ol>
                 </Modal>
             </div>
