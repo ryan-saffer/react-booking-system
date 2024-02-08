@@ -169,7 +169,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     <Form.Item
                         label="Sender"
                         rules={[{ required: true }]}
-                        extra="Name and position of the person listed at the bottom of the contract"
+                        extra="Name and position of this is person is included in their welcome email, as well as at the bottom of their contract."
                     >
                         <Form.Item
                             name="senderName"
