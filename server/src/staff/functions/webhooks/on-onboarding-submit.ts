@@ -50,11 +50,11 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
         email: getQuestionValue(data, 'email'),
         mobile: getQuestionValue(data, 'mobile'),
         address: {
-            full: getQuestionValue(data, 'address'),
-            addressLine1: getQuestionValue(data, 'address_street'),
-            city: getQuestionValue(data, 'address_suburb'),
-            region: getState(getQuestionValue(data, 'address_state'))!,
-            postalCode: getQuestionValue(data, 'address_postcode'),
+            full: getQuestionValue(data, 'address', 'type'),
+            addressLine1: getQuestionValue(data, 'address_street', 'type'),
+            city: getQuestionValue(data, 'address_suburb', 'type'),
+            region: getState(getQuestionValue(data, 'address_state', 'type'))!,
+            postalCode: getQuestionValue(data, 'address_postcode', 'type'),
         },
         health: getQuestionValue(data, 'health'),
         tfnForm: {

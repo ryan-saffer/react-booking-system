@@ -210,4 +210,12 @@ export type Emails = {
         formUrl: string
         senderName: string
     }
+
+    onboardingFormCompletedNotification: {
+        employeeName: string
+    }
+
+    wwccReminder: {
+        employees: string[]
+    }
 }

@@ -10,6 +10,8 @@ interface BaseEmployee {
     mobile: string
     commencementDate: string
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string
@@ -44,7 +46,11 @@ type EmployeeAdditionalInfo = BaseEmployee & {
 export type Employee =
     | (BaseEmployee & { status: 'form-sent' })
     | (EmployeeAdditionalInfo & { status: 'generating-accounts' })
-    | (EmployeeAdditionalInfo & { status: 'verification' | 'complete'; xeroUserId: string })
+    | (EmployeeAdditionalInfo & {
+          status: 'verification' | 'complete'
+          driveFolderId: string
+          // xeroUserId: string;
+      })
 
 export type InitiateEmployeeProps = {
     firstName: string
@@ -54,6 +60,8 @@ export type InitiateEmployeeProps = {
     mobile: string
     commencementDate: string
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string

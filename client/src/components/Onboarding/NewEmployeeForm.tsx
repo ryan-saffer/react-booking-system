@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Select, Typography, message } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
 import { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
 import React, { useState } from 'react'
@@ -14,8 +14,11 @@ type TNewEmployeeForm = {
     mobile: string
     email: string
     position: string
+    customPosition?: string
     commencementDate: Dayjs
     location: Location
+    normalRate: number
+    sundayRate: number
     managerName: string
     managerPosition: string
     senderName: string
@@ -41,6 +44,9 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             const formattedValues = {
                 ...values,
                 commencementDate: values.commencementDate.format('YYYY-MM-DD'),
+            }
+            if (formattedValues.position === 'other') {
+                formattedValues.position = formattedValues.customPosition!
             }
             setSubmitting(true)
             try {
@@ -112,7 +118,23 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                         <Input />
                     </Form.Item>
                     <Form.Item name="position" label="Position" rules={[{ required: true }]}>
-                        <Input placeholder="Party Facilitator" />
+                        <Select allowClear>
+                            <Option value="Party / Program Facilitator">Party / Program Facilitator</Option>
+                            <Option value="Program Facilitator">Program Facilitator</Option>
+                            <Option value="other">Other</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        noStyle
+                        shouldUpdate={(prevValues, currentValues) => prevValues.position !== currentValues.position}
+                    >
+                        {({ getFieldValue }) =>
+                            getFieldValue('position') === 'other' ? (
+                                <Form.Item name="customPosition" label="Custom Position" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
+                            ) : null
+                        }
                     </Form.Item>
                     <Form.Item
                         name="commencementDate"
@@ -129,6 +151,12 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                                 </Option>
                             ))}
                         </Select>
+                    </Form.Item>
+                    <Form.Item name="normalRate" label="Monday - Saturday Rate" rules={[{ required: true }]}>
+                        <InputNumber precision={2} />
+                    </Form.Item>
+                    <Form.Item name="sundayRate" label="Sunday Rate" rules={[{ required: true }]}>
+                        <InputNumber precision={2} />
                     </Form.Item>
                     <Form.Item label="Manager" rules={[{ required: true }]}>
                         <Form.Item
@@ -149,7 +177,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     <Form.Item
                         label="Sender"
                         rules={[{ required: true }]}
-                        extra="Name and position of the person listed at the bottom of the contract"
+                        extra="Name and position of this is person is included in their welcome email, as well as at the bottom of their contract."
                     >
                         <Form.Item
                             name="senderName"
