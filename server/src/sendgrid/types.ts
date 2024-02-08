@@ -210,4 +210,8 @@ export type Emails = {
         formUrl: string
         senderName: string
     }
+
+    onboardingFormCompletedNotification: {
+        employeeName: string
+    }
 }
