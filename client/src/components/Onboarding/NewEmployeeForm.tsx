@@ -14,6 +14,7 @@ type TNewEmployeeForm = {
     mobile: string
     email: string
     position: string
+    customPosition?: string
     commencementDate: Dayjs
     location: Location
     managerName: string
@@ -41,6 +42,9 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             const formattedValues = {
                 ...values,
                 commencementDate: values.commencementDate.format('YYYY-MM-DD'),
+            }
+            if (formattedValues.position === 'other') {
+                formattedValues.position = formattedValues.customPosition!
             }
             setSubmitting(true)
             try {
@@ -112,7 +116,23 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                         <Input />
                     </Form.Item>
                     <Form.Item name="position" label="Position" rules={[{ required: true }]}>
-                        <Input placeholder="Party Facilitator" />
+                        <Select allowClear>
+                            <Option value="Party / Program Facilitator">Party / Program Facilitator</Option>
+                            <Option value="Program Facilitator">Program Facilitator</Option>
+                            <Option value="other">Other</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        noStyle
+                        shouldUpdate={(prevValues, currentValues) => prevValues.position !== currentValues.position}
+                    >
+                        {({ getFieldValue }) =>
+                            getFieldValue('position') === 'other' ? (
+                                <Form.Item name="customPosition" label="Custom Position" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
+                            ) : null
+                        }
                     </Form.Item>
                     <Form.Item
                         name="commencementDate"
