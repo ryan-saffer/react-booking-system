@@ -5,7 +5,7 @@ import { MailClient } from '../../../sendgrid/MailClient'
 export const remindAboutWwcc = onSchedule(
     {
         timeZone: 'Australia/Melbourne',
-        schedule: '1, 14, 28 of month 08:30',
+        schedule: '1, 15 of month 08:30',
     },
     async () => {
         const employeesRef = await FirestoreRefs.employees()
