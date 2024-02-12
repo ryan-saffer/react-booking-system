@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
+import { Button, DatePicker, Divider, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
 import { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
 import React, { useState } from 'react'
@@ -89,23 +89,24 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             ]}
         >
             <div style={{ padding: '0 16px' }}>
-                <Typography.Title level={4}>Onboard new employee</Typography.Title>
+                <Typography.Title level={4}>Onboard New Employee</Typography.Title>
+                <Divider />
                 <Form form={form} layout="vertical" size="middle">
-                    <Form.Item label="Name" rules={[{ required: true }]} style={{ marginBottom: 0 }}>
-                        <Form.Item
-                            name="firstName"
-                            rules={[{ required: true, message: 'Please enter First Name' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
-                        >
-                            <Input placeholder="First Name" />
-                        </Form.Item>
-                        <Form.Item
-                            name="lastName"
-                            rules={[{ required: true, message: 'Please enter Last Name' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-                        >
-                            <Input placeholder="Last Name" />
-                        </Form.Item>
+                    <Form.Item
+                        name="firstName"
+                        label="First Name"
+                        rules={[{ required: true, message: 'Please enter First Name' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="lastName"
+                        label="Last Name"
+                        rules={[{ required: true, message: 'Please enter Last Name' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
+                    >
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         name="email"
@@ -158,42 +159,42 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     <Form.Item name="sundayRate" label="Sunday Rate" rules={[{ required: true }]}>
                         <InputNumber precision={2} />
                     </Form.Item>
-                    <Form.Item label="Manager" rules={[{ required: true }]}>
-                        <Form.Item
-                            name="managerName"
-                            rules={[{ required: true, message: 'Please enter Manager Name' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: 0 }}
-                        >
-                            <Input placeholder="Manager name" />
-                        </Form.Item>
-                        <Form.Item
-                            name="managerPosition"
-                            rules={[{ required: true, message: 'Please enter Manager Position' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-                        >
-                            <Input placeholder="Manager Position" />
-                        </Form.Item>
+                    <Form.Item
+                        name="managerName"
+                        label="Manager Name"
+                        rules={[{ required: true, message: 'Please enter Manager Name' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: 0 }}
+                    >
+                        <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Sender"
-                        rules={[{ required: true }]}
-                        extra="Name and position of this is person is included in their welcome email, as well as at the bottom of their contract."
+                        name="managerPosition"
+                        label="Manager Position"
+                        rules={[{ required: true, message: 'Please enter Manager Position' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
                     >
-                        <Form.Item
-                            name="senderName"
-                            rules={[{ required: true, message: 'Please enter Sender Name' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px 0' }}
-                        >
-                            <Input placeholder="Sender Name" />
-                        </Form.Item>
-                        <Form.Item
-                            name="senderPosition"
-                            rules={[{ required: true, message: 'Please enter Sender Position' }]}
-                            style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px' }}
-                        >
-                            <Input placeholder="Sender Position" />
-                        </Form.Item>
+                        <Input />
                     </Form.Item>
+                    <Form.Item
+                        name="senderName"
+                        label="Sender Name"
+                        rules={[{ required: true, message: 'Please enter Sender Name' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px 0' }}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="senderPosition"
+                        label="Sender Position"
+                        rules={[{ required: true, message: 'Please enter Sender Position' }]}
+                        style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '8px' }}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Typography.Text type="secondary">
+                        Name and position of this is person is included in their welcome email, as well as at the bottom
+                        of their contract.
+                    </Typography.Text>
                 </Form>
             </div>
         </Modal>
