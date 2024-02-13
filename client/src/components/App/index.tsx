@@ -191,6 +191,20 @@ const router = createBrowserRouter([
             return { Component: withAuthorization([], CreationsPage) }
         },
     },
+    {
+        path: ROUTES.INVITATIONS,
+        lazy: async () => {
+            const { CreateInvitationPage } = await import('../invitations/invitations-page.js')
+            return { Component: CreateInvitationPage }
+        },
+    },
+    {
+        path: ROUTES.INVITATION_CREATE,
+        lazy: async () => {
+            const { CreateInvitation } = await import('../invitations/create-invitation.js')
+            return { Component: CreateInvitation }
+        },
+    },
 ])
 
 const _App = () => {
