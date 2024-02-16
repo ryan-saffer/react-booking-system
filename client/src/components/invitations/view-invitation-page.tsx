@@ -35,6 +35,19 @@ export const ViewInvitationPage = () => {
         getUrl()
     }, [])
 
+    const downloadInvitation = async () => {
+        const response = await fetch(invitationUrl)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = 'Fizz Kidz Invitation.png'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+    }
+
     return (
         <>
             <ScrollRestoration />
@@ -69,7 +82,10 @@ export const ViewInvitationPage = () => {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="mr-2 w-56 min-[1060px]:mr-44">
-                                <DropdownMenuItem className="flex items-center justify-between">
+                                <DropdownMenuItem
+                                    className="flex cursor-pointer items-center justify-between"
+                                    onClick={downloadInvitation}
+                                >
                                     <span>Download Invitation</span>
                                     <Download className="h-4 w-4" />
                                 </DropdownMenuItem>
@@ -90,9 +106,9 @@ export const ViewInvitationPage = () => {
                                 loading && 'opacity-0'
                             )}
                         >
-                            <div className="relative mb-12 mt-12 flex w-[70%] justify-normal max-[1060px]:justify-center">
+                            <div className="relative mb-12 mt-12 flex w-[70%] max-[1060px]:justify-center">
                                 <img
-                                    className="z-20 w-full max-w-[500px] object-contain min-[300px]:min-w-[280px] min-[350px]:min-w-[300px] min-[400px]:min-w-[350px] min-[450px]:min-w-[400px]"
+                                    className="z-20 w-full max-w-[500px] object-contain min-[300px]:min-w-[280px] min-[350px]:min-w-[300px] min-[400px]:min-w-[350px] min-[450px]:min-w-[400px] min-[550px]:min-w-[500px]"
                                     src={invitationUrl}
                                 />
                                 <img

@@ -201,7 +201,7 @@ const router = createBrowserRouter([
     {
         path: ROUTES.INVITATION_CREATE,
         lazy: async () => {
-            const { InvitationV2 } = await import('../invitations/invitation-v2.js')
+            const { CreateInvitationPage: InvitationV2 } = await import('../invitations/create-invitation-page.js')
             return { Component: InvitationV2 }
         },
     },

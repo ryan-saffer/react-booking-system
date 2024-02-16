@@ -1,7 +1,7 @@
 import { Location, capitalise } from 'fizz-kidz'
 import { Loader2 } from 'lucide-react'
-import { useForm } from 'react-hook-form'
-import { Link, ScrollRestoration } from 'react-router-dom'
+import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { Link, ScrollRestoration, useLocation } from 'react-router-dom'
 
 import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
@@ -10,14 +10,38 @@ import * as Background from '@drawables/unicorn_background.jpeg'
 import * as Invitation from '@drawables/unicorn_invitation.png'
 import { Button } from '@ui-components/button'
 import { Dialog, DialogContent, DialogTrigger } from '@ui-components/dialog'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@ui-components/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { trpc } from '@utils/trpc'
 
-export const InvitationV2 = () => {
+type TForm = {
+    childName: string
+    childAge: string
+    date: string
+    time: string
+    type: 'studio' | 'mobile' | ''
+    studio?: Location
+    address?: string
+}
+
+export const CreateInvitationPage = () => {
+    const { state } = useLocation()
+
+    const form = useForm<TForm>({
+        defaultValues: {
+            childName: state?.childName || '',
+            childAge: state?.childAge || '',
+            date: state?.date || '',
+            time: state?.time || '',
+            type: state?.type || '',
+            studio: state?.studio || '',
+            address: state?.address || '',
+        },
+    })
+
     return (
-        <>
+        <div className="twp">
             <ScrollRestoration />
             <div className="sticky flex justify-center border-b border-gray-200 bg-white">
                 <img src={Logo.default} className="m-1 w-32"></img>
@@ -25,7 +49,18 @@ export const InvitationV2 = () => {
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
-                        <Link to={INVITATIONS}>
+                        <Link
+                            to={INVITATIONS}
+                            state={{
+                                childName: form.getValues().childName,
+                                childAge: form.getValues().childAge,
+                                date: form.getValues().date,
+                                time: form.getValues().time,
+                                type: form.getValues().type,
+                                studio: form.getValues().studio,
+                                address: form.getValues().address,
+                            }}
+                        >
                             <Button variant="ghost" size="sm">
                                 Invitations
                             </Button>
@@ -52,10 +87,12 @@ export const InvitationV2 = () => {
                         </div>
                     </div>
                 </div>
-                <Sidebar />
-                <BottomNav />
+                <FormProvider {...form}>
+                    <Sidebar />
+                    <BottomNav />
+                </FormProvider>
             </main>
-        </>
+        </div>
     )
 }
 
@@ -71,25 +108,10 @@ function Sidebar() {
     )
 }
 
-type TForm = {
-    childName: string
-    childAge: string
-    date: string
-    time: string
-    studio: Location
-}
-
 function CustomiseForm() {
     const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
 
-    const form = useForm<TForm>({
-        defaultValues: {
-            childName: '',
-            childAge: '',
-            date: '',
-            time: '',
-        },
-    })
+    const form = useFormContext<TForm>()
 
     const onSubmit = async (values: TForm) => {
         console.log(values)
@@ -106,15 +128,16 @@ function CustomiseForm() {
             <p className="mt-2 font-semibold text-slate-400">Magical Party Time</p>
             <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
             <Form {...form}>
-                <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="space-y-1" onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}
                         rules={{ required: "Please enter the child's name" }}
                         name="childName"
                         render={({ field }) => (
                             <FormItem>
+                                <FormLabel>Child's Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Child's Name" autoComplete="off" {...field} />
+                                    <Input placeholder="Child's Name" id="childName" autoComplete="off" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -126,6 +149,7 @@ function CustomiseForm() {
                         rules={{ required: "Please enter the child's age" }}
                         render={({ field }) => (
                             <FormItem>
+                                <FormLabel>Child's Age</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Child's Age" autoComplete="off" {...field} />
                                 </FormControl>
@@ -139,6 +163,7 @@ function CustomiseForm() {
                         rules={{ required: 'Please enter the party date' }}
                         render={({ field }) => (
                             <FormItem>
+                                <FormLabel>Date</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Date" autoComplete="off" {...field} />
                                 </FormControl>
@@ -152,6 +177,7 @@ function CustomiseForm() {
                         rules={{ required: 'Please enter the party time' }}
                         render={({ field }) => (
                             <FormItem>
+                                <FormLabel>Time</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Time" autoComplete="off" {...field} />
                                 </FormControl>
@@ -161,28 +187,81 @@ function CustomiseForm() {
                     />
                     <FormField
                         control={form.control}
-                        name="studio"
-                        rules={{ required: 'Please select a studio' }}
+                        name="type"
+                        rules={{ required: 'Please select the parties location' }}
                         render={({ field }) => (
-                            <FormItem className="pb-2">
+                            <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormLabel>Party Location</FormLabel>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select a studio" />
+                                            <SelectValue placeholder="Select the parties location" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent>
-                                        {Object.values(Location).map((location) => (
-                                            <SelectItem key={location} value={location}>
-                                                {capitalise(location)}
-                                            </SelectItem>
-                                        ))}
+                                    <SelectContent
+                                        // https://github.com/shadcn-ui/ui/issues/2620#issuecomment-1918404840
+                                        ref={(ref) => {
+                                            if (!ref) return
+                                            ref.ontouchstart = (e) => e.preventDefault()
+                                        }}
+                                    >
+                                        <SelectItem value="studio">Fizz Kidz studio</SelectItem>
+                                        <SelectItem value="mobile">Mobile Party (at home)</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
+                    {form.watch('type') === 'studio' && (
+                        <FormField
+                            control={form.control}
+                            name="studio"
+                            rules={{ required: 'Please select a studio' }}
+                            render={({ field }) => (
+                                <FormItem className="pb-2">
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormLabel>Studio</FormLabel>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a studio" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent
+                                            // https://github.com/shadcn-ui/ui/issues/2620#issuecomment-1918404840
+                                            ref={(ref) => {
+                                                if (!ref) return
+                                                ref.ontouchstart = (e) => e.preventDefault()
+                                            }}
+                                        >
+                                            {Object.values(Location).map((location) => (
+                                                <SelectItem key={location} value={location}>
+                                                    {capitalise(location)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+                    {form.watch('type') === 'mobile' && (
+                        <FormField
+                            control={form.control}
+                            name="address"
+                            rules={{ required: 'Please enter the party address' }}
+                            render={({ field }) => (
+                                <FormItem className="pb-2">
+                                    <FormLabel>Address</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Address" autoComplete="off" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
                     <Button
                         type="submit"
                         className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
@@ -212,7 +291,7 @@ function BottomNav() {
                     <DialogTrigger asChild>
                         <Button className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900">Customise</Button>
                     </DialogTrigger>
-                    <DialogContent className="max-h-screen overflow-y-scroll">
+                    <DialogContent className="twp max-h-screen overflow-y-scroll">
                         <CustomiseForm />
                     </DialogContent>
                 </Dialog>

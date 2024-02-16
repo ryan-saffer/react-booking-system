@@ -1,3 +1,5 @@
+import { scopedPreflightStyles } from 'tailwindcss-scoped-preflight'
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ['class'],
@@ -69,12 +71,17 @@ export default {
             fontFamily: {
                 lilita: ['LilitaOne'],
                 gotham: ['GothamLight'],
-                extend: {},
             },
             boxShadow: {
                 purple: '-28px 24px 0px -1px rgba(232,219,253,0.81)',
             },
         },
     },
-    plugins: ['tailwindcss-animate'],
+    plugins: [
+        'tailwindcss-animate',
+        scopedPreflightStyles({
+            cssSelector: '.twp',
+            mode: 'matched only',
+        }),
+    ],
 }

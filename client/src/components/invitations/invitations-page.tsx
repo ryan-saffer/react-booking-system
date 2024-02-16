@@ -1,57 +1,38 @@
-import { useEffect, useState } from 'react'
-import { Link, ScrollRestoration } from 'react-router-dom'
+import { RefObject, useEffect, useRef, useState } from 'react'
+import { Link, ScrollRestoration, useLocation, useSearchParams } from 'react-router-dom'
 
 import { INVITATION_CREATE } from '@constants/routes'
 import * as Logo from '@drawables/fizz-logo.png'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
-// import { CreateInvitationSidebar } from './create-invitation-sidebar'
-
-// import { Invitation } from './invitation'
-
 export const CreateInvitationPage = () => {
-    const [sticky, setSticky] = useState(false)
+    const stickyRef = useRef<HTMLDivElement>(null)
+    const isSticky = useSticky({ ref: stickyRef, offset: 64.5 })
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY
-            const element = document.getElementById('sticky-element')
-            const elementPosition = element?.offsetTop
-
-            if (scrollPosition >= (elementPosition || 0) - 64) {
-                setSticky(true)
-            } else {
-                setSticky(false)
-            }
-        }
-        window.addEventListener('scroll', handleScroll)
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [])
+    const [searchParams] = useSearchParams()
+    const { state } = useLocation()
 
     return (
-        <>
+        <div className="twp">
             <ScrollRestoration />
             <div className="fixed top-0 flex h-16 w-full justify-center border-2 border-b border-gray-200 bg-white">
                 <img src={Logo.default} className="m-1 w-32"></img>
             </div>
-            <main className="mx-auto mt-16 flex w-screen flex-col  items-center justify-center pl-8 pr-8">
-                <section className="mt-2 flex max-w-5xl flex-col justify-evenly gap-12 md:mt-12 md:flex-row">
-                    <div className="mt-6 flex flex-col gap-6">
+            <main className="mx-auto mt-16 flex w-screen flex-col items-center justify-center pl-8 pr-8">
+                <section className="mt-2 flex max-w-5xl flex-col justify-evenly gap-16 md:mt-12 md:flex-row">
+                    <div className="mt-6 flex flex-col gap-6 md:max-w-[450px]">
                         <h1 className="font-lilita text-4xl">Fizz Kidz Invitations</h1>
                         <h2 className="font-lilita text-xl text-[#9044E2]">
-                            Simply select a design, and we will generate an invite link that you can share however you
-                            like.
+                            You can use this custom built tool to generate beautiful invitations for your party. You
+                            will even get a link to your invitation, that you can share however you like!
                         </h2>
                         <p>
                             Just browse the options below, enter your party details, and we will generate a fully
                             personalised invitation for you!
                         </p>
                     </div>
-                    <div className="box shadow-purple ml-4 mr-4 flex max-w-[400px] items-center justify-center self-center rounded-3xl sm:ml-0 sm:mr-0 sm:max-w-[600px]">
+                    <div className="box ml-4 mr-4 hidden min-w-[400px] max-w-[400px] items-center justify-center self-center rounded-3xl shadow-purple sm:ml-0 sm:mr-0 sm:max-w-[600px] md:flex min-[900px]:min-w-[450px]">
                         <img
                             src="https://fizzkidz.com.au/wp-content/uploads/2021/01/party.jpg"
                             className="object-fill"
@@ -63,8 +44,9 @@ export const CreateInvitationPage = () => {
                     id="sticky-element"
                     className={cn(
                         'sticky top-16 flex h-12 w-screen items-center justify-center bg-white',
-                        sticky && 'shadow-md'
+                        isSticky && 'shadow-md'
                     )}
+                    ref={stickyRef}
                 >
                     <div className="w-full max-w-5xl pl-8">
                         <h5 className="font-gotham text-xl">Choose a design:</h5>
@@ -76,6 +58,15 @@ export const CreateInvitationPage = () => {
                             <Link
                                 to={INVITATION_CREATE}
                                 key={it}
+                                state={{
+                                    childName: searchParams.get('childName') || state?.childName || '',
+                                    childAge: searchParams.get('childAge') || state?.childAge || '',
+                                    date: searchParams.get('date') || state?.date || '',
+                                    time: searchParams.get('time') || state?.time || '',
+                                    type: searchParams.get('type') || state?.type || '',
+                                    studio: searchParams.get('studio') || state?.studio || '',
+                                    address: searchParams.get('address') || state?.address || '',
+                                }}
                                 className="flex h-[240px] w-[240px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
                             >
                                 <img
@@ -89,9 +80,29 @@ export const CreateInvitationPage = () => {
                         ))}
                     </div>
                 </section>
-                {/* <Invitation invitationUrl="https://fizzkidz.com.au/wp-content/uploads/2024/02/Mobile-Invitation-Option-1.png" /> */}
             </main>
-            {/* <CreateInvitationSidebar /> */}
-        </>
+        </div>
     )
+}
+
+const useSticky = ({ ref, offset }: { ref: RefObject<HTMLElement>; offset: number }) => {
+    const [sticky, setSticky] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (ref.current) {
+                const scrollPosition = window.scrollY
+                const elementPosition = ref.current.offsetTop
+
+                setSticky(scrollPosition >= elementPosition - offset)
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [offset, ref])
+
+    return sticky
 }
