@@ -71,10 +71,8 @@ export default {
                 gotham: ['GothamLight'],
                 extend: {},
             },
-            extend: {
-                boxShadow: {
-                    purple: '-28px 24px 0px -1px rgba(232,219,253,0.81)',
-                },
+            boxShadow: {
+                purple: '-28px 24px 0px -1px rgba(232,219,253,0.81)',
             },
         },
     },

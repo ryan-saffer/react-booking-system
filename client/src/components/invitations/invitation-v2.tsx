@@ -1,6 +1,9 @@
 import { Location, capitalise } from 'fizz-kidz'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { Link, ScrollRestoration } from 'react-router-dom'
 
+import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
 import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
@@ -10,16 +13,29 @@ import { Dialog, DialogContent, DialogTrigger } from '@ui-components/dialog'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { trpc } from '@utils/trpc'
 
 export const InvitationV2 = () => {
     return (
         <>
+            <ScrollRestoration />
             <div className="sticky flex justify-center border-b border-gray-200 bg-white">
                 <img src={Logo.default} className="m-1 w-32"></img>
             </div>
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
-                    <h1 className="ml-4 pb-2 pt-2 font-gotham text-lg min-[1620px]:ml-0">Invitation Generator</h1>
+                    <div className="flex items-center gap-2 p-2">
+                        <Link to={INVITATIONS}>
+                            <Button variant="ghost" size="sm">
+                                Invitations
+                            </Button>
+                        </Link>
+                        /
+                        <Button variant="ghost" size="sm">
+                            Magical Party Time
+                        </Button>
+                    </div>
+                    {/* <h1 className="ml-4 pb-2 pt-2 font-gotham text-lg min-[1620px]:ml-0">Invitation Generator</h1> */}
                     <div className="relative flex w-full justify-center">
                         <img
                             src={Background.default}
@@ -64,6 +80,8 @@ type TForm = {
 }
 
 function CustomiseForm() {
+    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
+
     const form = useForm<TForm>({
         defaultValues: {
             childName: '',
@@ -73,8 +91,13 @@ function CustomiseForm() {
         },
     })
 
-    const onSubmit = (values: TForm) => {
+    const onSubmit = async (values: TForm) => {
         console.log(values)
+
+        const result = await generateInvitation(values)
+
+        console.log('finished')
+        console.log('result:', result)
     }
 
     return (
@@ -83,7 +106,7 @@ function CustomiseForm() {
             <p className="mt-2 font-semibold text-slate-400">Magical Party Time</p>
             <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
             <Form {...form}>
-                <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+                <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}
                         rules={{ required: "Please enter the child's name" }}
@@ -91,7 +114,7 @@ function CustomiseForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Child's Name" {...field} />
+                                    <Input placeholder="Child's Name" autoComplete="off" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -104,7 +127,7 @@ function CustomiseForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Child's Age" {...field} />
+                                    <Input placeholder="Child's Age" autoComplete="off" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -117,7 +140,7 @@ function CustomiseForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Date" {...field} />
+                                    <Input placeholder="Date" autoComplete="off" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -130,7 +153,7 @@ function CustomiseForm() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="Time" {...field} />
+                                    <Input placeholder="Time" autoComplete="off" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -160,8 +183,19 @@ function CustomiseForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full rounded-2xl bg-blue-700 hover:bg-blue-900">
-                        Generate
+                    <Button
+                        type="submit"
+                        className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Generating...
+                            </>
+                        ) : (
+                            'Generate'
+                        )}
                     </Button>
                 </form>
             </Form>
@@ -175,8 +209,8 @@ function BottomNav() {
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
                 <p className="font-semibold text-slate-800">Magical Party Time</p>
                 <Dialog>
-                    <DialogTrigger>
-                        <Button className="w-full rounded-2xl bg-blue-700 hover:bg-blue-900">Customise</Button>
+                    <DialogTrigger asChild>
+                        <Button className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900">Customise</Button>
                     </DialogTrigger>
                     <DialogContent className="max-h-screen overflow-y-scroll">
                         <CustomiseForm />

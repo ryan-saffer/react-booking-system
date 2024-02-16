@@ -205,6 +205,13 @@ const router = createBrowserRouter([
             return { Component: InvitationV2 }
         },
     },
+    {
+        path: ROUTES.INVITATION_VIEW,
+        lazy: async () => {
+            const { ViewInvitationPage } = await import('../invitations/view-invitation-page.js')
+            return { Component: ViewInvitationPage }
+        },
+    },
 ])
 
 const _App = () => {
