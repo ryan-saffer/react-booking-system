@@ -1,4 +1,4 @@
-import { Booking, Location } from 'fizz-kidz'
+import { Booking, GenerateInvitation, Location } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
@@ -10,7 +10,6 @@ import { updatePartyBooking } from '../../core/update-party-booking'
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
 export type DeletePartyBooking = { bookingId: string; eventId: string; location: Location; type: Booking['type'] }
-export type GenerateInvite = { childName: string; childAge: string; date: string; time: string; studio: Location }
 
 export const partiesRouter = router({
     createPartyBooking: authenticatedProcedure
@@ -23,7 +22,7 @@ export const partiesRouter = router({
         .input((input: unknown) => input as DeletePartyBooking)
         .mutation(({ input }) => deletePartyBooking(input)),
     generateInvitation: publicProcedure
-        .input((input: unknown) => input as GenerateInvite)
+        .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
 })
 

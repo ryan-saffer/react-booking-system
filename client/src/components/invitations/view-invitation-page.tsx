@@ -1,15 +1,19 @@
-import { Download, Menu } from 'lucide-react'
+import { Download, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, ScrollRestoration, useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { ScrollRestoration, useParams } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
 import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
 import { Button } from '@ui-components/button'
-import { Dialog, DialogContent, DialogTrigger } from '@ui-components/dialog'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
+import { Drawer, DrawerContent } from '@ui-components/drawer'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
+import { Input } from '@ui-components/input'
+import { ScrollArea } from '@ui-components/scroll-area'
 import { cn } from '@utils/tailwind'
 
 type Params = {
@@ -49,26 +53,16 @@ export const ViewInvitationPage = () => {
     }
 
     return (
-        <>
+        <div className="twp">
             <ScrollRestoration />
-            <div className="sticky flex justify-center border-b border-gray-200 bg-white">
-                <img src={Logo.default} className="m-1 w-32"></img>
-            </div>
+            <Navbar />
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
-                <div className="flex w-full max-w-[1220px] flex-col">
+                <div className="flex h-[710px] w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
-                        <Link to={INVITATIONS}>
-                            <Button variant="ghost" size="sm">
-                                Invitations
-                            </Button>
-                        </Link>
-                        /
-                        <Button variant="ghost" size="sm">
-                            Magical Party Time
-                        </Button>
+                        <p className="text-md h-8 p-2">Time to celebrate!</p>
                     </div>
 
-                    <div className="relative flex h-full min-h-[646px] w-full justify-center">
+                    <div className="relative flex w-full flex-grow justify-center min-[1060px]:min-h-[646px]">
                         <DropdownMenu dir="ltr">
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -83,7 +77,7 @@ export const ViewInvitationPage = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="mr-2 w-56 min-[1060px]:mr-44">
                                 <DropdownMenuItem
-                                    className="flex cursor-pointer items-center justify-between"
+                                    className="flex h-6 cursor-pointer items-center justify-between"
                                     onClick={downloadInvitation}
                                 >
                                     <span>Download Invitation</span>
@@ -96,21 +90,20 @@ export const ViewInvitationPage = () => {
                             className="absolute h-full w-full object-cover min-[1060px]:block"
                         />
                         {loading && (
-                            <div className="absolute left-1/2 top-1/2 z-20 flex translate-x-[-50%] translate-y-[-50%] items-center justify-center rounded-xl bg-white p-4">
-                                <img src="/fizz_logo.gif" className="h-12 w-12" />
+                            <div className="">
+                                <div className="absolute left-1/2 top-1/2 z-20 flex translate-x-[-50%] translate-y-[-50%] items-center justify-center rounded-xl bg-white p-4">
+                                    <Loader2 className="animate-spin" />
+                                </div>
                             </div>
                         )}
                         <div
                             className={cn(
-                                'flex h-full w-full justify-center opacity-100 transition-opacity duration-700 ease-in',
+                                'flex w-full justify-center opacity-100 transition-opacity duration-700 ease-in',
                                 loading && 'opacity-0'
                             )}
                         >
-                            <div className="relative mb-12 mt-12 flex w-[70%] max-[1060px]:justify-center">
-                                <img
-                                    className="z-20 w-full max-w-[500px] object-contain min-[300px]:min-w-[280px] min-[350px]:min-w-[300px] min-[400px]:min-w-[350px] min-[450px]:min-w-[400px] min-[550px]:min-w-[500px]"
-                                    src={invitationUrl}
-                                />
+                            <div className="relative mb-12 mt-12 flex w-[70%] justify-normal max-[1060px]:justify-center">
+                                <img className="z-20 w-full max-w-[400px] object-contain" src={invitationUrl} />
                                 <img
                                     className="relative left-[-200px] z-10 hidden h-[90%] w-full max-w-[400px] self-center object-contain min-[1060px]:block"
                                     src={Envelope.default}
@@ -122,31 +115,178 @@ export const ViewInvitationPage = () => {
                 <Sidebar />
                 <BottomNav />
             </main>
-        </>
+        </div>
+    )
+}
+
+function Navbar() {
+    const [showMenu, setShowMenu] = useState(false)
+
+    return (
+        <div className="sticky z-[999] flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 shadow-lg lg:justify-normal">
+            <img src={Logo.default} className="top-0 m-1 w-32"></img>
+            <div className="flex items-center justify-center gap-2">
+                <Button variant="ghost" className="hidden lg:block">
+                    <a href="https://www.fizzkidz.com.au/book-a-party">Book a Party</a>
+                </Button>
+                <Button variant="ghost" className="hidden lg:block">
+                    <a href="https://www.fizzkidz.com.au/holiday-programs">Holiday Programs</a>
+                </Button>
+                <Button variant="ghost" className="hidden lg:block">
+                    <a href="https://fizzkidz.com.au/school-science/">After School Programs</a>
+                </Button>
+                <Button variant="ghost" className="hidden lg:block">
+                    <a href="https://fizzkidz.com.au/contact-us/">Get in touch</a>
+                </Button>
+            </div>
+            <Button variant="ghost" className="lg:hidden" onClick={() => setShowMenu((prev) => !prev)}>
+                <Menu color="#F88EC3" />
+            </Button>
+            <div
+                className={cn(
+                    'invisible absolute left-0 top-16 z-[999] flex h-0 w-full flex-col gap-2 bg-white p-4 opacity-0 shadow-md transition-all duration-500 ease-in-out lg:hidden',
+                    showMenu && 'visible h-[216px] opacity-100'
+                )}
+            >
+                <Button variant="outline">
+                    <a href="https://www.fizzkidz.com.au/book-a-party">Book a Party</a>
+                </Button>
+                <Button variant="outline">
+                    <a href="https://www.fizzkidz.com.au/holiday-programs">Holiday Programs</a>
+                </Button>
+                <Button variant="outline">
+                    <a href="https://fizzkidz.com.au/school-science/">After School Programs</a>
+                </Button>
+                <Button variant="outline">
+                    <a href="https://fizzkidz.com.au/contact-us/">Get in touch</a>
+                </Button>
+            </div>
+        </div>
     )
 }
 
 function Sidebar() {
     return (
         <section className="hidden h-screen min-[1060px]:block">
-            <div className="flex h-full w-full border-l border-gray-200">
-                <div className="w-[380px]">HI!</div>
+            <div className="flex h-[710px] w-[380px] border-l border-gray-200">
+                <PartyDetails />
             </div>
         </section>
     )
 }
 
+type TForm = {
+    name: string
+    email: string
+}
+
+function PartyDetails() {
+    const [submitting, setSubmitting] = useState(false)
+
+    const form = useForm<TForm>({ defaultValues: { name: '', email: '' } })
+
+    const onSubmit = (values: TForm) => {
+        console.log(values)
+        setSubmitting(true)
+        setTimeout(() => setSubmitting(false), 2000)
+    }
+
+    return (
+        <div className="flex h-full flex-col justify-between">
+            <div className="flex flex-col p-4">
+                <h2 className="font-lilita text-2xl">You've been invited to a Fizz Kidz party!</h2>
+                <p className="mt-2 font-semibold text-slate-400">We can't wait to see you there.</p>
+                <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
+                <p className="font-gotham">
+                    A paragraph about what it means to be invited to a Fizz Kidz party, and maybe some tips regarding
+                    staying or dropping off etc.
+                </p>
+                <p className="pt-4 font-gotham">
+                    You can download and save the invitation to your phone by choosing 'Donwload Invitation' from the
+                    menu.
+                </p>
+            </div>
+            <Card className="mx-3 mt-3 bg-gray-100">
+                <Form {...form}>
+                    <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+                        <CardHeader className="space-y-1">
+                            <h2 className="font-lilita text-xl">Special Offer</h2>
+                            <CardDescription>
+                                As a guest of a Fizz Kidz party, you are eligible to 10% off our upcoming holiday
+                                programs!
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid gap-4">
+                            <FormField
+                                control={form.control}
+                                rules={{ required: true }}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input id="name" type="text" autoComplete="off" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                rules={{ required: true }}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input id="email" type="email" autoComplete="off" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                type="submit"
+                                className="w-full bg-fuchsia-700 hover:bg-fuchsia-900"
+                                disabled={submitting}
+                            >
+                                {submitting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Creating discount code...
+                                    </>
+                                ) : (
+                                    'Claim my 10% discount code'
+                                )}
+                            </Button>
+                        </CardFooter>
+                    </form>
+                </Form>
+            </Card>
+        </div>
+    )
+}
+
 function BottomNav() {
+    const [open, setOpen] = useState(false)
     return (
         <div className="fixed bottom-0 z-50 hidden h-[100px] w-full border-t-[0.5px] border-gray-300 bg-white max-[1060px]:block">
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
-                <p className="font-semibold text-slate-800">Magical Party Time</p>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900">Customise</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-h-screen overflow-y-scroll">{/* <CustomiseForm /> */}</DialogContent>
-                </Dialog>
+                <p className="font-semibold text-slate-800">You're invited to a Fizz Kidz party!</p>
+                <Button
+                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
+                    onClick={() => setOpen(true)}
+                >
+                    View Details
+                </Button>
+                <Drawer open={open} onOpenChange={setOpen}>
+                    <DrawerContent className="twp h-3/4 px-8">
+                        <ScrollArea>
+                            <PartyDetails />
+                            <div className="mb-8" />
+                        </ScrollArea>
+                    </DrawerContent>
+                </Drawer>
             </div>
         </div>
     )

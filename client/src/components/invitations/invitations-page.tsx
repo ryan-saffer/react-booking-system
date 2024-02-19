@@ -41,7 +41,6 @@ export const CreateInvitationPage = () => {
                 </section>
                 <Separator className="mb-3 mt-12 w-screen sm:mb-8" />
                 <div
-                    id="sticky-element"
                     className={cn(
                         'sticky top-16 flex h-12 w-screen items-center justify-center bg-white',
                         isSticky && 'shadow-md'
@@ -67,10 +66,10 @@ export const CreateInvitationPage = () => {
                                     studio: searchParams.get('studio') || state?.studio || '',
                                     address: searchParams.get('address') || state?.address || '',
                                 }}
-                                className="flex h-[240px] w-[240px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
+                                className="flex h-[260px] w-[260px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
                             >
                                 <img
-                                    className="h-[280px] max-h-full max-w-full object-contain"
+                                    className="h-[260px] max-h-full max-w-full object-contain"
                                     src="/invitation+envelope.png"
                                 />
                                 <div className="flex flex-grow items-center justify-center">

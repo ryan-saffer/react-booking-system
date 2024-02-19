@@ -1,7 +1,13 @@
-import { Location, capitalise } from 'fizz-kidz'
-import { Loader2 } from 'lucide-react'
+import 'react-social-icons/whatsapp'
+
+import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
+import { Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
+import { useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Link, ScrollRestoration, useLocation } from 'react-router-dom'
+import { WhatsappShareButton } from 'react-share'
+import { SocialIcon } from 'react-social-icons/component'
+import { Toaster, toast } from 'sonner'
 
 import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
@@ -9,10 +15,14 @@ import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
 import * as Invitation from '@drawables/unicorn_invitation.png'
 import { Button } from '@ui-components/button'
-import { Dialog, DialogContent, DialogTrigger } from '@ui-components/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
+import { Dialog, DialogContent } from '@ui-components/dialog'
+import { Drawer, DrawerContent } from '@ui-components/drawer'
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
+import { Label } from '@ui-components/label'
+import { ScrollArea } from '@ui-components/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { Separator } from '@ui-components/separator'
 import { trpc } from '@utils/trpc'
 
 type TForm = {
@@ -21,8 +31,8 @@ type TForm = {
     date: string
     time: string
     type: 'studio' | 'mobile' | ''
-    studio?: Location
-    address?: string
+    studio: Location
+    address: string
 }
 
 export const CreateInvitationPage = () => {
@@ -43,6 +53,7 @@ export const CreateInvitationPage = () => {
     return (
         <div className="twp">
             <ScrollRestoration />
+            <Toaster richColors />
             <div className="sticky flex justify-center border-b border-gray-200 bg-white">
                 <img src={Logo.default} className="m-1 w-32"></img>
             </div>
@@ -70,7 +81,6 @@ export const CreateInvitationPage = () => {
                             Magical Party Time
                         </Button>
                     </div>
-                    {/* <h1 className="ml-4 pb-2 pt-2 font-gotham text-lg min-[1620px]:ml-0">Invitation Generator</h1> */}
                     <div className="relative flex w-full justify-center">
                         <img
                             src={Background.default}
@@ -108,18 +118,40 @@ function Sidebar() {
     )
 }
 
-function CustomiseForm() {
+function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
+
+    const [open, setOpen] = useState(false)
+    const [invitationId, setInvitationId] = useState('')
 
     const form = useFormContext<TForm>()
 
     const onSubmit = async (values: TForm) => {
         console.log(values)
 
-        const result = await generateInvitation(values)
+        let result = ''
+        if (values.type === 'studio') {
+            result = await generateInvitation({
+                childName: values.childName,
+                childAge: values.childAge,
+                time: values.time,
+                date: values.date,
+                $type: 'studio',
+                studio: values.studio,
+            })
+        } else if (values.type === 'mobile') {
+            result = await generateInvitation({
+                childName: values.childName,
+                childAge: values.childAge,
+                time: values.time,
+                date: values.date,
+                $type: 'mobile',
+                address: values.address,
+            })
+        }
 
-        console.log('finished')
-        console.log('result:', result)
+        setInvitationId(result)
+        setOpen(true)
     }
 
     return (
@@ -139,7 +171,6 @@ function CustomiseForm() {
                                 <FormControl>
                                     <Input placeholder="Child's Name" id="childName" autoComplete="off" {...field} />
                                 </FormControl>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -153,7 +184,6 @@ function CustomiseForm() {
                                 <FormControl>
                                     <Input placeholder="Child's Age" autoComplete="off" {...field} />
                                 </FormControl>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -167,7 +197,6 @@ function CustomiseForm() {
                                 <FormControl>
                                     <Input placeholder="Date" autoComplete="off" {...field} />
                                 </FormControl>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -181,7 +210,6 @@ function CustomiseForm() {
                                 <FormControl>
                                     <Input placeholder="Time" autoComplete="off" {...field} />
                                 </FormControl>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -209,7 +237,6 @@ function CustomiseForm() {
                                         <SelectItem value="mobile">Mobile Party (at home)</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -241,7 +268,6 @@ function CustomiseForm() {
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -257,7 +283,6 @@ function CustomiseForm() {
                                     <FormControl>
                                         <Input placeholder="Address" autoComplete="off" {...field} />
                                     </FormControl>
-                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -278,24 +303,129 @@ function CustomiseForm() {
                     </Button>
                 </form>
             </Form>
+            <SuccessDialog
+                isOpen={open}
+                close={() => {
+                    setOpen(false)
+                    onClose?.()
+                }}
+                childName={form.getValues('childName')}
+                invitationId={invitationId}
+            />
         </div>
     )
 }
 
 function BottomNav() {
+    const [open, setOpen] = useState(false)
     return (
         <div className="fixed bottom-0 z-50 hidden h-[100px] w-full border-t-[0.5px] border-gray-300 bg-white max-[1060px]:block">
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
                 <p className="font-semibold text-slate-800">Magical Party Time</p>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900">Customise</Button>
-                    </DialogTrigger>
-                    <DialogContent className="twp max-h-screen overflow-y-scroll">
-                        <CustomiseForm />
-                    </DialogContent>
-                </Dialog>
+                <Button
+                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
+                    onClick={() => setOpen(true)}
+                >
+                    Customise
+                </Button>
+                <Drawer open={open} onOpenChange={setOpen}>
+                    <DrawerContent className="twp h-2/3 px-4">
+                        <ScrollArea>
+                            <CustomiseForm onClose={() => setOpen(false)} />
+                        </ScrollArea>
+                    </DrawerContent>
+                </Drawer>
             </div>
         </div>
+    )
+}
+
+function SuccessDialog({
+    isOpen,
+    close,
+    childName,
+    invitationId,
+}: {
+    isOpen: boolean
+    close?: () => void
+    childName?: string
+    invitationId?: string
+}) {
+    const invitationText = `You're invited to ${childName}'s party!`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitations/${invitationId}`
+
+    const combinedMessage = `${invitationText} | ${inviteUrl}`
+
+    const copy = () => {
+        navigator.clipboard.writeText(combinedMessage)
+        toast.success('Invitation copied to clipboard!')
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={close}>
+            <DialogContent className="twp max-h-screen overflow-y-scroll">
+                <div className="flex flex-col p-4">
+                    <h5 className="font-lilita text-2xl">Let the party begin!</h5>
+                    <p className="mt-2 font-gotham">Share your invitation with all of {childName}'s friends.</p>
+                    <Separator className="mb-4 mt-4" />
+                    <div className="flex gap-2">
+                        <Input value={inviteUrl} />
+                        <Button variant="outline" onClick={copy}>
+                            <Copy className="h-6 w-6" />
+                        </Button>
+                    </div>
+                    <Separator className="mb-4 mt-4" />
+                    <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
+                        <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
+                            <WhatsappShareButton id="whatsapp" title={invitationText} url={inviteUrl} separator=" | ">
+                                <SocialIcon network="whatsapp" style={{ width: 36, height: 36 }} />
+                            </WhatsappShareButton>
+                            <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
+                                Whatsapp
+                            </Label>
+                        </div>
+                        <div
+                            className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
+                            onClick={() => window.open(`sms://?body=${encodeURIComponent(combinedMessage)}`)}
+                        >
+                            <MessageCircleMore id="sms" className="h-9 w-9" />
+                            <Label htmlFor="sms" className="mt-2 cursor-pointer">
+                                SMS
+                            </Label>
+                        </div>
+                        <div
+                            className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
+                            onClick={() =>
+                                window.open(
+                                    `mailto: ?subject=${encodeURIComponent(invitationText)}&body=${encodeURIComponent(combinedMessage)}`
+                                )
+                            }
+                        >
+                            <Mail id="email" className="h-9 w-9" />
+                            <Label htmlFor="email" className="mt-2 cursor-pointer">
+                                Email
+                            </Label>
+                        </div>
+                        <div
+                            className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
+                            onClick={copy}
+                        >
+                            <Copy id="copy" className="h-9 w-9" />
+                            <Label htmlFor="copy" className="mt-2 cursor-pointer">
+                                Copy
+                            </Label>
+                        </div>
+                    </div>
+                    <Separator className="mb-4 mt-4" />
+                    <Button
+                        className="rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
+                        onClick={() => window.open(inviteUrl, '_blank')}
+                    >
+                        View Invitation
+                        <ExternalLink className="ml-4 h-4 w-4" />
+                    </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
     )
 }

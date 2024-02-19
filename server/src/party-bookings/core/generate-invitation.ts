@@ -1,24 +1,24 @@
 import crypto from 'crypto'
 import path from 'path'
 
+import { GenerateInvitation } from 'fizz-kidz'
 import fs from 'fs/promises'
 import Mustache from 'mustache'
 import puppeteer from 'puppeteer'
 
 import { StorageClient } from '../../firebase/StorageClient'
 import { projectId } from '../../init'
-import { GenerateInvite } from '../functions/trpc/trpc.parties'
 
 type Invitation = 'freckles' | 'sparkles'
 
-export async function generateInvitation(input: GenerateInvite) {
+export async function generateInvitation(input: GenerateInvitation) {
     console.log(input)
 
     const browser = await puppeteer.launch()
     const [page] = await browser.pages()
 
     const htmlFile = getFilename('freckles')
-    const html = await fs.readFile(path.resolve(__dirname, `./party-bookings/core/${htmlFile}`), 'utf8')
+    const html = await fs.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, input)
 
     await page.setContent(output)

@@ -8,6 +8,7 @@ export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValue
 export { Location } from './partyBookings/Locations'
 export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './partyBookings/booking'
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
+export * from './partyBookings/Invitations'
 //#endregion
 
 //#region Acuity
