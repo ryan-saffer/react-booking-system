@@ -1,13 +1,15 @@
-import type { Client as TClient } from '@hubspot/api-client'
-import { Branch, Location, AcuityUtilities, Booking } from 'fizz-kidz'
+import { AcuityUtilities, Booking, Branch, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import type { Client as TClient } from '@hubspot/api-client'
+
 import { ClientStatus } from '../utilities/types'
 
 type BaseProps = {
     firstName: string
-    lastName: string
+    lastName?: string
     email: string
-    mobile: string
+    mobile?: string
 }
 type WithBaseProps<T> = BaseProps & T
 
@@ -47,8 +49,8 @@ export class HubspotClient {
 
         const properties = {
             firstname: firstName,
-            lastname: lastName,
-            phone: mobile,
+            lastname: lastName || '',
+            phone: mobile || '',
             email,
             ...rest,
             customer_type: 'B2C',
@@ -92,6 +94,15 @@ export class HubspotClient {
             party_date: DateTime.fromJSDate(partyDate).toISODate(),
             party_location: this.#getBranch(location),
             ...baseProps,
+        })
+    }
+
+    // when getting a discount code from our invitations
+    addBirthdayPartyGuestContact(props: BaseProps) {
+        return this.#addContact({
+            test_service: 'brithday_party_guest',
+            firstName: props.firstName,
+            email: props.email,
         })
     }
 

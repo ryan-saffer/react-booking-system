@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd'
-import { AcuityConstants, AcuityTypes, PaidHolidayProgramBooking } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes, DiscountCode, PaidHolidayProgramBooking } from 'fizz-kidz'
 import React, { useContext, useRef, useState } from 'react'
 
 import Firebase, { FirebaseContext } from '@components/Firebase'
@@ -28,7 +28,7 @@ type Props = {
     form: Form
     selectedClasses: AcuityTypes.Api.Class[]
     paymentIntentId: string
-    discount: AcuityTypes.Api.Certificate | undefined
+    discount: DiscountCode | undefined
 }
 
 const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, discount }) => {
@@ -93,8 +93,8 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                     discount !== undefined
                         ? PROGRAM_PRICE
                         : discountedPrograms.includes(klass.id)
-                        ? PROGRAM_PRICE - DISCOUNT_PRICE
-                        : PROGRAM_PRICE,
+                          ? PROGRAM_PRICE - DISCOUNT_PRICE
+                          : PROGRAM_PRICE,
                 booked: false,
             }))
         )

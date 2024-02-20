@@ -1,4 +1,4 @@
-import { AcuityTypes } from 'fizz-kidz'
+import { AcuityTypes, DiscountCode } from 'fizz-kidz'
 
 export const PROGRAM_PRICE = 49
 export const DISCOUNT_PRICE = 4
@@ -7,7 +7,7 @@ export function calculateTotal(
     selectedClasses: AcuityTypes.Api.Class[],
     discountedClasses: number[],
     numberOfChildren: number,
-    discount?: AcuityTypes.Api.Certificate
+    discount?: DiscountCode
 ) {
     const originalTotal = selectedClasses.length * numberOfChildren * PROGRAM_PRICE
     let amountDiscounted: number
@@ -24,7 +24,7 @@ export function calculateTotal(
     }
 }
 
-export function calculateDiscountedAmount(total: number, discount: AcuityTypes.Api.Certificate) {
+export function calculateDiscountedAmount(total: number, discount: DiscountCode) {
     switch (discount.discountType) {
         case 'percentage':
             return total * (discount.discountAmount / 100)

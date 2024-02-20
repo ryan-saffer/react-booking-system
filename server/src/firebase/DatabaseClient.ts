@@ -7,6 +7,7 @@ import type {
     RecursivePartial,
     Event,
     IncursionEvent,
+    DiscountCode,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { Timestamp, type DocumentReference, Query } from 'firebase-admin/firestore'
@@ -223,6 +224,15 @@ class Client {
                 signedUrl,
             },
         })
+    }
+
+    async createDiscountCode(discountCode: DiscountCode) {
+        return this.#createDocument(discountCode, (await FirestoreRefs.discountCodes()).doc())
+    }
+
+    async checkDiscountCode(code: string) {
+        const collection = await FirestoreRefs.discountCodes()
+        return this.#getDocuments(collection.where('code', '==', code))
     }
 }
 

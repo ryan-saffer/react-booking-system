@@ -407,6 +407,20 @@ export class MailClient {
                     template: 'wwcc_reminder.html',
                     useMjml: false,
                 }
+            case 'createDiscountCode':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Here is your unique discount code!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'discount_code.mjml',
+                    useMjml: true,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

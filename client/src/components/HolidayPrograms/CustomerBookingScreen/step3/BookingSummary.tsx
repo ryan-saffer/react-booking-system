@@ -1,5 +1,5 @@
 import { List, Tag, Typography } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
+import type { DiscountCode } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction } from 'react'
 
 import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
@@ -8,9 +8,9 @@ import { ItemSummary } from './Step3'
 type Props = {
     summarisedItems: ItemSummary[]
     total: number
-    discount: AcuityTypes.Api.Certificate | undefined
+    discount: DiscountCode | undefined
     originalTotal?: number
-    setDiscount: Dispatch<SetStateAction<AcuityTypes.Api.Certificate | undefined>>
+    setDiscount: Dispatch<SetStateAction<DiscountCode | undefined>>
 }
 
 const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, originalTotal, setDiscount }) => {
@@ -32,7 +32,7 @@ const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, ori
                             closable
                             onClose={() => setDiscount(undefined)}
                         >
-                            {discount.certificate}:{' '}
+                            {discount.code}:{' '}
                             {discount.discountType === 'percentage'
                                 ? `${discount.discountAmount}% off`
                                 : `-$${discount.discountAmount.toFixed(2)}`}

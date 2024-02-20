@@ -7,6 +7,12 @@ export type Emails = {
         bookings: { datetime: string; confirmationPage: string }[]
     }
 
+    createDiscountCode: {
+        name: string
+        code: string
+        expiryDate: string
+    }
+
     // AFTER SCHOOL PROGRAM
     termContinuationEmail: {
         parentName: string
