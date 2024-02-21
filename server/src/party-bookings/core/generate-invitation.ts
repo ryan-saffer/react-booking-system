@@ -6,15 +6,21 @@ import fs from 'fs/promises'
 import Mustache from 'mustache'
 import puppeteer from 'puppeteer'
 
+import chromium from '@sparticuz/chromium'
+
 import { StorageClient } from '../../firebase/StorageClient'
 import { projectId } from '../../init'
 
 type Invitation = 'freckles' | 'sparkles'
 
 export async function generateInvitation(input: GenerateInvitation) {
-    console.log(input)
-
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+        ignoreHTTPSErrors: true,
+    })
     const [page] = await browser.pages()
 
     const htmlFile = getFilename('freckles')
@@ -22,6 +28,10 @@ export async function generateInvitation(input: GenerateInvitation) {
     const output = Mustache.render(html, input)
 
     await page.setContent(output)
+    page.setViewport({
+        height: 1096,
+        width: 793,
+    })
     const filename = 'invitation.png'
     const id = crypto.randomBytes(16).toString('hex')
     const destination = `invitations/${id}/${filename}`

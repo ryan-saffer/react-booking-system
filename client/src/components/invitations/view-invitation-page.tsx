@@ -41,6 +41,7 @@ export const ViewInvitationPage = () => {
         }
 
         getUrl()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const downloadInvitation = async () => {
@@ -326,7 +327,7 @@ function BottomNav() {
                     View Details
                 </Button>
                 <Drawer open={open} onOpenChange={setOpen}>
-                    <DrawerContent className="twp h-3/4 px-8">
+                    <DrawerContent className="twp h-4/5 px-4">
                         <ScrollArea>
                             <PartyDetails />
                             <div className="mb-8" />

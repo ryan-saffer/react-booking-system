@@ -127,8 +127,6 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const form = useFormContext<TForm>()
 
     const onSubmit = async (values: TForm) => {
-        console.log(values)
-
         let result = ''
         if (values.type === 'studio') {
             result = await generateInvitation({
@@ -329,7 +327,7 @@ function BottomNav() {
                     Customise
                 </Button>
                 <Drawer open={open} onOpenChange={setOpen}>
-                    <DrawerContent className="twp h-2/3 px-4">
+                    <DrawerContent className="twp h-4/5 px-4">
                         <ScrollArea>
                             <CustomiseForm onClose={() => setOpen(false)} />
                         </ScrollArea>
@@ -352,7 +350,7 @@ function SuccessDialog({
     invitationId?: string
 }) {
     const invitationText = `You're invited to ${childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitations/${invitationId}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}`
 
     const combinedMessage = `${invitationText} | ${inviteUrl}`
 

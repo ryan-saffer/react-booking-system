@@ -26,4 +26,4 @@ export const partiesRouter = router({
         .mutation(({ input }) => generateInvitation(input)),
 })
 
-export const parties = onRequestTrpc(partiesRouter)
+export const parties = onRequestTrpc(partiesRouter, '2GiB')
