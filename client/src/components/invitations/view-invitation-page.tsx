@@ -65,7 +65,7 @@ export const ViewInvitationPage = () => {
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex h-[710px] w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
-                        <p className="text-md h-8 p-2">Time to celebrate!</p>
+                        <p className="font-lilita text-lg">You've been invited to a Fizz Kidz party!</p>
                     </div>
 
                     <div className="relative flex w-full flex-grow justify-center min-[1060px]:min-h-[646px]">
@@ -223,25 +223,25 @@ function PartyDetails() {
         <>
             <div className="flex h-full flex-col justify-between">
                 <div className="flex flex-col p-4">
-                    <h2 className="font-lilita text-2xl">You've been invited to a Fizz Kidz party!</h2>
-                    <p className="mt-2 font-semibold text-slate-400">We can't wait to see you there.</p>
+                    <h2 className="font-lilita text-xl">Welcome to the world of Fizz Kidz</h2>
                     <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
                     <p className="font-gotham">
-                        A paragraph about what it means to be invited to a Fizz Kidz party, and maybe some tips
-                        regarding staying or dropping off etc.
-                    </p>
-                    <p className="pt-4 font-gotham">
-                        You can download and save the invitation to your phone by choosing 'Donwload Invitation' from
+                        You can download and save your invitation to your phone by choosing 'Download invitation' from
                         the menu.
                     </p>
                 </div>
-                <Card className="mx-3 mt-3 bg-gray-100">
+                <Card className="mx-3 border-8 border-cyan-400">
                     <Form {...form}>
                         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-                            <CardHeader className="space-y-1">
-                                <h2 className="font-lilita text-xl">Special Offer</h2>
+                            <img
+                                src="https://fizzkidz.com.au/wp-content/uploads/2024/02/science.jpg"
+                                className="h-28 w-full object-cover"
+                            />
+                            <CardHeader className="space-y-1 py-0">
+                                <h2 className="font-lilita text-xl">Hello special friend!</h2>
                                 <CardDescription>
-                                    As a guest of a Fizz Kidz party, you are eligible to 10% off our upcoming holiday
+                                    As a guest of a Fizz Kidz party, you are eligible to{' '}
+                                    <span className="font-extrabold text-pink-500">10% off</span> our upcoming holiday
                                     programs!
                                 </CardDescription>
                             </CardHeader>

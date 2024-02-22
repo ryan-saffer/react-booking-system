@@ -8,43 +8,47 @@
       .text-link {
         color: #5e6ebf
       }
-    </mj-style>
-    <mj-style inline="inline">
+
       .footer-link {
         color: #888888
       }
+
+      .underline {
+        text-decoration: underline;
+      }
     </mj-style>
+    <mj-font name="Lilita One" href="https://fonts.googleapis.com/css2?family=Lilita+One" />
+  </mj-head>
 
   </mj-head>
   <mj-body background-color="#E7E7E7" width="600px">
-    <mj-section background-color="#eec73b" padding-bottom='0px'>
+    <mj-section background-color="#ffffff" padding-top="0" padding-bottom="0">
+      <mj-column>
+        <mj-image src="https://imgur.com/HkdqDkc.png" width="600px" alt="" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#eec73b" padding-bottom='16px' padding-top="0px">
       <mj-column width="100%">
-        <mj-spacer height="30px" />
-        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-          Here is your discount code!
+        <mj-text font-weight="10" font-family="Lilita One, Trebuchet MS" color="white" align="center" font-size="30px">
+          Here is your discount code - enjoy!
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section background-color="#ffffff" padding-top="0">
-      <mj-column>
-        <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
-      </mj-column>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="12px">
       <mj-column width="100%">
         <mj-text color="#637381" font-size="16px">
           Hi
           {{name}},
         </mj-text>
         <mj-text color="#637381" font-size="16px">
-          Below is your unique 10% discount code for our upcoming holiday programs!
+          Welcome to Fizz Kidz! How fun, to have a unique discount code to use.
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          Your code gives you <span class="underline">10% off our upcoming holiday programs</span> at any Fizz Kidz Studio you like!
         </mj-text>
         <mj-text font-size="24px" align="center" padding="24px">{{code}}</mj-text>
         <mj-text color="#637381" font-size="16px">
-          This discount code will expire on {{expiryDate}}.
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          To use this discount code, just enter it on the payment screen of our holiday program booking form. Click on the button below to see our upcoming holiday programs schedule.
+          The discount code will expire on {{expiryDate}}. So book this week!
         </mj-text>
         <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="https://www.fizzkidz.com.au" width="300px" border="1px #9ecc47 solid">
           Holiday Program Schedule ↗️
@@ -54,6 +58,9 @@
         </mj-text>
         <mj-text color="#637381" font-size="16px">
           The Fizz Kidz team
+        </mj-text>
+        <mj-text color="#637381" font-size="16px">
+          P.S. if you have any questions or even want to book your child's birthday party, simply hit reply and we will responde straight away!
         </mj-text>
       </mj-column>
     </mj-section>

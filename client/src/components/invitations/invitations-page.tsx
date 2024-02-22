@@ -24,12 +24,10 @@ export const CreateInvitationPage = () => {
                     <div className="mt-6 flex flex-col gap-6 md:max-w-[450px]">
                         <h1 className="font-lilita text-4xl">Fizz Kidz Invitations</h1>
                         <h2 className="font-lilita text-xl text-[#9044E2]">
-                            You can use this custom built tool to generate beautiful invitations for your party. You
-                            will even get a link to your invitation, that you can share however you like!
+                            We make kids parties easy!
                         </h2>
                         <p>
-                            Just browse the options below, enter your party details, and we will generate a fully
-                            personalised invitation for you!
+                            Simply choose your child's favourite invitation, add your party details, and generate a personalised invitation link to share with all their friends!
                         </p>
                     </div>
                     <div className="box ml-4 mr-4 hidden min-w-[400px] max-w-[400px] items-center justify-center self-center rounded-3xl shadow-purple sm:ml-0 sm:mr-0 sm:max-w-[600px] md:flex min-[900px]:min-w-[450px]">

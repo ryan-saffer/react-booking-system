@@ -2,13 +2,15 @@ import 'react-social-icons/whatsapp'
 
 import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { Img } from 'react-image'
 import { Link, ScrollRestoration, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
 import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'
 
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
 import * as Logo from '@drawables/fizz-logo.png'
@@ -191,7 +193,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         rules={{ required: 'Please enter the party date' }}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Date</FormLabel>
+                                <FormLabel>Date (Ie 08/04/24)</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Date" autoComplete="off" {...field} />
                                 </FormControl>
@@ -204,7 +206,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         rules={{ required: 'Please enter the party time' }}
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Time</FormLabel>
+                                <FormLabel>Time (Ie 10am - 11:30am)</FormLabel>
                                 <FormControl>
                                     <Input placeholder="Time" autoComplete="off" {...field} />
                                 </FormControl>
@@ -296,7 +298,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                 Generating...
                             </>
                         ) : (
-                            'Generate'
+                            'Generate!'
                         )}
                     </Button>
                 </form>
@@ -359,6 +361,22 @@ function SuccessDialog({
         toast.success('Invitation copied to clipboard!')
     }
 
+    const firebase = useFirebase()
+    const [invitationUrl, setInvitationUrl] = useState('')
+    useEffect(() => {
+        async function getInvitation() {
+            if (invitationId) {
+                const url = await firebase.storage
+                    .ref()
+                    .child(`invitations/${invitationId}/invitation.png`)
+                    .getDownloadURL()
+                setInvitationUrl(url)
+                console.log(url)
+            }
+        }
+        getInvitation()
+    }, [invitationId, firebase.storage])
+
     return (
         <Dialog open={isOpen} onOpenChange={close}>
             <DialogContent className="twp max-h-screen overflow-y-scroll">
@@ -366,8 +384,12 @@ function SuccessDialog({
                     <h5 className="font-lilita text-2xl">Let the party begin!</h5>
                     <p className="mt-2 font-gotham">Share your invitation with all of {childName}'s friends.</p>
                     <Separator className="mb-4 mt-4" />
+                    <div className="flex h-[400px] items-center justify-center">
+                        <Img src={invitationUrl} loader={<Loader2 className="animate-spin" />} className="h-full" />
+                    </div>
+                    <Separator className="mb-4 mt-4" />
                     <div className="flex gap-2">
-                        <Input value={inviteUrl} />
+                        <Input value={inviteUrl} readOnly />
                         <Button variant="outline" onClick={copy}>
                             <Copy className="h-6 w-6" />
                         </Button>
@@ -419,7 +441,7 @@ function SuccessDialog({
                         className="rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
                         onClick={() => window.open(inviteUrl, '_blank')}
                     >
-                        View Invitation
+                        View Invitation Page
                         <ExternalLink className="ml-4 h-4 w-4" />
                     </Button>
                 </div>
