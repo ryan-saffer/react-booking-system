@@ -1,42 +1,63 @@
-import crypto from 'crypto'
+import fs from 'fs'
 import path from 'path'
 
 import { GenerateInvitation } from 'fizz-kidz'
-import fs from 'fs/promises'
+import fsPromise from 'fs/promises'
+import { DateTime } from 'luxon'
 import Mustache from 'mustache'
-import puppeteer from 'puppeteer'
+import puppeteer, { Browser } from 'puppeteer'
 
 import chromium from '@sparticuz/chromium'
 
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { projectId } from '../../init'
 
 type Invitation = 'freckles' | 'sparkles'
 
 export async function generateInvitation(input: GenerateInvitation) {
-    const browser = await puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-        ignoreHTTPSErrors: true,
-    })
+    // serialise back into a date
+    input.date = new Date(input.date)
+
+    let browser: Browser
+    if (process.env.FUNCTIONS_EMULATOR) {
+        browser = await puppeteer.launch()
+    } else {
+        browser = await puppeteer.launch({
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
+            executablePath: await chromium.executablePath(),
+            headless: true,
+            ignoreHTTPSErrors: true,
+        })
+    }
     const [page] = await browser.pages()
 
     const htmlFile = getFilename('freckles')
-    const html = await fs.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
-    const output = Mustache.render(html, input)
+    const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
+    const output = Mustache.render(html, {
+        ...input,
+        date: DateTime.fromJSDate(input.date).toFormat('cccc, LLL dd'),
+    })
 
     await page.setContent(output)
-    page.setViewport({
-        height: 1096,
-        width: 793,
-    })
+    if (!process.env.FUNCTIONS_EMULATOR) {
+        page.setViewport({
+            height: 1096,
+            width: 793,
+        })
+    }
     const filename = 'invitation.png'
-    const id = crypto.randomBytes(16).toString('hex')
-    const destination = `invitations/${id}/${filename}`
 
-    await fs.mkdir(`${__dirname}/temp`)
+    const newDocRef = (await FirestoreRefs.invitations()).doc()
+    const newDocId = newDocRef.id
+
+    const destination = `invitations/${newDocId}/${filename}`
+
+    if (!fs.existsSync(`${__dirname}/temp`)) {
+        await fsPromise.mkdir(`${__dirname}/temp`)
+    }
     await page.screenshot({
         path: `${__dirname}/temp/${filename}`,
         fullPage: true,
@@ -46,10 +67,10 @@ export async function generateInvitation(input: GenerateInvitation) {
     await storage.bucket(`${projectId}.appspot.com`).upload(`${__dirname}/temp/${filename}`, {
         destination,
     })
-    await fs.rmdir(`${__dirname}/temp`, { recursive: true })
+    await DatabaseClient.createInvitation(newDocRef, input.date)
+    await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
 
-    console.log('destination:', destination)
-    return id
+    return newDocId
 }
 
 function getFilename(invitation: Invitation) {

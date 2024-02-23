@@ -8,11 +8,13 @@ import type {
     Event,
     IncursionEvent,
     DiscountCode,
+    Invitation,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
-import { Timestamp, type DocumentReference, Query } from 'firebase-admin/firestore'
+import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
 import { CreateEvent } from '../events/core/create-event'
 import { DateTime } from 'luxon'
+import { midnight } from '../utilities'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -224,6 +226,31 @@ class Client {
                 signedUrl,
             },
         })
+    }
+
+    createInvitation(ref: DocumentReference<Invitation>, date: Date) {
+        return this.#createDocument(
+            {
+                date,
+                claimedDiscountCode: [],
+            },
+            ref
+        )
+    }
+
+    async addGuestToInvitation(person: Invitation['claimedDiscountCode'][number], invitationId: string) {
+        const ref = await FirestoreRefs.invitation(invitationId)
+        await ref.update({ claimedDiscountCode: FieldValue.arrayUnion({ name: person.name, email: person.email }) })
+    }
+
+    async getInvitationGuestsOnDay(date: DateTime) {
+        const start = midnight(date)
+        const end = start.plus({ days: 1 })
+
+        const ref = await FirestoreRefs.invitations()
+        const query = ref.where('date', '>=', start.toJSDate()).where('date', '<=', end.toJSDate())
+
+        return this.#getDocuments(query)
     }
 
     async createDiscountCode(discountCode: DiscountCode) {

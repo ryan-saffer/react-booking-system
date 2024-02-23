@@ -9,7 +9,7 @@ import { scheduleHolidayProgram } from '../../core/schedule-holiday-program'
 import { sendConfirmationEmail } from '../../core/send-confirmation-email'
 
 export type CreateDiscountCode = Omit<DiscountCode, 'expiryDate'> &
-    ({ expiryDate: Date } | { expiryDate: 'auto-upcoming'; name: string; email: string })
+    ({ expiryDate: Date } | { expiryDate: 'auto-upcoming'; name: string; email: string }) & { invitationId: string }
 
 export const holidayProgramsRouter = router({
     scheduleFreeHolidayPrograms: publicProcedure

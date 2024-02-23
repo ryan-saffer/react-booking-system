@@ -1,7 +1,8 @@
 import 'react-social-icons/whatsapp'
 
+import { format } from 'date-fns'
 import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
-import { Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
+import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
@@ -17,20 +18,23 @@ import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
 import * as Invitation from '@drawables/unicorn_invitation.png'
 import { Button } from '@ui-components/button'
+import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
 import { Drawer, DrawerContent } from '@ui-components/drawer'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { ScrollArea } from '@ui-components/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
+import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
 type TForm = {
     childName: string
     childAge: string
-    date: string
+    date: Date
     time: string
     type: 'studio' | 'mobile' | ''
     studio: Location
@@ -128,6 +132,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
 
     const form = useFormContext<TForm>()
 
+    // used to close calendar popover after date selection
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+
     const onSubmit = async (values: TForm) => {
         let result = ''
         if (values.type === 'studio') {
@@ -190,13 +197,37 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <FormField
                         control={form.control}
                         name="date"
-                        rules={{ required: 'Please enter the party date' }}
+                        rules={{ required: true }}
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Date (Ie 08/04/24)</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Date" autoComplete="off" {...field} />
-                                </FormControl>
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Party Date</FormLabel>
+                                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'pl-3 text-left font-normal',
+                                                    !field.value && 'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={(e) => {
+                                                field.onChange(e)
+                                                setIsCalendarOpen(false)
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </FormItem>
                         )}
                     />

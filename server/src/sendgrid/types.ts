@@ -172,6 +172,10 @@ export type Emails = {
         reviewUrl: string
     }
 
+    invitationGuests: {
+        name: string
+    }
+
     // EVENTS
     standardEventBookingConfirmation: {
         contactName: string

@@ -421,6 +421,20 @@ export class MailClient {
                     template: 'discount_code.mjml',
                     useMjml: true,
                 }
+            case 'invitationGuests':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'We hope you had fun at Fizz Kidz!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'guest_of_party.mjml',
+                    useMjml: true,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

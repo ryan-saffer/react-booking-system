@@ -195,6 +195,8 @@ type TForm = {
 }
 
 function PartyDetails() {
+    const { id } = useParams<Params>()
+
     const [submitting, setSubmitting] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
 
@@ -211,6 +213,7 @@ function PartyDetails() {
                 expiryDate: 'auto-upcoming',
                 name: values.name,
                 email: values.email,
+                invitationId: id!,
             })
             setOpenDialog(true)
         } catch {

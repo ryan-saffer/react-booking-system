@@ -49,4 +49,11 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
     }
 
     await DatabaseClient.createDiscountCode({ ...discountCode, expiryDate })
+
+    if (discountCode.expiryDate === 'auto-upcoming') {
+        await DatabaseClient.addGuestToInvitation(
+            { name: discountCode.name, email: discountCode.email },
+            discountCode.invitationId
+        )
+    }
 }

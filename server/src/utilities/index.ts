@@ -5,6 +5,7 @@ import type { PubSubFunctions } from 'fizz-kidz'
 import { PubSubClient } from '../firebase/PubSubClient'
 import { TRPCError } from '@trpc/server'
 import { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
+import { DateTime } from 'luxon'
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
     return fireOnMessagePublished(topic, (event) => fn(event.data.message.json))
@@ -130,4 +131,8 @@ export function throwTrpcError(
         message,
         cause: { error, additionalInfo },
     })
+}
+
+export function midnight(date: DateTime) {
+    return date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
 }
