@@ -130,7 +130,9 @@ function Navbar() {
 
     return (
         <div className="sticky z-[999] flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 shadow-lg lg:justify-normal">
-            <img src={Logo.default} className="top-0 m-1 w-32"></img>
+            <a href="https://www.fizzkidz.com.au">
+                <img src={Logo.default} className="top-0 m-1 w-32"></img>
+            </a>
             <div className="flex items-center justify-center gap-2">
                 <a href="https://www.fizzkidz.com.au/book-a-party" className="hidden lg:block">
                     <Button variant="ghost">Book a Party</Button>
@@ -241,11 +243,11 @@ function PartyDetails() {
                                 className="h-28 w-full object-cover"
                             />
                             <CardHeader className="space-y-1 py-0">
-                                <h2 className="font-lilita text-xl">Hello special friend!</h2>
+                                <h2 className="font-lilita text-xl">Hello friend!</h2>
                                 <CardDescription>
                                     As a guest of a Fizz Kidz party, you are eligible to{' '}
-                                    <span className="font-extrabold text-pink-500">10% off</span> our upcoming holiday
-                                    programs!
+                                    <span className="text-lg font-extrabold text-pink-500">10% off</span> our upcoming
+                                    holiday programs!
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
