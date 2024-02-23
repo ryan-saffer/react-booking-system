@@ -16,7 +16,6 @@ import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
 import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
-import * as Invitation from '@drawables/unicorn_invitation.png'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -39,6 +38,9 @@ type TForm = {
     type: 'studio' | 'mobile' | ''
     studio: Location
     address: string
+    rsvpName: string
+    rsvpDate: Date
+    rsvpNumber: string
 }
 
 export const CreateInvitationPage = () => {
@@ -94,7 +96,7 @@ export const CreateInvitationPage = () => {
                         />
                         <div className="flex w-full justify-center">
                             <div className="relative mb-12 mt-12 flex w-[70%] justify-normal max-[1060px]:justify-center">
-                                <img className="z-20 w-full max-w-[400px] object-contain" src={Invitation.default} />
+                                <img className="z-20 w-full max-w-[400px] object-contain" src="/invite.png" />
                                 <img
                                     className="relative left-[-200px] z-10 hidden h-[90%] w-full max-w-[400px] self-center object-contain min-[1060px]:block"
                                     src={Envelope.default}
@@ -133,7 +135,8 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const form = useFormContext<TForm>()
 
     // used to close calendar popover after date selection
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+    const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
+    const [isRsvpCalendarOpen, setIsRsvpCalendarOpen] = useState(false)
 
     const onSubmit = async (values: TForm) => {
         let result = ''
@@ -145,6 +148,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                 date: values.date,
                 $type: 'studio',
                 studio: values.studio,
+                rsvpName: values.rsvpName,
+                rsvpDate: values.rsvpDate,
+                rsvpNumber: values.rsvpNumber,
             })
         } else if (values.type === 'mobile') {
             result = await generateInvitation({
@@ -154,6 +160,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                 date: values.date,
                 $type: 'mobile',
                 address: values.address,
+                rsvpName: values.rsvpName,
+                rsvpDate: values.rsvpDate,
+                rsvpNumber: values.rsvpNumber,
             })
         }
 
@@ -170,7 +179,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                 <form className="space-y-1" onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}
-                        rules={{ required: "Please enter the child's name" }}
+                        rules={{ required: true }}
                         name="childName"
                         render={({ field }) => (
                             <FormItem>
@@ -184,7 +193,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <FormField
                         control={form.control}
                         name="childAge"
-                        rules={{ required: "Please enter the child's age" }}
+                        rules={{ required: true }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Child's Age</FormLabel>
@@ -201,7 +210,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
                                 <FormLabel>Party Date</FormLabel>
-                                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                                <Popover open={isDateCalendarOpen} onOpenChange={setIsDateCalendarOpen}>
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
@@ -222,7 +231,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                             selected={field.value}
                                             onSelect={(e) => {
                                                 field.onChange(e)
-                                                setIsCalendarOpen(false)
+                                                setIsDateCalendarOpen(false)
                                             }}
                                             initialFocus
                                         />
@@ -234,7 +243,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <FormField
                         control={form.control}
                         name="time"
-                        rules={{ required: 'Please enter the party time' }}
+                        rules={{ required: true }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Time (Ie 10am - 11:30am)</FormLabel>
@@ -247,7 +256,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <FormField
                         control={form.control}
                         name="type"
-                        rules={{ required: 'Please select the parties location' }}
+                        rules={{ required: true }}
                         render={({ field }) => (
                             <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -275,7 +284,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         <FormField
                             control={form.control}
                             name="studio"
-                            rules={{ required: 'Please select a studio' }}
+                            rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem className="pb-2">
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -307,7 +316,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         <FormField
                             control={form.control}
                             name="address"
-                            rules={{ required: 'Please enter the party address' }}
+                            rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem className="pb-2">
                                     <FormLabel>Address</FormLabel>
@@ -318,6 +327,69 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             )}
                         />
                     )}
+                    <FormField
+                        control={form.control}
+                        name="rsvpName"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <FormItem className="pb-2">
+                                <FormLabel>RSVP Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="RSVP Name" autoComplete="off" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="rsvpDate"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>RSVP Date</FormLabel>
+                                <Popover open={isRsvpCalendarOpen} onOpenChange={setIsRsvpCalendarOpen}>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    'pl-3 text-left font-normal',
+                                                    !field.value && 'text-muted-foreground'
+                                                )}
+                                            >
+                                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={(e) => {
+                                                field.onChange(e)
+                                                setIsRsvpCalendarOpen(false)
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="rsvpNumber"
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <FormItem className="pb-2">
+                                <FormLabel>RSVP Mobile Number</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="RSVP Mobile Number" autoComplete="off" {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
                     <Button
                         type="submit"
                         className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"

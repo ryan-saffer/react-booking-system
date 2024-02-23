@@ -19,6 +19,7 @@ type Invitation = 'freckles' | 'sparkles'
 export async function generateInvitation(input: GenerateInvitation) {
     // serialise back into a date
     input.date = new Date(input.date)
+    input.rsvpDate = new Date(input.rsvpDate)
 
     let browser: Browser
     if (process.env.FUNCTIONS_EMULATOR) {
@@ -38,7 +39,9 @@ export async function generateInvitation(input: GenerateInvitation) {
     const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, {
         ...input,
-        date: DateTime.fromJSDate(input.date).toFormat('cccc, LLL dd'),
+        date: DateTime.fromJSDate(input.date).toLocaleString(DateTime.DATE_SHORT),
+        rsvpDate: DateTime.fromJSDate(input.rsvpDate).toLocaleString(DateTime.DATE_SHORT),
+        address: '141 Waverly Rd, Malvern 3145',
     })
 
     await page.setContent(output)

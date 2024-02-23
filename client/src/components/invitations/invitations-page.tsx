@@ -68,7 +68,7 @@ export const CreateInvitationPage = () => {
                             >
                                 <img
                                     className="h-[260px] max-h-full max-w-full object-contain"
-                                    src="/invitation+envelope.png"
+                                    src="/invite+envelope2.png"
                                 />
                                 <div className="flex flex-grow items-center justify-center">
                                     <p className="text-center text-sm font-semibold">Magical Party Time</p>

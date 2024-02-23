@@ -33,41 +33,68 @@
             text-align: center;
             font-family: 'Lilita One Regular';
             font-weight: normal;
-            color: #229db0;
         }
 
         .childName {
-            font-size: 40px;
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: #005E6D;
+            color: #4DC5D9;
             position: absolute;
-            top: 579px;
-            left: 326px;
+            font-size: 40px;
+            top: 490px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         .date {
-            font-size: 30px;
+            font-size: 18px;
             position: absolute;
-            top: 670px;
-            left: 253px;
+            top: 675px;
+            left: 285px;
         }
 
         .time {
-            font-size: 30px;
+            font-size: 18px;
             position: absolute;
-            top: 670px;
-            left: 481px;
+            top: 676px;
+            left: 475px;
+        }
+
+        .rsvp {
+            position: absolute;
+            font-size: 18px;
+            top: 732px;
+            left: 355px;
+        }
+
+        .address {
+            position: absolute;
+            top: 925px;
+            color: gray;
+            width: 100%;
         }
     </style>
 
 </head>
 
 <body>
-    <img src="https://imgur.com/r8ntQbU.png" width="100%" height="100%"></img>
+    <div style="position: relative; width: 100%; height: 100%">
+        <img src="https://imgur.com/wC2Vifk.png" width="100%" height="100%"></img>
 
-    <div class="childName">{{ childName }}</div>
+        <div class="childName" style="width:100%">{{ childName }}'s</div>
 
-    <div class="date">{{ date }}</div>
+        <div class="date">{{ date }}</div>
 
-    <div class="time">{{ time }}</div>
+        <div class="time">{{ time }}</div>
+
+        <div class="rsvp">
+            <div>{{ rsvpName }} by {{rsvpDate}}</div>
+            <div>{{rsvpNumber}}</div>
+        </div>
+
+        <div class="address">{{address}}</div>
+    </div>
 </body>
 
 </html>
