@@ -242,6 +242,7 @@ const _App = () => {
             ],
         })
     )
+
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>

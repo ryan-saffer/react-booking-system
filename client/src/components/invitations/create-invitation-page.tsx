@@ -139,35 +139,40 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const [isRsvpCalendarOpen, setIsRsvpCalendarOpen] = useState(false)
 
     const onSubmit = async (values: TForm) => {
-        let result = ''
-        if (values.type === 'studio') {
-            result = await generateInvitation({
-                childName: values.childName,
-                childAge: values.childAge,
-                time: values.time,
-                date: values.date,
-                $type: 'studio',
-                studio: values.studio,
-                rsvpName: values.rsvpName,
-                rsvpDate: values.rsvpDate,
-                rsvpNumber: values.rsvpNumber,
-            })
-        } else if (values.type === 'mobile') {
-            result = await generateInvitation({
-                childName: values.childName,
-                childAge: values.childAge,
-                time: values.time,
-                date: values.date,
-                $type: 'mobile',
-                address: values.address,
-                rsvpName: values.rsvpName,
-                rsvpDate: values.rsvpDate,
-                rsvpNumber: values.rsvpNumber,
-            })
-        }
+        try {
+            let result = ''
+            if (values.type === 'studio') {
+                result = await generateInvitation({
+                    childName: values.childName,
+                    childAge: values.childAge,
+                    time: values.time,
+                    date: values.date,
+                    $type: 'studio',
+                    studio: values.studio,
+                    rsvpName: values.rsvpName,
+                    rsvpDate: values.rsvpDate,
+                    rsvpNumber: values.rsvpNumber,
+                })
+            } else if (values.type === 'mobile') {
+                result = await generateInvitation({
+                    childName: values.childName,
+                    childAge: values.childAge,
+                    time: values.time,
+                    date: values.date,
+                    $type: 'mobile',
+                    address: values.address,
+                    rsvpName: values.rsvpName,
+                    rsvpDate: values.rsvpDate,
+                    rsvpNumber: values.rsvpNumber,
+                })
+            }
 
-        setInvitationId(result)
-        setOpen(true)
+            setInvitationId(result)
+            setOpen(true)
+        } catch (err) {
+            console.error(err)
+            toast.error('There was an error generating your invitation.')
+        }
     }
 
     return (
