@@ -9,6 +9,7 @@ import type {
     IncursionEvent,
     DiscountCode,
     Invitation,
+    WithoutId,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
@@ -253,7 +254,7 @@ class Client {
         return this.#getDocuments(query)
     }
 
-    async createDiscountCode(discountCode: DiscountCode) {
+    async createDiscountCode(discountCode: WithoutId<DiscountCode>) {
         return this.#createDocument(discountCode, (await FirestoreRefs.discountCodes()).doc())
     }
 

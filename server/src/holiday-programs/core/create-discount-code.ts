@@ -45,10 +45,15 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
             expiryDate: DateTime.fromJSDate(expiryDate).toLocaleString(DateTime.DATE_SHORT),
         })
     } else {
-        expiryDate = discountCode.expiryDate
+        expiryDate = new Date(discountCode.expiryDate)
     }
 
-    await DatabaseClient.createDiscountCode({ ...discountCode, expiryDate })
+    await DatabaseClient.createDiscountCode({
+        discountType: discountCode.discountType,
+        discountAmount: discountCode.discountAmount,
+        code: discountCode.code,
+        expiryDate,
+    })
 
     if (discountCode.expiryDate === 'auto-upcoming') {
         await DatabaseClient.addGuestToInvitation(

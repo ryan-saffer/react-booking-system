@@ -161,6 +161,13 @@ export const Navigation = () => {
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
                                     />
                                 )}
+                                {hasCoreWriteScope && (
+                                    <ListItem
+                                        title="Discount Codes"
+                                        to={ROUTES.DISCOUNT_CODES}
+                                        imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
+                                    />
+                                )}
                             </div>
                         </>
                     )}

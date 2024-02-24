@@ -212,6 +212,13 @@ const router = createBrowserRouter([
             return { Component: ViewInvitationPage }
         },
     },
+    {
+        path: ROUTES.DISCOUNT_CODES,
+        lazy: async () => {
+            const { DiscountCodesPage } = await import('../discount-codes/discount-codes-page.js')
+            return { Component: DiscountCodesPage }
+        },
+    },
 ])
 
 const _App = () => {

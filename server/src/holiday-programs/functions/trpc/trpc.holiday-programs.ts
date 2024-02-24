@@ -1,4 +1,4 @@
-import { DiscountCode, FreeHolidayProgramBooking } from 'fizz-kidz'
+import { DiscountCode, FreeHolidayProgramBooking, WithoutId } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
@@ -8,8 +8,10 @@ import { createDiscountCode } from '../../core/create-discount-code'
 import { scheduleHolidayProgram } from '../../core/schedule-holiday-program'
 import { sendConfirmationEmail } from '../../core/send-confirmation-email'
 
-export type CreateDiscountCode = Omit<DiscountCode, 'expiryDate'> &
-    ({ expiryDate: Date } | { expiryDate: 'auto-upcoming'; name: string; email: string }) & { invitationId: string }
+export type CreateDiscountCode = WithoutId<
+    Omit<DiscountCode, 'expiryDate'> &
+        ({ expiryDate: Date } | { expiryDate: 'auto-upcoming'; name: string; email: string; invitationId: string })
+>
 
 export const holidayProgramsRouter = router({
     scheduleFreeHolidayPrograms: publicProcedure
