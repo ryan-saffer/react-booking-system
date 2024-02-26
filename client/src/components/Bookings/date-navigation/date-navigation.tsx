@@ -217,6 +217,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                 >
                     <div className={classes.toolbar} />
                     <StaticDatePicker
+                        orientation="portrait"
                         value={date}
                         slotProps={{ actionBar: { actions: ['today'] } }}
                         onChange={(date) => handleDateChange(date!)}
