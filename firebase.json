@@ -3,7 +3,7 @@
     "public": "client/dist",
     "rewrites": [
       {
-        "source": "/invitation",
+        "source": "/invitation/**",
         "destination": "/invitation.html"
       },
       {
