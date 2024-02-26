@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
 import { MailClient } from '../../sendgrid/MailClient'
-import { throwTrpcError } from '../../utilities'
+import { logError, throwTrpcError } from '../../utilities'
 import { CreateDiscountCode } from '../functions/trpc/trpc.holiday-programs'
 import { checkDiscountCode } from './check-discount-code'
 
@@ -33,11 +33,15 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
             }
         }
 
-        const hubspotClient = await HubspotClient.getInstance()
-        await hubspotClient.addBirthdayPartyGuestContact({
-            firstName: discountCode.name,
-            email: discountCode.email,
-        })
+        try {
+            const hubspotClient = await HubspotClient.getInstance()
+            await hubspotClient.addBirthdayPartyGuestContact({
+                firstName: discountCode.name,
+                email: discountCode.email,
+            })
+        } catch (err) {
+            logError('error adding birthday party guest contact to hubspot', err)
+        }
 
         const mailClient = await MailClient.getInstance()
         await mailClient.sendEmail('createDiscountCode', discountCode.email, {
