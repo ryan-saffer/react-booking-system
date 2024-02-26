@@ -216,7 +216,7 @@ const router = createBrowserRouter([
         path: ROUTES.DISCOUNT_CODES,
         lazy: async () => {
             const { DiscountCodesPage } = await import('../discount-codes/discount-codes-page.js')
-            return { Component: DiscountCodesPage }
+            return { Component: withAuthorization(['ADMIN'], DiscountCodesPage) }
         },
     },
 ])
