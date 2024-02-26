@@ -2,13 +2,14 @@ import { RefObject, useEffect, useRef, useState } from 'react'
 import { Link, ScrollRestoration, useLocation, useSearchParams } from 'react-router-dom'
 
 import { INVITATION_CREATE } from '@constants/routes'
-import * as Logo from '@drawables/fizz-logo.png'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
+import { Navbar } from './navbar'
+
 export const CreateInvitationPage = () => {
     const stickyRef = useRef<HTMLDivElement>(null)
-    const isSticky = useSticky({ ref: stickyRef, offset: 64.5 })
+    const isSticky = useSticky({ ref: stickyRef, offset: 1 })
 
     const [searchParams] = useSearchParams()
     const { state } = useLocation()
@@ -16,10 +17,8 @@ export const CreateInvitationPage = () => {
     return (
         <div className="twp">
             <ScrollRestoration />
-            <div className="fixed top-0 z-[999] flex h-16 w-full justify-center border-2 border-b border-gray-200 bg-white">
-                <img src={Logo.default} className="m-1 w-32"></img>
-            </div>
-            <main className="mx-auto mt-16 flex w-screen flex-col items-center justify-center px-8">
+            <Navbar />
+            <main className="mx-auto flex w-screen flex-col items-center justify-center px-8">
                 <section className="mt-2 flex max-w-5xl flex-col justify-evenly gap-16 md:mt-12 md:flex-row">
                     <div className="mt-6 flex flex-col gap-6 md:max-w-[450px]">
                         <h1 className="font-lilita text-4xl">Fizz Kidz Invitations</h1>
@@ -39,7 +38,7 @@ export const CreateInvitationPage = () => {
                 <Separator className="mb-3 mt-12 w-screen sm:mb-8" />
                 <div
                     className={cn(
-                        'sticky top-16 flex h-12 w-screen items-center justify-center bg-white',
+                        'sticky top-0 flex h-16 w-screen items-center justify-center bg-white',
                         isSticky && 'shadow-md'
                     )}
                     ref={stickyRef}
@@ -62,6 +61,9 @@ export const CreateInvitationPage = () => {
                                     type: searchParams.get('type') || state?.type || '',
                                     studio: searchParams.get('studio') || state?.studio || '',
                                     address: searchParams.get('address') || state?.address || '',
+                                    rsvpName: searchParams.get('rsvpName') || state?.rsvpName || '',
+                                    rsvpDate: searchParams.get('rsvpDate') || state?.rsvpDate || '',
+                                    rsvpNumber: searchParams.get('rsvpNumber') || state?.rsvpNumber || '',
                                 }}
                                 className="flex h-[260px] w-[260px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
                             >

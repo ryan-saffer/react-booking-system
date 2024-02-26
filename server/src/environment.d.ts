@@ -14,6 +14,8 @@ declare global {
             XERO_CLIENT_ID: string
             XERO_CLIENT_SECRET: string
             ESIGNATURES_SECRET: string
+            MIXPANEL_API_KEY_DEV: string
+            MIXPANEL_API_KEY_PROD: string
         }
     }
 }

@@ -281,7 +281,7 @@ function PartyDetails() {
                             <CardFooter>
                                 <Button
                                     type="submit"
-                                    className="w-full bg-fuchsia-700 hover:bg-fuchsia-900"
+                                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
                                     disabled={submitting}
                                 >
                                     {submitting ? (
@@ -299,7 +299,7 @@ function PartyDetails() {
                 </Card>
             </div>
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent className="twp flex min-h-64 flex-col">
+                <DialogContent className="twp flex flex-col rounded-md p-6">
                     <p className="font-lilita text-2xl">You're discount code has been sent!</p>
                     <p className="text-sm">
                         We have sent you an email that includes your discount code. You can use it when signing up to
@@ -324,7 +324,7 @@ function BottomNav() {
     return (
         <div className="fixed bottom-0 z-50 hidden h-[100px] w-full border-t-[0.5px] border-gray-300 bg-white max-[1060px]:block">
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
-                <p className="font-semibold text-slate-800">You're invited to a Fizz Kidz party!</p>
+                <p className="font-semibold text-slate-800">Welcome to the world of Fizz Kidz.</p>
                 <Button
                     className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
                     onClick={() => setOpen(true)}

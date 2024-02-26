@@ -13,6 +13,7 @@ import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { projectId } from '../../init'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 type Invitation = 'freckles' | 'sparkles'
 
@@ -72,6 +73,9 @@ export async function generateInvitation(input: GenerateInvitation) {
     })
     await DatabaseClient.createInvitation(newDocRef, input.date)
     await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
+
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('invitation-generated', { invitationId: newDocId, partyDate: input.date })
 
     return newDocId
 }

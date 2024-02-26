@@ -1,6 +1,7 @@
 import path from 'path'
 
 import { defineConfig } from 'vite'
+import { createHtmlPlugin } from 'vite-plugin-html'
 
 import react from '@vitejs/plugin-react'
 
@@ -18,5 +19,13 @@ export default defineConfig({
             '@utils': path.resolve(__dirname, './src/utilities'),
         },
     },
-    plugins: [react()],
+    plugins: [
+        react(),
+        createHtmlPlugin({
+            pages: [
+                { entry: '/src/index.tsx', filename: 'index.html', template: 'public/index.html' },
+                { entry: '/src/index.tsx', filename: 'invitation.html', template: 'public/invitation.html' },
+            ],
+        }),
+    ],
 })

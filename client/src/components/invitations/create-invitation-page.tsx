@@ -29,6 +29,8 @@ import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
+import { Navbar } from './navbar'
+
 type TForm = {
     childName: string
     childAge: string
@@ -54,6 +56,9 @@ export const CreateInvitationPage = () => {
             type: state?.type || '',
             studio: state?.studio || '',
             address: state?.address || '',
+            rsvpName: state?.rsvpName || '',
+            rsvpDate: state?.rsvpDate || '',
+            rsvpNumber: state?.rsvpNumber || '',
         },
     })
 
@@ -61,9 +66,7 @@ export const CreateInvitationPage = () => {
         <div className="twp">
             <ScrollRestoration />
             <Toaster richColors />
-            <div className="sticky flex justify-center border-b border-gray-200 bg-white">
-                <img src="/fizz-logo.png" className="m-1 w-32"></img>
-            </div>
+            <Navbar />
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
@@ -77,6 +80,9 @@ export const CreateInvitationPage = () => {
                                 type: form.getValues().type,
                                 studio: form.getValues().studio,
                                 address: form.getValues().address,
+                                rsvpName: form.getValues().rsvpName,
+                                rsvpDate: form.getValues().rsvpDate,
+                                rsvpNumber: form.getValues().rsvpNumber,
                             }}
                         >
                             <Button variant="ghost" size="sm">
@@ -189,7 +195,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             <FormItem>
                                 <FormLabel>Child's Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Child's Name" id="childName" autoComplete="off" {...field} />
+                                    <Input placeholder="Child's Name" autoComplete="off" {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -290,7 +296,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             name="studio"
                             rules={{ required: true }}
                             render={({ field }) => (
-                                <FormItem className="pb-2">
+                                <FormItem>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormLabel>Studio</FormLabel>
                                         <FormControl>
@@ -322,7 +328,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             name="address"
                             rules={{ required: true }}
                             render={({ field }) => (
-                                <FormItem className="pb-2">
+                                <FormItem>
                                     <FormLabel>Address</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Address" autoComplete="off" {...field} />
@@ -386,7 +392,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         name="rsvpNumber"
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <FormItem className="pb-2">
+                            <FormItem className="pb-4">
                                 <FormLabel>RSVP Mobile Number</FormLabel>
                                 <FormControl>
                                     <Input placeholder="RSVP Mobile Number" autoComplete="off" {...field} />

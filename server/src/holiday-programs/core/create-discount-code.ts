@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { CreateDiscountCode } from '../functions/trpc/trpc.holiday-programs'
@@ -49,6 +50,9 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
             code: discountCode.code,
             expiryDate: DateTime.fromJSDate(expiryDate).toLocaleString(DateTime.DATE_SHORT),
         })
+
+        const mixpanel = await MixpanelClient.getInstance()
+        await mixpanel.track('invitation-coupon-signup', { invitationId: discountCode.invitationId })
     } else {
         expiryDate = new Date(discountCode.expiryDate)
     }
