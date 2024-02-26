@@ -13,6 +13,10 @@ export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory
             router,
             createContext,
             onError: ({ error, input, path }) => {
+                if (error.code === 'PRECONDITION_FAILED') {
+                    // not an error worth logging
+                    return
+                }
                 logger.error(error.message, {
                     path,
                     input,

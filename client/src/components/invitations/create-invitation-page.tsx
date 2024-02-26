@@ -14,7 +14,6 @@ import { Toaster, toast } from 'sonner'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
-import * as Logo from '@drawables/fizz-logo.png'
 import * as Background from '@drawables/unicorn_background.jpeg'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
@@ -63,7 +62,7 @@ export const CreateInvitationPage = () => {
             <ScrollRestoration />
             <Toaster richColors />
             <div className="sticky flex justify-center border-b border-gray-200 bg-white">
-                <img src={Logo.default} className="m-1 w-32"></img>
+                <img src="/fizz-logo.png" className="m-1 w-32"></img>
             </div>
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">

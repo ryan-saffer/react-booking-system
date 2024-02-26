@@ -16,18 +16,17 @@ export const CreateInvitationPage = () => {
     return (
         <div className="twp">
             <ScrollRestoration />
-            <div className="fixed top-0 flex h-16 w-full justify-center border-2 border-b border-gray-200 bg-white">
+            <div className="fixed top-0 z-[999] flex h-16 w-full justify-center border-2 border-b border-gray-200 bg-white">
                 <img src={Logo.default} className="m-1 w-32"></img>
             </div>
-            <main className="mx-auto mt-16 flex w-screen flex-col items-center justify-center pl-8 pr-8">
+            <main className="mx-auto mt-16 flex w-screen flex-col items-center justify-center px-8">
                 <section className="mt-2 flex max-w-5xl flex-col justify-evenly gap-16 md:mt-12 md:flex-row">
                     <div className="mt-6 flex flex-col gap-6 md:max-w-[450px]">
                         <h1 className="font-lilita text-4xl">Fizz Kidz Invitations</h1>
-                        <h2 className="font-lilita text-xl text-[#9044E2]">
-                            We make kids parties easy!
-                        </h2>
+                        <h2 className="font-lilita text-xl text-[#9044E2]">We make kids parties easy!</h2>
                         <p>
-                            Simply choose your child's favourite invitation, add your party details, and generate a personalised invitation link to share with all their friends!
+                            Simply choose your child's favourite invitation, add your party details, and generate a
+                            personalised invitation link to share with all their friends!
                         </p>
                     </div>
                     <div className="box ml-4 mr-4 hidden min-w-[400px] max-w-[400px] items-center justify-center self-center rounded-3xl shadow-purple sm:ml-0 sm:mr-0 sm:max-w-[600px] md:flex min-[900px]:min-w-[450px]">

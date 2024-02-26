@@ -175,7 +175,7 @@ export const DiscountCodesPage = () => {
             <Toaster richColors />
             <ScrollRestoration />
             <Navbar />
-            <main className="absolute mt-16 flex h-full w-full justify-center p-8">
+            <main className="absolute mt-16 flex h-full w-full justify-center p-4 sm:p-8">
                 <div className="w-full max-w-5xl">
                     <h1 className="font-lilita text-3xl">Discount Codes</h1>
                     {data.status === 'loading' && (
@@ -189,7 +189,7 @@ export const DiscountCodesPage = () => {
                     )}
                     {data.status === 'loaded' && (
                         <>
-                            <div className="mb-4 mt-8 flex justify-between">
+                            <div className="my-4 mb-4 flex justify-between gap-4 sm:mt-8">
                                 <Input
                                     value={(table.getColumn('code')?.getFilterValue() as string) ?? ''}
                                     onChange={(event) => table.getColumn('code')?.setFilterValue(event.target.value)}
@@ -280,6 +280,7 @@ function Navbar() {
 }
 
 type TForm = WithoutId<DiscountCode>
+
 function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
     const form = useForm<Omit<TForm, 'discountAmount'> & { discountAmount: number | string }, void, TForm>({
         defaultValues: {
@@ -308,9 +309,13 @@ function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
             toast.success('Discount code created!')
             close()
             form.reset()
-        } catch (err) {
+        } catch (err: any) {
             console.error(err)
-            toast.error('There was an error creating the discount code.')
+            if (err?.data?.httpStatus === 412) {
+                toast.error(err?.message)
+            } else {
+                toast.error('There was an error creating the discount code.')
+            }
         }
     }
 
@@ -440,7 +445,7 @@ function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
                             )}
                         />
                         <DialogFooter>
-                            <Button className="mt-4" type="submit" disabled={isLoading}>
+                            <Button className="mt-4 min-w-48" type="submit" disabled={isLoading}>
                                 {isLoading ? <Loader2 className="animate-spin" /> : 'Create discount code'}
                             </Button>
                         </DialogFooter>

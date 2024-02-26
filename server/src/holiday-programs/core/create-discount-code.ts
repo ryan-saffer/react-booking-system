@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { HubspotClient } from '../../hubspot/HubspotClient'
 import { MailClient } from '../../sendgrid/MailClient'
+import { throwTrpcError } from '../../utilities'
 import { CreateDiscountCode } from '../functions/trpc/trpc.holiday-programs'
 import { checkDiscountCode } from './check-discount-code'
 
@@ -14,7 +15,7 @@ import { checkDiscountCode } from './check-discount-code'
 export async function createDiscountCode(discountCode: CreateDiscountCode) {
     const existingCode = await checkDiscountCode(discountCode.code)
     if (existingCode !== 'not-found') {
-        throw new Error(`Discount code '${discountCode.code}' already exists.`)
+        throwTrpcError('PRECONDITION_FAILED', `Discount code '${discountCode.code}' already exists.`)
     }
     let expiryDate = new Date()
     if (discountCode.expiryDate === 'auto-upcoming') {
