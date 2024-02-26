@@ -363,8 +363,8 @@ function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
                                                 ref.ontouchstart = (e) => e.preventDefault()
                                             }}
                                         >
-                                            <SelectItem value="price">Price</SelectItem>
-                                            <SelectItem value="percentage">Percentage</SelectItem>
+                                            <SelectItem value="price">Price ($)</SelectItem>
+                                            <SelectItem value="percentage">Percentage (%)</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </FormItem>
@@ -409,7 +409,7 @@ function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Party Date</FormLabel>
+                                    <FormLabel>Expiry Date</FormLabel>
                                     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                                         <PopoverTrigger asChild>
                                             <FormControl>
