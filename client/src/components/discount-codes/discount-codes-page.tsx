@@ -30,13 +30,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@ui-components/dialog'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@ui-components/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
@@ -131,7 +125,6 @@ export const DiscountCodesPage = () => {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                     <DropdownMenuItem onClick={() => deleteCode(row.original.id)}>
                                         Delete
                                     </DropdownMenuItem>

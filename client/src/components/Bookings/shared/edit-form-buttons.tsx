@@ -1,12 +1,11 @@
+import { Loader2, MoreHorizontal, Pencil, Save, Trash } from 'lucide-react'
 import React from 'react'
 
-import CheckIcon from '@mui/icons-material/Check'
-import CreateIcon from '@mui/icons-material/Create'
-import DeleteIcon from '@mui/icons-material/Delete'
-import SaveIcon from '@mui/icons-material/Save'
-import { Button, CircularProgress, Fab } from '@mui/material'
 import { green, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
+import { Button } from '@ui-components/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 
 import { useScopes } from '../../Hooks/UseScopes'
 
@@ -65,86 +64,115 @@ const Root = styled('div')(({ theme }) => ({
 type Props = {
     loading: boolean
     editing: boolean
-    success: boolean
     onStartEditing: () => void
     onCancelEditing: () => void
     onSave: () => void
     onDelete: () => void
+    menu?: { label: string; action: () => void }[]
 }
 
 const EditFormButtons: React.FC<Props> = ({
     loading,
     editing,
-    success,
     onStartEditing,
     onCancelEditing,
     onSave,
     onDelete,
+    menu,
 }) => {
     const canEdit = useScopes().CORE === 'write'
 
-    if (canEdit) {
-        if (success) {
+    if (!canEdit) return
+
+    const renderButtons = () => {
+        if (loading) {
             return (
-                <Root className={classes.saveButtonDiv}>
-                    <Fab
-                        className={classes.success}
-                        aria-label="save"
-                        color="secondary"
-                        type="submit"
-                        disabled={loading}
-                    >
-                        {<CheckIcon />}
-                    </Fab>
-                </Root>
+                <div className="flex h-12 items-center">
+                    <Loader2 className="mr-2 animate-spin" />
+                </div>
             )
         }
-        return (
-            <Root className={classes.saveButtonDiv}>
-                {!loading && !editing && (
-                    <Fab className={classes.deleteButton} aria-label="delete" color="primary" onClick={onDelete}>
-                        <DeleteIcon />
-                    </Fab>
-                )}
-                {editing ? (
-                    <>
-                        <Button
-                            className={classes.cancelButton}
-                            variant="outlined"
-                            onClick={onCancelEditing}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </Button>
-                        <Fab
-                            className={classes.saveButton}
-                            aria-label="save"
-                            color="secondary"
-                            type="submit"
-                            disabled={loading}
-                            onClick={onSave}
-                        >
-                            {<SaveIcon />}
-                        </Fab>
-                    </>
-                ) : (
-                    <Fab
-                        className={classes.editButton}
-                        aria-label="edit"
-                        color="secondary"
-                        type="submit"
-                        disabled={loading}
-                        onClick={onStartEditing}
-                    >
-                        <CreateIcon />
-                    </Fab>
-                )}
-                {loading && <CircularProgress size={68} className={classes.progress} />}
-            </Root>
-        )
-    } else {
-        return null
+
+        if (editing) {
+            return (
+                <>
+                    <Button variant="outline" onClick={onCancelEditing}>
+                        Cancel
+                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Button
+                                variant="ghost"
+                                className="h-12 w-12 p-0"
+                                disabled={loading}
+                                type="submit"
+                                onClick={onSave}
+                            >
+                                <Save className="h-5 w-5" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-primary">
+                            <p className="text-primary-foreground">Save</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    {menu?.length && menu.length > 0 && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-12 w-12 p-0">
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreHorizontal className="h-5 w-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {menu.map((item) => (
+                                    <DropdownMenuItem key={item.label} onClick={item.action}>
+                                        {item.label}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="ghost" className="h-12 w-12 p-0" onClick={onDelete}>
+                                <Trash className="h-5 w-5" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-primary">
+                            <p className="text-primary-foreground">Delete</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="h-12 w-12 p-0"
+                                type="submit"
+                                disabled={loading}
+                                onClick={onStartEditing}
+                            >
+                                <Pencil className="h-5 w-5" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-primary">
+                            <p className="text-primary-foreground">Edit</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </>
+            )
+        }
     }
+
+    return (
+        <TooltipProvider delayDuration={0}>
+            <Root className="twp mt-4 flex items-center justify-end gap-2">{renderButtons()}</Root>
+        </TooltipProvider>
+    )
 }
 
 export default EditFormButtons

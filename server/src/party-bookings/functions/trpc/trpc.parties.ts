@@ -1,11 +1,13 @@
 import { Booking, GenerateInvitation, Location } from 'fizz-kidz'
 
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { createPartyBooking } from '../../core/create-party-booking'
 import { deletePartyBooking } from '../../core/delete-party-booking'
 import { generateInvitation } from '../../core/generate-invitation'
 import { updatePartyBooking } from '../../core/update-party-booking'
+import { getPrefilledFormUrl } from '../../core/utils'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -21,6 +23,12 @@ export const partiesRouter = router({
     deletePartyBooking: authenticatedProcedure
         .input((input: unknown) => input as DeletePartyBooking)
         .mutation(({ input }) => deletePartyBooking(input)),
+    getPartyFormUrl: authenticatedProcedure
+        .input((input: unknown) => input as { bookingId: string })
+        .mutation(async ({ input }) => {
+            const booking = await DatabaseClient.getPartyBooking(input.bookingId)
+            return getPrefilledFormUrl(input.bookingId, booking)
+        }),
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
