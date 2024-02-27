@@ -132,7 +132,7 @@ export class MailClient {
                         subject: subject || 'Thanks for coming to your first session!',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'term_continuation_email.html',
+                    template: 'term_continuation_email.mjml',
                     useMjml: true,
                 }
             case 'afterSchoolUnenrolmentConfirmation':
