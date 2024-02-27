@@ -116,7 +116,12 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
                 if (isSignedIn) {
                     if (width > BREAKPOINT_MD) {
                         return (
-                            <Button danger loading={loading} type="primary" onClick={handleSignOutButtonClick}>
+                            <Button
+                                style={{ background: '#16a34a' }}
+                                loading={loading}
+                                type="primary"
+                                onClick={handleSignOutButtonClick}
+                            >
                                 Sign Out
                             </Button>
                         )
