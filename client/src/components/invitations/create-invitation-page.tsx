@@ -1,7 +1,7 @@
 import 'react-social-icons/whatsapp'
 
 import { format } from 'date-fns'
-import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
+import { InvitationOption, Location, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
@@ -14,7 +14,6 @@ import { Toaster, toast } from 'sonner'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { INVITATIONS } from '@constants/routes'
 import * as Envelope from '@drawables/envelope.png'
-import * as Background from '@drawables/unicorn_background.jpeg'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -30,6 +29,17 @@ import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
 import { Navbar } from './navbar'
+
+const InvitationTemplates: Record<InvitationOption, string> = {
+    Freckles: '/Invitation-Freckles.png',
+    Stripes: '/Invitation-Stripes.png',
+    Dots: '/Invitation-Dots.png',
+    'Glitz & Glam': '/Invitation-Glitz.png',
+    'Bubbling Fun': '/Invitation-Bubbling.png',
+    'Bubbling Blue Fun': '/Invitation-Bubbling-Blue.png',
+    'Slime Time': '/Invitation-Slime.png',
+    'Tye Dye': '/Invitation-Tye-Dye.png',
+}
 
 type TForm = {
     childName: string
@@ -91,22 +101,27 @@ export const CreateInvitationPage = () => {
                         </Link>
                         /
                         <Button variant="ghost" size="sm">
-                            Magical Party Time
+                            {state.invitation}
                         </Button>
                     </div>
-                    <div className="relative flex w-full justify-center">
-                        <img
-                            src={Background.default}
-                            className="absolute h-full w-full object-cover min-[1060px]:block"
-                        />
-                        <div className="flex w-full justify-center">
-                            <div className="relative mb-12 mt-12 flex w-[70%] justify-normal max-[1060px]:justify-center">
-                                <img className="z-20 w-full max-w-[400px] object-contain" src="/invite.png" />
-                                <img
-                                    className="relative left-[-200px] z-10 hidden h-[90%] w-full max-w-[400px] self-center object-contain min-[1060px]:block"
-                                    src={Envelope.default}
-                                />
+                    {/* 724px is 840px (sidebar height) - 52px (navbar + breadcrumbs) */}
+                    <div className="relative flex h-screen max-h-[518px] w-full justify-center min-[700px]:max-h-[724px]">
+                        <div className="absolute h-full w-full">
+                            <img src="/invitations-background.jpeg" className="h-full object-cover" />
+                        </div>
+                        <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
+                            <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
+                                <img src={InvitationTemplates[state.invitation as InvitationOption]} />
                             </div>
+                            <div className="absolute left-1/2 top-1/2 z-10 w-[450px] max-w-[450px] translate-x-[-30%] translate-y-[-50%]">
+                                <img src={Envelope.default} />
+                            </div>
+                        </div>
+                        <div className="absolute m-6 max-h-[450px] min-[700px]:hidden">
+                            <img
+                                src={InvitationTemplates[state.invitation as InvitationOption]}
+                                className="max-h-[450px]"
+                            />
                         </div>
                     </div>
                 </div>
@@ -143,6 +158,8 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
     const [isRsvpCalendarOpen, setIsRsvpCalendarOpen] = useState(false)
 
+    const { state } = useLocation()
+
     const onSubmit = async (values: TForm) => {
         try {
             let result = ''
@@ -157,6 +174,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     rsvpName: values.rsvpName,
                     rsvpDate: values.rsvpDate,
                     rsvpNumber: values.rsvpNumber,
+                    invitation: state.invitation,
                 })
             } else if (values.type === 'mobile') {
                 result = await generateInvitation({
@@ -169,6 +187,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     rsvpName: values.rsvpName,
                     rsvpDate: values.rsvpDate,
                     rsvpNumber: values.rsvpNumber,
+                    invitation: state.invitation,
                 })
             }
 

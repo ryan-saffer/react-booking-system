@@ -46,7 +46,7 @@
             color: #4DC5D9;
             position: absolute;
             font-size: 50px;
-            top: 480px;
+            top: 420px;
             width: 100%;
             display: flex;
             justify-content: center;
@@ -54,34 +54,35 @@
 
         .date {
             font-family: "Open Sans Condensed Light";
-            font-size: 22px;
+            font-size: 20px;
             position: absolute;
-            top: 674px;
-            left: 250px;
+            top: 603px;
+            left: 236px;
         }
 
         .time {
             font-family: "Open Sans Condensed Light";
-            font-size: 22px;
+            font-size: 20px;
             position: absolute;
-            top: 674px;
-            left: 400px;
+            top: 603px;
+            left: 455px;
         }
 
         .rsvp {
             font-family: "Open Sans Condensed Light";
             position: absolute;
-            font-size: 22px;
-            top: 740px;
-            left: 250px;
+            font-size: 20px;
+            top: 670px;
+            left: 285px;
         }
 
         .address {
             font-family: "Open Sans Condensed Light";
             position: absolute;
             font-weight: 900;
-            top: 940px;
+            top: 950px;
             width: 100%;
+            left: 90px;
             font-size: 22px
         }
     </style>
@@ -90,7 +91,7 @@
 
 <body>
     <div style="position: relative; width: 100%; height: 100%">
-        <img src="https://imgur.com/Kn21pk8.png" width="100%" height="100%"></img>
+        <img src="https://imgur.com/bS2vzER.png" width="100%" height="100%"></img>
 
         <div class="childName" style="width:100%">{{ childName }}'s {{childAge}}th</div>
 
@@ -98,8 +99,7 @@
 
         <div class="time">{{ time }}</div>
 
-        <div class="rsvp">
-            {{ rsvpName }} by {{rsvpDate}} on {{rsvpNumber}}
+        <div class="rsvp">{{ rsvpName }} by {{rsvpDate}} on {{rsvpNumber}}
         </div>
 
         <div class="address">{{address}}</div>

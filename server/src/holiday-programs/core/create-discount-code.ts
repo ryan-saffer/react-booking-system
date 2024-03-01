@@ -48,7 +48,7 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
         await mailClient.sendEmail('createDiscountCode', discountCode.email, {
             name: discountCode.name,
             code: discountCode.code,
-            expiryDate: DateTime.fromJSDate(expiryDate).toLocaleString(DateTime.DATE_SHORT),
+            expiryDate: DateTime.fromJSDate(expiryDate).toFormat('dd/LL/yyyy'),
         })
 
         const mixpanel = await MixpanelClient.getInstance()

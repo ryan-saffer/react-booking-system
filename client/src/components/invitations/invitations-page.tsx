@@ -1,3 +1,4 @@
+import { InvitationOption } from 'fizz-kidz'
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Link, ScrollRestoration, useLocation, useSearchParams } from 'react-router-dom'
 
@@ -6,6 +7,41 @@ import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
 import { Navbar } from './navbar'
+
+const Invitations: { name: InvitationOption; src: string }[] = [
+    {
+        name: 'Freckles',
+        src: '/Invitation+Envelope-Freckles.png',
+    },
+    {
+        name: 'Stripes',
+        src: '/Invitation+Envelope-Stripes.png',
+    },
+    {
+        name: 'Dots',
+        src: '/Invitation+Envelope-Dots.png',
+    },
+    {
+        name: 'Glitz & Glam',
+        src: '/Invitation+Envelope-Glitz.png',
+    },
+    {
+        name: 'Bubbling Fun',
+        src: '/Invitation+Envelope-Bubbling.png',
+    },
+    {
+        name: 'Bubbling Blue Fun',
+        src: '/Invitation+Envelope-Bubbling-Blue.png',
+    },
+    {
+        name: 'Slime Time',
+        src: '/Invitation+Envelope-Slime.png',
+    },
+    {
+        name: 'Tye Dye',
+        src: '/Invitation+Envelope-Tye-Dye.png',
+    },
+]
 
 export const CreateInvitationPage = () => {
     const stickyRef = useRef<HTMLDivElement>(null)
@@ -49,10 +85,10 @@ export const CreateInvitationPage = () => {
                 </div>
                 <section>
                     <div className="mt-0 grid max-w-5xl grid-cols-1 gap-x-32 gap-y-8 md:grid-cols-2  xl:grid-cols-3">
-                        {[0, 1, 2, 3, 4, 5, 6, 7].map((it) => (
+                        {Invitations.map((it) => (
                             <Link
                                 to={INVITATION_CREATE}
-                                key={it}
+                                key={it.name}
                                 state={{
                                     childName: searchParams.get('childName') || state?.childName || '',
                                     childAge: searchParams.get('childAge') || state?.childAge || '',
@@ -64,15 +100,13 @@ export const CreateInvitationPage = () => {
                                     rsvpName: searchParams.get('rsvpName') || state?.rsvpName || '',
                                     rsvpDate: searchParams.get('rsvpDate') || state?.rsvpDate || '',
                                     rsvpNumber: searchParams.get('rsvpNumber') || state?.rsvpNumber || '',
+                                    invitation: it.name,
                                 }}
                                 className="flex h-[260px] w-[260px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
                             >
-                                <img
-                                    className="h-[260px] max-h-full max-w-full object-contain"
-                                    src="/invite+envelope2.png"
-                                />
-                                <div className="flex flex-grow items-center justify-center">
-                                    <p className="text-center text-sm font-semibold">Magical Party Time</p>
+                                <img className="h-[260px] max-h-full max-w-full object-contain" src={it.src} />
+                                <div className="mt-2 flex flex-grow items-center justify-center">
+                                    <p className="text-center text-sm font-semibold">{it.name}</p>
                                 </div>
                             </Link>
                         ))}
