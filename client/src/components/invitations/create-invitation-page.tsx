@@ -511,7 +511,7 @@ function SuccessDialog({
 
     return (
         <Dialog open={isOpen} onOpenChange={close}>
-            <DialogContent className="twp max-h-screen overflow-y-scroll">
+            <DialogContent className="twp">
                 <div className="flex flex-col p-4">
                     <h5 className="font-lilita text-2xl">Let the party begin!</h5>
                     <p className="mt-2 font-gotham">Share your invitation with all of {childName}'s friends.</p>

@@ -1,3 +1,4 @@
+import autoprefixer from 'autoprefixer'
 import { scopedPreflightStyles } from 'tailwindcss-scoped-preflight'
 
 /** @type {import('tailwindcss').Config} */
@@ -78,10 +79,10 @@ export default {
         },
     },
     plugins: [
-        'tailwindcss-animate',
         scopedPreflightStyles({
             cssSelector: '.twp',
             mode: 'matched only',
         }),
+        autoprefixer,
     ],
 }
