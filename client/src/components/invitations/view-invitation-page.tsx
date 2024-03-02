@@ -1,13 +1,12 @@
+import { InvitationOption } from 'fizz-kidz'
 import { Download, ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ScrollRestoration, useParams } from 'react-router-dom'
+import { ScrollRestoration, useParams, useSearchParams } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import * as Envelope from '@drawables/envelope.png'
 import * as Logo from '@drawables/fizz-logo.png'
-import * as Background from '@drawables/unicorn_background.jpeg'
 import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -20,12 +19,16 @@ import { generateRandomString } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
+import { InvitationTemplates } from './constants'
+
 type Params = {
     id: string
 }
 
 export const ViewInvitationPage = () => {
     const { id } = useParams<Params>()
+    const [searchParams] = useSearchParams()
+    console.log(searchParams.get('type'))
 
     const firebase = useFirebase()
 
@@ -91,29 +94,35 @@ export const ViewInvitationPage = () => {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <img
-                            src={Background.default}
-                            className="absolute h-full w-full object-cover min-[1060px]:block"
-                        />
-                        {loading && (
-                            <div className="">
+                        <div className="relative flex h-screen max-h-[810px] w-full justify-center min-[1060px]:max-h-[724px]">
+                            <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
+                            {loading && (
                                 <div className="absolute left-1/2 top-1/2 z-20 flex translate-x-[-50%] translate-y-[-50%] items-center justify-center rounded-xl bg-white p-4">
                                     <Loader2 className="animate-spin" />
                                 </div>
-                            </div>
-                        )}
-                        <div
-                            className={cn(
-                                'flex w-full justify-center opacity-100 transition-opacity duration-700 ease-in',
-                                loading && 'opacity-0'
                             )}
-                        >
-                            <div className="relative mb-12 mt-12 flex w-[70%] justify-normal max-[1060px]:justify-center">
-                                <img className="z-20 w-full max-w-[400px] object-contain" src={invitationUrl} />
-                                <img
-                                    className="relative left-[-200px] z-10 hidden h-[90%] w-full max-w-[400px] self-center object-contain min-[1060px]:block"
-                                    src={Envelope.default}
-                                />
+                            <div
+                                className={cn(
+                                    'relative hidden w-full items-center justify-center opacity-100 transition-opacity duration-700 ease-in min-[720px]:flex',
+                                    loading && 'opacity-0'
+                                )}
+                            >
+                                <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
+                                    <img src={invitationUrl} />
+                                </div>
+                                <div className="absolute left-1/2 top-1/2 z-10 w-[430px] max-w-[430px] translate-x-[-20%] translate-y-[-50%]">
+                                    <img
+                                        src={InvitationTemplates[searchParams.get('type') as InvitationOption].envelope}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className={cn(
+                                    'absolute m-6 mt-16 max-h-[450px] opacity-100 transition-opacity duration-700 ease-in min-[720px]:hidden',
+                                    loading && 'opacity-0'
+                                )}
+                            >
+                                <img src={invitationUrl} className="max-h-[650px]" />
                             </div>
                         </div>
                     </div>
@@ -184,7 +193,7 @@ function Navbar() {
 function Sidebar() {
     return (
         <section className="hidden h-screen min-[1060px]:block">
-            <div className="flex h-[710px] w-[380px] border-l border-gray-200">
+            <div className="flex h-[765px] w-[380px] border-l border-gray-200">
                 <PartyDetails />
             </div>
         </section>
@@ -227,7 +236,7 @@ function PartyDetails() {
     return (
         <>
             <div className="flex h-full flex-col justify-between">
-                <div className="flex flex-col p-4">
+                <div className="mb-8 flex flex-col p-4">
                     <h2 className="font-lilita text-xl">Welcome to the world of Fizz Kidz</h2>
                     <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
                     <p className="font-gotham">

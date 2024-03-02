@@ -95,6 +95,7 @@
         "prettier": "^3.2.5",
         "prettier-plugin-tailwindcss": "^0.5.11",
         "tailwindcss": "^3.4.1",
+        "tailwindcss-bg-patterns": "^0.3.0",
         "typescript": "^5.0.4",
         "vite": "^4.4.5",
         "vite-plugin-html": "^3.2.2"

@@ -13,7 +13,6 @@ import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { INVITATIONS } from '@constants/routes'
-import * as Envelope from '@drawables/envelope.png'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -28,18 +27,8 @@ import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
+import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
-
-const InvitationTemplates: Record<InvitationOption, string> = {
-    Freckles: '/Invitation-Freckles.png',
-    Stripes: '/Invitation-Stripes.png',
-    Dots: '/Invitation-Dots.png',
-    'Glitz & Glam': '/Invitation-Glitz.png',
-    'Bubbling Fun': '/Invitation-Bubbling.png',
-    'Bubbling Blue Fun': '/Invitation-Bubbling-Blue.png',
-    'Slime Time': '/Invitation-Slime.png',
-    'Tye Dye': '/Invitation-Tye-Dye.png',
-}
 
 type TForm = {
     childName: string
@@ -105,22 +94,20 @@ export const CreateInvitationPage = () => {
                         </Button>
                     </div>
                     {/* 724px is 840px (sidebar height) - 52px (navbar + breadcrumbs) */}
-                    <div className="relative flex h-screen max-h-[518px] w-full justify-center min-[700px]:max-h-[724px]">
-                        <div className="absolute h-full w-full">
-                            <img src="/invitations-background.jpeg" className="h-full object-cover" />
-                        </div>
+                    <div className="relative flex h-screen max-h-[776px] w-full justify-center min-[700px]:max-h-[776px]">
+                        <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
                         <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
                             <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
-                                <img src={InvitationTemplates[state.invitation as InvitationOption]} />
+                                <img src={InvitationTemplates[state.invitation as InvitationOption].invitation} />
                             </div>
                             <div className="absolute left-1/2 top-1/2 z-10 w-[450px] max-w-[450px] translate-x-[-30%] translate-y-[-50%]">
-                                <img src={Envelope.default} />
+                                <img src={InvitationTemplates[state.invitation as InvitationOption].envelope} />
                             </div>
                         </div>
-                        <div className="absolute m-6 max-h-[450px] min-[700px]:hidden">
+                        <div className="absolute m-6 max-h-[550px] min-[700px]:hidden">
                             <img
-                                src={InvitationTemplates[state.invitation as InvitationOption]}
-                                className="max-h-[450px]"
+                                src={InvitationTemplates[state.invitation as InvitationOption].invitation}
+                                className="max-h-[550px]"
                             />
                         </div>
                     </div>
@@ -483,8 +470,9 @@ function SuccessDialog({
     childName?: string
     invitationId?: string
 }) {
+    const { state } = useLocation()
     const invitationText = `You're invited to ${childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
 
     const combinedMessage = `${invitationText} | ${inviteUrl}`
 

@@ -1,4 +1,5 @@
 import autoprefixer from 'autoprefixer'
+import backgroundPatterns from 'tailwindcss-bg-patterns'
 import { scopedPreflightStyles } from 'tailwindcss-scoped-preflight'
 
 /** @type {import('tailwindcss').Config} */
@@ -84,5 +85,6 @@ export default {
             mode: 'matched only',
         }),
         autoprefixer,
+        backgroundPatterns,
     ],
 }

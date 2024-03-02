@@ -43,13 +43,13 @@ export async function generateInvitation(input: GenerateInvitation) {
         address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
     })
 
-    await page.setContent(output)
     if (!process.env.FUNCTIONS_EMULATOR) {
         page.setViewport({
             height: 1096,
             width: 793,
         })
     }
+    await page.setContent(output)
     const filename = 'invitation.png'
 
     const newDocRef = (await FirestoreRefs.invitations()).doc()
