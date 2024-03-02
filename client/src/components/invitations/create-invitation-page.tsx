@@ -93,8 +93,8 @@ export const CreateInvitationPage = () => {
                             {state.invitation}
                         </Button>
                     </div>
-                    {/* 724px is 840px (sidebar height) - 52px (navbar + breadcrumbs) */}
-                    <div className="relative flex h-screen max-h-[776px] w-full justify-center min-[700px]:max-h-[776px]">
+                    {/* 216px is Navbar (64px) + Breadcrumbs (52px) + Footer (100px). 116px is just Navbar and Breadcrumbs */}
+                    <div className="relative flex h-screen max-h-[calc(100vh-216px)] w-full justify-center min-[1060px]:max-h-[776px]">
                         <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
                         <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
                             <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
@@ -104,10 +104,10 @@ export const CreateInvitationPage = () => {
                                 <img src={InvitationTemplates[state.invitation as InvitationOption].envelope} />
                             </div>
                         </div>
-                        <div className="absolute m-6 max-h-[550px] min-[700px]:hidden">
+                        <div className="absolute m-6 min-[700px]:hidden">
                             <img
                                 src={InvitationTemplates[state.invitation as InvitationOption].invitation}
-                                className="max-h-[550px]"
+                                className="max-h-[calc(100vh-260px)]"
                             />
                         </div>
                     </div>
@@ -123,7 +123,7 @@ export const CreateInvitationPage = () => {
 
 function Sidebar() {
     return (
-        <section className="hidden h-screen min-[1060px]:block">
+        <section className="hidden h-[calc(100vh-64px)] min-[1060px]:block">
             <div className="flex h-full w-full border-l border-gray-200">
                 <div className="w-[380px]">
                     <CustomiseForm />

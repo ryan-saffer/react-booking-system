@@ -65,13 +65,13 @@ export const ViewInvitationPage = () => {
             <ScrollRestoration />
             <Navbar />
             <Toaster richColors />
-            <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
-                <div className="flex h-[710px] w-full max-w-[1220px] flex-col">
+            <main className="flex h-full w-full justify-center max-[1060px]:pb-[100px]">
+                <div className="flex h-[calc(100vh-208px)] w-full max-w-[1220px] flex-col min-[1060px]:h-[716px]">
                     <div className="flex items-center gap-2 p-2">
                         <p className="font-lilita text-lg">You've been invited to a Fizz Kidz party!</p>
                     </div>
 
-                    <div className="relative flex w-full flex-grow justify-center min-[1060px]:min-h-[646px]">
+                    <div className="relative flex h-screen w-full flex-grow justify-center min-[1060px]:min-h-[646px]">
                         <DropdownMenu dir="ltr">
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -94,7 +94,7 @@ export const ViewInvitationPage = () => {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <div className="relative flex h-screen max-h-[810px] w-full justify-center min-[1060px]:max-h-[724px]">
+                        <div className="relative flex h-[calc(100vh-208px)] w-full justify-center min-[1060px]:h-[724px]">
                             <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
                             {loading && (
                                 <div className="absolute left-1/2 top-1/2 z-20 flex translate-x-[-50%] translate-y-[-50%] items-center justify-center rounded-xl bg-white p-4">
@@ -118,11 +118,11 @@ export const ViewInvitationPage = () => {
                             </div>
                             <div
                                 className={cn(
-                                    'absolute m-6 mt-16 max-h-[450px] opacity-100 transition-opacity duration-700 ease-in min-[720px]:hidden',
+                                    'absolute m-6 mt-16 opacity-100 transition-opacity duration-700 ease-in min-[720px]:hidden',
                                     loading && 'opacity-0'
                                 )}
                             >
-                                <img src={invitationUrl} className="max-h-[650px]" />
+                                <img src={invitationUrl} className="max-h-[calc(100vh-290px)]" />
                             </div>
                         </div>
                     </div>
@@ -192,8 +192,8 @@ function Navbar() {
 
 function Sidebar() {
     return (
-        <section className="hidden h-screen min-[1060px]:block">
-            <div className="flex h-[765px] w-[380px] border-l border-gray-200">
+        <section className="hidden h-[765px] min-[1060px]:block">
+            <div className="flex h-full w-[380px] border-l border-gray-200">
                 <PartyDetails />
             </div>
         </section>
