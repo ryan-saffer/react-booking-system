@@ -66,6 +66,7 @@ export type Emails = {
         managerEmail: string
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
+        invitationsUrl: string
     }
 
     partyForm: {
