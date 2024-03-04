@@ -28,12 +28,13 @@ type Params = {
 export const ViewInvitationPage = () => {
     const { id } = useParams<Params>()
     const [searchParams] = useSearchParams()
-    console.log(searchParams.get('type'))
 
     const firebase = useFirebase()
 
     const [loading, setLoading] = useState(true)
     const [invitationUrl, setInvitationUrl] = useState('')
+
+    const [useBottomNav] = useState(Math.random() > 0.5)
 
     useEffect(() => {
         async function getUrl() {
@@ -67,11 +68,11 @@ export const ViewInvitationPage = () => {
             <Toaster richColors />
             <main className="flex h-full w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex h-[calc(100vh-208px)] w-full max-w-[1220px] flex-col min-[1060px]:h-[716px]">
-                    <div className="flex items-center gap-2 p-2">
-                        <p className="font-lilita text-lg">You've been invited to a Fizz Kidz party!</p>
+                    <div className="z-50 flex items-center gap-2 bg-white p-2">
+                        <p className="bg-clip-text font-lilita text-xl">You've been invited to a Fizz Kidz party!</p>
                     </div>
 
-                    <div className="relative flex h-screen w-full flex-grow justify-center min-[1060px]:min-h-[646px]">
+                    <div className="relative flex h-screen w-full flex-grow flex-col justify-center min-[1060px]:min-h-[646px]">
                         <DropdownMenu dir="ltr">
                             <DropdownMenuTrigger asChild>
                                 <Button
@@ -110,7 +111,7 @@ export const ViewInvitationPage = () => {
                                 <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
                                     <img src={invitationUrl} />
                                 </div>
-                                <div className="absolute left-1/2 top-1/2 z-10 w-[430px] max-w-[430px] translate-x-[-20%] translate-y-[-50%]">
+                                <div className="absolute left-1/2 top-1/2 z-10 w-[430px] translate-x-[-20%] translate-y-[-50%]">
                                     <img
                                         src={InvitationTemplates[searchParams.get('type') as InvitationOption].envelope}
                                     />
@@ -124,11 +125,16 @@ export const ViewInvitationPage = () => {
                             >
                                 <img src={invitationUrl} className="max-h-[calc(100vh-290px)]" />
                             </div>
+                            {!useBottomNav && (
+                                <div className="absolute top-[calc(100vh-208px)] z-50 hidden bg-white pb-4 max-[1060px]:block">
+                                    <PartyDetails viewUsed="scroll" />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
                 <Sidebar />
-                <BottomNav />
+                {useBottomNav && <BottomNav />}
             </main>
         </div>
     )
@@ -194,7 +200,7 @@ function Sidebar() {
     return (
         <section className="hidden h-[765px] min-[1060px]:block">
             <div className="flex h-full w-[380px] border-l border-gray-200">
-                <PartyDetails />
+                <PartyDetails viewUsed="sidebar" />
             </div>
         </section>
     )
@@ -205,7 +211,7 @@ type TForm = {
     email: string
 }
 
-function PartyDetails() {
+function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' }) {
     const { id } = useParams<Params>()
 
     const [submitting, setSubmitting] = useState(false)
@@ -225,6 +231,7 @@ function PartyDetails() {
                 name: values.name,
                 email: values.email,
                 invitationId: id!,
+                viewUsed,
             })
             setOpenDialog(true)
         } catch {
@@ -343,7 +350,7 @@ function BottomNav() {
                 <Drawer open={open} onOpenChange={setOpen}>
                     <DrawerContent className="twp h-4/5 px-4">
                         <ScrollArea>
-                            <PartyDetails />
+                            <PartyDetails viewUsed="drawer" />
                             <div className="mb-8" />
                         </ScrollArea>
                     </DrawerContent>

@@ -1,5 +1,6 @@
 import { DiscountCode, FreeHolidayProgramBooking, WithoutId } from 'fizz-kidz'
 
+import type { MixpanelEvent } from '../../../mixpanel/mixpanel-client'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { throwTrpcError } from '../../../utilities'
@@ -10,7 +11,16 @@ import { sendConfirmationEmail } from '../../core/send-confirmation-email'
 
 export type CreateDiscountCode = WithoutId<
     Omit<DiscountCode, 'expiryDate'> &
-        ({ expiryDate: Date } | { expiryDate: 'auto-upcoming'; name: string; email: string; invitationId: string })
+        (
+            | { expiryDate: Date }
+            | {
+                  expiryDate: 'auto-upcoming'
+                  name: string
+                  email: string
+                  invitationId: string
+                  viewUsed: MixpanelEvent['invitation-coupon-signup']['view']
+              }
+        )
 >
 
 export const holidayProgramsRouter = router({

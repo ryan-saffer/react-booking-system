@@ -8,6 +8,6 @@ export const InvitationTemplates: Record<InvitationOption, { invitation: string,
     'Bubbling Fun': { invitation: '/Invitation-Bubbling.png', envelope: '/Envelope-Bubbling.png' },
     'Bubbling Blue Fun': { invitation: '/Invitation-Bubbling-Blue.png', envelope: '/Envelope-Bubbling-Blue.png' },
     'Slime Time': { invitation: '/Invitation-Slime.png', envelope: '/Envelope-Slime.png' },
-    'Tye Dye': { invitation: '/Invitation-Tye-Dye.png', envelope: '/Envelope-Tye-Dye.png' },
-    'Taylor Swift': { invitation: '/Invitation-Swift.png', envelope: '/Envelope-Swift.png' }
+    'Tie Dye': { invitation: '/Invitation-Tye-Dye.png', envelope: '/Envelope-Tye-Dye.png' },
+    'Swiftie': { invitation: '/Invitation-Swift.png', envelope: '/Envelope-Swift.png' }
 }

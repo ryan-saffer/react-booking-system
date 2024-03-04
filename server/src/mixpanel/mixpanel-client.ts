@@ -49,9 +49,17 @@ export class MixpanelClient {
     }
 }
 
-type MixpanelEvent = {
+export type MixpanelEvent = {
     'invitation-generated': { invitationId: string; partyDate: Date }
-    'invitation-coupon-signup': { invitationId: string }
+    'invitation-coupon-signup': {
+        invitationId: string
+        view: // used the sidebar on desktop
+        | 'sidebar'
+            // used the mobile drawer
+            | 'drawer'
+            // used the section just sitting under the invite on mobile (no drawer)
+            | 'scroll'
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {

@@ -26,7 +26,7 @@ const Invitations: { name: InvitationOption; src: string }[] = [
         src: '/Invitation+Envelope-Glitz.png',
     },
     {
-        name: 'Taylor Swift',
+        name: 'Swiftie',
         src: '/Invitation+Envelope-Swift.png',
     },
     {
@@ -42,7 +42,7 @@ const Invitations: { name: InvitationOption; src: string }[] = [
         src: '/Invitation+Envelope-Slime.png',
     },
     {
-        name: 'Tye Dye',
+        name: 'Tie Dye',
         src: '/Invitation+Envelope-Tye-Dye.png',
     },
 ]

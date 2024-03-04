@@ -52,7 +52,10 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
         })
 
         const mixpanel = await MixpanelClient.getInstance()
-        await mixpanel.track('invitation-coupon-signup', { invitationId: discountCode.invitationId })
+        await mixpanel.track('invitation-coupon-signup', {
+            invitationId: discountCode.invitationId,
+            view: discountCode.viewUsed,
+        })
     } else {
         expiryDate = new Date(discountCode.expiryDate)
     }

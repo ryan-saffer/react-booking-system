@@ -33,5 +33,5 @@ export type InvitationOption =
     | 'Bubbling Fun'
     | 'Bubbling Blue Fun'
     | 'Slime Time'
-    | 'Tye Dye'
-    | 'Taylor Swift'
+    | 'Tie Dye'
+    | 'Swiftie'
