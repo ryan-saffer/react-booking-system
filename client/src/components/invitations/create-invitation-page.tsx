@@ -474,10 +474,8 @@ function SuccessDialog({
     const invitationText = `You're invited to ${childName}'s party!`
     const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
 
-    const combinedMessage = `${invitationText} | ${inviteUrl}`
-
     const copy = () => {
-        navigator.clipboard.writeText(combinedMessage)
+        navigator.clipboard.writeText(inviteUrl)
         toast.success('Invitation copied to clipboard!')
     }
 
@@ -517,7 +515,7 @@ function SuccessDialog({
                     <Separator className="mb-4 mt-4" />
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
                         <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
-                            <WhatsappShareButton id="whatsapp" title={invitationText} url={inviteUrl} separator=" | ">
+                            <WhatsappShareButton id="whatsapp" url={inviteUrl}>
                                 <SocialIcon network="whatsapp" style={{ width: 36, height: 36 }} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
@@ -526,7 +524,7 @@ function SuccessDialog({
                         </div>
                         <div
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
-                            onClick={() => window.open(`sms://?body=${encodeURIComponent(combinedMessage)}`)}
+                            onClick={() => window.open(`sms://?body=${encodeURIComponent(inviteUrl)}`)}
                         >
                             <MessageCircleMore id="sms" className="h-9 w-9" />
                             <Label htmlFor="sms" className="mt-2 cursor-pointer">
@@ -537,7 +535,7 @@ function SuccessDialog({
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
                             onClick={() =>
                                 window.open(
-                                    `mailto: ?subject=${encodeURIComponent(invitationText)}&body=${encodeURIComponent(combinedMessage)}`
+                                    `mailto: ?subject=${encodeURIComponent(invitationText)}&body=${encodeURIComponent(inviteUrl)}`
                                 )
                             }
                         >
