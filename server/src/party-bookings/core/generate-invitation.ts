@@ -87,4 +87,5 @@ const FileMap: Record<InvitationOption, string> = {
     'Bubbling Blue Fun': 'bubbling-blue.html',
     'Slime Time': 'slime.html',
     'Tye Dye': 'tye-dye.html',
+    'Taylor Swift': 'swift.html',
 }
