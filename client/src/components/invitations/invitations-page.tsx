@@ -84,7 +84,7 @@ export const CreateInvitationPage = () => {
                     </div>
                 </div>
                 <section>
-                    <div className="mt-0 grid max-w-5xl grid-cols-1 gap-x-32 gap-y-8 md:grid-cols-2  xl:grid-cols-3">
+                    <div className="mb-4 mt-0 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2  xl:grid-cols-3">
                         {Invitations.map((it) => (
                             <Link
                                 to={INVITATION_CREATE}
@@ -102,11 +102,12 @@ export const CreateInvitationPage = () => {
                                     rsvpNumber: searchParams.get('rsvpNumber') || state?.rsvpNumber || '',
                                     invitation: it.name,
                                 }}
-                                className="flex h-[260px] w-[260px] cursor-pointer flex-col p-4 hover:rounded-xl hover:bg-gray-100 min-[420px]:h-[320px] min-[420px]:w-[320px]"
                             >
-                                <img className="h-[260px] max-h-full max-w-full object-contain" src={it.src} />
-                                <div className="mt-2 flex flex-grow items-center justify-center">
-                                    <p className="text-center text-sm font-semibold">{it.name}</p>
+                                <div className="flex cursor-pointer flex-col gap-4 p-4 hover:rounded-xl hover:bg-gray-100">
+                                    <img className="w-[420px] object-contain" src={it.src} />
+                                    <div className="flex items-center justify-center">
+                                        <p className="text-center text-sm font-semibold">{it.name}</p>
+                                    </div>
                                 </div>
                             </Link>
                         ))}

@@ -40,6 +40,12 @@
             font-weight: normal;
         }
 
+        .img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .childName {
             -webkit-text-stroke-width: 1px;
             -webkit-text-stroke-color: #005E6D;
@@ -50,6 +56,7 @@
             width: 100%;
             display: flex;
             justify-content: center;
+            width: 100%;
         }
 
         .date {
@@ -90,9 +97,9 @@
 
 <body>
     <div style="position: relative; width: 100%; height: 100%">
-        <img src="https://imgur.com/K7Lt6EP.png" width="100%" height="100%"></img>
+        <img src="https://imgur.com/K7Lt6EP.png" class="img"></img>
 
-        <div class="childName" style="width:100%">{{ childName }}'s {{childAge}}th</div>
+        <div class="childName">{{ childName }}'s {{childAge}}th</div>
 
         <div class="date">{{ date }}</div>
 

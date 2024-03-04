@@ -40,6 +40,12 @@
             font-weight: normal;
         }
 
+        .img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .childName {
             -webkit-text-stroke-width: 1px;
             -webkit-text-stroke-color: #005E6D;
@@ -77,13 +83,13 @@
         }
 
         .address {
-            font-family: "Open Sans Condensed Light";
             position: absolute;
-            font-weight: 900;
             top: 950px;
-            width: 100%;
-            left: 90px;
-            font-size: 22px
+            left: 208px;
+            width: 70%;
+            font-family: "Open Sans Condensed Light";
+            font-weight: 900;
+            font-size: 22px;
         }
     </style>
 
@@ -91,7 +97,7 @@
 
 <body>
     <div style="position: relative; width: 100%; height: 100%">
-        <img src="https://imgur.com/bS2vzER.png" width="100%" height="100%"></img>
+        <img src="https://imgur.com/bS2vzER.png" class="img"></img>
 
         <div class="childName" style="width:100%">{{ childName }}'s {{childAge}}th</div>
 
