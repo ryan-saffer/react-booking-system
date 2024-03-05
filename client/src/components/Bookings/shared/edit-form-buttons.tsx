@@ -124,7 +124,6 @@ const EditFormButtons: React.FC<Props> = ({
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="h-12 w-12 p-0">
-                                    <span className="sr-only">Open menu</span>
                                     <MoreHorizontal className="h-5 w-5" />
                                 </Button>
                             </DropdownMenuTrigger>
