@@ -110,7 +110,7 @@
       {{/isMobile}}
       <mj-column width="100%">
         <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Cancellation
+          Cancellation Policy
         </mj-text>
         <mj-text color="#637381" font-size="14px" padding-top="0">
           While we would much prefer to not charge for a service that has not been received, please
