@@ -35,4 +35,6 @@ export type DiscountCode = {
     discountAmount: number
     code: string
     expiryDate: Date
+    numberOfUses: number
+    numberOfUsesAllocated: number
 }

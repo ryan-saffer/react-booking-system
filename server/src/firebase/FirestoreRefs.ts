@@ -101,4 +101,8 @@ export class FirestoreRefs {
     static async discountCodes() {
         return (await FirestoreClient.getInstance()).collection('discountCodes') as Collection<DiscountCode>
     }
+
+    static async discountCode(id: string) {
+        return (await this.discountCodes()).doc(id)
+    }
 }

@@ -10,7 +10,7 @@ import { scheduleHolidayProgram } from '../../core/schedule-holiday-program'
 import { sendConfirmationEmail } from '../../core/send-confirmation-email'
 
 export type CreateDiscountCode = WithoutId<
-    Omit<DiscountCode, 'expiryDate'> &
+    Omit<DiscountCode, 'expiryDate' | 'numberOfUses'> &
         (
             | { expiryDate: Date }
             | {
@@ -38,8 +38,8 @@ export const holidayProgramsRouter = router({
         .input((input: unknown) => input as CreateDiscountCode)
         .mutation(({ input }) => createDiscountCode(input)),
     checkDiscountCode: publicProcedure
-        .input((input: unknown) => input as string)
-        .mutation(({ input }) => checkDiscountCode(input)),
+        .input((input: unknown) => input as { code: string })
+        .mutation(({ input }) => checkDiscountCode(input.code)),
 })
 
 export const holidayPrograms = onRequestTrpc(holidayProgramsRouter)

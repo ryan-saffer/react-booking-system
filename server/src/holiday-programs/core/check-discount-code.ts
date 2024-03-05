@@ -8,6 +8,9 @@ export async function checkDiscountCode(code: string) {
         if (new Date() > discountCode.expiryDate) {
             return 'expired'
         }
+        if (discountCode.numberOfUses >= discountCode.numberOfUsesAllocated) {
+            return 'exhausted'
+        }
         return discountCode
     }
 

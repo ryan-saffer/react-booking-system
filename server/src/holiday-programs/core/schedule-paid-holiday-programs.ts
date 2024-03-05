@@ -1,3 +1,4 @@
+import { FieldValue } from 'firebase-admin/firestore'
 import { logger } from 'firebase-functions/v2'
 import { AcuityUtilities, PaidHolidayProgramBooking } from 'fizz-kidz'
 
@@ -50,6 +51,16 @@ async function scheduleHolidayPrograms(
     }
     // send confirmation email
     await sendConfirmationEmail(result)
+
+    // if using a discount code, update its number of uses
+    const code = programs[0].program.discountCode
+    if (code) {
+        try {
+            await DatabaseClient.updateDiscountCode(code, { numberOfUses: FieldValue.increment(1) })
+        } catch (err) {
+            logError('Error while updating discount code during holiday program registration', err, { code })
+        }
+    }
 
     return true
 }

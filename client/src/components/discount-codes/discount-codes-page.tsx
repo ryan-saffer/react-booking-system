@@ -113,6 +113,16 @@ export const DiscountCodesPage = () => {
                 cell: ({ row }) => <div className="text-center">{row.getValue('expiryDate')}</div>,
             },
             {
+                accessorKey: 'numberOfUsesAllocated',
+                header: () => <div className="text-center">Allocations</div>,
+                cell: ({ row }) => <div className="text-center">{row.getValue('numberOfUsesAllocated')}</div>,
+            },
+            {
+                accessorKey: 'numberOfUses',
+                header: () => <div className="text-center">Number of uses</div>,
+                cell: ({ row }) => <div className="text-center">{row.getValue('numberOfUses')}</div>,
+            },
+            {
                 id: 'actions',
                 cell: ({ row }) => {
                     return (
@@ -272,32 +282,54 @@ function Navbar() {
     )
 }
 
-type TForm = WithoutId<DiscountCode>
+type NumberOrString<T> = {
+    [P in keyof T]: T[P] extends number ? T[P] | string : T[P]
+}
+type TForm = WithoutId<Omit<DiscountCode, 'numberOfUses'>>
 
 function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
-    const form = useForm<Omit<TForm, 'discountAmount'> & { discountAmount: number | string }, void, TForm>({
+    const form = useForm<NumberOrString<TForm>>({
         defaultValues: {
             code: '',
             discountType: undefined,
             discountAmount: '',
             expiryDate: undefined,
+            numberOfUsesAllocated: 1,
         },
     })
 
     const { mutateAsync: createDiscount, isLoading } = trpc.holidayPrograms.createDiscountCode.useMutation()
 
-    const onSubmit = async (values: TForm) => {
-        if (values.discountType === 'percentage' && values.discountAmount > 100) {
+    const onSubmit = async (values: NumberOrString<TForm>) => {
+        const discountAmount =
+            typeof values.discountAmount === 'number' ? values.discountAmount : parseInt(values.discountAmount)
+        const numberOfUsesAllocated =
+            typeof values.numberOfUsesAllocated === 'number'
+                ? values.numberOfUsesAllocated
+                : parseInt(values.numberOfUsesAllocated)
+
+        if (values.discountType === 'percentage' && discountAmount > 100) {
             form.setError('discountAmount', { message: 'Percentage discount must be between 0 and 100.' })
+            return
+        }
+
+        if (discountAmount <= 0) {
+            form.setError('discountAmount', { message: 'Discount amount must be greather than 0' })
+            return
+        }
+
+        if (numberOfUsesAllocated < 0) {
+            form.setError('numberOfUsesAllocated', { message: 'Number of uses allocated must be greater than 0.' })
             return
         }
 
         try {
             await createDiscount({
                 discountType: values.discountType,
-                discountAmount: values.discountAmount,
+                discountAmount: discountAmount,
                 code: values.code,
                 expiryDate: values.expiryDate,
+                numberOfUsesAllocated: numberOfUsesAllocated,
             })
             toast.success('Discount code created!')
             close()
@@ -434,6 +466,25 @@ function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
                                             />
                                         </PopoverContent>
                                     </Popover>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            rules={{ required: true }}
+                            name="numberOfUsesAllocated"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Number of uses allocated</FormLabel>
+                                    <FormControl>
+                                        <Input id="numberOfUsesAllocated" autoComplete="off" type="number" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        The number of times this code can be used.
+                                        <br />
+                                        Booking multiple holiday programs at once only counts as one 'use'.
+                                    </FormDescription>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

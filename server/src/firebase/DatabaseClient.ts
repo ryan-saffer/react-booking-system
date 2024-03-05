@@ -21,6 +21,10 @@ type CreateDocOptions<T> = {
     ref?: Document<T>
 }
 
+export type UpdateDoc<T> = {
+    [P in keyof T]?: T[P] extends number ? UpdateDoc<T[P]> | FieldValue : UpdateDoc<T[P]>
+}
+
 class Client {
     /**
      * Create a firestore document, where the document id will be added to the document as `id`
@@ -48,7 +52,7 @@ class Client {
         return Promise.all(snap.docs.map((doc) => this.#convertTimestamps(doc.data())))
     }
 
-    async #updateDocument<T>(refPromise: Promise<Document<T>> | Document<T>, data: RecursivePartial<T>) {
+    async #updateDocument<T>(refPromise: Promise<Document<T>> | Document<T>, data: UpdateDoc<T>) {
         const ref = await refPromise
         return ref.set(data as any, { merge: true })
     }
@@ -261,6 +265,16 @@ class Client {
     async checkDiscountCode(code: string) {
         const collection = await FirestoreRefs.discountCodes()
         return this.#getDocuments(collection.where('code', '==', code))
+    }
+
+    async updateDiscountCode(code: string, discountCode: UpdateDoc<DiscountCode>) {
+        const collection = await FirestoreRefs.discountCodes()
+        const snap = await collection.where('code', '==', code).get()
+        if (snap.docs.length > 0) {
+            // guaranteed only one of each code - see 'createDiscountCode()'
+            const existingCode = snap.docs[0].data()
+            this.#updateDocument(FirestoreRefs.discountCode(existingCode.id), discountCode)
+        }
     }
 }
 

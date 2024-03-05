@@ -232,6 +232,7 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                 email: values.email,
                 invitationId: id!,
                 viewUsed,
+                numberOfUsesAllocated: 1,
             })
             setOpenDialog(true)
         } catch {

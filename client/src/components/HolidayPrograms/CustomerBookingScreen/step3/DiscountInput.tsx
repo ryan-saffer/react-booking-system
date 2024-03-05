@@ -31,11 +31,13 @@ const DiscountInput: React.FC<Props> = ({ setDiscount, total }) => {
         setError('')
 
         try {
-            const result = await checkDiscountCodeMutation.mutateAsync(value)
+            const result = await checkDiscountCodeMutation.mutateAsync({ code: value })
             if (result === 'not-found') {
                 setError('Invalid discount code.')
             } else if (result === 'expired') {
-                setError(`Discount code '${value}' has expired.`)
+                setError(`The discount code '${value}' has expired.`)
+            } else if (result === 'exhausted') {
+                setError(`The discount code '${value}' has been exhausted.`)
             } else {
                 const resultTransformed = { ...result, expiryDate: new Date(result.expiryDate) }
                 if (total - calculateDiscountedAmount(total, resultTransformed) < 0) {

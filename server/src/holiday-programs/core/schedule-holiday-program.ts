@@ -1,4 +1,5 @@
 import { AcuityConstants, HolidayProgramBooking } from 'fizz-kidz'
+
 import { AcuityClient } from '../../acuity/core/acuity-client'
 
 export async function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
@@ -11,7 +12,7 @@ export async function scheduleHolidayProgram(booking: HolidayProgramBooking, pay
         lastName: booking.parentLastName,
         email: booking.parentEmail,
         phone: booking.parentPhone,
-        certificate: booking.discountCode,
+        certificate: booking.discountCode === 'allday' ? 'allday' : undefined,
         paid: true,
         fields: [
             {

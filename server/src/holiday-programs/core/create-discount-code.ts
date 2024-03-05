@@ -65,6 +65,8 @@ export async function createDiscountCode(discountCode: CreateDiscountCode) {
         discountAmount: discountCode.discountAmount,
         code: discountCode.code,
         expiryDate,
+        numberOfUses: 0,
+        numberOfUsesAllocated: discountCode.numberOfUsesAllocated,
     })
 
     if (discountCode.expiryDate === 'auto-upcoming') {
