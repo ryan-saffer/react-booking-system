@@ -1,5 +1,6 @@
 import { Location, capitalise } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
+import { Toaster } from 'sonner'
 
 import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 
@@ -27,6 +28,7 @@ export const PartiesAndEvents = () => {
 
     return (
         <>
+            <Toaster richColors />
             {loading && [1, 2, 3].map((idx) => <BookingsSkeleton key={idx} />)}
             {bookings.status === 'loaded' && events.status === 'loaded' && !loading && (
                 <Grid item xs sm md>

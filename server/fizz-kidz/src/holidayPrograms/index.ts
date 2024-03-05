@@ -28,3 +28,11 @@ export type PaidHolidayProgramBooking = BookedPaidHolidayProgram | UnbookedPaidH
 export type FreeHolidayProgramBooking = BaseHolidayProgramBooking
 
 export type HolidayProgramBooking = PaidHolidayProgramBooking | FreeHolidayProgramBooking
+
+export type DiscountCode = {
+    id: string
+    discountType: 'percentage' | 'price'
+    discountAmount: number
+    code: string
+    expiryDate: Date
+}

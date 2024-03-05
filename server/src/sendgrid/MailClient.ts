@@ -132,7 +132,7 @@ export class MailClient {
                         subject: subject || 'Thanks for coming to your first session!',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'term_continuation_email.html',
+                    template: 'term_continuation_email.mjml',
                     useMjml: true,
                 }
             case 'afterSchoolUnenrolmentConfirmation':
@@ -406,6 +406,34 @@ export class MailClient {
                     },
                     template: 'wwcc_reminder.html',
                     useMjml: false,
+                }
+            case 'createDiscountCode':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Here is your unique discount code!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'discount_code.mjml',
+                    useMjml: true,
+                }
+            case 'invitationGuests':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'We hope you had fun at Fizz Kidz!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'guest_of_party.mjml',
+                    useMjml: true,
                 }
             default: {
                 const exhaustiveCheck: never = email

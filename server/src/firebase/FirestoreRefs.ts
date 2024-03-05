@@ -2,10 +2,12 @@ import { CollectionGroup } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
     Booking,
+    DiscountCode,
     Employee,
     Event,
     FirestoreBooking,
     HolidayProgramBooking,
+    Invitation,
     PaidHolidayProgramBooking,
 } from 'fizz-kidz'
 
@@ -86,5 +88,17 @@ export class FirestoreRefs {
 
     static async employee(employeeId: string) {
         return (await this.employees()).doc(employeeId)
+    }
+
+    static async invitations() {
+        return (await FirestoreClient.getInstance()).collection('invitations') as Collection<Invitation>
+    }
+
+    static async invitation(id: string) {
+        return (await this.invitations()).doc(id)
+    }
+
+    static async discountCodes() {
+        return (await FirestoreClient.getInstance()).collection('discountCodes') as Collection<DiscountCode>
     }
 }

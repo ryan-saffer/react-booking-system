@@ -71,12 +71,6 @@ export type Class = {
     appointmentTypeID: number
 }
 
-export type Certificate = {
-    discountType: 'percentage' | 'price'
-    discountAmount: number
-    certificate: string
-}
-
 export type Calendar = {
     id: number
     name: string

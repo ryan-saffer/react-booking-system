@@ -9,6 +9,7 @@
         "baseUrl": ".",
         "paths": {
             "@components/*": ["src/components/*"],
+            "@ui-components/*": ["src/ui-components/ui/*"],
             "@constants/*": ["src/constants/*"],
             "@drawables/*": ["src/drawables/*"],
             "@utils/*": ["src/utilities/*"],

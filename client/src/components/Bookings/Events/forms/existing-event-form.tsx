@@ -12,6 +12,7 @@ import { combineDateAndTime } from '@utils/dateUtils'
 import BaseEventForm, { Form } from './base-event-form'
 import { trpc } from '@utils/trpc'
 import { Grid, TextField, Typography, styled } from '@mui/material'
+import { toast } from 'sonner'
 
 type Props = {
     event: Event
@@ -35,7 +36,6 @@ const Root = styled('div')({
 const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false)
-    const [success, setSuccess] = useState(false)
 
     const disabled = !editing || loading
 
@@ -121,12 +121,9 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
 
             await updateEventMutation.mutateAsync(updatedBooking)
 
-            setSuccess(true)
-            setTimeout(() => {
-                setEditing(false)
-                setSuccess(false)
-                setDate(DateTime.fromJSDate(event.startTime))
-            }, 1000)
+            setEditing(false)
+            setDate(DateTime.fromJSDate(event.startTime))
+            toast.success('Event updated.')
         } catch {
             displayError('There was an error updating the event')
         } finally {
@@ -138,12 +135,9 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
         setLoading(true)
         try {
             await deleteEventMutation.mutateAsync(event)
-            setSuccess(true)
-            setTimeout(() => {
-                setEditing(false)
-                setSuccess(false)
-                setDate(DateTime.fromJSDate(event.startTime))
-            }, 1000)
+            setEditing(false)
+            setDate(DateTime.fromJSDate(event.startTime))
+            toast.success('Event deleted.')
         } catch (err) {
             displayError('There was an error deleting the event')
         } finally {
@@ -288,7 +282,6 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
             <EditFormButtons
                 loading={loading}
                 editing={editing}
-                success={success}
                 onStartEditing={() => setEditing(true)}
                 onCancelEditing={() => {
                     reset()

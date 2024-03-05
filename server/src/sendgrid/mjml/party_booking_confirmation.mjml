@@ -127,22 +127,27 @@
       </mj-column>
       <mj-column width="100%">
         <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Useful Links
+          Invitations
         </mj-text>
-        <mj-text color="#637381" font-size="14px" padding-top="0">
-          <ul>
-            {{^isMobile}}
+        <mj-text color="#637381" font-size="14px">Fizz Kidz parties are special, and your guests should know that too! Use our beautiful invitation generator to create an invitation and share it with {{childName}}'s friends!</mj-text>
+        <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #9ecc47 solid">
+          Create an invitation ↗️
+        </mj-button>
+      </mj-column>
+      <mj-column width="100%">
+        {{^isMobile}}
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+            Useful Links
+          </mj-text>
+          <mj-text color="#637381" font-size="14px" padding-top="0">
+            <ul>
               <li><a href="https://drive.google.com/file/d/123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD/view?usp=sharing">Here
                   is a document of FAQs.</a> We highly recommend giving this a read over :)
               </li>
               <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
-            {{/isMobile}}
-            <li><a href="https://www.fizzkidz.com.au/invitations">Click here</a> to view and download
-              our
-              awesome printable
-              invitations!</li>
-          </ul>
-        </mj-text>
+            </ul>
+          </mj-text>
+        {{/isMobile}}
         <mj-text color="#637381" font-size="16px">
           We can't wait to PARTY with you soon,
         </mj-text>

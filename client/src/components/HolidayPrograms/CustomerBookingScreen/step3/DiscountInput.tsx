@@ -1,5 +1,5 @@
 import { Button, Input, Popover, Typography } from 'antd'
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import { DiscountCode } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
@@ -7,23 +7,17 @@ import { trpc } from '@utils/trpc'
 
 import { calculateDiscountedAmount } from '../utilities'
 
-const AppointmentTypeId =
-    import.meta.env.VITE_ENV === 'prod'
-        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
-        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
-
 type Props = {
-    email: string
-    setDiscount: Dispatch<SetStateAction<AcuityTypes.Api.Certificate | undefined>>
+    setDiscount: Dispatch<SetStateAction<DiscountCode | undefined>>
     total: number
 }
 
-const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
+const DiscountInput: React.FC<Props> = ({ setDiscount, total }) => {
     const [value, setValue] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const checkCertificateMutation = trpc.acuity.checkCertificate.useMutation()
+    const checkDiscountCodeMutation = trpc.holidayPrograms.checkDiscountCode.useMutation()
 
     const validateDiscount = async () => {
         // do not allow the 'allday' discount code
@@ -37,21 +31,20 @@ const DiscountInput: React.FC<Props> = ({ email, setDiscount, total }) => {
         setError('')
 
         try {
-            const result = await checkCertificateMutation.mutateAsync({
-                appointmentTypeId: AppointmentTypeId,
-                certificate: value,
-                email,
-            })
-            if ('error' in result) {
-                setError(result.error || 'Invalid discount code')
-            } else if ('certificate' in result) {
-                if (total - calculateDiscountedAmount(total, result) < 0) {
+            const result = await checkDiscountCodeMutation.mutateAsync(value)
+            if (result === 'not-found') {
+                setError('Invalid discount code.')
+            } else if (result === 'expired') {
+                setError(`Discount code '${value}' has expired.`)
+            } else {
+                const resultTransformed = { ...result, expiryDate: new Date(result.expiryDate) }
+                if (total - calculateDiscountedAmount(total, resultTransformed) < 0) {
                     setError(
                         `Discount code amount of $${result.discountAmount} is greater than the total of $${total}.`
                     )
                 } else {
                     setValue('')
-                    setDiscount(result)
+                    setDiscount(resultTransformed)
                 }
             }
         } catch (err: any) {

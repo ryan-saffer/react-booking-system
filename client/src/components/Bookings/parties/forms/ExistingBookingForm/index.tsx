@@ -15,6 +15,7 @@ import {
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 import {
     Checkbox,
@@ -36,8 +37,8 @@ import { capitalise } from '../../../../../utilities/stringUtilities'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
 import WithErrorDialog, { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
 import { useScopes } from '../../../../Hooks/UseScopes'
-import EditFormButtons from '../../../shared/edit-form-buttons'
 import { useDateNavigation } from '../../../date-navigation/date-navigation.hooks'
+import EditFormButtons from '../../../shared/edit-form-buttons'
 import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import { ExistingBookingFormFields } from './types'
@@ -76,12 +77,12 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
     const updateBookingMutation = trpc.parties.updatePartyBooking.useMutation()
     const deleteBookingMutation = trpc.parties.deletePartyBooking.useMutation()
+    const getPartyFormUrl = trpc.parties.getPartyFormUrl.useMutation()
 
     const { setDate } = useDateNavigation()
 
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [success, setSuccess] = useState(false)
 
     const displayAddress = formValues.type.value === 'mobile'
     const displayDateTimeLocation = editing
@@ -209,17 +210,12 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         try {
             await updateBookingMutation.mutateAsync({ bookingId: booking.id, booking: mergedBooking })
             setLoading(false)
-            setSuccess(true)
-            setTimeout(() => {
-                // let user see success for a second, then refesh
-                setEditing(false)
-                setSuccess(false)
-                setDate(DateTime.fromJSDate(formValues.date.value))
-            }, 1000)
+            setEditing(false)
+            setDate(DateTime.fromJSDate(formValues.date.value))
+            toast.success('Party updated.')
         } catch (err) {
             console.error(err)
             setLoading(false)
-            setSuccess(false)
             displayError('Unable to update the booking. Please try again.\nError details: ' + err)
         }
     }
@@ -234,17 +230,12 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 type: booking.type,
             })
             setLoading(false)
-            setSuccess(true)
-            setTimeout(() => {
-                // let user see success for a second, then refesh
-                setEditing(false)
-                setSuccess(false)
-                setDate(DateTime.fromJSDate(formValues.date.value)) //  triggers firestore subscription to run again
-            }, 1000)
+            setEditing(false)
+            setDate(DateTime.fromJSDate(formValues.date.value)) //  triggers firestore subscription to run again
+            toast.success('Booking deleted.')
         } catch (err) {
             console.error(err)
             setLoading(false)
-            setSuccess(false)
             displayError('Unable to delete the booking. Please try again.\nError details: ' + err)
         }
     }
@@ -760,7 +751,6 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
             <EditFormButtons
                 loading={loading}
                 editing={editing}
-                success={success}
                 onStartEditing={handleEdit}
                 onCancelEditing={cancelEdit}
                 onDelete={() => {
@@ -772,6 +762,23 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                     })
                 }}
                 onSave={handleSubmit}
+                menu={[
+                    {
+                        label: 'Get party form link',
+                        action: async () => {
+                            setLoading(true)
+                            try {
+                                const url = await getPartyFormUrl.mutateAsync({ bookingId: booking.id })
+                                navigator.clipboard.writeText(url)
+                                toast.success('Party form link copied to clipboard.')
+                            } catch (err) {
+                                console.error(err)
+                                toast.error('Unable to get party form link.')
+                            }
+                            setLoading(false)
+                        },
+                    },
+                ]}
             />
         </Root>
     )

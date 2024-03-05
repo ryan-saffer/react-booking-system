@@ -1,13 +1,3 @@
 .table :global(.ant-table-caption) {
     margin: 9px;
 }
-
-.table .actionButton {
-    position: absolute;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    top: 0;
-    right: 32px;
-    height: 61px;
-}

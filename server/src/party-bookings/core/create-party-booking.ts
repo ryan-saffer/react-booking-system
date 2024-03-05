@@ -70,6 +70,28 @@ export async function createPartyBooking(_booking: Booking) {
         logError(`error adding contact to hubspot: '${booking.parentEmail}'`, err)
     }
 
+    // create the personalised invite url
+    const startTime = `${DateTime.fromJSDate(booking.dateTime.toDate(), {
+        zone: 'Australia/Melbourne',
+    }).toFormat('h:mm a')} - ${DateTime.fromJSDate(end, {
+        zone: 'Australia/Melbourne',
+    }).toFormat('h:mm a')}`
+
+    const params = [
+        `childName=${encodeURIComponent(booking.childName)}`,
+        `childAge=${encodeURIComponent(booking.childAge)}`,
+        `date=${encodeURIComponent(booking.dateTime.toDate().toISOString())}`,
+        `time=${encodeURIComponent(startTime)}`,
+        `type=${encodeURIComponent(booking.type)}`,
+        `studio=${encodeURIComponent(booking.location)}`,
+        `address=${encodeURIComponent(booking.address)}`,
+        `rsvpName=${encodeURIComponent(booking.parentFirstName)}`,
+        `rsvpDate=${encodeURIComponent(DateTime.fromJSDate(booking.dateTime.toDate()).minus({ days: 14 }).toISO())}`,
+        `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
+    ]
+
+    const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
+
     const manager = getManager(booking.location)
 
     if (booking.sendConfirmationEmail) {
@@ -100,6 +122,7 @@ export async function createPartyBooking(_booking: Booking) {
                     managerMobile: manager.mobile,
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
+                    invitationsUrl,
                 },
                 { replyTo: manager.email }
             )

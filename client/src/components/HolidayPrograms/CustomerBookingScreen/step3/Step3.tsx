@@ -1,5 +1,5 @@
 import { Result } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
+import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useEffect, useMemo, useState } from 'react'
 
@@ -39,7 +39,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
         clientSecret: '',
     })
     const [error, setError] = useState(false)
-    const [discount, setDiscount] = useState<AcuityTypes.Api.Certificate | undefined>(undefined)
+    const [discount, setDiscount] = useState<DiscountCode | undefined>(undefined)
 
     const createPaymentIntentMutation = trpc.stripe.createPaymentIntent.useMutation()
     const updatePaymentIntentMutation = trpc.stripe.updatePaymentIntent.useMutation()
@@ -83,11 +83,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             dateTime: item.dateTime,
             // if using a discount code, all individual prices are the full amount
             // if not using a discount code, set according to if each individual item is discounted (ie same day)
-            amount: discount?.certificate
-                ? PROGRAM_PRICE
-                : item.discounted
-                ? PROGRAM_PRICE - DISCOUNT_PRICE
-                : PROGRAM_PRICE,
+            amount: discount?.code ? PROGRAM_PRICE : item.discounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE,
         }))
 
     useEffect(() => {
@@ -171,7 +167,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                 discount={discount}
                 setDiscount={setDiscount}
             />
-            <DiscountInput email={form.parentEmail} setDiscount={setDiscount} total={originalTotal} />
+            <DiscountInput setDiscount={setDiscount} total={originalTotal} />
             {!isFree && (
                 <Elements stripe={stripePromise} options={options}>
                     <Payment
@@ -182,11 +178,11 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                     />
                 </Elements>
             )}
-            {isFree && discount?.certificate && (
+            {isFree && discount?.code && (
                 <FreeConfirmationButton
                     form={form}
                     selectedClasses={selectedClasses}
-                    discountCode={discount?.certificate}
+                    discountCode={discount?.code}
                     setError={setError}
                 />
             )}

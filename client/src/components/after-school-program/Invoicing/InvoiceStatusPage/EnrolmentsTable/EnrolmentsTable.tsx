@@ -1,12 +1,13 @@
-import { Button, Dropdown, MenuProps, Space, Table, Tag, Typography } from 'antd'
+import { Button, Dropdown, MenuProps, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { AfterSchoolEnrolment, PriceWeekMap } from 'fizz-kidz'
+import { AcuityTypes, AfterSchoolEnrolment, PriceWeekMap } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { styled } from '@mui/material/styles'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { trpc } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
@@ -34,6 +35,8 @@ const Root = styled('div')({
 type Props = {
     enrolments: AfterSchoolEnrolment[]
     calendar: string
+    appointmentTypes: AcuityTypes.Api.AppointmentType[]
+    onAppointmentTypeChange: (id: number) => void
 } & ConfirmationDialogProps
 
 type TableData = {
@@ -72,7 +75,13 @@ function getAppointmentWeekRange(enrolments: AfterSchoolEnrolment[]) {
     return output.sort()
 }
 
-const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmationDialog }) => {
+const _EnrolmentsTable: React.FC<Props> = ({
+    enrolments,
+    calendar,
+    appointmentTypes,
+    onAppointmentTypeChange,
+    showConfirmationDialog,
+}) => {
     const [loading, setLoading] = useState(true)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
@@ -369,17 +378,26 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
                 pagination={false}
                 size="small"
                 caption={
-                    <>
-                        <Typography.Title level={5} style={{ textAlign: 'center', margin: 9 }}>
-                            {calendar}
-                        </Typography.Title>
+                    <div className="twp flex items-center justify-between gap-4">
+                        <Select onValueChange={(it) => onAppointmentTypeChange(parseInt(it))}>
+                            <SelectTrigger className="w-full flex-grow text-center text-xl [&>span]:w-full">
+                                <SelectValue className="w-full" placeholder={calendar} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {appointmentTypes.map((type) => (
+                                    <SelectItem className="text-md" value={`${type.id}`} key={type.id}>
+                                        {type.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         <Dropdown
                             placement="bottomRight"
                             menu={{ items: menu, onClick: handleActionButtonClick }}
                             trigger={['click']}
                         >
                             <div className={styles.actionButton}>
-                                <Button loading={loading} disabled={!hasSelected}>
+                                <Button className="h-10" loading={loading} disabled={!hasSelected}>
                                     <Space>
                                         Action
                                         <DownOutlined />
@@ -387,7 +405,7 @@ const _EnrolmentsTable: React.FC<Props> = ({ enrolments, calendar, showConfirmat
                                 </Button>
                             </div>
                         </Dropdown>
-                    </>
+                    </div>
                 }
                 rowSelection={rowSelection}
                 dataSource={data}

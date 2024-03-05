@@ -137,16 +137,6 @@ export class AcuityClient {
         return this._request<AcuityTypes.Api.Calendar[]>(`/calendars`)
     }
 
-    checkCertificate(
-        certificate: string,
-        appointmentTypeId: number,
-        email: string
-    ): Promise<AcuityTypes.Api.Certificate> {
-        return this._request<AcuityTypes.Api.Certificate>(
-            `/certificates/check?certificate=${certificate}&appointmentTypeID=${appointmentTypeId}&email=${email}`
-        )
-    }
-
     updateLabel(params: UpdateLabelParams) {
         const labelMap: { [key in Exclude<Label, 'none'>]: number } = {
             'checked-in': AcuityConstants.Labels.CHECKED_IN,

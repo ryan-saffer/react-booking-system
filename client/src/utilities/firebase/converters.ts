@@ -9,3 +9,14 @@ export function convertTimestamps<T extends object>(input: T): T {
     })
     return data
 }
+
+export const timestampConverter = {
+    fromFirestore<T extends object>(snapshot: firebase.firestore.QueryDocumentSnapshot<T>): T {
+        const data = snapshot.data()
+        return convertTimestamps(data)
+    },
+
+    toFirestore<T>(data: T) {
+        return data
+    },
+}

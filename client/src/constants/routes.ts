@@ -15,3 +15,7 @@ export const HOLIDAY_PROGRAM_CUSTOMER_CONFIRMATION_SCREEN = '/holiday-programs/c
 export const PAYROLL = '/payroll'
 export const ONBOARDING = '/onboarding'
 export const CREATIONS = '/creations'
+export const INVITATIONS = '/invitations'
+export const INVITATION_CREATE = '/invitation/create'
+export const INVITATION_VIEW = '/invitation/:id'
+export const DISCOUNT_CODES = '/discount-codes'

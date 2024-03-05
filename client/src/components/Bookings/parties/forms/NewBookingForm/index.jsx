@@ -340,6 +340,7 @@ const _NewBookingForm = (props) => {
                 <Grid item xs={6} sm={3}>
                     <DatePicker
                         label="Party date"
+                        orientation="portrait"
                         value={formValues.date.value ? DateTime.fromJSDate(formValues.date.value) : null}
                         onChange={(e) => handleFormChange(e, 'date')}
                         format="dd/LL/yyyy"

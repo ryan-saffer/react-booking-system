@@ -191,6 +191,34 @@ const router = createBrowserRouter([
             return { Component: withAuthorization([], CreationsPage) }
         },
     },
+    {
+        path: ROUTES.INVITATIONS,
+        lazy: async () => {
+            const { CreateInvitationPage } = await import('../invitations/invitations-page.js')
+            return { Component: CreateInvitationPage }
+        },
+    },
+    {
+        path: ROUTES.INVITATION_CREATE,
+        lazy: async () => {
+            const { CreateInvitationPage: InvitationV2 } = await import('../invitations/create-invitation-page.js')
+            return { Component: InvitationV2 }
+        },
+    },
+    {
+        path: ROUTES.INVITATION_VIEW,
+        lazy: async () => {
+            const { ViewInvitationPage } = await import('../invitations/view-invitation-page.js')
+            return { Component: ViewInvitationPage }
+        },
+    },
+    {
+        path: ROUTES.DISCOUNT_CODES,
+        lazy: async () => {
+            const { DiscountCodesPage } = await import('../discount-codes/discount-codes-page.js')
+            return { Component: withAuthorization(['ADMIN'], DiscountCodesPage) }
+        },
+    },
 ])
 
 const _App = () => {
@@ -221,6 +249,7 @@ const _App = () => {
             ],
         })
     )
+
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>

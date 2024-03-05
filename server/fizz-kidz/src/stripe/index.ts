@@ -1,4 +1,4 @@
-import * as ApiTypes from '../acuity/types/apiTypes'
+import { DiscountCode } from '..'
 
 export type CreatePaymentIntentParams = {
     name: string
@@ -8,7 +8,7 @@ export type CreatePaymentIntentParams = {
     description: string
     programs: { childName: string; dateTime: string; amount: number }[]
     programType: 'holiday_program' | 'science_club'
-    discount: ApiTypes.Certificate | undefined
+    discount: DiscountCode | undefined
 }
 
 export type CreatePaymentIntentResponse = {
@@ -26,5 +26,5 @@ export type UpdatePaymentIntentParams = {
     id: string
     amount: number
     programs: { childName: string; dateTime: string; amount: number }[]
-    discount: ApiTypes.Certificate | undefined
+    discount: DiscountCode | undefined
 }
