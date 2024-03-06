@@ -86,7 +86,9 @@ export async function createPartyBooking(_booking: Booking) {
         `studio=${encodeURIComponent(booking.location)}`,
         `address=${encodeURIComponent(booking.address)}`,
         `rsvpName=${encodeURIComponent(booking.parentFirstName)}`,
-        `rsvpDate=${encodeURIComponent(DateTime.fromJSDate(booking.dateTime.toDate()).minus({ days: 14 }).toISO())}`,
+        `rsvpDate=${encodeURIComponent(
+            DateTime.fromJSDate(booking.dateTime.toDate(), { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO()
+        )}`,
         `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
     ]
 

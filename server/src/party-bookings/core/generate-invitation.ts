@@ -38,8 +38,8 @@ export async function generateInvitation(input: GenerateInvitation) {
     const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, {
         ...input,
-        date: DateTime.fromJSDate(input.date).toFormat('dd/LL/yyyy'),
-        rsvpDate: DateTime.fromJSDate(input.rsvpDate).toFormat('dd/LL/yyyy'),
+        date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
+        rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
     })
 
