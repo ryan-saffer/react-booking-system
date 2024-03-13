@@ -1,5 +1,5 @@
 import { InvitationOption } from 'fizz-kidz'
-import { Download, ExternalLink, Loader2, Menu } from 'lucide-react'
+import { ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ScrollRestoration, useParams, useSearchParams } from 'react-router-dom'
@@ -11,7 +11,6 @@ import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
 import { Dialog, DialogContent } from '@ui-components/dialog'
 import { Drawer, DrawerContent } from '@ui-components/drawer'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { ScrollArea } from '@ui-components/scroll-area'
@@ -48,19 +47,6 @@ export const ViewInvitationPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const downloadInvitation = async () => {
-        const response = await fetch(invitationUrl)
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = 'Fizz Kidz Invitation.png'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
-    }
-
     return (
         <div className="twp">
             <ScrollRestoration />
@@ -73,30 +59,8 @@ export const ViewInvitationPage = () => {
                     </div>
 
                     <div className="relative flex h-screen w-full flex-grow flex-col justify-center min-[1060px]:min-h-[646px]">
-                        <DropdownMenu dir="ltr">
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    className={cn(
-                                        'absolute right-2 top-2 z-20 transition-opacity duration-700 ease-in',
-                                        loading && 'opacity-0'
-                                    )}
-                                    variant="outline"
-                                >
-                                    <Menu className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="mr-2 w-56 min-[1060px]:mr-44">
-                                <DropdownMenuItem
-                                    className="flex h-6 cursor-pointer items-center justify-between"
-                                    onClick={downloadInvitation}
-                                >
-                                    <span>Download Invitation</span>
-                                    <Download className="h-4 w-4" />
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                         <div className="relative flex h-[calc(100vh-208px)] w-full justify-center min-[1060px]:h-[724px]">
-                            <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
+                            <div className="pattern-opacity-30 pattern-wavy absolute h-full w-full pattern-bg-white pattern-purple-400 pattern-size-1"></div>
                             {loading && (
                                 <div className="absolute left-1/2 top-1/2 z-20 flex translate-x-[-50%] translate-y-[-50%] items-center justify-center rounded-xl bg-white p-4">
                                     <Loader2 className="animate-spin" />
