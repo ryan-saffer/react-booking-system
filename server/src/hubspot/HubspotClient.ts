@@ -64,6 +64,9 @@ export class HubspotClient {
         } catch (err: any) {
             if (err.code === 409) {
                 // a way to update by email address. See 'Please note' section - https://developers.hubspot.com/docs/api/crm/contacts
+                // this isn't ideal, since properties that allow multiple values will be overwritten here with a single value.
+                // ie. if a birthday party guest signs up for a holiday program, their service will only be holiday program, and not both party and holiday program.
+                // can improve by first fetching the existing customer, and merging such fields.
                 await this.#hubspot.apiRequest({
                     method: 'PATCH',
                     path: `/crm/v3/objects/contacts/${email}?idProperty=email`,

@@ -14,7 +14,6 @@ import { Drawer, DrawerContent } from '@ui-components/drawer'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { ScrollArea } from '@ui-components/scroll-area'
-import { generateRandomString } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
@@ -182,21 +181,16 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
     const [openDialog, setOpenDialog] = useState(false)
 
     const form = useForm<TForm>({ defaultValues: { name: '', email: '' } })
-    const createDiscountCodeMutation = trpc.holidayPrograms.createDiscountCode.useMutation()
+    const createDiscountCodeMutation = trpc.holidayPrograms.createDiscountCodeFromInvitation.useMutation()
 
     const onSubmit = async (values: TForm) => {
         setSubmitting(true)
         try {
             await createDiscountCodeMutation.mutateAsync({
-                discountType: 'percentage',
-                discountAmount: 10,
-                code: `${values.name}-${generateRandomString(5)}`,
-                expiryDate: 'auto-upcoming',
                 name: values.name,
                 email: values.email,
                 invitationId: id!,
                 viewUsed,
-                numberOfUsesAllocated: 1,
             })
             setOpenDialog(true)
         } catch {

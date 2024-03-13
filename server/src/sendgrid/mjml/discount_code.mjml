@@ -41,7 +41,7 @@
           {{name}},
         </mj-text>
         <mj-text color="#637381" font-size="16px">
-          Welcome to Fizz Kidz! How fun, to have a unique discount code to use.
+          Welcome to Fizz Kidz! How fun - you have a unique discount code to use.
         </mj-text>
         <mj-text color="#637381" font-size="16px">
           Your code gives you <span class="underline">10% off our upcoming holiday programs</span> at any Fizz Kidz Studio you like!
@@ -50,7 +50,7 @@
         <mj-text color="#637381" font-size="16px">
           The discount code will expire on {{expiryDate}}. So book this week!
         </mj-text>
-        <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="https://www.fizzkidz.com.au" width="300px" border="1px #9ecc47 solid">
+        <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="https://www.fizzkidz.com.au/holiday-programs" width="300px" border="1px #9ecc47 solid">
           Holiday Program Schedule ↗️
         </mj-button>
         <mj-text color="#637381" font-size="16px">
@@ -60,7 +60,7 @@
           The Fizz Kidz team
         </mj-text>
         <mj-text color="#637381" font-size="16px">
-          P.S. if you have any questions or want to book your child's birthday party, simply hit reply and we will respond straight away!
+          P.S. If you have any questions or want to book your child's birthday party, simply hit reply!
         </mj-text>
       </mj-column>
     </mj-section>
