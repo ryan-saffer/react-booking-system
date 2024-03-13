@@ -1,4 +1,5 @@
 import { logger } from 'firebase-functions/v2'
+import { InvitationOption } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
 
 import { env } from '../init'
@@ -50,7 +51,7 @@ export class MixpanelClient {
 }
 
 export type MixpanelEvent = {
-    'invitation-generated': { invitationId: string; partyDate: Date }
+    'invitation-generated': { invitationId: string; partyDate: Date; invitation: InvitationOption }
     'invitation-coupon-signup': {
         invitationId: string
         view: // used the sidebar on desktop

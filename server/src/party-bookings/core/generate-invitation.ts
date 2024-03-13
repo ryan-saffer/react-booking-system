@@ -73,7 +73,11 @@ export async function generateInvitation(input: GenerateInvitation) {
     await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
 
     const mixpanel = await MixpanelClient.getInstance()
-    await mixpanel.track('invitation-generated', { invitationId: newDocId, partyDate: input.date })
+    await mixpanel.track('invitation-generated', {
+        invitationId: newDocId,
+        partyDate: input.date,
+        invitation: input.invitation,
+    })
 
     return newDocId
 }
