@@ -76,7 +76,7 @@ export async function createDiscountCodeFromInvitation(discountCode: CreateDisco
     await mailClient.sendEmail('createDiscountCode', discountCode.email, {
         name: discountCode.name,
         code: code,
-        expiryDate: DateTime.fromJSDate(expiryDate).toFormat('dd/LL/yyyy'),
+        expiryDate: DateTime.fromJSDate(expiryDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
     })
 
     const mixpanel = await MixpanelClient.getInstance()

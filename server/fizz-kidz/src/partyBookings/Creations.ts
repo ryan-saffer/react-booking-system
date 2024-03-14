@@ -57,4 +57,14 @@ export enum Creations {
     sugarScrubLipBalm = 'sugarScrubLipBalm',
     mermaidSugarScrub = 'mermaidSugarScrub',
     goldSlime = 'goldSlime',
+    // taylor swift
+    speakNowPurpleBathbombs = 'speakNowPurpleBathbombs',
+    evermoreSlime = 'evermoreSlime',
+    folkloreButterflySoap = 'folkloreButterflySoap',
+    friendshipBracelets = 'friendshipBracelets',
+    loverRainbowBathBombs = 'loverRainbowBathBombs',
+    fearlessGoldSlime = 'fearlessGoldSlime',
+    midnightsSlime = 'midnightsSlime',
+    red1989LipBalm = 'red1989LipBalm',
+    loverGlitterFacePaint = 'loverGlitterFacePaint',
 }

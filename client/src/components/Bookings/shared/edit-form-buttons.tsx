@@ -100,7 +100,7 @@ const EditFormButtons: React.FC<Props> = ({
                         Cancel
                     </Button>
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <Button
                                 variant="ghost"
                                 className="h-12 w-12 p-0"

@@ -86,6 +86,7 @@ export class PartyFormMapper {
             ...this.mapProductToSku(getQuestionValue(this.responses, 'safari_creations')),
             ...this.mapProductToSku(getQuestionValue(this.responses, 'unicorn_creations')),
             ...this.mapProductToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
+            ...this.mapProductToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
             ...this.mapProductToSku(getQuestionValue(this.responses, 'expert_creations')),
         ]
 

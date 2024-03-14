@@ -61,4 +61,13 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.sugarScrubLipBalm]: 'Sugar Lip Scrub',
     [Creations.mermaidSugarScrub]: 'Mermaid Sugar Scrub',
     [Creations.goldSlime]: 'Gold Slime',
+    [Creations.speakNowPurpleBathbombs]: "'Speak Now' Purple Bath Bombs",
+    [Creations.evermoreSlime]: 'Evermore Slime',
+    [Creations.folkloreButterflySoap]: 'Folklore Butterfly Soap',
+    [Creations.friendshipBracelets]: 'Friendship Bracelets',
+    [Creations.loverRainbowBathBombs]: "'Lover' Rainbow Bath Bombs",
+    [Creations.fearlessGoldSlime]: 'Fearless Gold Slim',
+    [Creations.midnightsSlime]: 'Midnights Slime',
+    [Creations.red1989LipBalm]: 'Red 1989 Lip Balm',
+    [Creations.loverGlitterFacePaint]: "'Lover' Glitter Face Paint",
 }
