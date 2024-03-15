@@ -37,7 +37,10 @@ class Firebase {
 
     doSignInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
 
-    doSignOut = () => this.auth.signOut()
+    doSignOut = () => {
+        this.auth.signOut()
+        localStorage.removeItem('authUser')
+    }
 }
 
 export default Firebase
