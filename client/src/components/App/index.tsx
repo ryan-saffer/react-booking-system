@@ -8,7 +8,8 @@ import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import { useEmulators } from '@components/Firebase/firebase.js'
 import useFirebase from '@components/Hooks/context/UseFirebase.js'
-import { withAuthentication, withAuthorization } from '@components/Session'
+import { AuthProvider } from '@components/Session/auth-provider.js'
+import { ProtectedRoute } from '@components/Session/protected-route.js'
 import * as ROUTES from '@constants/routes'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -49,7 +50,13 @@ const router = createBrowserRouter([
         path: ROUTES.LANDING,
         lazy: async () => {
             const { Navigation } = await import('../Navigation/navigation.js')
-            return { Component: withAuthorization([], Navigation) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={[]}>
+                        <Navigation />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -65,7 +72,13 @@ const router = createBrowserRouter([
             const { AfterSchoolProgramCheckinClassSelection } = await import(
                 '../after-school-program/Checkin/SelectClass/index.js'
             )
-            return { Component: withAuthorization(['BASIC'], AfterSchoolProgramCheckinClassSelection) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BASIC']}>
+                        <AfterSchoolProgramCheckinClassSelection />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -74,7 +87,13 @@ const router = createBrowserRouter([
             const { AfterSchoolProgramCheckinClassDetails } = await import(
                 '../after-school-program/Checkin/ClassDetails/index.js'
             )
-            return { Component: withAuthorization(['BASIC'], AfterSchoolProgramCheckinClassDetails) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BASIC']}>
+                        <AfterSchoolProgramCheckinClassDetails />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -83,7 +102,13 @@ const router = createBrowserRouter([
             const { AfterSchoolProgramInvoicingClassSelection } = await import(
                 '../after-school-program/Invoicing/SelectClass/index.js'
             )
-            return { Component: withAuthorization(['ADMIN'], AfterSchoolProgramInvoicingClassSelection) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['ADMIN']}>
+                        <AfterSchoolProgramInvoicingClassSelection />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -92,28 +117,52 @@ const router = createBrowserRouter([
             const { AfterSchoolProgramInvoicing } = await import(
                 '../after-school-program/Invoicing/InvoiceStatusPage/index.js'
             )
-            return { Component: withAuthorization(['ADMIN'], AfterSchoolProgramInvoicing) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['ADMIN']}>
+                        <AfterSchoolProgramInvoicing />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
         path: ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS,
         lazy: async () => {
             const { HolidayProgramSelection } = await import('../HolidayPrograms/SelectClass/index.js')
-            return { Component: withAuthorization(['BASIC'], HolidayProgramSelection) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BASIC']}>
+                        <HolidayProgramSelection />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
         path: ROUTES.HOLIDAY_PROGRAM_CLASS_DETAILS,
         lazy: async () => {
             const { ClassDetailsPage } = await import('../HolidayPrograms/ClassDetails/index.js')
-            return { Component: withAuthorization(['BASIC'], ClassDetailsPage) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BASIC']}>
+                        <ClassDetailsPage />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
         path: ROUTES.BOOKINGS,
         lazy: async () => {
             const { BookingsPage } = await import('../Bookings/bookings-page.js')
-            return { Component: withAuthorization(['BASIC', 'RESTRICTED'], BookingsPage) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BASIC', 'RESTRICTED']}>
+                        <BookingsPage />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -174,21 +223,39 @@ const router = createBrowserRouter([
         path: ROUTES.PAYROLL,
         lazy: async () => {
             const { Payroll } = await import('../Payroll/Payroll.js')
-            return { Component: withAuthorization(['BOOKKEEPER'], Payroll) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['BOOKKEEPER']}>
+                        <Payroll />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
         path: ROUTES.ONBOARDING,
         lazy: async () => {
             const { Onboarding } = await import('../Onboarding/Onboarding.js')
-            return { Component: withAuthorization([], Onboarding) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={[]}>
+                        <Onboarding />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
         path: ROUTES.CREATIONS,
         lazy: async () => {
             const { CreationsPage } = await import('../Creations/Creations.js')
-            return { Component: withAuthorization([], CreationsPage) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={[]}>
+                        <CreationsPage />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
     {
@@ -216,12 +283,18 @@ const router = createBrowserRouter([
         path: ROUTES.DISCOUNT_CODES,
         lazy: async () => {
             const { DiscountCodesPage } = await import('../discount-codes/discount-codes-page.js')
-            return { Component: withAuthorization(['ADMIN'], DiscountCodesPage) }
+            return {
+                Component: () => (
+                    <ProtectedRoute roles={['ADMIN']}>
+                        <DiscountCodesPage />
+                    </ProtectedRoute>
+                ),
+            }
         },
     },
 ])
 
-const _App = () => {
+export const App = () => {
     const firebase = useFirebase()
 
     const [queryClient] = useState(() => new QueryClient())
@@ -257,7 +330,9 @@ const _App = () => {
                     <LocalizationProvider dateAdapter={AdapterLuxon}>
                         <trpc.Provider client={trpcClient} queryClient={queryClient}>
                             <QueryClientProvider client={queryClient}>
-                                <RouterProvider router={router} />
+                                <AuthProvider>
+                                    <RouterProvider router={router} />
+                                </AuthProvider>
                             </QueryClientProvider>
                         </trpc.Provider>
                     </LocalizationProvider>
@@ -266,5 +341,3 @@ const _App = () => {
         </StyledEngineProvider>
     )
 }
-
-export const App = withAuthentication(_App)
