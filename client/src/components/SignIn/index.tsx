@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useAuth } from '@components/Hooks/context/useAuth'
 import * as ROUTES from '@constants/routes'
 import * as FizzLogo from '@drawables/FizzKidzLogoHorizontal.png'
 import { Button, CssBaseline, Snackbar, TextField } from '@mui/material'
@@ -23,6 +24,11 @@ const SignInPage = () => {
     const [loading, setLoading] = useState(false)
     const [loginError, setLoginError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
+
+    const auth = useAuth()
+    if (auth) {
+        return <Navigate to="/" replace />
+    }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event

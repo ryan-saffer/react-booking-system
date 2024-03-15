@@ -4,7 +4,7 @@ import mixpanel from 'mixpanel-browser'
 import { createRoot } from 'react-dom/client'
 
 import { App } from '@components/App'
-import Firebase, { FirebaseContext } from '@components/Firebase'
+import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 
 mixpanel.init(
@@ -16,9 +16,9 @@ mixpanel.init(
 
 const root = createRoot(document.getElementById('root')!)
 root.render(
-    <FirebaseContext.Provider value={new Firebase()}>
+    <FirebaseProvider>
         <MixpanelContext.Provider value={mixpanel}>
             <App />
         </MixpanelContext.Provider>
-    </FirebaseContext.Provider>
+    </FirebaseProvider>
 )
