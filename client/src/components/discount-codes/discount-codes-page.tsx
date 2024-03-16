@@ -2,11 +2,10 @@ import { format } from 'date-fns'
 import { DiscountCode, Service } from 'fizz-kidz'
 import { ArrowUpDown, CalendarIcon, MoreHorizontal } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, ScrollRestoration } from 'react-router-dom'
+import { ScrollRestoration } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { LANDING } from '@constants/routes'
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -286,8 +285,7 @@ export const DiscountCodesPage = () => {
         <div className="twp h-full">
             <Toaster richColors />
             <ScrollRestoration />
-            <Navbar />
-            <main className="absolute mt-16 flex h-full w-full justify-center p-4 sm:p-8">
+            <main className="absolute flex h-full w-full justify-center p-4 sm:p-8">
                 <div className="w-full max-w-5xl">
                     <h1 className="font-lilita text-3xl">Discount Codes</h1>
                     {data.status === 'loading' && (
@@ -378,15 +376,5 @@ export const DiscountCodesPage = () => {
                 </div>
             </main>
         </div>
-    )
-}
-
-function Navbar() {
-    return (
-        <nav className="absolute flex h-16 w-full items-center justify-center bg-slate-900 shadow-md">
-            <Link to={LANDING}>
-                <img src="/fizz-logo.png" className="h-12" />
-            </Link>
-        </nav>
     )
 }

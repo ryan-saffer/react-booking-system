@@ -9,7 +9,6 @@ import SkeletonRows from '@components/Shared/SkeletonRows'
 import { trpc } from '@utils/trpc'
 
 import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
-import Heading from './Heading'
 
 export const AfterSchoolProgramInvoicing: React.FC = () => {
     const firebase = useFirebase()
@@ -48,32 +47,19 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appointmentTypeId])
 
-    return (
-        <>
-            <Heading />
-            {(() => {
-                switch (enrolmentsService.status) {
-                    case 'loading':
-                        return <SkeletonRows rowCount={(height - 64) / 64} />
-                    case 'loaded':
-                        return (
-                            <EnrolmentsTable
-                                enrolments={enrolmentsService.result}
-                                calendar={calendarName}
-                                appointmentTypes={appointmentTypes || []}
-                                onAppointmentTypeChange={(id: number) => setAppointmentTypeId(id)}
-                            />
-                        )
-                    default: // error
-                        return (
-                            <Result
-                                status="500"
-                                title="Oh no"
-                                subTitle="There was an error retrieving the enrolments"
-                            />
-                        )
-                }
-            })()}
-        </>
-    )
+    switch (enrolmentsService.status) {
+        case 'loading':
+            return <SkeletonRows rowCount={(height - 64) / 64} />
+        case 'loaded':
+            return (
+                <EnrolmentsTable
+                    enrolments={enrolmentsService.result}
+                    calendar={calendarName}
+                    appointmentTypes={appointmentTypes || []}
+                    onAppointmentTypeChange={(id: number) => setAppointmentTypeId(id)}
+                />
+            )
+        default: // error
+            return <Result status="500" title="Oh no" subTitle="There was an error retrieving the enrolments" />
+    }
 }

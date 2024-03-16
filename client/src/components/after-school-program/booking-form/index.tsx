@@ -10,7 +10,7 @@ import Root from '@components/Shared/Root'
 import { Grow } from '@mui/material'
 import { trpc } from '@utils/trpc'
 
-import Loader from '../shared/Loader'
+import Loader from '../../Shared/Loader'
 import AppointmentTypeCard from './AppointmentTypeCard'
 import FormSwitcher from './FormSwitcher'
 import styles from './main.module.css'

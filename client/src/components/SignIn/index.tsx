@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
-import * as ROUTES from '@constants/routes'
 import * as FizzLogo from '@drawables/FizzKidzLogoHorizontal.png'
 import { Button, CssBaseline, Snackbar, TextField } from '@mui/material'
 import Container from '@mui/material/Container'
@@ -57,7 +56,7 @@ const SignInPage = () => {
             .doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 setLoading(false)
-                navigate(ROUTES.LANDING)
+                navigate('/')
             })
             .catch((err) => {
                 console.error(err)

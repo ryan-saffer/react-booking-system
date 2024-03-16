@@ -3,14 +3,13 @@ import { Navigate } from 'react-router-dom'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { ROLES, Role } from '@constants/roles'
-import { SIGN_IN } from '@constants/routes'
 
 import Unauthorised from './Unauthorised'
 
 export const ProtectedRoute = ({ roles, children }: PropsWithChildren<{ roles: Role[] }>) => {
     const authUser = useAuth()
     if (!authUser) {
-        return <Navigate to={SIGN_IN} replace />
+        return <Navigate to="sign-in" replace />
     }
 
     if (!authUser.role || !ROLES.includes(authUser.role)) {

@@ -2,7 +2,6 @@ import { InvitationOption } from 'fizz-kidz'
 import { RefObject, useEffect, useRef, useState } from 'react'
 import { Link, ScrollRestoration, useLocation, useSearchParams } from 'react-router-dom'
 
-import { INVITATION_CREATE } from '@constants/routes'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
@@ -47,7 +46,7 @@ const Invitations: { name: InvitationOption; src: string }[] = [
     },
 ]
 
-export const CreateInvitationPage = () => {
+export const ChooseInvitationPage = () => {
     const stickyRef = useRef<HTMLDivElement>(null)
     const isSticky = useSticky({ ref: stickyRef, offset: 1 })
 
@@ -91,7 +90,7 @@ export const CreateInvitationPage = () => {
                     <div className="mb-4 mt-0 grid max-w-5xl grid-cols-1 gap-x-12 gap-y-8 md:grid-cols-2  xl:grid-cols-3">
                         {Invitations.map((it) => (
                             <Link
-                                to={INVITATION_CREATE}
+                                to="invitation/create"
                                 key={it.name}
                                 state={{
                                     childName: searchParams.get('childName') || state?.childName || '',

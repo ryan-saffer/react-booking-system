@@ -5,7 +5,7 @@ import React from 'react'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { trpc } from '@utils/trpc'
 
-import Loader from '../../shared/Loader'
+import Loader from '../../../Shared/Loader'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'
 

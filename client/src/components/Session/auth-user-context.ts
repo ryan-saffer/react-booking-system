@@ -1,11 +1,6 @@
 import React from 'react'
 
-import { Role } from '@constants/roles'
-
-export interface AuthUser {
-    uid: string
-    role: Role
-}
+import { AuthUser } from './auth-provider'
 
 const AuthUserContext = React.createContext<AuthUser | null>(null)
 

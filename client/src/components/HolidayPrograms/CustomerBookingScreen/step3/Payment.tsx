@@ -3,7 +3,7 @@ import { AcuityConstants, AcuityTypes, DiscountCode, PaidHolidayProgramBooking }
 import React, { useContext, useRef, useState } from 'react'
 
 import Firebase, { FirebaseContext } from '@components/Firebase'
-import Loader from '@components/after-school-program/shared/Loader'
+import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 

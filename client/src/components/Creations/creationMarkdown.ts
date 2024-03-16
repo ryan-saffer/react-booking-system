@@ -31,9 +31,9 @@ const bathbombs = {
 * Blue is a heavy colour - add less drops of blue compared to lighter colors like yellow
 * Mixing of colours does not work e.g., pink and blue to make purple. If purple is a colour a child wants, lip pigment can be used: smaller than a pinky finger nail amount
 
-![Bath bomb](https://drive.google.com/uc?id=1rIf4fd-une_XvJEM7Sl6-JOSLGCgxNNw)
-![Bath bomb](https://drive.google.com/uc?id=1e4CUnJzII0g4ZTaHOuE-HIVK51FF5oio)
-![Bath bomb](https://drive.google.com/uc?id=1YhVuXgwxsYg3yefaFivVTL7K_ftqJ6Er)
+![Bath bomb](https://lh3.googleusercontent.com/d/1rIf4fd-une_XvJEM7Sl6-JOSLGCgxNNw)
+![Bath bomb](https://lh3.googleusercontent.com/d/1e4CUnJzII0g4ZTaHOuE-HIVK51FF5oio)
+![Bath bomb](https://lh3.googleusercontent.com/d/1YhVuXgwxsYg3yefaFivVTL7K_ftqJ6Er)
 `,
 }
 
@@ -70,7 +70,7 @@ const expertMarbleBathBombs = {
 * Blue is a heavy colour - add less drops of blue compared to lighter colors like yellow
 * Mixing of colours does not work e.g., pink and blue to make purple. If purple is a colour a child wants, lip pigment can be used: smaller than a pinky finger nail amount
 
-![expert bath bombs](https://drive.google.com/uc?id=1hhB7sfmbh6DcV1cx1zonX25yMTnkhp6h)
+![expert bath bombs](https://lh3.googleusercontent.com/d/1hhB7sfmbh6DcV1cx1zonX25yMTnkhp6h)
 `,
 }
 
@@ -101,8 +101,8 @@ const fluffySlime = {
 * Add more glue if overactivated
 * Can do any colour and any theme e.g. bluey fluffy slime, monster fluffy slime, fairy fluffy slime
 
-![Fluffy Slime](https://drive.google.com/uc?id=1wDZ9LfzJmz0B1TlDL_XpubaYtu5oX-cq)
-![Fluffy Slime](https://drive.google.com/uc?id=1qp_s4KPNxt-bpLzDY06MAnm06rvpgB6-)
+![Fluffy Slime](https://lh3.googleusercontent.com/d/1wDZ9LfzJmz0B1TlDL_XpubaYtu5oX-cq)
+![Fluffy Slime](https://lh3.googleusercontent.com/d/1qp_s4KPNxt-bpLzDY06MAnm06rvpgB6-)
     `,
 }
 
@@ -127,7 +127,7 @@ const galaxySlime = {
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into containers
 
-![Galaxy slime](https://drive.google.com/uc?id=154iecBQoKwcJunSL81HX8tatxBkFfv1c)
+![Galaxy slime](https://lh3.googleusercontent.com/d/154iecBQoKwcJunSL81HX8tatxBkFfv1c)
 
 **_For ages 7+_**
 1. Add glue into bowls and mix - lots of bubbles!
@@ -139,8 +139,8 @@ const galaxySlime = {
 6. Mix slimes together (to make dark purple) to get Galaxy Slime
 7. Put into containers
 
-![Galaxy slime](https://drive.google.com/uc?id=1fJOS8xXFh8U_oIp5NjcgxvT5_YK-uZcS)
-![Galaxy slime](https://drive.google.com/uc?id=1w3tJM7z9feQqGH_EsKJg_mOsS-tJTT7C)
+![Galaxy slime](https://lh3.googleusercontent.com/d/1fJOS8xXFh8U_oIp5NjcgxvT5_YK-uZcS)
+![Galaxy slime](https://lh3.googleusercontent.com/d/1w3tJM7z9feQqGH_EsKJg_mOsS-tJTT7C)
 
 ### Fizz Tips and Trickz
 * Add more sodium bicarbonate if sticky, more activator if runny. Mix and knead as fast as possible once out of the bowl.
@@ -173,8 +173,8 @@ const glitterFacePaint = {
 * The mixture shouldn't look like a booger once the glitter is in it, if it's too goopy, add more water
 * If it's too runny, and slightly more xanthan gumKids can do their own glitter if old enough to do so   
 
-![Glitter face paint](https://drive.google.com/uc?id=1EOo0oSBErAKUcONaBPwkMaHgXlkoFXbO)
-![Glitter face paint](https://drive.google.com/uc?id=10HQLg92yxOa-jsKE7jQL0i-iB576BH28)
+![Glitter face paint](https://lh3.googleusercontent.com/d/1EOo0oSBErAKUcONaBPwkMaHgXlkoFXbO)
+![Glitter face paint](https://lh3.googleusercontent.com/d/10HQLg92yxOa-jsKE7jQL0i-iB576BH28)
     `,
 }
 
@@ -205,7 +205,7 @@ const glitterSlime = {
 * Add more glue if overactivated
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
-![Glitter slime](https://drive.google.com/uc?id=1SXmYXzjFzbT8Ra0s_JmJmkBnIEJ5BNo5)
+![Glitter slime](https://lh3.googleusercontent.com/d/1SXmYXzjFzbT8Ra0s_JmJmkBnIEJ5BNo5)
     `,
 }
 
@@ -242,8 +242,8 @@ const instantSnowSlime = {
 * Add more glue if overactivated
 * Add more snow powder to bowl if too runny and more water if too dry
 
-![Instant snow slime](https://drive.google.com/uc?id=15ALmTF5_b8_kcKM0ZVFHBoBvGG-KbRy5)
-![Instant snow slime](https://drive.google.com/uc?id=1B0yWSwHZGfVbYkcWgHB7cR8R_c1RiMei)
+![Instant snow slime](https://lh3.googleusercontent.com/d/15ALmTF5_b8_kcKM0ZVFHBoBvGG-KbRy5)
+![Instant snow slime](https://lh3.googleusercontent.com/d/1B0yWSwHZGfVbYkcWgHB7cR8R_c1RiMei)
 `,
 }
 
@@ -280,7 +280,7 @@ const lipBalm = {
 * Lip balm can be any theme or colour (that is in line with what pigments there are in store). Frozen lipbalm, galaxy lip balm, barbie lip balm etc
 * If doing two colours for a double pour, have separate jugs with separate pigment colour e.g. one jug blue and one jug pink
 
-![Lip balm](https://drive.google.com/uc?id=1y33KMl4gqv6Ht1SIC5NjoEV64OEm0xCS)
+![Lip balm](https://lh3.googleusercontent.com/d/1y33KMl4gqv6Ht1SIC5NjoEV64OEm0xCS)
 `,
 }
 
@@ -324,11 +324,11 @@ const rainbowAndMarbleSoap = {
 * Medium size soap molds = 2 cubes and kids take ONE soap home
 * Larger size soap molds = 4 cubes and kids take ONE soap home
 
-![Rainbow and marble soap](https://drive.google.com/uc?id=1xpQOirBt2nMMI6C55g_Svvy37BZ67KXI)
-![Rainbow and marble soap](https://drive.google.com/uc?id=1CshqBP4KVQ-2Ip2M8ILL55XfpEF7hltb)
-![Rainbow and marble soap](https://drive.google.com/uc?id=1x54l-JNjR3730wHkZZvoiPJGr_7xurqb)
-![Rainbow and marble soap](https://drive.google.com/uc?id=10PfRK0xefV5HW0oBM7zl8dvhg9GrYlW8)
-![Rainbow and marble soap](https://drive.google.com/uc?id=1Jiz91IxqYcPLIouzCJBUSnpEV9-nUNGV)
+![Rainbow and marble soap](https://lh3.googleusercontent.com/d/1xpQOirBt2nMMI6C55g_Svvy37BZ67KXI)
+![Rainbow and marble soap](https://lh3.googleusercontent.com/d/1CshqBP4KVQ-2Ip2M8ILL55XfpEF7hltb)
+![Rainbow and marble soap](https://lh3.googleusercontent.com/d/1x54l-JNjR3730wHkZZvoiPJGr_7xurqb)
+![Rainbow and marble soap](https://lh3.googleusercontent.com/d/10PfRK0xefV5HW0oBM7zl8dvhg9GrYlW8)
+![Rainbow and marble soap](https://lh3.googleusercontent.com/d/1Jiz91IxqYcPLIouzCJBUSnpEV9-nUNGV)
 `,
 }
 
@@ -375,8 +375,8 @@ const rainbowBathCrystals = {
 * Generally, the best colours for rainbow bath crystals are yellow, pink/red and blue - mixing of colours does not work e.g., pink and blue to make purple. If purple is a colour the birthday child wants, lip pigment can be used: smaller than a pinky finger nail amount
 * We can do any theme of bath crystals and there can be repeat colours on layers. Lava bath crystals, Encanto bath crystals, peter pan bath crystals etc
 
-![Rainbow bath crystals](https://drive.google.com/uc?id=13gtC2TSzD4eYScMAmCZP8o-LOxxr-nFa)
-![Rainbow bath crystals](https://drive.google.com/uc?id=1GiWCX_obJAoEaQH-m8owuHRTYWLioD8N)
+![Rainbow bath crystals](https://lh3.googleusercontent.com/d/13gtC2TSzD4eYScMAmCZP8o-LOxxr-nFa)
+![Rainbow bath crystals](https://lh3.googleusercontent.com/d/1GiWCX_obJAoEaQH-m8owuHRTYWLioD8N)
     `,
 }
 
@@ -407,10 +407,10 @@ const rainbowTieDySlime = {
 * Add more sodium bicarbonate if sticky, more activator if runny. Mix and knead as fast as possible once out of the bowl.
 * Add more glue if overactivated
 
-![Rainbow / tie dye slime](https://drive.google.com/uc?id=1LTOAWmH3zdgwtqoXDqdScDY54EYPV3PD)
-![Rainbow / tie dye slime](https://drive.google.com/uc?id=1pDHiv6TVxUzlxoDl8MHC6Q0fQhTkRhap)
-![Rainbow / tie dye slime](https://drive.google.com/uc?id=13v9gnkFI0hU2GV032c1ynr6D5Uitv0j7)
-![Rainbow / tie dye slime](https://drive.google.com/uc?id=12v23D5lzOq27ZW7mq-JMDrbZdRUBxc5e)
+![Rainbow / tie dye slime](https://lh3.googleusercontent.com/d/1LTOAWmH3zdgwtqoXDqdScDY54EYPV3PD)
+![Rainbow / tie dye slime](https://lh3.googleusercontent.com/d/1pDHiv6TVxUzlxoDl8MHC6Q0fQhTkRhap)
+![Rainbow / tie dye slime](https://lh3.googleusercontent.com/d/13v9gnkFI0hU2GV032c1ynr6D5Uitv0j7)
+![Rainbow / tie dye slime](https://lh3.googleusercontent.com/d/12v23D5lzOq27ZW7mq-JMDrbZdRUBxc5e)
     `,
 }
 
@@ -439,7 +439,7 @@ const sandSlime = {
 * Add more sodium bicarbonate if sticky, more activator if runny. Mix and knead as fast as possible once out of the bowl.
 * Add more glue if overactivated
 
-![Sand slime](https://drive.google.com/uc?id=12Nhs9YtEzNmmVBE4FMpgVg8XjH_YhBrw)
+![Sand slime](https://lh3.googleusercontent.com/d/12Nhs9YtEzNmmVBE4FMpgVg8XjH_YhBrw)
     `,
 }
 
@@ -484,8 +484,8 @@ Medium size soap molds = 2 cubes and kids take ONE soap home
 
 Larger size soap molds = 4 cubes and kids take ONE soap home
 
-![soap](https://drive.google.com/uc?id=1shrg4icXgpEnAmK3WEZBu2HEew8_8PLP)
-![soap](https://drive.google.com/uc?id=1-UruHqgNFdNfBZL_bW0VlbDUiUEBJlbk)
+![soap](https://lh3.googleusercontent.com/d/1shrg4icXgpEnAmK3WEZBu2HEew8_8PLP)
+![soap](https://lh3.googleusercontent.com/d/1-UruHqgNFdNfBZL_bW0VlbDUiUEBJlbk)
 `,
 }
 
@@ -518,10 +518,10 @@ const bugAnimalInSoap = {
 ### Fizz Tipz and Trickz
 * Soap can be any colour - if doing multiple colours see recipe for marble/rainbpw soap
 
-![soap](https://drive.google.com/uc?id=13f6Dda-e59AKCQB1wj1_5uW81XkkaUzk)
-![soap](https://drive.google.com/uc?id=1tUi7WG1jkBMDcT2zXUp3qP1XX80G-yrq)
-![soap](https://drive.google.com/uc?id=1-IdUDVkGCgGEV2JbImO-_IQgsY2rf1UZ)
-![soap](https://drive.google.com/uc?id=1p2x5BgyMvqUxo77ltIvBipJVAkWWNb4w)
+![soap](https://lh3.googleusercontent.com/d/13f6Dda-e59AKCQB1wj1_5uW81XkkaUzk)
+![soap](https://lh3.googleusercontent.com/d/1tUi7WG1jkBMDcT2zXUp3qP1XX80G-yrq)
+![soap](https://lh3.googleusercontent.com/d/1-IdUDVkGCgGEV2JbImO-_IQgsY2rf1UZ)
+![soap](https://lh3.googleusercontent.com/d/1p2x5BgyMvqUxo77ltIvBipJVAkWWNb4w)
 `,
 }
 
@@ -576,7 +576,7 @@ const monsterSlime = {
 * Add more glue if overactivated
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
-![monster slime](https://drive.google.com/uc?id=1Danrqphnc5falwlyVyG7xlDWt3si_4H6)
+![monster slime](https://lh3.googleusercontent.com/d/1Danrqphnc5falwlyVyG7xlDWt3si_4H6)
 `,
 }
 
@@ -609,7 +609,7 @@ const frozenSlime = {
 * Add more glue if overactivated
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
-![frozen slime](https://drive.google.com/uc?id=1bRdZ-Pwh7m-RLJ8Z-tqhWBcPeeIwO5hX)
+![frozen slime](https://lh3.googleusercontent.com/d/1bRdZ-Pwh7m-RLJ8Z-tqhWBcPeeIwO5hX)
 `,
 }
 
@@ -642,7 +642,7 @@ const unicornSlime = {
 * Add more glue if overactivated
 * Kids can do their own glitter if old enough to do so - no more glitter than there is glue
 
-![unicorn slime](https://drive.google.com/uc?id=1PFBiFdxw0H_Pn5eQmZ1cKyBrOJl6WzpL)
+![unicorn slime](https://lh3.googleusercontent.com/d/1PFBiFdxw0H_Pn5eQmZ1cKyBrOJl6WzpL)
 }
 `,
 }
@@ -667,8 +667,8 @@ Items to be wrung out tightly to rid of all excess water - items should not be d
 
 Prepare colour dye into bottles - 3 bottles per colour PINK/RED, YELLOW AND BLUE- each of these makes another colour if mixed together. Colour dye from a previous weekend should not be used, it does not have the same strength.
 
-![tie dye](https://drive.google.com/uc?id=1jD3Dtp5DaBAeQKLHHMTmVOu_FP9XOuwf)
-![tie dye](https://drive.google.com/uc?id=1Xxr16i_8yibanP42elCUD1EzX1MWCr60)
+![tie dye](https://lh3.googleusercontent.com/d/1jD3Dtp5DaBAeQKLHHMTmVOu_FP9XOuwf)
+![tie dye](https://lh3.googleusercontent.com/d/1Xxr16i_8yibanP42elCUD1EzX1MWCr60)
 
 1. Hand out tie dye items
 2. Tie time - Explain process first and then hand out rubber bands -  Tying on rubber bands TIGHTLY which will give the design - everyones will be different, no wrong design
@@ -688,9 +688,9 @@ Items go home in the zip lock bag and stay in that for 24 hours. Then all rubber
 
 Swirl, sausage, dot
 
-![tie dye](https://drive.google.com/uc?id=1HLPpW6WaX17kwxVtoLU8zDXchRC-4eD7)
-![tie dye](https://drive.google.com/uc?id=1CvWuWMsmp5uGBmZGKYgeKA5Ahp1iDDQe)
-![tie dye](https://drive.google.com/uc?id=1BpquQapYR3aI-X_rwiXncDmi_k8snMpF)
+![tie dye](https://lh3.googleusercontent.com/d/1HLPpW6WaX17kwxVtoLU8zDXchRC-4eD7)
+![tie dye](https://lh3.googleusercontent.com/d/1CvWuWMsmp5uGBmZGKYgeKA5Ahp1iDDQe)
+![tie dye](https://lh3.googleusercontent.com/d/1BpquQapYR3aI-X_rwiXncDmi_k8snMpF)
 
     `,
 }
@@ -724,9 +724,9 @@ const volcano = {
 
 A cool volcano environment - made by Bonnie. A SCARY erupting volcano! A FRIENDLY dinosaur named Borris. A shelter to keep safe from the erupting volcano. A really COOL tree. A big GREEN bush that Borris eats
 
-![volcano](https://drive.google.com/uc?id=1JszTxtY_UPK5WhHhqW8z7F4Z7fOdea6a)
-![volcano](https://drive.google.com/uc?id=1iUYXWm8i_qDo0txOHS_rcLNKomYwEWGO)
-![volcano](https://drive.google.com/uc?id=1TTDtKV-f563QvcoeppShP3Awa1luJg-J)
+![volcano](https://lh3.googleusercontent.com/d/1JszTxtY_UPK5WhHhqW8z7F4Z7fOdea6a)
+![volcano](https://lh3.googleusercontent.com/d/1iUYXWm8i_qDo0txOHS_rcLNKomYwEWGO)
+![volcano](https://lh3.googleusercontent.com/d/1TTDtKV-f563QvcoeppShP3Awa1luJg-J)
     `,
 }
 
@@ -769,8 +769,8 @@ const wobblySoap = {
 * Wobbly soap can be any theme or colour 
 * Bluey wobbly soap, Frozen wobbly soap, Spiderman wobbly soap, Marvel wobbly soap etc
 
-![wobbly soap](https://drive.google.com/uc?id=1dl-vcID52drrLEsg75gRB5qmHGZi8eTg)
-![wobbly soap](https://drive.google.com/uc?id=1591SvEno5ULAPQWjUgllmkE98H0x0VWP)
+![wobbly soap](https://lh3.googleusercontent.com/d/1dl-vcID52drrLEsg75gRB5qmHGZi8eTg)
+![wobbly soap](https://lh3.googleusercontent.com/d/1591SvEno5ULAPQWjUgllmkE98H0x0VWP)
     `,
 }
 
