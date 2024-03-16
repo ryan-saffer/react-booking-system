@@ -5,7 +5,7 @@ import React from 'react'
 import { styled } from '@mui/material/styles'
 import { trpc } from '@utils/trpc'
 
-import Loader from '../../shared/Loader'
+import Loader from '../../../Shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
 
 const PREFIX = 'InvoiceDetails'

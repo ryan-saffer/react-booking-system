@@ -12,7 +12,6 @@ import { trpc } from '@utils/trpc'
 
 import { UnenrolDialog } from '../UnenrolDialog'
 import EnrolmentDetails from './EnrolmentDetails'
-import styles from './EnrolmentsTable.module.css'
 import InvoiceStatusCell from './InvoiceStatusCell'
 
 const PREFIX = 'EnrolmentsTable'
@@ -84,6 +83,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
     showConfirmationDialog,
 }) => {
     const [loading, setLoading] = useState(true)
+    const [changingClass, setChangingClass] = useState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
     // const [invoiceStatusMap, setInvoiceStatusMap] = useState<InvoiceStatusMap>({})
@@ -372,15 +372,20 @@ const _EnrolmentsTable: React.FC<Props> = ({
     const hasSelected = selectedRowKeys.length > 0
 
     return (
-        <Root>
+        <Root className="twp mt-4 px-4">
             <Table
-                className={styles.table}
-                bordered
+                loading={changingClass}
                 pagination={false}
                 size="small"
                 caption={
-                    <div className="twp flex items-center justify-between gap-4">
-                        <Select onValueChange={(it) => onAppointmentTypeChange(parseInt(it))}>
+                    <div className="mb-4 flex items-center justify-between gap-4">
+                        <Select
+                            onValueChange={(it) => {
+                                setChangingClass(true)
+                                setTimeout(() => setChangingClass(false), 300)
+                                onAppointmentTypeChange(parseInt(it))
+                            }}
+                        >
                             <SelectTrigger className="w-full flex-grow text-center text-xl [&>span]:w-full">
                                 <SelectValue className="w-full" placeholder={calendar} />
                             </SelectTrigger>
@@ -396,15 +401,14 @@ const _EnrolmentsTable: React.FC<Props> = ({
                             placement="bottomRight"
                             menu={{ items: menu, onClick: handleActionButtonClick }}
                             trigger={['click']}
+                            disabled={!hasSelected}
                         >
-                            <div className={styles.actionButton}>
-                                <Button className="h-10" loading={loading} disabled={!hasSelected}>
-                                    <Space>
-                                        Action
-                                        <DownOutlined />
-                                    </Space>
-                                </Button>
-                            </div>
+                            <Button className="h-10" loading={loading}>
+                                <Space>
+                                    Action
+                                    <DownOutlined />
+                                </Space>
+                            </Button>
                         </Dropdown>
                     </div>
                 }

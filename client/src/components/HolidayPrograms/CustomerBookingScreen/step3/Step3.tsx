@@ -3,7 +3,7 @@ import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useEffect, useMemo, useState } from 'react'
 
-import Loader from '@components/after-school-program/shared/Loader'
+import Loader from '@components/Shared/Loader'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { capitalise } from '@utils/stringUtilities'

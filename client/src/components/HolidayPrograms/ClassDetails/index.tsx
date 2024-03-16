@@ -2,19 +2,11 @@ import { Card, Collapse, Empty } from 'antd'
 import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFetchAppointments from '@components/Hooks/api/UseFetchAppointments'
 import SkeletonRows from '@components/Shared/SkeletonRows'
-import * as ROUTES from '@constants/routes'
-import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import AppBar from '@mui/material/AppBar'
-import CssBaseline from '@mui/material/CssBaseline'
-import IconButton from '@mui/material/IconButton'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
@@ -28,25 +20,20 @@ const classes = {
 }
 
 const Root = styled('div')({
-    [`&.${classes.main}`]: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-    },
     [`& .${classes.root}`]: {
         // backgroundColor: '#f0f2f2',
         backgroundImage: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
         minHeight: '100vh',
         paddingBottom: 24,
+        paddingLeft: 24,
+        paddingRight: 24,
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     [`& .${classes.card}`]: {
-        width: '90%',
+        width: '100%',
         height: 'fit-content',
-        marginTop: 36,
         borderRadius: 16,
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     },
@@ -76,8 +63,6 @@ export const ClassDetailsPage = () => {
         [classTime]
     )
 
-    const navigate = useNavigate()
-
     const sortByChildName = (a: AcuityTypes.Api.Appointment, b: AcuityTypes.Api.Appointment) => {
         const aName = AcuityUtilities.retrieveFormAndField(
             a,
@@ -102,34 +87,11 @@ export const ClassDetailsPage = () => {
     }) as AcuityTypes.Api.Appointment[]
 
     return (
-        <Root className={classes.main}>
-            <CssBaseline />
-            <AppBar position="static">
-                <Toolbar style={{ display: 'flex' }}>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)} size="large">
-                            <ArrowBackIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit">
-                            Children
-                        </Typography>
-                    </div>
-                    <div style={{ flex: '1 1 auto' }}>
-                        <Typography style={{ textAlign: 'center' }} variant="h6" color="inherit">
-                            {classDisplayable}
-                        </Typography>
-                    </div>
-                    <div style={{ flex: 1, textAlign: 'right' }}>
-                        <img
-                            src={Logo.default}
-                            style={{ maxWidth: 100, cursor: 'pointer' }}
-                            alt="fizz kidz logo"
-                            onClick={() => navigate(ROUTES.LANDING)}
-                        />
-                    </div>
-                </Toolbar>
-            </AppBar>
+        <Root>
             <div className={classes.root}>
+                <h1 className="lilita rounded-2xl bg-slate-700 bg-opacity-40 p-4 text-2xl text-white">
+                    {classDisplayable}
+                </h1>
                 <Card className={classes.card}>
                     {appointments !== null && appointments.length !== 0 && (
                         <Collapse accordion>
