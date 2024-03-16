@@ -13,7 +13,7 @@ type Props = {
     classRequired: boolean // true means its being used for class checkin, false for invoicing
 }
 
-const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
+export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
     const navigate = useNavigate()
 
     const nowRef = useRef(Date.now())
@@ -128,5 +128,3 @@ const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRe
         </Paper>
     )
 }
-
-export default AfterSchoolProgramClassSelection

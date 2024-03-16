@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import * as ROUTES from '@constants/routes'
 import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 
 const { Header, Content } = Layout
@@ -16,7 +15,7 @@ const Unauthorised: React.FC<Props> = ({ showLogout = false }) => {
     const firebase = useFirebase()
     const navigate = useNavigate()
 
-    const goHome = () => navigate(ROUTES.LANDING)
+    const goHome = () => navigate('/')
     const signOut = () => firebase.doSignOut()
 
     return (
@@ -25,7 +24,7 @@ const Unauthorised: React.FC<Props> = ({ showLogout = false }) => {
                 <img
                     style={{ height: 50, cursor: 'pointer' }}
                     src={Logo.default}
-                    onClick={() => navigate(ROUTES.LANDING)}
+                    onClick={() => navigate('/')}
                     alt="Fizz Kidz Logo"
                 />
             </Header>

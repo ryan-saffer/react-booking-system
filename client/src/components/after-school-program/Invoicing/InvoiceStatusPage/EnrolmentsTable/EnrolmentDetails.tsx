@@ -2,7 +2,6 @@ import { Button, Descriptions } from 'antd'
 import { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
 import React from 'react'
 
-import * as ROUTES from '@constants/routes'
 import { styled } from '@mui/material/styles'
 import { getBaseUrl } from '@utils/firebase/env'
 
@@ -40,7 +39,7 @@ const EnrolmentDetails: React.FC<Props> = ({ enrolment, invoiceStatusMap }) => {
             <Descriptions.Item label="Child Age">{enrolment.child.age}</Descriptions.Item>
             <Descriptions.Item label="Parent Portal">
                 <Button
-                    href={`${getBaseUrl()}${ROUTES.AFTER_SCHOOL_PROGRAM_PARENT_PORTAL.split(':')[0]}${enrolment.id}`}
+                    href={`${getBaseUrl()}/parent-portal/${enrolment.id}`}
                     target="_blank"
                     onClick={(e) => e.stopPropagation()}
                 >

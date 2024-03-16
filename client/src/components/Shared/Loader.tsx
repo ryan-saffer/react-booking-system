@@ -1,16 +1,18 @@
-import { Spin } from 'antd'
+import { Loader2 } from 'lucide-react'
 import React from 'react'
 
-import { LoadingOutlined } from '@ant-design/icons'
+import { cn } from '@utils/tailwind'
 
 type Props = {
     className?: string
     style?: React.CSSProperties
     size?: 'sm' | 'lg'
+    color?: string
 }
 
 const defaultProps: Props = {
     size: 'lg',
+    color: 'black',
 }
 
 const Loader: React.FC<Props> = (_props) => {
@@ -19,15 +21,14 @@ const Loader: React.FC<Props> = (_props) => {
         ..._props,
     }
 
-    const { className, style, size } = props
+    const { className, style, size, color } = props
 
-    const antIcon = <LoadingOutlined style={{ fontSize: size === 'sm' ? 24 : 48 }} spin />
     return (
         <div
             className={className}
             style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', ...style }}
         >
-            <Spin indicator={antIcon} />
+            <Loader2 className={cn(`animate-spin text-[${color}]`, size === 'sm' ? 'h-8 w-8' : 'h-10 w-10')} />
         </div>
     )
 }

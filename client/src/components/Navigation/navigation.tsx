@@ -2,10 +2,9 @@ import { Link } from 'react-router-dom'
 
 import { useScopes } from '@components/Hooks/UseScopes'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import * as ROUTES from '@constants/routes'
-import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { AppBar, Button, Container, CssBaseline, Toolbar } from '@mui/material'
+import { Button, Container, CssBaseline } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 
@@ -83,14 +82,11 @@ export const Navigation = () => {
 
     const firebase = useFirebase()
 
+    useStickyNavbar()
+
     return (
         <Root sx={{ height: '100%' }}>
             <CssBaseline />
-            <AppBar position="static" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <img className={classes.logo} src={Logo.default} alt="Fizz Kidz Logo" />
-                </Toolbar>
-            </AppBar>
             <div className={classes.main}>
                 <Container component="main" maxWidth="sm">
                     {hasCoreScopes && (
@@ -99,17 +95,17 @@ export const Navigation = () => {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 <ListItem
                                     title="Parties, Events & Incursions"
-                                    to={ROUTES.BOOKINGS}
+                                    to="bookings"
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-76-scaled-e1645523582564-pkvrc29l4f5in86v327lhv2aavc71eult9zjc8i5cw.jpeg"
                                 />
                                 <ListItem
                                     title="Holiday Programs"
-                                    to={ROUTES.HOLIDAY_PROGRAM_SELECT_CLASS}
+                                    to="holiday-program"
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
                                 />
                                 <ListItem
                                     title="After School Program"
-                                    to={ROUTES.AFTER_SCHOOL_PROGRAM_SELECT_CLASS}
+                                    to="after-school-program"
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
                                 />
                             </div>
@@ -118,7 +114,7 @@ export const Navigation = () => {
                                     <h2 className="lilita">Creations</h2>
                                     <ListItem
                                         title="Creation Instructions"
-                                        to={ROUTES.CREATIONS}
+                                        to="creations"
                                         imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
                                     />
                                 </>
@@ -143,28 +139,28 @@ export const Navigation = () => {
                                 {hasCoreWriteScope && (
                                     <ListItem
                                         title="After School Program Invoicing"
-                                        to={ROUTES.AFTER_SCHOOL_PROGRAM_INVOICING_SELECT_CLASS}
+                                        to="after-school-program-invoicing"
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
                                     />
                                 )}
                                 {hasPayrollWriteScope && (
                                     <ListItem
                                         title="Payroll"
-                                        to={ROUTES.PAYROLL}
+                                        to="payroll"
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5"
                                     />
                                 )}
                                 {hasCoreWriteScope && (
                                     <ListItem
                                         title="Onboarding"
-                                        to={ROUTES.ONBOARDING}
+                                        to="onboarding"
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
                                     />
                                 )}
                                 {hasCoreWriteScope && (
                                     <ListItem
                                         title="Discount Codes"
-                                        to={ROUTES.DISCOUNT_CODES}
+                                        to="discount-codes"
                                         imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
                                     />
                                 )}

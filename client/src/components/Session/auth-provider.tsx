@@ -5,16 +5,12 @@ import { Role } from '@constants/roles'
 
 import AuthUserContext from './auth-user-context'
 
-// models what is stored in firestore
-type DbUser = {
-    email: string
-    role: Role
-}
-
 // the combined authuser provided through context to the entire app
-type AuthUser = {
+export type AuthUser = {
     uid: string
     email: string
+    firstName: string
+    lastName: string
     role: Role
 }
 
@@ -30,10 +26,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 unsubDb = firebase.db.doc(`users/${auth.uid}`).onSnapshot((dbUserSnap) => {
                     let authUser: AuthUser
                     if (dbUserSnap.exists) {
-                        const dbUser = dbUserSnap.data() as DbUser
-                        authUser = { uid: auth.uid, email: auth.email!, role: dbUser.role }
+                        const dbUser = dbUserSnap.data() as AuthUser
+                        authUser = {
+                            uid: auth.uid,
+                            email: auth.email!,
+                            role: dbUser.role,
+                            firstName: dbUser.firstName,
+                            lastName: dbUser.lastName,
+                        }
                     } else {
-                        authUser = { uid: auth.uid, email: auth.email!, role: 'RESTRICTED' }
+                        authUser = {
+                            uid: auth.uid,
+                            email: auth.email!,
+                            role: 'RESTRICTED',
+                            firstName: '',
+                            lastName: '',
+                        }
                     }
                     setAuthUser(authUser)
                     localStorage.setItem('authUser', JSON.stringify(authUser))
