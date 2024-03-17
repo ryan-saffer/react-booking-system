@@ -4,6 +4,7 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
+import { SignIn, SignedIn, SignedOut } from '@clerk/clerk-react'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import Loader from '@components/Shared/Loader.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
@@ -110,16 +111,21 @@ const router = createBrowserRouter([
                 // redirects the base route to the dashboard, or the sign in page if not logged in
                 index: true,
                 Component: () => (
-                    <ProtectedRoute roles={[]}>
-                        <Navigate to="dashboard" />
-                    </ProtectedRoute>
+                    // <ProtectedRoute roles={[]}>
+                    <Navigate to="dashboard" />
+                    // </ProtectedRoute>
                 ),
             },
             {
                 path: 'sign-in',
                 Component: () => (
                     <Suspense fallback={<Loader />}>
-                        <SignInPage />
+                        <SignedIn>
+                            <Navigate to="/" />
+                        </SignedIn>
+                        <SignedOut>
+                            <SignIn />
+                        </SignedOut>
                     </Suspense>
                 ),
             },
@@ -260,7 +266,9 @@ const router = createBrowserRouter([
                         path: 'discount-codes',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <DiscountCodesPage />
+                                <ProtectedRoute roles={['ADMIN']}>
+                                    <DiscountCodesPage />
+                                </ProtectedRoute>
                             </Suspense>
                         ),
                     },

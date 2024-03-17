@@ -3,6 +3,7 @@ import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
 
+import { useAuth, useOrganization } from '@clerk/clerk-react'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
@@ -161,7 +162,10 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { showButton, children } = props
 
     const scopes = useScopes()
-    const writePermissions = scopes.CORE === 'write'
+    // const writePermissions = scopes.CORE === 'write'
+    const { has } = useAuth()
+    const writePermissions = has?.({ permission: 'org:bookings:write' })
+    console.log('write perms:', writePermissions)
 
     const [date, setDate] = useState(midnight(DateTime.now()))
     const [, setLoading] = useState(true)

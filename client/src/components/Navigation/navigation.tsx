@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+import { OrganizationList, SignIn, SignOutButton, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react'
 import { useScopes } from '@components/Hooks/UseScopes'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
@@ -38,6 +39,7 @@ const Root = styled('div')(({ theme }) => ({
         flexDirection: 'column',
         padding: theme.spacing(3),
         background: '#F0F2F5',
+        height: '100%',
     },
 
     [`& .${classes.paper}`]: {
@@ -82,16 +84,20 @@ export const Navigation = () => {
 
     const firebase = useFirebase()
 
-    useStickyNavbar()
+    // useStickyNavbar()
+
+    const { has } = useAuth()
+
+    // console.log(has?.({ permission: 'org:bookings:view' }))
 
     return (
-        <Root sx={{ height: '100%' }}>
+        <Root>
             <CssBaseline />
             <div className={classes.main}>
-                <Container component="main" maxWidth="sm">
-                    {hasCoreScopes && (
-                        <>
-                            <h2 className="lilita">Programs</h2>
+                <Container component="main" maxWidth="sm" className="h-full">
+                    <>
+                        <h2 className="lilita">Programs</h2>
+                        {has?.({ permission: 'org:bookings:view' }) && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                                 <ListItem
                                     title="Parties, Events & Incursions"
@@ -109,29 +115,30 @@ export const Navigation = () => {
                                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
                                 />
                             </div>
-                            {!isRestricted && (
-                                <>
-                                    <h2 className="lilita">Creations</h2>
-                                    <ListItem
-                                        title="Creation Instructions"
-                                        to="creations"
-                                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
-                                    />
-                                </>
-                            )}
-                            <h2 className="lilita">Useful Links</h2>
-                            <ListItem
-                                imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
-                                title="Incident Reporting"
-                                onClick={() =>
-                                    window.open(
-                                        'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                                        '_blank'
-                                    )
-                                }
-                            />
-                        </>
-                    )}
+                        )}
+                        {!isRestricted && (
+                            <>
+                                <h2 className="lilita">Creations</h2>
+                                <ListItem
+                                    title="Creation Instructions"
+                                    to="creations"
+                                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
+                                />
+                            </>
+                        )}
+                        <h2 className="lilita">Useful Links</h2>
+                        <ListItem
+                            imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
+                            title="Incident Reporting"
+                            onClick={() =>
+                                window.open(
+                                    'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
+                                    '_blank'
+                                )
+                            }
+                        />
+                    </>
+                    {/* )} */}
                     {(hasCoreWriteScope || hasPayrollWriteScope) && (
                         <>
                             <h2 className="lilita">Admin</h2>
@@ -168,14 +175,14 @@ export const Navigation = () => {
                         </>
                     )}
 
-                    <Button
+                    {/* <Button
                         className={classes.signOutButton}
                         variant="outlined"
                         onClick={firebase.doSignOut}
                         endIcon={<LogoutIcon />}
                     >
                         Log out
-                    </Button>
+                    </Button> */}
                 </Container>
             </div>
         </Root>
