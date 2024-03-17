@@ -15,6 +15,8 @@ import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
+import { ClerkProvider } from '@clerk/clerk-react'
+import Meta from 'antd/es/card/Meta'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -97,9 +99,11 @@ export function Root() {
                     <ThemeProvider theme={theme}>
                         <ConfigProvider theme={antdTheme}>
                             <LocalizationProvider dateAdapter={AdapterLuxon}>
-                                <AuthProvider>
-                                    <_Root />
-                                </AuthProvider>
+                                <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}>
+                                    <AuthProvider>
+                                        <_Root />
+                                    </AuthProvider>
+                                </ClerkProvider>
                             </LocalizationProvider>
                         </ConfigProvider>
                     </ThemeProvider>

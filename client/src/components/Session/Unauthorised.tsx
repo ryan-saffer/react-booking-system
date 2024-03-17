@@ -2,6 +2,7 @@ import { Button, Layout, Result } from 'antd'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { UserButton } from '@clerk/clerk-react'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 
@@ -20,24 +21,25 @@ const Unauthorised: React.FC<Props> = ({ showLogout = false }) => {
 
     return (
         <Layout style={{ background: 'rgb(240, 242, 245)', height: '100vh' }}>
-            <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <img
                     style={{ height: 50, cursor: 'pointer' }}
                     src={Logo.default}
                     onClick={() => navigate('/')}
                     alt="Fizz Kidz Logo"
                 />
-            </Header>
+                <UserButton />
+            </Header> */}
             <Content style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Result
                     status="403"
                     title="Unauthorised"
                     subTitle="Sorry, you are not authorised to access this page."
-                    extra={
-                        <Button type="primary" onClick={showLogout ? signOut : goHome}>
-                            {showLogout ? 'Logout' : 'Back Home'}
-                        </Button>
-                    }
+                    // extra={
+                    //     <Button type="primary" onClick={showLogout ? signOut : goHome}>
+                    //         {showLogout ? 'Logout' : 'Back Home'}
+                    //     </Button>
+                    // }
                 />
             </Content>
         </Layout>
