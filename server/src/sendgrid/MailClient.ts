@@ -361,7 +361,7 @@ export class MailClient {
                         subject: 'Review your Fizz Kidz experience and WIN!',
                         replyTo: 'bookings@fizzkidz.com.au',
                     },
-                    template: 'party_feedback.html',
+                    template: 'party_feedback.mjml',
                     useMjml: true,
                 }
             case 'onboarding':
