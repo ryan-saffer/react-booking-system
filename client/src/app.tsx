@@ -4,9 +4,10 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { SignIn, SignedIn, SignedOut } from '@clerk/clerk-react'
+import { SignedIn, SignedOut } from '@clerk/clerk-react'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import Loader from '@components/Shared/Loader.js'
+import { _404 } from '@components/root/404.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
 import { Root } from '@components/root/root.js'
 
@@ -14,7 +15,9 @@ import { Root } from '@components/root/root.js'
  * Lazy load all pages. This enables much cleaner code splitting, particularly for parents booking in
  * a program that do not need all the javascript for the entire dashboard.
  */
-const SignInPage = lazy(() => import('./components/SignIn/index.js').then((module) => ({ default: module.SignInPage })))
+const SignInPage = lazy(() =>
+    import('./components/SignIn/SignInPage.js').then((module) => ({ default: module.SignInPage }))
+)
 const Navigation = lazy(() =>
     import('./components/Navigation/navigation.js').then((module) => ({ default: module.Navigation }))
 )
@@ -106,6 +109,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         Component: Root,
+        ErrorBoundary: _404,
         children: [
             {
                 // redirects the base route to the dashboard, or the sign in page if not logged in
@@ -124,7 +128,7 @@ const router = createBrowserRouter([
                             <Navigate to="/" />
                         </SignedIn>
                         <SignedOut>
-                            <SignIn />
+                            <SignInPage />
                         </SignedOut>
                     </Suspense>
                 ),
@@ -141,7 +145,7 @@ const router = createBrowserRouter([
                         index: true,
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={[]}>
+                                <ProtectedRoute>
                                     <Navigation />
                                 </ProtectedRoute>
                             </Suspense>
@@ -151,7 +155,7 @@ const router = createBrowserRouter([
                         path: 'bookings',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={['BASIC', 'RESTRICTED']}>
+                                <ProtectedRoute>
                                     <BookingsPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -164,7 +168,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['BASIC']}>
+                                        <ProtectedRoute>
                                             <SelectClassPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -174,7 +178,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['BASIC']}>
+                                        <ProtectedRoute>
                                             <AfterSchoolProgramCheckinClassDetails />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -189,7 +193,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['ADMIN']}>
+                                        <ProtectedRoute role="org:admin">
                                             <AfterSchoolProgramInvoicingPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -199,7 +203,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['ADMIN']}>
+                                        <ProtectedRoute role="org:admin">
                                             <AfterSchoolProgramInvoicing />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -214,7 +218,7 @@ const router = createBrowserRouter([
                                 path: '',
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['BASIC']}>
+                                        <ProtectedRoute>
                                             <HolidayProgramSelectionPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -224,7 +228,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader />}>
-                                        <ProtectedRoute roles={['BASIC']}>
+                                        <ProtectedRoute>
                                             <ClassDetailsPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -236,7 +240,7 @@ const router = createBrowserRouter([
                         path: 'payroll',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={['BOOKKEEPER']}>
+                                <ProtectedRoute permission="org:payroll:view">
                                     <Payroll />
                                 </ProtectedRoute>
                             </Suspense>
@@ -246,7 +250,7 @@ const router = createBrowserRouter([
                         path: 'onboarding',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={[]}>
+                                <ProtectedRoute>
                                     <Onboarding />
                                 </ProtectedRoute>
                             </Suspense>
@@ -256,7 +260,7 @@ const router = createBrowserRouter([
                         path: 'creations',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={[]}>
+                                <ProtectedRoute>
                                     <CreationsPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -266,7 +270,7 @@ const router = createBrowserRouter([
                         path: 'discount-codes',
                         Component: () => (
                             <Suspense fallback={<Loader />}>
-                                <ProtectedRoute roles={['ADMIN']}>
+                                <ProtectedRoute role="org:admin">
                                     <DiscountCodesPage />
                                 </ProtectedRoute>
                             </Suspense>

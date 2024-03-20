@@ -2,96 +2,66 @@ import { ReactNode, useEffect, useState } from 'react'
 
 import { useAuth, useUser } from '@clerk/clerk-react'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { Role } from '@constants/roles'
+import { trpc } from '@utils/trpc'
 
 import AuthUserContext from './auth-user-context'
 
-// the combined authuser provided through context to the entire app
 export type AuthUser = {
     uid: string
     email: string
-    firstName: string
-    lastName: string
-    // role: Role
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const { getToken } = useAuth()
+    const { getToken, orgRole } = useAuth()
     const { user, isLoaded } = useUser()
     const firebase = useFirebase()
     const cachedUser = localStorage.getItem('authUser')
     const [authUser, setAuthUser] = useState<AuthUser | null>(cachedUser ? JSON.parse(cachedUser) : null)
 
+    const addCustomClaimToAuth = trpc.admin.addCustomClaimToAuth.useMutation()
+
     useEffect(() => {
         async function signInOrOut() {
+            // once clerk has loaded, check if there is a logged in user
             if (user) {
+                // if there is, get the user token, and sign in to firebase
                 const token = await getToken({ template: 'integration_firebase' })
                 if (token) {
-                    console.log('signing in to firebase')
                     const firebaseUser = await firebase.auth.signInWithCustomToken(token)
 
+                    // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
+                    // Since anyone, such as customers, can create accounts, we need to lock down firestore to only
+                    // members with access to an organization.
+
+                    // start by checking if the user has an org role.
+                    const hasOrgRole = !!orgRole
+
+                    // this function uses the admin sdk to add a custom claim to the users auth session.
+                    // read more about custom claims here: https://firebase.google.com/docs/auth/admin/custom-claims
+                    await addCustomClaimToAuth.mutateAsync({ isCustomer: !hasOrgRole })
+
+                    // once this has worked, force refresh the users token, to ensure it is now using the new custom claim.
+                    await firebaseUser.user?.getIdToken(true)
+
+                    // and finally, update the authUser context, so the app will know that firebase login is complete.
                     const authUser = {
                         uid: firebaseUser.user!.uid,
                         email: user.primaryEmailAddress!.emailAddress,
-                        firstName: user.firstName!,
-                        lastName: user.lastName!,
                     }
                     setAuthUser(authUser)
                     localStorage.setItem('authUser', JSON.stringify(authUser))
                 }
             } else {
-                console.log('signing out of firebase')
-                firebase.doSignOut()
+                // if the clerk user is not logged in, be sure to also sign out of firebase.
+                await firebase.doSignOut()
                 setAuthUser(null)
             }
         }
         if (isLoaded) {
             signInOrOut()
         }
-    }, [firebase, getToken, user])
-
-    // useEffect(() => {
-    //     console.log('isLoaded:', isLoaded)
-    //     console.log('user updated!', { user })
-    // }, [user, isLoaded])
-
-    // useEffect(() => {
-    //     let unsubDb = () => {}
-    //     const unsubAuthState = firebase.auth.onAuthStateChanged(async (auth) => {
-    //         if (auth) {
-    //             unsubDb = firebase.db.doc(`users/${auth.uid}`).onSnapshot((dbUserSnap) => {
-    //                 let authUser: AuthUser
-    //                 if (dbUserSnap.exists) {
-    //                     const dbUser = dbUserSnap.data() as AuthUser
-    //                     authUser = {
-    //                         uid: auth.uid,
-    //                         email: auth.email!,
-    //                         role: dbUser.role,
-    //                         firstName: dbUser.firstName,
-    //                         lastName: dbUser.lastName,
-    //                     }
-    //                 } else {
-    //                     authUser = {
-    //                         uid: auth.uid,
-    //                         email: auth.email!,
-    //                         role: 'RESTRICTED',
-    //                         firstName: '',
-    //                         lastName: '',
-    //                     }
-    //                 }
-    //                 setAuthUser(authUser)
-    //                 localStorage.setItem('authUser', JSON.stringify(authUser))
-    //             })
-    //         } else {
-    //             setAuthUser(null)
-    //         }
-    //     })
-
-    //     return () => {
-    //         unsubDb()
-    //         unsubAuthState()
-    //     }
-    // }, [firebase])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user])
 
     return <AuthUserContext.Provider value={authUser}>{children}</AuthUserContext.Provider>
 }

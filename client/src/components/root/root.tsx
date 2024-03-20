@@ -16,7 +16,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { ClerkProvider } from '@clerk/clerk-react'
-import Meta from 'antd/es/card/Meta'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -63,8 +62,10 @@ const _Root = () => {
                     url: '',
                     async headers() {
                         const authToken = (await firebase.auth.currentUser?.getIdToken()) || ''
+                        const uid = (await firebase.auth.currentUser?.uid) || ''
                         return {
                             authorization: authToken,
+                            uid,
                         }
                     },
                     fetch(url, options) {
@@ -84,8 +85,10 @@ const _Root = () => {
     return (
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
-                <ScrollRestoration />
-                <Outlet />
+                <AuthProvider>
+                    <ScrollRestoration />
+                    <Outlet />
+                </AuthProvider>
             </QueryClientProvider>
         </trpc.Provider>
     )
@@ -100,9 +103,7 @@ export function Root() {
                         <ConfigProvider theme={antdTheme}>
                             <LocalizationProvider dateAdapter={AdapterLuxon}>
                                 <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}>
-                                    <AuthProvider>
-                                        <_Root />
-                                    </AuthProvider>
+                                    <_Root />
                                 </ClerkProvider>
                             </LocalizationProvider>
                         </ConfigProvider>

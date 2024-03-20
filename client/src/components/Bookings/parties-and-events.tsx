@@ -1,7 +1,8 @@
-import { Location, capitalise } from 'fizz-kidz'
+import { FirestoreBooking, ObjectKeys, StandardEvent, WithId, capitalise } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 
+import { useStudio } from '@components/Hooks/useStudio'
 import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 
 import EventPanel from './events/event-panel'
@@ -18,6 +19,8 @@ export const PartiesAndEvents = () => {
     const bookings = usePartyBookings()
     const events = useEvents('standard')
 
+    const studio = useStudio()
+
     useEffect(() => {
         if (bookings.status === 'loading' || events.status === 'loading') {
             setLoading(true)
@@ -32,59 +35,79 @@ export const PartiesAndEvents = () => {
             {loading && [1, 2, 3].map((idx) => <BookingsSkeleton key={idx} />)}
             {bookings.status === 'loaded' && events.status === 'loaded' && !loading && (
                 <Grid item xs sm md>
-                    {Object.values(Location).map(
-                        (location) =>
-                            (selectedLocation === location || selectedLocation === 'all') && (
-                                <div key={location}>
-                                    <h2 className="lilita" style={{ margin: 0, paddingTop: 16 }}>
-                                        {capitalise(location)} Studio
-                                    </h2>
-                                    <div style={{ paddingTop: 12 }}>
-                                        {bookings.result[location].length === 0 &&
-                                            events.result[location].length === 0 && (
-                                                <div
-                                                    style={{
-                                                        background: 'white',
-                                                        padding: 16,
-                                                        paddingLeft: 24,
-                                                        borderRadius: 12,
-                                                    }}
-                                                >
-                                                    <Typography variant="overline">No bookings on this day</Typography>
-                                                </div>
-                                            )}
-                                        {bookings.result[location].length > 0 && (
-                                            <div style={{ marginBottom: 8 }}>
-                                                <h6
-                                                    className="lilita"
-                                                    style={{ fontSize: 16, margin: 0, paddingBottom: 8 }}
-                                                >
-                                                    Parties
-                                                </h6>
-                                                {bookings.result[location].map((booking) => (
-                                                    <PartyPanel key={booking.id} booking={booking} />
-                                                ))}
-                                            </div>
-                                        )}
-                                        {events.result[location].length > 0 && (
-                                            <div>
-                                                <h6
-                                                    className="lilita"
-                                                    style={{ fontSize: 16, margin: 0, padding: '8px 0 8px 0' }}
-                                                >
-                                                    Events
-                                                </h6>
-                                                {events.result[location].map((event) => (
-                                                    <EventPanel key={event.id} event={event} />
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )
+                    {studio === 'master' ? (
+                        ObjectKeys(bookings.result).map(
+                            (location) =>
+                                (selectedLocation === location || selectedLocation === 'all') && (
+                                    <LocationBookings
+                                        key={location}
+                                        name={`${capitalise(location)} Studio`}
+                                        bookings={bookings.result[location]}
+                                        events={events.result[location]}
+                                    />
+                                )
+                        )
+                    ) : (
+                        <LocationBookings
+                            name={`${capitalise(studio)} Studio`}
+                            bookings={bookings.result[studio]}
+                            events={events.result[studio]}
+                        />
                     )}
                 </Grid>
             )}
+        </>
+    )
+}
+
+const LocationBookings = ({
+    name,
+    bookings,
+    events,
+}: {
+    name: string
+    bookings: WithId<FirestoreBooking>[]
+    events: StandardEvent[]
+}) => {
+    return (
+        <>
+            <h2 className="lilita" style={{ margin: 0, paddingTop: 16 }}>
+                {name}
+            </h2>
+            <div style={{ paddingTop: 12 }}>
+                {bookings.length === 0 && events.length === 0 && (
+                    <div
+                        style={{
+                            background: 'white',
+                            padding: 16,
+                            paddingLeft: 24,
+                            borderRadius: 12,
+                        }}
+                    >
+                        <Typography variant="overline">No bookings on this day</Typography>
+                    </div>
+                )}
+                {bookings.length > 0 && (
+                    <div style={{ marginBottom: 8 }}>
+                        <h6 className="lilita" style={{ fontSize: 16, margin: 0, paddingBottom: 8 }}>
+                            Parties
+                        </h6>
+                        {bookings.map((booking) => (
+                            <PartyPanel key={booking.id} booking={booking} />
+                        ))}
+                    </div>
+                )}
+                {events.length > 0 && (
+                    <div>
+                        <h6 className="lilita" style={{ fontSize: 16, margin: 0, padding: '8px 0 8px 0' }}>
+                            Events
+                        </h6>
+                        {events.map((event) => (
+                            <EventPanel key={event.id} event={event} />
+                        ))}
+                    </div>
+                )}
+            </div>
         </>
     )
 }

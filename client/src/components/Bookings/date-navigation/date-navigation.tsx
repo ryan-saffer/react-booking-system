@@ -3,7 +3,8 @@ import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
 
-import { useAuth, useOrganization } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/clerk-react'
+import { useStudio } from '@components/Hooks/useStudio'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
@@ -25,7 +26,6 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
 import { Button as MyButton } from '@ui-components/button'
 
-import { useScopes } from '../../Hooks/UseScopes'
 import { LocationFilter } from '../location-filter/location-filter.context'
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 import { DateNavigationContext } from './date-navigation.context'
@@ -60,7 +60,7 @@ const StyledHeading = styled('h1')({})
 const Root = styled('div')(({ theme }) => ({
     [`&.${classes.root}`]: {
         display: 'flex',
-        height: 'inherit',
+        height: '100%',
         background: '#F0F2F5',
     },
 
@@ -68,6 +68,7 @@ const Root = styled('div')(({ theme }) => ({
         width: drawerWidth,
         flexShrink: 0,
         zIndex: 1,
+        height: 'calc(100vh-64px)',
     },
 
     [`& .${classes.drawerPaper}`]: {
@@ -161,11 +162,8 @@ function midnight(date: DateTime) {
 export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { showButton, children } = props
 
-    const scopes = useScopes()
-    // const writePermissions = scopes.CORE === 'write'
     const { has } = useAuth()
     const writePermissions = has?.({ permission: 'org:bookings:write' })
-    console.log('write perms:', writePermissions)
 
     const [date, setDate] = useState(midnight(DateTime.now()))
     const [, setLoading] = useState(true)
@@ -179,6 +177,8 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const wrapFilter = useMediaQuery('(max-width: 550px)')
 
     useStickyNavbar()
+
+    const location = useStudio()
 
     return (
         <Root className={classes.root}>
@@ -286,24 +286,26 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                 <NavigateNext />
                             </Button>
                         </div>
-                        <FormControl sx={{ background: 'white', flex: 1 }}>
-                            <Select
-                                value={selectedLocation}
-                                onChange={(e) => filterByLocation(e.target.value as LocationFilter)}
-                            >
-                                <MenuItem value="all">
-                                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                        <LocationOnOutlinedIcon sx={{ color: '#0f172a', width: 20, height: 20 }} />
-                                        <div>All Locations</div>
-                                    </div>
-                                </MenuItem>
-                                {Object.values(Location).map((location) => (
-                                    <MenuItem key={location} value={location}>
-                                        {capitalise(location)}
+                        {location === 'master' && (
+                            <FormControl sx={{ background: 'white', flex: 1 }}>
+                                <Select
+                                    value={selectedLocation}
+                                    onChange={(e) => filterByLocation(e.target.value as LocationFilter)}
+                                >
+                                    <MenuItem value="all">
+                                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                            <LocationOnOutlinedIcon sx={{ color: '#0f172a', width: 20, height: 20 }} />
+                                            <div>All Locations</div>
+                                        </div>
                                     </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                    {Object.values(Location).map((location) => (
+                                        <MenuItem key={location} value={location}>
+                                            {capitalise(location)}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
                     </div>
                     <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}

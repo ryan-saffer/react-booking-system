@@ -1,191 +1,88 @@
 import { Link } from 'react-router-dom'
 
-import { OrganizationList, SignIn, SignOutButton, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react'
-import { useScopes } from '@components/Hooks/UseScopes'
-import useFirebase from '@components/Hooks/context/UseFirebase'
-import { useStickyNavbar } from '@components/root/use-sticky-navbar'
-import LogoutIcon from '@mui/icons-material/Logout'
-import { Button, Container, CssBaseline } from '@mui/material'
-import { grey } from '@mui/material/colors'
-import { styled } from '@mui/material/styles'
+import { useAuth } from '@clerk/clerk-react'
 
 import styles from './navigation.module.css'
 
-const PREFIX = 'Navigation'
-
-const classes = {
-    appBar: `${PREFIX}-appBar`,
-    toolbar: `${PREFIX}-toolbar`,
-    main: `${PREFIX}-main`,
-    paper: `${PREFIX}-paper`,
-    logo: `${PREFIX}-logo`,
-    heading: `${PREFIX}-heading`,
-    signOutButton: `${PREFIX}-signOutButton`,
-}
-
-const Root = styled('div')(({ theme }) => ({
-    [`& .${classes.appBar}`]: {
-        zIndex: theme.zIndex.drawer + 1,
-        position: 'sticky',
-        top: 0,
-    },
-
-    [`& .${classes.toolbar}`]: {
-        justifyContent: 'center',
-    },
-
-    [`& .${classes.main}`]: {
-        display: 'flex',
-        flexDirection: 'column',
-        padding: theme.spacing(3),
-        background: '#F0F2F5',
-        height: '100%',
-    },
-
-    [`& .${classes.paper}`]: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-        padding: theme.spacing(2),
-        '&:hover': {
-            backgroundColor: grey[100],
-            cursor: 'pointer',
-        },
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-
-    [`& .${classes.logo}`]: {
-        height: 50,
-    },
-
-    [`& .${classes.heading}`]: {
-        marginTop: 12,
-    },
-
-    [`& .${classes.signOutButton}`]: {
-        width: '100%',
-        marginTop: theme.spacing(4),
-        // backgroundColor: red[400],
-        '&:hover': {
-            backgroundColor: '#051529',
-            color: 'white',
-        },
-        height: 48,
-        color: 'black',
-    },
-}))
-
 export const Navigation = () => {
-    const scopes = useScopes()
-    const hasCoreScopes = scopes.CORE !== 'none'
-    const isRestricted = scopes.CORE === 'restricted'
-    const hasCoreWriteScope = scopes.CORE === 'write'
-    const hasPayrollWriteScope = scopes.PAYROLL === 'write'
-
-    const firebase = useFirebase()
-
-    // useStickyNavbar()
-
     const { has } = useAuth()
-
-    // console.log(has?.({ permission: 'org:bookings:view' }))
-
+    const isAdmin = has?.({ role: 'org:admin' })
+    const canAccessPayroll = has?.({ permission: 'org:payroll:view' })
     return (
-        <Root>
-            <CssBaseline />
-            <div className={classes.main}>
-                <Container component="main" maxWidth="sm" className="h-full">
+        <div className="twp flex h-full justify-center bg-slate-100 p-4">
+            <div className="flex w-full max-w-lg flex-col gap-5">
+                <h2 className="lilita text-2xl">Programs</h2>
+                <ListItem
+                    title="Parties, Events & Incursions"
+                    to="bookings"
+                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-76-scaled-e1645523582564-pkvrc29l4f5in86v327lhv2aavc71eult9zjc8i5cw.jpeg"
+                />
+                <ListItem
+                    title="Holiday Programs"
+                    to="holiday-program"
+                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
+                />
+                <ListItem
+                    title="After School Program"
+                    to="after-school-program"
+                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
+                />
+                <h2 className="lilita text-2xl">Creations</h2>
+                <ListItem
+                    title="Creation Instructions"
+                    to="creations"
+                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
+                />
+                <h2 className="lilita text-2xl">Useful Links</h2>
+                <ListItem
+                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
+                    title="Incident Reporting"
+                    onClick={() =>
+                        window.open(
+                            'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
+                            '_blank'
+                        )
+                    }
+                />
+                {/* {(isAdmin || canAccessPayroll) && */}
+                {/* <> */}
+                {(isAdmin || canAccessPayroll) && (
                     <>
-                        <h2 className="lilita">Programs</h2>
-                        {has?.({ permission: 'org:bookings:view' }) && (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <h2 className="lilita text-2xl">Admin</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            {isAdmin && (
                                 <ListItem
-                                    title="Parties, Events & Incursions"
-                                    to="bookings"
-                                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-76-scaled-e1645523582564-pkvrc29l4f5in86v327lhv2aavc71eult9zjc8i5cw.jpeg"
+                                    title="After School Program Invoicing"
+                                    to="after-school-program-invoicing"
+                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
                                 />
+                            )}
+                            {(isAdmin || canAccessPayroll) && (
                                 <ListItem
-                                    title="Holiday Programs"
-                                    to="holiday-program"
-                                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
+                                    title="Payroll"
+                                    to="payroll"
+                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5"
                                 />
+                            )}
+                            {isAdmin && (
                                 <ListItem
-                                    title="After School Program"
-                                    to="after-school-program"
-                                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
+                                    title="Onboarding"
+                                    to="onboarding"
+                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
                                 />
-                            </div>
-                        )}
-                        {!isRestricted && (
-                            <>
-                                <h2 className="lilita">Creations</h2>
+                            )}
+                            {isAdmin && (
                                 <ListItem
-                                    title="Creation Instructions"
-                                    to="creations"
-                                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
+                                    title="Discount Codes"
+                                    to="discount-codes"
+                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
                                 />
-                            </>
-                        )}
-                        <h2 className="lilita">Useful Links</h2>
-                        <ListItem
-                            imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
-                            title="Incident Reporting"
-                            onClick={() =>
-                                window.open(
-                                    'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                                    '_blank'
-                                )
-                            }
-                        />
+                            )}
+                        </div>
                     </>
-                    {/* )} */}
-                    {(hasCoreWriteScope || hasPayrollWriteScope) && (
-                        <>
-                            <h2 className="lilita">Admin</h2>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                {hasCoreWriteScope && (
-                                    <ListItem
-                                        title="After School Program Invoicing"
-                                        to="after-school-program-invoicing"
-                                        imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
-                                    />
-                                )}
-                                {hasPayrollWriteScope && (
-                                    <ListItem
-                                        title="Payroll"
-                                        to="payroll"
-                                        imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5"
-                                    />
-                                )}
-                                {hasCoreWriteScope && (
-                                    <ListItem
-                                        title="Onboarding"
-                                        to="onboarding"
-                                        imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
-                                    />
-                                )}
-                                {hasCoreWriteScope && (
-                                    <ListItem
-                                        title="Discount Codes"
-                                        to="discount-codes"
-                                        imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )}
-
-                    {/* <Button
-                        className={classes.signOutButton}
-                        variant="outlined"
-                        onClick={firebase.doSignOut}
-                        endIcon={<LogoutIcon />}
-                    >
-                        Log out
-                    </Button> */}
-                </Container>
+                )}
             </div>
-        </Root>
+        </div>
     )
 }
 
@@ -203,7 +100,7 @@ function ListItem({
     return (
         <Link to={to || ''} className={styles.listItem} onClick={onClick}>
             <img src={imgSrc} width={80} alt={`${title} icon`} />
-            <h4 className="gotham">{title}</h4>
+            <h4 className="gotham font-bold">{title}</h4>
         </Link>
     )
 }

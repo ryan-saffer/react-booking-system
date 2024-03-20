@@ -8,7 +8,7 @@ import { creations, taylorSwift } from './creationMarkdown'
 
 export const CreationsPage = () => {
     return (
-        <div className="bg-slate-200/50 p-6">
+        <div className="h-full bg-slate-100 p-6">
             <h1 className="lilita m-0 pb-4 text-2xl">Creation Instructions</h1>
             <Accordion TransitionProps={{ unmountOnExit: true }} className="mb-8">
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
