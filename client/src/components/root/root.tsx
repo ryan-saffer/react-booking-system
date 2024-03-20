@@ -1,5 +1,5 @@
 import mixpanel from 'mixpanel-browser'
-import { Outlet, ScrollRestoration } from 'react-router-dom'
+import { Outlet, ScrollRestoration, useNavigate } from 'react-router-dom'
 
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
@@ -95,6 +95,7 @@ const _Root = () => {
 }
 
 export function Root() {
+    const navigate = useNavigate()
     return (
         <FirebaseProvider>
             <MixpanelContext.Provider value={mixpanel}>
@@ -102,7 +103,11 @@ export function Root() {
                     <ThemeProvider theme={theme}>
                         <ConfigProvider theme={antdTheme}>
                             <LocalizationProvider dateAdapter={AdapterLuxon}>
-                                <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}>
+                                <ClerkProvider
+                                    routerPush={(route: string) => navigate(route, { replace: false })}
+                                    routerReplace={(route: string) => navigate(route, { replace: true })}
+                                    publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}
+                                >
                                     <_Root />
                                 </ClerkProvider>
                             </LocalizationProvider>

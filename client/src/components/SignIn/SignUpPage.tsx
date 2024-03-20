@@ -1,18 +1,21 @@
-import { SignIn } from '@clerk/clerk-react'
+import { SignUp } from '@clerk/clerk-react'
 import { useMediaQuery } from '@mui/material'
 
 import { SignInUpLayout } from './SignInUpLayout'
 
-export function SignInPage() {
+export function SignUpPage() {
     const isDesktop = useMediaQuery('(min-width: 1024px)')
 
     return (
         <SignInUpLayout>
-            <SignIn
-                signUpUrl="/sign-up"
+            <SignUp
+                signInUrl="sign-in"
                 appearance={{
                     variables: {
                         colorPrimary: '#B14594',
+                    },
+                    layout: {
+                        showOptionalFields: false,
                     },
                     elements: {
                         logoImage: { height: 48 },

@@ -18,6 +18,9 @@ import { Root } from '@components/root/root.js'
 const SignInPage = lazy(() =>
     import('./components/SignIn/SignInPage.js').then((module) => ({ default: module.SignInPage }))
 )
+const SignUpPage = lazy(() =>
+    import('./components/SignIn/SignUpPage.js').then((module) => ({ default: module.SignUpPage }))
+)
 const Navigation = lazy(() =>
     import('./components/Navigation/navigation.js').then((module) => ({ default: module.Navigation }))
 )
@@ -129,6 +132,19 @@ const router = createBrowserRouter([
                         </SignedIn>
                         <SignedOut>
                             <SignInPage />
+                        </SignedOut>
+                    </Suspense>
+                ),
+            },
+            {
+                path: 'sign-up',
+                Component: () => (
+                    <Suspense fallback={<Loader />}>
+                        <SignedIn>
+                            <Navigate to="/" />
+                        </SignedIn>
+                        <SignedOut>
+                            <SignUpPage />
                         </SignedOut>
                     </Suspense>
                 ),
