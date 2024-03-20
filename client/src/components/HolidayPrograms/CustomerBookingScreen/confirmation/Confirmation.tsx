@@ -63,7 +63,7 @@ export const Confirmation = () => {
 
     if (loading) {
         return (
-            <Root color="pink" width="centered">
+            <Root width="centered">
                 <Loader style={{ marginTop: 36, marginBottom: 12 }} />
             </Root>
         )
@@ -71,7 +71,7 @@ export const Confirmation = () => {
 
     if (error) {
         return (
-            <Root color="pink" width="centered">
+            <Root width="centered">
                 <Result
                     status="500"
                     title="Something went wrong"
@@ -81,7 +81,7 @@ export const Confirmation = () => {
         )
     }
     return (
-        <Root color="pink" width="centered">
+        <Root width="centered">
             <Result
                 status="success"
                 title="Booking confirmed"

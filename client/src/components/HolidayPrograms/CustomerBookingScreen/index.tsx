@@ -166,6 +166,7 @@ export const CustomerBookingScreen = () => {
                         background: 'linear-gradient(45deg, #f86ca7ff, #f4d444ff)',
                         borderColor: 'white',
                     }}
+                    className="font-bold shadow-none disabled:text-white"
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         setTimeout(() => continueButtonRef.current?.blur())
@@ -192,7 +193,7 @@ export const CustomerBookingScreen = () => {
     }
 
     return (
-        <Root color="pink" width="centered">
+        <Root width="centered">
             <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
                 Holiday Program Booking Form
             </Typography.Title>

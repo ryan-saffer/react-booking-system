@@ -180,7 +180,7 @@ export const BookingForm = () => {
     }
 
     return (
-        <Root color="green" width="centered">
+        <Root width="centered">
             <Typography.Title level={4} style={{ margin: 8, textAlign: 'center' }}>
                 After School Program Enrolment Form
             </Typography.Title>

@@ -347,6 +347,8 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                     marginBottom: 12,
                     background: 'linear-gradient(270deg, #2FEAA8, #028CF3)',
                     borderColor: 'white',
+                    boxShadow: 'none',
+                    fontWeight: 700,
                 }}
                 block
                 loading={loading}
