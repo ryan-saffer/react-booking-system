@@ -1,4 +1,4 @@
-import { SignIn, SignUp } from '@clerk/clerk-react'
+import { SignIn } from '@clerk/clerk-react'
 import { useMediaQuery } from '@mui/material'
 
 export function SignInPage() {
@@ -6,13 +6,18 @@ export function SignInPage() {
 
     return (
         <main className="twp flex h-full">
-            <div className="relative hidden w-1/2 bg-slate-800 lg:block">
-                <h1 className="absolute left-8 top-8 font-lilita text-3xl text-white">The Fizz Kidz Portal</h1>
-                <div className="absolute bottom-8 flex w-full flex-col gap-8 p-8">
-                    <p className="font-gotham text-xl text-white">A single place to manage all things Fizz.</p>
+            <div className="hidden w-1/2 overflow-hidden bg-slate-900 lg:block">
+                <div className="flex h-full flex-col justify-between p-12">
+                    <h1 className="font-lilita text-3xl text-white">Welcome to the Fizz Kidz portal.</h1>
+                    <p className="font-gotham text-lg font-bold text-white">
+                        Your place to manage all things Fizz Kidz. View and manage birthday parties, holiday programs,
+                        after school programs, events, payroll, onboarding, discount codes and much more!
+                    </p>
                 </div>
             </div>
-            <div className="flex w-full items-center justify-center lg:w-1/2">
+            <div className="relative flex w-full items-center justify-center lg:w-1/2">
+                <img src="/login-background-top.png" className="absolute top-0 z-10 w-full object-cover" />
+                <img src="/login-background-bottom.png" className="absolute bottom-0 z-0 w-full object-cover" />
                 <SignIn
                     appearance={{
                         variables: {
@@ -20,6 +25,9 @@ export function SignInPage() {
                         },
                         elements: {
                             logoImage: { height: 48 },
+                            rootBox: {
+                                zIndex: 100,
+                            },
                             ...(isDesktop && {
                                 cardBox: {
                                     border: 'none',
