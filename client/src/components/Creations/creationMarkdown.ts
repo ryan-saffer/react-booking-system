@@ -774,6 +774,26 @@ const wobblySoap = {
     `,
 }
 
+export const taylorSwift = `
+### Mandatory in all Swiftie Parties
+1. Staff members wear gems on their face for the duration of the party
+2. Make a crown with the gems across the birthday child's forehead
+3. Place gems on all the kids' faces (outside of their eyes)
+4. Taylor Swift is the soundtrack to the party
+5. Staff use Taylor Swift themed lingo when introducing creations and whilst talking throughout the party
+6. Hosts to sing and dance, and encourage swiftie singing, dancing and FUN!
+
+### Swiftie Creations
+* **Swiftie** Friendship Bracelets (each child gets one length of elastic and 15-20 beads. Video instructions in Sling)
+* **Fearless** Gold Slime (yellow slime with gold glitter)
+* Red **1989** Lip Balm (red or pink lip balm using red/pink pigment)
+* **Folklore** Butterfly Soaps (soap in butterfly moulds)
+* **Evermore** Slime (green slime with green glitter)
+* **Lover** Rainbow Bath Bombs
+* **Midnight** Slime (galaxy slime)
+* **Lover** Glitter Face Paint
+`
+
 export const creations = [
     bathbombs,
     bugAnimalInSoap,
