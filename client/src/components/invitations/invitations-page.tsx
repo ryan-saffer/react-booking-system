@@ -11,39 +11,39 @@ import { Navbar } from './navbar'
 const Invitations: { name: InvitationOption; src: string }[] = [
     {
         name: 'Freckles',
-        src: '/Invitation+Envelope-Freckles.png',
+        src: '/invitations/Invitation+Envelope-Freckles.png',
     },
     {
         name: 'Stripes',
-        src: '/Invitation+Envelope-Stripes.png',
+        src: '/invitations/Invitation+Envelope-Stripes.png',
     },
     {
         name: 'Dots',
-        src: '/Invitation+Envelope-Dots.png',
+        src: '/invitations/Invitation+Envelope-Dots.png',
     },
     {
         name: 'Glitz & Glam',
-        src: '/Invitation+Envelope-Glitz.png',
+        src: '/invitations/Invitation+Envelope-Glitz.png',
     },
     {
         name: 'Swiftie',
-        src: '/Invitation+Envelope-Swift.png',
+        src: '/invitations/Invitation+Envelope-Swift.png',
     },
     {
         name: 'Bubbling Fun',
-        src: '/Invitation+Envelope-Bubbling.png',
+        src: '/invitations/Invitation+Envelope-Bubbling.png',
     },
     {
         name: 'Bubbling Blue Fun',
-        src: '/Invitation+Envelope-Bubbling-Blue.png',
+        src: '/invitations/Invitation+Envelope-Bubbling-Blue.png',
     },
     {
         name: 'Slime Time',
-        src: '/Invitation+Envelope-Slime.png',
+        src: '/invitations/Invitation+Envelope-Slime.png',
     },
     {
         name: 'Tie Dye',
-        src: '/Invitation+Envelope-Tye-Dye.png',
+        src: '/invitations/Invitation+Envelope-Tye-Dye.png',
     },
 ]
 

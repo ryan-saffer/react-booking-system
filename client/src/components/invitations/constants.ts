@@ -1,13 +1,19 @@
-import { InvitationOption } from "fizz-kidz";
+import { InvitationOption } from 'fizz-kidz'
 
-export const InvitationTemplates: Record<InvitationOption, { invitation: string, envelope: string}> = {
-    Freckles: { invitation: '/Invitation-Freckles.png', envelope: '/Envelope-Freckles.png' },
-    Stripes: { invitation: '/Invitation-Stripes.png', envelope: '/Envelope-Stripes.png' },
-    Dots: { invitation: '/Invitation-Dots.png', envelope: '/Envelope-Dots.png' },
-    'Glitz & Glam': { invitation: '/Invitation-Glitz.png', envelope: '/Envelope-Glitz.png' },
-    'Bubbling Fun': { invitation: '/Invitation-Bubbling.png', envelope: '/Envelope-Bubbling.png' },
-    'Bubbling Blue Fun': { invitation: '/Invitation-Bubbling-Blue.png', envelope: '/Envelope-Bubbling-Blue.png' },
-    'Slime Time': { invitation: '/Invitation-Slime.png', envelope: '/Envelope-Slime.png' },
-    'Tie Dye': { invitation: '/Invitation-Tye-Dye.png', envelope: '/Envelope-Tye-Dye.png' },
-    'Swiftie': { invitation: '/Invitation-Swift.png', envelope: '/Envelope-Swift.png' }
+export const InvitationTemplates: Record<InvitationOption, { invitation: string; envelope: string }> = {
+    Freckles: { invitation: '/invitations/Invitation-Freckles.png', envelope: '/invitations/Envelope-Freckles.png' },
+    Stripes: { invitation: '/invitations/Invitation-Stripes.png', envelope: '/invitations/Envelope-Stripes.png' },
+    Dots: { invitation: '/invitations/Invitation-Dots.png', envelope: '/invitations/Envelope-Dots.png' },
+    'Glitz & Glam': { invitation: '/invitations/Invitation-Glitz.png', envelope: '/invitations/Envelope-Glitz.png' },
+    'Bubbling Fun': {
+        invitation: '/invitations/Invitation-Bubbling.png',
+        envelope: '/invitations/Envelope-Bubbling.png',
+    },
+    'Bubbling Blue Fun': {
+        invitation: '/invitations/Invitation-Bubbling-Blue.png',
+        envelope: '/invitations/Envelope-Bubbling-Blue.png',
+    },
+    'Slime Time': { invitation: '/invitations/Invitation-Slime.png', envelope: '/invitations/Envelope-Slime.png' },
+    'Tie Dye': { invitation: '/invitations/Invitation-Tye-Dye.png', envelope: '/invitations/Envelope-Tye-Dye.png' },
+    Swiftie: { invitation: '/invitations/Invitation-Swift.png', envelope: '/invitations/Envelope-Swift.png' },
 }
