@@ -9,7 +9,6 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 
-import { useScopes } from '../../Hooks/UseScopes'
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
 
 const PREFIX = 'BookingPanel'
@@ -65,8 +64,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 }))
 
 const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
-    const isRestricted = useScopes().CORE === 'restricted'
-
     const isMobile = useMediaQuery('(max-width: 540px')
 
     return (
@@ -79,8 +76,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
                         </Typography>
                         <Typography className={classes.secondaryHeading}>
-                            {booking.parentFirstName} {isRestricted ? 'xxxxx' : booking.parentLastName} -{' '}
-                            {booking.childName}
+                            {booking.parentFirstName} {booking.parentLastName} - {booking.childName}
                             's {booking.childAge}th
                         </Typography>
                     </div>

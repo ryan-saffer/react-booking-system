@@ -1,4 +1,5 @@
 import { acuityRouter } from '../acuity/functions/trpc/trpc.acuity'
+import { adminRouter } from '../admin/functions/trpc/trpc.admin'
 import { afterSchoolProgramRouter } from '../after-school-program/functions/trpc/trpc.after-school-program'
 import { eventsRouter } from '../events/functions/trpc/trpc.events'
 import { holidayProgramsRouter } from '../holiday-programs/functions/trpc/trpc.holiday-programs'
@@ -15,6 +16,7 @@ const appRouter = router({
     stripe: stripeRouter,
     afterSchoolProgram: afterSchoolProgramRouter,
     staff: staffRouter,
+    admin: adminRouter,
 })
 
 export type AppRouter = typeof appRouter

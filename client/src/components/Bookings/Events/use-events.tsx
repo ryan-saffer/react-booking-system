@@ -1,6 +1,7 @@
 import { Event, IncursionEvent, Location, Service, StandardEvent } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
+import { useStudio } from '@components/Hooks/useStudio'
 import { convertTimestamps } from '@utils/firebase/converters'
 
 import useFirebase from '../../Hooks/context/UseFirebase'
@@ -13,6 +14,8 @@ export function useEvents<T extends Event['$type']>(
 
     const { date } = useDateNavigation()
     const [events, setEvents] = useState<Service<Record<Location, Event[]>>>({ status: 'loading' })
+
+    const location = useStudio()
 
     const generateLocationsMap = (events: Event[]): Record<Location, Event[]> =>
         Object.values(Location).reduce(
@@ -30,12 +33,17 @@ export function useEvents<T extends Event['$type']>(
             // an event will never be 90 days long, so a safe window
             const ninetyDaysAgo = date.minus({ days: 90 })
 
-            const snap = await firebase.db
+            let query = firebase.db
                 .collectionGroup('eventSlots')
                 .where('$type', '==', type)
                 .where('startTime', '<', nextDay.toJSDate())
                 .where('startTime', '>', ninetyDaysAgo.toJSDate())
-                .get()
+
+            if (location !== 'master') {
+                query = query.where('studio', '==', location)
+            }
+
+            const snap = await query.get()
 
             try {
                 const events = snap.docs

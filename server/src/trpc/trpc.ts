@@ -17,7 +17,7 @@ export const middleware = t.middleware
 export function createContext({
     req,
 }: NodeHTTPCreateContextFnOptions<IncomingMessage, ServerResponse<IncomingMessage>>) {
-    return { authToken: req.headers.authorization }
+    return { authToken: req.headers.authorization, uid: req.headers.uid as string | undefined }
 }
 
 // MIDDLEWARE
