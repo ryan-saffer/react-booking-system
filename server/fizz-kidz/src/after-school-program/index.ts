@@ -37,6 +37,7 @@ export type AfterSchoolEnrolment = {
         allergies: string
         isAnaphylactic: boolean
         anaphylaxisPlan: string
+        support: string
         permissionToPhotograph: boolean
     }
     emergencyContact: {

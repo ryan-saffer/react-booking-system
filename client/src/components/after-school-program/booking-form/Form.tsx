@@ -25,6 +25,7 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
     const [loading, setLoading] = useState(false)
     const [hasAllergies, setHasAllergies] = useState(false)
     const [isAnaphylactic, setIsAnaphylactic] = useState(false)
+    const [needsSupport, setNeedsSupport] = useState(false)
     const [showTermsModal, setShowTermsModal] = useState(false)
 
     useEffect(() => {
@@ -56,6 +57,7 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                 allergies: form.getFieldValue('childAllergies') ?? '',
                 isAnaphylactic: isAnaphylactic,
                 anaphylaxisPlan: form.getFieldValue('anaphylaxisPlan') ?? '',
+                support: form.getFieldValue('childSupport') ?? '',
                 permissionToPhotograph: form.getFieldValue('permissionToPhotograph') === 'yes',
             },
             emergencyContact: {
@@ -201,7 +203,35 @@ const Form: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                         <Upload onSuccess={(filepath: string) => form.setFieldsValue({ anaphylaxisPlan: filepath })} />
                     </AntdForm.Item>
                 )}
-
+                <AntdForm.Item
+                    name="childNeedsSupport"
+                    label="Does your child need extra support for learning difficulties, disabilities or additional learning needs?"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input if your child needs an extra support.',
+                        },
+                    ]}
+                >
+                    <Select onChange={(value) => setNeedsSupport(value === 'yes')}>
+                        <Select.Option value="yes">Yes</Select.Option>
+                        <Select.Option value="no">No</Select.Option>
+                    </Select>
+                </AntdForm.Item>
+                {needsSupport && (
+                    <AntdForm.Item
+                        name="childSupport"
+                        label="How best can we support your child?"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please help us understand how we can best support your child.',
+                            },
+                        ]}
+                    >
+                        <TextArea rows={3} />
+                    </AntdForm.Item>
+                )}
                 <AntdForm.Item
                     name="permissionToPhotograph"
                     label="We love to show other parents the cool things that we do by taking pictures and videos. Do you give permission for your child to be in our marketing content? "

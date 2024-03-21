@@ -130,6 +130,9 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 {!!enrolment.child.allergies && (
                     <Descriptions.Item label="Allergies:">{enrolment.child.allergies}</Descriptions.Item>
                 )}
+                {enrolment.child.support && (
+                    <Descriptions.Item label="Support:">{enrolment.child.support}</Descriptions.Item>
+                )}
                 <Descriptions.Item label="Parent Name:">
                     {enrolment.parent.firstName} {enrolment.parent.lastName}
                 </Descriptions.Item>

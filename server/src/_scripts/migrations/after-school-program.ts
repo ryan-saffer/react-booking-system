@@ -14,3 +14,10 @@ export async function migrateScienceEnrolments() {
         })
     )
 }
+
+export async function migration_addChildSupportToAllExistingEnrolments() {
+    const firestoreClient = await FirestoreClient.getInstance()
+    const appointmentsSnap = await firestoreClient.collection('afterSchoolEnrolments').get()
+
+    await Promise.all(appointmentsSnap.docs.map((doc) => doc.ref.update({ 'child.support': '' })))
+}

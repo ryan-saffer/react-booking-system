@@ -1,8 +1,12 @@
 import prompts from 'prompts'
 
+import {
+    migrateScienceEnrolments,
+    migration_addChildSupportToAllExistingEnrolments,
+} from './migrations/after-school-program'
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
-import { migrateScienceEnrolments } from './migrations/after-school-program'
 import { generatePartyFormUrl } from './parties/generate-form'
+
 ;(async () => {
     const { script } = await prompts({
         type: 'select',
@@ -31,6 +35,10 @@ import { generatePartyFormUrl } from './parties/generate-form'
                 description: 'Moves scienceAppointments to afterSchoolEnrolments',
                 value: 'migrateScienceEnrolments',
             },
+            {
+                title: 'Add child support to all existing after school enrolments',
+                value: 'addChildSupportToExistingEnrolments',
+            },
         ],
     })
 
@@ -53,5 +61,8 @@ import { generatePartyFormUrl } from './parties/generate-form'
     }
     if (script === 'migrateScienceEnrolments') {
         await migrateScienceEnrolments()
+    }
+    if (script === 'addChildSupportToExistingEnrolments') {
+        await migration_addChildSupportToAllExistingEnrolments()
     }
 })()
