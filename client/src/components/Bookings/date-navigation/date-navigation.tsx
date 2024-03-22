@@ -62,13 +62,13 @@ const Root = styled('div')(({ theme }) => ({
         display: 'flex',
         height: '100%',
         background: '#F0F2F5',
+        minHeight: 'calc(100vh - 64px)',
     },
 
     [`& .${classes.drawer}`]: {
         width: drawerWidth,
         flexShrink: 0,
         zIndex: 1,
-        height: 'calc(100vh-64px)',
     },
 
     [`& .${classes.drawerPaper}`]: {
@@ -201,7 +201,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                     />
                 </Drawer>
             </Hidden>
-            <Grid container>
+            <Grid container className="dashboard-full-screen">
                 <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
                     <div className="mb-2 flex items-center justify-between">
                         <StyledHeading

@@ -8,11 +8,13 @@ type Props = {
     style?: React.CSSProperties
     size?: 'sm' | 'lg'
     color?: string
+    fullScreen?: boolean
 }
 
 const defaultProps: Props = {
     size: 'lg',
     color: 'black',
+    fullScreen: false,
 }
 
 const Loader: React.FC<Props> = (_props) => {
@@ -21,11 +23,11 @@ const Loader: React.FC<Props> = (_props) => {
         ..._props,
     }
 
-    const { className, style, size, color } = props
+    const { className, style, size, color, fullScreen } = props
 
     return (
         <div
-            className={className}
+            className={cn(className, { 'dashboard-full-screen': fullScreen })}
             style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', ...style }}
         >
             <Loader2 className={cn(`animate-spin text-[${color}]`, size === 'sm' ? 'h-8 w-8' : 'h-10 w-10')} />
