@@ -170,7 +170,7 @@ const router = createBrowserRouter([
                     {
                         path: 'bookings',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute>
                                     <BookingsPage />
                                 </ProtectedRoute>

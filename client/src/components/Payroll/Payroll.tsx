@@ -81,7 +81,7 @@ export const Payroll = () => {
     }
 
     return (
-        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', height: '100%', minHeight: 'calc(100vh - 64px)' }}>
             <Content style={{ background: colorBgContainer, padding: 32, margin: 32 }}>
                 <Title style={{ marginTop: 0 }}>Payroll</Title>
                 <Paragraph>

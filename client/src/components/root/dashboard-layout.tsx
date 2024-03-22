@@ -1,17 +1,34 @@
+import { Menu } from 'lucide-react'
+import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
-import { ClerkLoaded, ClerkLoading, OrganizationSwitcher, UserButton } from '@clerk/clerk-react'
+import { OrganizationSwitcher, UserButton, useAuth as useAuthClerk } from '@clerk/clerk-react'
 import { dark } from '@clerk/themes'
+import { useAuth } from '@components/Hooks/context/useAuth'
 import Loader from '@components/Shared/Loader'
+import { Button } from '@ui-components/button'
+
+import { DashboardDrawer } from './dashboard-drawer'
 
 export function DashboardLayout() {
+    const auth = useAuth()
+    const { isLoaded } = useAuthClerk()
+
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
     return (
         <main className="flex h-full flex-col">
             <nav
                 id="navbar"
                 className="twp z-50 flex h-16 w-full flex-none items-center justify-center bg-slate-900 shadow-md"
             >
-                <Link to="/dashboard" preventScrollReset={true} className="absolute left-4 sm:static">
+                <Button
+                    className="absolute left-4 flex items-center hover:bg-slate-800"
+                    onClick={() => setDrawerOpen((prev) => !prev)}
+                >
+                    <Menu />
+                </Button>
+                <Link to="/dashboard" preventScrollReset={true} className="hidden sm:block">
                     <img src="/fizz-logo.png" className=" h-12" />
                 </Link>
                 <div className="absolute right-4">
@@ -21,14 +38,16 @@ export function DashboardLayout() {
                     </div>
                 </div>
             </nav>
-            <ClerkLoading>
+            {auth && isLoaded ? (
+                <>
+                    <section className="flex-auto">
+                        <Outlet />
+                        <DashboardDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+                    </section>
+                </>
+            ) : (
                 <Loader />
-            </ClerkLoading>
-            <ClerkLoaded>
-                <section className="flex-auto">
-                    <Outlet />
-                </section>
-            </ClerkLoaded>
+            )}
         </main>
     )
 }

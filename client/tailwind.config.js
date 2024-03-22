@@ -86,5 +86,14 @@ export default {
         }),
         autoprefixer,
         backgroundPatterns,
+        ({ addUtilities }) => {
+            addUtilities({
+                // a custom utility class to make screen full screen when within the dashboard.
+                // this fixes a bug when opening the drawer, and 'h-full' seems to break.
+                '.dashboard-full-screen': {
+                    minHeight: 'calc(100vh - 64px)',
+                },
+            })
+        },
     ],
 }

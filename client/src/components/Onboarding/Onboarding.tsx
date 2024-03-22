@@ -43,7 +43,7 @@ export const Onboarding = () => {
     const [showNewEmployeeModal, setShowNewEmployeeModal] = useState(false)
 
     return (
-        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', height: '100%', minHeight: 'calc(100vh - 64px)' }}>
             <Content style={{ background: 'white', padding: 32, margin: 32 }}>
                 <div
                     style={{
