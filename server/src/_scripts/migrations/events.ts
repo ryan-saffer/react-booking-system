@@ -86,6 +86,7 @@ export async function migrateLegacyEvents() {
 async function bookIntoNewSystem(legacyEvents: LegacyEvent[]) {
     const caller = eventsRouter.createCaller({
         authToken: 'ADD AUTH TOKEN HERE',
+        uid: 'ADD UID HERE',
     })
 
     const firstSlot = legacyEvents[0]

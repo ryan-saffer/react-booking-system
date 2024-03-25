@@ -33,7 +33,16 @@ export function DashboardLayout() {
                 </Link>
                 <div className="absolute right-4">
                     <div className="flex h-full items-center justify-center gap-4">
-                        <OrganizationSwitcher hidePersonal appearance={{ baseTheme: dark }} />
+                        <OrganizationSwitcher
+                            hidePersonal
+                            organizationProfileUrl="/dashboard/organization"
+                            appearance={{
+                                baseTheme: dark,
+                                elements: {
+                                    organizationSwitcherPopoverActionButton__manageOrganization: {},
+                                },
+                            }}
+                        />
                         <UserButton afterSignOutUrl="/sign-in" />
                     </div>
                 </div>
