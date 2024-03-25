@@ -153,7 +153,11 @@ const router = createBrowserRouter([
                 path: 'dashboard',
                 lazy: async () => {
                     return {
-                        Component: DashboardLayout,
+                        Component: () => (
+                            <ProtectedRoute>
+                                <DashboardLayout />
+                            </ProtectedRoute>
+                        ),
                     }
                 },
                 children: [
