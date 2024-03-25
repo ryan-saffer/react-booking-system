@@ -2,7 +2,6 @@ import { format } from 'date-fns'
 import { DiscountCode, Service } from 'fizz-kidz'
 import { ArrowUpDown, CalendarIcon, MoreHorizontal } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { ScrollRestoration } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
@@ -284,7 +283,6 @@ export const DiscountCodesPage = () => {
     return (
         <div className="twp h-full">
             <Toaster richColors />
-            <ScrollRestoration />
             <main className="absolute flex h-full w-full justify-center p-4 sm:p-8">
                 <div className="w-full max-w-5xl">
                     <h1 className="font-lilita text-3xl">Discount Codes</h1>

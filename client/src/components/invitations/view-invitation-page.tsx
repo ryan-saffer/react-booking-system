@@ -2,7 +2,7 @@ import { InvitationOption } from 'fizz-kidz'
 import { ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ScrollRestoration, useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
@@ -48,7 +48,6 @@ export const ViewInvitationPage = () => {
 
     return (
         <div className="twp">
-            <ScrollRestoration />
             <Navbar />
             <Toaster richColors />
             <main className="flex h-full w-full justify-center max-[1060px]:pb-[100px]">

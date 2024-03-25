@@ -337,15 +337,15 @@ const router = createBrowserRouter([
             },
             {
                 path: 'invitations',
-                Component: () => (
-                    <Suspense fallback={<Loader />}>
-                        <ChooseInvitationPage />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'invitation',
                 children: [
+                    {
+                        path: '',
+                        Component: () => (
+                            <Suspense fallback={<Loader />}>
+                                <ChooseInvitationPage />
+                            </Suspense>
+                        ),
+                    },
                     {
                         path: 'create',
                         Component: () => (
@@ -354,6 +354,11 @@ const router = createBrowserRouter([
                             </Suspense>
                         ),
                     },
+                ],
+            },
+            {
+                path: 'invitation',
+                children: [
                     {
                         path: ':id',
                         Component: () => (
