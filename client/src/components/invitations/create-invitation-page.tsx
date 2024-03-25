@@ -6,7 +6,7 @@ import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } fr
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
-import { Link, ScrollRestoration, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
 import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'
@@ -62,14 +62,14 @@ export const CreateInvitationPage = () => {
 
     return (
         <div className="twp">
-            <ScrollRestoration />
             <Toaster richColors />
             <Navbar />
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
                         <Link
-                            to="invitations"
+                            to=".."
+                            preventScrollReset={true}
                             state={{
                                 childName: form.getValues().childName,
                                 childAge: form.getValues().childAge,
