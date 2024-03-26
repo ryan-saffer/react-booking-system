@@ -153,18 +153,14 @@ const router = createBrowserRouter([
                 path: 'dashboard',
                 lazy: async () => {
                     return {
-                        Component: () => (
-                            <ProtectedRoute>
-                                <DashboardLayout />
-                            </ProtectedRoute>
-                        ),
+                        Component: DashboardLayout,
                     }
                 },
                 children: [
                     {
                         index: true,
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute>
                                     <Navigation />
                                 </ProtectedRoute>
@@ -187,7 +183,7 @@ const router = createBrowserRouter([
                             {
                                 index: true,
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute>
                                             <SelectClassPage />
                                         </ProtectedRoute>
@@ -197,7 +193,7 @@ const router = createBrowserRouter([
                             {
                                 path: 'class',
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute>
                                             <AfterSchoolProgramCheckinClassDetails />
                                         </ProtectedRoute>
@@ -212,7 +208,7 @@ const router = createBrowserRouter([
                             {
                                 index: true,
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute role="org:admin">
                                             <AfterSchoolProgramInvoicingPage />
                                         </ProtectedRoute>
@@ -222,7 +218,7 @@ const router = createBrowserRouter([
                             {
                                 path: 'class',
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute role="org:admin">
                                             <AfterSchoolProgramInvoicing />
                                         </ProtectedRoute>
@@ -237,7 +233,7 @@ const router = createBrowserRouter([
                             {
                                 path: '',
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute>
                                             <HolidayProgramSelectionPage />
                                         </ProtectedRoute>
@@ -247,7 +243,7 @@ const router = createBrowserRouter([
                             {
                                 path: 'class',
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute>
                                             <ClassDetailsPage />
                                         </ProtectedRoute>
@@ -259,7 +255,7 @@ const router = createBrowserRouter([
                     {
                         path: 'payroll',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute permission="org:payroll:view">
                                     <Payroll />
                                 </ProtectedRoute>
@@ -269,7 +265,7 @@ const router = createBrowserRouter([
                     {
                         path: 'onboarding',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute>
                                     <Onboarding />
                                 </ProtectedRoute>
@@ -279,7 +275,7 @@ const router = createBrowserRouter([
                     {
                         path: 'creations',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute>
                                     <CreationsPage />
                                 </ProtectedRoute>
@@ -289,7 +285,7 @@ const router = createBrowserRouter([
                     {
                         path: 'discount-codes',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute role="org:admin">
                                     <DiscountCodesPage />
                                 </ProtectedRoute>
@@ -301,7 +297,7 @@ const router = createBrowserRouter([
             {
                 path: 'after-school-program-enrolment',
                 Component: () => (
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={<Loader fullScreen />}>
                         <EnrolmentPage />
                     </Suspense>
                 ),
@@ -309,7 +305,7 @@ const router = createBrowserRouter([
             {
                 path: 'parent-portal/:id',
                 Component: () => (
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={<Loader fullScreen />}>
                         <ParentPortalRoot />
                     </Suspense>
                 ),
@@ -317,7 +313,7 @@ const router = createBrowserRouter([
             {
                 path: 'after-school-program-enrolment-form',
                 Component: () => (
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={<Loader fullScreen />}>
                         <BookingForm />
                     </Suspense>
                 ),
@@ -334,7 +330,7 @@ const router = createBrowserRouter([
             {
                 path: 'confirmation',
                 Component: () => (
-                    <Suspense fallback={<Loader />}>
+                    <Suspense fallback={<Loader fullScreen />}>
                         <Confirmation />
                     </Suspense>
                 ),
@@ -345,7 +341,7 @@ const router = createBrowserRouter([
                     {
                         path: '',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ChooseInvitationPage />
                             </Suspense>
                         ),
@@ -353,7 +349,7 @@ const router = createBrowserRouter([
                     {
                         path: 'create',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <CreateInvitationPage />
                             </Suspense>
                         ),
@@ -366,7 +362,7 @@ const router = createBrowserRouter([
                     {
                         path: ':id',
                         Component: () => (
-                            <Suspense fallback={<Loader />}>
+                            <Suspense fallback={<Loader fullScreen />}>
                                 <ViewInvitationPage />
                             </Suspense>
                         ),

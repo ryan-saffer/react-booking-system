@@ -4,14 +4,13 @@ import { Link, Outlet } from 'react-router-dom'
 
 import { OrganizationSwitcher, UserButton, useAuth as useAuthClerk } from '@clerk/clerk-react'
 import { dark } from '@clerk/themes'
-import { useAuth } from '@components/Hooks/context/useAuth'
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
+import { Skeleton } from '@ui-components/skeleton'
 
 import { DashboardDrawer } from './dashboard-drawer'
 
 export function DashboardLayout() {
-    const auth = useAuth()
     const { isLoaded } = useAuthClerk()
 
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -33,21 +32,30 @@ export function DashboardLayout() {
                 </Link>
                 <div className="absolute right-4">
                     <div className="flex h-full items-center justify-center gap-4">
-                        <OrganizationSwitcher
-                            hidePersonal
-                            organizationProfileUrl="/dashboard/organization"
-                            appearance={{
-                                baseTheme: dark,
-                                elements: {
-                                    organizationSwitcherPopoverActionButton__manageOrganization: {},
-                                },
-                            }}
-                        />
-                        <UserButton afterSignOutUrl="/sign-in" />
+                        {isLoaded ? (
+                            <>
+                                <OrganizationSwitcher
+                                    hidePersonal
+                                    organizationProfileUrl="/dashboard/organization"
+                                    appearance={{
+                                        baseTheme: dark,
+                                        elements: {
+                                            organizationSwitcherPopoverActionButton__manageOrganization: {},
+                                        },
+                                    }}
+                                />
+                                <UserButton afterSignOutUrl="/sign-in" />
+                            </>
+                        ) : (
+                            <>
+                                <Skeleton className="h-8 w-40 bg-slate-700" />
+                                <Skeleton className="h-8 w-8 rounded-full bg-slate-700" />
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
-            {auth && isLoaded ? (
+            {isLoaded ? (
                 <>
                     <section className="flex-auto">
                         <Outlet />
