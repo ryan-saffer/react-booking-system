@@ -1,6 +1,7 @@
 import { Card, Result } from 'antd'
 import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
-import React, { useEffect, useState } from 'react'
+import { DateTime } from 'luxon'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
@@ -11,7 +12,6 @@ import { trpc } from '@utils/trpc'
 
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
-import Heading from './Header'
 
 const PREFIX = 'AfterSchoolProgramCheckinClassDetails'
 
@@ -23,27 +23,22 @@ const classes = {
 }
 
 const Root = styled('div')({
-    [`&.${classes.main}`]: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-    },
     [`& .${classes.root}`]: {
         // backgroundColor: '#f0f2f2',
         backgroundImage: 'linear-gradient(45deg, #2FEAA8, #028CF3)',
         minHeight: '100vh',
         paddingBottom: 24,
+        paddingRight: 24,
+        paddingLeft: 24,
         display: 'flex',
-        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     [`& .${classes.card}`]: {
         marginLeft: 16,
         marginRight: 16,
         width: '100%',
         height: 'fit-content',
-        marginTop: 36,
         borderRadius: 16,
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
         '& .ant-card-body': {
@@ -66,7 +61,7 @@ const Root = styled('div')({
 
 export type EnrolmentsMap = { [key: string]: AfterSchoolEnrolment }
 
-export const AfterSchoolProgramCheckinClassDetails: React.FC = () => {
+export const AfterSchoolProgramCheckinClassDetails = () => {
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -154,9 +149,18 @@ export const AfterSchoolProgramCheckinClassDetails: React.FC = () => {
     }, [])
 
     return (
-        <Root className={classes.main}>
-            <Heading time={classTime} />
+        <Root>
             <div className={classes.root}>
+                <h1 className="lilita rounded-2xl bg-slate-500 bg-opacity-40 p-4 text-2xl text-white">
+                    {DateTime.fromISO(classTime).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true,
+                    })}
+                </h1>
                 <Card className={classes.card}>
                     {(() => {
                         if (loading) {

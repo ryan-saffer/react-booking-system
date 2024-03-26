@@ -9,7 +9,7 @@ import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import { styled } from '@mui/material/styles'
 
-import Loader from '../shared/Loader'
+import Loader from '../../Shared/Loader'
 import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
 import PickupPeople from './PickupPeople/PickupPeople'

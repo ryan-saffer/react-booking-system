@@ -6,13 +6,12 @@ import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } fr
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
-import { Link, ScrollRestoration, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
 import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { INVITATIONS } from '@constants/routes'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -63,14 +62,14 @@ export const CreateInvitationPage = () => {
 
     return (
         <div className="twp">
-            <ScrollRestoration />
             <Toaster richColors />
             <Navbar />
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
                         <Link
-                            to={INVITATIONS}
+                            to=".."
+                            preventScrollReset={true}
                             state={{
                                 childName: form.getValues().childName,
                                 childAge: form.getValues().childAge,
@@ -95,7 +94,7 @@ export const CreateInvitationPage = () => {
                     </div>
                     {/* 216px is Navbar (64px) + Breadcrumbs (52px) + Footer (100px). 116px is just Navbar and Breadcrumbs */}
                     <div className="relative flex h-screen max-h-[calc(100vh-216px)] w-full justify-center min-[1060px]:max-h-[776px]">
-                        <div className="pattern-wavy pattern-purple-400 pattern-bg-white pattern-size-1 pattern-opacity-30 absolute h-full w-full"></div>
+                        <div className="pattern-opacity-30 pattern-wavy absolute h-full w-full pattern-bg-white pattern-purple-400 pattern-size-1"></div>
                         <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
                             <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
                                 <img src={InvitationTemplates[state.invitation as InvitationOption].invitation} />

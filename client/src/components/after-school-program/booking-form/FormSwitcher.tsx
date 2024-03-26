@@ -6,7 +6,7 @@ import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import { trpc } from '@utils/trpc'
 
-import Loader from '../shared/Loader'
+import Loader from '../../Shared/Loader'
 import Form from './Form'
 import { FormSubmission } from '.'
 
