@@ -4,7 +4,7 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { SignedIn, SignedOut } from '@clerk/clerk-react'
+import { SignedIn, SignedOut, UserProfile } from '@clerk/clerk-react'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import Loader from '@components/Shared/Loader.js'
 import { _404 } from '@components/root/404.js'
@@ -106,6 +106,12 @@ const DiscountCodesPage = lazy(() =>
     import('./components/discount-codes/discount-codes-page.js').then((module) => ({
         default: module.DiscountCodesPage,
     }))
+)
+const SettingsPage = lazy(() =>
+    import('./components/settings/settings-page.js').then((module) => ({ default: module.SettingsPage }))
+)
+const ManageMembersTable = lazy(() =>
+    import('./components/settings/manage-members-table.js').then((module) => ({ default: module.ManageMembersTable }))
 )
 
 const router = createBrowserRouter([
@@ -291,6 +297,43 @@ const router = createBrowserRouter([
                                 </ProtectedRoute>
                             </Suspense>
                         ),
+                    },
+                    {
+                        path: 'settings',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ProtectedRoute>
+                                    <SettingsPage />
+                                </ProtectedRoute>
+                            </Suspense>
+                        ),
+                        children: [
+                            {
+                                path: '',
+                                Component: () => <Navigate to="account" />,
+                            },
+                            {
+                                path: 'account',
+                                Component: () => (
+                                    <UserProfile
+                                        appearance={{
+                                            elements: {
+                                                scrollBox: { borderRadius: 0 },
+                                                cardBox: { boxShadow: 'none' },
+                                            },
+                                        }}
+                                    />
+                                ),
+                            },
+                            {
+                                path: 'members',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ManageMembersTable />
+                                    </Suspense>
+                                ),
+                            },
+                        ],
                     },
                 ],
             },

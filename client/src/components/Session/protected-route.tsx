@@ -28,12 +28,14 @@ export const ProtectedRoute = ({ permission, role, children }: PropsWithChildren
     const authUser = useAuth()
     const { user } = useUser()
     if (!authUser && !user) {
-        return <Navigate to="../sign-in" />
+        return <Navigate to="/sign-in" />
     }
 
     if (user && !authUser) {
         return <Loader />
     }
+
+    return children
 
     if (permission) {
         return (

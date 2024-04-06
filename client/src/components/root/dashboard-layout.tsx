@@ -36,7 +36,7 @@ export function DashboardLayout() {
                             <>
                                 <OrganizationSwitcher
                                     hidePersonal
-                                    organizationProfileUrl="/dashboard/organization"
+                                    organizationProfileUrl="/dashboard/settings/members"
                                     appearance={{
                                         baseTheme: dark,
                                         elements: {
@@ -44,7 +44,7 @@ export function DashboardLayout() {
                                         },
                                     }}
                                 />
-                                <UserButton afterSignOutUrl="/sign-in" />
+                                <UserButton afterSignOutUrl="/sign-in" userProfileUrl="/dashboard/settings/account" />
                             </>
                         ) : (
                             <>
