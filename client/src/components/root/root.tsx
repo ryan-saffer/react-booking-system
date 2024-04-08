@@ -16,6 +16,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { ClerkProvider } from '@clerk/clerk-react'
+import { Toaster } from 'sonner'
+import { OrgProvider } from '@components/Session/org-provider'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -86,8 +88,11 @@ const _Root = () => {
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
-                    <ScrollRestoration />
-                    <Outlet />
+                    <OrgProvider>
+                        <ScrollRestoration />
+                        <Toaster richColors />
+                        <Outlet />
+                    </OrgProvider>
                 </AuthProvider>
             </QueryClientProvider>
         </trpc.Provider>

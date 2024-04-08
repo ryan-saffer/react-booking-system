@@ -36,7 +36,7 @@ export function DashboardDrawer({
     return (
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction="left">
             <DrawerContent
-                className="twp top-0 mt-16 h-[calc(100vh-4rem)] w-full rounded-none bg-slate-100 sm:w-[400px]"
+                className="twp top-0 mt-16 h-[calc(100vh-4rem)] w-full rounded-none border-none bg-slate-100 sm:w-[400px]"
                 showTopBar={false}
             >
                 <ScrollArea className="h-full">

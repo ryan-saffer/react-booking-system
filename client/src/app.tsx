@@ -4,8 +4,10 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { SignedIn, SignedOut, UserProfile } from '@clerk/clerk-react'
+import { UserProfile } from '@clerk/clerk-react'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
+import { SignedIn } from '@components/Session/signed-in.js'
+import { SignedOut } from '@components/Session/signed-out.js'
 import Loader from '@components/Shared/Loader.js'
 import { _404 } from '@components/root/404.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
@@ -159,7 +161,11 @@ const router = createBrowserRouter([
                 path: 'dashboard',
                 lazy: async () => {
                     return {
-                        Component: DashboardLayout,
+                        Component: () => (
+                            <ProtectedRoute>
+                                <DashboardLayout />
+                            </ProtectedRoute>
+                        ),
                     }
                 },
                 children: [
@@ -315,14 +321,15 @@ const router = createBrowserRouter([
                             {
                                 path: 'account',
                                 Component: () => (
-                                    <UserProfile
-                                        appearance={{
-                                            elements: {
-                                                scrollBox: { borderRadius: 0 },
-                                                cardBox: { boxShadow: 'none' },
-                                            },
-                                        }}
-                                    />
+                                    <h1>todo</h1>
+                                    // <UserProfile
+                                    //     appearance={{
+                                    //         elements: {
+                                    //             scrollBox: { borderRadius: 0 },
+                                    //             cardBox: { boxShadow: 'none' },
+                                    //         },
+                                    //     }}
+                                    // />
                                 ),
                             },
                             {
