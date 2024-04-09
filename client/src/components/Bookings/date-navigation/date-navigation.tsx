@@ -3,8 +3,7 @@ import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
 
-import { useAuth } from '@clerk/clerk-react'
-import { useStudio } from '@components/Hooks/useStudio'
+import { useOrg } from '@components/Session/use-org'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
@@ -162,8 +161,8 @@ function midnight(date: DateTime) {
 export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { showButton, children } = props
 
-    const { has } = useAuth()
-    const writePermissions = has?.({ permission: 'org:bookings:write' })
+    const { hasPermission } = useOrg()
+    const createPermissions = hasPermission('bookings:create')
 
     const [date, setDate] = useState(midnight(DateTime.now()))
     const [, setLoading] = useState(true)
@@ -178,7 +177,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
 
     useStickyNavbar()
 
-    const location = useStudio()
+    const { currentOrg } = useOrg()
 
     return (
         <Root className={classes.root}>
@@ -217,7 +216,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                         >
                             Parties, Events & Incursions
                         </StyledHeading>
-                        {writePermissions && showButton && (
+                        {createPermissions && showButton && (
                             <MyButton className="twp" variant="outline" onClick={props.onButtonPressed}>
                                 <CalendarPlus className="mr-2 h-4 w-4" />
                                 New Booking
@@ -286,7 +285,7 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                 <NavigateNext />
                             </Button>
                         </div>
-                        {location === 'master' && (
+                        {currentOrg === 'master' && (
                             <FormControl sx={{ background: 'white', flex: 1 }}>
                                 <Select
                                     value={selectedLocation}

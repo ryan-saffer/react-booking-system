@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { useStudio } from '@components/Hooks/useStudio'
+import { useOrg } from '@components/Session/use-org'
 
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 
@@ -14,7 +14,7 @@ export function usePartyBookings() {
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = useRef(urlSearchParams.get('id'))
 
-    const studio = useStudio()
+    const { currentOrg } = useOrg()
 
     const { filterByLocation } = useLocationFilter()
 
@@ -71,8 +71,8 @@ export function usePartyBookings() {
                 .where('dateTime', '>', date.toJSDate())
                 .where('dateTime', '<', followingDate.toJSDate())
 
-            if (studio !== 'master') {
-                query = query.where('location', '==', studio)
+            if (currentOrg !== 'master') {
+                query = query.where('location', '==', currentOrg)
             }
 
             unsubscribe = query.onSnapshot((snapshot) => {
@@ -95,7 +95,7 @@ export function usePartyBookings() {
 
         return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [date, studio])
+    }, [date, currentOrg])
 
     return bookings
 }

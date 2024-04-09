@@ -2,18 +2,13 @@ import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
-import { useAuth as useAuthClerk } from '@clerk/clerk-react'
-import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
-import { Skeleton } from '@ui-components/skeleton'
 
 import { DashboardDrawer } from './dashboard-drawer'
 import { OrganisationSwitcher } from './organisation-switcher'
 import { UserButton } from './user-button'
 
 export function DashboardLayout() {
-    const { isLoaded } = useAuthClerk()
-
     const [drawerOpen, setDrawerOpen] = useState(false)
 
     return (
@@ -33,30 +28,15 @@ export function DashboardLayout() {
                 </Link>
                 <div className="absolute right-4 pr-4">
                     <div className="flex h-full items-center justify-center gap-4">
-                        {isLoaded ? (
-                            <>
-                                <OrganisationSwitcher />
-                                <UserButton />
-                            </>
-                        ) : (
-                            <>
-                                <Skeleton className="h-10 w-44 bg-slate-700" />
-                                <Skeleton className="h-10 w-10 rounded-full bg-slate-700" />
-                            </>
-                        )}
+                        <OrganisationSwitcher />
+                        <UserButton />
                     </div>
                 </div>
             </nav>
-            {isLoaded ? (
-                <>
-                    <section className="flex-auto">
-                        <Outlet />
-                        <DashboardDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
-                    </section>
-                </>
-            ) : (
-                <Loader />
-            )}
+            <section className="flex-auto">
+                <Outlet />
+                <DashboardDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+            </section>
         </main>
     )
 }

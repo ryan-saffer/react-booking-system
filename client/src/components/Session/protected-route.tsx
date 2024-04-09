@@ -1,56 +1,22 @@
-import { PropsWithChildren } from 'react'
+import { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { Protect, useUser } from '@clerk/clerk-react'
 import { useAuth } from '@components/Hooks/context/useAuth'
-import Loader from '@components/Shared/Loader'
+import { Permission } from '@constants/permissions'
 
 import Unauthorised from './Unauthorised'
+import { useOrg } from './use-org'
 
-interface PermissionProps {
-    permission: string
-    role?: never
-}
-
-interface RoleProps {
-    role: string
-    permission?: never
-}
-
-interface NoProps {
-    permission?: never
-    role?: never
-}
-
-type Props = PermissionProps | RoleProps | NoProps
-
-export const ProtectedRoute = ({ permission, role, children }: PropsWithChildren<Props>) => {
+export function ProtectedRoute({ permission, children }: { permission: Permission; children: ReactNode }) {
     const authUser = useAuth()
+    const { hasPermission } = useOrg()
     if (!authUser) {
         return <Navigate to="/sign-in" />
     }
 
-    return children
-
-    if (permission) {
-        return (
-            <Protect permission={permission} fallback={<Unauthorised />}>
-                {children}
-            </Protect>
-        )
+    if (hasPermission(permission)) {
+        return children
+    } else {
+        return <Unauthorised />
     }
-
-    if (role) {
-        return (
-            <Protect role={role} fallback={<Unauthorised />}>
-                {children}
-            </Protect>
-        )
-    }
-
-    return (
-        <Protect permission="org:dashboard:view" fallback={<Unauthorised />}>
-            {children}
-        </Protect>
-    )
 }

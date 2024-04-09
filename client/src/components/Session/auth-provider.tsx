@@ -27,13 +27,9 @@ type CustomerAuthUser = BaseAuthUser & {
 export type AuthUser = StaffAuthUser | CustomerAuthUser
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    // const { getToken, orgRole } = useAuth()
-    // const { user, isLoaded } = useUser()
     const firebase = useFirebase()
     const cachedUser = localStorage.getItem('authUser')
     const [authUser, setAuthUser] = useState<AuthUser | null>(cachedUser ? JSON.parse(cachedUser) : null)
-
-    // const addCustomClaimToAuth = trpc.admin.addCustomClaimToAuth.useMutation()
 
     useEffect(() => {
         let unsubDb = () => {}
@@ -50,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             if (!user.imageUrl) {
                                 user.imageUrl = authUser.photoURL
                             }
+                            console.log('updating user')
                             setAuthUser(user)
                             localStorage.setItem('authUser', JSON.stringify(user))
                         } else {
@@ -75,7 +72,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             unsubAuth()
             unsubDb()
         }
-    }, [firebase])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // useEffect(() => {
     //     async function signInOrOut() {

@@ -12,7 +12,7 @@ import {
 import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import { useAuth } from '@clerk/clerk-react'
+import { useOrg } from '@components/Session/use-org'
 import { useMediaQuery } from '@mui/material'
 import { Drawer, DrawerContent } from '@ui-components/drawer'
 import { ScrollArea } from '@ui-components/scroll-area'
@@ -25,9 +25,8 @@ export function DashboardDrawer({
     drawerOpen: boolean
     setDrawerOpen: (state: boolean) => void
 }) {
-    const { has } = useAuth()
-    const isAdmin = has?.({ role: 'org:admin' })
-    const canAccessPayroll = has?.({ permission: 'org:payroll:view' })
+    const { hasPermission } = useOrg()
+    const isAdmin = hasPermission('admin')
 
     const isShort = useMediaQuery('(max-height: 815px')
 
@@ -92,41 +91,33 @@ export function DashboardDrawer({
                             <Flag className="mr-2 h-4 w-4" />
                             Incident Reporting
                         </Link>
-                        {(isAdmin || canAccessPayroll) && (
+                        {isAdmin && (
                             <>
                                 <p className="z-50 my-2 font-lilita text-xl">Admin</p>
-                                {isAdmin && (
-                                    <NavItem
-                                        label="After School Program Invoicing"
-                                        to="after-school-program-invoicing"
-                                        onClick={closeDrawer}
-                                        icon={<CreditCard className="mr-2 h-4 w-4" />}
-                                    />
-                                )}
-                                {(isAdmin || canAccessPayroll) && (
-                                    <NavItem
-                                        label="Payroll"
-                                        onClick={closeDrawer}
-                                        to="payroll"
-                                        icon={<HandCoins className="mr-2 h-4 w-4" />}
-                                    />
-                                )}
-                                {isAdmin && (
-                                    <NavItem
-                                        onClick={closeDrawer}
-                                        label="Onboarding"
-                                        to="onboarding"
-                                        icon={<Users className="mr-2 h-4 w-4" />}
-                                    />
-                                )}
-                                {isAdmin && (
-                                    <NavItem
-                                        label="Discount Codes"
-                                        onClick={closeDrawer}
-                                        to="discount-codes"
-                                        icon={<TicketPercent className="mr-2 h-4 w-4" />}
-                                    />
-                                )}
+                                <NavItem
+                                    label="After School Program Invoicing"
+                                    to="after-school-program-invoicing"
+                                    onClick={closeDrawer}
+                                    icon={<CreditCard className="mr-2 h-4 w-4" />}
+                                />
+                                <NavItem
+                                    label="Payroll"
+                                    onClick={closeDrawer}
+                                    to="payroll"
+                                    icon={<HandCoins className="mr-2 h-4 w-4" />}
+                                />
+                                <NavItem
+                                    onClick={closeDrawer}
+                                    label="Onboarding"
+                                    to="onboarding"
+                                    icon={<Users className="mr-2 h-4 w-4" />}
+                                />
+                                <NavItem
+                                    label="Discount Codes"
+                                    onClick={closeDrawer}
+                                    to="discount-codes"
+                                    icon={<TicketPercent className="mr-2 h-4 w-4" />}
+                                />
                             </>
                         )}
                     </div>

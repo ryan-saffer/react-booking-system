@@ -14,7 +14,14 @@ const Unauthorised: React.FC<Props> = () => {
                 <Result
                     status="403"
                     title="Unauthorised"
-                    subTitle="Sorry, you are not authorised to access this page."
+                    subTitle={
+                        <p>
+                            Sorry, you are not authorised to access this page.
+                            <br />
+                            <br />
+                            If you think this is a mistake, be sure you have selected a studio on the top right.
+                        </p>
+                    }
                 />
             </Content>
         </Layout>

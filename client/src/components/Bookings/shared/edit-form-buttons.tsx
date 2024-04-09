@@ -1,7 +1,7 @@
 import { Loader2, MoreHorizontal, Pencil, Save, Trash } from 'lucide-react'
 import React from 'react'
 
-import { useAuth } from '@clerk/clerk-react'
+import { useOrg } from '@components/Session/use-org'
 import { green, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { Button } from '@ui-components/button'
@@ -79,8 +79,8 @@ const EditFormButtons: React.FC<Props> = ({
     onDelete,
     menu,
 }) => {
-    const { has } = useAuth()
-    const canEdit = has?.({ permission: 'org:bookings:edit' })
+    const { hasPermission } = useOrg()
+    const canEdit = hasPermission('bookings:edit')
 
     if (!canEdit) return
 

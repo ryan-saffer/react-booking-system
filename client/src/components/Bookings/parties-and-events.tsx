@@ -2,8 +2,9 @@ import { FirestoreBooking, ObjectKeys, StandardEvent, WithId, capitalise } from 
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 
-import { useStudio } from '@components/Hooks/useStudio'
+import { useOrg } from '@components/Session/use-org'
 import { Grid, Skeleton, Stack, Typography } from '@mui/material'
+import { getOrgName } from '@utils/studioUtils'
 
 import EventPanel from './events/event-panel'
 import { useEvents } from './events/use-events'
@@ -19,7 +20,7 @@ export const PartiesAndEvents = () => {
     const bookings = usePartyBookings()
     const events = useEvents('standard')
 
-    const studio = useStudio()
+    const { currentOrg } = useOrg()
 
     useEffect(() => {
         if (bookings.status === 'loading' || events.status === 'loading') {
@@ -35,7 +36,7 @@ export const PartiesAndEvents = () => {
             {loading && [1, 2, 3].map((idx) => <BookingsSkeleton key={idx} />)}
             {bookings.status === 'loaded' && events.status === 'loaded' && !loading && (
                 <Grid item xs sm md>
-                    {studio === 'master' ? (
+                    {currentOrg === 'master' ? (
                         ObjectKeys(bookings.result).map(
                             (location) =>
                                 (selectedLocation === location || selectedLocation === 'all') && (
@@ -49,9 +50,9 @@ export const PartiesAndEvents = () => {
                         )
                     ) : (
                         <LocationBookings
-                            name={`${capitalise(studio)} Studio`}
-                            bookings={bookings.result[studio]}
-                            events={events.result[studio]}
+                            name={getOrgName(currentOrg!)}
+                            bookings={bookings.result[currentOrg!]}
+                            events={events.result[currentOrg!]}
                         />
                     )}
                 </Grid>

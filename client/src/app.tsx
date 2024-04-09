@@ -4,7 +4,6 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 
-import { UserProfile } from '@clerk/clerk-react'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
 import { SignedOut } from '@components/Session/signed-out.js'
@@ -112,9 +111,6 @@ const DiscountCodesPage = lazy(() =>
 const SettingsPage = lazy(() =>
     import('./components/settings/settings-page.js').then((module) => ({ default: module.SettingsPage }))
 )
-const ManageMembersTable = lazy(() =>
-    import('./components/settings/manage-members-table.js').then((module) => ({ default: module.ManageMembersTable }))
-)
 
 const router = createBrowserRouter([
     {
@@ -161,11 +157,7 @@ const router = createBrowserRouter([
                 path: 'dashboard',
                 lazy: async () => {
                     return {
-                        Component: () => (
-                            <ProtectedRoute>
-                                <DashboardLayout />
-                            </ProtectedRoute>
-                        ),
+                        Component: DashboardLayout,
                     }
                 },
                 children: [
@@ -173,7 +165,7 @@ const router = createBrowserRouter([
                         index: true,
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute>
+                                <ProtectedRoute permission="dashboard:view">
                                     <Navigation />
                                 </ProtectedRoute>
                             </Suspense>
@@ -183,7 +175,7 @@ const router = createBrowserRouter([
                         path: 'bookings',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute>
+                                <ProtectedRoute permission="bookings:read">
                                     <BookingsPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -196,7 +188,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute>
+                                        <ProtectedRoute permission="bookings:read">
                                             <SelectClassPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -206,7 +198,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute>
+                                        <ProtectedRoute permission="bookings:read">
                                             <AfterSchoolProgramCheckinClassDetails />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -221,7 +213,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute role="org:admin">
+                                        <ProtectedRoute permission="admin">
                                             <AfterSchoolProgramInvoicingPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -231,7 +223,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute role="org:admin">
+                                        <ProtectedRoute permission="admin">
                                             <AfterSchoolProgramInvoicing />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -246,7 +238,7 @@ const router = createBrowserRouter([
                                 path: '',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute>
+                                        <ProtectedRoute permission="bookings:read">
                                             <HolidayProgramSelectionPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -256,7 +248,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute>
+                                        <ProtectedRoute permission="bookings:read">
                                             <ClassDetailsPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -268,7 +260,7 @@ const router = createBrowserRouter([
                         path: 'payroll',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute permission="org:payroll:view">
+                                <ProtectedRoute permission="admin">
                                     <Payroll />
                                 </ProtectedRoute>
                             </Suspense>
@@ -278,7 +270,7 @@ const router = createBrowserRouter([
                         path: 'onboarding',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute>
+                                <ProtectedRoute permission="admin">
                                     <Onboarding />
                                 </ProtectedRoute>
                             </Suspense>
@@ -288,7 +280,7 @@ const router = createBrowserRouter([
                         path: 'creations',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute>
+                                <ProtectedRoute permission="creations:read">
                                     <CreationsPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -298,7 +290,7 @@ const router = createBrowserRouter([
                         path: 'discount-codes',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute role="org:admin">
+                                <ProtectedRoute permission="admin">
                                     <DiscountCodesPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -308,7 +300,7 @@ const router = createBrowserRouter([
                         path: 'settings',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute>
+                                <ProtectedRoute permission="dashboard:view">
                                     <SettingsPage />
                                 </ProtectedRoute>
                             </Suspense>
@@ -320,25 +312,11 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'account',
-                                Component: () => (
-                                    <h1>todo</h1>
-                                    // <UserProfile
-                                    //     appearance={{
-                                    //         elements: {
-                                    //             scrollBox: { borderRadius: 0 },
-                                    //             cardBox: { boxShadow: 'none' },
-                                    //         },
-                                    //     }}
-                                    // />
-                                ),
+                                Component: () => <h1>todo</h1>,
                             },
                             {
                                 path: 'members',
-                                Component: () => (
-                                    <Suspense fallback={<Loader fullScreen />}>
-                                        <ManageMembersTable />
-                                    </Suspense>
-                                ),
+                                Component: () => <h1>todo as well</h1>,
                             },
                         ],
                     },

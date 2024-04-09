@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom'
 
-import { useAuth } from '@clerk/clerk-react'
+import { useOrg } from '@components/Session/use-org'
 
 import styles from './navigation.module.css'
 
 export const Navigation = () => {
-    const { has } = useAuth()
-    const isAdmin = has?.({ role: 'org:admin' })
-    const canAccessPayroll = has?.({ permission: 'org:payroll:view' })
+    const { hasPermission } = useOrg()
+
     return (
         <div className="twp flex h-full justify-center bg-slate-100 p-4">
             <div className="flex w-full max-w-lg flex-col gap-5">
@@ -46,38 +45,30 @@ export const Navigation = () => {
                 />
                 {/* {(isAdmin || canAccessPayroll) && */}
                 {/* <> */}
-                {(isAdmin || canAccessPayroll) && (
+                {hasPermission('admin') && (
                     <>
                         <h2 className="lilita text-2xl">Admin</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            {isAdmin && (
-                                <ListItem
-                                    title="After School Program Invoicing"
-                                    to="after-school-program-invoicing"
-                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
-                                />
-                            )}
-                            {(isAdmin || canAccessPayroll) && (
-                                <ListItem
-                                    title="Payroll"
-                                    to="payroll"
-                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5"
-                                />
-                            )}
-                            {isAdmin && (
-                                <ListItem
-                                    title="Onboarding"
-                                    to="onboarding"
-                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
-                                />
-                            )}
-                            {isAdmin && (
-                                <ListItem
-                                    title="Discount Codes"
-                                    to="discount-codes"
-                                    imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
-                                />
-                            )}
+                            <ListItem
+                                title="After School Program Invoicing"
+                                to="after-school-program-invoicing"
+                                imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=E91171"
+                            />
+                            <ListItem
+                                title="Payroll"
+                                to="payroll"
+                                imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=cashCoin&scale=70&backgroundColor=4BC5D9&translateY=5"
+                            />
+                            <ListItem
+                                title="Onboarding"
+                                to="onboarding"
+                                imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=signpost2&scale=70&backgroundColor=9ECC48"
+                            />
+                            <ListItem
+                                title="Discount Codes"
+                                to="discount-codes"
+                                imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
+                            />
                         </div>
                     </>
                 )}

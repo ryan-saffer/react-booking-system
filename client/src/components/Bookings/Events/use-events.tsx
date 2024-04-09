@@ -1,7 +1,7 @@
 import { Event, IncursionEvent, Location, Service, StandardEvent } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
-import { useStudio } from '@components/Hooks/useStudio'
+import { useOrg } from '@components/Session/use-org'
 import { convertTimestamps } from '@utils/firebase/converters'
 
 import useFirebase from '../../Hooks/context/UseFirebase'
@@ -15,7 +15,7 @@ export function useEvents<T extends Event['$type']>(
     const { date } = useDateNavigation()
     const [events, setEvents] = useState<Service<Record<Location, Event[]>>>({ status: 'loading' })
 
-    const location = useStudio()
+    const { currentOrg } = useOrg()
 
     const generateLocationsMap = (events: Event[]): Record<Location, Event[]> =>
         Object.values(Location).reduce(
@@ -39,8 +39,8 @@ export function useEvents<T extends Event['$type']>(
                 .where('startTime', '<', nextDay.toJSDate())
                 .where('startTime', '>', ninetyDaysAgo.toJSDate())
 
-            if (location !== 'master') {
-                query = query.where('studio', '==', location)
+            if (currentOrg !== 'master') {
+                query = query.where('studio', '==', currentOrg)
             }
 
             const snap = await query.get()
