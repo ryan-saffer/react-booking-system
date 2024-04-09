@@ -2,7 +2,7 @@ import dateFormat from 'dateformat'
 import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Grid, useMediaQuery } from '@mui/material'
+import { Grid } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -67,8 +67,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     const isRestricted = useScopes().CORE === 'restricted'
 
-    const isMobile = useMediaQuery('(max-width: 540px')
-
     return (
         <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -89,18 +87,11 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             display: 'flex',
                             justifyContent: 'flex-end',
                             alignItems: 'center',
-                            ...(isMobile && { flexDirection: 'column', gap: 4 }),
                         }}
                     >
                         <CustomChip
-                            label={booking.oldPrices ? 'Old Price' : 'New Price'}
-                            color={booking.oldPrices ? '#ffb380' : '#C1E1C1'}
-                            isMobile={isMobile}
-                        />
-                        <CustomChip
                             label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
                             color={booking.type === 'studio' ? '#CAEDFF' : '#D8B4F8'}
-                            isMobile={isMobile}
                         />
                     </div>
                 </div>
@@ -116,7 +107,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
     )
 }
 
-function CustomChip({ label, color, isMobile }: { label: string; color: string; isMobile: boolean }) {
+function CustomChip({ label, color }: { label: string; color: string }) {
     return (
         <Typography
             variant="body1"
@@ -127,7 +118,7 @@ function CustomChip({ label, color, isMobile }: { label: string; color: string; 
                 textAlign: 'center',
                 background: color,
                 px: 2,
-                py: isMobile ? 0.5 : 1,
+                py: 1,
                 borderRadius: 1,
                 marginRight: 1,
                 width: 120,
