@@ -6,6 +6,7 @@ import { Role } from '@constants/roles'
 
 import AuthUserContext from './auth-user-context'
 import { LocationOrMaster } from './org-provider'
+import { trpc } from '@utils/trpc'
 
 // import { trpc } from '@utils/trpc'
 
@@ -31,6 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const cachedUser = localStorage.getItem('authUser')
     const [authUser, setAuthUser] = useState<AuthUser | null>(cachedUser ? JSON.parse(cachedUser) : null)
 
+    const addCustomClaim = trpc.admin.addCustomClaimToAuth.useMutation()
+
     useEffect(() => {
         let unsubDb = () => {}
 
@@ -40,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 unsubDb = firebase.db
                     .collection('users')
                     .doc(authUser.uid)
-                    .onSnapshot((snap) => {
+                    .onSnapshot(async (snap) => {
                         if (snap.exists) {
                             const user = snap.data() as AuthUser
                             if (!user.imageUrl) {
@@ -49,6 +52,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             console.log('updating user')
                             setAuthUser(user)
                             localStorage.setItem('authUser', JSON.stringify(user))
+
+                            // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
+                            // Since anyone, such as customers, can create accounts, we need to lock down firestore to only staff members.
+
+                            // add a custom claim to the auth object. Read more: https://firebase.google.com/docs/auth/admin/custom-claims
+                            await addCustomClaim.mutateAsync({ isCustomer: user.accountType !== 'staff' })
+
+                            // refresh the authUser to access the newly added custom claim
+                            authUser.getIdToken(true)
                         } else {
                             // user doesn't exist in db, which means they were not invited to the platform.
                             // default them as a customer.
