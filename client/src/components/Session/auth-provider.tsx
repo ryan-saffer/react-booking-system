@@ -1,36 +1,17 @@
 import { ReactNode, useEffect, useState } from 'react'
 
-// import { useAuth, useUser } from '@clerk/clerk-react'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { Role } from '@constants/roles'
 
 import AuthUserContext from './auth-user-context'
-import { LocationOrMaster } from './org-provider'
 import { trpc } from '@utils/trpc'
-
-// import { trpc } from '@utils/trpc'
-
-type BaseAuthUser = {
-    uid: string
-    email: string
-    imageUrl: string | null
-}
-
-type StaffAuthUser = BaseAuthUser & {
-    roles: Record<LocationOrMaster, Role>
-    accountType: 'staff'
-}
-
-type CustomerAuthUser = BaseAuthUser & {
-    accountType: 'customer'
-}
-
-export type AuthUser = StaffAuthUser | CustomerAuthUser
+import { AuthUser } from 'fizz-kidz'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const firebase = useFirebase()
     const cachedUser = localStorage.getItem('authUser')
-    const [authUser, setAuthUser] = useState<AuthUser | null>(cachedUser ? JSON.parse(cachedUser) : null)
+    const [authUser, setAuthUser] = useState<(AuthUser & { jwt: string; uid: string }) | null>(
+        cachedUser ? JSON.parse(cachedUser) : null
+    )
 
     const addCustomClaim = trpc.admin.addCustomClaimToAuth.useMutation()
 
@@ -49,18 +30,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             if (!user.imageUrl) {
                                 user.imageUrl = authUser.photoURL
                             }
-                            console.log('updating user')
-                            setAuthUser(user)
-                            localStorage.setItem('authUser', JSON.stringify(user))
+
+                            // include the jwt and uid in the cache, since when loading the app, authStateChanged can take a moment to trigger,
+                            // and requests to the server can happen in the meantime. Caching it can allow it to be used in the interim.
+                            const jwt = await authUser.getIdToken(false)
+                            const uid = authUser.uid
+                            setAuthUser({ ...user, jwt, uid })
+                            localStorage.setItem('authUser', JSON.stringify({ ...user, jwt, uid }))
 
                             // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
                             // Since anyone, such as customers, can create accounts, we need to lock down firestore to only staff members.
 
                             // add a custom claim to the auth object. Read more: https://firebase.google.com/docs/auth/admin/custom-claims
-                            await addCustomClaim.mutateAsync({ isCustomer: user.accountType !== 'staff' })
-
-                            // refresh the authUser to access the newly added custom claim
-                            authUser.getIdToken(true)
+                            await addCustomClaim.mutateAsync({
+                                uid: authUser.uid,
+                                isCustomer: user.accountType !== 'staff',
+                            })
                         } else {
                             // user doesn't exist in db, which means they were not invited to the platform.
                             // default them as a customer.
@@ -81,54 +66,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
 
         return () => {
-            unsubAuth()
             unsubDb()
+            unsubAuth()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    // useEffect(() => {
-    //     async function signInOrOut() {
-    //         // once clerk has loaded, check if there is a logged in user
-    //         if (user) {
-    //             // if there is, get the user token, and sign in to firebase
-    //             const token = await getToken({ template: 'integration_firebase' })
-    //             if (token) {
-    //                 const firebaseUser = await firebase.auth.signInWithCustomToken(token)
-
-    //                 // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
-    //                 // Since anyone, such as customers, can create accounts, we need to lock down firestore to only
-    //                 // members with access to an organization.
-
-    //                 // start by checking if the user has an org role.
-    //                 const hasOrgRole = !!orgRole
-
-    //                 // this function uses the admin sdk to add a custom claim to the users auth session.
-    //                 // read more about custom claims here: https://firebase.google.com/docs/auth/admin/custom-claims
-    //                 await addCustomClaimToAuth.mutateAsync({ isCustomer: !hasOrgRole })
-
-    //                 // once this has worked, force refresh the users token, to ensure it is now using the new custom claim.
-    //                 await firebaseUser.user?.getIdToken(true)
-
-    //                 // and finally, update the authUser context, so the app will know that firebase login is complete.
-    //                 const authUser = {
-    //                     uid: firebaseUser.user!.uid,
-    //                     email: user.primaryEmailAddress!.emailAddress,
-    //                 }
-    //                 setAuthUser(authUser)
-    //                 localStorage.setItem('authUser', JSON.stringify(authUser))
-    //             }
-    //         } else {
-    //             // if the clerk user is not logged in, be sure to also sign out of firebase.
-    //             await firebase.doSignOut()
-    //             setAuthUser(null)
-    //         }
-    //     }
-    //     if (isLoaded) {
-    //         signInOrOut()
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [user])
 
     return <AuthUserContext.Provider value={authUser}>{children}</AuthUserContext.Provider>
 }

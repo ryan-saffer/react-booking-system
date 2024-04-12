@@ -1,5 +1,5 @@
+import { Location } from '../core/location'
 import { Booking } from '../partyBookings/booking'
-import { Location } from '../partyBookings/Locations'
 
 export function getLocationAddress(location: Location) {
     switch (location) {

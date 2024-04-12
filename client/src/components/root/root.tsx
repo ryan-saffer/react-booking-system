@@ -5,7 +5,6 @@ import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { ConfigProvider, type ThemeConfig } from 'antd'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc } from '@utils/trpc'
@@ -18,6 +17,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { Toaster } from 'sonner'
 import { OrgProvider } from '@components/Session/org-provider'
+import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -53,8 +53,8 @@ const antdTheme: ThemeConfig = {
     },
 }
 
-const _Root = () => {
-    const firebase = useFirebase()
+export function Root() {
+    const navigate = useNavigate()
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
@@ -63,11 +63,14 @@ const _Root = () => {
                 httpLink({
                     url: '',
                     async headers() {
-                        const authToken = (await firebase.auth.currentUser?.getIdToken()) || ''
-                        const uid = (await firebase.auth.currentUser?.uid) || ''
+                        let authToken = ''
+                        const cachedAuthUser = localStorage.getItem('authUser')
+                        if (cachedAuthUser) {
+                            const authUser = JSON.parse(cachedAuthUser)
+                            authToken = authUser.jwt
+                        }
                         return {
                             authorization: authToken,
-                            uid,
                         }
                     },
                     fetch(url, options) {
@@ -85,23 +88,6 @@ const _Root = () => {
     )
 
     return (
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>
-                <AuthProvider>
-                    <OrgProvider>
-                        <ScrollRestoration />
-                        <Toaster richColors />
-                        <Outlet />
-                    </OrgProvider>
-                </AuthProvider>
-            </QueryClientProvider>
-        </trpc.Provider>
-    )
-}
-
-export function Root() {
-    const navigate = useNavigate()
-    return (
         <FirebaseProvider>
             <MixpanelContext.Provider value={mixpanel}>
                 <StyledEngineProvider injectFirst>
@@ -113,7 +99,19 @@ export function Root() {
                                     routerReplace={(route: string) => navigate(route, { replace: true })}
                                     publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}
                                 >
-                                    <_Root />
+                                    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                                        <QueryClientProvider client={queryClient}>
+                                            <AuthProvider>
+                                                <OrgProvider>
+                                                    <ConfirmationDialogProvider>
+                                                        <ScrollRestoration />
+                                                        <Toaster richColors />
+                                                        <Outlet />
+                                                    </ConfirmationDialogProvider>
+                                                </OrgProvider>
+                                            </AuthProvider>
+                                        </QueryClientProvider>
+                                    </trpc.Provider>
                                 </ClerkProvider>
                             </LocalizationProvider>
                         </ConfigProvider>

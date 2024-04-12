@@ -1,11 +1,8 @@
-import { Location, ObjectKeys } from 'fizz-kidz'
+import { LocationOrMaster, ObjectKeys, Permission, Role } from 'fizz-kidz'
 import { ReactNode, createContext, useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
-import { Permission, checkRoleForPermission } from '@constants/permissions'
-import { Role } from '@constants/roles'
-
-export type LocationOrMaster = Location | 'master'
+import { checkRoleForPermission } from '@constants/permissions'
 
 export const OrgContext = createContext<{
     availableOrgs: LocationOrMaster[] | null
@@ -28,7 +25,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     const getRole = useCallback(
         (org: LocationOrMaster | null) => {
             if (user?.accountType === 'staff' && org) {
-                return user.roles[org]
+                return user.roles[org] || null
             }
             return null
         },
@@ -47,6 +44,13 @@ export function OrgProvider({ children }: { children: ReactNode }) {
         }
     }, [user, currentOrg, getRole])
 
+    const hasPermission = useCallback(
+        (permission: Permission) => {
+            return checkRoleForPermission(role, permission)
+        },
+        [role]
+    )
+
     return (
         <OrgContext.Provider
             value={{
@@ -58,9 +62,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
                     setRole(getRole(org))
                 },
                 role,
-                hasPermission: (permission) => {
-                    return checkRoleForPermission(role, permission)
-                },
+                hasPermission,
             }}
         >
             {children}

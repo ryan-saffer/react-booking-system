@@ -4,3 +4,5 @@ export enum Location {
     ESSENDON = 'essendon',
     MALVERN = 'malvern',
 }
+
+export type LocationOrMaster = Location | 'master'

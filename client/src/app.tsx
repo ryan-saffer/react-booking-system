@@ -111,6 +111,9 @@ const DiscountCodesPage = lazy(() =>
 const SettingsPage = lazy(() =>
     import('./components/settings/settings-page.js').then((module) => ({ default: module.SettingsPage }))
 )
+const ManageUsersTable = lazy(() =>
+    import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
+)
 
 const router = createBrowserRouter([
     {
@@ -316,7 +319,11 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'members',
-                                Component: () => <h1>todo as well</h1>,
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ManageUsersTable />
+                                    </Suspense>
+                                ),
                             },
                         ],
                     },

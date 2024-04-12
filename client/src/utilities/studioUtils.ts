@@ -1,6 +1,4 @@
-import { capitalise } from 'fizz-kidz'
-
-import { LocationOrMaster } from '@components/Session/org-provider'
+import { LocationOrMaster, capitalise } from 'fizz-kidz'
 
 export function getOrgName(org: LocationOrMaster) {
     if (org === 'master') {

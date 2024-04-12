@@ -1,6 +1,4 @@
-export const ROLES = ['admin', 'studio-ipad', 'manager', 'facilitator'] as const
-
-export type Role = (typeof ROLES)[number]
+import { Role } from 'fizz-kidz'
 
 export function getRoleDisplayValue(role: Role) {
     switch (role) {
@@ -15,7 +13,7 @@ export function getRoleDisplayValue(role: Role) {
         default: {
             const exhaustiveCheck: never = role
             localStorage.removeItem('authUser') // helps recover from a stuck state
-            throw new Error(`unregonised role '${exhaustiveCheck}'`)
+            throw new Error(`unregonised role: '${exhaustiveCheck}'`)
         }
     }
 }

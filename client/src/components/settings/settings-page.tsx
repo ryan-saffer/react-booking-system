@@ -7,16 +7,16 @@ import { cn } from '@utils/tailwind'
 export function SettingsPage() {
     const { pathname } = useLocation()
     return (
-        <main className="twp h-full p-12">
+        <main className="twp flex min-h-[calc(100vh-64px)] flex-col px-12 pt-12">
             <div className="space-y-1">
-                <h2 className="font-lilita text-2xl">Settings</h2>
+                <h2 className="font-lilita text-3xl">Settings</h2>
                 <p className="font-gotham font-bold text-muted-foreground">
                     Manage your account settings and set e-mail preferences.
                 </p>
             </div>
-            <Separator className="my-6" />
-            <div className="flex">
-                <aside className="-mx-4 mr-4 w-60">
+            <Separator className="mt-6" />
+            <div className="flex h-full grow">
+                <aside className="-mx-4 mr-4 mt-6 w-60">
                     <nav className="flex flex-col">
                         <Link to="account">
                             <Button
@@ -40,12 +40,14 @@ export function SettingsPage() {
                                         : 'hover:bg-transparent hover:underline'
                                 )}
                             >
-                                Manage Members
+                                Manage Users
                             </Button>
                         </Link>
                     </nav>
                 </aside>
-                <div className="grow">
+                {/* 196px is for desktop: 64px navbar + 132px (distance between top of separater and navbar)  */}
+                <Separator orientation="vertical" className="h-[calc(100vh-196px)]" />
+                <div className="ml-6 mt-6 grow">
                     <Outlet />
                 </div>
             </div>

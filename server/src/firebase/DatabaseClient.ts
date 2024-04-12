@@ -10,6 +10,8 @@ import type {
     DiscountCode,
     Invitation,
     WithoutId,
+    LocationOrMaster,
+    AuthUser,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
@@ -275,6 +277,29 @@ class Client {
             const existingCode = snap.docs[0].data()
             this.#updateDocument(FirestoreRefs.discountCode(existingCode.id), discountCode)
         }
+    }
+
+    async createUser(uid: string, user: AuthUser) {
+        return (await FirestoreRefs.users()).doc(uid).set(user)
+    }
+
+    async updateUser(uid: string, user: RecursivePartial<AuthUser>) {
+        const userRef = await FirestoreRefs.user(uid)
+        return userRef.set(user, { merge: true })
+    }
+
+    async getUser(uid: string) {
+        return (await (await FirestoreRefs.user(uid)).get()).data()
+    }
+
+    async getUsersByStudio(studio: LocationOrMaster) {
+        const collection = await FirestoreRefs.users()
+        const snap = await collection.where('accountType', '==', 'staff').get()
+        return snap.docs
+            .map((it) => it.data())
+            .filter((user) => {
+                return user.accountType === 'staff' && user.roles && Object.keys(user.roles).includes(studio)
+            })
     }
 }
 

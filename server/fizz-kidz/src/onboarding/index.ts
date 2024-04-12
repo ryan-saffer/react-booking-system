@@ -1,4 +1,4 @@
-import { Location } from '../partyBookings/Locations'
+import { Location } from '../core/location'
 
 interface BaseEmployee {
     id: string

@@ -1,6 +1,7 @@
 import { CollectionGroup } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
+    AuthUser,
     Booking,
     DiscountCode,
     Employee,
@@ -104,5 +105,13 @@ export class FirestoreRefs {
 
     static async discountCode(id: string) {
         return (await this.discountCodes()).doc(id)
+    }
+
+    static async users() {
+        return (await FirestoreClient.getInstance()).collection('users') as Collection<AuthUser>
+    }
+
+    static async user(uid: string) {
+        return (await this.users()).doc(uid)
     }
 }

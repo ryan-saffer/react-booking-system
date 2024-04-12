@@ -1,49 +1,30 @@
-import { auth } from 'firebase-admin'
+import { getAuth } from 'firebase-admin/auth'
+import { LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
 
-import { createClerkClient } from '@clerk/backend'
-
-import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { authenticatedProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
-
-const clerk = createClerkClient({ secretKey: '' })
+import { addUserToStudio } from '../../core/add-user-to-studio'
 
 export const adminRouter = router({
     addCustomClaimToAuth: authenticatedProcedure
-        .input((input: unknown) => input as { isCustomer: boolean })
-        .mutation(({ input, ctx }) => {
-            if (ctx.uid) {
-                auth().setCustomUserClaims(ctx.uid, input)
-            }
+        .input((input: unknown) => input as { uid: string; isCustomer: boolean })
+        .mutation(({ input }) => {
+            getAuth().setCustomUserClaims(input.uid, input)
         }),
-    addMetadata: authenticatedProcedure
-        .input((input: unknown) => input as { id: string; orgId: string })
-        .mutation(async ({ input }) => {
-            const result = await clerk.invitations.createInvitation({
-                ignoreExisting: true,
-                emailAddress: 'ryansaffer@gmail.com',
-                publicMetadata: {
-                    orgs: {
-                        [input.orgId]: 'test',
-                    },
-                    'SOME NEW': 'DATA',
-                },
-            })
-            console.log(result)
-            return result
-        }),
-    getUsers: publicProcedure
-        .input((input: unknown) => input as { orgId: string })
+    getUsers: authenticatedProcedure
+        .input((input: unknown) => input as { studio: LocationOrMaster | null })
         .query(async ({ input }) => {
-            const allUsers = await clerk.users.getUserList()
-            console.log(allUsers.data)
-            return allUsers.data.filter((it) => {
-                const orgs = it.publicMetadata['orgs'] as any
-                if (typeof orgs === 'object') {
-                    return Object.keys(orgs).includes(input.orgId)
-                }
-                return false
-            })
+            if (!input.studio) return []
+            const users = await DatabaseClient.getUsersByStudio(input.studio)
+            return users as StaffAuthUser[]
         }),
+    updateUserRole: authenticatedProcedure
+        .input((input: unknown) => input as { uid: string; studio: LocationOrMaster; role: Role })
+        .mutation(({ input }) => DatabaseClient.updateUser(input.uid, { roles: { [input.studio]: input.role } })),
+    addUserToStudio: authenticatedProcedure
+        .input((input: unknown) => input as { email: string; role: Role; studio: LocationOrMaster })
+        .mutation(({ input }) => addUserToStudio(input)),
 })
 
 export const admin = onRequestTrpc(adminRouter)
