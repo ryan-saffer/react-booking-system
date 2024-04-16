@@ -4,7 +4,6 @@ import path from 'path'
 import { logger } from 'firebase-functions/v2'
 import Mustache from 'mustache'
 
-import type { MailData } from '@sendgrid/helpers/classes/mail'
 import type { MailService } from '@sendgrid/mail'
 
 import { env } from '../init'
@@ -53,13 +52,12 @@ export class MailClient {
     }
 
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
-        logger.log('generating html...')
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
-        logger.log('generated successfully!')
-        logger.log('sending email...')
-        await this.#sgMail.send({ ...emailInfo, html, ...(env === 'prod' && { bcc: 'bookings@fizzkidz.com.au' }) })
-        logger.log('email sent successfully!')
+        if (env === 'prod') {
+            emailInfo.bcc = [...(emailInfo.bcc || []), 'bookings@fizzkidz.com.au']
+        }
+        await this.#sgMail.send({ ...emailInfo, html })
     }
 
     private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
@@ -87,7 +85,13 @@ export class MailClient {
         to: string,
         options: Options
     ): {
-        emailInfo: MailData & { to: string; from: { name: string; email: string }; subject: string; replyTo: string }
+        emailInfo: {
+            to: string
+            from: { name: string; email: string }
+            subject: string
+            replyTo: string
+            bcc?: string[]
+        }
         template: string
         useMjml: boolean
     } {
@@ -143,6 +147,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
+                        bcc: ['bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Unenrolment Confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
@@ -171,7 +176,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: 'programs@fizzkidz.com.au',
+                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -186,7 +191,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: 'programs@fizzkidz.com.au',
+                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -201,7 +206,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'program@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bookings@fizzkidz.com.au'],
+                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Science incursion is coming up!',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -216,7 +221,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'programs@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bookigns@fizzkidz.com.au'],
+                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Submission Recieved',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -368,7 +373,7 @@ export class MailClient {
                 return {
                     emailInfo: {
                         to,
-                        bcc: 'people@fizzkidz.com.au',
+                        bcc: ['people@fizzkidz.com.au'],
                         from: {
                             name: 'Fizz Kidz',
                             email: 'people@fizzkidz.com.au',
