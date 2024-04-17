@@ -31,13 +31,13 @@ export interface SendInvoiceParams {
 // prices depend on how many weeks they are attending the program for
 // use this map to include the number of weeks in the invoice
 export const PriceWeekMap: { [key: string]: string } = {
-    '216': '9',
-    '192': '8',
-    '168': '7',
-    '144': '6',
-    '120': '5',
-    '96': '4',
-    '72': '3',
-    '48': '2',
-    '24': '1',
+    '234': '9',
+    '208': '8',
+    '182': '7',
+    '156': '6',
+    '130': '5',
+    '104': '4',
+    '78': '3',
+    '52': '2',
+    '26': '1',
 }

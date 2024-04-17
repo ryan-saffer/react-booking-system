@@ -1,29 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { styled } from '@mui/material/styles'
+
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
-
-const PREFIX = 'WithConfirmationDialog'
-
-const classes = {
-    deleteButton: `${PREFIX}-deleteButton`,
-    form: `${PREFIX}-form`,
-}
-
-const Root = styled('div')({
-    [`& .${classes.deleteButton}`]: {
-        color: 'red',
-    },
-
-    [`& .${classes.form}`]: {
-        width: '100%',
-    },
-})
 
 /**
  * Higher-order-component that provides a confirmation dialog.
@@ -107,15 +90,15 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         }
 
         return (
-            <Root>
+            <>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>{content}</DialogContentText>
                         {listItems && (
-                            <FormControl className={classes.form} error={formError}>
+                            <FormControl className="w-full mt-4" error={formError}>
                                 <InputLabel>{listItems.title}</InputLabel>
-                                <Select value={selectedListItem} onChange={handleListItemChange}>
+                                <Select value={selectedListItem} onChange={handleListItemChange} label={listItems.title}>
                                     {listItems.items.map((item) => (
                                         <MenuItem key={item.key} value={item.key}>
                                             {item.value}
@@ -126,7 +109,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={(e) => handleConfirm(e)} color="error" variant="contained">
+                        <Button onClick={(e) => handleConfirm(e)} color="secondary" variant="contained">
                             {confirmButton}
                         </Button>
                         <Button onClick={(e) => handleClose(e)} color="primary">
@@ -135,7 +118,7 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                     </DialogActions>
                 </Dialog>
                 <Component {...(props as P)} showConfirmationDialog={handleShow} />
-            </Root>
+            </>
         )
     }
 
