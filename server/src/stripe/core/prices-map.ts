@@ -5,6 +5,7 @@ const stripeConfig =
         : StripeConfig.DEV_CONFIG
 
 export const PricesMap: { [key: string]: string } = {
+    '260': stripeConfig.STRIPE_PRICE_260,
     '234': stripeConfig.STRIPE_PRICE_234,
     '216': stripeConfig.STRIPE_PRICE_216,
     '208': stripeConfig.STRIPE_PRICE_208,

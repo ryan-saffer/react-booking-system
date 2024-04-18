@@ -1,6 +1,7 @@
 import * as stripeCredentials from '../../../credentials/stripe_credentials'
 
 export const DEV_CONFIG = {
+    STRIPE_PRICE_260: 'price_1P6k87Ihbh0YhdB7JZX30RND',
     STRIPE_PRICE_234: 'price_1P6N2nIhbh0YhdB7iZLVGSzU',
     STRIPE_PRICE_216: 'price_1LMWtmIhbh0YhdB7yEExK9Li',
     STRIPE_PRICE_208: 'price_1P6N2UIhbh0YhdB7iSM5GItK',
@@ -33,6 +34,7 @@ export const DEV_CONFIG = {
 }
 
 export const PROD_CONFIG = {
+    STRIPE_PRICE_260: 'price_1P6k8aIhbh0YhdB7PBgeltq9',
     STRIPE_PRICE_234: 'price_1P6N4cIhbh0YhdB72froXe14',
     STRIPE_PRICE_216: 'price_1LMWyPIhbh0YhdB7ZX5NAqP1',
     STRIPE_PRICE_208: 'price_1P6N4PIhbh0YhdB7xxsvOqCq',
