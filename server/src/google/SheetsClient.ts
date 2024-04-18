@@ -1,9 +1,11 @@
-import googleCredentials from '../../credentials/google-credentials.json'
 import type { sheets_v4 } from 'googleapis'
+
+import googleCredentials from '../../credentials/google-credentials.json'
 import { ClientStatus } from '../utilities/types'
 
 const SHEETS = {
     anaphylacticChildrenChecklist: '1-LYEEUh4jaXQhs9QgBLazzKG0VcAIYKhDvE6qkeDcWU',
+    afterSchoolProgramWaitlist: '1X2Y1TVkShfazGS6t2v-jbfJwQQCNXIApvE3G2kfJk-A',
 }
 
 export class SheetsClient {

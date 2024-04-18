@@ -5,6 +5,7 @@ import {
     UpdateAfterSchoolEnrolmentParams,
 } from 'fizz-kidz'
 
+import { SheetsClient } from '../../../google/SheetsClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import scheduleAfterSchoolProgram from '../../core/schedule-after-school-program'
@@ -25,6 +26,23 @@ export const afterSchoolProgramRouter = router({
     updateAfterSchoolEnrolment: publicProcedure
         .input((input: unknown) => input as UpdateAfterSchoolEnrolmentParams)
         .mutation(({ input }) => updateAfterSchoolEnrolment(input)),
+    joinWaitList: publicProcedure
+        .input(
+            (input: unknown) =>
+                input as {
+                    parentName: string
+                    parentEmail: string
+                    parentMobile: string
+                    childName: string
+                    program: string
+                }
+        )
+        .mutation(async ({ input }) => {
+            const sheetsClient = await SheetsClient.getInstance()
+            await sheetsClient.addRowToSheet('afterSchoolProgramWaitlist', [
+                [input.program, input.parentName, input.parentEmail, input.parentMobile, input.childName],
+            ])
+        }),
 })
 
 export const afterSchoolProgram = onRequestTrpc(afterSchoolProgramRouter)

@@ -8,6 +8,7 @@ import { trpc } from '@utils/trpc'
 
 import Loader from '../shared/Loader'
 import Form from './Form'
+import { WaitingListForm } from './waiting-list-form'
 import { FormSubmission } from '.'
 
 type Props = {
@@ -25,7 +26,7 @@ const FormSwitcher: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
 
     const { status, data: classes } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId: appointmentType.id,
-        includeUnavailable: false,
+        includeUnavailable: true,
     })
 
     // Mixpanel Tracking
@@ -72,14 +73,16 @@ const FormSwitcher: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                     )
                 } else {
                     // no spots left
-                    // this could be swapped out with a waiting list form in the future
                     return (
-                        <Alert
-                            style={{ marginTop: 24 }}
-                            message="Class Full"
-                            description="Unfortunately this class is full for the term."
-                            type="error"
-                        />
+                        <>
+                            <Alert
+                                style={{ marginTop: 24 }}
+                                message="Class Full"
+                                description="Unfortunately this class is full for the term."
+                                type="error"
+                            />
+                            <WaitingListForm program={appointmentType.name} />
+                        </>
                     )
                 }
             } else {
@@ -87,8 +90,8 @@ const FormSwitcher: React.FC<Props> = ({ type, appointmentType, onSubmit }) => {
                 return (
                     <Alert
                         style={{ marginTop: 24 }}
-                        message="Class Full"
-                        description="Unfortunately this class is full for the term."
+                        message="Enrolment closed"
+                        description="Unfortunately enrolment has closed for this program."
                         type="error"
                     />
                 )
