@@ -4,7 +4,6 @@ import { AcuityConstants, AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { useMemo, useState } from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { trpc } from '@utils/trpc'
 
 import { getEnrolment } from '../ClassDetails.utils'
@@ -31,15 +30,15 @@ type TableData = {
 
 export type SetAppointmentLabel = (id: number, label: 'signed-in' | 'signed-out' | 'not-attending' | 'none') => void
 
-export type UpdateEnrolment = (enrolment: AfterSchoolEnrolment) => void
+export type UpdateEnrolment = (id: string, enrolment: Partial<AfterSchoolEnrolment>) => void
 
 const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enrolmentsMap, calendarName }) => {
-    const firebase = useFirebase()
     const { width } = useWindowDimensions()
 
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
     const updateAppointmentMutation = trpc.acuity.updateAppointment.useMutation()
+    const updateEnrolmentMutation = trpc.afterSchoolProgram.updateAfterSchoolEnrolment.useMutation()
 
     const handleExpandRow = (expanded: boolean, record: TableData) => {
         if (expanded) {
@@ -56,17 +55,17 @@ const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enro
                 label === 'signed-in'
                     ? [{ id: AcuityConstants.Labels.CHECKED_IN }]
                     : label === 'signed-out'
-                    ? [{ id: AcuityConstants.Labels.CHECKED_OUT }]
-                    : label === 'not-attending'
-                    ? [{ id: AcuityConstants.Labels.NOT_ATTENDING }]
-                    : [],
+                      ? [{ id: AcuityConstants.Labels.CHECKED_OUT }]
+                      : label === 'not-attending'
+                        ? [{ id: AcuityConstants.Labels.NOT_ATTENDING }]
+                        : [],
         })
 
         updateAppointment(result)
     }
 
-    const updateEnrolment: UpdateEnrolment = async (enrolment: AfterSchoolEnrolment) => {
-        await firebase.db.collection('afterSchoolEnrolments').doc(enrolment.id).update(enrolment)
+    const updateEnrolment: UpdateEnrolment = async (id, enrolment) => {
+        await updateEnrolmentMutation.mutateAsync({ id, ...enrolment })
     }
 
     const columns = useMemo(() => {

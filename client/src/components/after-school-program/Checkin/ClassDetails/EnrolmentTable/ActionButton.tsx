@@ -65,8 +65,7 @@ const ActionButton: React.FC<Props> = ({ appointment, enrolment, updateEnrolment
     }
 
     const handleSignOut = async (pickupPerson: string, signature: string, staffReason: string = '') => {
-        await updateEnrolment({
-            ...enrolment,
+        await updateEnrolment(enrolment.id, {
             signatures: {
                 ...enrolment.signatures,
                 [appointment.id]: { pickupPerson, signature, timestamp: Date.now(), staffReason },

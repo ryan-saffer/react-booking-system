@@ -440,6 +440,20 @@ export class MailClient {
                     template: 'guest_of_party.mjml',
                     useMjml: true,
                 }
+            case 'notContinuingNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'do-not-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Not Continuing With Term Notification',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'not_continuing_after_school_notification.html',
+                    useMjml: false,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

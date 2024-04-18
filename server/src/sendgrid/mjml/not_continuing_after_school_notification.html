@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <p>This is a notification email to let you know that the following parent has chosen not to continue with their
+        after school program term:</p>
+    <table style="border-collapse: collapse">
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Program</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ program }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Name</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ parentName }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Email</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ parentEmail }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Phone</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ parentMobile }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Child Name</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ childName }}</td>
+        </tr>
+    </table>
+
+    <p>Before unenrolling them, be sure to check if the class is full, and offer the spot to anyone on the waitlist!</p>
+</body>
+
+</html>

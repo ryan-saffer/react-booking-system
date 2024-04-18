@@ -49,6 +49,14 @@ export type Emails = {
         portalUrl: string
     }
 
+    notContinuingNotification: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        program: string
+    }
+
     // BIRTHDAY PARTIES
     partyBookingConfirmation: {
         parentName: string

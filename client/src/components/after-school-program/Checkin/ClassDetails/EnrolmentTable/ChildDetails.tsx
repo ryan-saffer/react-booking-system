@@ -68,7 +68,7 @@ const ChildDetails: React.FC<Props> = ({ appointment, enrolment, setAppointmentL
                 await setAppointmentLabel(appointment.id, 'not-attending')
                 break
             case 'not-continuing':
-                await updateEnrolment({ ...enrolment, continuingWithTerm: 'no' })
+                await updateEnrolment(enrolment.id, { continuingWithTerm: 'no' })
                 break
             default: {
                 const exhaustiveCheck: never = key
