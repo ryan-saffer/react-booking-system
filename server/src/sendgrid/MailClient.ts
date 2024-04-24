@@ -147,7 +147,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Unenrolment Confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },

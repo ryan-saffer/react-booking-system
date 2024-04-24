@@ -12,7 +12,7 @@ export async function updateAfterSchoolEnrolment(input: UpdateAfterSchoolEnrolme
         const existingEnrolment = await DatabaseClient.getAfterSchoolEnrolment(id)
         if (existingEnrolment.continuingWithTerm !== 'no') {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('notContinuingNotification', 'info@fizzkidz.com.au', {
+            await mailClient.sendEmail('notContinuingNotification', 'bonnie.c@fizzkidz.com.au', {
                 parentName: `${existingEnrolment.parent.firstName} ${existingEnrolment.parent.lastName}`,
                 parentEmail: existingEnrolment.parent.email,
                 parentMobile: existingEnrolment.parent.phone,
