@@ -6,7 +6,7 @@ import { authenticatedProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { addUserToStudio } from '../../core/add-user-to-studio'
 
-export const adminRouter = router({
+export const authRouter = router({
     addCustomClaimToAuth: authenticatedProcedure
         .input((input: unknown) => input as { uid: string; isCustomer: boolean })
         .mutation(({ input }) => {
@@ -30,4 +30,4 @@ export const adminRouter = router({
         .mutation(({ input }) => addUserToStudio(input)),
 })
 
-export const admin = onRequestTrpc(adminRouter)
+export const auth = onRequestTrpc(authRouter)

@@ -20,12 +20,12 @@ const columnHelper = createColumnHelper<StaffAuthUser>()
 export function ManageUsersTable() {
     const { currentOrg, role, hasPermission } = useOrg()
     const authUser = useAuth()
-    const { data, isSuccess, isLoading, refetch } = trpc.admin.getUsers.useQuery({ studio: currentOrg })
+    const { data, isSuccess, isLoading, refetch } = trpc.auth.getUsers.useQuery({ studio: currentOrg })
 
     const [openNewUserDialog, setOpenNewUserDialog] = useState(false)
     const confirm = useConfirm()
 
-    const updateUserRoleMutation = trpc.admin.updateUserRole.useMutation()
+    const updateUserRoleMutation = trpc.auth.updateUserRole.useMutation()
 
     const [users, setUsers] = useState<Record<string, StaffAuthUser>>({})
     useEffect(() => {

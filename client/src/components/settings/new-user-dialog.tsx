@@ -42,7 +42,7 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
 
     const { currentOrg } = useOrg()
 
-    const { mutateAsync: addUser, isLoading } = trpc.admin.addUserToStudio.useMutation()
+    const { mutateAsync: addUser, isLoading } = trpc.auth.addUserToStudio.useMutation()
 
     const onSubmit = async (values: Form) => {
         try {

@@ -13,8 +13,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         cachedUser ? JSON.parse(cachedUser) : null
     )
 
-    const addCustomClaim = trpc.admin.addCustomClaimToAuth.useMutation()
-    const { mutateAsync: createUser } = trpc.admin.createUser.useMutation()
+    const addCustomClaim = trpc.auth.addCustomClaimToAuth.useMutation()
+    const { mutateAsync: createUser } = trpc.auth.createUser.useMutation()
 
     useEffect(() => {
         let unsubDb = () => {}
