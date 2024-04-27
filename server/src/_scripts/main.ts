@@ -1,6 +1,7 @@
 import prompts from 'prompts'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
+import { getAllUsers } from './auth/get-all-users'
 import {
     migrateScienceEnrolments,
     migration_addChildSupportToAllExistingEnrolments,
@@ -14,6 +15,10 @@ import { generatePartyFormUrl } from './parties/generate-form'
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'List all users',
+                value: 'listAllUsers',
+            },
             {
                 title: 'Generate party form URL',
                 value: 'generatePartyFormUrl',
@@ -74,5 +79,8 @@ import { generatePartyFormUrl } from './parties/generate-form'
             message: 'Please enter the enrolment id:',
         })
         await getAfterSchoolProgramAnaphylaxisPlanSignedUrl(enrolmentId)
+    }
+    if (script === 'listAllUsers') {
+        await getAllUsers()
     }
 })()

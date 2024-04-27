@@ -14,51 +14,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     )
 
     const addCustomClaim = trpc.admin.addCustomClaimToAuth.useMutation()
+    const { mutateAsync: createUser } = trpc.admin.createUser.useMutation()
 
     useEffect(() => {
         let unsubDb = () => {}
 
-        const unsubAuth = firebase.auth.onAuthStateChanged((authUser) => {
+        const unsubAuth = firebase.auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
                 // get the user from the db
                 unsubDb = firebase.db
                     .collection('users')
                     .doc(authUser.uid)
-                    .onSnapshot(async (snap) => {
-                        if (snap.exists) {
-                            const user = snap.data() as AuthUser
-                            if (!user.imageUrl) {
-                                user.imageUrl = authUser.photoURL
+                    .onSnapshot(
+                        async (snap) => {
+                            if (snap.exists) {
+                                const user = snap.data() as AuthUser
+                                if (!user.imageUrl) {
+                                    user.imageUrl = authUser.photoURL
+                                }
+
+                                // include the jwt and uid in the cache, since when loading the app, authStateChanged can take a moment to trigger,
+                                // and requests to the server can happen in the meantime. Caching it can allow it to be used in the interim.
+                                const jwt = await authUser.getIdToken(false)
+                                const uid = authUser.uid
+                                setAuthUser({ ...user, jwt, uid })
+                                localStorage.setItem('authUser', JSON.stringify({ ...user, jwt, uid }))
+
+                                // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
+                                // Since anyone, such as customers, can create accounts, we need to lock down firestore to only staff members.
+
+                                // add a custom claim to the auth object. Read more: https://firebase.google.com/docs/auth/admin/custom-claims
+                                await addCustomClaim.mutateAsync({
+                                    uid: authUser.uid,
+                                    isCustomer: user.accountType !== 'staff',
+                                })
+                            } else {
+                                // user doesn't exist in db, which means they were not invited to the platform, so default them as a customer.
+                                // once created, it will fire this snapshot again, and will then correctly be found
+                                const newUser = {
+                                    uid: authUser.uid,
+                                    email: authUser.email!,
+                                    imageUrl: authUser.photoURL,
+                                    accountType: 'customer',
+                                } satisfies AuthUser
+
+                                // users are only given read access to their user document in firestore, and must update/create their doc
+                                // through the backend (to avoid giving themselves admin privileges).
+                                // however.. createUser is an authenticated procedure, and we have not yet set the authUser..
+                                // so we just set the jwt in the cache here to allow calling this endpoint.
+                                const jwt = await authUser.getIdToken(false)
+                                localStorage.setItem('authUser', JSON.stringify({ jwt }))
+
+                                await createUser(newUser)
                             }
-
-                            // include the jwt and uid in the cache, since when loading the app, authStateChanged can take a moment to trigger,
-                            // and requests to the server can happen in the meantime. Caching it can allow it to be used in the interim.
-                            const jwt = await authUser.getIdToken(false)
-                            const uid = authUser.uid
-                            setAuthUser({ ...user, jwt, uid })
-                            localStorage.setItem('authUser', JSON.stringify({ ...user, jwt, uid }))
-
-                            // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
-                            // Since anyone, such as customers, can create accounts, we need to lock down firestore to only staff members.
-
-                            // add a custom claim to the auth object. Read more: https://firebase.google.com/docs/auth/admin/custom-claims
-                            await addCustomClaim.mutateAsync({
-                                uid: authUser.uid,
-                                isCustomer: user.accountType !== 'staff',
-                            })
-                        } else {
-                            // user doesn't exist in db, which means they were not invited to the platform.
-                            // default them as a customer.
-                            // once created, it will fire this snapshot again, and will then correctly be found
-                            const newUser = {
-                                uid: authUser.uid,
-                                email: authUser.email!,
-                                imageUrl: authUser.photoURL,
-                                accountType: 'customer',
-                            } satisfies AuthUser
-                            firebase.db.collection('users').doc(authUser.uid).set(newUser)
-                        }
-                    })
+                        },
+                        (error) => console.error(error)
+                    )
             } else {
                 setAuthUser(null)
                 localStorage.removeItem('authUser')

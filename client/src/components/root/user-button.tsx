@@ -1,4 +1,4 @@
-import { LogOut, Settings, User } from 'lucide-react'
+import { LogOut, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
@@ -20,18 +20,13 @@ export function UserButton() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                    {user?.imageUrl ? (
-                        <img
-                            src={user?.imageUrl || ''}
-                            width={36}
-                            height={36}
-                            alt="Avatar"
-                            className="overflow-hidden rounded-full"
-                        />
-                    ) : (
-                        <User />
-                    )}
+                <Button variant="ghost" size="icon" className="overflow-hidden rounded-full focus:outline-none">
+                    <img
+                        src={user?.imageUrl || `https://api.dicebear.com/8.x/shapes/svg?seed=${user?.email}`}
+                        width={40}
+                        height={40}
+                        alt="Avatar"
+                    />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" forceMount className="twp w-60">

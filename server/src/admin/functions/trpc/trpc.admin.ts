@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase-admin/auth'
-import { LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
@@ -12,6 +12,9 @@ export const adminRouter = router({
         .mutation(({ input }) => {
             getAuth().setCustomUserClaims(input.uid, input)
         }),
+    createUser: authenticatedProcedure
+        .input((input: unknown) => input as AuthUser)
+        .mutation(({ input }) => DatabaseClient.createUser(input.uid, input)),
     getUsers: authenticatedProcedure
         .input((input: unknown) => input as { studio: LocationOrMaster | null })
         .query(async ({ input }) => {

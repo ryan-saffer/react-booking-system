@@ -17,11 +17,12 @@ import { Root } from '@components/root/root.js'
  * a program that do not need all the javascript for the entire dashboard.
  */
 const SignInPage = lazy(() =>
-    import('./components/SignIn/SignInPage.js').then((module) => ({ default: module.SignInPage }))
+    import('./components/SignIn/sign-in-page.js').then((module) => ({ default: module.SignInPage }))
 )
 const SignUpPage = lazy(() =>
-    import('./components/SignIn/SignUpPage.js').then((module) => ({ default: module.SignUpPage }))
+    import('./components/SignIn/sign-up-page.js').then((module) => ({ default: module.SignUpPage }))
 )
+const ResetPasswordPage = lazy(() => import('./components/SignIn/reset-password-page.js').then(module => ({ default: module.ResetPasswordPage})))
 const Navigation = lazy(() =>
     import('./components/Navigation/navigation.js').then((module) => ({ default: module.Navigation }))
 )
@@ -155,6 +156,19 @@ const router = createBrowserRouter([
                         </SignedOut>
                     </Suspense>
                 ),
+            },
+            {
+                path: 'reset-password',
+                Component: () => (
+                    <Suspense fallback={<Loader />}>
+                        <SignedIn>
+                            <Navigate to="/" />
+                        </SignedIn>
+                        <SignedOut>
+                            <ResetPasswordPage />
+                        </SignedOut>
+                    </Suspense>
+                )
             },
             {
                 path: 'dashboard',

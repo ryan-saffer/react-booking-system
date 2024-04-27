@@ -1,17 +1,6 @@
-import { ReactNode, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-import { useAuth } from '@components/Hooks/context/useAuth'
+import { ReactNode } from 'react'
 
 export function SignInUpLayout({ children }: { children: ReactNode }) {
-    const user = useAuth()
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (user) {
-            navigate('../dashboard')
-        }
-    })
     return (
         <main className="twp flex h-full">
             <div className="relative hidden w-1/2 overflow-hidden bg-slate-900 lg:block">

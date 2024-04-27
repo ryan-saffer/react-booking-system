@@ -41,6 +41,8 @@ class Firebase {
         await this.auth.signOut()
         localStorage.removeItem('authUser')
     }
+
+    resetPassword = (email: string) => this.auth.sendPasswordResetEmail(email)
 }
 
 export default Firebase

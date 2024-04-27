@@ -28,7 +28,7 @@ export function OrganisationSwitcher() {
             </PopoverTrigger>
             <PopoverContent className="twp w-64 p-0" align="end" forceMount>
                 {currentOrg && role && (
-                    <div className="flex w-full items-center justify-between border-b p-4">
+                    <div className="flex w-full items-center justify-between p-4">
                         <div className="text-sm font-semibold">
                             {getOrgName(currentOrg)}
                             <p className="text-xs text-gray-500">{getRoleDisplayValue(role)}</p>
@@ -51,7 +51,7 @@ export function OrganisationSwitcher() {
                         .map((org) => (
                             <div
                                 key={org}
-                                className="group flex cursor-pointer items-center justify-between p-4 text-sm font-light hover:bg-slate-100"
+                                className="group flex cursor-pointer items-center justify-between border-t p-4 text-sm font-light hover:bg-slate-100"
                                 onClick={() => {
                                     switchToOrg(org)
                                     setOpen(false)

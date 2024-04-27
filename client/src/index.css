@@ -76,6 +76,9 @@ code {
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 210 40% 98%;
 
+        --success: 142.1 70.6% 40%;
+        --success-foreground: 210 40% 98%;
+
         --border: 214.3 31.8% 91.4%;
         --input: 214.3 31.8% 91.4%;
         --ring: 222.2 84% 4.9%;
@@ -107,6 +110,9 @@ code {
 
         --destructive: 0 62.8% 30.6%;
         --destructive-foreground: 210 40% 98%;
+
+        --success: 143.8 61.2% 20.2%;
+        --success-foreground: 138.5 76.5% 96.7%;
 
         --border: 217.2 32.6% 17.5%;
         --input: 217.2 32.6% 17.5%;
