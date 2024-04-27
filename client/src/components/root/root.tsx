@@ -1,5 +1,5 @@
 import mixpanel from 'mixpanel-browser'
-import { Outlet, ScrollRestoration, useNavigate } from 'react-router-dom'
+import { Outlet, ScrollRestoration } from 'react-router-dom'
 
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
@@ -14,7 +14,6 @@ import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
-import { ClerkProvider } from '@clerk/clerk-react'
 import { Toaster } from 'sonner'
 import { OrgProvider } from '@components/Session/org-provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
@@ -54,8 +53,6 @@ const antdTheme: ThemeConfig = {
 }
 
 export function Root() {
-    const navigate = useNavigate()
-
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         trpc.createClient({
@@ -94,25 +91,19 @@ export function Root() {
                     <ThemeProvider theme={theme}>
                         <ConfigProvider theme={antdTheme}>
                             <LocalizationProvider dateAdapter={AdapterLuxon}>
-                                <ClerkProvider
-                                    routerPush={(route: string) => navigate(route, { replace: false })}
-                                    routerReplace={(route: string) => navigate(route, { replace: true })}
-                                    publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_DEV}
-                                >
-                                    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-                                        <QueryClientProvider client={queryClient}>
-                                            <AuthProvider>
-                                                <OrgProvider>
-                                                    <ConfirmationDialogProvider>
-                                                        <ScrollRestoration />
-                                                        <Toaster richColors />
-                                                        <Outlet />
-                                                    </ConfirmationDialogProvider>
-                                                </OrgProvider>
-                                            </AuthProvider>
-                                        </QueryClientProvider>
-                                    </trpc.Provider>
-                                </ClerkProvider>
+                                <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                                    <QueryClientProvider client={queryClient}>
+                                        <AuthProvider>
+                                            <OrgProvider>
+                                                <ConfirmationDialogProvider>
+                                                    <ScrollRestoration />
+                                                    <Toaster richColors />
+                                                    <Outlet />
+                                                </ConfirmationDialogProvider>
+                                            </OrgProvider>
+                                        </AuthProvider>
+                                    </QueryClientProvider>
+                                </trpc.Provider>
                             </LocalizationProvider>
                         </ConfigProvider>
                     </ThemeProvider>

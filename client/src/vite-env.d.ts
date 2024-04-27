@@ -26,8 +26,6 @@ interface ImportMetaEnv {
 
     readonly VITE_MIXPANEL_API_KEY_DEV: string
     readonly VITE_MIXPANEL_API_KEY_PROD: string
-
-    readonly VITE_CLERK_PUBLISHABLE_KEY_DEV: sting
 }
 
 interface ImportMeta {

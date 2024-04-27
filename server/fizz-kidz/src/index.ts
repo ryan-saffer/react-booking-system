@@ -50,4 +50,3 @@ export * from './paperform'
 
 export * from './events/Event'
 export * from './events/incursion-module-map'
-export * from './clerk/clerk'
