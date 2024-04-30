@@ -55,7 +55,7 @@ export const PROD_CONFIG = {
     STRIPE_PRICE_78: 'price_1P6N3qIhbh0YhdB7QAXgP40c',
     STRIPE_PRICE_72: 'price_1LMWxrIhbh0YhdB7eoDRV5Ma',
     STRIPE_PRICE_63: 'price_1JJzd1Ihbh0YhdB7prf9a6bZ',
-    STRIPE_PRICE_52: 'price_1P6N3cIhbh0YhdB7Tafe8Typv',
+    STRIPE_PRICE_52: 'price_1P6N3cIhbh0YhdB7Tafe8Typ',
     STRIPE_PRICE_48: 'price_1LMWxjIhbh0YhdB7WeTl1iv5',
     STRIPE_PRICE_42: 'price_1KSZImIhbh0YhdB7bR92U9Qp',
     STRIPE_PRICE_26: 'price_1P6N3WIhbh0YhdB7CMUKZsjx',
