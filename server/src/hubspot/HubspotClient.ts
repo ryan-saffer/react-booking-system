@@ -11,6 +11,7 @@ type BaseProps = {
     email: string
     mobile?: string
 }
+
 type WithBaseProps<T> = BaseProps & T
 
 export class HubspotClient {
@@ -44,7 +45,9 @@ export class HubspotClient {
         throw new Error('Hubspot client not initialised')
     }
 
-    async #addContact(values: WithBaseProps<{ test_service: string } & { [key: string]: string }>) {
+    async #addContact(
+        values: WithBaseProps<{ test_service: string; customer_type: 'B2C' | 'B2B' } & { [key: string]: string }>
+    ) {
         const { firstName, lastName, email, mobile, ...rest } = values
 
         const properties = {
@@ -53,11 +56,10 @@ export class HubspotClient {
             phone: mobile || '',
             email,
             ...rest,
-            customer_type: 'B2C',
         }
 
         try {
-            await this.#hubspot.crm.contacts.basicApi.create({
+            return this.#hubspot.crm.contacts.basicApi.create({
                 properties,
                 associations: [],
             })
@@ -67,17 +69,42 @@ export class HubspotClient {
                 // this isn't ideal, since properties that allow multiple values will be overwritten here with a single value.
                 // ie. if a birthday party guest signs up for a holiday program, their service will only be holiday program, and not both party and holiday program.
                 // can improve by first fetching the existing customer, and merging such fields.
-                await this.#hubspot.apiRequest({
+                const result = await this.#hubspot.apiRequest({
                     method: 'PATCH',
                     path: `/crm/v3/objects/contacts/${email}?idProperty=email`,
                     body: {
                         properties,
                     },
                 })
+                return result.json()
             } else {
                 throw err
             }
         }
+    }
+
+    #addDeal(dealName: string, conatactId: string) {
+        this.#hubspot.crm.deals.basicApi.create({
+            properties: {
+                dealname: dealName,
+                pipeline: 'default',
+                dealstage: 'appointmentscheduled',
+                hubspot_owner_id: '899046703', // melissa
+            },
+            associations: [
+                {
+                    to: {
+                        id: conatactId,
+                    },
+                    types: [
+                        {
+                            associationCategory: 'HUBSPOT_DEFINED',
+                            associationTypeId: 3, // deal to contact
+                        },
+                    ],
+                },
+            ],
+        })
     }
 
     addBirthdayPartyContact(
@@ -96,6 +123,7 @@ export class HubspotClient {
             test_service: service === 'studio' ? 'In-store Party' : 'Mobile Party',
             party_date: DateTime.fromJSDate(partyDate).toISODate(),
             party_location: this.#getBranch(location),
+            customer_type: 'B2C',
             ...baseProps,
         })
     }
@@ -106,6 +134,7 @@ export class HubspotClient {
             test_service: 'brithday_party_guest',
             firstName: props.firstName,
             email: props.email,
+            customer_type: 'B2C',
         })
     }
 
@@ -114,6 +143,7 @@ export class HubspotClient {
         return this.#addContact({
             test_service: 'Holiday Program',
             party_location: this.#getBranch(location),
+            customer_type: 'B2C',
             ...baseProps,
         })
     }
@@ -123,8 +153,30 @@ export class HubspotClient {
         return this.#addContact({
             party_location: AcuityUtilities.getSchoolByCalendarId(calendarId),
             test_service: type === 'science' ? 'School Science Program' : 'Art Program',
+            customer_type: 'B2C',
             ...baseProps,
         })
+    }
+
+    addBasicB2CContact(props: WithBaseProps<{ branch?: Location }>) {
+        const { branch, ...rest } = props
+        return this.#addContact({
+            ...rest,
+            customer_type: 'B2C',
+            test_service: '',
+            ...(branch && { party_location: this.#getBranch(branch) }),
+        })
+    }
+
+    async addBasicB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
+        const { service, ...rest } = props
+        const contact = await this.#addContact({
+            ...rest,
+            test_service: service,
+            customer_type: 'B2B',
+            hs_lead_status: 'NEW',
+        })
+        await this.#addDeal('New contact form lead', contact?.id || '')
     }
 
     #getBranch(location: Location): Branch {
