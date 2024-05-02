@@ -90,7 +90,7 @@ export class ZohoClient {
             email,
             service,
             customer_type,
-            branch,
+            branch: branch || '',
             ...rest,
         }
 
