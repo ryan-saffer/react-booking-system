@@ -163,11 +163,37 @@ export class ZohoClient {
     addBasicB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
         const { service, company, ...baseProps } = props
 
-        return this.#addContact({
-            service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
-            customer_type: 'B2B',
-            Company: company || '',
-            ...baseProps,
+        return Promise.all([
+            this.#addContact({
+                service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
+                customer_type: 'B2B',
+                Company: company || '',
+                ...baseProps,
+            }),
+            this.createLead({
+                company: company || '',
+                source: 'Website Form',
+                ...baseProps,
+            }),
+        ])
+    }
+
+    createLead(props: WithBaseProps<{ company: string; source: string }>) {
+        return this.#request({
+            endpoint: 'Leads',
+            method: 'POST',
+            data: [
+                {
+                    First_Name: props.firstName,
+                    Last_Name: props.lastName || 'N/A',
+                    Email: props.email,
+                    Phone: props.mobile || '',
+                    Company: props.company,
+                    Owner: '76392000000284519', // melissa
+                    Lead_Source: props.source,
+                    Lead_Status: 'Not Qualified',
+                },
+            ],
         })
     }
 }
