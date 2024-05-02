@@ -2,11 +2,11 @@ import { DiscountCode, WithoutId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { MixpanelClient, MixpanelEvent } from '../../mixpanel/mixpanel-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { generateRandomString } from '../../utilities/stringUtils'
+import { ZohoClient } from '../../zoho/zoho-client'
 import { checkDiscountCode } from './check-discount-code'
 
 export type CreateDiscountCodeFromInvitation = WithoutId<
@@ -49,13 +49,13 @@ export async function createDiscountCodeFromInvitation(discountCode: CreateDisco
     }
 
     try {
-        const hubspotClient = await HubspotClient.getInstance()
-        await hubspotClient.addBirthdayPartyGuestContact({
+        const zohoClient = new ZohoClient()
+        await zohoClient.addBirthdayPartyGuestContact({
             firstName: discountCode.name,
             email: discountCode.email,
         })
     } catch (err) {
-        logError('error adding birthday party guest contact to hubspot', err)
+        logError('error adding birthday party guest contact to zoho', err)
     }
 
     await DatabaseClient.createDiscountCode({

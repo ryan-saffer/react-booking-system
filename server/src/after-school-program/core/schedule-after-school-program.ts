@@ -3,7 +3,8 @@ import {
     AcuityTypes,
     AfterSchoolEnrolment,
     ScheduleAfterSchoolEnrolmentParams,
-    getApplicationDomain, capitalise,
+    capitalise,
+    getApplicationDomain,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -11,10 +12,10 @@ import { AcuityClient } from '../../acuity/core/acuity-client'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { SheetsClient } from '../../google/SheetsClient'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { projectId } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -131,48 +132,51 @@ export default async function scheduleAfterSchoolProgram(
     }
 
     try {
-        const hubspotClient = await HubspotClient.getInstance()
-        await hubspotClient.addScienceProgramContact({
+        const zohoClient = new ZohoClient()
+        await zohoClient.addAfterSchoolProgramContact({
             firstName: appointment.parent.firstName,
             lastName: appointment.parent.lastName,
             email: appointment.parent.email,
             mobile: appointment.parent.phone,
-            calendarId: appointment.calendarId,
-            type: input.type,
         })
     } catch (err) {
-        logError(`unable to add after school program enrolment to hubspot with id: ${appointment.id}`, err)
+        logError(`unable to add after school program enrolment to zoho with id: ${appointment.id}`, err)
     }
 
     // send the confirmation email
     if (sendConfirmationEmail) {
         try {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('afterSchoolEnrolmentConfirmation', input.parent.email, {
-                isScience: input.type === 'science',
-                isArt: input.type === 'art',
-                parentName: input.parent.firstName,
-                childName: input.child.firstName,
-                className: input.className,
-                appointmentTimes: appointments.map((it) =>
-                    DateTime.fromISO(it.datetime, {
-                        setZone: true,
-                    }).toLocaleString({
-                        weekday: 'short',
-                        month: 'short',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    })
-                ),
-                calendarName: calendar.location,
-                price: (parseInt(appointments[0].price) * appointments.length).toString(),
-                location: calendar.description,
-                numberOfWeeks: appointments.length.toString(),
-            }, {
-                subject: `${capitalise(input.type)} Program Enrolment Confirmation`
-            })
+            await mailClient.sendEmail(
+                'afterSchoolEnrolmentConfirmation',
+                input.parent.email,
+                {
+                    isScience: input.type === 'science',
+                    isArt: input.type === 'art',
+                    parentName: input.parent.firstName,
+                    childName: input.child.firstName,
+                    className: input.className,
+                    appointmentTimes: appointments.map((it) =>
+                        DateTime.fromISO(it.datetime, {
+                            setZone: true,
+                        }).toLocaleString({
+                            weekday: 'short',
+                            month: 'short',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                        })
+                    ),
+                    calendarName: calendar.location,
+                    price: (parseInt(appointments[0].price) * appointments.length).toString(),
+                    location: calendar.description,
+                    numberOfWeeks: appointments.length.toString(),
+                },
+                {
+                    subject: `${capitalise(input.type)} Program Enrolment Confirmation`,
+                }
+            )
         } catch (err) {
             logError(
                 `unable to send science enrolment confirmation email for enrolment with id: '${appointment.id}'`,

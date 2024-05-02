@@ -14,10 +14,10 @@ import {
 import { DateTime } from 'luxon'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
@@ -53,21 +53,19 @@ export async function createPartyBooking(_booking: Booking) {
 
     await DatabaseClient.updatePartyBooking(bookingId, { eventId })
 
-    const hubspotClient = await HubspotClient.getInstance()
+    const zohoClient = new ZohoClient()
     try {
-        await hubspotClient.addBirthdayPartyContact({
+        await zohoClient.addBirthdayPartyContact({
             firstName: booking.parentFirstName,
             lastName: booking.parentLastName,
             email: booking.parentEmail,
             mobile: booking.parentMobile,
-            childName: booking.childName,
-            childAge: booking.childAge,
-            service: booking.type,
             partyDate: booking.dateTime.toDate(),
-            location: booking.location,
+            studio: booking.location,
+            type: booking.type,
         })
     } catch (err) {
-        logError(`error adding contact to hubspot: '${booking.parentEmail}'`, err)
+        logError(`error adding contact to zoho: '${booking.parentEmail}'`, err)
     }
 
     // create the personalised invite url

@@ -5,8 +5,8 @@ import { AcuityUtilities, PaidHolidayProgramBooking } from 'fizz-kidz'
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { logError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 import { scheduleHolidayProgram } from './schedule-holiday-program'
 import { sendConfirmationEmail } from './send-confirmation-email'
 
@@ -34,20 +34,20 @@ async function scheduleHolidayPrograms(
     const result = await Promise.all(programs.map((it) => _scheduleHolidayProgram(it.program, it.id, paymentIntentId)))
 
     try {
-        const hubspotClient = await HubspotClient.getInstance()
+        const zohoClient = new ZohoClient()
         const program = programs[0]
         if (program) {
             const { parentFirstName, parentLastName, parentEmail, parentPhone, calendarId } = program.program
-            await hubspotClient.addHolidayProgramContact({
+            await zohoClient.addHolidayProgramContact({
                 firstName: parentFirstName,
                 lastName: parentLastName,
                 email: parentEmail,
                 mobile: parentPhone,
-                location: AcuityUtilities.getStudioByCalendarId(calendarId),
+                studio: AcuityUtilities.getStudioByCalendarId(calendarId),
             })
         }
     } catch (err) {
-        logError(`unable to add holiday program booking to hubspot with paymentIntentId ${paymentIntentId}`, err)
+        logError(`unable to add holiday program booking to zoho with paymentIntentId ${paymentIntentId}`, err)
     }
     // send confirmation email
     await sendConfirmationEmail(result)
