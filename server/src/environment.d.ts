@@ -16,6 +16,9 @@ declare global {
             ESIGNATURES_SECRET: string
             MIXPANEL_API_KEY_DEV: string
             MIXPANEL_API_KEY_PROD: string
+            ZOHO_REFRESH_TOKEN: string
+            ZOHO_CLIENT_ID: string
+            ZOHO_CLIENT_SECRET: string
         }
     }
 }

@@ -1,23 +1,23 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { HubspotClient } from '../../hubspot/HubspotClient'
 import { logError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
 import { ContactFormLocationMap, Form, PartyFormLocationMap } from '../contact-form-7-types'
 
 export const contactForm7Webhook = onRequest(async (req, res) => {
     const formId = req.query.formId as keyof Form
 
-    const hubspotClient = await HubspotClient.getInstance()
+    const zohoClient = new ZohoClient()
 
     switch (formId) {
         case 'party-booking': {
             const formData = req.body as Form['party-booking']
             const [firstName, lastName] = formData['your-name'].split(' ')
-            await hubspotClient.addBasicB2CContact({
+            await zohoClient.addBasicB2CContact({
                 firstName,
                 lastName: lastName || '',
                 email: formData['your-email'],
-                branch: PartyFormLocationMap[formData.location],
+                studio: PartyFormLocationMap[formData.location],
                 mobile: formData.phone,
             })
             break
@@ -36,15 +36,15 @@ export const contactForm7Webhook = onRequest(async (req, res) => {
                 service === 'School Science Program' ||
                 service === 'Mini Science'
             ) {
-                await hubspotClient.addBasicB2CContact({
+                await zohoClient.addBasicB2CContact({
                     firstName,
                     lastName,
                     email: formData['your-email'],
                     mobile: formData.phone,
-                    ...(formData.location && { branch: ContactFormLocationMap[formData.location] }),
+                    ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
                 })
             } else if (service === 'Activation and Events' || service === 'School Incursion') {
-                await hubspotClient.addBasicB2BContact({
+                await zohoClient.addBasicB2BContact({
                     firstName,
                     lastName,
                     email: formData['your-email'],
@@ -60,7 +60,7 @@ export const contactForm7Webhook = onRequest(async (req, res) => {
         case 'event': {
             const formData = req.body as Form['event']
             const [firstName, lastName] = formData['your-name'].split(' ')
-            await hubspotClient.addBasicB2BContact({
+            await zohoClient.addBasicB2BContact({
                 firstName,
                 lastName,
                 email: formData['your-email'],
@@ -73,7 +73,7 @@ export const contactForm7Webhook = onRequest(async (req, res) => {
         case 'incursion': {
             const formData = req.body as Form['incursion']
             const [firstName, lastName] = formData['your-name'].split(' ')
-            await hubspotClient.addBasicB2BContact({
+            await zohoClient.addBasicB2BContact({
                 firstName,
                 lastName,
                 email: formData['your-email'],
