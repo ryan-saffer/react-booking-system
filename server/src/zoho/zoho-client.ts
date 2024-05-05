@@ -1,8 +1,6 @@
 import { Booking, Location, capitalise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { throwFunctionsError } from '../utilities'
-
 type BaseProps = {
     firstName: string
     lastName?: string
@@ -66,8 +64,7 @@ export class ZohoClient {
             return result.json()
         } else {
             const error = await result.json()
-            console.log(JSON.stringify(error))
-            throwFunctionsError('internal', 'error calling zoho api', error, { input: JSON.stringify(props) })
+            throw error
         }
     }
 

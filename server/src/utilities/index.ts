@@ -108,8 +108,7 @@ export function throwFunctionsError(
             })
         }
     } else {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message, cause: { error, additionalInfo } })
-        // throw new HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
+        throw new HttpsError(code, message, { ...(hasAdditionalInfo && additionalInfo) })
     }
 }
 
