@@ -17,6 +17,9 @@ export function UserButton() {
     const navigate = useNavigate()
     const firebase = useFirebase()
     const user = useAuth()
+
+    const name = `${user?.firstname || ''} ${user?.lastname || ''}`.trim()
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -33,7 +36,7 @@ export function UserButton() {
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">My Account</p>
-                        <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{name || user?.email}</p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />

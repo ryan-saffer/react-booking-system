@@ -22,12 +22,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getOrgName } from '@utils/studioUtils'
 import { trpc } from '@utils/trpc'
 
-type Form = {
-    email: string
-    role: Role
-}
-
 const formSchema = z.object({
+    firstname: z.string().min(1, { message: 'First name cannot be empty.' }),
+    lastname: z.string().min(1, { message: 'Last name cannot be empty.' }),
     email: z.string().email({ message: 'Email address is not valid.' }),
     role: z.custom<Role>((value) => !!value, { message: 'Role is required.' }),
 })
@@ -36,6 +33,8 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            firstname: '',
+            lastname: '',
             email: '',
         },
     })
@@ -44,9 +43,11 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
 
     const { mutateAsync: addUser, isLoading } = trpc.auth.addUserToStudio.useMutation()
 
-    const onSubmit = async (values: Form) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const result = await addUser({
+                firstname: values.firstname,
+                lastname: values.lastname,
                 email: values.email,
                 role: values.role,
                 studio: currentOrg!,
@@ -75,6 +76,34 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
                 </DialogHeader>
                 <Form {...form}>
                     <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(onSubmit)}>
+                        <FormField
+                            control={form.control}
+                            name="firstname"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <FormItem className="pb-2">
+                                    <FormLabel>First name</FormLabel>
+                                    <FormControl>
+                                        <Input autoComplete="off" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="lastname"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <FormItem className="pb-2">
+                                    <FormLabel>Last name</FormLabel>
+                                    <FormControl>
+                                        <Input autoComplete="off" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="email"

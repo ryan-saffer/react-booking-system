@@ -8,9 +8,9 @@ export const Navigation = () => {
     const { hasPermission } = useOrg()
 
     return (
-        <div className="twp flex h-full justify-center bg-slate-100 p-4">
-            <div className="flex w-full max-w-lg flex-col gap-5">
-                <h2 className="lilita text-2xl">Programs</h2>
+        <div className="twp mb-8 flex h-full justify-center bg-slate-100 p-4">
+            <div className="flex w-full max-w-lg flex-col gap-4">
+                <h2 className="lilita mt-8 text-2xl">Programs</h2>
                 <ListItem
                     title="Parties, Events & Incursions"
                     to="bookings"
@@ -26,13 +26,13 @@ export const Navigation = () => {
                     to="after-school-program"
                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
                 />
-                <h2 className="lilita text-2xl">Creations</h2>
+                <h2 className="lilita mt-8 text-2xl">Creations</h2>
                 <ListItem
                     title="Creation Instructions"
                     to="creations"
                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
                 />
-                <h2 className="lilita text-2xl">Useful Links</h2>
+                <h2 className="lilita mt-8 text-2xl">Useful Links</h2>
                 <ListItem
                     imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
                     title="Incident Reporting"
@@ -47,7 +47,7 @@ export const Navigation = () => {
                 {/* <> */}
                 {hasPermission('admin') && (
                     <>
-                        <h2 className="lilita text-2xl">Admin</h2>
+                        <h2 className="lilita mt-8 text-2xl">Admin</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                             <ListItem
                                 title="After School Program Invoicing"

@@ -6,6 +6,8 @@ type BaseAuthUser = {
     uid: string
     email: string
     imageUrl: string | null
+    firstname?: string
+    lastname?: string
 }
 
 export type StaffAuthUser = BaseAuthUser & {

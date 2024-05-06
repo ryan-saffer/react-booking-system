@@ -22,7 +22,9 @@ const SignInPage = lazy(() =>
 const SignUpPage = lazy(() =>
     import('./components/SignIn/sign-up-page.js').then((module) => ({ default: module.SignUpPage }))
 )
-const ResetPasswordPage = lazy(() => import('./components/SignIn/reset-password-page.js').then(module => ({ default: module.ResetPasswordPage})))
+const ResetPasswordPage = lazy(() =>
+    import('./components/SignIn/reset-password-page.js').then((module) => ({ default: module.ResetPasswordPage }))
+)
 const Navigation = lazy(() =>
     import('./components/Navigation/navigation.js').then((module) => ({ default: module.Navigation }))
 )
@@ -112,6 +114,7 @@ const DiscountCodesPage = lazy(() =>
 const SettingsPage = lazy(() =>
     import('./components/settings/settings-page.js').then((module) => ({ default: module.SettingsPage }))
 )
+const Account = lazy(() => import('./components/settings/account.js').then((module) => ({ default: module.Account })))
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
 )
@@ -168,7 +171,7 @@ const router = createBrowserRouter([
                             <ResetPasswordPage />
                         </SignedOut>
                     </Suspense>
-                )
+                ),
             },
             {
                 path: 'dashboard',
@@ -329,7 +332,11 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: 'account',
-                                Component: () => <h1>todo</h1>,
+                                Component: () => (
+                                    <Suspense fallback={<Loader />}>
+                                        <Account />
+                                    </Suspense>
+                                ),
                             },
                             {
                                 path: 'members',

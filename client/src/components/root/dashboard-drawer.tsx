@@ -39,7 +39,7 @@ export function DashboardDrawer({
                 showTopBar={false}
             >
                 <ScrollArea className="h-full">
-                    <div className="flex flex-col gap-0.5 pl-4">
+                    <div className="flex flex-col gap-0.5 px-4">
                         <img
                             src="/backgrounds/bg-fizz-top-right.png"
                             className="absolute right-0 top-0 z-0 w-full max-w-[200px] object-contain"

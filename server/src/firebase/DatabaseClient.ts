@@ -24,7 +24,7 @@ type CreateDocOptions<T> = {
 }
 
 export type UpdateDoc<T> = {
-    [P in keyof T]?: T[P] extends number ? UpdateDoc<T[P]> | FieldValue : UpdateDoc<T[P]>
+    [P in keyof T]?: T[P] extends boolean ? UpdateDoc<T[P]> : UpdateDoc<T[P]> | FieldValue
 }
 
 class Client {
@@ -283,9 +283,8 @@ class Client {
         return (await FirestoreRefs.users()).doc(uid).set(user)
     }
 
-    async updateUser(uid: string, user: RecursivePartial<AuthUser>) {
-        const userRef = await FirestoreRefs.user(uid)
-        return userRef.set(user, { merge: true })
+    updateUser(uid: string, user: UpdateDoc<AuthUser>) {
+        return this.#updateDocument(FirestoreRefs.user(uid), user)
     }
 
     async getUser(uid: string) {

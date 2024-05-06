@@ -18,8 +18,9 @@ export function DashboardLayout() {
                 className="twp z-50 flex h-16 w-full flex-none items-center justify-center bg-slate-900 shadow-md"
             >
                 <Button
-                    className="absolute left-4 flex items-center hover:bg-slate-800"
+                    className="absolute left-4 flex items-center text-white hover:bg-slate-800 hover:text-white"
                     onClick={() => setDrawerOpen((prev) => !prev)}
+                    variant="ghost"
                 >
                     <Menu />
                 </Button>

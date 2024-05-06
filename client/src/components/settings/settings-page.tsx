@@ -11,7 +11,7 @@ export function SettingsPage() {
             <div className="space-y-1">
                 <h2 className="font-lilita text-3xl">Settings</h2>
                 <p className="font-gotham font-bold text-muted-foreground">
-                    Manage your account settings and set e-mail preferences.
+                    Manage your account and the users for this studio.
                 </p>
             </div>
             <Separator className="mt-6" />

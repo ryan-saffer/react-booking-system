@@ -304,7 +304,7 @@ export const DiscountCodesPage = () => {
                                     className="max-w-sm"
                                     placeholder="Filter discount codes..."
                                 />
-                                <Button onClick={() => setOpenNewCode(true)}>New Discount Code</Button>
+                                <Button onClick={() => setOpenNewCode(true)}>Create Discount Code</Button>
                             </div>
                             <div className="rounded-md border">
                                 <Table>

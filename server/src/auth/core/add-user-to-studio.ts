@@ -6,10 +6,14 @@ import { TRPCError } from '@trpc/server'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export async function addUserToStudio({
+    firstname,
+    lastname,
     email,
     role,
     studio,
 }: {
+    firstname: string
+    lastname: string
     email: string
     role: Role
     studio: LocationOrMaster
@@ -60,6 +64,8 @@ export async function addUserToStudio({
                 accountType: 'staff',
                 email,
                 imageUrl: null,
+                firstname,
+                lastname,
                 roles: {
                     [studio]: role,
                 },

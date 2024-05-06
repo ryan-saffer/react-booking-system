@@ -17,6 +17,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { Toaster } from 'sonner'
 import { OrgProvider } from '@components/Session/org-provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
+import useFirebase from '@components/Hooks/context/UseFirebase'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -52,7 +53,9 @@ const antdTheme: ThemeConfig = {
     },
 }
 
-export function Root() {
+function _Root() {
+    const firebase = useFirebase()
+
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         trpc.createClient({
@@ -60,11 +63,19 @@ export function Root() {
                 httpLink({
                     url: '',
                     async headers() {
-                        let authToken = ''
-                        const cachedAuthUser = localStorage.getItem('authUser')
-                        if (cachedAuthUser) {
-                            const authUser = JSON.parse(cachedAuthUser)
-                            authToken = authUser.jwt
+                        // first try refresh the users token - this means when returning to the app
+                        // after a while, it will refresh the token and work nicely.
+                        let authToken = (await firebase.auth.currentUser?.getIdToken()) || ''
+                        if (!authToken) {
+                            // however when refreshing the page, firebase.auth.currentUser is undefined, and we cannot access the AuthUserContext in here.
+                            // to get around this, check the cache for the jwt, and use it if it is there.
+                            // since this code is only reached during a full page refresh (or user is not logged in),
+                            // if the token is expired, onAuthStateChanged should be triggered and on the second attempt firebase.auth.currentUser should be found.
+                            const cachedAuthUser = localStorage.getItem('authUser')
+                            if (cachedAuthUser) {
+                                const authUser = JSON.parse(cachedAuthUser)
+                                authToken = authUser.jwt
+                            }
                         }
                         return {
                             authorization: authToken,
@@ -85,30 +96,36 @@ export function Root() {
     )
 
     return (
+        <MixpanelContext.Provider value={mixpanel}>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <ConfigProvider theme={antdTheme}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon}>
+                            <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                                <QueryClientProvider client={queryClient}>
+                                    <AuthProvider>
+                                        <OrgProvider>
+                                            <ConfirmationDialogProvider>
+                                                <ScrollRestoration />
+                                                <Toaster richColors />
+                                                <Outlet />
+                                            </ConfirmationDialogProvider>
+                                        </OrgProvider>
+                                    </AuthProvider>
+                                </QueryClientProvider>
+                            </trpc.Provider>
+                        </LocalizationProvider>
+                    </ConfigProvider>
+                </ThemeProvider>
+            </StyledEngineProvider>
+        </MixpanelContext.Provider>
+    )
+}
+
+export function Root() {
+    return (
         <FirebaseProvider>
-            <MixpanelContext.Provider value={mixpanel}>
-                <StyledEngineProvider injectFirst>
-                    <ThemeProvider theme={theme}>
-                        <ConfigProvider theme={antdTheme}>
-                            <LocalizationProvider dateAdapter={AdapterLuxon}>
-                                <trpc.Provider client={trpcClient} queryClient={queryClient}>
-                                    <QueryClientProvider client={queryClient}>
-                                        <AuthProvider>
-                                            <OrgProvider>
-                                                <ConfirmationDialogProvider>
-                                                    <ScrollRestoration />
-                                                    <Toaster richColors />
-                                                    <Outlet />
-                                                </ConfirmationDialogProvider>
-                                            </OrgProvider>
-                                        </AuthProvider>
-                                    </QueryClientProvider>
-                                </trpc.Provider>
-                            </LocalizationProvider>
-                        </ConfigProvider>
-                    </ThemeProvider>
-                </StyledEngineProvider>
-            </MixpanelContext.Provider>
+            <_Root />
         </FirebaseProvider>
     )
 }
