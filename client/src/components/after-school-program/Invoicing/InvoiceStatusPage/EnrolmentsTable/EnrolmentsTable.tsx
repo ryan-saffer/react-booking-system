@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { trpc } from '@utils/trpc'
 
+import { UnenrolDialog } from '../UnenrolDialog'
 import EnrolmentDetails from './EnrolmentDetails'
 import styles from './EnrolmentsTable.module.css'
 import InvoiceStatusCell from './InvoiceStatusCell'
@@ -103,6 +104,8 @@ const _EnrolmentsTable: React.FC<Props> = ({
     const unenrollMutation = trpc.afterSchoolProgram.unenrollFromAfterSchoolProgram.useMutation()
     const trpcUtils = trpc.useUtils()
 
+    const [showUnenrolDialog, setShowUnenrolDialog] = useState(false)
+
     const handleExpand = (expanded: boolean, record: TableData) => {
         if (expanded) {
             setExpandedRowKeys([record.key])
@@ -161,12 +164,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
                 })
                 break
             case 'unenroll':
-                showConfirmationDialog({
-                    dialogTitle: `Unenroll child from the term`,
-                    dialogContent: `This will completely unenroll the selected children from the term. This cannot be undone.`,
-                    confirmationButtonText: 'Unenroll from term',
-                    onConfirm: unenrollFromTerm,
-                })
+                setShowUnenrolDialog(true)
         }
     }
 
@@ -206,10 +204,13 @@ const _EnrolmentsTable: React.FC<Props> = ({
         setLoading(false)
     }
 
-    const unenrollFromTerm = async () => {
+    const unenrollFromTerm = async (sendConfirmationEmail: boolean) => {
         setLoading(true)
         try {
-            await unenrollMutation.mutateAsync({ appointmentIds: selectedRowKeys.map((it) => it.toString()) })
+            await unenrollMutation.mutateAsync({
+                appointmentIds: selectedRowKeys.map((it) => it.toString()),
+                sendConfirmationEmail,
+            })
         } catch {
             showError({ message: 'There was an error unenrolling from the term.' })
         }
@@ -420,6 +421,13 @@ const _EnrolmentsTable: React.FC<Props> = ({
                 }}
             />
             <ErrorModal />
+            <UnenrolDialog
+                open={showUnenrolDialog}
+                dismiss={() => setShowUnenrolDialog(false)}
+                onConfirm={(sendEmail) => {
+                    unenrollFromTerm(sendEmail)
+                }}
+            />
         </Root>
     )
 }

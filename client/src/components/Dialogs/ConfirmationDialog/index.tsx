@@ -96,9 +96,13 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                     <DialogContent>
                         <DialogContentText>{content}</DialogContentText>
                         {listItems && (
-                            <FormControl className="w-full mt-4" error={formError}>
+                            <FormControl className="mt-4 w-full" error={formError}>
                                 <InputLabel>{listItems.title}</InputLabel>
-                                <Select value={selectedListItem} onChange={handleListItemChange} label={listItems.title}>
+                                <Select
+                                    value={selectedListItem}
+                                    onChange={handleListItemChange}
+                                    label={listItems.title}
+                                >
                                     {listItems.items.map((item) => (
                                         <MenuItem key={item.key} value={item.key}>
                                             {item.value}

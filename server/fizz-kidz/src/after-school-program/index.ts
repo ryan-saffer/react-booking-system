@@ -9,6 +9,7 @@ export type SendTermContinuationEmailsParams = {
 
 export type UnenrollAfterSchoolParams = {
     appointmentIds: string[]
+    sendConfirmationEmail: boolean
 }
 
 export type UpdateAfterSchoolEnrolmentParams = {

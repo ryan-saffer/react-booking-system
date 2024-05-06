@@ -43,19 +43,21 @@ export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchool
             await DatabaseClient.updateAfterSchoolEnrolment(appointmentId, updatedAppointment)
 
             // 5. email confirmation
-            try {
-                const mailClient = await MailClient.getInstance()
-                await mailClient.sendEmail('afterSchoolUnenrolmentConfirmation', enrolment.parent.email, {
-                    parentName: enrolment.parent.firstName,
-                    childName: enrolment.child.firstName,
-                    className: enrolment.className,
-                })
-            } catch (err) {
-                throwTrpcError(
-                    'INTERNAL_SERVER_ERROR',
-                    `appointment with id ${appointmentId} cancelled successfully, however an error occurred sending the confirmation email`,
-                    err
-                )
+            if (input.sendConfirmationEmail) {
+                try {
+                    const mailClient = await MailClient.getInstance()
+                    await mailClient.sendEmail('afterSchoolUnenrolmentConfirmation', enrolment.parent.email, {
+                        parentName: enrolment.parent.firstName,
+                        childName: enrolment.child.firstName,
+                        className: enrolment.className,
+                    })
+                } catch (err) {
+                    throwTrpcError(
+                        'INTERNAL_SERVER_ERROR',
+                        `appointment with id ${appointmentId} cancelled successfully, however an error occurred sending the confirmation email`,
+                        err
+                    )
+                }
             }
         })
     )
