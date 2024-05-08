@@ -18,6 +18,7 @@ import { Toaster } from 'sonner'
 import { OrgProvider } from '@components/Session/org-provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox-provider'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -106,9 +107,11 @@ function _Root() {
                                     <AuthProvider>
                                         <OrgProvider>
                                             <ConfirmationDialogProvider>
-                                                <ScrollRestoration />
-                                                <Toaster richColors />
-                                                <Outlet />
+                                                <ConfirmationDialogWithCheckboxProvider>
+                                                    <ScrollRestoration />
+                                                    <Toaster richColors />
+                                                    <Outlet />
+                                                </ConfirmationDialogWithCheckboxProvider>
                                             </ConfirmationDialogProvider>
                                         </OrgProvider>
                                     </AuthProvider>

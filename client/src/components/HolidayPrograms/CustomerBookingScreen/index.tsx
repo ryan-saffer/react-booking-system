@@ -112,7 +112,7 @@ export const CustomerBookingScreen = () => {
 
     const renderForm = () => {
         if (isLoading) {
-            return <Loader style={{ marginTop: 24, marginBottom: 24 }} color="#B14594" />
+            return <Loader style={{ marginTop: 24, marginBottom: 24 }} />
         }
 
         if (data?.length === 0 || isError) {

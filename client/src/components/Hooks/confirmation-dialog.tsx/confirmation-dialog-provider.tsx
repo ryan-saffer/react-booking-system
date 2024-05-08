@@ -27,28 +27,21 @@ export function ConfirmationDialogProvider({ children }: { children: ReactNode }
     const fn = useRef<(choice: boolean) => void>(() => {})
 
     const confirm = useCallback(
-        (data: Props) => {
-            return new Promise<boolean>((resolve) => {
+        (data: Props) =>
+            new Promise<boolean>((resolve) => {
                 setState({ ...data, open: true })
-                fn.current = (choice: boolean) => {
+                fn.current = (choice) => {
                     resolve(choice)
                     setState((prevState) => ({ ...prevState, open: false }))
                 }
-            })
-        },
+            }),
         [setState]
     )
 
     return (
         <ConfirmationDialogContext.Provider value={confirm}>
             {children}
-            <AlertDialog
-                open={state.open}
-                onOpenChange={() => {
-                    fn.current(false)
-                    setState((prevState) => ({ ...prevState, open: false }))
-                }}
-            >
+            <AlertDialog open={state.open} onOpenChange={() => fn.current(false)}>
                 <AlertDialogContent className="twp">
                     <AlertDialogHeader>
                         <AlertDialogTitle>{state.title}</AlertDialogTitle>

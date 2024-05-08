@@ -6,11 +6,11 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
+import { useConfirmWithCheckbox } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/use-confirmation-dialog-with-checkbox'
 import { styled } from '@mui/material/styles'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { trpc } from '@utils/trpc'
 
-import { UnenrolDialog } from '../UnenrolDialog'
 import EnrolmentDetails from './EnrolmentDetails'
 import InvoiceStatusCell from './InvoiceStatusCell'
 
@@ -88,6 +88,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([])
     // const [invoiceStatusMap, setInvoiceStatusMap] = useState<InvoiceStatusMap>({})
     const { ErrorModal, showError } = useErrorDialog()
+    const confirm = useConfirmWithCheckbox()
 
     const {
         data: invoiceStatusMap,
@@ -104,8 +105,6 @@ const _EnrolmentsTable: React.FC<Props> = ({
     const unenrollMutation = trpc.afterSchoolProgram.unenrollFromAfterSchoolProgram.useMutation()
     const trpcUtils = trpc.useUtils()
 
-    const [showUnenrolDialog, setShowUnenrolDialog] = useState(false)
-
     const handleExpand = (expanded: boolean, record: TableData) => {
         if (expanded) {
             setExpandedRowKeys([record.key])
@@ -118,7 +117,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
         setLoading(isLoadingInvoices)
     }, [isLoadingInvoices])
 
-    const handleActionButtonClick: MenuProps['onClick'] = (e) => {
+    const handleActionButtonClick: MenuProps['onClick'] = async (e) => {
         const key = e.key as MenuKey
         switch (key) {
             case 'send-invoice': {
@@ -163,8 +162,28 @@ const _EnrolmentsTable: React.FC<Props> = ({
                     onConfirm: sendTermContinuationEmails,
                 })
                 break
-            case 'unenroll':
-                setShowUnenrolDialog(true)
+            case 'unenroll': {
+                const { confirmed, checked } = await confirm({
+                    title: 'Are you sure?',
+                    description:
+                        'This will completely unenroll the selected children from the term. This cannot be undone.',
+                    checkboxLabel: 'Send unenrolment confirmation email.',
+                    confirmButton: 'Unenrol',
+                })
+
+                if (confirmed) {
+                    setLoading(true)
+                    try {
+                        await unenrollMutation.mutateAsync({
+                            appointmentIds: selectedRowKeys.map((it) => it.toString()),
+                            sendConfirmationEmail: checked,
+                        })
+                    } catch {
+                        showError({ message: 'There was an error unenrolling from the term.' })
+                    }
+                    setLoading(false)
+                }
+            }
         }
     }
 
@@ -200,19 +219,6 @@ const _EnrolmentsTable: React.FC<Props> = ({
             }
         } catch {
             showError({ message: 'There was an error sending the emails' })
-        }
-        setLoading(false)
-    }
-
-    const unenrollFromTerm = async (sendConfirmationEmail: boolean) => {
-        setLoading(true)
-        try {
-            await unenrollMutation.mutateAsync({
-                appointmentIds: selectedRowKeys.map((it) => it.toString()),
-                sendConfirmationEmail,
-            })
-        } catch {
-            showError({ message: 'There was an error unenrolling from the term.' })
         }
         setLoading(false)
     }
@@ -425,13 +431,6 @@ const _EnrolmentsTable: React.FC<Props> = ({
                 }}
             />
             <ErrorModal />
-            <UnenrolDialog
-                open={showUnenrolDialog}
-                dismiss={() => setShowUnenrolDialog(false)}
-                onConfirm={(sendEmail) => {
-                    unenrollFromTerm(sendEmail)
-                }}
-            />
         </Root>
     )
 }
