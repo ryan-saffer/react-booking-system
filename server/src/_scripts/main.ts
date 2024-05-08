@@ -1,5 +1,6 @@
 import prompts from 'prompts'
 
+import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import {
     migrateScienceEnrolments,
     migration_addChildSupportToAllExistingEnrolments,
@@ -17,6 +18,7 @@ import { generatePartyFormUrl } from './parties/generate-form'
                 title: 'Generate party form URL',
                 value: 'generatePartyFormUrl',
             },
+            { title: 'Sign after school program anaphylaxis plan', value: 'signAnaphylaxisPlan' },
             {
                 title: 'Group legacy events by contact email',
                 description: 'Creates a json file that groups all legacy events',
@@ -64,5 +66,13 @@ import { generatePartyFormUrl } from './parties/generate-form'
     }
     if (script === 'addChildSupportToExistingEnrolments') {
         await migration_addChildSupportToAllExistingEnrolments()
+    }
+    if (script === 'signAnaphylaxisPlan') {
+        const { enrolmentId } = await prompts({
+            type: 'text',
+            name: 'enrolmentId',
+            message: 'Please enter the enrolment id:',
+        })
+        await getAfterSchoolProgramAnaphylaxisPlanSignedUrl(enrolmentId)
     }
 })()

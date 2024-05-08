@@ -109,7 +109,7 @@ class Client {
         return this.#getDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId))
     }
 
-    updateAfterSchoolEnrolment(appointmentId: string, data: Partial<AfterSchoolEnrolment>) {
+    updateAfterSchoolEnrolment(appointmentId: string, data: RecursivePartial<AfterSchoolEnrolment>) {
         return this.#updateDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId), data)
     }
 
