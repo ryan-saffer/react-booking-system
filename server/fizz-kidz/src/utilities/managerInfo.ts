@@ -3,7 +3,7 @@ import { Location } from '../partyBookings/Locations'
 export function getManager(location: Location) {
     switch (location) {
         case Location.BALWYN:
-            return { name: 'Ebony', email: 'balwyn@fizzkidz.com.au', mobile: '0413 268 795' }
+            return { name: 'Bronwyn', email: 'balwyn@fizzkidz.com.au', mobile: '0435 906 395' }
         case Location.ESSENDON:
             return { name: 'Ali', email: 'essendon@fizzkidz.com.au', mobile: '0438 328 327' }
         case Location.CHELTENHAM:
