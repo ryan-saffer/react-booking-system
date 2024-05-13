@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase-admin/auth'
 import { FieldValue } from 'firebase-admin/firestore'
 import { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
 
@@ -8,11 +7,6 @@ import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { addUserToStudio } from '../../core/add-user-to-studio'
 
 export const authRouter = router({
-    addCustomClaimToAuth: authenticatedProcedure
-        .input((input: unknown) => input as { uid: string; isCustomer: boolean })
-        .mutation(({ input }) => {
-            getAuth().setCustomUserClaims(input.uid, input)
-        }),
     createUser: authenticatedProcedure
         .input((input: unknown) => input as AuthUser)
         .mutation(({ input }) => DatabaseClient.createUser(input.uid, input)),

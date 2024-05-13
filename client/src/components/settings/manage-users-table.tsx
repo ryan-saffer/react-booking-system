@@ -185,43 +185,49 @@ export function ManageUsersTable() {
             }),
             columnHelper.display({
                 id: 'actions',
-                cell: ({ row }) => (
-                    <>
-                        {removingUser === row.id ? (
-                            <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem
-                                        onClick={async () => {
-                                            if (row.original.uid === authUser?.uid) {
-                                                const confirmed = await confirm({
-                                                    title: 'Are you sure?',
-                                                    description:
-                                                        'Removing yourself will mean you will lose access to this studio, as well as the ability to manage the users.',
-                                                })
+                cell: ({ row }) => {
+                    if (role !== 'admin') {
+                        return null
+                    }
 
-                                                if (confirmed) {
+                    return (
+                        <>
+                            {removingUser === row.id ? (
+                                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" className="h-8 w-8 p-0">
+                                            <span className="sr-only">Open menu</span>
+                                            <MoreHorizontal className="h-4 w-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuItem
+                                            onClick={async () => {
+                                                if (row.original.uid === authUser?.uid) {
+                                                    const confirmed = await confirm({
+                                                        title: 'Are you sure?',
+                                                        description:
+                                                            'Removing yourself will mean you will lose access to this studio, as well as the ability to manage the users.',
+                                                    })
+
+                                                    if (confirmed) {
+                                                        removeUser(row.id, row.original.uid, row.original.email)
+                                                    }
+                                                } else {
                                                     removeUser(row.id, row.original.uid, row.original.email)
                                                 }
-                                            } else {
-                                                removeUser(row.id, row.original.uid, row.original.email)
-                                            }
-                                        }}
-                                    >
-                                        Remove user
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
-                    </>
-                ),
+                                            }}
+                                        >
+                                            Remove user
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )}
+                        </>
+                    )
+                },
             }),
         ],
         [authUser?.uid, confirm, currentOrg, removeUser, removingUser, role, updateUser, users]

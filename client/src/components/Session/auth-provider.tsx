@@ -13,7 +13,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         cachedUser ? JSON.parse(cachedUser) : null
     )
 
-    const addCustomClaim = trpc.auth.addCustomClaimToAuth.useMutation()
     const { mutateAsync: createUser } = trpc.auth.createUser.useMutation()
 
     useEffect(() => {
@@ -32,22 +31,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                                 if (!user.imageUrl) {
                                     user.imageUrl = authUser.photoURL
                                 }
-
                                 // include the jwt and uid in the cache, since when loading the app, authStateChanged can take a moment to trigger,
                                 // and requests to the server can happen in the meantime. Caching it can allow it to be used in the interim.
                                 const jwt = await authUser.getIdToken(false)
                                 const uid = authUser.uid
                                 setAuthUser({ ...user, jwt, uid })
                                 localStorage.setItem('authUser', JSON.stringify({ ...user, jwt, uid }))
-
-                                // in order to protect firestore, the security rule 'request.auth.uid != null' is insufficient.
-                                // Since anyone, such as customers, can create accounts, we need to lock down firestore to only staff members.
-
-                                // add a custom claim to the auth object. Read more: https://firebase.google.com/docs/auth/admin/custom-claims
-                                await addCustomClaim.mutateAsync({
-                                    uid: authUser.uid,
-                                    isCustomer: user.accountType !== 'staff',
-                                })
                             } else {
                                 // user doesn't exist in db, which means they were not invited to the platform, so default them as a customer.
                                 // once created, it will fire this snapshot again, and will then correctly be found
