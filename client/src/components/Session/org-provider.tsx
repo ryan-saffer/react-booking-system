@@ -25,7 +25,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     const getRole = useCallback(
         (org: LocationOrMaster | null) => {
             if (user?.accountType === 'staff' && org) {
-                return user.roles[org] || null
+                return user.roles?.[org] || null
             }
             return null
         },
@@ -52,9 +52,9 @@ export function OrgProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (user?.accountType === 'staff') {
-            const availableOrgs = ObjectKeys(user.roles)
+            const availableOrgs = ObjectKeys(user.roles || {})
             if (availableOrgs.length > 0) {
-                setAvailableOrgs(ObjectKeys(user.roles))
+                setAvailableOrgs(availableOrgs)
                 setRole(getRole(currentOrg))
 
                 if (!currentOrg) {

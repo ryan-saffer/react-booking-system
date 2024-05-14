@@ -34,13 +34,14 @@ export async function addUserToStudio({
 
         if (dbUser.accountType === 'customer') {
             // if the user already has a customer account, convert them to a staff account.
-            await DatabaseClient.updateUser(dbUser.uid, { ...user, accountType: 'staff' })
+            dbUser = { ...dbUser, accountType: 'staff' } // important to update dbUser here, because it gets reassigned below, so doing this inline in the update function will break things.
+            await DatabaseClient.updateUser(dbUser.uid, dbUser)
         }
 
         // guaranteed to be a staff account at this point, cast it for types
         dbUser = dbUser as StaffAuthUser
 
-        if (ObjectKeys(dbUser.roles).includes(studio)) {
+        if (dbUser.roles && ObjectKeys(dbUser.roles).includes(studio)) {
             // user already assigned to this studio
             return 'exists'
         } else {

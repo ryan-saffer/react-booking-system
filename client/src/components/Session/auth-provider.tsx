@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                                     email: authUser.email!,
                                     imageUrl: authUser.photoURL,
                                     accountType: 'customer',
+                                    firstname: authUser.displayName || '',
                                 } satisfies AuthUser
 
                                 // users are only given read access to their user document in firestore, and must update/create their doc

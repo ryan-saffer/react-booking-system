@@ -11,7 +11,7 @@ type BaseAuthUser = {
 }
 
 export type StaffAuthUser = BaseAuthUser & {
-    roles: PartialRecord<LocationOrMaster, Role>
+    roles?: PartialRecord<LocationOrMaster, Role>
     accountType: 'staff'
 }
 
