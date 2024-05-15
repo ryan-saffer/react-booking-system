@@ -31,9 +31,21 @@ export const authRouter = router({
         .mutation(({ input }) => addUserToStudio(input)),
     removeUserFromStudio: authenticatedProcedure
         .input((input: unknown) => input as { uid: string; studio: LocationOrMaster })
-        .mutation(({ input }) =>
+        .mutation(async ({ input }) => {
             DatabaseClient.updateUser(input.uid, { roles: { [input.studio]: FieldValue.delete() } })
-        ),
+
+            // if the user is now no longer a member of any studios, then delete the roles object and set them back to a customer account.
+            const user = await DatabaseClient.getUser(input.uid)
+            if (user?.accountType === 'staff') {
+                if (user.roles && Object.keys(user.roles).length === 0) {
+                    await DatabaseClient.updateUser(input.uid, {
+                        ...user,
+                        accountType: 'customer',
+                        roles: FieldValue.delete(),
+                    })
+                }
+            }
+        }),
 })
 
 export const auth = onRequestTrpc(authRouter)
