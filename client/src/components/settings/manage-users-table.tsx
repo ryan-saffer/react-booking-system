@@ -141,13 +141,13 @@ export function ManageUsersTable() {
                         const user = users[row.original.uid]
                         return (
                             <div>
-                                {user && user.roles[currentOrg!] && getRoleDisplayValue(user.roles[currentOrg!]!)}
+                                {user && user.roles?.[currentOrg!] && getRoleDisplayValue(user.roles[currentOrg!]!)}
                             </div>
                         )
                     } else {
                         return (
                             <Select
-                                value={users[row.original.uid]?.roles[currentOrg!]}
+                                value={users[row.original.uid]?.roles?.[currentOrg!]}
                                 onValueChange={async (selectedRole: Role) => {
                                     if (row.original.uid === authUser?.uid) {
                                         const confirmed = await confirm({
@@ -178,8 +178,8 @@ export function ManageUsersTable() {
                     }
                 },
                 sortingFn: (a, b) => {
-                    const firstRole = a.original.roles[currentOrg!] || ''
-                    const secondRole = b.original.roles[currentOrg!] || ''
+                    const firstRole = a.original.roles?.[currentOrg!] || ''
+                    const secondRole = b.original.roles?.[currentOrg!] || ''
                     return firstRole < secondRole ? -1 : firstRole > secondRole ? 1 : 0
                 },
             }),
