@@ -4,9 +4,9 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Fizz Kidz Platform",
+    "name": "Fizz Kidz Portal",
     "short_name": "Fizz Kidz",
-    "description": "The platform for all things Fizz!",
+    "description": "The portal for all things Fizz!",
     "icons": [
         {
             "src": "/icon-192x192.png",
