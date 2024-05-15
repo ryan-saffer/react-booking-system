@@ -93,6 +93,16 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
 
     const childInfo = [
         {
+            label: 'Allergies',
+            value: allergies,
+            render: hasAllergies,
+        },
+        {
+            label: 'Notes',
+            value: additionalInfo,
+            render: !!additionalInfo,
+        },
+        {
             label: 'Parent Name',
             value: `${appointment.firstName} ${appointment.lastName}`,
             render: true,
@@ -117,16 +127,6 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
             value: emergencyContactNumber,
             render: true,
         },
-        {
-            label: 'Allergies',
-            value: allergies,
-            render: hasAllergies,
-        },
-        {
-            label: 'Additional Info',
-            value: additionalInfo,
-            render: !!additionalInfo,
-        },
     ]
 
     const renderExtra = () => {
@@ -138,6 +138,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                     </Tag>
                 )}
                 {stayingAllDay && <Tag color="geekblue">All Day</Tag>}
+                {!!additionalInfo && <Tag color="magenta">Includes Notes</Tag>}
                 {notSignedIn && (
                     <AntButton
                         style={{ background: '#B14592', color: 'white' }}
