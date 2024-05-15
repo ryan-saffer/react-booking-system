@@ -46,6 +46,11 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         AcuityConstants.Forms.CHILDREN_DETAILS,
         AcuityConstants.FormFields.CHILDREN_ALLERGIES
     )
+    const additionalInfo = AcuityUtilities.retrieveFormAndField(
+        appointment,
+        AcuityConstants.Forms.CHILDREN_DETAILS,
+        AcuityConstants.FormFields.CHILD_ADDITIONAL_INFO
+    )
     const emergencyContactName = AcuityUtilities.retrieveFormAndField(
         appointment,
         AcuityConstants.Forms.HOLIDAY_PROGRAM_EMERGENCY_CONTACT,
@@ -116,6 +121,11 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
             label: 'Allergies',
             value: allergies,
             render: hasAllergies,
+        },
+        {
+            label: 'Additional Info',
+            value: additionalInfo,
+            render: !!additionalInfo,
         },
     ]
 

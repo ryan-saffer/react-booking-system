@@ -28,6 +28,10 @@ export async function scheduleHolidayProgram(booking: HolidayProgramBooking, pay
                 value: booking.childAllergies,
             },
             {
+                id: AcuityConstants.FormFields.CHILD_ADDITIONAL_INFO,
+                value: booking.childAdditionalInfo,
+            },
+            {
                 id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NAME_HP,
                 value: booking.emergencyContactName,
             },

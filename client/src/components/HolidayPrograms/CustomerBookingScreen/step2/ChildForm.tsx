@@ -2,6 +2,7 @@ import { Form, Input, Select } from 'antd'
 import React, { useState } from 'react'
 
 import { SimpleTextRule } from '@utils/formUtils'
+
 const { TextArea } = Input
 
 type Props = {
@@ -60,6 +61,12 @@ export const ChildForm: React.FC<Props> = ({ childNumber }) => {
                     <TextArea rows={3} />
                 </Form.Item>
             )}
+            <Form.Item
+                name={[childNumber, 'additionalInfo']}
+                label="Is there additional information you would like us to know about this child?"
+            >
+                <TextArea rows={3} />
+            </Form.Item>
         </>
     )
 }

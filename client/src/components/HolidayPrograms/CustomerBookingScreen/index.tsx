@@ -27,6 +27,7 @@ export type Form = {
         childAge: string
         hasAllergies: boolean
         allergies?: string
+        additionalInfo: string
     }[]
 }
 

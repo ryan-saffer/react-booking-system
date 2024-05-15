@@ -11,6 +11,7 @@ export interface BaseHolidayProgramBooking {
     childName: string
     childAge: string
     childAllergies: string
+    childAdditionalInfo: string
     discountCode: string
     amountCharged: number
 }
