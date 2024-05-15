@@ -267,7 +267,7 @@ export function ManageUsersTable() {
                 <Separator className="my-6" />
                 {isLoading && <Skeleton className="h-[400px]" />}
                 {isSuccess && (
-                    <div className="rounded-md border">
+                    <div className="mb-8 rounded-md border">
                         <Table>
                             <TableHeader>
                                 {table.getHeaderGroups().map((headerGroup) => (

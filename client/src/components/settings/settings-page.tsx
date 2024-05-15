@@ -45,8 +45,7 @@ export function SettingsPage() {
                         </Link>
                     </nav>
                 </aside>
-                {/* 196px is for desktop: 64px navbar + 132px (distance between top of separater and navbar)  */}
-                <Separator orientation="vertical" className="h-[calc(100vh-196px)]" />
+                <Separator orientation="vertical" className="fixed left-72" />
                 <div className="ml-6 mt-6 grow">
                     <Outlet />
                 </div>
