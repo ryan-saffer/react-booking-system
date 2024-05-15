@@ -37,7 +37,12 @@ class Firebase {
 
     doSignInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
 
-    doSignOut = () => this.auth.signOut()
+    doSignOut = async () => {
+        await this.auth.signOut()
+        localStorage.removeItem('authUser')
+    }
+
+    resetPassword = (email: string) => this.auth.sendPasswordResetEmail(email)
 }
 
 export default Firebase

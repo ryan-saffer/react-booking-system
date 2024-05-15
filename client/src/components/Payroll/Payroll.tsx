@@ -4,11 +4,8 @@ import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import { GenerateTimesheetsResponse, Service } from 'fizz-kidz'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { DownloadOutlined } from '@ant-design/icons'
-import * as ROUTES from '@constants/routes'
-import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import { styled } from '@mui/material/styles'
 import { trpc } from '@utils/trpc'
 
@@ -37,7 +34,7 @@ const StyledLayout = styled(Layout)({
 
 const { RangePicker } = DatePicker
 const { Title, Paragraph, Text, Link } = Typography
-const { Header, Content } = Layout
+const { Content } = Layout
 const { Panel } = Collapse
 
 dayjs.extend(updateLocale)
@@ -47,8 +44,6 @@ export const Payroll = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken()
-
-    const navigate = useNavigate()
 
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
     const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
@@ -86,15 +81,7 @@ export const Payroll = () => {
     }
 
     return (
-        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
-            <Header className={classes.header}>
-                <img
-                    style={{ height: 50, cursor: 'pointer' }}
-                    src={Logo.default}
-                    onClick={() => navigate(ROUTES.LANDING)}
-                    alt="Fizz Kidz Logo"
-                />
-            </Header>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', height: '100%', minHeight: 'calc(100vh - 64px)' }}>
             <Content style={{ background: colorBgContainer, padding: 32, margin: 32 }}>
                 <Title style={{ marginTop: 0 }}>Payroll</Title>
                 <Paragraph>

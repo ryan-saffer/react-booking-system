@@ -1,10 +1,7 @@
 import { Button, Layout, Typography } from 'antd'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { PlusOutlined } from '@ant-design/icons'
-import * as ROUTES from '@constants/routes'
-import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
 import { styled } from '@mui/material/styles'
 
 import EmployeeTable from './EmployeeTable'
@@ -39,24 +36,14 @@ const StyledLayout = styled(Layout)({
     },
 })
 
-const { Header, Content } = Layout
+const { Content } = Layout
 const { Title } = Typography
 
 export const Onboarding = () => {
-    const navigate = useNavigate()
-
     const [showNewEmployeeModal, setShowNewEmployeeModal] = useState(false)
 
     return (
-        <StyledLayout style={{ background: 'rgb(240, 242, 245)', minHeight: '100vh' }}>
-            <Header className={classes.header}>
-                <img
-                    style={{ height: 50, cursor: 'pointer' }}
-                    src={Logo.default}
-                    onClick={() => navigate(ROUTES.LANDING)}
-                    alt="Fizz Kidz Logo"
-                />
-            </Header>
+        <StyledLayout style={{ background: 'rgb(240, 242, 245)', height: '100%', minHeight: 'calc(100vh - 64px)' }}>
             <Content style={{ background: 'white', padding: 32, margin: 32 }}>
                 <div
                     style={{

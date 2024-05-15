@@ -23,15 +23,23 @@ export function createContext({
 // MIDDLEWARE
 const isAuthenticated = middleware(async ({ ctx, next }) => {
     try {
-        await getAuth().verifyIdToken(ctx.authToken || '')
-        return next()
+        const user = await getAuth().verifyIdToken(ctx.authToken || '')
+        return next({ ctx: { ...ctx, uid: user.uid } })
     } catch {
         throw new HttpsError('unauthenticated', 'procedure requires authentication')
     }
 })
 
+const logging = middleware(({ next, path, rawInput }) => {
+    if (process.env.FUNCTIONS_EMULATOR) {
+        console.log(`running: '${path}' with input:`)
+        console.log(rawInput)
+    }
+    return next()
+})
+
 // PROCEDURES
-export const publicProcedure = t.procedure
+export const publicProcedure = t.procedure.use(logging)
 export const authenticatedProcedure = publicProcedure.use(isAuthenticated)
 
 const acuityProcedure = publicProcedure.use(async ({ ctx, next }) => {

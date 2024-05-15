@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useOrg } from '@components/Session/use-org'
+
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 
 export function usePartyBookings() {
@@ -11,6 +13,8 @@ export function usePartyBookings() {
 
     const urlSearchParams = new URLSearchParams(window.location.search)
     const id = useRef(urlSearchParams.get('id'))
+
+    const { currentOrg } = useOrg()
 
     const { filterByLocation } = useLocationFilter()
 
@@ -62,31 +66,36 @@ export function usePartyBookings() {
                 })
         } else {
             const followingDate = date.plus({ days: 1 })
-            unsubscribe = firebase.db
+            let query = firebase.db
                 .collection('bookings')
                 .where('dateTime', '>', date.toJSDate())
                 .where('dateTime', '<', followingDate.toJSDate())
-                .onSnapshot((snapshot) => {
-                    const bookings = snapshot.docs.map((doc) => ({
-                        ...(doc.data() as FirestoreBooking),
-                        id: doc.id,
-                    }))
-                    const deletedBooking = snapshot.docChanges().find((doc) => doc.type === 'removed')
-                    setBookings({
-                        status: 'loaded',
-                        result: generateLocationsMap([
-                            ...bookings,
-                            ...(deletedBooking
-                                ? [{ ...(deletedBooking.doc.data() as FirestoreBooking), id: deletedBooking.doc.id }]
-                                : []),
-                        ]),
-                    })
+
+            if (currentOrg !== 'master') {
+                query = query.where('location', '==', currentOrg)
+            }
+
+            unsubscribe = query.onSnapshot((snapshot) => {
+                const bookings = snapshot.docs.map((doc) => ({
+                    ...(doc.data() as FirestoreBooking),
+                    id: doc.id,
+                }))
+                const deletedBooking = snapshot.docChanges().find((doc) => doc.type === 'removed')
+                setBookings({
+                    status: 'loaded',
+                    result: generateLocationsMap([
+                        ...bookings,
+                        ...(deletedBooking
+                            ? [{ ...(deletedBooking.doc.data() as FirestoreBooking), id: deletedBooking.doc.id }]
+                            : []),
+                    ]),
                 })
+            })
         }
 
         return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [date])
+    }, [date, currentOrg])
 
     return bookings
 }

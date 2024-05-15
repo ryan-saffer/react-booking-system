@@ -4,7 +4,7 @@ import { Employee } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import Loader from '@components/after-school-program/shared/Loader'
+import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 
 import VerificationButton from './VerificationButton'

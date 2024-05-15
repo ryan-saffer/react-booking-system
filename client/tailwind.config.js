@@ -34,6 +34,10 @@ export default {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))',
                 },
+                success: {
+                    DEFAULT: 'hsl(var(--success))',
+                    foreground: 'hsl(var(--success-foreground))',
+                },
                 muted: {
                     DEFAULT: 'hsl(var(--muted))',
                     foreground: 'hsl(var(--muted-foreground))',
@@ -86,5 +90,14 @@ export default {
         }),
         autoprefixer,
         backgroundPatterns,
+        ({ addUtilities }) => {
+            addUtilities({
+                // a custom utility class to make screen full screen when within the dashboard.
+                // this fixes a bug when opening the drawer, and 'h-full' seems to break.
+                '.dashboard-full-screen': {
+                    minHeight: 'calc(100vh - 64px)',
+                },
+            })
+        },
     ],
 }

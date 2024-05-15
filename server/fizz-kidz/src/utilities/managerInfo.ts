@@ -1,4 +1,4 @@
-import { Location } from '../partyBookings/Locations'
+import { Location } from '../core/location'
 
 export function getManager(location: Location) {
     switch (location) {

@@ -1,14 +1,14 @@
 import { Location, capitalise } from 'fizz-kidz'
+import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { FC, PropsWithChildren, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-import AddIcon from '@mui/icons-material/Add'
+import { useOrg } from '@components/Session/use-org'
+import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
 import {
-    AppBar,
     Box,
     Button,
     CssBaseline,
@@ -18,17 +18,13 @@ import {
     Hidden,
     MenuItem,
     Select,
-    Toolbar,
     useMediaQuery,
 } from '@mui/material'
-import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
+import { Button as MyButton } from '@ui-components/button'
 
-import * as ROUTES from '../../../constants/routes'
-import * as Logo from '../../../drawables/FizzKidzLogoHorizontal.png'
-import { useScopes } from '../../Hooks/UseScopes'
 import { LocationFilter } from '../location-filter/location-filter.context'
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 import { DateNavigationContext } from './date-navigation.context'
@@ -63,17 +59,20 @@ const StyledHeading = styled('h1')({})
 const Root = styled('div')(({ theme }) => ({
     [`&.${classes.root}`]: {
         display: 'flex',
-        height: 'inherit',
+        height: '100%',
         background: '#F0F2F5',
+        minHeight: 'calc(100vh - 64px)',
     },
 
     [`& .${classes.drawer}`]: {
         width: drawerWidth,
         flexShrink: 0,
+        zIndex: 1,
     },
 
     [`& .${classes.drawerPaper}`]: {
         width: drawerWidth,
+        border: 0,
     },
 
     [`& .${classes.content}`]: {
@@ -162,10 +161,8 @@ function midnight(date: DateTime) {
 export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
     const { showButton, children } = props
 
-    // const firebase = useFirebase()
-    const navigate = useNavigate()
-    const scopes = useScopes()
-    const writePermissions = scopes.CORE === 'write'
+    const { hasPermission } = useOrg()
+    const createPermissions = hasPermission('bookings:create')
 
     const [date, setDate] = useState(midnight(DateTime.now()))
     const [, setLoading] = useState(true)
@@ -178,34 +175,13 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
 
     const wrapFilter = useMediaQuery('(max-width: 550px)')
 
+    useStickyNavbar()
+
+    const { currentOrg } = useOrg()
+
     return (
         <Root className={classes.root}>
             <CssBaseline />
-            <AppBar className={classes.appBar} position="fixed">
-                <Toolbar className={classes.appBarToolbar}>
-                    <img
-                        className={classes.logo}
-                        src={Logo.default}
-                        onClick={() => navigate(ROUTES.LANDING)}
-                        alt="fizz kidz logo"
-                    />
-                    {writePermissions && showButton && (
-                        <Button
-                            onClick={props.onButtonPressed}
-                            variant="outlined"
-                            sx={{
-                                color: 'white',
-                                borderColor: 'white',
-                                '&:hover': { borderColor: 'white', background: grey[800] },
-                                position: 'absolute',
-                                right: 16,
-                            }}
-                        >
-                            <AddIcon />
-                        </Button>
-                    )}
-                </Toolbar>
-            </AppBar>
             <Hidden mdDown>
                 <Drawer
                     className={classes.drawer}
@@ -224,21 +200,29 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                     />
                 </Drawer>
             </Hidden>
-            <Grid container sx={{ marginTop: { xs: 7, sm: 8 } }}>
+            <Grid container className="dashboard-full-screen">
                 <Box className={classes.content} sx={{ padding: { xs: 2, md: 3 } }}>
-                    <StyledHeading
-                        className="lilita"
-                        sx={{
-                            marginBottom: 2,
-                            marginTop: 0,
-                            fontSize: {
-                                xs: 24,
-                                sm: 32,
-                            },
-                        }}
-                    >
-                        Parties, Events & Incursions
-                    </StyledHeading>
+                    <div className="mb-2 flex items-center justify-between">
+                        <StyledHeading
+                            className="lilita"
+                            sx={{
+                                marginBottom: 0,
+                                marginTop: 0,
+                                fontSize: {
+                                    xs: 24,
+                                    sm: 32,
+                                },
+                            }}
+                        >
+                            Parties, Events & Incursions
+                        </StyledHeading>
+                        {createPermissions && showButton && (
+                            <MyButton className="twp" variant="outline" onClick={props.onButtonPressed}>
+                                <CalendarPlus className="mr-2 h-4 w-4" />
+                                New Booking
+                            </MyButton>
+                        )}
+                    </div>
                     <div style={{ display: 'flex', gap: 12, flexDirection: wrapFilter ? 'column' : 'row' }}>
                         <div
                             style={{
@@ -301,24 +285,26 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                 <NavigateNext />
                             </Button>
                         </div>
-                        <FormControl sx={{ background: 'white', flex: 1 }}>
-                            <Select
-                                value={selectedLocation}
-                                onChange={(e) => filterByLocation(e.target.value as LocationFilter)}
-                            >
-                                <MenuItem value="all">
-                                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                        <LocationOnOutlinedIcon sx={{ color: '#0f172a', width: 20, height: 20 }} />
-                                        <div>All Locations</div>
-                                    </div>
-                                </MenuItem>
-                                {Object.values(Location).map((location) => (
-                                    <MenuItem key={location} value={location}>
-                                        {capitalise(location)}
+                        {currentOrg === 'master' && (
+                            <FormControl sx={{ background: 'white', flex: 1 }}>
+                                <Select
+                                    value={selectedLocation}
+                                    onChange={(e) => filterByLocation(e.target.value as LocationFilter)}
+                                >
+                                    <MenuItem value="all">
+                                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                            <LocationOnOutlinedIcon sx={{ color: '#0f172a', width: 20, height: 20 }} />
+                                            <div>All Locations</div>
+                                        </div>
                                     </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                    {Object.values(Location).map((location) => (
+                                        <MenuItem key={location} value={location}>
+                                            {capitalise(location)}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        )}
                     </div>
                     <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}

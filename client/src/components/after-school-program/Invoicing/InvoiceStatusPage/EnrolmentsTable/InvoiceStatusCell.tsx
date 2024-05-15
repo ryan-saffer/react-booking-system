@@ -2,7 +2,7 @@ import { Tag } from 'antd'
 import { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
 import React from 'react'
 
-import Loader from '../../../shared/Loader'
+import Loader from '../../../../Shared/Loader'
 
 type Props = {
     enrolment: AfterSchoolEnrolment

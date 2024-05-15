@@ -1,9 +1,10 @@
 /// <reference lib="dom" />
 import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
-import { Location } from './Locations'
-import { Creations } from './Creations'
-import { CakeFlavours } from './CakeFlavours'
+
+import { Location } from '../core/location'
 import { Additions } from './Additions'
+import { CakeFlavours } from './CakeFlavours'
+import { Creations } from './Creations'
 
 type AdditionKeys = keyof typeof Additions
 type AdditionKeyValues = { [key in AdditionKeys]: boolean }

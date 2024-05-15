@@ -1,13 +1,12 @@
 import { Loader2, MoreHorizontal, Pencil, Save, Trash } from 'lucide-react'
 import React from 'react'
 
+import { useOrg } from '@components/Session/use-org'
 import { green, red } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { Button } from '@ui-components/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
-
-import { useScopes } from '../../Hooks/UseScopes'
 
 const PREFIX = 'EditFormButtons'
 
@@ -80,7 +79,8 @@ const EditFormButtons: React.FC<Props> = ({
     onDelete,
     menu,
 }) => {
-    const canEdit = useScopes().CORE === 'write'
+    const { hasPermission } = useOrg()
+    const canEdit = hasPermission('bookings:edit')
 
     if (!canEdit) return
 

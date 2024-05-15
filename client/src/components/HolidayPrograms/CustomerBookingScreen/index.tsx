@@ -4,8 +4,8 @@ import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
 
 import { LeftOutlined } from '@ant-design/icons'
+import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
-import Loader from '@components/after-school-program/shared/Loader'
 import { trpc } from '@utils/trpc'
 
 import Step1 from './step1/Step1'

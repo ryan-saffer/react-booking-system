@@ -21,6 +21,11 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K
 export type WithoutId<T> = DistributiveOmit<T, 'id'>
 export type WithId<T> = T & { id: string }
 
+// https://stackoverflow.com/a/53276873/7870403
+export type PartialRecord<K extends keyof any, T> = {
+    [P in K]?: T
+}
+
 export * from './businessLogic'
 export * from './managerInfo'
 export * from './stringUtilities'

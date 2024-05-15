@@ -10,6 +10,8 @@ import type {
     DiscountCode,
     Invitation,
     WithoutId,
+    LocationOrMaster,
+    AuthUser,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
@@ -22,7 +24,7 @@ type CreateDocOptions<T> = {
 }
 
 export type UpdateDoc<T> = {
-    [P in keyof T]?: T[P] extends number ? UpdateDoc<T[P]> | FieldValue : UpdateDoc<T[P]>
+    [P in keyof T]?: T[P] extends boolean ? UpdateDoc<T[P]> : UpdateDoc<T[P]> | FieldValue
 }
 
 class Client {
@@ -275,6 +277,28 @@ class Client {
             const existingCode = snap.docs[0].data()
             this.#updateDocument(FirestoreRefs.discountCode(existingCode.id), discountCode)
         }
+    }
+
+    async createUser(uid: string, user: AuthUser) {
+        return (await FirestoreRefs.users()).doc(uid).set(user)
+    }
+
+    updateUser(uid: string, user: UpdateDoc<AuthUser>) {
+        return this.#updateDocument(FirestoreRefs.user(uid), user)
+    }
+
+    async getUser(uid: string) {
+        return (await (await FirestoreRefs.user(uid)).get()).data()
+    }
+
+    async getUsersByStudio(studio: LocationOrMaster) {
+        const collection = await FirestoreRefs.users()
+        const snap = await collection.where('accountType', '==', 'staff').get()
+        return snap.docs
+            .map((it) => it.data())
+            .filter((user) => {
+                return user.accountType === 'staff' && user.roles && Object.keys(user.roles).includes(studio)
+            })
     }
 }
 

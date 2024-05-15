@@ -1,5 +1,5 @@
-import { Location } from '../../partyBookings/Locations'
 import { ValuesAsKeys } from '../../utilities'
+import { Location } from '../..'
 
 export const StoreCalendars: ValuesAsKeys<typeof Location, number> = {
     balwyn: 3163510,
