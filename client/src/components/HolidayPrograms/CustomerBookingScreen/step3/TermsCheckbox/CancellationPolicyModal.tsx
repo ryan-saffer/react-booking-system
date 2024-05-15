@@ -9,7 +9,7 @@ type Props = {
 const CancellationPolicyModal: React.FC<Props> = ({ open, onClose }) => {
     return (
         <Modal
-            title="Terms and conditions"
+            title="Cancellation Policy"
             open={open}
             onCancel={() => onClose()}
             footer={[
@@ -18,12 +18,13 @@ const CancellationPolicyModal: React.FC<Props> = ({ open, onClose }) => {
                 </Button>,
             ]}
         >
-            <strong>Cancellation Policy</strong>
-            <p />
             <p>
                 A full refund will be automatically issued for cancellations made more than 48 hours before the program.
             </p>
             <p>Cancellations made less than 48 hours before the program will not be refunded.</p>
+            <p>
+                <i>This policy can change at any time at our discretion.</i>
+            </p>
         </Modal>
     )
 }
