@@ -376,20 +376,25 @@ const router = createBrowserRouter([
             },
             {
                 path: 'holiday-programs',
-                Component: () => (
-                    <Suspense>
-                        {/* fallback looks awkward on this screen */}
-                        <CustomerBookingScreen />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'confirmation',
-                Component: () => (
-                    <Suspense fallback={<Loader fullScreen />}>
-                        <Confirmation />
-                    </Suspense>
-                ),
+                children: [
+                    {
+                        index: true,
+                        Component: () => (
+                            <Suspense>
+                                {/* fallback looks awkward on this screen */}
+                                <CustomerBookingScreen />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'confirmation',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <Confirmation />
+                            </Suspense>
+                        ),
+                    },
+                ],
             },
             {
                 path: 'invitations',

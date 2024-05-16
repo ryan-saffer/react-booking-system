@@ -88,7 +88,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 childName: child.childName,
                 childAge: child.childAge,
                 childAllergies: child.allergies ?? '',
-                childAdditionalInfo: child.additionalInfo,
+                childAdditionalInfo: child.additionalInfo || '',
                 discountCode: discount?.code || discountedPrograms.includes(klass.id) ? 'allday' : '',
                 amountCharged:
                     discount !== undefined
@@ -105,7 +105,9 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
 
         if (!query.exists) {
             const batch = firebase.db.batch()
+            console.log('creating doc')
             const paymentIntentRef = firebase.db.collection('holidayProgramBookings').doc(paymentIntentId)
+            console.log('doc created!')
             batch.set(paymentIntentRef, { booked: false })
             programs.forEach((program) => {
                 const programRef = paymentIntentRef.collection('programs').doc()

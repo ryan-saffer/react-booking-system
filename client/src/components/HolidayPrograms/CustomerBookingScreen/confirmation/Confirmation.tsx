@@ -57,7 +57,10 @@ export const Confirmation = () => {
                     setLoading(false)
                 }
             )
-        return unsubscribe
+        return () => {
+            unsubscribe()
+            clearTimeout(timeout)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -1,7 +1,7 @@
 import { Result } from 'antd'
 import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Elements } from '@stripe/react-stripe-js'
@@ -86,6 +86,9 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             amount: discount?.code ? PROGRAM_PRICE : item.discounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE,
         }))
 
+    // this ref is needed because in strict mode, createPaymentIntent runs twice
+    // useful when testing locally to ensure it runs once.
+    const creatingPaymentIntentRef = useRef(false)
     useEffect(() => {
         async function createPaymentIntent(amount: number) {
             try {
@@ -109,7 +112,10 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                 setError(true)
             }
         }
-        createPaymentIntent(totalPrice)
+        if (!creatingPaymentIntentRef.current) {
+            creatingPaymentIntentRef.current = true
+            createPaymentIntent(totalPrice)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
