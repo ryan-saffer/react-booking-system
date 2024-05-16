@@ -2,7 +2,7 @@ import '/fonts/LilitaOne-Regular.ttf'
 import '/fonts/Gotham-Light.otf'
 
 import { Suspense, lazy } from 'react'
-import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter, useSearchParams } from 'react-router-dom'
 
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
@@ -429,6 +429,18 @@ const router = createBrowserRouter([
                         ),
                     },
                 ],
+            },
+            // This route is pureley for backwards compat for opening bookings links in the calendar made before the dashboard.
+            // This can be safely removed in January 2025 (once all existing bookings before the dashboard have passed).
+            {
+                path: 'bookings',
+                Component: () => {
+                    const [searchParams] = useSearchParams()
+                    const bookingId = searchParams.get('id')
+
+                    const route = bookingId ? `/dashboard/bookings?id=${bookingId}` : '/dashboard/bookings'
+                    return <Navigate to={route} />
+                },
             },
         ],
     },

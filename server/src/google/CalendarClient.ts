@@ -115,7 +115,7 @@ export class CalendarClient {
                     location: event.location,
                     start: { dateTime: event.start.toISOString() },
                     end: { dateTime: event.end.toISOString() },
-                    description: event.description,
+                    ...(event.description && { description: event.description }),
                 },
             })
 

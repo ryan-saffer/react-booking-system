@@ -43,7 +43,7 @@ export async function createPartyBooking(_booking: Booking) {
                 start: booking.dateTime.toDate(),
                 end,
                 location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
-                description: `${getApplicationDomain(env)}/bookings?id=${bookingId}`,
+                description: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
