@@ -171,7 +171,11 @@ export const CustomerBookingScreen = () => {
                     disabled={selectedClasses.length === 0}
                     onClick={async () => {
                         setTimeout(() => continueButtonRef.current?.blur())
-                        await form.validateFields()
+                        try {
+                            await form.validateFields()
+                        } catch {
+                            return
+                        }
                         if (step === 2) {
                             // check if any children added
                             // (removing a child makes their values undefined.. so filter those out to be sure)
@@ -224,7 +228,7 @@ export const CustomerBookingScreen = () => {
             <Modal
                 title="No children added"
                 footer={[
-                    <Button type="primary" onClick={() => setShowNoChildrenModal(false)}>
+                    <Button type="primary" key={0} onClick={() => setShowNoChildrenModal(false)}>
                         OK
                     </Button>,
                 ]}

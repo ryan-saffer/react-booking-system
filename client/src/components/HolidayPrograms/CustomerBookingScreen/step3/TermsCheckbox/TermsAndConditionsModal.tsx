@@ -12,7 +12,13 @@ const TermsAndConditionsModal: React.FC<Props> = ({ open, onClose }) => {
             title="Terms and conditions"
             open={open}
             style={{ top: 20 }}
-            bodyStyle={{ top: 20, maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
+            styles={{
+                body: {
+                    top: 20,
+                    maxHeight: 'calc(100vh - 200px)',
+                    overflow: 'auto',
+                },
+            }}
             onCancel={() => onClose()}
             footer={[
                 <Button type="primary" onClick={() => onClose()}>

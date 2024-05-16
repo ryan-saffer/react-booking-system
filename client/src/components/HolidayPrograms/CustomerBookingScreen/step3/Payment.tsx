@@ -89,7 +89,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 childAge: child.childAge,
                 childAllergies: child.allergies ?? '',
                 childAdditionalInfo: child.additionalInfo || '',
-                discountCode: discount?.code || discountedPrograms.includes(klass.id) ? 'allday' : '',
+                discountCode: discount?.code || (discountedPrograms.includes(klass.id) ? 'allday' : ''),
                 amountCharged:
                     discount !== undefined
                         ? PROGRAM_PRICE
