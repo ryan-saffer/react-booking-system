@@ -9,7 +9,7 @@ export function getManager(location: Location) {
         case Location.CHELTENHAM:
             return { name: 'Bronwyn', email: 'cheltenham@fizzkidz.com.au', mobile: '0435 906 395' }
         case Location.MALVERN:
-            return { name: 'Emily', email: 'malvern@fizzkidz.com.au', mobile: '0490 501 376' }
+            return { name: 'Emily', email: 'malvern@fizzkidz.com.au', mobile: '0413 268 795' }
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unknown location: ${exhaustiveCheck}`)
