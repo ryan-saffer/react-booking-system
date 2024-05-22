@@ -52,8 +52,10 @@ export const ViewInvitationPage = () => {
             <Toaster richColors />
             <main className="flex h-full w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex h-[calc(100vh-208px)] w-full max-w-[1220px] flex-col min-[1060px]:h-[716px]">
-                    <div className="z-50 flex items-center gap-2 bg-white p-2">
-                        <p className="bg-clip-text font-lilita text-xl">You've been invited to a Fizz Kidz party!</p>
+                    <div className="z-50 flex items-center justify-center gap-2 bg-white p-2">
+                        <p className="my-2 bg-clip-text font-lilita text-2xl md:text-3xl">
+                            You've been invited to a Fizz Kidz party!
+                        </p>
                     </div>
 
                     <div className="relative flex h-screen w-full flex-grow flex-col justify-center min-[1060px]:min-h-[646px]">
@@ -108,7 +110,7 @@ function Navbar() {
     return (
         <div className="sticky z-[999] flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 shadow-lg lg:justify-normal">
             <a href="https://www.fizzkidz.com.au">
-                <img src={Logo.default} className="top-0 m-1 w-32"></img>
+                <img src={Logo.default} className="top-0 m-1 mb-3 w-24"></img>
             </a>
             <div className="flex items-center justify-center gap-2">
                 <a href="https://www.fizzkidz.com.au/book-a-party" className="hidden lg:block">
@@ -160,7 +162,7 @@ function Navbar() {
 
 function Sidebar() {
     return (
-        <section className="hidden h-[765px] min-[1060px]:block">
+        <section className="hidden h-[717px] min-[1060px]:block">
             <div className="flex h-full w-[380px] border-l border-gray-200">
                 <PartyDetails viewUsed="sidebar" />
             </div>
@@ -253,11 +255,7 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                                 />
                             </CardContent>
                             <CardFooter>
-                                <Button
-                                    type="submit"
-                                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                                    disabled={submitting}
-                                >
+                                <Button type="submit" className="w-full rounded-2xl" disabled={submitting}>
                                     {submitting ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -283,7 +281,7 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                         Click on the button below to see our upcoming holiday program schedule 😄.
                     </p>
                     <a href="https://www.fizzkidz.com.au/holiday-programs">
-                        <Button className="w-full bg-fuchsia-700 text-white hover:bg-fuchsia-900">
+                        <Button className="w-full text-white">
                             Holiday Programs Schedule <ExternalLink className="ml-2 h-4 w-4" />
                         </Button>
                     </a>
@@ -299,10 +297,7 @@ function BottomNav() {
         <div className="fixed bottom-0 z-50 hidden h-[100px] w-full border-t-[0.5px] border-gray-300 bg-white max-[1060px]:block">
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
                 <p className="font-semibold text-slate-800">Welcome to the world of Fizz Kidz.</p>
-                <Button
-                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                    onClick={() => setOpen(true)}
-                >
+                <Button className="w-full rounded-2xl" onClick={() => setOpen(true)}>
                     View Details
                 </Button>
                 <Drawer open={open} onOpenChange={setOpen}>

@@ -5,7 +5,7 @@ import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { ConfigProvider, type ThemeConfig } from 'antd'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc } from '@utils/trpc'
 import { httpLink } from '@trpc/client'
@@ -19,6 +19,7 @@ import { OrgProvider } from '@components/Session/org-provider'
 import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox-provider'
+import Loader from '@components/Shared/Loader'
 
 mixpanel.init(
     import.meta.env.VITE_ENV === 'prod'
@@ -110,7 +111,9 @@ function _Root() {
                                                 <ConfirmationDialogWithCheckboxProvider>
                                                     <ScrollRestoration />
                                                     <Toaster richColors />
-                                                    <Outlet />
+                                                    <Suspense fallback={<Loader fullScreen />}>
+                                                        <Outlet />
+                                                    </Suspense>
                                                 </ConfirmationDialogWithCheckboxProvider>
                                             </ConfirmationDialogProvider>
                                         </OrgProvider>

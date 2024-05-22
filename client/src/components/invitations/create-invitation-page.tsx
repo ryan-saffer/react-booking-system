@@ -9,7 +9,7 @@ import { Img } from 'react-image'
 import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
 import { SocialIcon } from 'react-social-icons/component'
-import { Toaster, toast } from 'sonner'
+import { toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Button } from '@ui-components/button'
@@ -62,8 +62,7 @@ export const CreateInvitationPage = () => {
 
     return (
         <div className="twp">
-            <Toaster richColors />
-            <Navbar />
+            <Navbar shadow={false} />
             <main className="flex w-full justify-center max-[1060px]:pb-[100px]">
                 <div className="flex w-full max-w-[1220px] flex-col">
                     <div className="flex items-center gap-2 p-2">
@@ -405,11 +404,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             </FormItem>
                         )}
                     />
-                    <Button
-                        type="submit"
-                        className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                        disabled={isLoading}
-                    >
+                    <Button type="submit" className="w-full rounded-2xl" disabled={isLoading}>
                         {isLoading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -440,10 +435,7 @@ function BottomNav() {
         <div className="fixed bottom-0 z-50 hidden h-[100px] w-full border-t-[0.5px] border-gray-300 bg-white max-[1060px]:block">
             <div className="flex h-full w-full flex-col justify-center gap-4 p-4">
                 <p className="font-semibold text-slate-800">Magical Party Time</p>
-                <Button
-                    className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                    onClick={() => setOpen(true)}
-                >
+                <Button className="w-full rounded-2xl" onClick={() => setOpen(true)}>
                     Customise
                 </Button>
                 <Drawer open={open} onOpenChange={setOpen}>
@@ -554,10 +546,7 @@ function SuccessDialog({
                         </div>
                     </div>
                     <Separator className="mb-4 mt-4" />
-                    <Button
-                        className="rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                        onClick={() => window.open(inviteUrl, '_blank')}
-                    >
+                    <Button className="rounded-2xl" onClick={() => window.open(inviteUrl, '_blank')}>
                         View Invitation Page
                         <ExternalLink className="ml-4 h-4 w-4" />
                     </Button>

@@ -128,11 +128,7 @@ const router = createBrowserRouter([
             {
                 // redirects the base route to the dashboard, or the sign in page if not logged in
                 index: true,
-                Component: () => (
-                    // <ProtectedRoute roles={[]}>
-                    <Navigate to="dashboard" />
-                    // </ProtectedRoute>
-                ),
+                Component: () => <Navigate to="dashboard" />,
             },
             {
                 path: 'sign-in',
@@ -184,21 +180,21 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute permission="dashboard:view">
-                                    <Navigation />
-                                </ProtectedRoute>
-                            </Suspense>
+                            // <Suspense fallback={<Loader fullScreen />}>
+                            <ProtectedRoute permission="dashboard:view">
+                                <Navigation />
+                            </ProtectedRoute>
+                            // </Suspense>
                         ),
                     },
                     {
                         path: 'bookings',
                         Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <ProtectedRoute permission="bookings:read">
-                                    <BookingsPage />
-                                </ProtectedRoute>
-                            </Suspense>
+                            // <Suspense fallback={<Loader fullScreen />}>
+                            <ProtectedRoute permission="bookings:read">
+                                <BookingsPage />
+                            </ProtectedRoute>
+                            // </Suspense>
                         ),
                     },
                     {
@@ -333,7 +329,7 @@ const router = createBrowserRouter([
                             {
                                 path: 'account',
                                 Component: () => (
-                                    <Suspense fallback={<Loader />}>
+                                    <Suspense fallback={<Loader fullScreen />}>
                                         <Account />
                                     </Suspense>
                                 ),

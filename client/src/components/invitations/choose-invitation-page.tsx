@@ -55,12 +55,12 @@ export const ChooseInvitationPage = () => {
 
     return (
         <div className="twp">
-            <Navbar />
+            <Navbar shadow />
             <main className="mx-auto flex w-screen flex-col items-center justify-center px-8">
                 <section className="mt-2 flex max-w-5xl flex-col justify-evenly gap-16 md:mt-12 md:flex-row">
                     <div className="mt-6 flex flex-col gap-6 md:max-w-[450px]">
                         <h1 className="font-lilita text-4xl">Fizz Kidz Invitations</h1>
-                        <h2 className="font-lilita text-xl text-[#9044E2]">We make kids parties easy!</h2>
+                        <h2 className="font-lilita text-xl text-primary">We make kids parties easy!</h2>
                         <p>
                             Simply choose your child's favourite invitation, add your party details, and generate a
                             personalised invitation link to share with all their friends!

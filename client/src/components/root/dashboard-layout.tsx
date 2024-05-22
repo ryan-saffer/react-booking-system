@@ -1,7 +1,8 @@
 import { Menu } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 
+import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
 
 import { DashboardDrawer } from './dashboard-drawer'
@@ -35,7 +36,9 @@ export function DashboardLayout() {
                 </div>
             </nav>
             <section className="flex-auto">
-                <Outlet />
+                <Suspense fallback={<Loader fullScreen />}>
+                    <Outlet />
+                </Suspense>
                 <DashboardDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
             </section>
         </main>

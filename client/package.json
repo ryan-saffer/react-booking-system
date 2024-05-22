@@ -102,6 +102,11 @@
         "vite": "^4.4.5",
         "vite-plugin-html": "^3.2.2"
     },
+    "overrides": {
+        "@mui/x-date-pickers": {
+            "date-fns": "^3.3.1"
+        }
+    },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {
             "style": "import-sort-style-module-scoped"
