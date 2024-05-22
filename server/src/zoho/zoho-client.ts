@@ -188,7 +188,7 @@ export class ZohoClient {
                     Company: props.company,
                     Owner: '76392000000284519', // melissa
                     Lead_Source: props.source,
-                    Lead_Status: 'Not Qualified',
+                    Lead_Status: 'New Lead',
                 },
             ],
         })
