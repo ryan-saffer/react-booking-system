@@ -1,4 +1,5 @@
 import { AcuityConstants, HolidayProgramBooking } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 
@@ -21,7 +22,8 @@ export async function scheduleHolidayProgram(booking: HolidayProgramBooking, pay
             },
             {
                 id: AcuityConstants.FormFields.CHILDREN_AGES,
-                value: booking.childAge,
+                // convert ISO string to age
+                value: Math.floor(DateTime.now().diff(DateTime.fromISO(booking.childAge), 'years').years),
             },
             {
                 id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,

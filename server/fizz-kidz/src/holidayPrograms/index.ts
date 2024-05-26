@@ -9,6 +9,8 @@ export interface BaseHolidayProgramBooking {
     emergencyContactName: string
     emergencyContactPhone: string
     childName: string
+    // comes from client as birthday ISO string, saved in acuity as age.
+    // kept name as 'childAge' for backwards compat
     childAge: string
     childAllergies: string
     childAdditionalInfo: string

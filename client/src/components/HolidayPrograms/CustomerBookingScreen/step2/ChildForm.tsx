@@ -1,4 +1,5 @@
-import { Form, Input, Select } from 'antd'
+import { DatePicker, Form, Input, Select } from 'antd'
+import dayjs from 'dayjs'
 import React, { useState } from 'react'
 
 import { SimpleTextRule } from '@utils/formUtils'
@@ -23,14 +24,32 @@ export const ChildForm: React.FC<Props> = ({ childNumber }) => {
             </Form.Item>
             <Form.Item
                 name={[childNumber, 'childAge']}
-                label="Child's age"
+                label="Child's date of birth"
                 extra={'The minimum age is 4 years old, and all children must be completely toilet trained 😊'}
                 rules={[
-                    { required: true, message: "Please input child's age" },
-                    { pattern: /^(?:[4-9]|1[0-12])$/, message: 'Age must be between 4-12' },
+                    {
+                        type: 'object' as const,
+                        required: true,
+                        validator: (_, value: dayjs.Dayjs) => {
+                            if (!value) return Promise.reject(new Error("Please input child's age"))
+                            const fourYearsAgo = dayjs().subtract(4, 'years')
+                            const thirteenYearsAgo = dayjs().subtract(13, 'years')
+
+                            if (value.isAfter(fourYearsAgo)) {
+                                // younger than 4
+                                return Promise.reject(new Error('Child must be at least 4 years old.'))
+                            } else if (value.isBefore(thirteenYearsAgo)) {
+                                // 13 or older
+                                return Promise.reject(new Error('Child must be 12 years old or younger.'))
+                            } else {
+                                // between 4 and 12
+                                return Promise.resolve()
+                            }
+                        },
+                    },
                 ]}
             >
-                <Input />
+                <DatePicker format="DD/MM/YYYY" />
             </Form.Item>
             <Form.Item
                 name={[childNumber, 'hasAllergies']}

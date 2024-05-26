@@ -33,22 +33,30 @@ async function scheduleHolidayPrograms(
     // book in all programs
     const result = await Promise.all(programs.map((it) => _scheduleHolidayProgram(it.program, it.id, paymentIntentId)))
 
-    try {
-        const zohoClient = new ZohoClient()
-        const program = programs[0]
-        if (program) {
-            const { parentFirstName, parentLastName, parentEmail, parentPhone, calendarId } = program.program
-            await zohoClient.addHolidayProgramContact({
-                firstName: parentFirstName,
-                lastName: parentLastName,
-                email: parentEmail,
-                mobile: parentPhone,
-                studio: AcuityUtilities.getStudioByCalendarId(calendarId),
+    // write to crm
+    const zohoClient = new ZohoClient()
+    const zohoResults = await Promise.allSettled(
+        programs.map(({ program }) =>
+            zohoClient.addHolidayProgramContact({
+                firstName: program.parentFirstName,
+                lastName: program.parentLastName,
+                email: program.parentEmail,
+                mobile: program.parentPhone,
+                studio: AcuityUtilities.getStudioByCalendarId(program.calendarId),
+                childName: program.childName,
+                childBirthdayISO: program.childAge,
             })
+        )
+    )
+    zohoResults.map((zohoResult) => {
+        if (zohoResult.status === 'rejected') {
+            logError(
+                `unable to add holiday program booking to zoho with paymentIntentId ${paymentIntentId}`,
+                zohoResult.reason
+            )
         }
-    } catch (err) {
-        logError(`unable to add holiday program booking to zoho with paymentIntentId ${paymentIntentId}`, err)
-    }
+    })
+
     // send confirmation email
     await sendConfirmationEmail(result)
 

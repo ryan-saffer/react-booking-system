@@ -14,6 +14,7 @@ import { sendConfirmationEmail } from '../../core/send-confirmation-email'
 
 export const holidayProgramsRouter = router({
     scheduleFreeHolidayPrograms: publicProcedure
+        // 'childAge' will come through as ISO datetime string
         .input((input: unknown) => input as FreeHolidayProgramBooking[])
         .mutation(async ({ input }) => {
             try {

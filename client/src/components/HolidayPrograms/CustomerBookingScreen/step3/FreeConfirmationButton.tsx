@@ -62,7 +62,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                         emergencyContactName: form.emergencyContact,
                         emergencyContactPhone: form.emergencyPhone,
                         childName: child.childName,
-                        childAge: child.childAge,
+                        childAge: child.childAge.toISOString(),
                         childAllergies: child.allergies ?? '',
                         childAdditionalInfo: child.additionalInfo,
                         discountCode: discountCode,

@@ -8,6 +8,7 @@ import {
 } from './migrations/after-school-program'
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { generatePartyFormUrl } from './parties/generate-form'
+import { zohoTest } from './zoho-test'
 
 ;(async () => {
     const { script } = await prompts({
@@ -15,6 +16,10 @@ import { generatePartyFormUrl } from './parties/generate-form'
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Zoho Test',
+                value: 'zohoTest',
+            },
             {
                 title: 'List all users',
                 value: 'listAllUsers',
@@ -82,5 +87,13 @@ import { generatePartyFormUrl } from './parties/generate-form'
     }
     if (script === 'listAllUsers') {
         await getAllUsers()
+    }
+
+    if (script === 'zohoTest') {
+        try {
+            await zohoTest()
+        } catch (err) {
+            console.log(err)
+        }
     }
 })()

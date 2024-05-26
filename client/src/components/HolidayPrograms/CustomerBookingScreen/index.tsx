@@ -1,5 +1,6 @@
 import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import dayjs from 'dayjs'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
 
@@ -24,7 +25,7 @@ export type Form = {
     emergencyPhone: string
     children: {
         childName: string
-        childAge: string
+        childAge: dayjs.Dayjs
         hasAllergies: boolean
         allergies?: string
         additionalInfo: string
@@ -174,7 +175,7 @@ export const CustomerBookingScreen = () => {
                         try {
                             await form.validateFields()
                         } catch {
-                            return
+                            return new Error()
                         }
                         if (step === 2) {
                             // check if any children added
