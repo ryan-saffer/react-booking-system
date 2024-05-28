@@ -94,7 +94,7 @@ export const contactForm7Webhook = onRequest(async (req, res) => {
             }
         }
     } catch (err) {
-        logError('error handling contact form 7 submission', err)
+        logError('error handling contact form 7 submission', JSON.stringify(err))
     }
 
     res.status(200).send()
