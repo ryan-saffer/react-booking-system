@@ -2,28 +2,23 @@ import { FreeHolidayProgramBooking } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
-import { throwTrpcError } from '../../../utilities'
 import { checkDiscountCode } from '../../core/check-discount-code'
 import { CreateDiscountCode, createDiscountCode } from '../../core/create-discount-code'
 import {
     CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '../../core/create-discount-code-from-invitation'
-import { scheduleHolidayProgram } from '../../core/schedule-holiday-program'
-import { sendConfirmationEmail } from '../../core/send-confirmation-email'
+import { bookHolidayPrograms } from '../../core/schedule-holiday-programs'
 
 export const holidayProgramsRouter = router({
     scheduleFreeHolidayPrograms: publicProcedure
-        // 'childAge' will come through as ISO datetime string
         .input((input: unknown) => input as FreeHolidayProgramBooking[])
-        .mutation(async ({ input }) => {
-            try {
-                const result = await Promise.all(input.map((program) => scheduleHolidayProgram(program)))
-                await sendConfirmationEmail(result)
-            } catch (err) {
-                throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error booking into the holiday programs', err)
-            }
-        }),
+        .mutation(async ({ input }) =>
+            bookHolidayPrograms({
+                free: true,
+                programs: input,
+            })
+        ),
     createDiscountCode: authenticatedProcedure
         .input((input: unknown) => input as CreateDiscountCode)
         .mutation(({ input }) => createDiscountCode(input)),

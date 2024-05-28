@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd'
+import { Button, Checkbox, Typography } from 'antd'
 import { AcuityConstants, AcuityTypes, DiscountCode, PaidHolidayProgramBooking } from 'fizz-kidz'
 import React, { useContext, useRef, useState } from 'react'
 
@@ -39,6 +39,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
     const termsRef = useRef<TermsCheckboxHandle>(null)
     const submitButtonRef = useRef<HTMLButtonElement>(null)
 
+    const [joinMailingList, setJoinMailingList] = useState(true)
     const [paymentError, setPaymentError] = useState('')
 
     const [submitting, setSubmitting] = useState(false)
@@ -97,6 +98,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                           ? PROGRAM_PRICE - DISCOUNT_PRICE
                           : PROGRAM_PRICE,
                 booked: false,
+                joinMailingList,
             }))
         )
 
@@ -145,12 +147,15 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
     return (
         <Root>
             <PaymentElement />
-            <TermsCheckbox ref={termsRef} />
             {paymentError && (
                 <Typography.Title type="danger" level={5} style={{ textAlign: 'center', marginTop: 12 }}>
                     {paymentError}
                 </Typography.Title>
             )}
+            <Checkbox className="mt-4" onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
+                Keep me informed about the latest Fizz Kidz news and offers.
+            </Checkbox>
+            <TermsCheckbox ref={termsRef} />
             <Button
                 ref={submitButtonRef}
                 className={classes.primaryButton}

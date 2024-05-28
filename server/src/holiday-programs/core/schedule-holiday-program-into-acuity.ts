@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 
-export async function scheduleHolidayProgram(booking: HolidayProgramBooking, paymentIntentId = '') {
+export async function bookHolidayProgramIntoAcuity(booking: HolidayProgramBooking, paymentIntentId = '') {
     const acuity = await AcuityClient.getInstance()
     return acuity.scheduleAppointment({
         appointmentTypeID: booking.appointmentTypeId,

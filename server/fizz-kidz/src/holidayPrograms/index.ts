@@ -16,6 +16,7 @@ export interface BaseHolidayProgramBooking {
     childAdditionalInfo: string
     discountCode: string
     amountCharged: number
+    joinMailingList: boolean
 }
 
 interface BookedPaidHolidayProgram extends BaseHolidayProgramBooking {

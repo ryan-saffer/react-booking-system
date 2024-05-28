@@ -1,4 +1,4 @@
-import { Button } from 'antd'
+import { Button, Checkbox } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -36,6 +36,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
     const termsRef = useRef<TermsCheckboxHandle>(null)
     const submitButtonRef = useRef<HTMLButtonElement>(null)
 
+    const [joinMailingList, setJoinMailingList] = useState(true)
     const [submitting, setSubmitting] = useState(false)
 
     const scheduleProgramsMutation = trpc.holidayPrograms.scheduleFreeHolidayPrograms.useMutation()
@@ -67,6 +68,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                         childAdditionalInfo: child.additionalInfo,
                         discountCode: discountCode,
                         amountCharged: 0,
+                        joinMailingList,
                     }))
                 )
             )
@@ -79,6 +81,9 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
 
     return (
         <Root>
+            <Checkbox onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
+                Keep me informed about the latest Fizz Kidz news and offers.
+            </Checkbox>
             <TermsCheckbox ref={termsRef} />
             <Button
                 className={classes.primaryButton}

@@ -214,7 +214,7 @@ export class ZohoClient {
 
     addHolidayProgramContact(
         props: WithBaseProps<{
-            studio: Location
+            studio: Location | 'test'
             childName: string
             childBirthdayISO: string // ISO string
         }>

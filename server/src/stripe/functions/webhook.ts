@@ -3,7 +3,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { Metadata } from 'fizz-kidz'
 import type { Stripe } from 'stripe'
 
-import { bookHolidayPrograms } from '../../holiday-programs/core/schedule-paid-holiday-programs'
+import { bookHolidayPrograms } from '../../holiday-programs/core/schedule-holiday-programs'
 import { env } from '../../init'
 import { logError } from '../../utilities'
 import { StripeClient } from '../core/stripe-client'
@@ -43,7 +43,10 @@ export const stripeWebhook = onRequest(async (request, response) => {
             if (metadata.programType === 'holiday_program') {
                 logger.log('beginning to book holiday programs')
                 try {
-                    await bookHolidayPrograms(paymentIntent.id)
+                    await bookHolidayPrograms({
+                        free: false,
+                        paymentIntentId: paymentIntent.id,
+                    })
                 } catch (err) {
                     logError(
                         `there was an error booking in a holiday program with payment intent id: ${paymentIntent.id}`,

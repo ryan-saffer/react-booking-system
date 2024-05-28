@@ -1,6 +1,6 @@
 // import { ObjectKeys } from '../utilities'
 import { ObjectKeys } from '../utilities'
-import { StoreCalendars } from './constants/Calendars'
+import { StoreCalendars, TestCalendarId } from './constants/Calendars'
 
 export function retrieveForm(client: any, formId: any) {
     return client.forms.find((form: any) => form.id === formId)?.values
@@ -15,6 +15,7 @@ export function retrieveFormAndField(client: any, formId: any, fieldId: any) {
 }
 
 export function getStudioByCalendarId(id: number) {
+    if (id === TestCalendarId) return 'test'
     const keys = ObjectKeys(StoreCalendars)
     for (const key of keys) {
         if (StoreCalendars[key] === id) return key
