@@ -2,6 +2,7 @@ import prompts from 'prompts'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
+import { deleteEvents } from './events/delete-events'
 import {
     migrateScienceEnrolments,
     migration_addChildSupportToAllExistingEnrolments,
@@ -16,6 +17,10 @@ import { zohoTest } from './zoho-test'
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Delete Events By Email',
+                value: 'deleteEventsByEmail',
+            },
             {
                 title: 'Zoho Test',
                 value: 'zohoTest',
@@ -95,5 +100,14 @@ import { zohoTest } from './zoho-test'
         } catch (err) {
             console.log(err)
         }
+    }
+
+    if (script === 'deleteEventsByEmail') {
+        const { email } = await prompts({
+            type: 'text',
+            name: 'email',
+            message: 'Enter the email to delete by:',
+        })
+        await deleteEvents(email)
     }
 })()

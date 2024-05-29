@@ -75,7 +75,7 @@ const Step1: React.FC<Props> = ({
                     type="info"
                     message="Check our website to see what we will be making each day."
                     action={
-                        <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs">
+                        <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs" target='_blank'>
                             View schedule
                         </Button>
                     }
