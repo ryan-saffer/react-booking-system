@@ -2,8 +2,8 @@ import { logger } from 'firebase-functions/v2'
 
 import { handleIncursionFormSubmission } from '../../../events/core/handle-incursion-form-submission'
 import { handlePartyFormSubmission } from '../../../party-bookings/core/handle-party-form-submission'
+import { handlePartyFormSubmissionV3 } from '../../../party-bookings/core/handle-party-form-submission-v3'
 import { onMessagePublished } from '../../../utilities'
-import { handlePartyFormSubmissionV2 } from '../../../party-bookings/core/handle-party-form-submission-v2'
 
 export const paperformPubSub = onMessagePublished('paperformSubmission', async (input) => {
     const { form, data } = input
@@ -12,8 +12,8 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
         case 'party':
             await handlePartyFormSubmission(data)
             break
-        case 'party-v2':
-            await handlePartyFormSubmissionV2(data)
+        case 'party-v3':
+            await handlePartyFormSubmissionV3(data)
             break
         case 'incursion':
             await handleIncursionFormSubmission(data)

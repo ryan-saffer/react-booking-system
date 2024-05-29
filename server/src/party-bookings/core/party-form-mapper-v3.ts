@@ -8,17 +8,17 @@ import {
     getQuestionValue,
     Location,
     PaperFormResponse,
-    PartyFormV2,
+    PartyFormV3,
     PFProduct,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
 import { logger } from 'firebase-functions/v2'
 
-export class PartyFormMapperV2 {
-    responses: PaperFormResponse<PartyFormV2>
+export class PartyFormMapperV3 {
+    responses: PaperFormResponse<PartyFormV3>
     bookingId: string
 
-    constructor(responses: PaperFormResponse<PartyFormV2>) {
+    constructor(responses: PaperFormResponse<PartyFormV3>) {
         this.responses = responses
         this.bookingId = getQuestionValue(this.responses, 'id')
     }

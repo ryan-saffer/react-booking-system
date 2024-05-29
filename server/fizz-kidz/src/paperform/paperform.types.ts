@@ -26,7 +26,7 @@ export type PartyForm = {
     questions: string
 }
 
-export type PartyFormV2 = {
+export type PartyFormV3 = {
     id: string
     location: string
     parent_first_name: string

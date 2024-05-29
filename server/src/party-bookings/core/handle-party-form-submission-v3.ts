@@ -1,15 +1,15 @@
 import { logger } from 'firebase-functions/v2'
-import { Booking, PaperFormResponse, PartyFormV2, capitalise, getManager } from 'fizz-kidz'
+import { Booking, PaperFormResponse, PartyFormV3, capitalise, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwFunctionsError } from '../../utilities'
-import { PartyFormMapperV2 } from './party-form-mapper-v2'
+import { PartyFormMapperV3 } from './party-form-mapper-v3'
 import { getBookingAdditions, getBookingCreations } from './utils'
 
-export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<PartyFormV2>) {
-    const formMapper = new PartyFormMapperV2(responses)
+export async function handlePartyFormSubmissionV3(responses: PaperFormResponse<PartyFormV3>) {
+    const formMapper = new PartyFormMapperV3(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     console.log('Existing Booking:')
@@ -32,7 +32,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
         // form has been filled in before, notify manager of the change
         try {
             await mailClient.sendEmail(
-                'partyFormFilledInAgainV2',
+                'partyFormFilledInAgainV3',
                 getManager(booking.location!).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
@@ -172,7 +172,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
 
     try {
         await mailClient.sendEmail(
-            'partyFormConfirmationV2',
+            'partyFormConfirmationV3',
             fullBooking.parentEmail,
             {
                 parentName: fullBooking.parentFirstName,

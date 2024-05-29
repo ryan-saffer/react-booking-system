@@ -270,7 +270,7 @@ export class MailClient {
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
                 }
-            case 'partyFormFilledInAgainV2':
+            case 'partyFormFilledInAgainV3':
                 return {
                     emailInfo: {
                         to,
@@ -281,7 +281,7 @@ export class MailClient {
                         subject: subject || 'Party form filled in again!',
                         replyTo: replyTo || 'info@fizzkidz.com.au',
                     },
-                    template: 'party_form_filled_in_again_v2.html',
+                    template: 'party_form_filled_in_again_v3.html',
                     useMjml: false,
                 }
             case 'tooManyCreationsChosen':
@@ -340,7 +340,7 @@ export class MailClient {
                     template: 'party_form_completed.html',
                     useMjml: true,
                 }
-            case 'partyFormConfirmationV2':
+            case 'partyFormConfirmationV3':
                 return {
                     emailInfo: {
                         to,
@@ -351,7 +351,7 @@ export class MailClient {
                         subject: subject || 'Your Party Details',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'party_form_completed_v2.mjml',
+                    template: 'party_form_completed_v3.mjml',
                     useMjml: true,
                 }
             case 'partyFeedback':

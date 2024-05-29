@@ -105,7 +105,7 @@ export type Emails = {
         newAdditions: string[]
     }
 
-    partyFormFilledInAgainV2: {
+    partyFormFilledInAgainV3: {
         parentName: string
         parentEmail: string
         parentMobile: string
@@ -161,7 +161,7 @@ export type Emails = {
         managerMobile: string
     }
 
-    partyFormConfirmationV2: {
+    partyFormConfirmationV3: {
         parentName: string
         numberOfChildren: string
         creations: string[]
