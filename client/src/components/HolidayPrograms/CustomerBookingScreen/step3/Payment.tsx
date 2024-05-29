@@ -153,7 +153,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 </Typography.Title>
             )}
             <Checkbox className="mt-4" onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
-                Keep me informed about the latest Fizz Kidz news and offers.
+                Keep me informed about the latest Fizz Kidz programs and offers.
             </Checkbox>
             <TermsCheckbox ref={termsRef} />
             <Button

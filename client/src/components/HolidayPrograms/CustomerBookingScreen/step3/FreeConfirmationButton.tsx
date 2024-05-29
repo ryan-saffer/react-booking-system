@@ -82,7 +82,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
     return (
         <Root>
             <Checkbox onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
-                Keep me informed about the latest Fizz Kidz news and offers.
+                Keep me informed about the latest Fizz Kidz programs and offers.
             </Checkbox>
             <TermsCheckbox ref={termsRef} />
             <Button
