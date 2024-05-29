@@ -154,6 +154,9 @@ const EmployeeTable = () => {
             columns={columns}
             dataSource={employees.map((employee) => ({ ...employee, key: employee.id }))}
             size="small"
+            pagination={{
+                pageSize: 50,
+            }}
             expandable={{
                 expandRowByClick: true,
                 expandedRowRender: (employee) => {
