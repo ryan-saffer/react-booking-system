@@ -26,6 +26,30 @@ export type PartyForm = {
     questions: string
 }
 
+export type PartyFormV2 = {
+    id: string
+    location: string
+    parent_first_name: string
+    parent_last_name: string
+    child_name: string
+    child_age: string
+    number_of_children_in_store: string
+    number_of_children_mobile: string
+    glam_creations: PFProduct[]
+    science_creations: PFProduct[]
+    slime_creations: PFProduct[]
+    safari_creations: PFProduct[]
+    unicorn_creations: PFProduct[]
+    tie_dye_creations: PFProduct[]
+    taylor_swift_creations: PFProduct[]
+    expert_creations: PFProduct[]
+    food_package: PFProduct[]
+    additions: string[]
+    party_packs: PFProduct[]
+    fun_facts: string
+    questions: string
+}
+
 export type PartyFormV3 = {
     id: string
     location: string

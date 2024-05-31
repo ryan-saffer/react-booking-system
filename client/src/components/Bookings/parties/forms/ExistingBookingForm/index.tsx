@@ -89,7 +89,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayCreation2 = formValues.creation2.value || editing
     const displayCreation3 = formValues.creation3.value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
-    const displayMenu = formValues.menu?.value || editing
+    // const displayMenu = formValues.menu?.value || editing
     const displayCake = formValues.cake.value || editing
     const displayQuestions = formValues.questions.value || editing
     const displayFunFacts = formValues.funFacts.value || editing
@@ -591,7 +591,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         </FormControl>
                     </Grid>
                 )}
-                {displayMenu && (
+                {/* {displayMenu && (
                     <>
                         <Grid item xs={12}>
                             <Typography variant="h6">Food Menu</Typography>
@@ -626,7 +626,27 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             </FormControl>
                         </Grid>
                     </>
-                )}
+                )} */}
+                <Grid item xs={12}>
+                    <Typography variant="h6">Food Package</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small" classes={{ root: classes.disabled }} variant="standard">
+                        <InputLabel>Food package</InputLabel>
+                        <Select
+                            name={FormBookingFields.includesFood}
+                            id={createUniqueId(FormBookingFields.includesFood, booking.id)}
+                            label="food package"
+                            value={formValues[FormBookingFields.includesFood].value}
+                            disabled={!editing}
+                            error={formValues[FormBookingFields.includesFood].error}
+                            onChange={handleFormChange}
+                        >
+                            <MenuItem value={true as any}>Includes food</MenuItem>
+                            <MenuItem value={false as any}>Self catered</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
                 {displayAdditions && (
                     <>
                         <Grid item xs={12}>

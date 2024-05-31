@@ -105,6 +105,23 @@ export type Emails = {
         newAdditions: string[]
     }
 
+    partyFormFilledInAgainV2: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        dateTime: string
+        oldNumberOfKids: string
+        oldCreations: string[]
+        oldAdditions: string[]
+        newNumberOfKids: string
+        newCreations: string[]
+        newAdditions: string[]
+        oldIncludesFood: boolean
+        newIncludesFood: boolean
+        isMobile: boolean
+    }
+
     partyFormFilledInAgainV3: {
         parentName: string
         parentEmail: string
@@ -159,6 +176,20 @@ export type Emails = {
         hasQuestions: boolean
         managerName: string
         managerMobile: string
+    }
+
+    partyFormConfirmationV2: {
+        parentName: string
+        numberOfChildren: string
+        creations: string[]
+        isTyeDyeParty: boolean
+        hasAdditions: boolean
+        additions: string[]
+        isMobile: boolean
+        hasQuestions: boolean
+        managerName: string
+        managerMobile: string
+        includesFood: boolean
     }
 
     partyFormConfirmationV3: {
