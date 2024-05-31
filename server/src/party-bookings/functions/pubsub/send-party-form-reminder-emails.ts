@@ -66,6 +66,7 @@ async function sendFormReminder(bookingId: string, booking: Booking) {
 
     return mailClient.sendEmail('partyFormReminder', booking.parentEmail, {
         parentName: booking.parentFirstName,
+        childName: booking.childName,
         managerName: manager.name,
         managerMobile: manager.mobile,
         prefilledFormUrl,

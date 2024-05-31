@@ -38,7 +38,7 @@
             {{ parentName }},
           </mj-text>
           <mj-text color="#637381" font-size="16px">
-            {{ managerName }} here! This is just a friendly reminder to please have your party form filled in by tomorrow. You can access your personalised form by clicking on the button below.
+            {{ managerName }} here! This is a friendly reminder to please have your party form filled in by tomorrow. This will help us to prepare for and ensure any special requirements are met in time for {{ childName }}'s party! You can access your personalised form by clicking on the button below.
           </mj-text>
         </mj-column>
         <mj-column width="100%">

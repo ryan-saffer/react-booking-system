@@ -94,6 +94,7 @@ export type Emails = {
 
     partyFormReminder: {
         parentName: string
+        childName: string
         managerName: string
         managerMobile: string
         prefilledFormUrl: string
