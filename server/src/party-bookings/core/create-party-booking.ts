@@ -123,6 +123,7 @@ export async function createPartyBooking(_booking: Booking) {
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
+                    includesFood: booking.includesFood,
                 },
                 { replyTo: manager.email }
             )

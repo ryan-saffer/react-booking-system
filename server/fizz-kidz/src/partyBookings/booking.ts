@@ -34,6 +34,7 @@ export interface BaseBooking extends AdditionKeyValues {
     partyFormFilledIn: boolean
     sendConfirmationEmail: boolean
     oldPrices: boolean
+    includesFood: boolean
 }
 
 // separates date and time into separate values, for better use in forms
@@ -99,6 +100,7 @@ export const FormBookingFields: FormBookingKeys = {
     slimePartyPack: 'slimePartyPack',
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
+    includesFood: 'includesFood',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -147,4 +149,5 @@ export const BookingFields: BookingKeys = {
     slimePartyPack: 'slimePartyPack',
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
+    includesFood: 'includesFood',
 }

@@ -143,6 +143,11 @@ const getEmptyValues = () => ({
         error: false,
         errorText: '',
     },
+    includesFood: {
+        value: '',
+        error: false,
+        errorText: 'Please select a food package',
+    },
 })
 
 /**
@@ -162,6 +167,9 @@ const mapFormToBooking = (formValues) => {
     booking[FormBookingFields.parentLastName] = booking[FormBookingFields.parentLastName].trim()
     booking[FormBookingFields.childName] = booking[FormBookingFields.childName].trim()
     booking[FormBookingFields.childAge] = booking[FormBookingFields.childAge].trim()
+
+    // make sure 'includesFood' is set as a boolean (for mobile parties its value is '' at this point)
+    booking[FormBookingFields.includesFood] = !!booking[FormBookingFields.includesFood]
 
     // combine date and time into one
     // hardcode to AEST to ensure bookings can be created/updated from anywhere in the world
@@ -210,6 +218,9 @@ const _NewBookingForm = (props) => {
         if (field === 'type') {
             tmpValues.address.value = ''
             tmpValues.address.error = false
+
+            tmpValues.includesFood.value = ''
+            tmpValues.includesFood.error = false
         }
 
         setValid(!errorFound(tmpValues))
@@ -440,6 +451,32 @@ const _NewBookingForm = (props) => {
                             onChange={handleFormChange}
                         />
                     </Grid>
+                )}
+                {formValues.type.value === 'studio' && (
+                    <>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Party Food</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth>
+                                <InputLabel>Food Package</InputLabel>
+                                <Select
+                                    name="includesFood"
+                                    id="includesFood"
+                                    label="Food Package"
+                                    value={formValues.includesFood.value}
+                                    error={formValues.includesFood.error}
+                                    onChange={handleFormChange}
+                                >
+                                    <MenuItem value={true}>Includes food</MenuItem>
+                                    <MenuItem value={false}>Self catered</MenuItem>
+                                </Select>
+                                {formValues.includesFood.error ? (
+                                    <FormHelperText error={true}>{formValues.includesFood.errorText}</FormHelperText>
+                                ) : null}
+                            </FormControl>
+                        </Grid>
+                    </>
                 )}
                 <Grid item xs={12}>
                     <Typography variant="h6">Notes</Typography>

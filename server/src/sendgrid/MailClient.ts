@@ -284,6 +284,20 @@ export class MailClient {
                     template: 'party_form_filled_in_again_v2.html',
                     useMjml: false,
                 }
+            case 'partyFormFilledInAgainV3':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party form filled in again!',
+                        replyTo: replyTo || 'info@fizzkidz.com.au',
+                    },
+                    template: 'party_form_filled_in_again_v3.html',
+                    useMjml: false,
+                }
             case 'tooManyCreationsChosen':
                 return {
                     emailInfo: {
@@ -337,7 +351,7 @@ export class MailClient {
                         subject: subject || 'Your Party Details',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'party_form_completed.html',
+                    template: 'party_form_completed.mjml',
                     useMjml: true,
                 }
             case 'partyFormConfirmationV2':
@@ -352,6 +366,20 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'party_form_completed_v2.mjml',
+                    useMjml: true,
+                }
+            case 'partyFormConfirmationV3':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your Party Details',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_form_completed_v3.mjml',
                     useMjml: true,
                 }
             case 'partyFeedback':
@@ -451,6 +479,20 @@ export class MailClient {
                         replyTo: replyTo || 'no-reply@fizzkidz.com.au',
                     },
                     template: 'not_continuing_after_school_notification.html',
+                    useMjml: false,
+                }
+            case 'partyFormFoodPackageChanged':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Food package has changed!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'food_package_changed.html',
                     useMjml: false,
                 }
             default: {

@@ -46,7 +46,7 @@ export function getBookingAdditions(booking: BaseBooking) {
 }
 
 export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://fizzkidz.paperform.co/?location=${
+    let url = `https://ovrhkys4.paperform.co/?location=${
         booking.type === 'studio' ? booking.location : 'mobile'
     }&id=${bookingId}`
     const encodedParams: { [key: string]: string } = {
@@ -54,6 +54,7 @@ export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
         parent_last_name: encodeURIComponent(booking.parentLastName),
         child_name: encodeURIComponent(booking.childName),
         child_age: encodeURIComponent(booking.childAge),
+        food_package: booking.includesFood ? 'include_food_package' : 'dont_include_food_package',
     }
 
     Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))

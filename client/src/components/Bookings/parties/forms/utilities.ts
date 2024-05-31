@@ -58,7 +58,7 @@ export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooki
     for (const field in formValues) {
         if (Utilities.isObjKey(field, formValues)) {
             const val = domainBooking[field]
-            if (val) {
+            if (val !== undefined) {
                 const prop = formValues[field]
                 if (prop) prop.value = val
             }
@@ -309,6 +309,11 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        includesFood: {
+            value: true,
+            error: false,
+            errorText: 'Food package is required',
+        },
     }
 }
 
@@ -358,5 +363,6 @@ function getEmptyDomainBooking(): FormBooking {
         partyFormFilledIn: false,
         sendConfirmationEmail: true,
         oldPrices: false,
+        includesFood: false,
     }
 }

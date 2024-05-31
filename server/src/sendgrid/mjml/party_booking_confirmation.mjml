@@ -65,6 +65,21 @@
           {{ startTime }} - {{ endTime }}
         </mj-text>
       </mj-column>
+      {{^isMobile}}
+        <mj-column width="100%">
+          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
+            Food package
+          </mj-text>
+          <mj-text color="#637381" font-size="14px" padding-top="0">
+            {{#includesFood}}
+              Food included
+            {{/includesFood}}
+            {{^includesFood}}
+              Self-catered
+            {{/includesFood}}
+          </mj-text>
+        </mj-column>
+      {{/isMobile}}
       <mj-column width="100%">
         <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
           Contact

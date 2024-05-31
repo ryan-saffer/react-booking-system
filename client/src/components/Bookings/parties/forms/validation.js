@@ -19,6 +19,7 @@ export function validateFormOnChange(formValues, field, value) {
         case FormBookingFields.date:
         case FormBookingFields.location:
         case FormBookingFields.address:
+        case FormBookingFields.includesFood:
             formValues[field].error = value === ''
             break
         case FormBookingFields.parentEmail:
@@ -103,6 +104,7 @@ export function validateFormOnSubmit(formValues) {
         // no need to validate creations, cake and questions
         if (
             field !== FormBookingFields.address &&
+            field !== FormBookingFields.includesFood &&
             field !== FormBookingFields.numberOfChildren &&
             field !== FormBookingFields.notes &&
             field !== FormBookingFields.creation1 &&
@@ -120,6 +122,11 @@ export function validateFormOnSubmit(formValues) {
     // validate address here
     if (formValues[FormBookingFields.type].value === 'mobile') {
         formValues[FormBookingFields.address].error = formValues[FormBookingFields.address].value === ''
+    }
+
+    // validate food package here
+    if (formValues[FormBookingFields.type].value === 'studio') {
+        formValues[FormBookingFields.includesFood].error = formValues[FormBookingFields.includesFood].value === ''
     }
 
     return errorFound(formValues) ? formValues : null

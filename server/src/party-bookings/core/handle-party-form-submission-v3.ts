@@ -1,16 +1,19 @@
 import { logger } from 'firebase-functions/v2'
-import { Booking, PaperFormResponse, PartyFormV2, capitalise, getManager } from 'fizz-kidz'
+import { Booking, PaperFormResponse, PartyFormV3, capitalise, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwFunctionsError } from '../../utilities'
-import { PartyFormMapperV2 } from './party-form-mapper-v2'
+import { PartyFormMapperV3 } from './party-form-mapper-v3'
 import { getBookingAdditions, getBookingCreations } from './utils'
 
-export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<PartyFormV2>) {
-    const formMapper = new PartyFormMapperV2(responses)
+export async function handlePartyFormSubmissionV3(responses: PaperFormResponse<PartyFormV3>) {
+    const formMapper = new PartyFormMapperV3(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
+
+    console.log('Existing Booking:')
+    console.log(existingBooking)
 
     let booking: Partial<Booking> = {}
     try {
@@ -29,7 +32,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
         // form has been filled in before, notify manager of the change
         try {
             await mailClient.sendEmail(
-                'partyFormFilledInAgainV2',
+                'partyFormFilledInAgainV3',
                 getManager(booking.location!).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
@@ -41,13 +44,18 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
                     }).toLocaleString(DateTime.DATETIME_SHORT),
                     oldNumberOfKids: existingBooking.numberOfChildren,
                     oldCreations: getBookingCreations(existingBooking),
+                    oldMenu:
+                        existingBooking.menu === 'glutenFree'
+                            ? 'Gluten Free'
+                            : existingBooking.menu === 'vegan'
+                            ? 'Vegan'
+                            : 'Standard',
                     oldAdditions: getBookingAdditions(existingBooking),
                     newNumberOfKids: booking.numberOfChildren!,
                     newCreations: formMapper.getCreationDisplayValues(),
+                    newMenu:
+                        booking.menu === 'glutenFree' ? 'Gluten Free' : booking.menu === 'vegan' ? 'Vegan' : 'Standard',
                     newAdditions: formMapper.getAdditionDisplayValues(false),
-                    oldIncludesFood: existingBooking.includesFood,
-                    newIncludesFood: booking.includesFood!,
-                    isMobile: existingBooking.type === 'mobile',
                 },
                 {
                     subject: `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`,
@@ -56,36 +64,6 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
         } catch (err) {
             logError(
                 `error sending party form filled in again notificaiton for booking with id: '${formMapper.bookingId}'`,
-                err
-            )
-        }
-    }
-
-    // this checks if they have changed their selected food package. if so, alert the manager.
-    // this is different to the 'form filled in again' email, since this can trigger even on the first submission.
-    if (existingBooking.type === 'studio' && existingBooking.includesFood !== booking.includesFood) {
-        try {
-            await mailClient.sendEmail(
-                'partyFormFoodPackageChanged',
-                getManager(booking.location!).email,
-                {
-                    parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
-                    parentEmail: existingBooking.parentEmail,
-                    parentMobile: existingBooking.parentMobile,
-                    childName: booking.childName!,
-                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATETIME_SHORT),
-                    oldIncludesFood: existingBooking.includesFood,
-                    newIncludesFood: booking.includesFood!,
-                },
-                {
-                    subject: `Food package has changed for ${booking.parentFirstName} ${booking.parentLastName}`,
-                }
-            )
-        } catch (err) {
-            logError(
-                `error sending food package changed notificaiton for booking with id: '${formMapper.bookingId}'`,
                 err
             )
         }
@@ -194,7 +172,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
 
     try {
         await mailClient.sendEmail(
-            'partyFormConfirmationV2',
+            'partyFormConfirmationV3',
             fullBooking.parentEmail,
             {
                 parentName: fullBooking.parentFirstName,
@@ -202,12 +180,12 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
                 creations,
                 isTyeDyeParty: creations.find((it) => it.includes('Tie Dye')) !== undefined,
                 hasAdditions: additions.length !== 0,
+                menu: booking.menu === 'glutenFree' ? 'Gluten Free' : booking.menu === 'vegan' ? 'Vegan' : 'Standard',
                 additions,
                 isMobile: fullBooking.type === 'mobile',
                 hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
                 managerName: manager.name,
                 managerMobile: manager.mobile,
-                includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
             },
             {
                 from: {

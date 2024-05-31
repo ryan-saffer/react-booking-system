@@ -8,17 +8,17 @@ import {
     getQuestionValue,
     Location,
     PaperFormResponse,
-    PartyFormV2,
+    PartyFormV3,
     PFProduct,
 } from 'fizz-kidz'
 import { AdditionsFormMap } from './utils'
 import { logger } from 'firebase-functions/v2'
 
-export class PartyFormMapperV2 {
-    responses: PaperFormResponse<PartyFormV2>
+export class PartyFormMapperV3 {
+    responses: PaperFormResponse<PartyFormV3>
     bookingId: string
 
-    constructor(responses: PaperFormResponse<PartyFormV2>) {
+    constructor(responses: PaperFormResponse<PartyFormV3>) {
         this.responses = responses
         this.bookingId = getQuestionValue(this.responses, 'id')
     }
@@ -33,11 +33,11 @@ export class PartyFormMapperV2 {
                 ? getQuestionValue(this.responses, 'number_of_children_mobile')
                 : getQuestionValue(this.responses, 'number_of_children_in_store')
 
-        // additions are only asked to in-store parties
+        // additions and menu are only asked to in-store parties
         if (type !== 'mobile') {
             booking = {
                 ...booking,
-                ...this.getFoodPackage(),
+                menu: getQuestionValue(this.responses, 'menu'),
                 ...this.getAdditions(),
             }
         }
@@ -67,7 +67,7 @@ export class PartyFormMapperV2 {
             }
         })
 
-        const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
+        const partyPackKeys = this.mapProductsToSku(getQuestionValue(this.responses, 'party_packs'))
         partyPackKeys.forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 displayValues.push(AdditionsDisplayValuesMapPrices[pack])
@@ -81,14 +81,14 @@ export class PartyFormMapperV2 {
      */
     private getCreations() {
         const creationSkus = [
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'glam_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'science_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'slime_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'safari_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'unicorn_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'expert_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'glam_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'science_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'slime_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'safari_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'unicorn_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
+            ...this.mapProductsToSku(getQuestionValue(this.responses, 'expert_creations')),
         ]
 
         // filter out any duplicate creation selections
@@ -141,25 +141,11 @@ export class PartyFormMapperV2 {
         return (<any>Object).values(Location).includes(location)
     }
 
-    private mapProductToSku = (products: PFProduct[]) =>
+    private mapProductsToSku = (products: PFProduct[]) =>
         products.map((it) => (it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU))
 
     private isValidCreation(creation: string): creation is Creations {
         return Object.keys(Creations).includes(creation)
-    }
-
-    private getFoodPackage() {
-        // paperform limits this question to only one option allowed, and questions is required,
-        // so just get the first item.
-        const value = getQuestionValue(this.responses, 'food_package')
-        if (value === 'include_food_package') {
-            return { includesFood: true }
-        }
-        if (value === 'dont_include_food_package') {
-            return { includesFood: false }
-        }
-
-        throw new Error(`Invalid response found for food package question: '${value}'`)
     }
 
     private getAdditions() {
@@ -181,7 +167,7 @@ export class PartyFormMapperV2 {
 
     private getPartyPacks() {
         const booking: Partial<Booking> = {}
-        this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
+        this.mapProductsToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
             if (this.isValidAddition(pack)) {
                 booking[pack] = true
             }
