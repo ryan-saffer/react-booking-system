@@ -9,9 +9,10 @@ import {
 } from './migrations/after-school-program'
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
+import { generatePartyFormUrl } from './parties/generate-form'
+import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
 
 ;
-import { generatePartyFormUrl } from './parties/generate-form'
 import { zohoTest } from './zoho-test'
 
 (async () => {
@@ -62,6 +63,10 @@ import { zohoTest } from './zoho-test'
             {
                 title: 'Add food package to all parties',
                 value: 'addFoodPackageToParties',
+            },
+            {
+                title: 'Get self catered parties by notes',
+                value: 'getSelfCateredPartiesByNotes',
             },
         ],
     })
@@ -119,5 +124,8 @@ import { zohoTest } from './zoho-test'
     }
     if (script === 'addFoodPackageToParties') {
         await addFoodPackageToAllParties()
+    }
+    if (script === 'getSelfCateredPartiesByNotes') {
+        await getSelfCateredPartiesByNotes()
     }
 })()
