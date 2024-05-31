@@ -75,6 +75,7 @@ export type Emails = {
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
         invitationsUrl: string
+        includesFood: boolean
     }
 
     partyForm: {
