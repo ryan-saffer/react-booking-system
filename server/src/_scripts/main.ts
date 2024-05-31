@@ -8,10 +8,13 @@ import {
     migration_addChildSupportToAllExistingEnrolments,
 } from './migrations/after-school-program'
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
+import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
+
+;
 import { generatePartyFormUrl } from './parties/generate-form'
 import { zohoTest } from './zoho-test'
 
-;(async () => {
+(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
@@ -55,6 +58,10 @@ import { zohoTest } from './zoho-test'
             {
                 title: 'Add child support to all existing after school enrolments',
                 value: 'addChildSupportToExistingEnrolments',
+            },
+            {
+                title: 'Add food package to all parties',
+                value: 'addFoodPackageToParties',
             },
         ],
     })
@@ -109,5 +116,8 @@ import { zohoTest } from './zoho-test'
             message: 'Enter the email to delete by:',
         })
         await deleteEvents(email)
+    }
+    if (script === 'addFoodPackageToParties') {
+        await addFoodPackageToAllParties()
     }
 })()
