@@ -151,15 +151,15 @@ export class PartyFormMapperV2 {
     private getFoodPackage() {
         // paperform limits this question to only one option allowed, and questions is required,
         // so just get the first item.
-        const { SKU } = getQuestionValue(this.responses, 'food_package')[0]
-        if (SKU === 'include_food_package') {
+        const value = getQuestionValue(this.responses, 'food_package')
+        if (value === 'include_food_package') {
             return { includesFood: true }
         }
-        if (SKU === 'dont_include_food_package') {
+        if (value === 'dont_include_food_package') {
             return { includesFood: false }
         }
 
-        throw new Error(`Invalid SKU found for food package question: '${SKU}'`)
+        throw new Error(`Invalid response found for food package question: '${value}'`)
     }
 
     private getAdditions() {

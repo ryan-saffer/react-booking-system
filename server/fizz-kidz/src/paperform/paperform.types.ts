@@ -43,7 +43,7 @@ export type PartyFormV2 = {
     tie_dye_creations: PFProduct[]
     taylor_swift_creations: PFProduct[]
     expert_creations: PFProduct[]
-    food_package: PFProduct[]
+    food_package: string
     additions: string[]
     party_packs: PFProduct[]
     fun_facts: string

@@ -92,6 +92,16 @@ export type Emails = {
         isMobile: boolean
     }
 
+    partyFormFoodPackageChanged: {
+        parentName: string
+        parentEmail: string
+        parentMobile: string
+        childName: string
+        dateTime: string
+        oldIncludesFood: boolean
+        newIncludesFood: boolean
+    }
+
     partyFormFilledInAgain: {
         parentName: string
         parentEmail: string

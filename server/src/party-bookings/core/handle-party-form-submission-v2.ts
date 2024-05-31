@@ -47,7 +47,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
                     newAdditions: formMapper.getAdditionDisplayValues(false),
                     oldIncludesFood: existingBooking.includesFood,
                     newIncludesFood: booking.includesFood!,
-                    isMobile: booking.type === 'mobile',
+                    isMobile: existingBooking.type === 'mobile',
                 },
                 {
                     subject: `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`,
@@ -56,6 +56,36 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
         } catch (err) {
             logError(
                 `error sending party form filled in again notificaiton for booking with id: '${formMapper.bookingId}'`,
+                err
+            )
+        }
+    }
+
+    // this checks if they have changed their selected food package. if so, alert the manager.
+    // this is different to the 'form filled in again' email, since this can trigger even on the first submission.
+    if (existingBooking.type === 'studio' && existingBooking.includesFood !== booking.includesFood) {
+        try {
+            await mailClient.sendEmail(
+                'partyFormFoodPackageChanged',
+                getManager(booking.location!).email,
+                {
+                    parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
+                    parentEmail: existingBooking.parentEmail,
+                    parentMobile: existingBooking.parentMobile,
+                    childName: booking.childName!,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString(DateTime.DATETIME_SHORT),
+                    oldIncludesFood: existingBooking.includesFood,
+                    newIncludesFood: booking.includesFood!,
+                },
+                {
+                    subject: `Food package has changed for ${booking.parentFirstName} ${booking.parentLastName}`,
+                }
+            )
+        } catch (err) {
+            logError(
+                `error sending food package changed notificaiton for booking with id: '${formMapper.bookingId}'`,
                 err
             )
         }

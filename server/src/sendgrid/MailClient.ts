@@ -481,6 +481,20 @@ export class MailClient {
                     template: 'not_continuing_after_school_notification.html',
                     useMjml: false,
                 }
+            case 'partyFormFoodPackageChanged':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Food package has changed!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'food_package_changed.html',
+                    useMjml: false,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
