@@ -86,7 +86,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                         }}
                     >
                         {booking.type === 'studio' && booking.includesFood === false && (
-                            <CustomChip label="Self Catered" color="#fecaca" />
+                            <CustomChip label="Self-catered" color="#fecaca" />
                         )}
                         <CustomChip
                             label={booking.type === 'studio' ? 'Studio' : 'Mobile'}
