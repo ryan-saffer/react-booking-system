@@ -10,7 +10,7 @@ import { getPrefilledFormUrl } from '../../core/utils'
 export const sendPartyForms = onSchedule(
     {
         timeZone: 'Australia/Melbourne',
-        schedule: '30 8 * * 4',
+        schedule: '30 8 * * 2', // 8:30am every tuesday
     },
     async () => {
         const startDate = DateTime.fromObject(
