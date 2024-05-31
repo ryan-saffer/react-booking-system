@@ -92,6 +92,13 @@ export type Emails = {
         isMobile: boolean
     }
 
+    partyFormReminder: {
+        parentName: string
+        managerName: string
+        managerMobile: string
+        prefilledFormUrl: string
+    }
+
     partyFormFoodPackageChanged: {
         parentName: string
         parentEmail: string
