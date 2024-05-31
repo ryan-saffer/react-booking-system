@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { getPrefilledFormUrl } from '../../../party-bookings/core/utils'
 import { MailClient } from '../../../sendgrid/MailClient'
-import { logError } from 'src/utilities'
+import { logError } from '../../../utilities'
 
 export const sentPartyFormReminder = onSchedule(
     {
