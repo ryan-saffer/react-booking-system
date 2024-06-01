@@ -1,5 +1,5 @@
+import express from 'express'
 import { logger } from 'firebase-functions/v2'
-import { onRequest } from 'firebase-functions/v2/https'
 import { Metadata } from 'fizz-kidz'
 import type { Stripe } from 'stripe'
 
@@ -8,17 +8,19 @@ import { env } from '../../init'
 import { logError } from '../../utilities'
 import { StripeClient } from '../core/stripe-client'
 
-export const stripeWebhook = onRequest(async (request, response) => {
+export const stripeWebhook = express.Router()
+
+stripeWebhook.post('/stripeWebhook', express.raw({ type: 'application/json' }), async (request, response) => {
     let event = request.body as Stripe.Event
 
     // Get the signature sent by Stripe
-    const signature = request.get('stripe-signature')
+    const signature = request.headers['stripe-signature']
     logger.log(signature)
     if (signature) {
         try {
             const stripe = await StripeClient.getInstance()
             event = stripe.webhooks.constructEvent(
-                request.rawBody.toString('utf8'),
+                request.body,
                 signature,
                 env === 'prod' ? process.env.STRIPE_WEBHOOK_SECRET_PROD : process.env.STRIPE_WEBHOOK_SECRET_DEV
             )

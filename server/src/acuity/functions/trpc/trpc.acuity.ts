@@ -1,7 +1,6 @@
 import { AcuityTypes } from 'fizz-kidz'
 
 import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 
 export const acuityRouter = router({
     updateLabel: acuityAuthenticatedProcedure
@@ -25,5 +24,3 @@ export const acuityRouter = router({
             ctx.acuityClient.getClasses(input.appointmentTypeId, input.includeUnavailable, input.minDate)
         ),
 })
-
-export const acuity = onRequestTrpc(acuityRouter)

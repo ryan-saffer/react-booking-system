@@ -3,7 +3,6 @@ import { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { addUserToStudio } from '../../core/add-user-to-studio'
 
 export const authRouter = router({
@@ -47,5 +46,3 @@ export const authRouter = router({
             }
         }),
 })
-
-export const auth = onRequestTrpc(authRouter)

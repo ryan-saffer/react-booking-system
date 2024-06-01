@@ -1,5 +1,5 @@
+import express from 'express'
 import { logger } from 'firebase-functions/v2'
-import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
 import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
@@ -18,7 +18,9 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
-export const asWebhook = onRequest(async (req, resp) => {
+export const acuityWebhook = express.Router()
+
+acuityWebhook.post('/acuityWebhook', async (req, resp) => {
     logger.log('STARTING WEBHOOK')
     logger.log(req.body)
     const data = req.body as AcuityWebhookData

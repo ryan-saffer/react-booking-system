@@ -8,7 +8,7 @@ import { staffRouter } from '../staff/functions/trpc/trpc.staffRouter'
 import { stripeRouter } from '../stripe/functions/trpc/trpc.stripe'
 import { router } from './trpc'
 
-const appRouter = router({
+export const appRouter = router({
     parties: partiesRouter,
     events: eventsRouter,
     acuity: acuityRouter,

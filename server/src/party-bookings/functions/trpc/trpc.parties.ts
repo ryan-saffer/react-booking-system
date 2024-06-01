@@ -2,7 +2,6 @@ import { Booking, GenerateInvitation, Location } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { createPartyBooking } from '../../core/create-party-booking'
 import { deletePartyBooking } from '../../core/delete-party-booking'
 import { generateInvitation } from '../../core/generate-invitation'
@@ -33,5 +32,3 @@ export const partiesRouter = router({
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
 })
-
-export const parties = onRequestTrpc(partiesRouter, '2GiB')
