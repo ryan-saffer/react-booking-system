@@ -1,5 +1,5 @@
 // API (trpc & webhooks)
-export * from './express/api'
+export * from './api'
 
 // Pubsub (cron jobs)
 export * from './events'
