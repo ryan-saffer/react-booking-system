@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 
 import { getAuth } from 'firebase-admin/auth'
+import { logger } from 'firebase-functions/v2'
 import { HttpsError } from 'firebase-functions/v2/https'
 
 import { initTRPC } from '@trpc/server'
@@ -32,8 +33,14 @@ const isAuthenticated = middleware(async ({ ctx, next }) => {
 
 const logging = middleware(({ next, path, rawInput }) => {
     if (process.env.FUNCTIONS_EMULATOR) {
-        console.log(`running: '${path}' with input:`)
+        console.log(`- - - - ${path} - - - -`)
         console.log(rawInput)
+        console.log('- - - - - - - - - - - - - - - - - - - -')
+    } else {
+        logger.log({
+            path,
+            input: rawInput,
+        })
     }
     return next()
 })
