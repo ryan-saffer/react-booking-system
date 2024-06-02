@@ -36,6 +36,24 @@ app.use(
 )
 
 // WEBHOOKS
-app.use('/', [acuityWebhook, contactForm7Webhook, esignaturesWebhook, paperformWebhook, stripeWebhook])
+const webhooks = express.Router()
+webhooks.use((req, _, next) => {
+    if (process.env.FUNCTIONS_EMULATOR) {
+        console.log(`- - - - ${req.path} - - - -`)
+        console.log(req.body)
+        console.log('- - - - - - - - - - - - - - - - - - - -')
+    } else {
+        logger.debug(req.path, {
+            endpoint: req.path,
+            method: req.method,
+            input: req.body,
+        })
+    }
+    next()
+})
+
+webhooks.use('/', [acuityWebhook, contactForm7Webhook, esignaturesWebhook, paperformWebhook, stripeWebhook])
+
+app.use(webhooks)
 
 export const api = onRequest({ region: 'australia-southeast1', cors: true, memory: '2GiB' }, app)

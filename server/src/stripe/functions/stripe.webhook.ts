@@ -10,17 +10,16 @@ import { StripeClient } from '../core/stripe-client'
 
 export const stripeWebhook = express.Router()
 
-stripeWebhook.post('/stripeWebhook', express.raw({ type: 'application/json' }), async (request, response) => {
+stripeWebhook.post('/stripeWebhook', express.raw(), async (request, response) => {
     let event = request.body as Stripe.Event
 
     // Get the signature sent by Stripe
     const signature = request.headers['stripe-signature']
-    logger.log(signature)
     if (signature) {
         try {
             const stripe = await StripeClient.getInstance()
             event = stripe.webhooks.constructEvent(
-                request.body,
+                (request as any)['rawBody'],
                 signature,
                 env === 'prod' ? process.env.STRIPE_WEBHOOK_SECRET_PROD : process.env.STRIPE_WEBHOOK_SECRET_DEV
             )

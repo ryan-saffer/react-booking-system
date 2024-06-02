@@ -21,8 +21,6 @@ function isHolidayProgram(appointmentTypeId: string) {
 export const acuityWebhook = express.Router()
 
 acuityWebhook.post('/acuityWebhook', async (req, resp) => {
-    logger.log('STARTING WEBHOOK')
-    logger.log(req.body)
     const data = req.body as AcuityWebhookData
 
     try {

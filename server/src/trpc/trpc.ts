@@ -37,8 +37,8 @@ const logging = middleware(({ next, path, rawInput }) => {
         console.log(rawInput)
         console.log('- - - - - - - - - - - - - - - - - - - -')
     } else {
-        logger.log({
-            path,
+        logger.debug({
+            endpoint: path,
             input: rawInput,
         })
     }
