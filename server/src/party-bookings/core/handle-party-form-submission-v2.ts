@@ -6,7 +6,7 @@ import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwFunctionsError } from '../../utilities'
 import { PartyFormMapperV2 } from './party-form-mapper-v2'
-import { getBookingAdditions, getBookingCreations } from './utils'
+import { getBookingAdditions, getBookingCreations } from './utils.party'
 
 export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<PartyFormV2>) {
     const formMapper = new PartyFormMapperV2(responses)

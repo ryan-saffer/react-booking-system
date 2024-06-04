@@ -11,7 +11,7 @@ import {
     PartyFormV3,
     PFProduct,
 } from 'fizz-kidz'
-import { AdditionsFormMap } from './utils'
+import { AdditionsFormMap } from './utils.party'
 import { logger } from 'firebase-functions/v2'
 
 export class PartyFormMapperV3 {

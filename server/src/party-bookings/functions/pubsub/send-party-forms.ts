@@ -1,30 +1,26 @@
+import { logger } from 'firebase-functions/v2'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
 import { Booking, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { logError } from '../../../utilities'
 import { MailClient } from '../../../sendgrid/MailClient'
-import { logger } from 'firebase-functions/v2'
-import { getPrefilledFormUrl } from '../../core/utils'
+import { logError } from '../../../utilities'
+import { getPrefilledFormUrl, getUpcoming } from '../../core/utils.party'
 
 export const sendPartyForms = onSchedule(
     {
         timeZone: 'Australia/Melbourne',
-        schedule: '30 8 * * 2', // 8:30am every tuesday
+        schedule: '30 8 * * 2', // 8:30am every Tuesday
     },
     async () => {
-        const startDate = DateTime.fromObject(
-            { hour: 0, minute: 0, second: 0 },
-            { zone: 'Australia/Melbourne' }
-        ).toJSDate()
-        startDate.setDate(startDate.getDate() + ((1 + 7 - startDate.getDay()) % 7)) // will always get upcoming Tuesday
+        // since this runs on a Tuesday, it will get Tuesday in one week from today.
+        const startDate = getUpcoming('Tuesday')
         const endDate = new Date(startDate)
         endDate.setDate(startDate.getDate() + 7)
 
-        logger.log('Start date:')
-        logger.log(startDate)
-        logger.log('End date:')
-        logger.log(endDate)
+        logger.log({ startDate })
+        logger.log({ endDate })
 
         const bookingsRef = await FirestoreRefs.partyBookings()
         const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
@@ -47,7 +43,6 @@ export const sendPartyForms = onSchedule(
                 logError(`error sending party form for booking with id: '${querySnapshot.docs[idx].id}'`)
             }
         })
-        return
     }
 )
 

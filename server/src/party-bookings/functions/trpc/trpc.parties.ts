@@ -7,7 +7,7 @@ import { createPartyBooking } from '../../core/create-party-booking'
 import { deletePartyBooking } from '../../core/delete-party-booking'
 import { generateInvitation } from '../../core/generate-invitation'
 import { updatePartyBooking } from '../../core/update-party-booking'
-import { getPrefilledFormUrl } from '../../core/utils'
+import { getPrefilledFormUrl } from '../../core/utils.party'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }

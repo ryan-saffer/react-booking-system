@@ -1,5 +1,5 @@
-import { getPrefilledFormUrl } from '../../party-bookings/core/utils'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { getPrefilledFormUrl } from '../../party-bookings/core/utils.party'
 
 export async function generatePartyFormUrl(bookingId: string) {
     const booking = await DatabaseClient.getPartyBooking(bookingId)

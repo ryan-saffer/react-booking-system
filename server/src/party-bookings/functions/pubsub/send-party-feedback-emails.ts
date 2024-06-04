@@ -1,31 +1,24 @@
-import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { DateTime } from 'luxon'
-import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { Booking, getReviewUrl } from 'fizz-kidz'
-import { logError } from '../../../utilities'
-import { MailClient } from '../../../sendgrid/MailClient'
 import { logger } from 'firebase-functions/v2'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
+import { Booking, getReviewUrl } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+
+import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
+import { MailClient } from '../../../sendgrid/MailClient'
+import { logError, midnight } from '../../../utilities'
 
 export const sendFeedbackEmails = onSchedule(
     {
         timeZone: 'Australia/Melbourne',
-        schedule: '30 8 * * *',
+        schedule: '30 8 * * *', // daily at 8:30am
     },
     async () => {
-        const startDate = DateTime.fromObject(
-            { hour: 0, minute: 0, second: 0 },
-            { zone: 'Australia/Melbourne' }
-        ).toJSDate()
-        startDate.setDate(startDate.getDate() - 1) // yesterday
-        const endDate = DateTime.fromObject(
-            { hour: 0, minute: 0, second: 0 },
-            { zone: 'Australia/Melbourne' }
-        ).toJSDate() // today
+        const today = midnight(DateTime.now().setZone('Australia/Melbourne'))
+        const startDate = today.minus({ days: 1 }).toJSDate() // yesterday
+        const endDate = today.toJSDate() // today
 
-        logger.log('Start date:')
-        logger.log(startDate)
-        logger.log('End date:')
-        logger.log(endDate)
+        logger.log({ startDate })
+        logger.log({ endDate })
 
         const bookingsRef = await FirestoreRefs.partyBookings()
 
