@@ -136,9 +136,13 @@ class Client {
         return { eventId, slotIds }
     }
 
-    async getEventSlots(eventId: string) {
+    async getEventSlots<T extends 'standard' | 'incursion'>(eventId: string) {
         const slotsRef = await FirestoreRefs.eventSlots(eventId)
-        return this.#getDocuments(slotsRef)
+        return this.#getDocuments(slotsRef) as T extends 'standard'
+            ? Promise<Event[]>
+            : T extends 'incursion'
+            ? Promise<IncursionEvent[]>
+            : never
     }
 
     /**

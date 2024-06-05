@@ -265,6 +265,7 @@ export type Emails = {
 
     incursionFormCompleted: {
         contactName: string
+        slots: string[]
         numberOfChildren: string
         location: string
         parking: string

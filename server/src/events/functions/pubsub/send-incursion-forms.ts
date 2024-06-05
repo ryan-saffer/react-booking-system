@@ -42,7 +42,7 @@ export const sendIncursionForms = onSchedule(
         // for each event, send a form
         for (const eventId of Object.keys(incursionMap)) {
             // get all slots for this eventId
-            const slots = (await DatabaseClient.getEventSlots(eventId)) as IncursionEvent[]
+            const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
             // we can just use the first slot for all the details
             const firstSlot = slots[0]
             await mailClient.sendEmail('incursionForm', firstSlot.contactEmail, {

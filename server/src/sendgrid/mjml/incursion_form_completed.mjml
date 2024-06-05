@@ -36,8 +36,20 @@
           <mj-text color="#637381" font-size="16px">
             Hi {{ contactName }},
           </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            Thank you for filling out the incursion form. Below is a summary of your responses:
+          <mj-text color="#637381" font-size="16px" padding-bottom="16px">
+            Thank you for filling out the incursion form. Just to confirm, these are the dats and times of the incursion:
+          </mj-text>
+          <mj-raw>
+            <ul>
+              {{#slots}}
+                <li style="color:#637381;font-size:16px">
+                  <i>{{ . }}</i>
+                </li>
+              {{/slots}}
+            </ul>
+          </mj-raw>
+          <mj-text color="#637381" font-size="16px" padding-top="16px">
+            And below are a summary of your responses:
           </mj-text>
         </mj-column>
         <mj-column width="100%">

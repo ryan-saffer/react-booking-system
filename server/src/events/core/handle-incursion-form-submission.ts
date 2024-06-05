@@ -2,6 +2,7 @@ import { IncursionEvent, IncursionForm, PaperFormResponse, getQuestionValue } fr
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
+import { DateTime } from 'luxon'
 
 export async function handleIncursionFormSubmission(response: PaperFormResponse<IncursionForm>) {
     const eventId = getQuestionValue(response, 'id')
@@ -40,9 +41,17 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
 
     await DatabaseClient.updateEventBooking(eventId, firstSlot.id, updatedSlot)
 
+    const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
+
     const mailClient = await MailClient.getInstance()
     await mailClient.sendEmail('incursionFormCompleted', firstSlot.contactEmail, {
         contactName: firstSlot.contactName,
+        slots: slots.map(
+            (slot) =>
+                `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+                    'cccc, LLL dd, t'
+                )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
+        ),
         numberOfChildren,
         location,
         parking,
