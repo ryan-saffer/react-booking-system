@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react'
-import { Button, message, Progress, Upload as AntdUpload } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { Upload as AntdUpload, Button, Progress, message } from 'antd'
 import type { RcFile, UploadFile } from 'antd/es/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
-import Firebase, { FirebaseContext } from '../../Firebase'
+import React, { useContext, useState } from 'react'
+
+import { UploadOutlined } from '@ant-design/icons'
+
+import Firebase, { FirebaseContext } from '../../../Firebase'
 
 type Props = {
     onSuccess: (filename: string) => void

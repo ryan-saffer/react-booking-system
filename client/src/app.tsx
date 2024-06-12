@@ -8,6 +8,8 @@ import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
 import { SignedOut } from '@components/Session/signed-out.js'
 import Loader from '@components/Shared/Loader.js'
+import { AfterSchoolProgramInStudioBookingPage } from '@components/after-school-program/in-studio/booking-form/after-school-program-booking-page.js'
+import { SelectedProgramProvider } from '@components/after-school-program/in-studio/booking-form/selected-program-context.js'
 import { _404 } from '@components/root/404.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
 import { Root } from '@components/root/root.js'
@@ -71,7 +73,7 @@ const ParentPortalRoot = lazy(() =>
     }))
 )
 const BookingForm = lazy(() =>
-    import('./components/after-school-program/booking-form/index.js').then((module) => ({
+    import('./components/after-school-program/in-schools/booking-form/index.js').then((module) => ({
         default: module.BookingForm,
     }))
 )
@@ -377,6 +379,14 @@ const router = createBrowserRouter([
                     <Suspense fallback={<Loader fullScreen />}>
                         <BookingForm />
                     </Suspense>
+                ),
+            },
+            {
+                path: 'after-school-program-enrolment-form-studio',
+                Component: () => (
+                    <SelectedProgramProvider>
+                        <AfterSchoolProgramInStudioBookingPage />
+                    </SelectedProgramProvider>
                 ),
             },
             {
