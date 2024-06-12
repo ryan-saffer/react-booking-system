@@ -144,7 +144,7 @@
         <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
           Invitations
         </mj-text>
-        <mj-text color="#637381" font-size="14px">Fizz Kidz parties are special, and your guests should know that too! Use our invitation generator to create a personalised invitation to with {{childName}}'s friends!</mj-text>
+        <mj-text color="#637381" font-size="14px">Fizz Kidz parties are special, and your guests should know that too! Use our invitation generator to create a personalised invitation to share with {{childName}}'s friends!</mj-text>
         <mj-button background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
           Create my personalised invitation ↗️
         </mj-button>
