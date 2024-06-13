@@ -88,7 +88,6 @@ export function AfterSchoolProgramInStudioBookingPage() {
                                 {isStudio && <StudioProgramSelection />}
                                 {!isStudio && <SchoolProgramSelection />}
                                 {selectedProgram && <BookingForm />}
-                                {selectedProgram && <Button type="submit">Submit</Button>}
                             </div>
                         </form>
                     </Form>

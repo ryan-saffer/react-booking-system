@@ -5,11 +5,13 @@ import { Fragment, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 
 import Loader from '@components/Shared/Loader'
+import TermsAndConditions from '@components/after-school-program/in-schools/booking-form/TermsAndConditions'
 import { WaitingListForm } from '@components/after-school-program/in-schools/booking-form/waiting-list-form'
 import { DateCalendar } from '@mui/x-date-pickers'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui-components/dialog'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
@@ -62,7 +64,9 @@ export function BookingForm() {
         includeUnavailable: true,
     })
 
+    // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
+    const [showTermsAndConditions, setShowTermsAndConditions] = useState(false)
 
     if (isLoading) {
         return <Loader />
@@ -492,8 +496,9 @@ export function BookingForm() {
                     </Fragment>
                 ))}
                 <Button
+                    className="border-2 border-dashed bg-slate-50"
                     type="button"
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => appendChild({ firstName: '', lastName: '' }, { shouldFocus: true })}
                 >
                     Enrol Another Child
@@ -578,8 +583,9 @@ export function BookingForm() {
                     />
                 ))}
                 <Button
+                    className="border-2 border-dashed bg-slate-50"
                     type="button"
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => appendPickupPerson({ pickupPerson: '' }, { shouldFocus: true })}
                 >
                     Add Pickup Person
@@ -595,13 +601,33 @@ export function BookingForm() {
                                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                 </FormControl>
                                 <FormLabel className="ml-2 cursor-pointer">
-                                    I have read and agreed to the terms and conditions.
+                                    I have read and agreed to the{' '}
+                                    <span
+                                        className="text-blue-500 hover:underline"
+                                        onClick={() => setShowTermsAndConditions(true)}
+                                    >
+                                        Terms and Conditions.
+                                    </span>
                                 </FormLabel>
                             </div>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+                <Button
+                    type="submit"
+                    className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-400  font-semibold"
+                >
+                    Enrol
+                </Button>
+                <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
+                    <DialogContent className="twp">
+                        <DialogHeader>
+                            <DialogTitle>Terms and Conditions</DialogTitle>
+                        </DialogHeader>
+                        <TermsAndConditions />
+                    </DialogContent>
+                </Dialog>
             </>
         )
     }
