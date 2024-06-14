@@ -366,6 +366,11 @@ const router = createBrowserRouter([
                     </Suspense>
                 ),
             },
+            // TEMPORARY FIX FOR REDIRECT - TERM 3 2024 ACCIDENTALLY SENT WRONG LINK
+            {
+                path: 'science-program-booking-form',
+                Component: () => <Navigate to="/after-school-program-enrolment-form" />,
+            },
             {
                 path: 'after-school-program-enrolment-form',
                 Component: () => (
