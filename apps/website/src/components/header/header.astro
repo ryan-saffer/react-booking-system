@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import HeaderItem from "@/components/header/header-item.astro";
+import logo from "@/assets/images/Fizz Kidz Horizontal.png";
+---
+
+<style>
+  .dropdown-content {
+    display: none;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+</style>
+
+<div class="bg-gray-800">
+  <div class="container mx-auto flex items-center">
+    <a href="#home" class="text-white px-4">Home</a>
+    <div class="relative h-full dropdown">
+      <a href="#services" class="text-white px-4 cursor-pointer">Services</a>
+      <div
+        class="absolute w-48 dropdown-content bg-white text-black mt-2 rounded shadow-lg"
+      >
+        <a href="#service1" class="block px-4 py-2 hover:bg-gray-200"
+          >Service 1</a
+        >
+        <a href="#service2" class="block px-4 py-2 hover:bg-gray-200"
+          >Service 2</a
+        >
+        <a href="#service3" class="block px-4 py-2 hover:bg-gray-200"
+          >Service 3</a
+        >
+      </div>
+    </div>
+    <a href="#contact" class="text-white px-4">Contact</a>
+    <a href="#about" class="text-white px-4">About</a>
+  </div>
+</div>
+<nav class="flex justify-between items-center px-8 py-2 shadow-md">
+  <Image src={logo} alt="Fizz Kidz Logo" class="h-12 w-fit" />
+  <ul class="flex gap-1">
+    <HeaderItem path="/test" title="Fizz Fam" />
+    <HeaderItem path="/test" title="In Studio" />
+    <HeaderItem path="/test" title="In Schools" />
+    <HeaderItem path="/test" title="Activations and Events" />
+    <HeaderItem path="/test" title="Fizz Franchising" />
+  </ul>
+</nav>

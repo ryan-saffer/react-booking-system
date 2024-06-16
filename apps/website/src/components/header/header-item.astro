@@ -1,0 +1,12 @@
+---
+type Props = {
+  path: string;
+  title: string;
+};
+
+const { path, title } = Astro.props;
+---
+
+<li class="hover:bg-gray-50 h-8 flex items-center p-5 rounded-md">
+  <a href={path}>{title}</a>
+</li>
