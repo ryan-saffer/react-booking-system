@@ -1,7 +1,24 @@
-# Astro Starter Kit: Minimal
+# Astro + React + Tailwind Scaffold
+
+This project was scoffolded with the following commands:
 
 ```sh
-npm create astro@latest -- --template minimal
+npm create astro@latest
+
+# tmpl -> Empty
+# ts -> Yes
+# use -> Strict
+# deps -> Yes
+# git -> Yes
+
+npx astro add react
+
+# yes to all questions
+
+npx astro add tailwind
+
+# yes to all questions
+
 ```
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
