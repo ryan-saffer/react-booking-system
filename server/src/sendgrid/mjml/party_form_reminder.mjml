@@ -42,7 +42,7 @@
           </mj-text>
         </mj-column>
         <mj-column width="100%">
-          <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ prefilledFormUr }}" width="300px" border="1px #9ecc47 solid">
+          <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ prefilledFormUrl }}" width="300px" border="1px #9ecc47 solid">
             Party Form ↗️
           </mj-button>
           <mj-text color="#637381" font-size="16px">
