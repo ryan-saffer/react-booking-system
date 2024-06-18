@@ -16,7 +16,7 @@ export function BreadcrumbWrapper() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink>Fizz In Studio</BreadcrumbLink>
+          <BreadcrumbLink href="/parties">Fizz In Studio</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

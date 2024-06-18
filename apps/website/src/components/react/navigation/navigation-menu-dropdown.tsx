@@ -7,7 +7,6 @@ import {
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import NavigationMenuItem from "./navigation-menu-item";
-import { useState } from "react";
 
 function NavigationMenuDropdown({
   title,
@@ -18,22 +17,11 @@ function NavigationMenuDropdown({
   path: string;
   submenus: { title: string; path: string }[];
 }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <HoverCard
-      openDelay={200}
-      closeDelay={100}
-      open={open}
-      onOpenChange={setOpen}
-    >
+    <HoverCard openDelay={200} closeDelay={100}>
       <HoverCardTrigger>
-        <Button
-          variant="ghost"
-          className="font-semibold"
-          onClick={() => setOpen(true)}
-        >
-          {title}
+        <Button variant="ghost" className="font-semibold">
+          <a href={path}>{title}</a>
           <ChevronDown className="h-4 w-4 ml-2" />
         </Button>
       </HoverCardTrigger>

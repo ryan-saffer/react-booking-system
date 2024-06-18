@@ -10,7 +10,7 @@ function NavigationMenu() {
         <NavigationMenuItem title="Fizz Facts" path="/fizz-facts" />
         <NavigationMenuDropdown
           title="Fizz In Studio"
-          path="/studios"
+          path="/parties"
           submenus={[
             { path: "/parties", title: "Parties" },
             { path: "/holiday-programs", title: "Holiday Programs" },
