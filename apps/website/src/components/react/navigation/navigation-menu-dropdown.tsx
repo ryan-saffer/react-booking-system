@@ -19,9 +19,9 @@ function NavigationMenuDropdown({
 }) {
   return (
     <HoverCard openDelay={200} closeDelay={100}>
-      <HoverCardTrigger>
+      <HoverCardTrigger href={path}>
         <Button variant="ghost" className="font-semibold">
-          <a href={path}>{title}</a>
+          {title}
           <ChevronDown className="h-4 w-4 ml-2" />
         </Button>
       </HoverCardTrigger>
