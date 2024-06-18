@@ -1,0 +1,52 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import PrimaryButton from "@/components/primary-button.astro";
+
+type Props = {
+  subtitle: string;
+  content: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  actionButtonText: string;
+  actionButtonPath: string;
+  color: string;
+};
+
+const {
+  subtitle,
+  content,
+  image,
+  imageAlt,
+  actionButtonPath,
+  actionButtonText,
+  color,
+} = Astro.props;
+---
+
+<style>
+  /* h1 {
+    font-family: "LilitaOne";
+  } */
+</style>
+
+<div class="flex items-center gap-24">
+  <div class="w-1/2">
+    <h1 class="font-lilita text-[60px] leading-none mb-4">
+      <slot name="title" />
+    </h1>
+    <h3 class="font-lilita text-[28px] mb-8" style={{ color }}>{subtitle}</h3>
+    <p class="font-gotham mb-16 font-semibold">{content}</p>
+    <PrimaryButton text={actionButtonText} path={actionButtonPath} />
+  </div>
+  <div class="w-1/2">
+    <div class="">
+      <Image
+        src={image}
+        alt={imageAlt}
+        loading="eager"
+        class="rounded-3xl shadow-purple"
+      />
+    </div>
+  </div>
+</div>

@@ -12,6 +12,13 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        lilita: ["LilitaOne", "sans-serif"],
+        gotham: ["Gotham", "sans-serif"],
+      },
+      boxShadow: {
+        purple: "-50px 50px 0px -1px rgba(232,219,253,0.71)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

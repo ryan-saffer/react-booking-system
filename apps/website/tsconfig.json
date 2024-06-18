@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/ui/*": ["./src/components/react/ui/*"]
+      "@/react-components/*": ["./src/components/react/*"],
+      "@/react-ui/*": ["./src/components/react/ui/*"],
+      "@/react-lib/*": ["./src/components/react/lib/*"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

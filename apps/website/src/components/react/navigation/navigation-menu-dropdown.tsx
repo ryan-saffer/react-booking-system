@@ -37,7 +37,7 @@ function NavigationMenuDropdown({
           <ChevronDown className="h-4 w-4 ml-2" />
         </Button>
       </HoverCardTrigger>
-      <HoverCardContent className="flex flex-col">
+      <HoverCardContent className="flex flex-col p-3">
         {submenus.map((menu, idx) => (
           <NavigationMenuItem path={menu.path} title={menu.title} key={idx} />
         ))}

@@ -1,0 +1,19 @@
+---
+import { Image } from "astro:assets";
+import logo from "@/assets/images/Fizz Kidz Horizontal.png";
+import NavigationMenu from "@/react-components/navigation/navigation-menu";
+---
+
+<div
+  class="sticky top-0 flex justify-between items-center px-8 py-2 shadow-md z-50 bg-white"
+>
+  <a href="/">
+    <Image
+      src={logo}
+      alt="Fizz Kidz Logo"
+      loading="eager"
+      class="w-24 min-w-24"
+    />
+  </a>
+  <NavigationMenu client:load />
+</div>

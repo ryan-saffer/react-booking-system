@@ -1,0 +1,16 @@
+---
+type Props = {
+  text: string;
+  path: string;
+};
+
+const { text, path } = Astro.props;
+---
+
+<button
+  class="transition-colors duration-300 ease-in-out rounded-full bg-[#F6BA33] text-white px-7 py-5 uppercase font-semibold hover:bg-[#9C59E4] shadow-[0px_0px_35px_0px_rgba(246,186,51,0.75)]"
+>
+  <a href={path}>
+    {text}
+  </a>
+</button>

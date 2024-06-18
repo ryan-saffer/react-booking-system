@@ -1,0 +1,39 @@
+---
+import { Image } from "astro:assets";
+
+type Props = {
+  color: string;
+  number?: string;
+  icon?: ImageMetadata;
+  iconAlt?: string;
+};
+
+const { number, color, icon, iconAlt } = Astro.props;
+---
+
+<div class="rounded-xl shadow-md flex-1">
+  <div
+    class="h-28 min-w-[380px] rounded-t-xl flex items-center p-8 relative"
+    style={{ background: color }}
+  >
+    <h3 class="font-lilita text-3xl text-white">
+      <slot name="title" />
+    </h3>
+    <span class="absolute -bottom-5 right-4 text-white font-lilita text-9xl"
+      >{number}</span
+    >
+  </div>
+  <div class="px-8 py-4 relative min-h-[420px]">
+    <slot name="content" />
+    {
+      icon && (
+        <Image
+          src={icon}
+          alt={iconAlt || ""}
+          class="absolute bottom-2 right-2"
+          loading="eager"
+        />
+      )
+    }
+  </div>
+</div>

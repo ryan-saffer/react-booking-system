@@ -1,5 +1,5 @@
 ---
-import Header from "@/components/header/header.astro";
+import Header from "@/components/header.astro";
 import { ViewTransitions } from "astro:transitions";
 
 type Props = {
@@ -20,6 +20,8 @@ const { title } = Astro.props;
   </head>
   <body>
     <Header />
-    <slot />
+    <main>
+      <slot />
+    </main>
   </body>
 </html>

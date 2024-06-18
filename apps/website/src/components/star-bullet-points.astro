@@ -1,0 +1,24 @@
+---
+const { default: starSvg } = await import(
+  `@/assets/svg/star-bullet-point.svg?raw`
+);
+
+type Props = {
+  content: string[];
+};
+
+const { content } = Astro.props;
+---
+
+<ul class="flex flex-col gap-2">
+  {
+    content.map((it) => (
+      <li class="flex gap-4 items-center font-semibold">
+        <div class="h-4 w-4 min-w-4">
+          <Fragment set:html={starSvg} />
+        </div>
+        {it}
+      </li>
+    ))
+  }
+</ul>
