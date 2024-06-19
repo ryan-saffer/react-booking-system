@@ -1,7 +1,5 @@
 import { apiPlugin, storyblokInit, type SbInitResult } from "@storyblok/js";
 
-console.log("STORYBLOK API CLIENT: ", import.meta.env.STORYBLOK_TOKEN);
-
 export type HolidayProgramWeek = {
   title: string;
   dates: string;
@@ -43,12 +41,6 @@ class StoryblokClient {
       starts_with: "holiday_programs",
       version: status,
     });
-
-    // console.log({ data });
-
-    // console.log(data.stories);
-    //
-    // console.log(data.stories[0].content.Programs[0]);
 
     return data.stories.map(({ content }: any) => ({
       title: content.week_title,
