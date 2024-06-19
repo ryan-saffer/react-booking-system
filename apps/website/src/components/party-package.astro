@@ -1,0 +1,21 @@
+---
+import { Image } from "astro:assets";
+
+type Props = {
+  color: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  title: string;
+  path: string;
+};
+
+const { color, image, imageAlt, path, title } = Astro.props;
+---
+
+<a class="flex flex-col items-center w-72" href={path}>
+  <Image src={image} alt={imageAlt} width={250} />
+  <h4 class="font-lilita text-2xl mb-4" style={{ color }}>{title}</h4>
+  <p class="font-gotham uppercase text-sm font-semibold" style={{ color }}>
+    Learn more
+  </p>
+</a>

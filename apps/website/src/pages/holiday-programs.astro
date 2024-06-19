@@ -1,0 +1,14 @@
+---
+import "@/styles/globals.css";
+import { storyblokClient } from "@/utils/storyblok-api-client";
+import { DateTime } from "luxon";
+import { getDateSuffix } from "@/utils/dates";
+import StarBulletPoints from "@/components/star-bullet-points.astro";
+import HolidayProgramWeek from "@/components/holiday-program-week.astro";
+
+const programWeeks = await storyblokClient.getHolidayPrograms({
+  status: import.meta.env.DEV ? "draft" : "published",
+});
+---
+
+{programWeeks.map((week) => <HolidayProgramWeek week={week} />)}

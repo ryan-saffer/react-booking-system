@@ -3,15 +3,23 @@ import "@/styles/globals.css";
 import Layout from "@/layout/Layout.astro";
 import PageIntro from "@/components/page-intro.astro";
 import { Image } from "astro:assets";
-import partyHero from "@/assets/images/party-hero.jpg";
+import partyHero from "@/assets/images/pages/parties/party-hero.jpg";
 import { BreadcrumbWrapper } from "@/react-components/breadcrumb-wrapper";
 import StarBulletPoints from "@/components/star-bullet-points.astro";
 
-import greenClock from "@/assets/images/green-clock.png";
-import blueCalendar from "@/assets/images/blue-calendar.png";
-import purpleHat from "@/assets/images/purple-hat.png";
-import forwardArrow from "@/assets/images/forward-arrow.png";
+import greenClock from "@/assets/images/pages/parties/green-clock.png";
+import blueCalendar from "@/assets/images/pages/parties/blue-calendar.png";
+import purpleHat from "@/assets/images/pages/parties/purple-hat.png";
+import forwardArrow from "@/assets/images/pages/parties/forward-arrow.png";
 import Step from "@/components/step.astro";
+import PrimaryButton from "@/components/primary-button.astro";
+import PartyPackage from "@/components/party-package.astro";
+
+import glitzAndGlam from "@/assets/images/pages/parties/creations/glitz-and-glam.png";
+import science from "@/assets/images/pages/parties/creations/science.png";
+import slimey from "@/assets/images/pages/parties/creations/slimey.png";
+
+console.log("parties");
 ---
 
 <Layout
@@ -102,6 +110,45 @@ import Step from "@/components/step.astro";
             />
           </div>
         </Step>
+      </div>
+    </section>
+    <div class="text-center my-16">
+      <PrimaryButton text="Book a party" path="#test" />
+    </div>
+    <section>
+      <div class="flex flex-col items-center gap-4 mb-4">
+        <h2 class="font-lilita text-4xl">Birthday Party Themes</h2>
+        <h5 class="font-lilita text-xl">
+          Our packages help creaet a personalised birthday party that your child
+          will love.
+        </h5>
+        <p class="font-gotham text-center">
+          Whether your child loves all things glitter and sparkles or is amazed
+          by<br />science we have the perfect party for your child!
+        </p>
+      </div>
+      <div class="grid grid-cols-4">
+        <PartyPackage
+          title="Glitz & Glam parties"
+          color="#F24C9F"
+          image={glitzAndGlam}
+          imageAlt="hands with lip balm"
+          path="parties/glitz-and-glam"
+        />
+        <PartyPackage
+          title="Science parties"
+          color="#43D4F3"
+          image={science}
+          imageAlt="bubbling volcano"
+          path="parties/science"
+        />
+        <PartyPackage
+          title="Slimey parties"
+          color="#9044E2"
+          image={slimey}
+          imageAlt="flufy slime"
+          path="parties/slime"
+        />
       </div>
     </section>
   </div>
