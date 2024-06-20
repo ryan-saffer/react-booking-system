@@ -6,16 +6,14 @@ import {
 
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import NavigationMenuItem from "./navigation-menu-item";
+import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 
 function NavigationMenuDropdown({
   title,
-  path,
   submenus,
 }: {
   title: string;
-  path: string;
-  submenus: { title: string; path: string }[];
+  submenus: Readonly<{ title: string; path: string }[]>;
 }) {
   return (
     <HoverCard openDelay={100} closeDelay={50}>
@@ -28,7 +26,11 @@ function NavigationMenuDropdown({
       </HoverCardTrigger>
       <HoverCardContent className="flex flex-col p-3">
         {submenus.map((menu, idx) => (
-          <NavigationMenuItem path={menu.path} title={menu.title} key={idx} />
+          <NavigationMenuItemDesktop
+            path={menu.path}
+            title={menu.title}
+            key={idx}
+          />
         ))}
       </HoverCardContent>
     </HoverCard>
