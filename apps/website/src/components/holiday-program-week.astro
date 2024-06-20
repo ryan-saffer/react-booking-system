@@ -1,39 +1,30 @@
 ---
 import type { HolidayProgramWeek } from "@/utils/storyblok-api-client";
-import { getDateSuffix } from "@/utils/dates";
-import { DateTime } from "luxon";
-import StarBulletPoints from "./star-bullet-points.astro";
+import HolidayProgramSession from "./holiday-program-session.astro";
 
 type Props = {
   week: HolidayProgramWeek;
 };
 
 const { week } = Astro.props;
+
+const morningPrograms = week.programs.filter((it) => it.slot === "morning");
+const afternoonPrograms = week.programs.filter((it) => it.slot === "afternoon");
 ---
 
 <h1 class="text-center mt-16">{week.title}</h1>
 <h2 class="text-center mb-16">{week.dates}</h2>
 <div class="flex justify-center gap-12">
   {
-    week.programs.map((program) => (
-      <div>
-        <p>
-          {DateTime.fromJSDate(program.date).toFormat("EEE d") +
-            getDateSuffix(program.date.getDay())}
-        </p>
-        <p>
-          {program.slot === "morning"
-            ? "Morning Activity"
-            : "Afternoon Activity"}
-        </p>
-        <p>{program.title}</p>
-        <p>
-          {DateTime.fromJSDate(program.date).toFormat("EEEE d")}
-          <span>{getDateSuffix(program.date.getDay())}</span>{" "}
-          {DateTime.fromJSDate(program.date).toFormat("MMMM")}
-        </p>
-        <StarBulletPoints content={program.creations} />
-      </div>
+    morningPrograms.map((program) => (
+      <HolidayProgramSession program={program} />
+    ))
+  }
+</div>
+<div class="flex justify-center gap-12 mt-12">
+  {
+    afternoonPrograms.map((program) => (
+      <HolidayProgramSession program={program} />
     ))
   }
 </div>

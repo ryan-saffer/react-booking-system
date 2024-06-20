@@ -18,9 +18,10 @@ function NavigationMenuDropdown({
   submenus: { title: string; path: string }[];
 }) {
   return (
-    <HoverCard openDelay={200} closeDelay={100}>
-      <HoverCardTrigger href={path}>
-        <Button variant="ghost" className="font-semibold">
+    <HoverCard openDelay={100} closeDelay={50}>
+      {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score */}
+      <HoverCardTrigger asChild>
+        <Button variant="ghost" className="font-gotham font-light">
           {title}
           <ChevronDown className="h-4 w-4 ml-2" />
         </Button>

@@ -7,7 +7,14 @@ import {
   BreadcrumbSeparator,
 } from "@/react-ui/breadcrumb";
 
-export function BreadcrumbWrapper() {
+export function BreadcrumbWrapper({
+  items,
+}: {
+  items: (
+    | { type: "link"; title: string; path: string }
+    | { type: "not-link"; title: string }
+  )[];
+}) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -15,12 +22,35 @@ export function BreadcrumbWrapper() {
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
+        {items.slice(0, -1).map((child) => {
+          if (child.type === "link") {
+            return (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={child.path}>
+                    {child.title}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbSeparator />
+              </>
+            );
+          } else {
+            return (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <span>{child.title}</span>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+
+                <BreadcrumbSeparator />
+              </>
+            );
+          }
+        })}
         <BreadcrumbItem>
-          <BreadcrumbLink href="/parties">Fizz In Studio</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>Birthday Parties</BreadcrumbPage>
+          <BreadcrumbPage>{items[items.length - 1].title}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

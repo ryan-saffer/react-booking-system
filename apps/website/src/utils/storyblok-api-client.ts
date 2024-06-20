@@ -42,22 +42,26 @@ class StoryblokClient {
       version: status,
     });
 
-    return data.stories.map(({ content }: any) => ({
-      title: content.week_title,
-      dates: content.week_dates,
-      programs: content.Programs.map((program: any) => ({
-        date: new Date(program.date.split(" ")[0]),
-        slot: program.time_slot,
-        title: program.title,
-        creations: [
-          program.first_creation,
-          program.second_creation,
-          program.third_creation,
-        ],
-        image: program.image.filename,
-        color: program.color,
-      })),
-    }));
+    return data.stories
+      .sort((a: any, b: any) =>
+        a.content.week_number < b.content.week_number ? -1 : 1
+      )
+      .map(({ content }: any) => ({
+        title: content.week_title,
+        dates: content.week_dates,
+        programs: content.Programs.map((program: any) => ({
+          date: new Date(program.date.split(" ")[0]),
+          slot: program.time_slot,
+          title: program.title,
+          creations: [
+            program.first_creation,
+            program.second_creation,
+            program.third_creation,
+          ],
+          image: program.image.filename,
+          color: program.color,
+        })),
+      }));
   }
 }
 
