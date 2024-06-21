@@ -62,7 +62,7 @@ export function StudioProgramSelection() {
                         if ((selectedProgram && selectedProgram.id === program.id) || !selectedProgram) {
                             return (
                                 <ProgramCard
-                                    key={program.id + (program.id ? '-selected' : '')} // this little trick forces a rerender when selecting the card, which makes the 'animate-grow' animation happen again.
+                                    key={program.id + (selectedProgram?.id ? '-selected' : '')} // this little trick forces a rerender when selecting the card, which makes the 'animate-grow' animation happen again.
                                     onSelect={() => {
                                         if (selectedProgram && selectedProgram.id === program.id) {
                                             selectProgram(null)

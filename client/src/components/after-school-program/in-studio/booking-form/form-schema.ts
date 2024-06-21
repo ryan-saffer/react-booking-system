@@ -28,7 +28,12 @@ const childSchema = z
         anaphylaxisPlan: z
             .instanceof(File)
             .optional()
-            .refine((file) => file && file.size < 5_000_000, 'Anaphylaxis plan must be less than  5MB'),
+            .refine((file) => {
+                if (file) {
+                    return file.size < 5_000_000
+                }
+                return true
+            }, 'Anaphylaxis plan must be less than  5MB'),
         needsSupport: z
             .boolean()
             .optional()
@@ -92,28 +97,51 @@ const childSchema = z
         }
     )
 
+/**
+ * Schema is split between 'main' and 'waitingList'.
+ *
+ * This enables marking each object optional.
+ * This way, you can set the value of either to be `undefined` and when submitting, it will pass validation.
+ */
 export const formSchema = z.object({
     type: z.enum(['studio', 'school']),
-    programType: z.enum(['science', 'art']).optional(),
+    programType: z.enum(['science', 'art']),
     studio: z.custom<Location>((value) => !!value, 'Please select a studio.').optional(),
-    parentFirstName: z.string().trim().min(1, 'Parent first name is required'),
-    parentLastName: z.string().trim().min(1, 'Parent last name is required'),
-    parentEmailAddress: z.string().email().trim().toLowerCase(),
-    parentPhone: z.string().min(10, 'Number must be at least 10 digits').regex(phoneRegex, 'Invalid Number').trim(),
-    children: z.array(childSchema),
-    emergencyContactName: z.string().trim().min(1, 'Emergency contact name is required'),
-    emergencyContactRelation: z.string().trim().min(1, 'Emergency contact relation is required'),
-    emergencyContactNumber: z
-        .string()
-        .min(10, 'Number must be at least 10 digits')
-        .regex(phoneRegex, 'Invalid number')
-        .trim(),
-    pickupPeople: z.array(
-        z.object({
-            pickupPerson: z.string().trim().min(1, 'Pickup person cannot be empty'),
+    main: z
+        .object({
+            parentFirstName: z.string().trim().min(1, 'Parent first name is required'),
+            parentLastName: z.string().trim().min(1, 'Parent last name is required'),
+            parentEmailAddress: z.string().email().trim().toLowerCase(),
+            parentPhone: z
+                .string()
+                .min(10, 'Number must be at least 10 digits')
+                .regex(phoneRegex, 'Invalid Number')
+                .trim(),
+            children: z.array(childSchema),
+            emergencyContactName: z.string().trim().min(1, 'Emergency contact name is required'),
+            emergencyContactRelation: z.string().trim().min(1, 'Emergency contact relation is required'),
+            emergencyContactNumber: z
+                .string()
+                .min(10, 'Number must be at least 10 digits')
+                .regex(phoneRegex, 'Invalid number')
+                .trim(),
+            pickupPeople: z.array(
+                z.object({
+                    pickupPerson: z.string().trim().min(1, 'Pickup person cannot be empty'),
+                })
+            ),
+            termsAndConditions: z.boolean().refine((val) => val, 'Please accept the terms and conditions'),
         })
-    ),
-    termsAndConditions: z.boolean().refine((val) => val, 'Please accept the terms and conditions'),
+        .optional(),
+    classIsFull: z.boolean(),
+    waitingList: z
+        .object({
+            waitingListParentName: z.string().min(1, { message: 'Your name is required.' }),
+            waitingListChildName: z.string().min(1, { message: "Child's name is required. " }),
+            waitingListParentEmail: z.string().email({ message: 'Please enter a valid email.' }),
+            waitingListParentMobile: z.string().regex(phoneRegex, 'Invalid Number'),
+        })
+        .optional(),
 })
 
 export function useEnrolmentForm() {

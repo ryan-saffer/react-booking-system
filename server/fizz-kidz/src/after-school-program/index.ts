@@ -1,6 +1,14 @@
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,
-    'type' | 'appointmentTypeId' | 'calendarId' | 'parent' | 'child' | 'emergencyContact' | 'className' | 'pickupPeople'
+    | 'type'
+    | 'inStudio'
+    | 'appointmentTypeId'
+    | 'calendarId'
+    | 'parent'
+    | 'child'
+    | 'emergencyContact'
+    | 'className'
+    | 'pickupPeople'
 >
 
 export type SendTermContinuationEmailsParams = {
@@ -19,6 +27,8 @@ export type UpdateAfterSchoolEnrolmentParams = {
 export type AfterSchoolEnrolment = {
     id: string
     type: 'science' | 'art'
+    // if true the program is run at a Fizz studio, if false it is run at a school
+    inStudio: boolean
     // inactive status will mean they are deleted in acuity
     status: 'active' | 'inactive'
     appointmentTypeId: number

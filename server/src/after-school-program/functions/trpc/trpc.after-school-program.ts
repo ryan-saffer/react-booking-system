@@ -18,8 +18,8 @@ export const afterSchoolProgramRouter = router({
         .input((input: unknown) => input as SendTermContinuationEmailsParams)
         .mutation(({ input }) => sendTermContinutationEmails(input)),
     scheduleAfterSchoolEnrolment: publicProcedure
-        .input((input: unknown) => input as ScheduleAfterSchoolEnrolmentParams)
-        .mutation(({ input }) => scheduleAfterSchoolProgram(input)),
+        .input((input: unknown) => input as ScheduleAfterSchoolEnrolmentParams[])
+        .mutation(({ input }) => Promise.all(input.map((it) => scheduleAfterSchoolProgram(it)))),
     unenrollFromAfterSchoolProgram: authenticatedProcedure
         .input((input: unknown) => input as UnenrollAfterSchoolParams)
         .mutation(({ input }) => unenrollAfterSchoolAppointments(input)),

@@ -1,12 +1,11 @@
 import { format } from 'date-fns'
-import { AlertCircle, CalendarIcon, CircleX, Plus } from 'lucide-react'
+import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 
 import Loader from '@components/Shared/Loader'
 import TermsAndConditions from '@components/after-school-program/in-schools/booking-form/TermsAndConditions'
-import { WaitingListForm } from '@components/after-school-program/in-schools/booking-form/waiting-list-form'
 import { DateCalendar } from '@mui/x-date-pickers'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
@@ -26,8 +25,9 @@ import { FileUploadInput } from './file-upload-input'
 import { GRADES, useEnrolmentForm } from './form-schema'
 import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
+import { WaitingListForm } from './waiting-list-form'
 
-export function BookingForm() {
+export function BookingForm({ submitting, formSubmitted }: { submitting: boolean; formSubmitted: boolean }) {
     const form = useEnrolmentForm()
 
     const {
@@ -36,7 +36,7 @@ export function BookingForm() {
         remove: removeChild,
     } = useFieldArray({
         control: form.control,
-        name: 'children',
+        name: 'main.children',
     })
 
     const {
@@ -45,7 +45,7 @@ export function BookingForm() {
         remove: removePickupPerson,
     } = useFieldArray({
         control: form.control,
-        name: 'pickupPeople',
+        name: 'main.pickupPeople',
     })
 
     const { selectedProgram } = useSelectedProgram()
@@ -63,6 +63,21 @@ export function BookingForm() {
         appointmentTypeId: selectedProgram!.id,
         includeUnavailable: true,
     })
+
+    /**
+     * Sync the required 'main' or 'waitingList' section with if the class is full.
+     */
+    useEffect(() => {
+        const isFull = (classes && classes.length > 0 && classes[0].slotsAvailable === 0) || false
+        form.setValue('classIsFull', isFull)
+
+        if (isFull) {
+            form.setValue('main', undefined)
+        } else {
+            form.setValue('waitingList', undefined)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess])
 
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
@@ -89,12 +104,15 @@ export function BookingForm() {
             if (classes[0].slotsAvailable === 0) {
                 return (
                     <>
-                        <Alert>
+                        <Separator className="my-4" />
+                        <Alert variant="info">
                             <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>Class Full</AlertTitle>
-                            <AlertDescription>Unfortunately this class is full for the term.</AlertDescription>
+                            <AlertTitle className="font-semibold">Class Full</AlertTitle>
+                            <AlertDescription className="font-medium">
+                                Unfortunately this class is full for the term.
+                            </AlertDescription>
                         </Alert>
-                        <WaitingListForm program={selectedProgram.name} />
+                        <WaitingListForm submitting={submitting} isSuccess={formSubmitted} />
                     </>
                 )
             }
@@ -110,7 +128,7 @@ export function BookingForm() {
                 <SectionBreak title="Parent Details" />
                 <FormField
                     control={form.control}
-                    name="parentFirstName"
+                    name="main.parentFirstName"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Parent First Name</FormLabel>
@@ -123,7 +141,7 @@ export function BookingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="parentLastName"
+                    name="main.parentLastName"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Parent Last Name</FormLabel>
@@ -136,7 +154,7 @@ export function BookingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="parentEmailAddress"
+                    name="main.parentEmailAddress"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Parent Email</FormLabel>
@@ -149,7 +167,7 @@ export function BookingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="parentPhone"
+                    name="main.parentPhone"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Parent Phone Number</FormLabel>
@@ -188,7 +206,7 @@ export function BookingForm() {
                         )}
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.firstName` as const}
+                            name={`main.children.${idx}.firstName` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Child First Name</FormLabel>
@@ -201,7 +219,7 @@ export function BookingForm() {
                         />
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.lastName` as const}
+                            name={`main.children.${idx}.lastName` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Child Last Name</FormLabel>
@@ -214,7 +232,7 @@ export function BookingForm() {
                         />
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.dob` as const}
+                            name={`main.children.${idx}.dob` as const}
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Date of birth</FormLabel>
@@ -260,7 +278,7 @@ export function BookingForm() {
                         />
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.grade` as const}
+                            name={`main.children.${idx}.grade` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Child Grade</FormLabel>
@@ -286,11 +304,12 @@ export function BookingForm() {
                         />
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.hasAllergies` as const}
+                            name={`main.children.${idx}.hasAllergies` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Does {form.watch('children')[idx].firstName || 'this child'} have any allergies?
+                                        Does {form.watch('main.children')[idx].firstName || 'this child'} have any
+                                        allergies?
                                     </FormLabel>
                                     <FormControl>
                                         <Select
@@ -319,14 +338,14 @@ export function BookingForm() {
                                 </FormItem>
                             )}
                         />
-                        {form.watch('children')[idx].hasAllergies && (
+                        {form.watch('main.children')[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
-                                name={`children.${idx}.allergies` as const}
+                                name={`main.children.${idx}.allergies` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Please enter {form.watch('children')[idx].firstName || 'the child'}'s
+                                            Please enter {form.watch('main.children')[idx].firstName || 'the child'}'s
                                             allergies here
                                         </FormLabel>
                                         <FormControl>
@@ -337,14 +356,15 @@ export function BookingForm() {
                                 )}
                             />
                         )}
-                        {form.watch('children')[idx].hasAllergies && (
+                        {form.watch('main.children')[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
-                                name={`children.${idx}.isAnaphylactic` as const}
+                                name={`main.children.${idx}.isAnaphylactic` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Is {form.watch('children')[idx].firstName || 'this child'} anaphylactic?
+                                            Is {form.watch('main.children')[idx].firstName || 'this child'}{' '}
+                                            anaphylactic?
                                         </FormLabel>
                                         <FormControl>
                                             <Select
@@ -374,15 +394,15 @@ export function BookingForm() {
                                 )}
                             />
                         )}
-                        {form.watch('children')[idx].isAnaphylactic && (
+                        {form.watch('main.children')[idx].isAnaphylactic && (
                             <FormField
                                 control={form.control}
-                                name={`children.${idx}.anaphylaxisPlan` as const}
+                                name={`main.children.${idx}.anaphylaxisPlan` as const}
                                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                 render={({ field: { value, onChange, ...fieldProps } }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Please upload {form.watch('children')[idx].firstName || 'the child'}'s
+                                            Please upload {form.watch('main.children')[idx].firstName || 'the child'}'s
                                             anaphylaxis plan
                                         </FormLabel>
                                         <FormControl>
@@ -403,12 +423,12 @@ export function BookingForm() {
                         )}
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.needsSupport` as const}
+                            name={`main.children.${idx}.needsSupport` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Does {form.watch('children')[idx].firstName || 'your child'} need extra support
-                                        for learning difficulties, disabilites or additional learning needs?
+                                        Does {form.watch('main.children')[idx].firstName || 'your child'} need extra
+                                        support for learning difficulties, disabilites or additional learning needs?
                                     </FormLabel>
                                     <FormControl>
                                         <Select
@@ -437,15 +457,15 @@ export function BookingForm() {
                                 </FormItem>
                             )}
                         />
-                        {form.watch('children')[idx].needsSupport && (
+                        {form.watch('main.children')[idx].needsSupport && (
                             <FormField
                                 control={form.control}
-                                name={`children.${idx}.support` as const}
+                                name={`main.children.${idx}.support` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
                                             How best can we support{' '}
-                                            {form.watch('children')[idx].firstName || 'your child'}?
+                                            {form.watch('main.children')[idx].firstName || 'your child'}?
                                         </FormLabel>
                                         <FormControl>
                                             <Textarea {...field} />
@@ -457,14 +477,14 @@ export function BookingForm() {
                         )}
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.permissionToPhotograph` as const}
+                            name={`main.children.${idx}.permissionToPhotograph` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
                                         We love to show other parents the cool things that we do by taking pictures and
                                         videos. Do you give permission for{' '}
-                                        {form.watch('children')[idx].firstName || 'your child'} to be in our marketing
-                                        content?
+                                        {form.watch('main.children')[idx].firstName || 'your child'} to be in our
+                                        marketing content?
                                     </FormLabel>
                                     <FormControl>
                                         <Select
@@ -508,7 +528,7 @@ export function BookingForm() {
                 <p>This person will be contacted in the case we cannot get hold of you.</p>
                 <FormField
                     control={form.control}
-                    name="emergencyContactName"
+                    name="main.emergencyContactName"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Emergency Contact Name</FormLabel>
@@ -521,7 +541,7 @@ export function BookingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="emergencyContactRelation"
+                    name="main.emergencyContactRelation"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Emergency Contact Relation</FormLabel>
@@ -534,7 +554,7 @@ export function BookingForm() {
                 />
                 <FormField
                     control={form.control}
-                    name="emergencyContactNumber"
+                    name="main.emergencyContactNumber"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Emergency Contact Number</FormLabel>
@@ -551,7 +571,7 @@ export function BookingForm() {
                 {pickupPeople.map((person, idx) => (
                     <FormField
                         control={form.control}
-                        name={`pickupPeople.${idx}.pickupPerson` as const}
+                        name={`main.pickupPeople.${idx}.pickupPerson` as const}
                         key={person.id}
                         render={({ field }) => (
                             <FormItem className="grow">
@@ -593,7 +613,7 @@ export function BookingForm() {
                 </Button>
                 <FormField
                     control={form.control}
-                    name="termsAndConditions"
+                    name="main.termsAndConditions"
                     render={({ field }) => (
                         <FormItem className="my-2">
                             <div className="flex items-center space-y-0">
@@ -616,9 +636,10 @@ export function BookingForm() {
                 />
                 <Button
                     type="submit"
+                    disabled={submitting}
                     className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-400  font-semibold"
                 >
-                    Enrol
+                    {submitting ? <Loader2 className="animate-spin" /> : 'Enrol'}
                 </Button>
                 <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
                     <DialogContent className="twp">

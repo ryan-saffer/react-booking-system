@@ -168,7 +168,7 @@ export default async function scheduleAfterSchoolProgram(
                             hour12: true,
                         })
                     ),
-                    calendarName: calendar.location,
+                    calendarName: calendar.location || 'Calendar Name',
                     price: (parseInt(appointments[0].price) * appointments.length).toString(),
                     location: calendar.description,
                     numberOfWeeks: appointments.length.toString(),
@@ -178,6 +178,7 @@ export default async function scheduleAfterSchoolProgram(
                 }
             )
         } catch (err) {
+            console.log({ err })
             logError(
                 `unable to send science enrolment confirmation email for enrolment with id: '${appointment.id}'`,
                 err
