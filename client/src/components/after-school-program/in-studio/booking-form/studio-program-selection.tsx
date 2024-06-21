@@ -1,10 +1,11 @@
-import { Location, capitalise } from 'fizz-kidz'
+import { AcuityTypes, Location, capitalise } from 'fizz-kidz'
 import { MessageCircleWarning } from 'lucide-react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { Separator } from '@ui-components/separator'
 import { trpc } from '@utils/trpc'
 
 import { useEnrolmentForm } from './form-schema'
@@ -17,7 +18,7 @@ export function StudioProgramSelection() {
     const studio = form.watch('studio')
 
     const { data, isLoading, isSuccess } = trpc.acuity.getAppointmentTypes.useQuery(
-        { category: [`science-${studio!}` as const] },
+        { category: [`science-${studio!}` as const, `art-${studio!}` as const], availableToBook: true },
         { enabled: !!studio, staleTime: Infinity }
     )
 
@@ -52,13 +53,18 @@ export function StudioProgramSelection() {
         )
     }
 
-    return (
-        <>
-            <h3 className="text-lg font-medium">Select program:</h3>
-            {isLoading && <Loader />}
-            {isSuccess && data.length > 0 && (
+    function renderProgramCategory(category: 'art' | 'science', programs: AcuityTypes.Api.AppointmentType[]) {
+        if (programs.length > 0) {
+            return (
                 <>
-                    {data.map((program) => {
+                    {selectedProgram === null && (
+                        <div className="flex items-center">
+                            <Separator className="mr-4 w-fit grow" />
+                            <h3 className="text-lg font-medium">{capitalise(category)} Programs</h3>
+                            <Separator className="ml-4 w-fit grow" />
+                        </div>
+                    )}
+                    {programs.map((program) => {
                         if ((selectedProgram && selectedProgram.id === program.id) || !selectedProgram) {
                             return (
                                 <ProgramCard
@@ -76,6 +82,26 @@ export function StudioProgramSelection() {
                             )
                         }
                     })}
+                </>
+            )
+        }
+        return null
+    }
+
+    return (
+        <>
+            <h3 className="text-lg font-medium">Select program:</h3>
+            {isLoading && <Loader />}
+            {isSuccess && data.length > 0 && (
+                <>
+                    {renderProgramCategory(
+                        'science',
+                        data.filter((it) => it.category.includes('science'))
+                    )}
+                    {renderProgramCategory(
+                        'art',
+                        data.filter((it) => it.category.includes('art'))
+                    )}
                 </>
             )}
             {isSuccess && data.length <= 0 && (

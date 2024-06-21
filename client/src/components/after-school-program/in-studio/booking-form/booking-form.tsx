@@ -27,7 +27,7 @@ import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
 
-export function BookingForm({ submitting, formSubmitted }: { submitting: boolean; formSubmitted: boolean }) {
+export function BookingForm({ submitting }: { submitting: boolean }) {
     const form = useEnrolmentForm()
 
     const {
@@ -112,7 +112,7 @@ export function BookingForm({ submitting, formSubmitted }: { submitting: boolean
                                 Unfortunately this class is full for the term.
                             </AlertDescription>
                         </Alert>
-                        <WaitingListForm submitting={submitting} isSuccess={formSubmitted} />
+                        <WaitingListForm submitting={submitting} />
                     </>
                 )
             }
@@ -639,7 +639,7 @@ export function BookingForm({ submitting, formSubmitted }: { submitting: boolean
                     disabled={submitting}
                     className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-400  font-semibold"
                 >
-                    {submitting ? <Loader2 className="animate-spin" /> : 'Enrol'}
+                    {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Enrol'}
                 </Button>
                 <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
                     <DialogContent className="twp">

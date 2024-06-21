@@ -118,11 +118,23 @@ export function AfterSchoolProgramInStudioBookingPage() {
             return
         }
 
+        let programType = values.programType
+        if (inStudio) {
+            console.log({ selectedProgram })
+            if (selectedProgram.category.includes('science')) {
+                programType = 'science'
+            } else if (selectedProgram.category.includes('art')) {
+                programType = 'art'
+            } else {
+                throw new Error(`Selected studio program category of '${selectedProgram.category}' is not recognised!`)
+            }
+        }
+
         try {
             await enrol(
                 values.main.children.map((child) => ({
                     inStudio,
-                    type: values.programType,
+                    type: programType!,
                     appointmentTypeId: selectedProgram.id,
                     calendarId: selectedProgram.calendarIDs[0],
                     parent: {
@@ -165,16 +177,22 @@ export function AfterSchoolProgramInStudioBookingPage() {
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit, onError)}>
                             {isSuccessMain ? (
-                                <>
-                                    <Alert variant="success">
-                                        <CheckCircle className="h-4 w-4" />
-                                        <AlertTitle className="font-semibold">Done!</AlertTitle>
-                                        <AlertDescription className="font-medium">
-                                            You have successfully enrolled and should have a confirmation email waiting
-                                            for you.
-                                        </AlertDescription>
-                                    </Alert>
-                                </>
+                                <Alert variant="success">
+                                    <CheckCircle className="h-4 w-4" />
+                                    <AlertTitle className="font-semibold">Done!</AlertTitle>
+                                    <AlertDescription className="font-medium">
+                                        You have successfully enrolled and should have a confirmation email waiting for
+                                        you.
+                                    </AlertDescription>
+                                </Alert>
+                            ) : isSuccessWaitlist ? (
+                                <Alert variant="success">
+                                    <CheckCircle className="h-4 w-4" />
+                                    <AlertTitle className="font-semibold">Done!</AlertTitle>
+                                    <AlertDescription className="font-medium">
+                                        You are on the waitlist. We will contact if you a spot opens up.
+                                    </AlertDescription>
+                                </Alert>
                             ) : (
                                 <>
                                     {showBackButton && (
@@ -200,10 +218,7 @@ export function AfterSchoolProgramInStudioBookingPage() {
                                         {inStudio && <StudioProgramSelection />}
                                         {!inStudio && <SchoolProgramSelection />}
                                         {selectedProgram && (
-                                            <BookingForm
-                                                submitting={submittingMain || submittingWaitlist}
-                                                formSubmitted={isSuccessMain || isSuccessWaitlist}
-                                            />
+                                            <BookingForm submitting={submittingMain || submittingWaitlist} />
                                         )}
                                     </div>
                                 </>

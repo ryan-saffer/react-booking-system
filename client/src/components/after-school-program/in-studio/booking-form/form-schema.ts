@@ -105,7 +105,7 @@ const childSchema = z
  */
 export const formSchema = z.object({
     type: z.enum(['studio', 'school']),
-    programType: z.enum(['science', 'art']),
+    programType: z.enum(['science', 'art']).optional(),
     studio: z.custom<Location>((value) => !!value, 'Please select a studio.').optional(),
     main: z
         .object({

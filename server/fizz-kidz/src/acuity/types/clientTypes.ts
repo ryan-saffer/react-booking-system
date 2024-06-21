@@ -22,6 +22,10 @@ export type GetAppointmentTypesParams = {
         | 'science-essendon'
         | 'science-malvern'
         | 'science-cheltenham'
+        | 'art-balwyn'
+        | 'art-essendon'
+        | 'art-malvern'
+        | 'art-cheltenham'
     >
     availableToBook?: boolean
 }
