@@ -2,6 +2,7 @@
 import "@/styles/globals.css";
 import Header from "@/components/header.astro";
 import { ViewTransitions } from "astro:transitions";
+import LoadingIndicator from "astro-loading-indicator/component";
 
 type Props = {
   title: string;
@@ -21,6 +22,7 @@ const { title, description } = Astro.props;
     <meta name="description" content={description} />
   </head>
   <ViewTransitions />
+  <LoadingIndicator color="#9044E2" height="4px" threshold={400} />
 
   <body>
     <Header />

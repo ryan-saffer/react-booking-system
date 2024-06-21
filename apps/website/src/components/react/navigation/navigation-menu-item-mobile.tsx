@@ -11,7 +11,7 @@ function NavigationMenuItemMobile({
 }) {
   return (
     <div className={cn("px-12 py-4 border-b", { "border-0 px-4": isNested })}>
-      <a href={path} className="font-medium w-full block">
+      <a href={path} className="font-medium w-full block hover:underline">
         {title}
       </a>
     </div>
