@@ -31,7 +31,10 @@ export function SchoolProgramSelection() {
 
     const { data, isLoading, isSuccess } = trpc.acuity.getAppointmentTypes.useQuery(
         {
-            category: [programType === 'science' ? 'Science Club' : 'Art Program'],
+            category:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? [programType === 'science' ? 'Science Club' : 'Art Program']
+                    : ['TEST-art', 'TEST-science'],
             availableToBook: true,
         },
         { enabled: !!programType, staleTime: Infinity }

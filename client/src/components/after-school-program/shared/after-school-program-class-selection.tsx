@@ -1,4 +1,4 @@
-import { AcuityTypes } from 'fizz-kidz'
+import { AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -26,8 +26,12 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
     const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
         category:
             import.meta.env.VITE_ENV === 'prod'
-                ? ['Science Club', 'Art Program']
-                : ['TEST', 'TEST-science', 'TEST-art'],
+                ? [
+                      'Science Club',
+                      'Art Program',
+                      ...Object.values(Location).flatMap((it) => [`science-${it}` as const, `art-${it}` as const]),
+                  ]
+                : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
     })
     const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId: selectedAppointmentType?.id || 0,
