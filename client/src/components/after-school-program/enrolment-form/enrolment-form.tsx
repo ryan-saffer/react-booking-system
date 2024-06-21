@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 
 import Loader from '@components/Shared/Loader'
-import TermsAndConditions from '@components/after-school-program/in-schools/booking-form/TermsAndConditions'
+import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
 import { DateCalendar } from '@mui/x-date-pickers'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
@@ -27,7 +27,7 @@ import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
 
-export function BookingForm({ submitting }: { submitting: boolean }) {
+export function EnrolmentForm({ submitting }: { submitting: boolean }) {
     const form = useEnrolmentForm()
 
     const {

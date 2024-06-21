@@ -17,6 +17,7 @@ export interface Appointment {
     datetime: string
     confirmationPage: string
     certificate: string
+    duration: string
 }
 
 export interface MergedAppointment extends Appointment {

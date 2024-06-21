@@ -18,6 +18,7 @@ export type GetAppointmentTypesParams = {
         | 'TEST'
         | 'TEST-science'
         | 'TEST-art'
+        | 'test-after-school-in-studio'
         | 'science-balwyn'
         | 'science-essendon'
         | 'science-malvern'

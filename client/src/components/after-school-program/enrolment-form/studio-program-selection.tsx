@@ -18,7 +18,13 @@ export function StudioProgramSelection() {
     const studio = form.watch('studio')
 
     const { data, isLoading, isSuccess } = trpc.acuity.getAppointmentTypes.useQuery(
-        { category: [`science-${studio!}` as const, `art-${studio!}` as const], availableToBook: true },
+        {
+            category:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? [`science-${studio!}` as const, `art-${studio!}` as const]
+                    : ['test-after-school-in-studio'],
+            availableToBook: true,
+        },
         { enabled: !!studio, staleTime: Infinity }
     )
 

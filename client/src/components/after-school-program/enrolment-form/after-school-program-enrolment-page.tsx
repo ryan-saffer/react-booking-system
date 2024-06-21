@@ -12,13 +12,13 @@ import { Form } from '@ui-components/form'
 import { Separator } from '@ui-components/separator'
 import { trpc } from '@utils/trpc'
 
-import { BookingForm } from './booking-form'
+import { EnrolmentForm } from './enrolment-form'
 import { formSchema } from './form-schema'
 import { SchoolProgramSelection } from './school-program-selection'
 import { StudioProgramSelection } from './studio-program-selection'
 import { useSelectedProgram } from './use-selected-program'
 
-export function AfterSchoolProgramInStudioBookingPage() {
+export function AfterSchoolProgramEnrolmentPage() {
     const [searchParams] = useSearchParams()
     const inStudio = searchParams.get('type') === 'studio' // otherwise at a school
 
@@ -205,8 +205,7 @@ export function AfterSchoolProgramInStudioBookingPage() {
                                                     selectProgram(null)
                                                 } else {
                                                     form.setValue('studio', undefined)
-                                                    // TODO fix this shit
-                                                    // form.setValue('programType', undefined)
+                                                    form.setValue('programType', undefined)
                                                 }
                                             }}
                                         >
@@ -218,7 +217,7 @@ export function AfterSchoolProgramInStudioBookingPage() {
                                         {inStudio && <StudioProgramSelection />}
                                         {!inStudio && <SchoolProgramSelection />}
                                         {selectedProgram && (
-                                            <BookingForm submitting={submittingMain || submittingWaitlist} />
+                                            <EnrolmentForm submitting={submittingMain || submittingWaitlist} />
                                         )}
                                     </div>
                                 </>

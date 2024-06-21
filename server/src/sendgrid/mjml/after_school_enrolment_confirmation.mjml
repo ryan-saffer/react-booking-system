@@ -8,6 +8,10 @@
       .text-link {
         color: #5e6ebf
       }
+
+      .pre-wrap {
+        white-space: pre-wrap;
+      }
     </mj-style>
     <mj-style inline="inline">
       .footer-link {
@@ -68,8 +72,8 @@
           <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
             Location
           </mj-text>
-          <mj-text color="#637381" font-size="14px" padding-top="0">
-            {{ location }}
+          <mj-text color="#637381" font-size="14px" padding-top="0" mj-class="pre-wrap">
+            {{{ location }}}
           </mj-text>
         </mj-column>
         <mj-column width="100%">
@@ -89,9 +93,14 @@
             Important Information
           </mj-text>
           <mj-text color="#637381" font-size="14px" padding-top="0">
-            Please ask {{ childName }} to meet us at the {{ location }}. Prep students will be picked up
-            from their classrooms in week 1, however for the rest of the term they need to meet their
-            facilitator at the {{ location }} straight after school.
+            {{#inStudio}}
+              We are excited to soon introduce you to your Science Facilitator. They will be there each week to take {{ childName }} through this exciting journey. If there is anything specific you would like us to know about your child, please let us know, via email or call us anytime.
+            {{/inStudio}}
+            {{^inStudio}}
+              Please ask {{ childName }} to meet us at the {{ location }}. Prep students will be picked up
+              from their classrooms in week 1, however for the rest of the term they need to meet their
+              facilitator at the {{ location }} straight after school.
+            {{/inStudio}}
           </mj-text>
         </mj-column>
         <mj-column width="100%">
