@@ -1,0 +1,158 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+
+import hero from "@/assets/images/pages/incursions/hero.png";
+import bonnie from "@/assets/images/pages/incursions/bonnie.png";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import { Image } from "astro:assets";
+import CardWithImage from "@/components/card-with-image.astro";
+import kid1 from "@/assets/images/pages/incursions/kid-1.jpg";
+import kid2 from "@/assets/images/pages/incursions/kid-2.jpg";
+import kid3 from "@/assets/images/pages/incursions/kid-3.jpg";
+
+const { default: purpleSplot } = await import(
+  `@/assets/images/pages/incursions/purple-splot.svg?raw`
+);
+---
+
+<Layout
+  title="Incursions | Fizz Kidz"
+  description="Fizz Kidz runs science incursions at schools across Australia. The perfect way to bring an extra fizz into the classroom!"
+>
+  <BreadcrumbWrapper
+    items={[
+      { type: "not-link", title: "Fizz In Schools" },
+      { type: "not-link", title: "Incursions" },
+    ]}
+  />
+  <section class="mt-12">
+    <PageIntro
+      subtitle="We bring science to your school"
+      image={hero}
+      imageAlt="hero"
+      actionButtonText="Book a science incursion for your school"
+      actionButtonPath="#contact"
+      color="#9044E2"
+    >
+      <span slot="title">Melbourne School Science Incursions</span>
+      <span slot="content">
+        We engage your students in the fascinating nature of everyday science,
+        and we do it by exploring <span class="underline"
+          >hands-on science experiments!</span
+        >
+      </span>
+    </PageIntro>
+  </section>
+  <section class="mt-32 flex gap-8">
+    <div class="relative hidden w-1/2 min-[1000px]:inline-block">
+      <Image
+        class="h-full w-full object-contain"
+        src={bonnie}
+        alt="fizz kidz staff smiling and holding a large box"
+      />
+      <div
+        class="justify-centert absolute bottom-12 right-44 flex h-56 w-56 items-center"
+      >
+        <p
+          class="absolute left-0 right-8 m-auto w-1/2 text-center font-lilita text-xl leading-5 text-white"
+        >
+          Packed with science equipment!
+        </p>
+        <Fragment set:html={purpleSplot} />
+      </div>
+    </div>
+    <div class="w-full min-[1000px]:w-1/2">
+      <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+        Why choose Fizz Kidz and what we offer?
+      </h4>
+      <p class="mb-6">
+        Fizz Kidz Science Incursions bring the <span class="font-semibold"
+          >excitement of hands-on learning</span
+        >
+        to your school, making science both educational and FUN!<br /><br />Our
+        dedicated science facilitators are passionate about <span
+          class="font-semibold">igniting curiosity</span
+        > and fostering problem-solving skills among primary-aged children. With
+        engaging materials and interactive activities, students have the opportunity
+        to tinker and explore science concepts firsthand.<br /><br />Having
+        facilitated <span class="font-semibold"
+          >thousands of science programs across Melbourne</span
+        >, we are experts in engaging kids in the facilitating world of science!
+      </p>
+      <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+        Incursion Details
+      </h4>
+      <p>
+        <span class="font-semibold">Duration</span>
+        <br />Fizz Kidz Science Incursions run for 55 minutes
+        <br />
+        <span class="font-semibold">Class size </span>
+        <br />Up to 30 kids per session
+        <br />
+        <span class="font-semibold">Cost options</span>
+        <br />We have cost saving options available, for example splitting 4
+        classes between 3 workshop
+        <br />
+        <span class="font-semibold">To book</span>
+        <br />Choose an incursion and fill in the form below
+      </p>
+    </div>
+  </section>
+  <section class="mt-20 flex flex-col items-center">
+    <h4 class="mb-6 font-lilita text-4xl text-[#9044E2]">Our difference</h4>
+    <h5 class="mb-12 w-full max-w-3xl text-center font-lilita text-3xl">
+      Igniting curiosity, sparking excitement, and fostering a lifelong love for
+      science!
+    </h5>
+    <div
+      class="flex w-full flex-col items-center justify-between gap-8 min-[900px]:flex-row min-[900px]:items-stretch"
+    >
+      <CardWithImage image={kid1} imageAlt="smiling child holding up slime">
+        <div slot="content">
+          <h4 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+            Excitability and wonderment<br />(aka fun!)
+          </h4>
+          <p class="text-center text-sm">
+            Fizz Kidz Facilitators are masters at sparking children's curiosity
+            and excitement in the captivating world of science!
+          </p>
+        </div>
+      </CardWithImage>
+      <CardWithImage image={kid2} imageAlt="smiling child holding up slime">
+        <div slot="content">
+          <h4 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+            Passionate about hands on learning
+          </h4>
+          <p class="text-center text-sm">
+            We’re not about watching experiments - we’re about making them!
+          </p>
+        </div>
+      </CardWithImage>
+      <CardWithImage image={kid3} imageAlt="smiling child holding up slime">
+        <div slot="content">
+          <h4 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+            Science made easy
+          </h4>
+          <p class="text-center text-sm">
+            Fizz Kidz incursions align <span class="font-semibold"
+              >directly with the Victorian Curriculum.</span
+            >
+            Additionally, we've got your back with <span class="font-semibold"
+              >post-lesson worksheets,</span
+            > ensuring a seamless continuation of the science adventure beyond the
+            incursion!
+          </p>
+        </div>
+      </CardWithImage>
+    </div>
+  </section>
+  <section class="mt-16">
+    <h4 class="mb-4 text-center font-lilita text-4xl">
+      Four key modules to choose from
+    </h4>
+    <h5 class="text-center font-lilita text-3xl text-[#9044E2]">
+      Click on a module to learn more!
+    </h5>
+  </section>
+</Layout>

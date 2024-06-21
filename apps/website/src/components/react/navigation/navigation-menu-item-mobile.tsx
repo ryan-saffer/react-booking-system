@@ -10,8 +10,8 @@ function NavigationMenuItemMobile({
   isNested: boolean;
 }) {
   return (
-    <div className={cn("px-12 py-4 border-b", { "border-0 px-4": isNested })}>
-      <a href={path} className="font-medium w-full block hover:underline">
+    <div className={cn("border-b px-12 py-4", { "border-0 px-4": isNested })}>
+      <a href={path} className="block w-full font-medium hover:underline">
         {title}
       </a>
     </div>

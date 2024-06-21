@@ -21,7 +21,7 @@ function NavigationMenuDropdown({
       <HoverCardTrigger asChild>
         <Button variant="ghost" className="font-gotham font-light">
           {title}
-          <ChevronDown className="h-4 w-4 ml-2" />
+          <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </HoverCardTrigger>
       <HoverCardContent className="flex flex-col p-3">

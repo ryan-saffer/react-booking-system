@@ -12,8 +12,8 @@ const morningPrograms = week.programs.filter((it) => it.slot === "morning");
 const afternoonPrograms = week.programs.filter((it) => it.slot === "afternoon");
 ---
 
-<h1 class="text-center mt-16">{week.title}</h1>
-<h2 class="text-center mb-16">{week.dates}</h2>
+<h1 class="mt-16 text-center">{week.title}</h1>
+<h2 class="mb-16 text-center">{week.dates}</h2>
 <div class="flex justify-center gap-12">
   {
     morningPrograms.map((program) => (
@@ -21,7 +21,7 @@ const afternoonPrograms = week.programs.filter((it) => it.slot === "afternoon");
     ))
   }
 </div>
-<div class="flex justify-center gap-12 mt-12">
+<div class="mt-12 flex justify-center gap-12">
   {
     afternoonPrograms.map((program) => (
       <HolidayProgramSession program={program} />

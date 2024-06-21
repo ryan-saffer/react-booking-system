@@ -95,10 +95,10 @@ function NavigationMenu() {
         </Button>
         <div
           className={cn(
-            "absolute hidden top-[65px] left-0 w-full h-[calc(100%-65px)] bg-white",
+            "absolute left-0 top-[65px] hidden h-[calc(100%-65px)] w-full bg-white",
             {
               block: showMobileMenu,
-            }
+            },
           )}
         >
           <ul>

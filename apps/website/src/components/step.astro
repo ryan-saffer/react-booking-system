@@ -11,19 +11,19 @@ type Props = {
 const { number, color, icon, iconAlt } = Astro.props;
 ---
 
-<div class="rounded-xl shadow-md flex-1 w-full justify-stretch">
+<div class="w-full flex-1 justify-stretch rounded-xl shadow-md">
   <div
-    class="h-28 rounded-t-xl flex items-center p-8 relative"
+    class="relative flex h-28 items-center rounded-t-xl p-8"
     style={{ background: color }}
   >
     <h3 class="font-lilita text-3xl text-white">
       <slot name="title" />
     </h3>
-    <span class="absolute -bottom-5 right-4 text-white font-lilita text-9xl"
+    <span class="absolute -bottom-5 right-4 font-lilita text-9xl text-white"
       >{number}</span
     >
   </div>
-  <div class="px-8 py-4 relative min-h-[420px]">
+  <div class="relative min-h-[420px] px-8 py-4">
     <slot name="content" />
     {
       icon && (

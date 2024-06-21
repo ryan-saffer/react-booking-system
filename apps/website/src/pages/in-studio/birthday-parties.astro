@@ -33,7 +33,6 @@ import slimey from "@/assets/images/pages/parties/creations/slimey.png";
   <section class="mb-28 mt-8">
     <PageIntro
       subtitle="The magic of glitter colour and exploding fun!"
-      content="Fizz Kidz' Kids Birthday Parties are the perfect and stress-free party for all boys and girls (aged 4 - 12) that your child and all their friends will love!"
       image={partyHero}
       imageAlt="Party Hero"
       actionButtonPath="/"
@@ -41,21 +40,26 @@ import slimey from "@/assets/images/pages/parties/creations/slimey.png";
       color="#9044E2"
     >
       <span slot="title">Fizz Kidz<br />Birthday Parties</span>
+      <span slot="content"
+        >Fizz Kidz' Kids Birthday Parties are the perfect and stress-free party
+        for all boys and girls (aged 4 - 12) that your child and all their
+        friends will love!</span
+      >
     </PageIntro>
   </section>
   <section>
-    <h2 class="text-center font-lilita text-5xl mb-12">How it works</h2>
+    <h2 class="mb-12 text-center font-lilita text-5xl">How it works</h2>
     <div
-      class="flex flex-col min-[1400px]:flex-row gap-4 justify-center items-center min-[1400px]:items-stretch"
+      class="flex flex-col items-center justify-center gap-4 min-[1400px]:flex-row min-[1400px]:items-stretch"
     >
       <Step color="#4FE16D" number="1" icon={greenClock} iconAlt="green clock">
         <span slot="title">Choose a<br />party length</span>
         <div slot="content">
-          <h3 class="font-lilita text-2xl mb-2">1.5 hour party</h3>
+          <h3 class="mb-2 font-lilita text-2xl">1.5 hour party</h3>
           <StarBulletPoints
             content={["Two creations", "Exclusive venue", "Two party hosts"]}
           />
-          <h3 class="font-lilita text-2xl mb-2 mt-4">2 hour party</h3>
+          <h3 class="mb-2 mt-4 font-lilita text-2xl">2 hour party</h3>
           <StarBulletPoints
             content={["Three creations", "Exclusive venue", "Two party hosts"]}
           />
@@ -74,11 +78,11 @@ import slimey from "@/assets/images/pages/parties/creations/slimey.png";
       >
         <span slot="title">Choose your day,<br />time & venue</span>
         <div slot="content">
-          <h3 class="font-lilita text-2xl mb-2">Friday</h3>
+          <h3 class="mb-2 font-lilita text-2xl">Friday</h3>
           <StarBulletPoints content={["4:30pm or 6:30pm"]} />
-          <h3 class="font-lilita text-2xl mb-2 mt-4">Saturdays and Sundays</h3>
+          <h3 class="mb-2 mt-4 font-lilita text-2xl">Saturdays and Sundays</h3>
           <StarBulletPoints content={["10am, 12pm, 2:30pm and 4:30pm"]} />
-          <h3 class="font-lilita text-2xl mb-2 mt-4">Venue</h3>
+          <h3 class="mb-2 mt-4 font-lilita text-2xl">Venue</h3>
           <StarBulletPoints
             content={["Balwyn, Cheltenham, Essendon and Malvern venues"]}
           />
@@ -105,23 +109,23 @@ import slimey from "@/assets/images/pages/parties/creations/slimey.png";
       </Step>
     </div>
   </section>
-  <div class="text-center my-16">
+  <div class="my-16 text-center">
     <PrimaryButton text="Book a party" path="#test" />
   </div>
   <section>
-    <div class="flex flex-col items-center gap-4 mb-4">
+    <div class="mb-4 flex flex-col items-center gap-4">
       <h3 class="font-lilita text-4xl">Birthday Party Themes</h3>
       <h4 class="font-lilita text-xl">
         Our packages help creaet a personalised birthday party that your child
         will love.
       </h4>
-      <p class="font-gotham text-center">
+      <p class="text-center font-gotham">
         Whether your child loves all things glitter and sparkles or is amazed by<br
         />science we have the perfect party for your child!
       </p>
     </div>
     <div
-      class="grid grid-cols-1 min-[350px]:grid-cols-2 min-[900px]:grid-cols-4 justify-center"
+      class="grid grid-cols-1 justify-center min-[350px]:grid-cols-2 min-[900px]:grid-cols-4"
     >
       <PartyPackage
         title="Glitz & Glam parties"
