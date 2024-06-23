@@ -3,9 +3,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../react/ui/accordion";
+} from "@/react-ui/accordion";
 
-import { Button } from "../ui/button";
+import { Button } from "@/react-ui/button";
 import { Menu } from "lucide-react";
 import NavigationMenuDropdown from "./navigation-menu-dropdown";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
@@ -74,6 +74,7 @@ function NavigationMenu() {
           if (menuItem.type === "link") {
             return (
               <NavigationMenuItemDesktop
+                key={menuItem.title}
                 title={menuItem.title}
                 path={menuItem.path}
               />
@@ -81,6 +82,7 @@ function NavigationMenu() {
           } else {
             return (
               <NavigationMenuDropdown
+                key={menuItem.title}
                 title={menuItem.title}
                 submenus={menuItem.items}
               />
@@ -106,11 +108,16 @@ function NavigationMenu() {
               {menu.map((menuItem) => {
                 if (menuItem.type === "dropdown") {
                   return (
-                    <AccordionItem value={menuItem.title} className="px-12">
+                    <AccordionItem
+                      value={menuItem.title}
+                      className="px-12"
+                      key={menuItem.title}
+                    >
                       <AccordionTrigger>{menuItem.title}</AccordionTrigger>
                       <AccordionContent className="w-full">
                         {menuItem.items.map((item) => (
                           <NavigationMenuItemMobile
+                            key={item.title}
                             title={item.title}
                             path={item.path}
                             isNested={true}
@@ -122,6 +129,7 @@ function NavigationMenu() {
                 } else {
                   return (
                     <NavigationMenuItemMobile
+                      key={menuItem.title}
                       title={menuItem.title}
                       path={menuItem.path}
                       isNested={false}
