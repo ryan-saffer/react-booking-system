@@ -63,6 +63,7 @@ export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
 }
 
 const DAYS_OF_THE_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const
+type DayOfTheWeek = (typeof DAYS_OF_THE_WEEK)[number]
 
 /**
  * Given a day of the week, it will return the next upcoming day as a Date.
@@ -73,10 +74,10 @@ const DAYS_OF_THE_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'
  * getUpcoming('Monday') // in 7 days
  * getUpcoming('Tuesday') // in 1 day
  *
- * @param day the upcoming day you want to get
- * @returns {Date} the date of the upcoming day, at midnight.
+ * @param day - the upcoming day you want to get
+ * @returns the date of the upcoming day, at midnight.
  */
-export function getUpcoming(day: (typeof DAYS_OF_THE_WEEK)[number]) {
+export function getUpcoming(day: DayOfTheWeek) {
     const today = new Date()
     const currentDay = today.getDay()
     const targetDay = DAYS_OF_THE_WEEK.indexOf(day)
