@@ -11,7 +11,7 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@/react-components",
+    "components": "src/components/react",
     "utils": "@/react-lib/utils"
   }
 }

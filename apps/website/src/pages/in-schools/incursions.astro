@@ -24,6 +24,7 @@ import earth1 from "@/assets/images/pages/incursions/earth-1.webp";
 import earth2 from "@/assets/images/pages/incursions/earth-2.jpg";
 import earth3 from "@/assets/images/pages/incursions/earth-3.jpg";
 import earth4 from "@/assets/images/pages/incursions/earth-4.jpg";
+import IncursionImageCarousel from "@/components/react/incursions/incursion-image-carousel";
 
 const { default: purpleSplot } = await import(
   `@/assets/images/pages/incursions/purple-splot.svg?raw`
@@ -40,6 +41,20 @@ const earth1Optimised = await getImage({ src: earth1, format: "webp" });
 const earth2Optimised = await getImage({ src: earth2, format: "webp" });
 const earth3Optimised = await getImage({ src: earth3, format: "webp" });
 const earth4Optimised = await getImage({ src: earth4, format: "webp" });
+
+const chemicalImages = [
+  chemical1Optimised,
+  chemical2Optimised,
+  chemical3Optimised,
+];
+const physicalImages = [physical1Optimised, physical2Optimised];
+const lightImages = [light1Optimised, light2Optimised];
+const earthImages = [
+  earth1Optimised,
+  earth2Optimised,
+  earth3Optimised,
+  earth4Optimised,
+];
 ---
 
 <Layout
@@ -181,21 +196,20 @@ const earth4Optimised = await getImage({ src: earth4, format: "webp" });
       Click on a module to learn more!
     </h5>
     <IncursionModulesSection
-      chemicalImages={[
-        chemical1Optimised,
-        chemical2Optimised,
-        chemical3Optimised,
-      ]}
-      physicalImages={[physical1Optimised, physical2Optimised]}
-      lightImages={[light1Optimised, light2Optimised]}
-      earthImages={[
-        earth1Optimised,
-        earth2Optimised,
-        earth3Optimised,
-        earth4Optimised,
+      chemicalImages={chemicalImages}
+      physicalImages={physicalImages}
+      lightImages={lightImages}
+      earthImages={earthImages}
+      client:idle
+    />
+    <IncursionImageCarousel
+      images={[
+        ...chemicalImages,
+        ...physicalImages,
+        ...lightImages,
+        ...earthImages,
       ]}
       client:visible
     />
-    <h1 class="mt-12 h-96">Content below</h1>
   </section>
 </Layout>
