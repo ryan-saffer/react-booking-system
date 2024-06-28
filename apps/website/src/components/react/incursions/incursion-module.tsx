@@ -1,9 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ChevronDown } from "lucide-react";
-import type { GetImageResult } from "astro";
 import IncursionExpandable from "@/react-components/incursions/incursion-expandable";
-import type { Module } from "./incursion-modules-section";
 import type { SingleIncursionProps } from "./incursion-expandable-item";
 import { cn } from "../lib/utils";
 
@@ -11,6 +9,7 @@ type Props = {
   position: number;
   isMobile: boolean;
   svg: string;
+  svgAlt: string;
   title: string;
   subtitle: string;
   incursions: SingleIncursionProps[];
@@ -23,6 +22,7 @@ export const IncursionModule = ({
   position,
   isMobile,
   svg,
+  svgAlt,
   title,
   subtitle,
   incursions,
@@ -44,7 +44,7 @@ export const IncursionModule = ({
         onClick={onClick}
       >
         <div className="flex flex-col gap-4">
-          <img src={svg} className="h-20 w-fit" />
+          <img src={svg} alt={svgAlt} className="h-20 w-fit" />
           <h5 className="font-lilita text-2xl">{title}</h5>
           <p className="text-xs">{subtitle}</p>
         </div>

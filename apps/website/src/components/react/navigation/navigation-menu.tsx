@@ -92,7 +92,11 @@ function NavigationMenu() {
       </nav>
 
       <nav className="min-[900px]:hidden">
-        <Button variant="ghost" onClick={toggleMenu}>
+        <Button
+          variant="ghost"
+          onClick={toggleMenu}
+          aria-label="hamburger menu"
+        >
           <Menu color="#E81070" className="h-6 w-6" />
         </Button>
         <div

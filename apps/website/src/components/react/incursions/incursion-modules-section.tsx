@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { GetImageResult } from "astro";
+import type { CustomImage } from "@/types/types";
 import { IncursionModule } from "./incursion-module";
 // @ts-ignore
 import blueParachute from "@/assets/images/pages/incursions/blue-parachute.svg";
@@ -14,10 +14,10 @@ import purpleLightbulb from "@/assets/images/pages/incursions/purple-lightbulb.s
 import yellowTube from "@/assets/images/pages/incursions/yellow-tube.svg";
 
 type Props = {
-  chemicalImages: GetImageResult[];
-  physicalImages: GetImageResult[];
-  lightImages: GetImageResult[];
-  earthImages: GetImageResult[];
+  chemicalImages: CustomImage[];
+  physicalImages: CustomImage[];
+  lightImages: CustomImage[];
+  earthImages: CustomImage[];
 };
 
 export type Module = "chemical" | "physical" | "light" | "earth" | null;
@@ -63,6 +63,7 @@ const IncursionModulesSection = ({
         position={1}
         isMobile={isMobile}
         svg={yellowTube.src}
+        svgAlt="graphic of a yellow test tube"
         title="Chemical Science"
         subtitle="Experiments include Magic Sand, Slime, Chromatography, Lava Lamps, Elephants Toothpaste and more!"
         color="#f6ba3a"
@@ -159,6 +160,7 @@ const IncursionModulesSection = ({
         position={2}
         isMobile={isMobile}
         svg={blueParachute.src}
+        svgAlt="graphic of a blue parachute"
         title="Physical Sciences"
         subtitle="Experiments include Hexbug Mazes, Salt Pendulums, Kaleidoscopes and more!"
         color="#5ED9F3"
@@ -225,6 +227,7 @@ const IncursionModulesSection = ({
         position={3}
         isMobile={isMobile}
         svg={purpleLightbulb.src}
+        svgAlt="graphic of a purple lightbulb"
         title="Light, Sound
 and Electricity"
         subtitle="Experiments include Electrical Circuits, Sound and Sting Telephones, Invisible Ink, Shadow Puppets and more!"
@@ -293,6 +296,7 @@ and Electricity"
         position={4}
         isMobile={isMobile}
         svg={greenEarth.src}
+        svgAlt="graphic of a green earth"
         title="Earth, Weather & Sustainability"
         subtitle="Experiments include making a Solar System, Milky Way, Stocking Plants, Instant-Snow, Recyclable Monsters, Habitats and more!"
         color="#77E78A"

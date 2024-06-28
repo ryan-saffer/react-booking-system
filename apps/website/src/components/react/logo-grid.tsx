@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import type { GetImageResult } from "astro";
+import type { CustomImage } from "@/types/types";
 
-function LogoGrid({ logos }: { logos: GetImageResult[] }) {
+function LogoGrid({ logos }: { logos: CustomImage[] }) {
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
@@ -35,7 +35,8 @@ function LogoGrid({ logos }: { logos: GetImageResult[] }) {
             className="relative flex h-48 items-center justify-center"
           >
             <img
-              src={logo.src}
+              src={logo.image.src}
+              alt={logo.alt}
               className="max-h-36 max-w-24 object-contain sm:max-w-40"
             />
             {showLeftBorder && (

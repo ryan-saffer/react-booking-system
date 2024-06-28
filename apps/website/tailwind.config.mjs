@@ -17,7 +17,9 @@ module.exports = {
         gotham: ["Gotham", "sans-serif"],
       },
       boxShadow: {
-        purple: "-50px 50px 0px -1px rgba(232,219,253,0.71)",
+        "purple-lg": "-50px 50px 0px -1px rgba(232,219,253,0.71)",
+        "purple-md": "-25px 25px 0px -1px rgba(232,219,253,0.71)",
+        "purple-sm": "-10px 10px 0px -1px rgba(232,219,253,0.71)",
       },
       colors: {
         border: "hsl(var(--border))",

@@ -5,10 +5,10 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 
-import type { GetImageResult } from "astro";
+import type { CustomImage } from "@/types/types";
 
 export type SingleIncursionProps = {
-  image: GetImageResult;
+  image: CustomImage;
   title: string;
   content: string;
   curriculumLinks: { content: string; link?: { code: string; url: string } }[];
@@ -24,7 +24,8 @@ function IncursionExpandableItem({
   return (
     <div className="flex flex-1 flex-col rounded-md shadow-lg">
       <img
-        src={image.src}
+        src={image.image.src}
+        alt={image.alt}
         className="h-48 min-h-48 rounded-t-md object-cover"
       />
       <div className="flex h-full flex-col justify-between rounded-b-md p-4">
