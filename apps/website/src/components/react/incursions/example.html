@@ -1,0 +1,288 @@
+<script>
+    const el1 = document.getElementById("unfold-trigger-1");
+    const el2 = document.getElementById("unfold-trigger-2");
+    const el3 = document.getElementById("unfold-trigger-3");
+    const el4 = document.getElementById("unfold-trigger-4");
+
+    const chevron1 = document.getElementById("chevron-yellow");
+    const chevron2 = document.getElementById("chevron-blue");
+    const chevron3 = document.getElementById("chevron-purple");
+    const chevron4 = document.getElementById("chevron-green");
+
+    const section1Desktop = document.getElementById("unfold-desktop-1");
+    const section2Desktop = document.getElementById("unfold-desktop-2");
+    const section3Desktop = document.getElementById("unfold-desktop-3");
+    const section4Desktop = document.getElementById("unfold-desktop-4");
+
+    const section1Mobile = document.getElementById("unfold-mobile-1");
+    const section2Mobile = document.getElementById("unfold-mobile-2");
+    const section3Mobile = document.getElementById("unfold-mobile-3");
+    const section4Mobile = document.getElementById("unfold-mobile-4");
+
+    const moduleContainer = document.getElementById("module-container");
+
+    const moduleContainerY =
+        moduleContainer.getBoundingClientRect().top + window.scrollY;
+
+    let isMobile = window.innerWidth < 1024;
+
+    drawBordersAroundLogos();
+
+    window.addEventListener("resize", () => {
+        const isNowMobile = window.innerWidth < 1024;
+
+        if (isNowMobile !== isMobile) {
+            reset();
+            isMobile = isNowMobile;
+            drawBordersAroundLogos();
+        }
+    });
+
+    let isOpen1 = false;
+    let isOpen2 = false;
+    let isOpen3 = false;
+    let isOpen4 = false;
+
+    function isOpen() {
+        return isOpen1 || isOpen2 || isOpen3 || isOpen4;
+    }
+
+    // used when resizing the window and it changes between desktop and mobile.
+    // otherwise it gets into a funky state.
+    function reset() {
+        isOpen1 = false;
+        isOpen2 = false;
+        isOpen3 = false;
+        isOpen4 = false;
+
+        el1.classList.remove("selected-yellow");
+        el2.classList.remove("selected-blue");
+        el3.classList.remove("selected-purple");
+        el4.classList.remove("selected-green");
+
+        chevron1.classList.remove("rotated");
+        chevron2.classList.remove("rotated");
+        chevron3.classList.remove("rotated");
+        chevron4.classList.remove("rotated");
+
+        section1Desktop.classList.remove("expanded");
+        section2Desktop.classList.remove("expanded");
+        section3Desktop.classList.remove("expanded");
+        section4Desktop.classList.remove("expanded");
+
+        section1Mobile.classList.remove("visible");
+        section2Mobile.classList.remove("visible");
+        section3Mobile.classList.remove("visible");
+        section4Mobile.classList.remove("visible");
+    }
+
+    el1.addEventListener("click", () => {
+        el1.classList.toggle("selected-yellow");
+        chevron1.classList.toggle("rotated");
+
+        if (isMobile) {
+            section1Mobile.classList.toggle("visible");
+        } else {
+            section1Desktop.classList.toggle("expanded");
+        }
+
+        isOpen1 = !isOpen1;
+        isOpen2 = false;
+        isOpen3 = false;
+        isOpen4 = false;
+
+        if (!isMobile) {
+            if (isOpen()) {
+                setTimeout(
+                    () => window.scrollTo({ top: moduleContainerY, behavior: "smooth" }),
+                    300
+                );
+            } else {
+                window.scrollTo({ top: moduleContainerY - 272, behavior: "smooth" });
+            }
+        }
+
+        el2.classList.remove("selected-blue");
+        el3.classList.remove("selected-purple");
+        el4.classList.remove("selected-green");
+
+        chevron2.classList.remove("rotated");
+        chevron3.classList.remove("rotated");
+        chevron4.classList.remove("rotated");
+
+        section2Desktop.classList.remove("expanded");
+        section3Desktop.classList.remove("expanded");
+        section4Desktop.classList.remove("expanded");
+
+        section2Mobile.classList.remove("visible");
+        section3Mobile.classList.remove("visible");
+        section4Mobile.classList.remove("visible");
+    });
+
+    el2.addEventListener("click", () => {
+        el2.classList.toggle("selected-blue");
+        chevron2.classList.toggle("rotated");
+
+        if (isMobile) {
+            section2Mobile.classList.toggle("visible");
+        } else {
+            section2Desktop.classList.toggle("expanded");
+        }
+
+        isOpen1 = false;
+        isOpen2 = !isOpen2;
+        isOpen3 = false;
+        isOpen4 = false;
+
+        if (!isMobile) {
+            if (isOpen()) {
+                setTimeout(
+                    () => window.scrollTo({ top: moduleContainerY, behavior: "smooth" }),
+                    300
+                );
+            } else {
+                window.scrollTo({ top: moduleContainerY - 272, behavior: "smooth" });
+            }
+        }
+
+        el1.classList.remove("selected-yellow");
+        el3.classList.remove("selected-purple");
+        el4.classList.remove("selected-green");
+
+        chevron1.classList.remove("rotated");
+        chevron3.classList.remove("rotated");
+        chevron4.classList.remove("rotated");
+
+        section1Desktop.classList.remove("expanded");
+        section3Desktop.classList.remove("expanded");
+        section4Desktop.classList.remove("expanded");
+
+        section1Mobile.classList.remove("visible");
+        section3Mobile.classList.remove("visible");
+        section4Mobile.classList.remove("visible");
+    });
+
+    el3.addEventListener("click", () => {
+        el3.classList.toggle("selected-purple");
+        chevron3.classList.toggle("rotated");
+
+        if (isMobile) {
+            section3Mobile.classList.toggle("visible");
+        } else {
+            section3Desktop.classList.toggle("expanded");
+        }
+
+        isOpen1 = false;
+        isOpen2 = false;
+        isOpen3 = !isOpen3;
+        isOpen4 = false;
+
+        if (!isMobile) {
+            if (isOpen()) {
+                setTimeout(
+                    () => window.scrollTo({ top: moduleContainerY, behavior: "smooth" }),
+                    300
+                );
+            } else {
+                window.scrollTo({ top: moduleContainerY - 272, behavior: "smooth" });
+            }
+        }
+
+        el1.classList.remove("selected-yellow");
+        el2.classList.remove("selected-blue");
+        el4.classList.remove("selected-green");
+
+        chevron1.classList.remove("rotated");
+        chevron2.classList.remove("rotated");
+        chevron4.classList.remove("rotated");
+
+        section1Desktop.classList.remove("expanded");
+        section2Desktop.classList.remove("expanded");
+        section4Desktop.classList.remove("expanded");
+
+        section1Mobile.classList.remove("visible");
+        section2Mobile.classList.remove("visible");
+        section4Mobile.classList.remove("visible");
+    });
+
+    el4.addEventListener("click", () => {
+        el4.classList.toggle("selected-green");
+        chevron4.classList.toggle("rotated");
+
+        if (isMobile) {
+            section4Mobile.classList.toggle("visible");
+        } else {
+            section4Desktop.classList.toggle("expanded");
+        }
+
+        isOpen1 = false;
+        isOpen2 = false;
+        isOpen3 = false;
+        isOpen4 = !isOpen4;
+
+        if (!isMobile) {
+            if (isOpen()) {
+                setTimeout(
+                    () => window.scrollTo({ top: moduleContainerY, behavior: "smooth" }),
+                    300
+                );
+            } else {
+                window.scrollTo({ top: moduleContainerY - 272, behavior: "smooth" });
+            }
+        }
+
+        el1.classList.remove("selected-yellow");
+        el2.classList.remove("selected-blue");
+        el3.classList.remove("selected-purple");
+
+        chevron1.classList.remove("rotated");
+        chevron2.classList.remove("rotated");
+        chevron3.classList.remove("rotated");
+
+        section1Desktop.classList.remove("expanded");
+        section2Desktop.classList.remove("expanded");
+        section3Desktop.classList.remove("expanded");
+
+        section1Mobile.classList.remove("visible");
+        section2Mobile.classList.remove("visible");
+        section3Mobile.classList.remove("visible");
+    });
+
+    /**
+     * SCHOOL LOGOS
+     */
+
+    function drawBordersAroundLogos() {
+        for (let id = 1; id <= 15; id++) {
+            const borderRight = document.getElementById(`br-${id}`);
+            const borderBottom = document.getElementById(`bb-${id}`);
+
+            if (isMobile) {
+                if (id % 3 === 0) {
+                    borderRight.classList.add("invisible");
+                    borderBottom.classList.remove("invisible");
+                } else {
+                    borderRight.classList.remove("invisible");
+                    borderBottom.classList.remove("invisible");
+                }
+
+                if (id > 12) {
+                    borderBottom.classList.add("invisible");
+                }
+            } else {
+                // desktop
+                if (id % 5 === 0) {
+                    borderRight.classList.add("invisible");
+                    borderBottom.classList.remove("invisible");
+                } else {
+                    borderRight.classList.remove("invisible");
+                    borderBottom.classList.remove("invisible");
+                }
+
+                if (id > 10) {
+                    borderBottom.classList.add("invisible");
+                }
+            }
+        }
+    }
+</script>

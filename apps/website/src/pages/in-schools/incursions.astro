@@ -26,6 +26,49 @@ import earth3 from "@/assets/images/pages/incursions/earth-3.jpg";
 import earth4 from "@/assets/images/pages/incursions/earth-4.jpg";
 import IncursionImageCarousel from "@/components/react/incursions/incursion-image-carousel";
 
+import classroomImage from "@/assets/images/pages/incursions/purple-classroom.jpg";
+import PrimaryButton from "@/components/primary-button.astro";
+
+// school logos
+import abbotsford from "@/assets/images/pages/incursions/schools/abbotsford.png";
+import auburn from "@/assets/images/pages/incursions/schools/auburn.png";
+import blackburn from "@/assets/images/pages/incursions/schools/blackburn.png";
+import eastBentleigh from "@/assets/images/pages/incursions/schools/eastBentleigh.png";
+import flemington from "@/assets/images/pages/incursions/schools/flemington.png";
+import hampton from "@/assets/images/pages/incursions/schools/hampton.png";
+import holyFamily from "@/assets/images/pages/incursions/schools/holyFamily.png";
+import huntingdale from "@/assets/images/pages/incursions/schools/huntingdale.png";
+import malvern from "@/assets/images/pages/incursions/schools/malvern.png";
+import mckinnon from "@/assets/images/pages/incursions/schools/mckinnon.png";
+import oldOrchard from "@/assets/images/pages/incursions/schools/oldOrchard.png";
+import ologc from "@/assets/images/pages/incursions/schools/ologc.png";
+import ripponlea from "@/assets/images/pages/incursions/schools/ripponlea.png";
+import stKilda from "@/assets/images/pages/incursions/schools/stKilda.jpg";
+import stMichaels from "@/assets/images/pages/incursions/schools/stMichaels.png";
+import LogoGrid from "@/components/react/logo-grid";
+import Reviews from "@/components/reviews.astro";
+import blueBubbles from "@/assets/images/pages/incursions/blue-bubbles.png";
+
+const schoolLogos = await Promise.all(
+  [
+    abbotsford,
+    auburn,
+    blackburn,
+    eastBentleigh,
+    flemington,
+    hampton,
+    holyFamily,
+    huntingdale,
+    malvern,
+    mckinnon,
+    oldOrchard,
+    ologc,
+    ripponlea,
+    stKilda,
+    stMichaels,
+  ].map((it) => getImage({ src: it, format: "webp" })),
+);
+
 const { default: purpleSplot } = await import(
   `@/assets/images/pages/incursions/purple-splot.svg?raw`
 );
@@ -61,155 +104,225 @@ const earthImages = [
   title="Incursions | Fizz Kidz"
   description="Fizz Kidz runs science incursions at schools across Australia. The perfect way to bring an extra fizz into the classroom!"
 >
-  <BreadcrumbWrapper
-    items={[
-      { type: "not-link", title: "Fizz In Schools" },
-      { type: "not-link", title: "Incursions" },
-    ]}
-  />
-  <section class="mt-12">
-    <PageIntro
-      subtitle="We bring science to your school"
-      image={hero}
-      imageAlt="hero"
-      actionButtonText="Book a science incursion for your school"
-      actionButtonPath="#contact"
-      color="#9044E2"
-    >
-      <span slot="title">Melbourne School Science Incursions</span>
-      <span slot="content">
-        We engage your students in the fascinating nature of everyday science,
-        and we do it by exploring <span class="underline"
-          >hands-on science experiments!</span
-        >
-      </span>
-    </PageIntro>
-  </section>
-  <section class="mt-32 flex gap-8">
-    <div class="relative hidden w-1/2 min-[1000px]:inline-block">
-      <Image
-        class="h-full w-full object-contain"
-        src={bonnie}
-        alt="fizz kidz staff smiling and holding a large box"
-      />
-      <div
-        class="justify-centert absolute bottom-12 right-44 flex h-56 w-56 items-center"
-      >
-        <p
-          class="absolute left-0 right-8 m-auto w-1/2 text-center font-lilita text-xl leading-5 text-white"
-        >
-          Packed with science equipment!
-        </p>
-        <Fragment set:html={purpleSplot} />
-      </div>
-    </div>
-    <div class="w-full min-[1000px]:w-1/2">
-      <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
-        Why choose Fizz Kidz and what we offer?
-      </h4>
-      <p class="mb-6">
-        Fizz Kidz Science Incursions bring the <span class="font-semibold"
-          >excitement of hands-on learning</span
-        >
-        to your school, making science both educational and FUN!<br /><br />Our
-        dedicated science facilitators are passionate about <span
-          class="font-semibold">igniting curiosity</span
-        > and fostering problem-solving skills among primary-aged children. With
-        engaging materials and interactive activities, students have the opportunity
-        to tinker and explore science concepts firsthand.<br /><br />Having
-        facilitated <span class="font-semibold"
-          >thousands of science programs across Melbourne</span
-        >, we are experts in engaging kids in the facilitating world of science!
-      </p>
-      <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
-        Incursion Details
-      </h4>
-      <p>
-        <span class="font-semibold">Duration</span>
-        <br />Fizz Kidz Science Incursions run for 55 minutes
-        <br />
-        <span class="font-semibold">Class size </span>
-        <br />Up to 30 kids per session
-        <br />
-        <span class="font-semibold">Cost options</span>
-        <br />We have cost saving options available, for example splitting 4
-        classes between 3 workshop
-        <br />
-        <span class="font-semibold">To book</span>
-        <br />Choose an incursion and fill in the form below
-      </p>
-    </div>
-  </section>
-  <section class="mt-20 flex flex-col items-center">
-    <h4 class="mb-6 font-lilita text-4xl text-[#9044E2]">Our difference</h4>
-    <h5 class="mb-12 w-full max-w-3xl text-center font-lilita text-3xl">
-      Igniting curiosity, sparking excitement, and fostering a lifelong love for
-      science!
-    </h5>
-    <div
-      class="flex w-full flex-col items-center justify-between gap-8 min-[900px]:flex-row min-[900px]:items-stretch"
-    >
-      <CardWithImage image={kid1} imageAlt="smiling child holding up slime">
-        <div slot="content">
-          <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
-            Excitability and wonderment<br />(aka fun!)
-          </h5>
-          <p class="text-center text-sm">
-            Fizz Kidz Facilitators are masters at sparking children's curiosity
-            and excitement in the captivating world of science!
-          </p>
-        </div>
-      </CardWithImage>
-      <CardWithImage image={kid2} imageAlt="smiling child holding up slime">
-        <div slot="content">
-          <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
-            Passionate about hands on learning
-          </h5>
-          <p class="text-center text-sm">
-            We’re not about watching experiments - we’re about making them!
-          </p>
-        </div>
-      </CardWithImage>
-      <CardWithImage image={kid3} imageAlt="smiling child holding up slime">
-        <div slot="content">
-          <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
-            Science made easy
-          </h5>
-          <p class="text-center text-sm">
-            Fizz Kidz incursions align <span class="font-semibold"
-              >directly with the Victorian Curriculum.</span
-            >
-            Additionally, we've got your back with <span class="font-semibold"
-              >post-lesson worksheets,</span
-            > ensuring a seamless continuation of the science adventure beyond the
-            incursion!
-          </p>
-        </div>
-      </CardWithImage>
-    </div>
-  </section>
-  <section class="mt-16">
-    <h5 class="mb-4 text-center font-lilita text-4xl">
-      Four key modules to choose from
-    </h5>
-    <h5 class="mb-12 text-center font-lilita text-3xl text-[#9044E2]">
-      Click on a module to learn more!
-    </h5>
-    <IncursionModulesSection
-      chemicalImages={chemicalImages}
-      physicalImages={physicalImages}
-      lightImages={lightImages}
-      earthImages={earthImages}
-      client:idle
-    />
-    <IncursionImageCarousel
-      images={[
-        ...chemicalImages,
-        ...physicalImages,
-        ...lightImages,
-        ...earthImages,
+  <div class="m-auto block max-w-[1380px] px-5 pt-8">
+    <BreadcrumbWrapper
+      items={[
+        { type: "not-link", title: "Fizz In Schools" },
+        { type: "not-link", title: "Incursions" },
       ]}
-      client:visible
+    />
+    <section class="mt-12">
+      <PageIntro
+        subtitle="We bring science to your school"
+        image={hero}
+        imageAlt="hero"
+        actionButtonText="Book a science incursion for your school"
+        actionButtonPath="#contact"
+        color="#9044E2"
+      >
+        <span slot="title">Melbourne School Science Incursions</span>
+        <span slot="content">
+          We engage your students in the fascinating nature of everyday science,
+          and we do it by exploring <span class="underline"
+            >hands-on science experiments!</span
+          >
+        </span>
+      </PageIntro>
+    </section>
+    <section class="mt-32 flex gap-8">
+      <div class="relative hidden w-1/2 min-[1000px]:inline-block">
+        <Image
+          class="h-full w-full object-contain"
+          src={bonnie}
+          alt="fizz kidz staff smiling and holding a large box"
+        />
+        <div
+          class="justify-centert absolute bottom-12 right-44 flex h-56 w-56 items-center"
+        >
+          <p
+            class="absolute left-0 right-8 m-auto w-1/2 text-center font-lilita text-xl leading-5 text-white"
+          >
+            Packed with science equipment!
+          </p>
+          <Fragment set:html={purpleSplot} />
+        </div>
+      </div>
+      <div class="w-full min-[1000px]:w-1/2">
+        <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+          Why choose Fizz Kidz and what we offer?
+        </h4>
+        <p class="mb-6">
+          Fizz Kidz Science Incursions bring the <span class="font-semibold"
+            >excitement of hands-on learning</span
+          >
+          to your school, making science both educational and FUN!<br /><br
+          />Our dedicated science facilitators are passionate about <span
+            class="font-semibold">igniting curiosity</span
+          > and fostering problem-solving skills among primary-aged children. With
+          engaging materials and interactive activities, students have the opportunity
+          to tinker and explore science concepts firsthand.<br /><br />Having
+          facilitated <span class="font-semibold"
+            >thousands of science programs across Melbourne</span
+          >, we are experts in engaging kids in the facilitating world of
+          science!
+        </p>
+        <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+          Incursion Details
+        </h4>
+        <p>
+          <span class="font-semibold">Duration</span>
+          <br />Fizz Kidz Science Incursions run for 55 minutes
+          <br />
+          <span class="font-semibold">Class size </span>
+          <br />Up to 30 kids per session
+          <br />
+          <span class="font-semibold">Cost options</span>
+          <br />We have cost saving options available, for example splitting 4
+          classes between 3 workshop
+          <br />
+          <span class="font-semibold">To book</span>
+          <br />Choose an incursion and fill in the form below
+        </p>
+      </div>
+    </section>
+    <section class="mt-20 flex flex-col items-center">
+      <h4 class="mb-6 font-lilita text-4xl text-[#9044E2]">Our difference</h4>
+      <h5 class="mb-12 w-full max-w-3xl text-center font-lilita text-3xl">
+        Igniting curiosity, sparking excitement, and fostering a lifelong love
+        for science!
+      </h5>
+      <div
+        class="flex w-full flex-col items-center justify-between gap-8 min-[900px]:flex-row min-[900px]:items-stretch"
+      >
+        <CardWithImage image={kid1} imageAlt="smiling child holding up slime">
+          <div slot="content">
+            <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+              Excitability and wonderment<br />(aka fun!)
+            </h5>
+            <p class="text-center text-sm">
+              Fizz Kidz Facilitators are masters at sparking children's
+              curiosity and excitement in the captivating world of science!
+            </p>
+          </div>
+        </CardWithImage>
+        <CardWithImage image={kid2} imageAlt="smiling child holding up slime">
+          <div slot="content">
+            <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+              Passionate about hands on learning
+            </h5>
+            <p class="text-center text-sm">
+              We’re not about watching experiments - we’re about making them!
+            </p>
+          </div>
+        </CardWithImage>
+        <CardWithImage image={kid3} imageAlt="smiling child holding up slime">
+          <div slot="content">
+            <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+              Science made easy
+            </h5>
+            <p class="text-center text-sm">
+              Fizz Kidz incursions align <span class="font-semibold"
+                >directly with the Victorian Curriculum.</span
+              >
+              Additionally, we've got your back with <span class="font-semibold"
+                >post-lesson worksheets,</span
+              > ensuring a seamless continuation of the science adventure beyond
+              the incursion!
+            </p>
+          </div>
+        </CardWithImage>
+      </div>
+    </section>
+    <section class="mt-16">
+      <h5 class="mb-4 text-center font-lilita text-4xl">
+        Four key modules to choose from
+      </h5>
+      <h5 class="mb-12 text-center font-lilita text-3xl text-[#9044E2]">
+        Click on a module to learn more!
+      </h5>
+      <IncursionModulesSection
+        chemicalImages={chemicalImages}
+        physicalImages={physicalImages}
+        lightImages={lightImages}
+        earthImages={earthImages}
+        client:idle
+      />
+      <IncursionImageCarousel
+        images={[
+          ...chemicalImages,
+          ...physicalImages,
+          ...lightImages,
+          ...earthImages,
+        ]}
+        client:visible
+      />
+    </section>
+  </div>
+  <section class="relative my-12 h-[450px] w-screen">
+    <div
+      class="relative z-10 flex h-full flex-col items-center justify-center gap-6"
+    >
+      <p class="mx-8 text-center font-lilita text-4xl text-white">
+        Book an incursion for your school today
+      </p>
+      <p class="font-lilita text-7xl text-white">BOOK TODAY</p>
+      <PrimaryButton
+        text="Book a science incursion for your school"
+        path="#book"
+      />
+    </div>
+    <Image
+      class="absolute top-0 z-0 h-full object-cover"
+      src={classroomImage}
+      alt="background image of kids in a classroom"
     />
   </section>
+  <div class="m-auto block max-w-[1380px] px-5 pb-8">
+    <section>
+      <h6 class="text-center font-lilita text-4xl">
+        Schools that have joined the science adventure
+      </h6>
+      <LogoGrid logos={schoolLogos} client:visible />
+    </section>
+    <Reviews
+      title="Read what parents say!"
+      reviews={[
+        {
+          review:
+            "I wanted to thank you for the fantastic Chemical Science Incursion my child attended. The fun experiments and engaging demonstrations were educational and fun, sparking a newfound interest in science. At pick up I could really see the team's passion, which was greatly appreciated.",
+          writtenBy: "Harry",
+          writtenYear: "2023",
+        },
+        {
+          review:
+            "My twins Leo and Chloe just loved the science experiments yesterday. They were so proud of their fidget toys that they made (and currently playing with) thanks for bringing such science fun to the school.",
+          writtenBy: "Lisa",
+          writtenYear: "2023",
+        },
+        {
+          review:
+            "My child had an amazing time at the 'Fabulous Forces' Science Incursion! The hands-on activities and engaging demonstrations were captivating. I appreciate how seamlessly the program aligned with the Victorian Curriculum, and the post-lesson worksheets have been a fantastic resource for extending the learning at home. Thank you, Fizz Kidz, for providing such an enriching experience!",
+          writtenBy: "Annabelle",
+          writtenYear: "2024'",
+        },
+      ]}
+    />
+    <section class="flex flex-col gap-16 md:flex-row md:gap-8">
+      <div class="flex flex-1 items-center justify-center">
+        <Image
+          src={blueBubbles}
+          alt="slime, lava lamp and a kid mixing an experiment."
+          class="max-h-[500px] flex-shrink object-contain"
+        />
+      </div>
+      <div
+        class="flex flex-1 grow flex-col items-center justify-center gap-6 md:items-start"
+      >
+        <p class="font-lilita text-3xl">
+          Book a call with us to discuss your school needs
+        </p>
+        <PrimaryButton text="Book a call" path="#contact" className="w-fit" />
+      </div>
+    </section>
+  </div>
 </Layout>

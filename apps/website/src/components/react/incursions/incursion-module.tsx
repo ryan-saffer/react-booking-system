@@ -1,6 +1,9 @@
+import { AnimatePresence, motion } from "framer-motion";
+
 import { ChevronDown } from "lucide-react";
 import type { GetImageResult } from "astro";
 import IncursionExpandable from "@/react-components/incursions/incursion-expandable";
+import type { Module } from "./incursion-modules-section";
 import type { SingleIncursionProps } from "./incursion-expandable-item";
 import { cn } from "../lib/utils";
 
@@ -13,7 +16,6 @@ type Props = {
   incursions: SingleIncursionProps[];
   color: string;
   selected: boolean;
-  isCollapsing: boolean;
   onClick: () => void;
 };
 
@@ -26,7 +28,6 @@ export const IncursionModule = ({
   incursions,
   color,
   selected,
-  isCollapsing,
   onClick,
 }: Props) => {
   return (
@@ -59,15 +60,55 @@ export const IncursionModule = ({
           <ChevronDown color="#42D4F3" className="h-7 w-7" />
         </div>
       </div>
-      <IncursionExpandable
-        position={position}
-        isMobile={isMobile}
-        title={title}
-        incursions={incursions}
-        color={color}
-        selected={selected}
-        isCollapsing={isCollapsing}
-      />
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{
+              height: 0,
+              opacity: 0,
+            }}
+            animate={{
+              height: "auto",
+              opacity: 1,
+              transition: {
+                height: {
+                  duration: 0.3,
+                },
+                opacity: {
+                  duration: 0.3,
+                  repeatDelay: 0.15,
+                },
+              },
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              transition: {
+                height: {
+                  duration: 0.5,
+                },
+                opacity: {
+                  duration: 0.25,
+                },
+              },
+            }}
+            style={{
+              gridColumnStart: 1,
+              gridColumnEnd: isMobile ? 1 : 5,
+              gridRowStart: isMobile ? position * 2 : 2,
+              gridRowEnd: isMobile ? position * 2 : 2,
+            }}
+          >
+            <IncursionExpandable
+              position={position}
+              isMobile={isMobile}
+              title={title}
+              incursions={incursions}
+              color={color}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

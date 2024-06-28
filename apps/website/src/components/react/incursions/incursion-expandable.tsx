@@ -1,7 +1,5 @@
-import type { GetImageResult } from "astro";
 import IncursionExpandableItem from "./incursion-expandable-item";
 import type { SingleIncursionProps } from "./incursion-expandable-item";
-import { cn } from "../lib/utils";
 
 type Props = {
   position: number;
@@ -9,8 +7,6 @@ type Props = {
   title: string;
   incursions: SingleIncursionProps[];
   color: string;
-  selected: boolean;
-  isCollapsing: boolean;
 };
 
 const IncursionExpandable = ({
@@ -19,17 +15,10 @@ const IncursionExpandable = ({
   title,
   incursions,
   color,
-  selected,
-  isCollapsing,
 }: Props) => {
   return (
     <div
-      className={cn(
-        "max-h-0 flex-col overflow-hidden transition-all duration-300 ease-linear",
-        {
-          "max-h-full": selected && !isCollapsing,
-        },
-      )}
+      className="flex-col"
       style={{
         gridColumnStart: 1,
         gridColumnEnd: isMobile ? 1 : 5,

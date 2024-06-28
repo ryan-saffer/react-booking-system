@@ -1,14 +1,20 @@
 ---
+import { cn } from "./react/lib/utils";
+
 type Props = {
   text: string;
   path: string;
+  className?: astroHTML.JSX.HTMLAttributes["class"];
 };
 
-const { text, path } = Astro.props;
+const { text, path, className = "" } = Astro.props;
 ---
 
 <a
-  class="rounded-full bg-[#F6BA33] px-7 py-5 font-semibold uppercase text-white shadow-[0px_0px_35px_0px_rgba(246,186,51,0.75)] transition-colors duration-300 ease-in-out hover:bg-[#9C59E4]"
+  class={cn(
+    "rounded-full bg-[#F6BA33] px-7 py-5 font-semibold uppercase text-white shadow-[0px_0px_35px_0px_rgba(246,186,51,0.75)] transition-colors duration-300 ease-in-out hover:bg-[#9C59E4]",
+    className,
+  )}
   href={path}
 >
   {text}
