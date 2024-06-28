@@ -7,9 +7,7 @@ function LogoGrid({ logos }: { logos: CustomImage[] }) {
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 1024);
-  }, []);
 
-  useEffect(() => {
     const onResize = () => {
       setIsMobile(window.innerWidth < 1024);
     };
@@ -20,8 +18,6 @@ function LogoGrid({ logos }: { logos: CustomImage[] }) {
       window.removeEventListener("resize", onResize);
     };
   }, []);
-
-  console.log({ isMobile });
 
   return (
     <div className="relative mt-8 grid grid-cols-3 lg:grid-cols-5">

@@ -28,12 +28,12 @@ const IncursionModulesSection = ({
   lightImages,
   earthImages,
 }: Props) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth < 1000);
     const onResize = () => {
       setIsMobile(window.innerWidth < 1000);
-      3;
     };
 
     window.addEventListener("resize", onResize);
