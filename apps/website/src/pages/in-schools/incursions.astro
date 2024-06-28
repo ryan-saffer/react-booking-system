@@ -48,6 +48,7 @@ import stMichaels from "@/assets/images/pages/incursions/schools/stMichaels.png"
 import LogoGrid from "@/components/react/logo-grid";
 import Reviews from "@/components/reviews.astro";
 import blueBubbles from "@/assets/images/pages/incursions/blue-bubbles.png";
+import IncursionForm from "@/components/react/forms/incursion-form";
 
 const abbotsfordOptimised = await getImage({ src: abbotsford, format: "webp" });
 const auburnOptimised = await getImage({ src: auburn, format: "webp" });
@@ -368,6 +369,9 @@ const earthImages = [
           <PrimaryButton text="Book a call" path="#contact" className="w-fit" />
         </div>
       </section>
+    </div>
+    <div class="m-auto max-w-3xl p-4">
+      <IncursionForm client:load />
     </div>
   </main>
 </Layout>
