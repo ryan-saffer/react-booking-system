@@ -1,6 +1,7 @@
 ---
 import "@/styles/globals.css";
-import Header from "@/components/header.astro";
+import Header from "@/layout/header.astro";
+import Footer from "@/layout/footer.astro";
 import { ViewTransitions } from "astro:transitions";
 import LoadingIndicator from "astro-loading-indicator/component";
 
@@ -12,7 +13,7 @@ type Props = {
 const { title, description } = Astro.props;
 ---
 
-<html lang="en" transition:animate="none">
+<html lang="en" transition:animate="none" class="h-full">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -24,9 +25,10 @@ const { title, description } = Astro.props;
   <ViewTransitions />
   <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
 
-  <body>
+  <body class="flex flex-col">
     <Header />
-    <slot />
+    <slot class="flex-1" />
+    <Footer />
   </body>
 
 

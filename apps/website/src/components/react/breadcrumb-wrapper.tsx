@@ -3,9 +3,11 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/react-ui/breadcrumb";
+
+import { Fragment } from "react/jsx-runtime";
+import NavigationMenuDropdown from "./navigation/navigation-menu-dropdown";
 
 export function BreadcrumbWrapper({
   items,
@@ -13,6 +15,11 @@ export function BreadcrumbWrapper({
   items: (
     | { type: "link"; title: string; path: string }
     | { type: "not-link"; title: string }
+    | {
+        type: "dropdown";
+        title: string;
+        items: { title: string; path: string }[];
+      }
   )[];
 }) {
   return (
@@ -22,36 +29,42 @@ export function BreadcrumbWrapper({
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        {items.slice(0, -1).map((child) => {
+        {items.map((child, idx) => {
+          let result;
           if (child.type === "link") {
-            return (
-              <>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href={child.path}>
-                    {child.title}
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-
-                <BreadcrumbSeparator />
-              </>
+            result = (
+              <BreadcrumbItem>
+                <BreadcrumbLink href={child.path}>{child.title}</BreadcrumbLink>
+              </BreadcrumbItem>
+            );
+          } else if (child.type === "not-link") {
+            result = (
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <span>{child.title}</span>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
             );
           } else {
-            return (
-              <>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <span>{child.title}</span>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-
-                <BreadcrumbSeparator />
-              </>
+            // child.type === 'dropwdown'
+            result = (
+              <BreadcrumbItem>
+                <NavigationMenuDropdown
+                  className="-ml-2 font-sans font-normal"
+                  title={child.title}
+                  submenus={child.items}
+                  delay={400}
+                />
+              </BreadcrumbItem>
             );
           }
+          return (
+            <Fragment key={idx}>
+              {result}
+              {idx !== items.length - 1 && <BreadcrumbSeparator />}
+            </Fragment>
+          );
         })}
-        <BreadcrumbItem>
-          <BreadcrumbPage>{items[items.length - 1].title}</BreadcrumbPage>
-        </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
   );

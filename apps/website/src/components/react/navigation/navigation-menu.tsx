@@ -20,14 +20,14 @@ const menu = [
     path: "/fizz-facts",
   },
   {
-    title: "In Studio",
+    title: "In Studios",
     type: "dropdown",
     items: [
-      { title: "Birthday Parties", path: "/in-studio/birthday-parties" },
-      { title: "Holiday Programs", path: "/in-studio/holiday-programs" },
+      { title: "Birthday Parties", path: "/in-studios/birthday-parties" },
+      { title: "Holiday Programs", path: "/in-studios/holiday-programs" },
       {
         title: "After School Program",
-        path: "/in-studio/after-school-program",
+        path: "/in-studios/after-school-program",
       },
     ],
   },

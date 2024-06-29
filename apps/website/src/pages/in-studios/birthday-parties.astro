@@ -26,9 +26,20 @@ import slimey from "@/assets/images/pages/parties/creations/slimey.png";
 >
   <main class="m-auto block max-w-[1380px] px-5 pt-8">
     <BreadcrumbWrapper
+      client:load
       items={[
-        { type: "not-link", title: "In Studio" },
-        { type: "not-link", title: "Birthday Parties" },
+        {
+          type: "not-link",
+          title: "In Studios",
+        },
+        {
+          type: "dropdown",
+          title: "Birthday Parties",
+          items: [
+            { title: "Birthday Parties", path: "birthday-parties" },
+            { title: "Holiday Programs", path: "holiday-programs" },
+          ],
+        },
       ]}
     />
     <section class="mb-28 mt-8">

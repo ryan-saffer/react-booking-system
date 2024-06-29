@@ -1,0 +1,64 @@
+---
+import { Image } from "astro:assets";
+import logo from "@/assets/images/logo-white.png";
+---
+
+<footer class="flex min-h-72 w-full justify-center bg-zinc-800 p-8">
+  <div class="flex w-full max-w-7xl items-center justify-center gap-8">
+    <div
+      class="flex flex-1 flex-col justify-between gap-2 text-white xl:flex-row"
+    >
+      {
+        [
+          {
+            location: "Balwyn",
+            email: "bookings@fizzkidz.com.au",
+            address: "184 Whitehorse Rd, Balwyn, 3103",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Cheltenham",
+            email: "bookings@fizzkidz.com.au",
+            address: "273 Bay Rd, Cheltenham, 3192",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Essendon",
+            email: "bookings@fizzkidz.com.au",
+            address: "75 Raleigh Street, Esendon, 3040",
+            phone: "(03) 9059 8144",
+          },
+          {
+            location: "Malvern",
+            email: "bookings@fizzkidz.com.au",
+            address: "20 Glenferrie Rd, Malvern",
+            phone: "(03) 9059 8144",
+          },
+        ].map((studio) => (
+          <div class="flex flex-col">
+            <p class="font-lilita">{studio.location}</p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Email: </span>
+              {studio.email}
+            </p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Address: </span>
+              {studio.address}
+            </p>
+            <p class="text-xs text-gray-300">
+              <span class="font-bold">Call: </span>
+              {studio.phone}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="">
+      <Image
+        src={logo}
+        alt="fizz kidz logo in white"
+        class="h-48 w-fit object-contain"
+      />
+    </div>
+  </div>
+</footer>

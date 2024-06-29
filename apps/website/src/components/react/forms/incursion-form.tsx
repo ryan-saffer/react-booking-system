@@ -79,7 +79,7 @@ function IncursionForm() {
             <p className="font-semibold">Enquiry recieved!</p>
             <p>You should have an email with a copy of your submission.</p>
             <p>
-              We typically response to 90% of enquiries within 2 business days.
+              We typically respond to 90% of enquiries within 2 business days.
             </p>
           </div>
         </div>,
