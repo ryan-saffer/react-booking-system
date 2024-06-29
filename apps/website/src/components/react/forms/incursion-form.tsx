@@ -7,10 +7,18 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
@@ -20,6 +28,23 @@ const formSchema = z.object({
   contactName: z.string().min(1, "Contact name is required"),
   schoolName: z.string().min(1, "School name is required"),
   email: z.string().min(1, "Email address is required").email(),
+  contactNumber: z
+    .string()
+    .min(10, "Contact number must be at least 10 digits long"),
+  preferredDateAndTime: z
+    .string()
+    .min(1, "Please enter a preferred date and time"),
+  module: z
+    .enum([
+      "chemicalScience",
+      "pushAndPull",
+      "lightAndSound",
+      "earthWeatherSustainability",
+      "notSure",
+    ])
+    .optional()
+    .refine((it) => !!it, "Please select a module"),
+  enquiry: z.string().min(1, "Please enter an enquiry"),
 });
 
 function IncursionForm() {
@@ -29,6 +54,10 @@ function IncursionForm() {
       contactName: "",
       schoolName: "",
       email: "",
+      contactNumber: "",
+      preferredDateAndTime: "",
+      module: undefined,
+      enquiry: "",
     },
   });
 
@@ -73,7 +102,7 @@ function IncursionForm() {
               <FormLabel>Your name *</FormLabel>
               <FormControl>
                 <Input
-                  className="rounded-full border-violet-500 focus-visible:outline-violet-700"
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
                   {...field}
                 />
               </FormControl>
@@ -89,7 +118,7 @@ function IncursionForm() {
               <FormLabel>Name of school *</FormLabel>
               <FormControl>
                 <Input
-                  className="rounded-full border-violet-500 focus-visible:outline-violet-700"
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
                   {...field}
                 />
               </FormControl>
@@ -105,7 +134,90 @@ function IncursionForm() {
               <FormLabel>Your email *</FormLabel>
               <FormControl>
                 <Input
-                  className="rounded-full border-violet-500 focus-visible:outline-violet-700"
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="contactNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Your best contact number *</FormLabel>
+              <FormControl>
+                <Input
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="preferredDateAndTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Preferred date and time *</FormLabel>
+              <FormControl>
+                <Input
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="module"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Science Module *</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="rounded-xl border-violet-500 focus-visible:outline-purple-700">
+                    <SelectValue />
+                  </SelectTrigger>
+                  {/* <Input
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  {...field}
+                  /> */}
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="chemicalScience">
+                    Chemical Science
+                  </SelectItem>
+                  <SelectItem value="pushAndPull">Push and Pull</SelectItem>
+                  <SelectItem value="lightAndSound">Light and Sound</SelectItem>
+                  <SelectItem value="earthWeatherSustainability">
+                    Earth, Weather and Sustainability
+                  </SelectItem>
+                  <SelectItem value="notSure">
+                    A combination of the above / not sure
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="enquiry"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Your enquiry *</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  rows={5}
                   {...field}
                 />
               </FormControl>
@@ -114,7 +226,7 @@ function IncursionForm() {
           )}
         />
         <Button
-          className="bg-[#B34495] focus-visible:outline-purple-500"
+          className="w-full bg-[#B34495] text-end focus-visible:outline-purple-500"
           type="submit"
         >
           {loading ? (
