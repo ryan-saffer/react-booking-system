@@ -13,7 +13,7 @@ const { content } = Astro.props;
 <ul class="flex flex-col gap-2">
   {
     content.map((it) => (
-      <li class="flex gap-4 items-center font-semibold">
+      <li class="flex items-center gap-4 font-semibold">
         <div class="h-4 w-4 min-w-4">
           <Fragment set:html={starSvg} />
         </div>

@@ -44,7 +44,7 @@ class StoryblokClient {
 
     return data.stories
       .sort((a: any, b: any) =>
-        a.content.week_number < b.content.week_number ? -1 : 1
+        a.content.week_number < b.content.week_number ? -1 : 1,
       )
       .map(({ content }: any) => ({
         title: content.week_title,

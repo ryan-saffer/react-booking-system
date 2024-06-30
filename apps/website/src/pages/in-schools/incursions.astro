@@ -1,0 +1,413 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+
+import hero from "@/assets/images/pages/incursions/hero.png";
+import bonnie from "@/assets/images/pages/incursions/bonnie.png";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import { Image, getImage } from "astro:assets";
+import CardWithImage from "@/components/card-with-image.astro";
+import kid1 from "@/assets/images/pages/incursions/kid-1.jpg";
+import kid2 from "@/assets/images/pages/incursions/kid-2.jpg";
+import kid3 from "@/assets/images/pages/incursions/kid-3.jpg";
+import IncursionModulesSection from "@/react-components/incursions/incursion-modules-section";
+
+// module images
+import chemical1 from "@/assets/images/pages/incursions/chemical-1.jpg";
+import chemical2 from "@/assets/images/pages/incursions/chemical-2.jpg";
+import chemical3 from "@/assets/images/pages/incursions/chemical-3.jpg";
+import physical1 from "@/assets/images/pages/incursions/physical-1.jpg";
+import physical2 from "@/assets/images/pages/incursions/physical-2.jpg";
+import light1 from "@/assets/images/pages/incursions/light-1.jpg";
+import light2 from "@/assets/images/pages/incursions/light-2.jpg";
+import earth1 from "@/assets/images/pages/incursions/earth-1.webp";
+import earth2 from "@/assets/images/pages/incursions/earth-2.jpg";
+import earth3 from "@/assets/images/pages/incursions/earth-3.jpg";
+import earth4 from "@/assets/images/pages/incursions/earth-4.jpg";
+import IncursionImageCarousel from "@/components/react/incursions/incursion-image-carousel";
+
+import classroomImage from "@/assets/images/pages/incursions/purple-classroom.jpg";
+import PrimaryButton from "@/components/primary-button.astro";
+
+// school logos
+import abbotsford from "@/assets/images/pages/incursions/schools/abbotsford.png";
+import auburn from "@/assets/images/pages/incursions/schools/auburn.png";
+import blackburn from "@/assets/images/pages/incursions/schools/blackburn.png";
+import eastBentleigh from "@/assets/images/pages/incursions/schools/eastBentleigh.png";
+import flemington from "@/assets/images/pages/incursions/schools/flemington.png";
+import hampton from "@/assets/images/pages/incursions/schools/hampton.png";
+import holyFamily from "@/assets/images/pages/incursions/schools/holyFamily.png";
+import huntingdale from "@/assets/images/pages/incursions/schools/huntingdale.png";
+import malvern from "@/assets/images/pages/incursions/schools/malvern.png";
+import mckinnon from "@/assets/images/pages/incursions/schools/mckinnon.png";
+import oldOrchard from "@/assets/images/pages/incursions/schools/oldOrchard.png";
+import ologc from "@/assets/images/pages/incursions/schools/ologc.png";
+import ripponlea from "@/assets/images/pages/incursions/schools/ripponlea.png";
+import stKilda from "@/assets/images/pages/incursions/schools/stKilda.jpg";
+import stMichaels from "@/assets/images/pages/incursions/schools/stMichaels.png";
+import LogoGrid from "@/components/react/logo-grid";
+import Reviews from "@/components/reviews.astro";
+import blueBubbles from "@/assets/images/pages/incursions/blue-bubbles.png";
+import IncursionForm from "@/components/react/forms/incursion-form";
+
+const abbotsfordOptimised = await getImage({ src: abbotsford, format: "webp" });
+const auburnOptimised = await getImage({ src: auburn, format: "webp" });
+const blackburnOptimised = await getImage({ src: blackburn, format: "webp" });
+const eastBentleighOptimised = await getImage({
+  src: eastBentleigh,
+  format: "webp",
+});
+const flemingtonOptimised = await getImage({ src: flemington, format: "webp" });
+const hamptonOptimised = await getImage({ src: hampton, format: "webp" });
+const holyFamilyOptimised = await getImage({ src: holyFamily, format: "webp" });
+const huntingdaleOptimised = await getImage({
+  src: huntingdale,
+  format: "webp",
+});
+const malvernOptimised = await getImage({ src: malvern, format: "webp" });
+const mckinnonOptimised = await getImage({ src: mckinnon, format: "webp" });
+const oldOrchardOptimised = await getImage({ src: oldOrchard, format: "webp" });
+const ologcOptimised = await getImage({ src: ologc, format: "webp" });
+const ripponleaOptimised = await getImage({ src: ripponlea, format: "webp" });
+const stKildaOptimised = await getImage({ src: stKilda, format: "webp" });
+const stMichaelsOptimised = await getImage({ src: stMichaels, format: "webp" });
+
+const schoolLogos = [
+  { image: abbotsfordOptimised, alt: "logo of abbotsford primary school" },
+  { image: auburnOptimised, alt: "logo of auburn primary school" },
+  { image: blackburnOptimised, alt: "logo of blackburn primary school" },
+  {
+    image: eastBentleighOptimised,
+    alt: "logo of east bentleigh primary school",
+  },
+  { image: flemingtonOptimised, alt: "logo of flemington primary school" },
+  { image: hamptonOptimised, alt: "logo of hampton primary school" },
+  { image: holyFamilyOptimised, alt: "logo of holy family primary school" },
+  { image: huntingdaleOptimised, alt: "logo of huntingdale primary school" },
+  { image: malvernOptimised, alt: "logo of malvern primary school" },
+  { image: mckinnonOptimised, alt: "logo of mckinnon primary school" },
+  { image: oldOrchardOptimised, alt: "logo of old orchard primary school" },
+  {
+    image: ologcOptimised,
+    alt: "logo of our lady of good counsel primary school",
+  },
+  { image: ripponleaOptimised, alt: "logo of ripponlea primary school" },
+  { image: stKildaOptimised, alt: "logo of st kilda primary school" },
+  { image: stMichaelsOptimised, alt: "logo of st michaels primary school" },
+];
+
+const { default: purpleSplot } = await import(
+  `@/assets/images/pages/incursions/purple-splot.svg?raw`
+);
+
+const chemical1Optimised = await getImage({ src: chemical1, format: "webp" });
+const chemical2Optimised = await getImage({ src: chemical2, format: "webp" });
+const chemical3Optimised = await getImage({ src: chemical3, format: "webp" });
+const physical1Optimised = await getImage({ src: physical1, format: "webp" });
+const physical2Optimised = await getImage({ src: physical2, format: "webp" });
+const light1Optimised = await getImage({ src: light1, format: "webp" });
+const light2Optimised = await getImage({ src: light2, format: "webp" });
+const earth1Optimised = await getImage({ src: earth1, format: "webp" });
+const earth2Optimised = await getImage({ src: earth2, format: "webp" });
+const earth3Optimised = await getImage({ src: earth3, format: "webp" });
+const earth4Optimised = await getImage({ src: earth4, format: "webp" });
+
+const chemicalImages = [
+  { image: chemical1Optimised, alt: "child mixing slime colours" },
+  { image: chemical2Optimised, alt: "child in a school uniform smiling" },
+  {
+    image: chemical3Optimised,
+    alt: "3 children smiling and moulding their experiment",
+  },
+];
+const physicalImages = [
+  { image: physical1Optimised, alt: "child creating an electricity box" },
+  { image: physical2Optimised, alt: "children playing under a parachute" },
+];
+const lightImages = [
+  { image: light1Optimised, alt: "children experimenting with circuitry" },
+  { image: light2Optimised, alt: "shadow puppet box of fish" },
+];
+const earthImages = [
+  { image: earth1Optimised, alt: "weather experiment in glass container" },
+  { image: earth2Optimised, alt: "fizz kidz staff high fiving children" },
+  {
+    image: earth3Optimised,
+    alt: "children gathered around a tub, about to perform an experiment",
+  },
+  {
+    image: earth4Optimised,
+    alt: "fizz kidz staff facilitating children in an activity",
+  },
+];
+---
+
+<Layout
+  title="Incursions | Fizz Kidz"
+  description="Fizz Kidz runs science incursions at schools across Australia. The perfect way to bring an extra fizz into the classroom!"
+>
+  <main>
+    <div class="m-auto block max-w-[1380px] px-5 pt-8">
+      <BreadcrumbWrapper
+        client:load
+        items={[
+          {
+            type: "not-link",
+            title: "In Schools",
+          },
+          {
+            type: "dropdown",
+            title: "Incursions",
+            path: "incursions",
+            items: [
+              {
+                type: "link",
+                title: "After School Programs",
+                path: "after-school-program",
+              },
+              { type: "link", title: "Incursions", path: "incursions" },
+              {
+                type: "link",
+                title: "School Celebrations",
+                path: "school-celebrations",
+              },
+            ],
+          },
+        ]}
+      />
+      <PageIntro
+        subtitle="We bring science to your school"
+        image={hero}
+        imageAlt="hero"
+        actionButtonText="Book a science incursion for your school"
+        actionButtonPath="#contact"
+        color="#9044E2"
+      >
+        <span slot="title">Melbourne School Science Incursions</span>
+        <span slot="content">
+          We engage your students in the fascinating nature of everyday science,
+          and we do it by exploring <span class="underline"
+            >hands-on science experiments!</span
+          >
+        </span>
+      </PageIntro>
+      <section class="mt-16 flex gap-8 md:mt-48">
+        <div class="relative hidden w-1/2 min-[1000px]:inline-block">
+          <Image
+            class="h-full w-full object-contain"
+            src={bonnie}
+            alt="fizz kidz staff smiling and holding a large box"
+          />
+          <div
+            class="justify-centert absolute bottom-12 right-44 flex h-56 w-56 items-center"
+          >
+            <p
+              class="absolute left-0 right-8 m-auto w-1/2 text-center font-lilita text-xl leading-5 text-white"
+            >
+              Packed with science equipment!
+            </p>
+            <Fragment set:html={purpleSplot} />
+          </div>
+        </div>
+        <div class="w-full min-[1000px]:w-1/2">
+          <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+            Why choose Fizz Kidz and what we offer?
+          </h4>
+          <p class="mb-6">
+            Fizz Kidz Science Incursions bring the <span class="font-semibold"
+              >excitement of hands-on learning</span
+            >
+            to your school, making science both educational and FUN!<br /><br
+            />Our dedicated science facilitators are passionate about <span
+              class="font-semibold">igniting curiosity</span
+            > and fostering problem-solving skills among primary-aged children. With
+            engaging materials and interactive activities, students have the opportunity
+            to tinker and explore science concepts firsthand.<br /><br />Having
+            facilitated <span class="font-semibold"
+              >thousands of science programs across Melbourne</span
+            >, we are experts in engaging kids in the facilitating world of
+            science!
+          </p>
+          <h4 class="mb-4 font-lilita text-4xl text-[#9044E2]">
+            Incursion Details
+          </h4>
+          <p>
+            <span class="font-semibold">Duration</span>
+            <br />Fizz Kidz Science Incursions run for 55 minutes
+            <br />
+            <span class="font-semibold">Class size </span>
+            <br />Up to 30 kids per session
+            <br />
+            <span class="font-semibold">Cost options</span>
+            <br />We have cost saving options available, for example splitting 4
+            classes between 3 workshop
+            <br />
+            <span class="font-semibold">To book</span>
+            <br />Choose an incursion and fill in the form below
+          </p>
+        </div>
+      </section>
+      <section class="mt-16 flex flex-col items-center md:mt-32">
+        <h4 class="mb-6 font-lilita text-4xl text-[#9044E2]">Our difference</h4>
+        <h5 class="mb-12 w-full max-w-3xl text-center font-lilita text-3xl">
+          Igniting curiosity, sparking excitement, and fostering a lifelong love
+          for science!
+        </h5>
+        <div
+          class="flex w-full flex-col items-center justify-between gap-8 min-[900px]:max-w-6xl min-[900px]:flex-row min-[900px]:items-stretch"
+        >
+          <CardWithImage image={kid1} imageAlt="smiling child holding up slime">
+            <div slot="content">
+              <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+                Excitability and wonderment<br />(aka fun!)
+              </h5>
+              <p class="text-center text-sm">
+                Fizz Kidz Facilitators are masters at sparking children's
+                curiosity and excitement in the captivating world of science!
+              </p>
+            </div>
+          </CardWithImage>
+          <CardWithImage image={kid2} imageAlt="smiling child holding up slime">
+            <div slot="content">
+              <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+                Passionate about hands on learning
+              </h5>
+              <p class="text-center text-sm">
+                We're not about watching experiments - we're about making them!
+              </p>
+            </div>
+          </CardWithImage>
+          <CardWithImage image={kid3} imageAlt="smiling child holding up slime">
+            <div slot="content">
+              <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
+                Science made easy
+              </h5>
+              <p class="text-center text-sm">
+                Fizz Kidz incursions align <span class="font-semibold"
+                  >directly with the Victorian Curriculum.</span
+                >
+                Additionally, we've got your back with <span
+                  class="font-semibold">post-lesson worksheets,</span
+                > ensuring a seamless continuation of the science adventure beyond
+                the incursion!
+              </p>
+            </div>
+          </CardWithImage>
+        </div>
+      </section>
+      <section class="mt-32">
+        <h5 class="mb-4 text-center font-lilita text-4xl">
+          Four key modules to choose from
+        </h5>
+        <h5 class="mb-12 text-center font-lilita text-3xl text-[#9044E2]">
+          Click on a module to learn more!
+        </h5>
+        <IncursionModulesSection
+          chemicalImages={chemicalImages}
+          physicalImages={physicalImages}
+          lightImages={lightImages}
+          earthImages={earthImages}
+          client:idle
+        />
+        <div class="h-8"></div>
+        <IncursionImageCarousel
+          images={[
+            ...chemicalImages,
+            ...physicalImages,
+            ...lightImages,
+            ...earthImages,
+          ]}
+          client:visible
+        />
+        <div class="h-8"></div>
+      </section>
+    </div>
+    <section class="relative my-12 h-[450px]">
+      <div
+        class="relative z-10 flex h-full flex-col items-center justify-center gap-6"
+      >
+        <p class="mx-8 text-center font-lilita text-2xl text-white sm:text-4xl">
+          Book an incursion for your school today
+        </p>
+        <p class="text-center font-lilita text-5xl text-white sm:text-7xl">
+          BOOK TODAY
+        </p>
+        <PrimaryButton
+          text="Book a science incursion for your school"
+          path="#contact"
+        />
+      </div>
+      <Image
+        class="absolute top-0 z-0 h-full object-cover"
+        src={classroomImage}
+        alt="background image of kids in a classroom"
+      />
+    </section>
+    <div class="mx-auto my-24 block max-w-[1380px] px-5 pb-8 md:mt-32">
+      <section>
+        <h6 class="mb-24 text-center font-lilita text-4xl md:mb-32 md:text-5xl">
+          Schools that have joined the science adventure
+        </h6>
+        <LogoGrid logos={schoolLogos} client:visible />
+      </section>
+      <Reviews
+        title="Read what parents say!"
+        reviews={[
+          {
+            review:
+              "I wanted to thank you for the fantastic Chemical Science Incursion my child attended. The fun experiments and engaging demonstrations were educational and fun, sparking a newfound interest in science. At pick up I could really see the team's passion, which was greatly appreciated.",
+            writtenBy: "Harry",
+            writtenYear: "2023",
+          },
+          {
+            review:
+              "My twins Leo and Chloe just loved the science experiments yesterday. They were so proud of their fidget toys that they made (and currently playing with) thanks for bringing such science fun to the school.",
+            writtenBy: "Lisa",
+            writtenYear: "2023",
+          },
+          {
+            review:
+              "My child had an amazing time at the 'Fabulous Forces' Science Incursion! The hands-on activities and engaging demonstrations were captivating. I appreciate how seamlessly the program aligned with the Victorian Curriculum, and the post-lesson worksheets have been a fantastic resource for extending the learning at home. Thank you, Fizz Kidz, for providing such an enriching experience!",
+            writtenBy: "Annabelle",
+            writtenYear: "2024'",
+          },
+        ]}
+      />
+      <section class="relative mt-24 flex flex-col gap-16 md:flex-row md:gap-8">
+        <div class="flex flex-1 items-center justify-center">
+          <Image
+            src={blueBubbles}
+            alt="slime, lava lamp and a kid mixing an experiment."
+            class="max-h-[500px] flex-shrink object-contain"
+          />
+        </div>
+        <div
+          class="flex flex-1 grow flex-col items-center justify-center gap-10 md:items-start"
+        >
+          <p class="font-lilita text-3xl">
+            Book a call with us to discuss your school needs
+          </p>
+          <PrimaryButton text="Book a call" path="#contact" className="w-fit" />
+        </div>
+        <div id="contact" class="absolute bottom-10"></div>
+      </section>
+      <div class="m-auto mt-12 max-w-3xl p-4">
+        <p class="mb-4 text-center font-lilita text-3xl">
+          Contact us - we're friendly!
+        </p>
+        <p class="text-center font-gotham text-sm font-semibold">
+          We know teachers are superheroes with busy schedules, so we've
+          simplified the booking process for you.
+        </p>
+        <p class="text-center font-gotham text-sm font-semibold">
+          Simply fill out the form, and we will get everything in motion for
+          you.
+        </p>
+        <p class="mb-8 text-center font-gotham text-sm font-semibold">
+          Science made easy - that's our promise!
+        </p>
+        <IncursionForm client:load />
+      </div>
+    </div>
+  </main>
+</Layout>

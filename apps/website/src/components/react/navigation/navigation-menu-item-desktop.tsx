@@ -8,8 +8,8 @@ function NavigationMenuItemDesktop({
   title: string;
 }) {
   return (
-    <Button variant="link" className="font-light font-gotham justify-start p-0">
-      <a href={path} className="w-full text-start p-3">
+    <Button variant="link" className="justify-start p-0 font-gotham font-light">
+      <a href={path} className="w-full p-3 text-start">
         {title}
       </a>
     </Button>

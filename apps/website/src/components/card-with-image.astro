@@ -1,0 +1,19 @@
+---
+import { Image } from "astro:assets";
+
+type Props = {
+  image: ImageMetadata;
+  imageAlt: string;
+};
+
+const { image, imageAlt } = Astro.props;
+---
+
+<div class="flex w-full flex-col rounded-lg shadow-md min-[900px]:max-w-xs">
+  <div>
+    <Image src={image} alt={imageAlt} class="h-52 rounded-t-lg object-cover" />
+  </div>
+  <div class="p-8">
+    <slot name="content" />
+  </div>
+</div>

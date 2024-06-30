@@ -3,15 +3,26 @@ import { cn } from "../lib/utils";
 function NavigationMenuItemMobile({
   title,
   path,
-  isNested,
+  nested,
+  italic = false,
 }: {
   title: string;
   path: string;
-  isNested: boolean;
+  nested: boolean;
+  italic?: boolean;
 }) {
   return (
-    <div className={cn("px-12 py-4 border-b", { "border-0 px-4": isNested })}>
-      <a href={path} className="font-medium w-full block hover:underline">
+    <div
+      className={cn("border-b px-12 py-4", {
+        "border-0 px-4": nested,
+      })}
+    >
+      <a
+        href={path}
+        className={cn("block w-full font-medium hover:underline", {
+          italic: italic,
+        })}
+      >
         {title}
       </a>
     </div>

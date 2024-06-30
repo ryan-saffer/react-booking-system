@@ -1,0 +1,186 @@
+---
+// import "@/styles/globals.css";
+import Layout from "@/layout/Layout.astro";
+import PageIntro from "@/components/page-intro.astro";
+import { Image } from "astro:assets";
+import partyHero from "@/assets/images/pages/parties/party-hero.jpg";
+import { BreadcrumbWrapper } from "@/react-components/breadcrumb-wrapper";
+import StarBulletPoints from "@/components/star-bullet-points.astro";
+
+import greenClock from "@/assets/images/pages/parties/green-clock.png";
+import blueCalendar from "@/assets/images/pages/parties/blue-calendar.png";
+import purpleHat from "@/assets/images/pages/parties/purple-hat.png";
+import forwardArrow from "@/assets/images/pages/parties/forward-arrow.png";
+import Step from "@/components/step.astro";
+import PrimaryButton from "@/components/primary-button.astro";
+import PartyPackage from "@/components/party-package.astro";
+
+import glitzAndGlam from "@/assets/images/pages/parties/creations/glitz-and-glam.png";
+import science from "@/assets/images/pages/parties/creations/science.png";
+import slimey from "@/assets/images/pages/parties/creations/slimey.png";
+---
+
+<Layout
+  title="Parties | Fizz Kidz"
+  description="Fizz Kidz's Birthday Parties are the perfect and stress-free party for all boys and girls, aged 4 - 12, that your child and all their friends will love!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-8">
+    <BreadcrumbWrapper
+      client:load
+      items={[
+        {
+          type: "not-link",
+          title: "In Studios",
+        },
+        {
+          type: "dropdown",
+          title: "Birthday Parties",
+          path: "birthday-parties",
+          items: [
+            {
+              type: "link",
+              title: "Birthday Parties",
+              path: "birthday-parties",
+            },
+            {
+              type: "link",
+              title: "Holiday Programs",
+              path: "holiday-programs",
+            },
+          ],
+        },
+      ]}
+    />
+    <section class="mb-28 mt-8">
+      <PageIntro
+        subtitle="The magic of glitter colour and exploding fun!"
+        image={partyHero}
+        imageAlt="Party Hero"
+        actionButtonPath="/"
+        actionButtonText="Book a Party"
+        color="#9044E2"
+      >
+        <span slot="title">Fizz Kidz<br />Birthday Parties</span>
+        <span slot="content"
+          >Fizz Kidz' Kids Birthday Parties are the perfect and stress-free
+          party for all boys and girls (aged 4 - 12) that your child and all
+          their friends will love!</span
+        >
+      </PageIntro>
+    </section>
+    <section>
+      <h2 class="mb-12 text-center font-lilita text-5xl">How it works</h2>
+      <div
+        class="flex flex-col items-center justify-center gap-4 min-[1400px]:flex-row min-[1400px]:items-stretch"
+      >
+        <Step
+          color="#4FE16D"
+          number="1"
+          icon={greenClock}
+          iconAlt="green clock"
+        >
+          <span slot="title">Choose a<br />party length</span>
+          <div slot="content">
+            <h3 class="mb-2 font-lilita text-2xl">1.5 hour party</h3>
+            <StarBulletPoints
+              content={["Two creations", "Exclusive venue", "Two party hosts"]}
+            />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">2 hour party</h3>
+            <StarBulletPoints
+              content={[
+                "Three creations",
+                "Exclusive venue",
+                "Two party hosts",
+              ]}
+            />
+          </div>
+        </Step>
+        <Image
+          src={forwardArrow}
+          alt="forward arrow"
+          class="h-16 w-fit self-center"
+        />
+        <Step
+          color="#42D4F3"
+          number="2"
+          icon={blueCalendar}
+          iconAlt="blue calendar"
+        >
+          <span slot="title">Choose your day,<br />time & venue</span>
+          <div slot="content">
+            <h3 class="mb-2 font-lilita text-2xl">Friday</h3>
+            <StarBulletPoints content={["4:30pm or 6:30pm"]} />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">
+              Saturdays and Sundays
+            </h3>
+            <StarBulletPoints content={["10am, 12pm, 2:30pm and 4:30pm"]} />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">Venue</h3>
+            <StarBulletPoints
+              content={["Balwyn, Cheltenham, Essendon and Malvern venues"]}
+            />
+          </div>
+        </Step>
+        <Image
+          src={forwardArrow}
+          alt="forward arrow"
+          class="h-16 w-fit self-center"
+        />
+        <Step color="#9044E2" number="3" icon={purpleHat} iconAlt="purple hat">
+          <span slot="title">Personalise</span>
+          <div slot="content">
+            <StarBulletPoints
+              content={[
+                "Choose your favourite creations to make",
+                "Flexible & allergy aware party food",
+                "Party invitations included",
+                "You can bring your own birthday cake",
+                "Let us know the approx. number of children & which creations your child wants to make a week before the party",
+              ]}
+            />
+          </div>
+        </Step>
+      </div>
+    </section>
+    <div class="my-16 text-center">
+      <PrimaryButton text="Book a party" path="#test" />
+    </div>
+    <section>
+      <div class="mb-4 flex flex-col items-center gap-4">
+        <h3 class="font-lilita text-4xl">Birthday Party Themes</h3>
+        <h4 class="font-lilita text-xl">
+          Our packages help creaet a personalised birthday party that your child
+          will love.
+        </h4>
+        <p class="text-center font-gotham">
+          Whether your child loves all things glitter and sparkles or is amazed
+          by<br />science we have the perfect party for your child!
+        </p>
+      </div>
+      <div
+        class="grid grid-cols-1 justify-center min-[350px]:grid-cols-2 min-[900px]:grid-cols-4"
+      >
+        <PartyPackage
+          title="Glitz & Glam parties"
+          color="#F24C9F"
+          image={glitzAndGlam}
+          imageAlt="hands with lip balm"
+          path="parties/glitz-and-glam"
+        />
+        <PartyPackage
+          title="Science parties"
+          color="#43D4F3"
+          image={science}
+          imageAlt="bubbling volcano"
+          path="parties/science"
+        />
+        <PartyPackage
+          title="Slimey parties"
+          color="#9044E2"
+          image={slimey}
+          imageAlt="flufy slime"
+          path="parties/slime"
+        />
+      </div>
+    </section>
+  </main>
+</Layout>

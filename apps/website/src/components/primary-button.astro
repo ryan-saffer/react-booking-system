@@ -1,15 +1,23 @@
 ---
+import { cn } from "./react/lib/utils";
+import { Button } from "./react/ui/button";
+
 type Props = {
   text: string;
   path: string;
+  className?: astroHTML.JSX.HTMLAttributes["class"];
 };
 
-const { text, path } = Astro.props;
+const { text, path, className = "" } = Astro.props;
 ---
 
-<a
-  class="transition-colors duration-300 ease-in-out rounded-full bg-[#F6BA33] text-white px-7 py-5 uppercase font-semibold hover:bg-[#9C59E4] shadow-[0px_0px_35px_0px_rgba(246,186,51,0.75)]"
-  href={path}
+<Button
+  className={cn(
+    "h-fit text-wrap break-words rounded-full bg-[#F6BA33] p-0 font-semibold uppercase text-white shadow-[0px_0px_35px_0px_rgba(246,186,51,0.75)] transition-colors duration-300 ease-in-out hover:bg-[#9C59E4]",
+    className,
+  )}
 >
-  {text}
-</a>
+  <a href={path} class="px-7 py-5">
+    {text}
+  </a>
+</Button>
