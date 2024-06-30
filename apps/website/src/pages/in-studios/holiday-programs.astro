@@ -22,12 +22,15 @@ const programWeeks = await storyblokClient.getHolidayPrograms({
         {
           type: "dropdown",
           title: "Holiday Programs",
+          path: "holiday-programs",
           items: [
             {
+              type: "link",
               title: "Birthday Parties",
               path: "birthday-parties",
             },
             {
+              type: "link",
               title: "Holiday Programs",
               path: "holiday-programs",
             },

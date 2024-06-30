@@ -182,7 +182,10 @@ function IncursionForm() {
               <FormLabel>Science Module *</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="rounded-xl border-violet-500 focus-visible:outline-purple-700">
+                  <SelectTrigger
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    aria-label="select module"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   {/* <Input
@@ -226,7 +229,7 @@ function IncursionForm() {
           )}
         />
         <Button
-          className="w-full bg-[#B34495] text-end hover:bg-[#B4589C] focus-visible:outline-purple-500"
+          className="!mt-8 w-full bg-[#B34495] hover:bg-[#B4589C] focus-visible:outline-purple-500"
           type="submit"
         >
           {loading ? (
