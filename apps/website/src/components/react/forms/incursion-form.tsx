@@ -93,7 +93,7 @@ function IncursionForm() {
   return (
     <Form {...form}>
       <Toaster richColors closeButton />
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="contactName"
@@ -226,7 +226,7 @@ function IncursionForm() {
           )}
         />
         <Button
-          className="w-full bg-[#B34495] text-end focus-visible:outline-purple-500"
+          className="w-full bg-[#B34495] text-end hover:bg-[#B4589C] focus-visible:outline-purple-500"
           type="submit"
         >
           {loading ? (

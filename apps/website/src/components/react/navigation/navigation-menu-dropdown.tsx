@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import { cn } from "../lib/utils";
+import { useState } from "react";
 
 function NavigationMenuDropdown({
   title,
@@ -20,13 +21,21 @@ function NavigationMenuDropdown({
   delay?: number;
   className?: React.HTMLAttributes<any>["className"];
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <HoverCard openDelay={delay} closeDelay={50}>
-      {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score */}
-      <HoverCardTrigger asChild>
+    <HoverCard
+      open={open}
+      onOpenChange={setOpen}
+      openDelay={delay}
+      closeDelay={50}
+    >
+      {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score) */}
+      <HoverCardTrigger>
         <Button
           variant="ghost"
           className={cn("font-gotham font-light", className)}
+          onClick={() => setOpen(true)}
         >
           {title}
           <ChevronDown className="ml-2 h-4 w-4" />

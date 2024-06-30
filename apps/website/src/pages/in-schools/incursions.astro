@@ -331,7 +331,7 @@ const earthImages = [
         </p>
         <PrimaryButton
           text="Book a science incursion for your school"
-          path="#book"
+          path="#contact"
         />
       </div>
       <Image
@@ -370,7 +370,7 @@ const earthImages = [
           },
         ]}
       />
-      <section class="mt-24 flex flex-col gap-16 md:flex-row md:gap-8">
+      <section class="relative mt-24 flex flex-col gap-16 md:flex-row md:gap-8">
         <div class="flex flex-1 items-center justify-center">
           <Image
             src={blueBubbles}
@@ -386,6 +386,7 @@ const earthImages = [
           </p>
           <PrimaryButton text="Book a call" path="#contact" className="w-fit" />
         </div>
+        <div id="contact" class="absolute bottom-10"></div>
       </section>
       <div class="m-auto mt-12 max-w-3xl p-4">
         <p class="mb-4 text-center font-lilita text-3xl">
