@@ -12,11 +12,13 @@ import { useState } from "react";
 
 function NavigationMenuDropdown({
   title,
+  path = "",
   submenus,
   className = "",
   delay = 100,
 }: {
   title: string;
+  path?: string;
   submenus: Readonly<{ title: string; path: string }[]>;
   delay?: number;
   className?: React.HTMLAttributes<any>["className"];
@@ -31,7 +33,7 @@ function NavigationMenuDropdown({
       closeDelay={50}
     >
       {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score) */}
-      <HoverCardTrigger>
+      <HoverCardTrigger asChild={path === ""}>
         <Button
           variant="ghost"
           className={cn("font-gotham font-light", className)}

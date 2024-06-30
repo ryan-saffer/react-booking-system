@@ -18,6 +18,7 @@ export function BreadcrumbWrapper({
     | {
         type: "dropdown";
         title: string;
+        path: string;
         items: { title: string; path: string }[];
       }
   )[];
@@ -52,6 +53,7 @@ export function BreadcrumbWrapper({
                 <NavigationMenuDropdown
                   className="-ml-2 font-sans font-normal"
                   title={child.title}
+                  path={child.path}
                   submenus={child.items}
                   delay={400}
                 />
