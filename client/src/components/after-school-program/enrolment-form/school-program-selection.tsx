@@ -78,10 +78,8 @@ export function SchoolProgramSelection() {
                                     key={program.id + (selectedProgram?.id ? '-selected' : '')} // this little trick forces a rerender when selecting the card, which makes the 'animate-grow' animation happen again.
                                     onSelect={() => {
                                         if (selectedProgram && selectedProgram.id === program.id) {
-                                            console.log('setting program to null')
                                             selectProgram(null)
                                         } else {
-                                            console.log('setting program to', { program })
                                             selectProgram(program)
                                         }
                                     }}

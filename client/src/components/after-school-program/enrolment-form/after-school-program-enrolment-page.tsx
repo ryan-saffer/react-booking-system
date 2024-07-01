@@ -79,13 +79,6 @@ export function AfterSchoolProgramEnrolmentPage() {
         isSuccess: isSuccessWaitlist,
     } = trpc.afterSchoolProgram.joinWaitList.useMutation()
 
-    const classIsFull = form.watch('classIsFull')
-
-    const onError = (errors: any) => {
-        console.error(errors)
-        console.log({ classIsFull })
-    }
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!selectedProgram) {
             console.error('Enrolling before program has been selecte - this is impossible.')
@@ -176,7 +169,7 @@ export function AfterSchoolProgramEnrolmentPage() {
                 <Separator className="my-4" />
                 <FormProvider {...form}>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
                             {isSuccessMain ? (
                                 <Alert variant="success">
                                     <CheckCircle className="h-4 w-4" />
