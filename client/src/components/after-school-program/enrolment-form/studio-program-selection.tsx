@@ -100,13 +100,20 @@ export function StudioProgramSelection() {
             {isLoading && <Loader />}
             {isSuccess && data.length > 0 && (
                 <>
-                    {renderProgramCategory(
-                        'science',
-                        data.filter((it) => it.category.includes('science'))
-                    )}
-                    {renderProgramCategory(
-                        'art',
-                        data.filter((it) => it.category.includes('art'))
+                    {import.meta.env.VITE_ENV === 'prod' ? (
+                        <>
+                            {renderProgramCategory(
+                                'science',
+                                data.filter((it) => it.category.includes('science'))
+                            )}
+                            {renderProgramCategory(
+                                'art',
+                                data.filter((it) => it.category.includes('art'))
+                            )}
+                        </>
+                    ) : (
+                        // for testing, there is no breakdown by studio and category. just render all the test programs.
+                        renderProgramCategory('science', data)
                     )}
                 </>
             )}

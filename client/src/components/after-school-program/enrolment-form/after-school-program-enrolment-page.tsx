@@ -1,4 +1,5 @@
 import { CheckCircle, ChevronLeft } from 'lucide-react'
+import { DateTime } from 'luxon'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -48,6 +49,7 @@ export function AfterSchoolProgramEnrolmentPage() {
                 emergencyContactNumber: '',
                 pickupPeople: [{ pickupPerson: '' }],
                 termsAndConditions: false,
+                joinMailingList: true,
             },
             waitingList: {
                 waitingListParentName: '',
@@ -85,16 +87,12 @@ export function AfterSchoolProgramEnrolmentPage() {
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log('SUBMITTING')
-        console.log(values)
-
         if (!selectedProgram) {
             console.error('Enrolling before program has been selecte - this is impossible.')
             return
         }
 
         if (values.classIsFull) {
-            console.log('CLASS FULL')
             if (!values.waitingList) {
                 console.error("'waitingList' form cannot be empty at this point")
                 return
@@ -120,8 +118,9 @@ export function AfterSchoolProgramEnrolmentPage() {
 
         let programType = values.programType
         if (inStudio) {
-            console.log({ selectedProgram })
-            if (selectedProgram.category.includes('science')) {
+            if (import.meta.env.VITE_ENV === 'dev') {
+                programType = 'science'
+            } else if (selectedProgram.category.includes('science')) {
                 programType = 'science'
             } else if (selectedProgram.category.includes('art')) {
                 programType = 'art'
@@ -146,7 +145,8 @@ export function AfterSchoolProgramEnrolmentPage() {
                     child: {
                         firstName: child.firstName!,
                         lastName: child.lastName!,
-                        age: '0', // TODO calculate age from DOB
+                        age: Math.floor(Math.abs(DateTime.fromJSDate(child.dob!).diffNow('years').years)).toString(),
+                        dob: child.dob!.toISOString(),
                         grade: child.grade!,
                         allergies: child.allergies || '',
                         isAnaphylactic: !!child.isAnaphylactic,
@@ -161,6 +161,7 @@ export function AfterSchoolProgramEnrolmentPage() {
                     },
                     className: selectedProgram.name,
                     pickupPeople: values.main!.pickupPeople.map((person) => person.pickupPerson),
+                    joinMailingList: values.main!.joinMailingList,
                 }))
             )
         } catch (err) {

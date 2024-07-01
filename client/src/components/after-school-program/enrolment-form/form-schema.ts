@@ -131,6 +131,7 @@ export const formSchema = z.object({
                 })
             ),
             termsAndConditions: z.boolean().refine((val) => val, 'Please accept the terms and conditions'),
+            joinMailingList: z.boolean(),
         })
         .optional(),
     classIsFull: z.boolean(),

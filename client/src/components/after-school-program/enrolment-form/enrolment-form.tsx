@@ -615,7 +615,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     control={form.control}
                     name="main.termsAndConditions"
                     render={({ field }) => (
-                        <FormItem className="my-2">
+                        <FormItem className="mt-2">
                             <div className="flex items-center space-y-0">
                                 <FormControl>
                                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
@@ -628,6 +628,23 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     >
                                         Terms and Conditions.
                                     </span>
+                                </FormLabel>
+                            </div>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="main.joinMailingList"
+                    render={({ field }) => (
+                        <FormItem className="mb-2">
+                            <div className="flex items-center space-y-0">
+                                <FormControl>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <FormLabel className="ml-2 cursor-pointer">
+                                    Keep me informed about the latest Fizz Kidz programs and offers.
                                 </FormLabel>
                             </div>
                             <FormMessage />
