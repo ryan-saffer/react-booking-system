@@ -51,10 +51,10 @@ export function BreadcrumbWrapper({
             result = (
               <BreadcrumbItem>
                 <NavigationMenuDropdown
-                  className="-ml-2 font-sans font-normal"
                   title={child.title}
                   submenus={child.items}
                   delay={400}
+                  isBreadcrumb
                 />
               </BreadcrumbItem>
             );

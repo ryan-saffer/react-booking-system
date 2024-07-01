@@ -20,8 +20,8 @@ import { useState } from "react";
 function NavigationMenuDropdown({
   title,
   submenus,
-  className = "",
   delay = 100,
+  isBreadcrumb = false,
 }: {
   title: string;
   submenus: Readonly<
@@ -36,7 +36,7 @@ function NavigationMenuDropdown({
     )[]
   >;
   delay?: number;
-  className?: React.HTMLAttributes<any>["className"];
+  isBreadcrumb?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -52,10 +52,15 @@ function NavigationMenuDropdown({
         <HybridHoverCardTrigger asChild>
           <Button
             variant="ghost"
-            className={cn("font-gotham font-light", className)}
+            className={cn(
+              "group relative font-gotham text-lg hover:bg-transparent",
+              { "text-md -ml-2 font-sans font-normal": isBreadcrumb },
+            )}
             onClick={() => setOpen(true)}
           >
-            {title}
+            <span className="decoration-[#B34696] decoration-2 underline-offset-4 group-hover:underline">
+              {title}
+            </span>
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </HybridHoverCardTrigger>
@@ -67,6 +72,7 @@ function NavigationMenuDropdown({
                   path={menu.path}
                   title={menu.title}
                   key={idx}
+                  className={isBreadcrumb ? "text-md" : ""}
                 />
               );
             }
@@ -79,9 +85,12 @@ function NavigationMenuDropdown({
                     className="border-none"
                     date-state="open"
                   >
-                    <AccordionTrigger className="p-3 font-gotham text-sm font-light hover:no-underline">
+                    <AccordionTrigger className="h-10 rounded-xl p-3 font-gotham text-lg hover:bg-gray-50 hover:no-underline">
                       {menu.path ? (
-                        <a href={menu.path} className="hover:underline">
+                        <a
+                          href={menu.path}
+                          className="decoration-[#B34696] underline-offset-4 hover:underline"
+                        >
                           {menu.title}
                         </a>
                       ) : (
@@ -93,7 +102,10 @@ function NavigationMenuDropdown({
                         <AccordionItem
                           key={idx}
                           value={item.title}
-                          className="border-none p-2 font-gotham text-sm font-light"
+                          className={cn(
+                            "border-none p-2 font-gotham text-lg italic decoration-[#B34696] underline-offset-4",
+                            { "text-md": isBreadcrumb },
+                          )}
                         >
                           <a href={item.path} className="hover:underline">
                             {item.title}

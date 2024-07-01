@@ -33,7 +33,7 @@ function LogoGrid({ logos }: { logos: CustomImage[] }) {
             <img
               src={logo.image.src}
               alt={logo.alt}
-              className="max-h-36 max-w-24 object-contain sm:max-w-40"
+              className="max-h-36 max-w-24 object-contain sm:max-w-32"
             />
             {showLeftBorder && (
               <div className="absolute left-0 h-4/5 w-[1px] bg-black" />

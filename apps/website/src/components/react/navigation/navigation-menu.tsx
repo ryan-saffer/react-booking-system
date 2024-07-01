@@ -15,11 +15,6 @@ import { useState } from "react";
 
 const menu = [
   {
-    title: "Fizz Facts",
-    type: "link",
-    path: "/fizz-facts",
-  },
-  {
     title: "In Studios",
     type: "dropdown",
     items: [
@@ -103,14 +98,22 @@ const menu = [
     ],
   },
   {
-    title: "Activation and Events",
+    title: "Activations and Events",
     type: "link",
     path: "/activations-and-events",
   },
   {
-    title: "Franchising",
-    type: "link",
-    path: "/franchising",
+    title: "Fizz Facts",
+    type: "dropdown",
+    items: [
+      {
+        type: "link",
+        title: "Contact Us",
+        path: "/contact-us",
+      },
+      { type: "link", title: "Meet the Team", path: "/the-team" },
+      { type: "link", title: "Franchising", path: "/franchising" },
+    ],
   },
 ] as const;
 
