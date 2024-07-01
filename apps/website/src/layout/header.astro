@@ -2,20 +2,29 @@
 import { Image } from "astro:assets";
 import logo from "@/assets/images/Fizz Kidz Horizontal.png";
 import NavigationMenu from "@/react-components/navigation/navigation-menu";
+import { Button } from "@/components/react/ui/button";
 ---
 
 <div
-  class="sticky top-0 z-50 flex items-center justify-between bg-white px-8 py-2 shadow-lg"
+  class="sticky top-0 z-50 flex min-h-20 justify-center bg-white px-8 py-2 shadow-lg"
 >
-  <a href="/">
-    <Image
-      src={logo}
-      alt="Fizz Kidz Logo"
-      height={300}
-      width={300}
-      loading="eager"
-      class="w-28 min-w-24"
-    />
-  </a>
-  <NavigationMenu client:load />
+  <div class="flex w-full max-w-[1380px] items-center justify-between">
+    <div class="flex items-center gap-8">
+      <a href="/">
+        <Image
+          src={logo}
+          alt="Fizz Kidz Logo"
+          height={300}
+          width={300}
+          loading="eager"
+          class="w-40 min-w-24"
+        />
+      </a>
+      <NavigationMenu client:load />
+    </div>
+    <Button
+      className="rounded-full bg-[#B34696] p-6 font-lilita text-lg uppercase hover:bg-[#B4589C]"
+      >Get in touch</Button
+    >
+  </div>
 </div>
