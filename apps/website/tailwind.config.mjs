@@ -20,6 +20,10 @@ module.exports = {
         "purple-lg": "-50px 50px 0px -1px rgba(232,219,253,0.71)",
         "purple-md": "-25px 25px 0px -1px rgba(232,219,253,0.71)",
         "purple-sm": "-10px 10px 0px -1px rgba(232,219,253,0.71)",
+        "blue-lg": "-50px 50px 0px -1px rgba(215, 246, 253, 0.81)",
+        "blue-md": "-25px 25px 0px -1px rgba(215, 246, 253, 0.81)",
+        "blue-sm": "-10px 10px 0px -1px rgba(215, 246, 253, 0.81)",
+        around: "rgba(0, 0, 0, 0.35) 0px 5px 15px;",
       },
       colors: {
         border: "hsl(var(--border))",

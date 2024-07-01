@@ -1,0 +1,339 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import WideImageCard from "@/components/wide-image-card.astro";
+import { getImage } from "astro:assets";
+
+import CardCarousel from "@/react-components/activations/card-carousel";
+
+import hero from "@/assets/images/pages/activations-and-events/hero.jpg";
+import mCity from "@/assets/images/pages/activations-and-events/m-city.jpg";
+import kidsMornings from "@/assets/images/pages/activations-and-events/kids-mornings.jpg";
+import mothersDayClassic from "@/assets/images/pages/activations-and-events/mothers-day-classic.jpg";
+import mothersDay from "@/assets/images/pages/activations-and-events/mothers-day.jpg";
+import easter from "@/assets/images/pages/activations-and-events/easter.png";
+import christmas from "@/assets/images/pages/activations-and-events/christmas.jpeg";
+import halloween from "@/assets/images/pages/activations-and-events/halloween.jpeg";
+import backToSchool from "@/assets/images/pages/activations-and-events/back-to-school.jpg";
+import scienceWeek from "@/assets/images/pages/activations-and-events/science-week.jpg";
+import springCarnival from "@/assets/images/pages/activations-and-events/spring-carnival.jpg";
+import scientist from "@/assets/images/pages/activations-and-events/scientist.jpg";
+import winterWonderland from "@/assets/images/pages/activations-and-events/winter-wonderland.jpg";
+import rainbows from "@/assets/images/pages/activations-and-events/roaring-rainbows.jpeg";
+import engineers from "@/assets/images/pages/activations-and-events/engineers.jpg";
+import animals from "@/assets/images/pages/activations-and-events/animals.jpg";
+
+import aflLogo from "@/assets/images/pages/activations-and-events/logos/afl.png";
+import brimbankLogo from "@/assets/images/pages/activations-and-events/logos/brimbank.jpeg";
+import caseyCentralLogo from "@/assets/images/pages/activations-and-events/logos/casey-central.png";
+import cbusLogo from "@/assets/images/pages/activations-and-events/logos/cbus.png";
+import croydonCentralLogo from "@/assets/images/pages/activations-and-events/logos/croydon-central.jpeg";
+import dandenongPlazaLogo from "@/assets/images/pages/activations-and-events/logos/dandenong-plaza.jpeg";
+import goodFridayAppealLogo from "@/assets/images/pages/activations-and-events/logos/good-friday-appeal.png";
+import mCityLogo from "@/assets/images/pages/activations-and-events/logos/m-city.png";
+import mooneePondsCentralLogo from "@/assets/images/pages/activations-and-events/logos/moonee-ponds-central.jpeg";
+import mothersDayClassicLogo from "@/assets/images/pages/activations-and-events/logos/mothers-day-classic.jpeg";
+import stocklandLogo from "@/assets/images/pages/activations-and-events/logos/stockland.png";
+import sumerhillLogo from "@/assets/images/pages/activations-and-events/logos/sumerhill.png";
+import thePinesLogo from "@/assets/images/pages/activations-and-events/logos/the-pines.jpeg";
+import waggaWaggaLogo from "@/assets/images/pages/activations-and-events/logos/wagga-wagga.jpeg";
+import westfieldLogo from "@/assets/images/pages/activations-and-events/logos/westfield.jpg";
+import LogoGrid from "@/components/react/logo-grid";
+
+const aflLogoOptimised = await getImage({ src: aflLogo, format: "webp" });
+const brimbankLogoOptimised = await getImage({
+  src: brimbankLogo,
+  format: "webp",
+});
+const caseyCentralLogoOptimised = await getImage({
+  src: caseyCentralLogo,
+  format: "webp",
+});
+const cbusLogoOptimised = await getImage({ src: cbusLogo, format: "webp" });
+const croydonCentralLogoOptimised = await getImage({
+  src: croydonCentralLogo,
+  format: "webp",
+});
+const dandenongPlazaLogoOptimised = await getImage({
+  src: dandenongPlazaLogo,
+  format: "webp",
+});
+const goodFridayAppealLogoOptimised = await getImage({
+  src: goodFridayAppealLogo,
+  format: "webp",
+});
+const mCityLogoOptimised = await getImage({ src: mCityLogo, format: "webp" });
+const mooneePondsCentralLogoOptimised = await getImage({
+  src: mooneePondsCentralLogo,
+  format: "webp",
+});
+const mothersDayClassicLogoOptimised = await getImage({
+  src: mothersDayClassicLogo,
+  format: "webp",
+});
+const stocklandLogoOptimised = await getImage({
+  src: stocklandLogo,
+  format: "webp",
+});
+const sumerhillLogoOptimised = await getImage({
+  src: sumerhillLogo,
+  format: "webp",
+});
+const thePinesLogoOptimised = await getImage({
+  src: thePinesLogo,
+  format: "webp",
+});
+const waggaWaggaLogoOptimised = await getImage({
+  src: waggaWaggaLogo,
+  format: "webp",
+});
+const westfieldLogoOptimised = await getImage({
+  src: westfieldLogo,
+  format: "webp",
+});
+
+const heroOptimised = await getImage({ src: hero, format: "webp" });
+const mothersDayOptimised = await getImage({ src: mothersDay, format: "webp" });
+const easterOptimised = await getImage({ src: easter, format: "webp" });
+const christmasOptimised = await getImage({ src: christmas, format: "webp" });
+const halloweenOptimised = await getImage({ src: halloween, format: "webp" });
+const backToSchoolOptimised = await getImage({
+  src: backToSchool,
+  format: "webp",
+});
+const scienceWeekOptimised = await getImage({
+  src: scienceWeek,
+  format: "webp",
+});
+const springCarnivalOptimised = await getImage({
+  src: springCarnival,
+  format: "webp",
+});
+const scientistOptimised = await getImage({ src: scientist, format: "webp" });
+const winterWonderlandOptimised = await getImage({
+  src: winterWonderland,
+  format: "webp",
+});
+const rainbowsOptimised = await getImage({ src: rainbows, format: "webp" });
+const engineersOptimised = await getImage({ src: engineers, format: "webp" });
+const animalsOptimised = await getImage({ src: animals, format: "webp" });
+
+const logos = [
+  { image: aflLogoOptimised, alt: "afl logo" },
+  { image: brimbankLogoOptimised, alt: "brimbank logo" },
+  { image: caseyCentralLogoOptimised, alt: "casey central logo" },
+  { image: cbusLogoOptimised, alt: "cbus logo" },
+  { image: croydonCentralLogoOptimised, alt: "croydon central logo" },
+  { image: dandenongPlazaLogoOptimised, alt: "dandenong plaza logo" },
+  { image: goodFridayAppealLogoOptimised, alt: "good friday appeal logo" },
+  { image: mCityLogoOptimised, alt: "m-city logo" },
+  { image: mooneePondsCentralLogoOptimised, alt: "moonee ponds central logo" },
+  { image: mothersDayClassicLogoOptimised, alt: "mothers day classic logo" },
+  { image: stocklandLogoOptimised, alt: "stockland logo" },
+  { image: sumerhillLogoOptimised, alt: "sumerhill logo" },
+  { image: thePinesLogoOptimised, alt: "the pines logo" },
+  { image: waggaWaggaLogoOptimised, alt: "wagga wagga logo" },
+  { image: westfieldLogoOptimised, alt: "westfield logo" },
+];
+---
+
+<Layout
+  title="Activations and Events | Fizz Kidz"
+  description="Fizz Kidz runs activations and events across Australia, creating a space for children to create something special. Book us for your shopping center, corporate event or anywhere you need a little bit of Fizz!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 py-8" aria-hidden="true">
+    <div class="h-[10px]"></div>
+    <BreadcrumbWrapper
+      items={[
+        {
+          type: "link",
+          path: "/activations-and-events",
+          title: "Activations and Events",
+        },
+      ]}
+    />
+    <PageIntro
+      subtitle="Seriously fun activations!"
+      image={hero}
+      imageAlt="Fizz Kidz running a beautiful activation in a shopping center"
+      actionButtonText="Book an activation or event"
+      actionButtonPath="#contact"
+      color="blue"
+    >
+      <span slot="title">Kids Activations and Events in Melbourne</span>
+      <span slot="content"
+        >Fizz Kidz is an innovative and vibrant company that is wholeheartedly
+        dedicated to providing high-energy, interactive and fun experiences for
+        children. Fizz Kidz Activations are vibrant and engaging, fostering a
+        sense of wonder and creating a world of curious excitement for children.</span
+      >
+    </PageIntro>
+    <section class="mt-28 lg:mt-40">
+      <h5 class="text-center font-lilita text-4xl">
+        Share the Fizz and create a buzz around your community!
+      </h5>
+      <div class="mt-20 flex flex-col gap-8 lg:mt-28 lg:gap-16">
+        <WideImageCard
+          image={mCity}
+          imageAlt="Fiz Kidz running programs for children in a large shopping center with balloons"
+          title="School Holiday Activations"
+          content="Join us for school holiday fun! Choose from our pre-created themes or share your vision, and we'll bring it to life. Whether it's for one or two weeks, we've got you covered."
+          color="#4DC5D9"
+          imageSide="left"
+        />
+        <WideImageCard
+          image={kidsMornings}
+          imageAlt="A child smiling while drawing with crayons"
+          title="Pre-school Kids Mornings"
+          content="Bring weekday morning excitement to your Centre. Little ones and parents join in for fun developmentally appropriate activities that families love! Choose from our pre-planned workshops or we’ll customise the sessions to your vision!"
+          color="#4FE16D"
+          imageSide="right"
+        />
+        <WideImageCard
+          image={mothersDayClassic}
+          imageAlt="Fizz Kidz building cardboard houses outdoors with a marquee in the background"
+          title="Corporate Events"
+          content="Elevate your corporate events with Fizz Kidz! Your team and customers will love you for it. Whether it's a company family fun day, a public showcase, or a large-scale pop-up event, we deliver high-end, seamless, and beloved activations!"
+          color="#4DC5D9"
+          imageSide="left"
+        />
+      </div>
+    </section>
+    <section>
+      <div class="mt-28 bg-[#EBFAFE] p-4">
+        <h6 class="pb-2 pl-12 pt-12 font-lilita text-4xl text-[#6EC1E4]">
+          Calendar Themed Activations
+        </h6>
+        <CardCarousel
+          client:visible
+          items={[
+            {
+              title: "Mothers Day",
+              content:
+                "An activation wrapped in pastel pinks, designed to celebrate mums! This event offers a variety of activities for kids that are sure to delight mums, from creating Mother's Day cards to making bath bombs. It's an activation guaranteed to bring smiles to all.",
+              image: mothersDayOptimised,
+              imageAlt: "A child colouring in a card for mothers day",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Exciting Easter",
+              content:
+                "Spring into fun with our Easter-themed activations where kids create truly egg-citing activities! Activities include Easter Baskets, Easter Egg Bath-Bombs and Bunny Ears.",
+              image: easterOptimised,
+              imageAlt: "An crafty easter egg",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Christmas Cheer",
+              content:
+                "Spread the Holiday Spirit! In this Activation kids craft festive Christmas activities, including Christmas Stockings, Snow Houses and Christmas Slime.",
+              image: christmasOptimised,
+              imageAlt: "A child making a cutout christmas tree",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Haunted Halloween",
+              content:
+                "Step into a Spooky Spectacle! Kids craft up their spooky activities including Monster Slime and Wild Animal Masks.",
+              image: halloweenOptimised,
+              imageAlt: "A slimey couldron",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Back to School",
+              content:
+                "Get kids and families into your centre for back to school shopping with school themed kids activities!",
+              image: backToSchoolOptimised,
+              imageAlt: "A kid carefully reading from an instruction booklet",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Science Week",
+              content:
+                "This Activation is scientifically fantastic offering kids hands-on science experiments to make and take home with them for hours of fun!",
+              image: scienceWeekOptimised,
+              imageAlt: "A child playing with slime they made",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+          ]}
+        />
+      </div>
+      <div class="p-4">
+        <h6 class="pb-2 pl-12 pt-12 font-lilita text-4xl text-[#6EC1E4]">
+          Themed Activations
+        </h6>
+        <CardCarousel
+          client:visible
+          items={[
+            {
+              title: "Silly Scientist",
+              content:
+                "A Fizz Kidz favourite, this activation is scientifically-fantastic! Kids get hands-on making their own science experiments lead by enthusiastic facilitators dressed in lab coats and science goggles.",
+              image: scientistOptimised,
+              imageAlt: "A kid in a lab coat pouring something",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Winter Wonderland",
+              content:
+                "Step into the winter wonderland! Kids explore enchanting activities like instant snow slime, frosty bath-bombs and build their own snow houses.",
+              image: winterWonderlandOptimised,
+              imageAlt: "White snow slime",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Roaring Rainbows",
+              content:
+                "Our Roaring Rainbows activation is a colourful celebration packed with vibrant activities, including rainbow wall hangings, rainbow and rainbow sand art.",
+              image: rainbowsOptimised,
+              imageAlt: "A Fizz Kidz staff holding crafted rainbows",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Excellent Engineers",
+              content:
+                "This activation is packed with hands-on activities and challenges designed to spark creativity and problem-solving skills. Activities include 3D roller coasters, catapults and parachutes.",
+              image: engineersOptimised,
+              imageAlt: "Two kids laughing with bath bombs",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Enchanted Forest",
+              content:
+                "Step into the whimsical enchanted forest with us! This activation has kids making magic sand, creatures-of-the-night masks, monster slime and more.",
+              image: heroOptimised,
+              imageAlt: "An crafty easter egg",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+            {
+              title: "Amazing Animals",
+              content:
+                "Join us as we explore the fascinating world of animals through hands-on activities such as dinosaur eggs, hamster pencil holders and bugs in bath-bombs.",
+              image: animalsOptimised,
+              imageAlt: "A toy dinosaur in a bath bomb",
+              buttonText: "Book Now",
+              buttonPath: "#contact",
+            },
+          ]}
+        />
+      </div>
+    </section><section>
+      <h6 class="my-20 text-center font-lilita text-4xl">
+        You're in great company!
+      </h6>
+      <LogoGrid client:visible logos={logos} />
+    </section>
+  </main>
+</Layout>

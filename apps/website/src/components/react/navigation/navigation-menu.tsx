@@ -98,7 +98,7 @@ const menu = [
     ],
   },
   {
-    title: "Activation and Events",
+    title: "Activations and Events",
     type: "link",
     path: "/activations-and-events",
   },

@@ -2,6 +2,7 @@
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 import PrimaryButton from "@/components/primary-button.astro";
+import { cn } from "./react/lib/utils";
 
 type Props = {
   subtitle: string;
@@ -9,11 +10,13 @@ type Props = {
   imageAlt: string;
   actionButtonText: string;
   actionButtonPath: string;
-  color: string;
+  color: "purple" | "blue";
 };
 
 const { subtitle, image, imageAlt, actionButtonPath, actionButtonText, color } =
   Astro.props;
+
+const colourHex = color === "purple" ? "#9044E2" : "#4DC5DA";
 ---
 
 <section class="mt-4 min-[1400px]:mt-20">
@@ -24,7 +27,10 @@ const { subtitle, image, imageAlt, actionButtonPath, actionButtonText, color } =
       <h1 class="mb-4 font-lilita text-5xl leading-none sm:text-6xl">
         <slot name="title" />
       </h1>
-      <h2 class="mb-8 font-lilita text-2xl sm:text-3xl" style={{ color }}>
+      <h2
+        class="mb-8 font-lilita text-2xl sm:text-3xl"
+        style={{ color: colourHex }}
+      >
         {subtitle}
       </h2>
       <p class="mb-16 font-gotham text-sm font-semibold sm:text-base">
@@ -40,7 +46,12 @@ const { subtitle, image, imageAlt, actionButtonPath, actionButtonText, color } =
         alt={imageAlt}
         width={1200}
         loading="eager"
-        class="shadow-purple-sm sm:shadow-purple-md md:shadow-purple-lg rounded-3xl"
+        class={cn("rounded-3xl", {
+          "shadow-purple-sm sm:shadow-purple-md md:shadow-purple-lg":
+            color === "purple",
+          "shadow-blue-sm sm:shadow-blue-md md:shadow-blue-lg":
+            color === "blue",
+        })}
       />
     </div>
   </div>

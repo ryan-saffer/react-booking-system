@@ -1,0 +1,37 @@
+---
+import { Image } from "astro:assets";
+import { cn } from "./react/lib/utils";
+
+type Props = {
+  image: ImageMetadata;
+  imageAlt: string;
+  title: string;
+  content: string;
+  color: string;
+  imageSide: "left" | "right";
+};
+
+const { image, imageAlt, title, content, color, imageSide } = Astro.props;
+---
+
+<div
+  class={cn("shadow-around flex h-[450px] max-h-[450px] rounded-2xl", {
+    "flex-row": imageSide === "left",
+    "flex-row-reverse": imageSide === "right",
+  })}
+>
+  <Image
+    class={cn("w-3/5 object-cover hidden md:block", {
+      "rounded-l-2xl": imageSide === "left",
+      "rounded-r-2xl": imageSide === "right",
+    })}
+    src={image}
+    alt={imageAlt}
+  />
+  <div
+    class="flex w-full flex-col items-center justify-center gap-8 p-8 md:w-2/5"
+  >
+    <h6 class="text-center font-lilita text-4xl" style={{ color }}>{title}</h6>
+    <p class="text-center font-gotham font-medium leading-8">{content}</p>
+  </div>
+</div>
