@@ -26,6 +26,7 @@ export type Emails = {
     afterSchoolEnrolmentConfirmation: {
         isScience: boolean
         isArt: boolean
+        inStudio: boolean
         parentName: string
         childName: string
         className: string

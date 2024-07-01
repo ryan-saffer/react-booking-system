@@ -1,10 +1,13 @@
 import {
     AcuityConstants,
     AcuityTypes,
+    AcuityUtilities,
     AfterSchoolEnrolment,
+    Location,
     ScheduleAfterSchoolEnrolmentParams,
     capitalise,
     getApplicationDomain,
+    getLocationAddress,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -131,16 +134,20 @@ export default async function scheduleAfterSchoolProgram(
         }
     }
 
-    try {
-        const zohoClient = new ZohoClient()
-        await zohoClient.addAfterSchoolProgramContact({
-            firstName: appointment.parent.firstName,
-            lastName: appointment.parent.lastName,
-            email: appointment.parent.email,
-            mobile: appointment.parent.phone,
-        })
-    } catch (err) {
-        logError(`unable to add after school program enrolment to zoho with id: ${appointment.id}`, err)
+    if (input.joinMailingList) {
+        try {
+            const zohoClient = new ZohoClient()
+            await zohoClient.addAfterSchoolProgramContact({
+                firstName: appointment.parent.firstName,
+                lastName: appointment.parent.lastName,
+                email: appointment.parent.email,
+                mobile: appointment.parent.phone,
+                childName: input.child.firstName,
+                childBirthdayISO: input.child.dob,
+            })
+        } catch (err) {
+            logError(`unable to add after school program enrolment to zoho with id: ${appointment.id}`, err)
+        }
     }
 
     // send the confirmation email
@@ -153,24 +160,32 @@ export default async function scheduleAfterSchoolProgram(
                 {
                     isScience: input.type === 'science',
                     isArt: input.type === 'art',
+                    inStudio: input.inStudio,
                     parentName: input.parent.firstName,
                     childName: input.child.firstName,
                     className: input.className,
-                    appointmentTimes: appointments.map((it) =>
-                        DateTime.fromISO(it.datetime, {
-                            setZone: true,
-                        }).toLocaleString({
-                            weekday: 'short',
-                            month: 'short',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: true,
-                        })
+                    appointmentTimes: appointments.map(
+                        (it) =>
+                            `${DateTime.fromISO(it.datetime, {
+                                setZone: true,
+                            }).toLocaleString({
+                                weekday: 'short',
+                                month: 'short',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                            })} - ${DateTime.fromISO(it.datetime, { setZone: true })
+                                .plus({
+                                    minutes: parseInt(it.duration),
+                                })
+                                .toFormat('hh:mm a')}`
                     ),
-                    calendarName: calendar.location,
+                    calendarName: calendar.location || 'Calendar Name',
                     price: (parseInt(appointments[0].price) * appointments.length).toString(),
-                    location: calendar.description,
+                    location: input.inStudio
+                        ? getStudioLocation(AcuityUtilities.getStudioByCalendarId(input.calendarId))
+                        : calendar.description,
                     numberOfWeeks: appointments.length.toString(),
                 },
                 {
@@ -178,6 +193,7 @@ export default async function scheduleAfterSchoolProgram(
                 }
             )
         } catch (err) {
+            console.log({ err })
             logError(
                 `unable to send science enrolment confirmation email for enrolment with id: '${appointment.id}'`,
                 err
@@ -200,4 +216,12 @@ export default async function scheduleAfterSchoolProgram(
             logError(`unable to send parent portal email for enrolment with id: '${appointment.id}'`, err)
         }
     }
+}
+
+function getStudioLocation(studio: Location | 'test') {
+    if (studio === 'test') {
+        return 'TEST'
+    }
+
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
 }

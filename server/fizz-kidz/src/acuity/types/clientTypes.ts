@@ -12,7 +12,22 @@ export type GetAppointmentsParams = {
 }
 
 export type GetAppointmentTypesParams = {
-    category?: Array<'Science Club' | 'Art Program' | 'TEST' | 'TEST-science' | 'TEST-art'>
+    category?: Array<
+        | 'Science Club'
+        | 'Art Program'
+        | 'TEST'
+        | 'TEST-science'
+        | 'TEST-art'
+        | 'test-after-school-in-studio'
+        | 'science-balwyn'
+        | 'science-essendon'
+        | 'science-malvern'
+        | 'science-cheltenham'
+        | 'art-balwyn'
+        | 'art-essendon'
+        | 'art-malvern'
+        | 'art-cheltenham'
+    >
     availableToBook?: boolean
 }
 

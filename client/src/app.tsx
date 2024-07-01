@@ -70,9 +70,14 @@ const ParentPortalRoot = lazy(() =>
         default: module.ParentPortalRoot,
     }))
 )
-const BookingForm = lazy(() =>
-    import('./components/after-school-program/booking-form/index.js').then((module) => ({
-        default: module.BookingForm,
+const AfterSchoolProgramEnrolmentPage = lazy(() =>
+    import('./components/after-school-program/enrolment-form/after-school-program-enrolment-page.js').then(
+        (module) => ({ default: module.AfterSchoolProgramEnrolmentPage })
+    )
+)
+const SelectedProgramProvider = lazy(() =>
+    import('./components/after-school-program/enrolment-form/selected-program-context.js').then((module) => ({
+        default: module.SelectedProgramProvider,
     }))
 )
 const CustomerBookingScreen = lazy(() =>
@@ -375,7 +380,9 @@ const router = createBrowserRouter([
                 path: 'after-school-program-enrolment-form',
                 Component: () => (
                     <Suspense fallback={<Loader fullScreen />}>
-                        <BookingForm />
+                        <SelectedProgramProvider>
+                            <AfterSchoolProgramEnrolmentPage />
+                        </SelectedProgramProvider>
                     </Suspense>
                 ),
             },

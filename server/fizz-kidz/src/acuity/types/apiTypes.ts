@@ -17,6 +17,7 @@ export interface Appointment {
     datetime: string
     confirmationPage: string
     certificate: string
+    duration: string
 }
 
 export interface MergedAppointment extends Appointment {
@@ -37,6 +38,7 @@ export interface AppointmentType {
     calendarIDs: number[]
     price: string
     color: string
+    image: string
 }
 
 export interface Form {

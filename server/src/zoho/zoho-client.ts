@@ -230,8 +230,8 @@ export class ZohoClient {
         })
     }
 
-    addAfterSchoolProgramContact(props: BaseProps) {
-        return this.#upsertContact({
+    addAfterSchoolProgramContact(props: WithBaseProps<{ childName: string; childBirthdayISO: string }>) {
+        return this.#addParentWithChild({
             service: 'After School Program',
             customer_type: 'B2C',
             ...props,

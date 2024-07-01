@@ -1,6 +1,15 @@
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,
-    'type' | 'appointmentTypeId' | 'calendarId' | 'parent' | 'child' | 'emergencyContact' | 'className' | 'pickupPeople'
+    | 'type'
+    | 'inStudio'
+    | 'appointmentTypeId'
+    | 'calendarId'
+    | 'parent'
+    | 'child'
+    | 'emergencyContact'
+    | 'className'
+    | 'pickupPeople'
+    | 'joinMailingList'
 >
 
 export type SendTermContinuationEmailsParams = {
@@ -19,6 +28,8 @@ export type UpdateAfterSchoolEnrolmentParams = {
 export type AfterSchoolEnrolment = {
     id: string
     type: 'science' | 'art'
+    // if true the program is run at a Fizz studio, if false it is run at a school
+    inStudio: boolean
     // inactive status will mean they are deleted in acuity
     status: 'active' | 'inactive'
     appointmentTypeId: number
@@ -33,7 +44,8 @@ export type AfterSchoolEnrolment = {
     child: {
         firstName: string
         lastName: string
-        age: string
+        age: string // age is needed for backwards compat. After Term 3 2024, age can be removed, and UI calculates age from dob.
+        dob: string // ISO
         grade: string
         allergies: string
         isAnaphylactic: boolean
@@ -64,6 +76,7 @@ export type AfterSchoolEnrolment = {
             staffReason: string
         }
     }
+    joinMailingList: boolean
 }
 
 export type Calendar = {

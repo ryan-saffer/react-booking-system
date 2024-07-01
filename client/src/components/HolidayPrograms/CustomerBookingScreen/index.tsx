@@ -200,7 +200,7 @@ export const CustomerBookingScreen = () => {
 
     return (
         <Root width="centered">
-            <Typography.Title level={4} style={{ margin: 24, textAlign: 'center' }}>
+            <Typography.Title level={4} style={{ margin: 24, marginTop: 0, textAlign: 'center' }}>
                 Holiday Program Booking Form
             </Typography.Title>
             <Steps current={step - 1} style={{ marginBottom: 24 }}>
@@ -208,7 +208,7 @@ export const CustomerBookingScreen = () => {
                 <Step title="Your information" />
                 <Step title="Payment" />
             </Steps>
-            <div style={{ width: '100%', maxWidth: 500, marginBottom: 36 }}>
+            <div style={{ width: '100%', maxWidth: 500 }}>
                 <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     {step > 1 && (
                         <Button
