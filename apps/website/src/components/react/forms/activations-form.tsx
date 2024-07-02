@@ -7,13 +7,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
@@ -26,37 +19,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   contactName: z.string().min(1, "Contact name is required"),
-  schoolName: z.string().min(1, "School name is required"),
   email: z.string().min(1, "Email address is required").email(),
-  contactNumber: z
-    .string()
-    .min(10, "Contact number must be at least 10 digits long"),
-  preferredDateAndTime: z
-    .string()
-    .min(1, "Please enter a preferred date and time"),
-  module: z
-    .enum([
-      "chemicalScience",
-      "pushAndPull",
-      "lightAndSound",
-      "earthWeatherSustainability",
-      "notSure",
-    ])
-    .optional()
-    .refine((it) => !!it, "Please select a module"),
+  company: z.string().min(1, "Company / organisation is required"),
+  preferredDateAndTime: z.string().min(1, "Please enter your preffered dates"),
   enquiry: z.string().min(1, "Please enter an enquiry"),
 });
 
-function IncursionForm() {
+function ActivationsForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       contactName: "",
-      schoolName: "",
       email: "",
-      contactNumber: "",
+      company: "",
       preferredDateAndTime: "",
-      module: undefined,
       enquiry: "",
     },
   });
@@ -112,22 +88,6 @@ function IncursionForm() {
         />
         <FormField
           control={form.control}
-          name="schoolName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name of school *</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -144,10 +104,10 @@ function IncursionForm() {
         />
         <FormField
           control={form.control}
-          name="contactNumber"
+          name="company"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your best contact number *</FormLabel>
+              <FormLabel>Company / Organisation *</FormLabel>
               <FormControl>
                 <Input
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
@@ -163,50 +123,13 @@ function IncursionForm() {
           name="preferredDateAndTime"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preferred date and time *</FormLabel>
+              <FormLabel>Preferred dates *</FormLabel>
               <FormControl>
                 <Input
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="module"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Science Module *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select module"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  {/* <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                  /> */}
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="chemicalScience">
-                    Chemical Science
-                  </SelectItem>
-                  <SelectItem value="pushAndPull">Push and Pull</SelectItem>
-                  <SelectItem value="lightAndSound">Light and Sound</SelectItem>
-                  <SelectItem value="earthWeatherSustainability">
-                    Earth, Weather and Sustainability
-                  </SelectItem>
-                  <SelectItem value="notSure">
-                    A combination of the above / not sure
-                  </SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -243,4 +166,4 @@ function IncursionForm() {
   );
 }
 
-export default IncursionForm;
+export default ActivationsForm;

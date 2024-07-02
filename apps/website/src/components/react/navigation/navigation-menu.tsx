@@ -122,7 +122,7 @@ function NavigationMenu() {
 
   return (
     <>
-      <nav className="hidden min-[900px]:block">
+      <nav className="hidden min-[990px]:block">
         {menu.map((menuItem) => {
           if (menuItem.type === "link") {
             return (
@@ -144,7 +144,7 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="min-[900px]:hidden">
+      <aside className="min-[990px]:hidden">
         <nav>
           <Button
             variant="ghost"
@@ -155,7 +155,7 @@ function NavigationMenu() {
           </Button>
           <div
             className={cn(
-              "absolute left-0 top-[65px] z-50 hidden h-screen w-full overflow-scroll bg-white",
+              "absolute left-0 top-[85px] z-50 hidden h-screen w-full overflow-scroll border-t bg-white",
               {
                 block: showMobileMenu,
               },

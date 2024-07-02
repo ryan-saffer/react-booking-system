@@ -72,7 +72,7 @@ function NavigationMenuDropdown({
                   path={menu.path}
                   title={menu.title}
                   key={idx}
-                  className={isBreadcrumb ? "text-md" : ""}
+                  className={isBreadcrumb ? "text-sm sm:text-base" : ""}
                 />
               );
             }

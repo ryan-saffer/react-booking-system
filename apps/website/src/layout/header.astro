@@ -9,21 +9,19 @@ import { Button } from "@/components/react/ui/button";
   class="sticky top-0 z-50 flex min-h-20 justify-center bg-white px-8 py-2 shadow-lg"
 >
   <div class="flex w-full max-w-[1380px] items-center justify-between">
-    <div class="flex items-center gap-8">
-      <a href="/">
-        <Image
-          src={logo}
-          alt="Fizz Kidz Logo"
-          height={300}
-          width={300}
-          loading="eager"
-          class="w-40 min-w-24"
-        />
-      </a>
-      <NavigationMenu client:load />
-    </div>
+    <a href="/">
+      <Image
+        src={logo}
+        alt="Fizz Kidz Logo"
+        height={300}
+        width={300}
+        loading="eager"
+        class="w-40 min-w-24"
+      />
+    </a>
+    <NavigationMenu client:load />
     <Button
-      className="rounded-full bg-[#B34696] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+      className="hidden bg-[#B34696] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33] min-[1170px]:inline-flex"
       >Get in touch</Button
     >
   </div>
