@@ -284,8 +284,15 @@ class Client {
     }
 
     async createUser(uid: string, user: AuthUser) {
-        // TODO - ensure this user actually does not already exist.
-        // I think this is what is causing the scienceclub account to reset back to a customer
+        // first check that this user doesn't already exist
+        const userRef = await FirestoreRefs.user(uid)
+        const existingUser = await userRef.get()
+
+        // if they already exist, abort
+        if (existingUser.exists) {
+            return
+        }
+
         return (await FirestoreRefs.users()).doc(uid).set(user)
     }
 

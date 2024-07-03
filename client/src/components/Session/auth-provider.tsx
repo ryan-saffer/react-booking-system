@@ -56,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                                 localStorage.setItem('authUser', JSON.stringify({ jwt }))
 
                                 await createUser(newUser)
+                                location.reload()
                             }
                         },
                         (error) => console.error(error)
