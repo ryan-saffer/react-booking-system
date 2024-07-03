@@ -284,6 +284,8 @@ class Client {
     }
 
     async createUser(uid: string, user: AuthUser) {
+        // TODO - ensure this user actually does not already exist.
+        // I think this is what is causing the scienceclub account to reset back to a customer
         return (await FirestoreRefs.users()).doc(uid).set(user)
     }
 
