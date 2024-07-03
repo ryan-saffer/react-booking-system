@@ -9,10 +9,18 @@ type Props = {
   iconAlt?: string;
   background?: string;
   backgroundPosition?: string;
+  iconClass?: astroHTML.JSX.HtmlHTMLAttributes["class"];
 };
 
-const { number, color, icon, iconAlt, background, backgroundPosition } =
-  Astro.props;
+const {
+  number,
+  color,
+  icon,
+  iconAlt,
+  background,
+  backgroundPosition,
+  iconClass,
+} = Astro.props;
 ---
 
 <div
@@ -36,11 +44,7 @@ const { number, color, icon, iconAlt, background, backgroundPosition } =
       >{number}</span
     >
   </div>
-  <div
-    class={cn("relative bg-white px-8 py-4 rounded-b-xl", {
-      "min-[415px]:min-h-[400px] min-h-[500px]": !!icon,
-    })}
-  >
+  <div class={cn("relative bg-white px-8 py-4 rounded-b-xl", iconClass)}>
     <slot name="content" />
     {
       icon && (
