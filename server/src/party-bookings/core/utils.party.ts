@@ -1,4 +1,5 @@
 import { Additions, AdditionsDisplayValuesMap, BaseBooking, Booking, CreationDisplayValuesMap } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 
 export const AdditionsFormMap: { [key: string]: Additions } = {
     'Chicken Nuggets - $35': Additions.chickenNuggets,
@@ -78,13 +79,20 @@ type DayOfTheWeek = (typeof DAYS_OF_THE_WEEK)[number]
  * @returns the date of the upcoming day, at midnight.
  */
 export function getUpcoming(day: DayOfTheWeek) {
-    const today = new Date()
-    const currentDay = today.getDay()
-    const targetDay = DAYS_OF_THE_WEEK.indexOf(day)
+    const today = DateTime.fromJSDate(new Date(), { zone: 'Australia/Melbourne' }).set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    const currentDayIndex = today.weekday % 7 // Luxon weekday goes from 1 (Monday) to 7 (Sunday)
+    const targetDayIndex = DAYS_OF_THE_WEEK.indexOf(day)
 
-    const daysUntilNextDay = (targetDay - currentDay + 7) % 7 || 7
-    const nextDay = new Date(today)
-    nextDay.setDate(today.getDate() + daysUntilNextDay)
-    nextDay.setHours(0, 0, 0, 0)
-    return nextDay
+    let daysUntilNext = targetDayIndex - currentDayIndex
+    if (daysUntilNext <= 0) {
+        daysUntilNext += 7
+    }
+
+    const nextDate = today.plus({ days: daysUntilNext })
+    return nextDate.toJSDate()
 }
