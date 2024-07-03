@@ -12,12 +12,22 @@ type Props = {
 const { color, image, imageAlt, path, title } = Astro.props;
 ---
 
-<a class="flex min-w-40 max-w-96 flex-col items-center" href={path}>
-  <Image src={image} alt={imageAlt} width={250} />
-  <h4 class="mb-4 text-center font-lilita text-2xl" style={{ color }}>
+<div class="flex max-w-96 flex-col items-center">
+  <a href={path}>
+    <Image src={image} alt={imageAlt} class="object-fit w-full" />
+  </a>
+  <a
+    href={path}
+    class="my-4 text-center font-lilita text-lg sm:text-2xl"
+    style={{ color }}
+  >
     {title}
-  </h4>
-  <p class="font-gotham text-sm font-semibold uppercase" style={{ color }}>
+  </a>
+  <a
+    href={path}
+    class="font-gotham text-xs font-semibold uppercase sm:text-sm"
+    style={{ color }}
+  >
     Learn more
-  </p>
-</a>
+  </a>
+</div>

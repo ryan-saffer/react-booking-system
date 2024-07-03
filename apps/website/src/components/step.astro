@@ -1,38 +1,52 @@
 ---
 import { Image } from "astro:assets";
+import { cn } from "./react/lib/utils";
 
 type Props = {
   color: string;
   number?: string;
-  icon?: ImageMetadata;
+  icon?: string;
   iconAlt?: string;
+  background?: string;
+  backgroundPosition?: string;
 };
 
-const { number, color, icon, iconAlt } = Astro.props;
+const { number, color, icon, iconAlt, background, backgroundPosition } =
+  Astro.props;
 ---
 
-<div class="w-full flex-1 justify-stretch rounded-xl shadow-md">
+<div
+  class="relative z-10 w-full flex-1 justify-stretch rounded-xl shadow-around"
+>
+  {
+    background && (
+      <div class={cn("absolute z-0", backgroundPosition)}>
+        <Fragment set:html={background} />
+      </div>
+    )
+  }
   <div
     class="relative flex h-28 items-center rounded-t-xl p-8"
     style={{ background: color }}
   >
-    <h3 class="font-lilita text-3xl text-white">
+    <h6 class="font-lilita text-3xl text-white">
       <slot name="title" />
-    </h3>
+    </h6>
     <span class="absolute -bottom-5 right-4 font-lilita text-9xl text-white"
       >{number}</span
     >
   </div>
-  <div class="relative min-h-[420px] px-8 py-4">
+  <div
+    class={cn("relative bg-white px-8 py-4 rounded-b-xl", {
+      "min-[415px]:min-h-[400px] min-h-[500px]": !!icon,
+    })}
+  >
     <slot name="content" />
     {
       icon && (
-        <Image
-          src={icon}
-          alt={iconAlt || ""}
-          class="absolute bottom-2 right-2"
-          loading="eager"
-        />
+        <div class="absolute bottom-2 right-2">
+          <Fragment set:html={icon} />
+        </div>
       )
     }
   </div>
