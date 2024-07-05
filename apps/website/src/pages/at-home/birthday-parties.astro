@@ -1,0 +1,305 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+
+import atHomePartyies from "@/assets/images/pages/parties/at-home-parties.jpg";
+import PartyThemes from "@/components/party-themes.astro";
+import StarBulletPoints from "@/components/star-bullet-points.astro";
+import { Image } from "astro:assets";
+import Step from "@/components/step.astro";
+
+import forwardArrow from "@/assets/images/pages/parties/forward-arrow.png";
+import PrimaryButton from "@/components/primary-button.astro";
+import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
+
+const { default: greenClock } = await import(
+  `@/assets/images/pages/parties/green-clock.svg?raw`
+);
+const { default: blueCalendar } = await import(
+  `@/assets/images/pages/parties/blue-calendar.svg?raw`
+);
+const { default: purpleHat } = await import(
+  `@/assets/images/pages/parties/purple-hat.svg?raw`
+);
+
+const { default: greenDrop } = await import(
+  `@/assets/images/pages/parties/drop-green.svg?raw`
+);
+const { default: blueDrop } = await import(
+  `@/assets/images/pages/parties/drop-blue.svg?raw`
+);
+const { default: purpleDrop } = await import(
+  `@/assets/images/pages/parties/drop-purple.svg?raw`
+);
+---
+
+<Layout
+  title="At Home Birthday Parties"
+  description="We can come to you, and run a fabulous birthday party at your home or venue!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-8">
+    <div class="h-[10px]"></div>
+    <BreadcrumbWrapper
+      items={[
+        { type: "not-link", title: "At Home" },
+        { type: "not-link", title: "Birthday Parties" },
+      ]}
+    />
+    <PageIntro
+      image={atHomePartyies}
+      imageAlt="A girl playing with slime and laughing in her backyard with friends in the background"
+      subtitle="Sit back, relax and we will take care of everything!"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="purple"
+    >
+      <span slot="title">At Home Birthday Parties</span>
+      <span slot="content"
+        >Every child will make their own fabulous Fizz Kidz creations, choosing
+        their own colours, glitters and shapes! Throw in party games as well and
+        your child will have the best PARTY!
+      </span>
+    </PageIntro>
+    <h3
+      class="m-auto mt-48 max-w-5xl text-center font-lilita text-3xl text-[#9044E2]"
+    >
+      Our fabulous Fizz Kidz party host will come to your home or a party venue
+      near you, and run a fantastic, stress-free party that the birthday child,
+      and their friends will love!
+    </h3>
+    <PartyThemes />
+    <section class="mt-16 md:mt-40">
+      <h2 class="mb-12 text-center font-lilita text-4xl md:mb-28 md:text-5xl">
+        How it works
+      </h2>
+      <div
+        class="flex flex-col items-center justify-center gap-4 min-[1400px]:flex-row min-[1400px]:items-stretch"
+      >
+        <Step
+          color="#4FE16D"
+          number="1"
+          icon={greenClock}
+          iconAlt="green clock"
+          background={greenDrop}
+          backgroundPosition="-bottom-24 -left-12"
+          iconClass="min-h-[400px]"
+        >
+          <span slot="title">Pick your<br /> party package</span>
+          <div slot="content">
+            <h3 class="mb-2 font-lilita text-2xl">1 hour party</h3>
+            <StarBulletPoints content={["Two creations"]} className="pl-4" />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">1.5 hour party</h3>
+            <StarBulletPoints content={["Three creations"]} className="pl-4" />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">Date / Time</h3>
+            <StarBulletPoints
+              content={[
+                "Let us know your preferred date and time and we will check our availability for you.",
+              ]}
+              className="pl-4"
+            />
+          </div>
+        </Step>
+        <Image
+          src={forwardArrow}
+          alt="forward arrow"
+          class="h-16 w-fit self-center"
+        />
+        <Step
+          color="#42D4F3"
+          number="2"
+          icon={blueCalendar}
+          iconAlt="blue calendar"
+          background={blueDrop}
+          backgroundPosition="-bottom-24 -left-8"
+          iconClass="min-h-[400px]"
+        >
+          <span slot="title">Choose Creations</span>
+          <div slot="content">
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">
+              Creation choices and numbers
+            </h3>
+            <StarBulletPoints
+              content={[
+                "Let us know the approx. number of children & which creations your child wants to make a week before the party",
+              ]}
+              className="pl-4"
+            />
+          </div>
+        </Step>
+        <Image
+          src={forwardArrow}
+          alt="forward arrow"
+          class="h-16 w-fit self-center"
+        />
+        <Step
+          color="#9044E2"
+          number="3"
+          icon={purpleHat}
+          iconAlt="purple hat"
+          background={purpleDrop}
+          backgroundPosition="right-0 -bottom-24"
+          iconClass="min-[415px]:min-h-[400px] min-h-[500px]"
+        >
+          <span slot="title">On the day</span>
+          <div slot="content">
+            <StarBulletPoints
+              content={[
+                "On the day, all we need is a table for kids to stand or sit around as well as access to water.",
+                "Our staff will set up a fabulous Fizz Kidz creation making table, plug in music and start the party!",
+              ]}
+            />
+          </div>
+        </Step>
+      </div>
+      <div class="relative z-10 m-auto my-20 text-center">
+        <PrimaryButton text="View all the creations here" path="/creations" />
+      </div>
+    </section>
+    <section>
+      <h6
+        class="mb-12 mt-20 text-center font-lilita text-4xl md:mb-16 md:mt-32 md:text-5xl"
+      >
+        At Home Party Pricing
+      </h6>
+      <div class="flex flex-col gap-4 lg:flex-row">
+        <Step color="#9044E2">
+          <p slot="title" class="text-4xl">1 hour party</p>
+          <div slot="content">
+            <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
+              $36 per child
+            </p>
+            <StarBulletPoints
+              content={[
+                "A fantastic Fizz Kidz Party Host",
+                "Each child makes two Fizz Kidz creations",
+                "Party take home bags",
+                "Music speakers",
+                "Dancing party games",
+                "Party Invitations",
+              ]}
+            />
+            <p class="my-8 pl-12 italic">Minimum 12 children</p>
+          </div>
+        </Step>
+        <Step color="#9044E2">
+          <p slot="title" class="text-4xl">1.5 hour party</p>
+          <div slot="content">
+            <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
+              $43 per child
+            </p>
+            <StarBulletPoints
+              content={[
+                "A fantastic Fizz Kidz Party Host",
+                "Each child makes three Fizz Kidz creations",
+                "Party take home bags",
+                "Music speakers",
+                "Dancing party games",
+                "Party Invitations",
+              ]}
+            />
+            <p class="my-8 pl-12 italic">Minimum 12 children</p>
+          </div>
+        </Step>
+        <Step color="#9044E2">
+          <p slot="title" class="text-4xl">Travel Fee</p>
+          <div slot="content">
+            <StarBulletPoints
+              content={[
+                "Zone 1: 0km - 10km = $55",
+                "Zone 2: 10 - 20km = $75",
+                "Zone 3: 20 - 30km = $90",
+                "Zone 4: Currently not available",
+              ]}
+            />
+          </div>
+        </Step>
+      </div>
+    </section>
+    <section class="relative mb-16">
+      <h6 class="my-16 text-center font-lilita text-4xl md:my-20 md:text-5xl">
+        Additional information
+      </h6>
+      <div class="flex flex-col gap-8 lg:flex-row">
+        <div class="relative flex-1">
+          <div class="absolute -bottom-20 -right-12 z-0 hidden lg:block">
+            <Fragment set:html={blueDrop} />
+          </div>
+          <div
+            class="relative z-10 h-full w-full rounded-2xl bg-white p-8 shadow-around"
+          >
+            <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">Inclusions</p>
+            <p class="mb-4 font-lilita text-2xl">Mobile parties include</p>
+            <StarBulletPoints
+              content={[
+                "Fabulous party host",
+                "All Fizz Kidz creation materials",
+                "Dancing games",
+                "Table cloths",
+                "Individual party bags (to take their creations home in - not lolly bags)",
+              ]}
+            />
+          </div>
+        </div>
+        <div class="relative flex-1">
+          <div class="absolute -bottom-20 -right-12 z-0 hidden lg:block">
+            <Fragment set:html={blueDrop} />
+          </div>
+          <div
+            class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around"
+          >
+            <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">
+              Party Structure
+            </p>
+            <p class="mb-4 font-lilita text-2xl">
+              What would a 1 hour party look like?
+            </p>
+            <p class="mb-2 font-gotham font-medium">
+              Fizz Kidz staff, arrive 15 minutes before the party starts to set
+              up a fabulous creation making table, play music and wait for your
+              guests to arrive!
+            </p>
+            <p class="mb-2 font-gotham font-medium">
+              Spend the hour making two selected creations and playing party
+              games.
+            </p>
+            <p class="mb-2 font-gotham font-medium">
+              Fizz Kidz hosts will then pack up and leave you to continue the
+              party however you like!
+            </p>
+            <p class="mb-2 font-gotham font-medium">
+              Each child then takes home their creations in their individual
+              Fizz Kidz party bag.
+            </p>
+            <p class="mb-2 font-gotham font-semibold">
+              Our 1.5 hour party allow an extra 30 minutes to make an extra
+              creation!
+            </p>
+          </div>
+        </div>
+        <div class="relative flex-1">
+          <div
+            class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around"
+          >
+            <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">FAQ</p>
+            <p class="mb-4 font-lilita text-2xl">
+              Feel free to call us any time with questions
+            </p>
+            <StarBulletPoints
+              content={[
+                "What do I need to provide? A table and access to water - that's it!",
+                "When should I let you know the number of kids that will attend? A week before the party.",
+                "What happens if an extra child attends on the day? No problem, we always pack a few extras!",
+                "How does payment work? We will only invoice you for the number of kids that actually make the creations (minimum payment for 12 children).",
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 m-auto my-12 text-center">
+        <PrimaryButton text="Book a party" path="/book-a-party" />
+      </div>
+    </section>
+    <MixAndMatchParties />
+  </main>
+</Layout>

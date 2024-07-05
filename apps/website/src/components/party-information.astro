@@ -1,0 +1,94 @@
+---
+import StarBulletPoints from "./star-bullet-points.astro";
+
+type Props = {
+  partyPackage: string;
+};
+
+const { partyPackage } = Astro.props;
+
+const { default: blueDrop } = await import(
+  `@/assets/images/pages/parties/drop-blue.svg?raw`
+);
+---
+
+<section class="relative mb-16">
+  <h6 class="my-16 text-center font-lilita text-4xl md:my-20 md:text-5xl">
+    Additional information
+  </h6>
+  <div class="flex flex-col gap-8 lg:flex-row">
+    <div class="relative flex-1">
+      <div class="absolute -bottom-20 -right-12 z-0 hidden lg:block">
+        <Fragment set:html={blueDrop} />
+      </div>
+      <div
+        class="relative z-10 h-full w-full rounded-2xl bg-white p-8 shadow-around"
+      >
+        <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">Inclusions</p>
+        <p class="mb-4 font-lilita text-2xl">
+          {partyPackage} parties include
+        </p>
+        <StarBulletPoints
+          content={[
+            "Exclusive Fizz Kidz Venue",
+            "Children pick their own glitters, colours and shapes as they make their awesome Fizz Kidz creations!",
+            "Dancing games - obviously!",
+            "Two amazing Fizz Kidz Party Hosts",
+            "Individual party bags (to take their creations home in - not lolly bags)",
+            "Party food ($4 extra per child)",
+          ]}
+        />
+      </div>
+    </div>
+    <div class="relative flex-1">
+      <div class="absolute -bottom-20 -right-12 z-0 hidden lg:block">
+        <Fragment set:html={blueDrop} />
+      </div>
+      <div class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+        <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">Party Structure</p>
+        <p class="mb-4 font-lilita text-2xl">
+          What would a 1.5 hour party look like?
+        </p>
+        <p class="mb-2 font-gotham font-medium">
+          Arrive 10 minutes before the party starts to settle in, place your
+          cake down and wait to meet and greet your friends!
+        </p>
+        <p class="mb-2 font-gotham font-medium">
+          Spend the first hour making two selected creations and playing party
+          games
+        </p>
+        <p class="mb-2 font-gotham font-medium">
+          Second 30 minutes, our staff will serve the kids their party food and
+          help you with cake celebrations
+        </p>
+        <p class="mb-2 font-gotham font-medium">
+          Each child then takes home their creations in their individual Fizz
+          Kidz party bag!
+        </p>
+        <p class="mb-2 font-gotham font-medium">
+          Our 2 hour parties allow an extra 30 minutes to make an extra
+          creation!
+        </p>
+      </div>
+    </div>
+    <div class="relative flex-1">
+      <div class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+        <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">FAQ</p>
+        <p class="mb-4 font-lilita text-2xl">
+          Feel free to call us any time with questions
+        </p>
+        <StarBulletPoints
+          content={[
+            "When do I choose creation options? We week before the party.",
+            "When do I let you know numbers? A week before the party.",
+            "Can I change the party food if I like? Yes we have options!",
+            "When do you take payment? At the end of the party.",
+            "Can we bring food for parents? Sure, just make sure it's nut free.",
+            "Can parents stay during the party? Sure, parents can stay or drop off.",
+            "Is there a maximum patron capacity? Yes, it is 35 in total (of adults and children combined) for all venues.",
+          ]}
+        />
+      </div>
+    </div>
+  </div>
+</section>

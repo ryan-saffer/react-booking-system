@@ -1,0 +1,67 @@
+---
+import StarBulletPoints from "./star-bullet-points.astro";
+import Step from "./step.astro";
+---
+
+<section>
+  <h6
+    class="mb-12 mt-20 text-center font-lilita text-4xl md:mb-16 md:mt-32 md:text-5xl"
+  >
+    Pricing
+  </h6>
+  <div class="flex flex-col gap-4 lg:flex-row">
+    <Step color="#9044E2">
+      <p slot="title" class="text-4xl">1.5 hour party</p>
+      <div slot="content">
+        <p class="mb-6 font-lilita text-3xl text-[#9044E2]">$38 per child</p>
+        <StarBulletPoints
+          content={[
+            "Two fantastic Fizz Kidz Party hosts",
+            "Exclusive Fizz Kidz Studio",
+            "Each child makes two Fizz Kidz creations",
+            "Dancing and party games",
+            "Take home creation bags",
+            "Personalised online invitations [NEW!]",
+          ]}
+        />
+        <p class="my-8 pl-12 italic">Minimum 12 children</p>
+      </div>
+    </Step>
+    <Step color="#9044E2">
+      <p slot="title" class="text-4xl">2 hour party</p>
+      <div slot="content">
+        <p class="mb-6 font-lilita text-3xl text-[#9044E2]">$49 per child</p>
+        <StarBulletPoints
+          content={[
+            "Two fantastic Fizz Kidz Party hosts",
+            "Exclusive Fizz Kidz Studio",
+            "Each child makes three Fizz Kidz creations",
+            "Dancing and party games",
+            "Take home creation bags",
+            "Personalised online invitations [NEW!]",
+          ]}
+        />
+        <p class="my-8 pl-12 italic">Minimum 12 children</p>
+      </div>
+    </Step>
+    <Step color="#9044E2">
+      <p slot="title" class="text-4xl">Party food</p>
+      <div slot="content">
+        <p class="mb-6 font-lilita text-3xl text-[#9044E2]">$4 per child</p>
+        <StarBulletPoints
+          content={[
+            "Choose from a meat or vegetarian menu",
+            "Entire menu included for all children",
+            "Party plates and cups included",
+            "Fizz Kidz hosts serve party food",
+            "Sit back, watch and enjoy!",
+          ]}
+        />
+        <p class="my-8 pl-12 italic">
+          You are welcome to provide your own party food at no extra cost and
+          our staff will serve it for you!
+        </p>
+      </div>
+    </Step>
+  </div>
+</section>

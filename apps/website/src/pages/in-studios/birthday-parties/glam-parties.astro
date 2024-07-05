@@ -1,0 +1,29 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import bodyGlitter from "@/assets/images/pages/parties/body-glitter.jpg";
+---
+
+<Layout
+  title="Glitz and Glam Party | Fizz Kidz"
+  description="This pamper party package is made for all things glitzy and glamorous!"
+>
+  <PartyLayout partyPackage="Glitz and Glam">
+    <PageIntro
+      subtitle="Bring the glitter, sparkles and fun to your child's next party!"
+      image={bodyGlitter}
+      imageAlt="hands holding colourful body glitter containers"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="pink"
+    >
+      <span slot="title">Glitz and Glam Kids Birthday Party</span>
+      <span slot="content">
+        Make your very own sparkling and dazzling pamper products to take home
+        with you after the party!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

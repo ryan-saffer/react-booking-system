@@ -18,7 +18,6 @@ export function BreadcrumbWrapper({
     | {
         type: "dropdown";
         title: string;
-        path: string;
         items: { type: "link"; title: string; path: string }[];
       }
   )[];

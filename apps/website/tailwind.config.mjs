@@ -23,6 +23,12 @@ module.exports = {
         "blue-lg": "-50px 50px 0px -1px rgba(215, 246, 253, 0.81)",
         "blue-md": "-25px 25px 0px -1px rgba(215, 246, 253, 0.81)",
         "blue-sm": "-10px 10px 0px -1px rgba(215, 246, 253, 0.81)",
+        "pink-lg": "-50px 50px 0px -1px rgba(242, 77, 162, 0.2)",
+        "pink-md": "-25px 25px 0px -1px rgba(242, 77, 162, 0.2)",
+        "pink-sm": "-10px 10px 0px -1px rgba(242, 77, 162, 0.2)",
+        "green-lg": "-50px 50px 0px -1px rgba(78, 216, 95, 0.2)",
+        "green-md": "-25px 25px 0px -1px rgba(78, 216, 95, 0.2)",
+        "green-sm": "-10px 10px 0px -1px rgba(78, 216, 95, 0.2)",
         around: "rgba(0, 0, 0, 0.35) 0px 5px 15px;",
       },
       colors: {

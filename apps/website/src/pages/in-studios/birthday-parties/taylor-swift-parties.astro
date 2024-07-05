@@ -1,0 +1,26 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import taylorSwiftParty from "@/assets/images/pages/parties/taylor-swift-party.png";
+---
+
+<Layout
+  title="Taylor Swift Parties | Fizz Kidz"
+  description="As obsessed with Taylor Swift as we are? This party package is perfect for all Swiftie's out there!"
+>
+  <PartyLayout partyPackage="Taylor Swift">
+    <PageIntro
+      subtitle="Join us for the best Swiftie Party!"
+      image={taylorSwiftParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="purple"
+    >
+      <span slot="title">Taylor Swift kids birthday party</span>
+      <span slot="content"> Join us for the best Swiftie Party! </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

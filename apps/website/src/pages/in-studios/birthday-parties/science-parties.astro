@@ -1,0 +1,29 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import scienceParty from "@/assets/images/pages/parties/science-party.jpg";
+---
+
+<Layout
+  title="Science Party | Fizz Kidz"
+  description="Does your kid love science, experimenting, and making a mess? Then this party package is for them!"
+>
+  <PartyLayout partyPackage="Science">
+    <PageIntro
+      subtitle="Fizz, Bang, Bubble, Explode! For all the little scientists out there, this is for you!"
+      image={scienceParty}
+      imageAlt="a kid in awe as her science experiment bubbles"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="blue"
+    >
+      <span slot="title">Kids Science Birthday Parties</span>
+      <span slot="content">
+        Fizz Kidz science birthday parties are scientifically proven to be
+        fizzing fantastic!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

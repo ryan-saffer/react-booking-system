@@ -1,0 +1,29 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import slime from "@/assets/images/pages/parties/slime-party.jpg";
+---
+
+<Layout
+  title="Slime Party | Fizz Kidz"
+  description="Our most popular party package - get ready to get messy!"
+>
+  <PartyLayout partyPackage="Slime">
+    <PageIntro
+      subtitle="Slime, slime and more slime!"
+      image={slime}
+      imageAlt="a kid holding a long stretch of slime and smiling"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="purple"
+    >
+      <span slot="title">Kids Slime Birthday Parties</span>
+      <span slot="content">
+        For all the slime lovers out there, we love slime just as much! Together
+        lets get messy and make the most perfect slimes!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

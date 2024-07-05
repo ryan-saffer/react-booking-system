@@ -1,0 +1,28 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import unicornParty from "@/assets/images/pages/parties/unicorn-party.jpg";
+---
+
+<Layout
+  title="Unicorn Parties | Fizz Kidz"
+  description="A party package full of sparkles, glitter and unicorns!"
+>
+  <PartyLayout partyPackage="Unicorn">
+    <PageIntro
+      subtitle="Welcome to the magical world of Unicorns!"
+      image={unicornParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="pink"
+    >
+      <span slot="title">Unicorn Kids Birthday Parties</span>
+      <span slot="content">
+        Here we love everything sparkles, glitter and magic!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

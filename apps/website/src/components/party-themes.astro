@@ -1,0 +1,88 @@
+---
+import PartyPackage from "./party-package.astro";
+
+import glitzAndGlam from "@/assets/images/pages/parties/packages/glitz-and-glam.png";
+import science from "@/assets/images/pages/parties/packages/science.png";
+import slime from "@/assets/images/pages/parties/packages/slime.png";
+import tieDye from "@/assets/images/pages/parties/packages/tie-dye.png";
+import safari from "@/assets/images/pages/parties/packages/safari.png";
+import swiftie from "@/assets/images/pages/parties/packages/swiftie.png";
+import unicorn from "@/assets/images/pages/parties/packages/unicorn.png";
+import mobile from "@/assets/images/pages/parties/packages/mobile.png";
+---
+
+<section class="mt-12 md:mt-24">
+  <div class="mb-8 flex flex-col items-center gap-4 md:mb-16">
+    <h3 class="text-center font-lilita text-3xl md:text-5xl">
+      Birthday Party Themes
+    </h3>
+    <h4 class="text-center font-lilita text-xl text-[#9044E2] md:text-2xl">
+      Our packages help create a personalised birthday party that your child
+      will love.
+    </h4>
+    <p class="text-center font-gotham">
+      Whether your child loves all things glitter and sparkles or is amazed by<br
+      />science we have the perfect party for your child!
+    </p>
+  </div>
+  <div
+    class="mb-24 grid grid-cols-2 justify-center gap-4 sm:gap-8 min-[900px]:grid-cols-4"
+  >
+    <PartyPackage
+      title="Glitz & Glam parties"
+      color="#F24C9F"
+      image={glitzAndGlam}
+      imageAlt="hands with lip balm"
+      path="parties/glitz-and-glam"
+    />
+    <PartyPackage
+      title="Science parties"
+      color="#43D4F3"
+      image={science}
+      imageAlt="bubbling volcano"
+      path="parties/science"
+    />
+    <PartyPackage
+      title="Slime parties"
+      color="#9044E2"
+      image={slime}
+      imageAlt="girl holding slime and smiling"
+      path="parties/slime"
+    />
+    <PartyPackage
+      title="Tie Dye Parties"
+      color="#F6BA33"
+      image={tieDye}
+      imageAlt="tie dye shoelaces"
+      path="parties/slime"
+    />
+    <PartyPackage
+      title="Safari Parties"
+      color="#4EE16D"
+      image={safari}
+      imageAlt="a frog in a bath bomb"
+      path="parties/slime"
+    />
+    <PartyPackage
+      title="Swiftie Parties"
+      color="#F24DA2"
+      image={swiftie}
+      imageAlt="Taylor Swift"
+      path="parties/slime"
+    />
+    <PartyPackage
+      title="Unicorn Parties"
+      color="#43D4F3"
+      image={unicorn}
+      imageAlt="unicorn soap"
+      path="parties/slime"
+    />
+    <PartyPackage
+      title="At Home Parties"
+      color="#F6BA33"
+      image={mobile}
+      imageAlt="A fizz kidz staff holding a box"
+      path="parties/slime"
+    />
+  </div>
+</section>

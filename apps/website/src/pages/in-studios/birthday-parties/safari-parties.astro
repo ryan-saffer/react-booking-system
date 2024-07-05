@@ -1,0 +1,28 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import safariParty from "@/assets/images/pages/parties/safari-party.jpg";
+---
+
+<Layout
+  title="Safari Parties | Fizz Kidz"
+  description="This party package will take the kids on a safari adventure!"
+>
+  <PartyLayout partyPackage="Safari">
+    <PageIntro
+      subtitle="Roar! Welcome to the jungle!"
+      image={safariParty}
+      imageAlt="hands holding colourful body glitter containers"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="green"
+    >
+      <span slot="title">Safari Kids Birthday Parties</span>
+      <span slot="content">
+        Join the safari adventure and make your own jungle creations!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

@@ -1,0 +1,29 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import tieDye from "@/assets/images/pages/parties/tie-dye-party.png";
+---
+
+<Layout
+  title="Tye Dye Parties | Fizz Kidz"
+  description="A party package brimming with colour. Tie dye parties are sure to be memorable!"
+>
+  <PartyLayout partyPackage="Tie Dye">
+    <PageIntro
+      subtitle="Tie Dye birthday parties are the best kids parties!"
+      image={tieDye}
+      imageAlt="tie dyed shoelaces"
+      actionButtonText="Book a party"
+      actionButtonPath="/book-a-party"
+      color="pink"
+    >
+      <span slot="title">Tie Dye Kids Birthday Party</span>
+      <span slot="content">
+        Enjoy the process of Tie Dying your favourite items and take the item
+        home to enjoy!
+      </span>
+    </PageIntro>
+  </PartyLayout>
+</Layout>

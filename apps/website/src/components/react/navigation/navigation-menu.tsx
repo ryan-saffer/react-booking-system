@@ -13,7 +13,7 @@ import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
 import { cn } from "../lib/utils";
 import { useState } from "react";
 
-const menu = [
+export const menu = [
   {
     title: "In Studios",
     type: "dropdown",
@@ -25,31 +25,31 @@ const menu = [
         items: [
           {
             title: "Glitz and Glam Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/glam-parties",
           },
           {
             title: "Science Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/science-parties",
           },
           {
             title: "Slime Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/slime-parties",
           },
           {
             title: "Safari Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/safari-parties",
           },
           {
             title: "Unicorn Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/unicorn-parties",
           },
           {
             title: "Tie Dye Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/tie-dye-parties",
           },
           {
             title: "Taylor Swift Parties",
-            path: "/in-studios/birthday-parties/glitz-and-glam",
+            path: "/in-studios/birthday-parties/taylor-swift-parties",
           },
           {
             title: "At Home Parties",
@@ -76,7 +76,7 @@ const menu = [
       {
         type: "link",
         title: "Birthday Parties",
-        path: "/at-home/mobile-parties",
+        path: "/at-home/birthday-parties",
       },
     ],
   },

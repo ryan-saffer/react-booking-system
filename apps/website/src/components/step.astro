@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import { cn } from "./react/lib/utils";
 
 type Props = {
@@ -12,15 +11,8 @@ type Props = {
   iconClass?: astroHTML.JSX.HtmlHTMLAttributes["class"];
 };
 
-const {
-  number,
-  color,
-  icon,
-  iconAlt,
-  background,
-  backgroundPosition,
-  iconClass,
-} = Astro.props;
+const { number, color, icon, background, backgroundPosition, iconClass } =
+  Astro.props;
 ---
 
 <div

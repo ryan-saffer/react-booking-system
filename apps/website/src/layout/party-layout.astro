@@ -1,0 +1,43 @@
+---
+import PartyInformation from "@/components/party-information.astro";
+import Pricing from "@/components/pricing.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import { menu } from "../components/react/navigation/navigation-menu";
+import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
+import PartyPacks from "@/components/party-packs.astro";
+import PartyReviews from "@/components/party-reviews.astro";
+
+type Props = {
+  partyPackage: string;
+};
+
+const { partyPackage } = Astro.props;
+---
+
+<main class="m-auto block max-w-[1380px] px-5 pt-8">
+  <BreadcrumbWrapper
+    client:idle
+    items={[
+      {
+        type: "not-link",
+        title: "In Studios",
+      },
+      {
+        type: "link",
+        title: "Birthday Parties",
+        path: "/in-studios/birthday-parties",
+      },
+      {
+        type: "dropdown",
+        title: `${partyPackage} Party`,
+        items: menu[0].items[0].items.map((it) => ({ type: "link", ...it })),
+      },
+    ]}
+  />
+  <slot />
+  <Pricing />
+  <PartyInformation partyPackage={partyPackage} />
+  <PartyPacks />
+  <PartyReviews />
+  <MixAndMatchParties />
+</main>
