@@ -125,6 +125,8 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     ${parseInt(selectedProgram.price) * numClasses} for {numClasses === 8 ? 'an' : 'a'} {numClasses}{' '}
                     week term
                 </h3>
+                <p className="text-center italic">No credit card details are required to enrol.</p>
+                <p className="mb-4 text-center italic">We will only invoice you after your free trial.</p>
                 <SectionBreak title="Parent Details" />
                 <FormField
                     control={form.control}
