@@ -521,7 +521,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     className="border-2 border-dashed bg-slate-50"
                     type="button"
                     variant="outline"
-                    onClick={() => appendChild({ firstName: '', lastName: '' }, { shouldFocus: true })}
+                    onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
                 >
                     Enrol Another Child
                     <Plus className="ml-2 h-4 w-4" />
