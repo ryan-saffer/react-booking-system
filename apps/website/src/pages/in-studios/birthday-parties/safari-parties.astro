@@ -4,6 +4,17 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import safariParty from "@/assets/images/pages/parties/safari-party.jpg";
+import safari from "@/assets/images/pages/parties/packages/safari.png";
+import Creations from "@/components/creations.astro";
+import AnimalSoap from "@/components/creations/animal-soap.astro";
+import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
+import LavaBathCrystals from "@/components/creations/lava-bath-crystals.astro";
+import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
+import AnimalsInSoap from "@/components/creations/animals-in-soap.astro";
+import SandSlime from "@/components/creations/sand-slime.astro";
+import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
+import FizzyBathBombsGreen from "@/components/creations/fizzy-bath-bombs-green.astro";
+import BubblingVolcanoes from "@/components/creations/bubbling-volcanoes.astro";
 ---
 
 <Layout
@@ -24,5 +35,20 @@ import safariParty from "@/assets/images/pages/parties/safari-party.jpg";
         Join the safari adventure and make your own jungle creations!
       </span>
     </PageIntro>
+    <Creations
+      partyPackage="Safari"
+      image={safari}
+      imageAlt="Safari Party Package"
+    >
+      <AnimalSoap slot="1" />
+      <MonsterSlimePurple slot="2" />
+      <SandSlime slot="3" />
+      <BugsInBathBombs slot="4" />
+      <AnimalsInSoap slot="5" />
+      <MonsterSlimeGreen slot="6" />
+      <LavaBathCrystals slot="7" />
+      <FizzyBathBombsGreen slot="8" />
+      <BubblingVolcanoes slot="9" />
+    </Creations>
   </PartyLayout>
 </Layout>

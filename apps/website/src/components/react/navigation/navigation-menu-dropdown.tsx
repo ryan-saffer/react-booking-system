@@ -64,7 +64,7 @@ function NavigationMenuDropdown({
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </HybridHoverCardTrigger>
-        <HybridHoverCardContent className="flex flex-col p-3">
+        <HybridHoverCardContent className="flex w-fit flex-col p-3">
           {submenus.map((menu, idx) => {
             if (menu.type === "link") {
               return (
@@ -85,7 +85,7 @@ function NavigationMenuDropdown({
                     className="border-none"
                     date-state="open"
                   >
-                    <AccordionTrigger className="h-10 rounded-xl p-3 font-gotham text-lg hover:bg-gray-50 hover:no-underline">
+                    <AccordionTrigger className="h-10 min-w-72 rounded-xl p-3 font-gotham text-lg hover:bg-gray-50 hover:no-underline">
                       {menu.path ? (
                         <a
                           href={menu.path}

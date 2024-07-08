@@ -1,4 +1,5 @@
 ---
+import AdditionalInfoAccordion from "./react/parties/additional-info-accordion";
 import StarBulletPoints from "./star-bullet-points.astro";
 
 type Props = {
@@ -73,21 +74,26 @@ const { default: blueDrop } = await import(
     </div>
     <div class="relative flex-1">
       <div class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
-        <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">FAQ</p>
+        <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">Party Food Menu</p>
         <p class="mb-4 font-lilita text-2xl">
-          Feel free to call us any time with questions
+          Food included in the Food Package ($4 per child)
         </p>
         <StarBulletPoints
           content={[
-            "When do I choose creation options? We week before the party.",
-            "When do I let you know numbers? A week before the party.",
-            "Can I change the party food if I like? Yes we have options!",
-            "When do you take payment? At the end of the party.",
-            "Can we bring food for parents? Sure, just make sure it's nut free.",
-            "Can parents stay during the party? Sure, parents can stay or drop off.",
-            "Is there a maximum patron capacity? Yes, it is 35 in total (of adults and children combined) for all venues.",
+            "Hot Party Pies (Beef)",
+            "Hot Sausage rolls (Beef)",
+            "A bowl of fresh seasonal fruit",
+            "Potato chips (crisps) (GF, DF, V)",
+            "Corn chips (GF, DF, V)",
+            "Chocolate wafers - 'may contain hazelnuts'",
+            "Popcorn (GF, V)",
+            "Cordial and water",
           ]}
         />
+        <p class="mt-8 text-xs font-semibold">
+          GF - Gluten Free, DF - Dairy free, V - Vegetarian, VV - Vegan
+        </p>
+        <AdditionalInfoAccordion client:visible />
       </div>
     </div>
   </div>

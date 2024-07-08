@@ -4,6 +4,17 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import scienceParty from "@/assets/images/pages/parties/science-party.jpg";
+import science from "@/assets/images/pages/parties/packages/science.png";
+import Creations from "@/components/creations.astro";
+import BubblingVolcanoes from "@/components/creations/bubbling-volcanoes.astro";
+import WobblyGalaxySoap from "@/components/creations/wobbly-galaxy-soap.astro";
+import BugsInBathBombs from "@/components/creations/bugs-in-bath-bombs.astro";
+import InstantSnowSlime from "@/components/creations/instant-snow-slime.astro";
+import FizzyBathBombsGreen from "@/components/creations/fizzy-bath-bombs-green.astro";
+import SandSlime from "@/components/creations/sand-slime.astro";
+import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
+import FluffySlimeGreen from "@/components/creations/fluffy-slime-green.astro";
+import WobblyStarSoap from "@/components/creations/wobbly-star-soap.astro";
 ---
 
 <Layout
@@ -25,5 +36,20 @@ import scienceParty from "@/assets/images/pages/parties/science-party.jpg";
         fizzing fantastic!
       </span>
     </PageIntro>
+    <Creations
+      partyPackage="Science"
+      image={science}
+      imageAlt="Science Party Package"
+    >
+      <BubblingVolcanoes slot="1" />
+      <FizzyBathBombsGreen slot="2" />
+      <WobblyGalaxySoap slot="3" />
+      <BugsInBathBombs slot="4" />
+      <InstantSnowSlime slot="5" />
+      <SandSlime slot="6" />
+      <MonsterSlimePurple slot="7" />
+      <FluffySlimeGreen slot="8" />
+      <WobblyStarSoap slot="9" />
+    </Creations>
   </PartyLayout>
 </Layout>

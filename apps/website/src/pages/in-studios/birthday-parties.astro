@@ -18,6 +18,7 @@ import PartyInformation from "@/components/party-information.astro";
 import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 import PartyPacks from "@/components/party-packs.astro";
 import PartyThemes from "@/components/party-themes.astro";
+import PartyFaq from "@/components/party-faq.astro";
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -47,7 +48,7 @@ const { default: purpleDrop } = await import(
   <main>
     <div class="m-auto block max-w-[1380px] px-5 pt-8">
       <BreadcrumbWrapper
-        client:load
+        client:idle
         items={[
           {
             type: "not-link",
@@ -197,6 +198,7 @@ const { default: purpleDrop } = await import(
       <MixAndMatchParties />
       <Pricing />
       <PartyInformation partyPackage="Birthday" />
+      <PartyFaq />
       <PartyPacks />
     </div>
     <section class="relative mt-12 h-[450px]">

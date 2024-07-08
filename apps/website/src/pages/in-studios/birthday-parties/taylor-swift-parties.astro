@@ -4,6 +4,17 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import taylorSwiftParty from "@/assets/images/pages/parties/taylor-swift-party.png";
+import taylorSwiftPackage from "@/assets/images/pages/parties/packages/swiftie.png";
+import Creations from "@/components/creations.astro";
+import TsBathBombs from "@/components/creations/ts-bath-bombs.astro";
+import TsBracelets from "@/components/creations/ts-bracelets.astro";
+import TsButterflySoap from "@/components/creations/ts-butterfly-soap.astro";
+import TsFacePaint from "@/components/creations/ts-face-paint.astro";
+import TsGoldSlime from "@/components/creations/ts-gold-slime.astro";
+import TsLipBalm from "@/components/creations/ts-lip-balm.astro";
+import TsMidnightsSlime from "@/components/creations/ts-midnights-slime.astro";
+import TsRainbowBathBombs from "@/components/creations/ts-rainbow-bath-bombs.astro";
+import TsSlime from "@/components/creations/ts-slime.astro";
 ---
 
 <Layout
@@ -19,8 +30,26 @@ import taylorSwiftParty from "@/assets/images/pages/parties/taylor-swift-party.p
       actionButtonPath="/book-a-party"
       color="purple"
     >
-      <span slot="title">Taylor Swift kids birthday party</span>
-      <span slot="content"> Join us for the best Swiftie Party! </span>
+      <span slot="title">Taylor Swift Kids Birthday Party</span>
+      <span slot="content"
+        >Make your very own sparkling and dazzling Swiftie creations to take
+        home with you after the party!</span
+      >
     </PageIntro>
+    <Creations
+      partyPackage="Taylor Swift"
+      image={taylorSwiftPackage}
+      imageAlt="Taylor Swift Party Package"
+    >
+      <TsBathBombs slot="1" />
+      <TsSlime slot="2" />
+      <TsButterflySoap slot="3" />
+      <TsBracelets slot="4" />
+      <TsRainbowBathBombs slot="5" />
+      <TsGoldSlime slot="6" />
+      <TsMidnightsSlime slot="7" />
+      <TsLipBalm slot="8" />
+      <TsFacePaint slot="9" />
+    </Creations>
   </PartyLayout>
 </Layout>

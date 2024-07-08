@@ -1,7 +1,8 @@
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as React from "react";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
+
 import { cn } from "@/react-lib/utils";
 
 const Accordion = AccordionPrimitive.Root;
@@ -22,27 +23,42 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
     chevronStart?: boolean;
+    icon?: "chevron" | "plus";
   }
->(({ className, children, chevronStart = false, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
-    <AccordionPrimitive.Trigger
-      ref={ref}
-      className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-90",
-        className,
-      )}
-      {...props}
-    >
-      {chevronStart && (
-        <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
-      )}
-      {children}
-      {!chevronStart && (
-        <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
-      )}
-    </AccordionPrimitive.Trigger>
-  </AccordionPrimitive.Header>
-));
+>(
+  (
+    { className, children, chevronStart = false, icon = "chevron", ...props },
+    ref,
+  ) => (
+    <AccordionPrimitive.Header className="flex">
+      <AccordionPrimitive.Trigger
+        ref={ref}
+        className={cn(
+          "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-90",
+          className,
+        )}
+        {...props}
+      >
+        {chevronStart &&
+          (icon === "chevron" ? (
+            <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
+          ) : (
+            <Plus
+              className="h-4 w-4 shrink-0 transition-transform duration-200"
+              strokeWidth={4}
+            />
+          ))}
+        {children}
+        {!chevronStart &&
+          (icon === "chevron" ? (
+            <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
+          ) : (
+            <Plus className="h-4 w-4 shrink-0 transition-transform duration-200" />
+          ))}
+      </AccordionPrimitive.Trigger>
+    </AccordionPrimitive.Header>
+  ),
+);
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 const AccordionContent = React.forwardRef<

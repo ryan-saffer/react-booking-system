@@ -4,6 +4,17 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import slime from "@/assets/images/pages/parties/slime-party.jpg";
+import slimePackage from "@/assets/images/pages/parties/packages/slime.png";
+import Creations from "@/components/creations.astro";
+import GlitterSlime from "@/components/creations/glitter-slime.astro";
+import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
+import FluffySlimeGreen from "@/components/creations/fluffy-slime-green.astro";
+import UnicornSlime from "@/components/creations/unicorn-slime.astro";
+import RainbowSlime from "@/components/creations/rainbow-slime.astro";
+import InstantSnowSlime from "@/components/creations/instant-snow-slime.astro";
+import GalaxySlime from "@/components/creations/galaxy-slime.astro";
+import FluffySlimePink from "@/components/creations/fluffy-slime-pink.astro";
+import FrozenSparkleSlime from "@/components/creations/frozen-sparkle-slime.astro";
 ---
 
 <Layout
@@ -25,5 +36,20 @@ import slime from "@/assets/images/pages/parties/slime-party.jpg";
         lets get messy and make the most perfect slimes!
       </span>
     </PageIntro>
+    <Creations
+      image={slimePackage}
+      imageAlt="Slime Party Pacakge"
+      partyPackage="Slime"
+    >
+      <GlitterSlime slot="1" />
+      <MonsterSlimePurple slot="2" />
+      <FluffySlimeGreen slot="3" />
+      <RainbowSlime slot="4" />
+      <UnicornSlime slot="5" />
+      <InstantSnowSlime slot="6" />
+      <GalaxySlime slot="7" />
+      <FrozenSparkleSlime slot="8" />
+      <FluffySlimePink slot="9" />
+    </Creations>
   </PartyLayout>
 </Layout>

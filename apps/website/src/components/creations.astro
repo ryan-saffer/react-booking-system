@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import PrimaryButton from "./primary-button.astro";
+
+type Props = {
+  partyPackage: string;
+  image: ImageMetadata;
+  imageAlt: string;
+};
+
+const { partyPackage, image, imageAlt } = Astro.props;
+---
+
+<section class="my-36">
+  <h4 class="mb-4 text-center font-lilita text-5xl">
+    {partyPackage} Birthday Party Creations
+  </h4>
+  <p class="mb-8 hidden text-center font-gotham text-lg lg:block">
+    Hover on a creation to see what it is
+  </p>
+  <p class="mb-8 block text-center font-gotham text-lg lg:hidden">
+    Tap on a creation to see what it is
+  </p>
+  <div class="flex flex-col gap-8 lg:flex-row">
+    <div
+      class="hidden w-2/5 flex-col items-center justify-center gap-8 lg:flex"
+    >
+      <Image src={image} alt={imageAlt} />
+      <PrimaryButton
+        className="w-fit"
+        text="View all the creations here"
+        path="/creations"
+      />
+    </div>
+    <div
+      class="grid w-full grid-cols-1 items-center justify-center min-[480px]:grid-cols-2 md:grid-cols-3 lg:w-3/5 [&>div]:flex [&>div]:items-center [&>div]:justify-center"
+    >
+      <div><slot name="1" /></div>
+      <div><slot name="2" /></div>
+      <div><slot name="3" /></div>
+      <div><slot name="4" /></div>
+      <div><slot name="5" /></div>
+      <div><slot name="6" /></div>
+      <div><slot name="7" /></div>
+      <div><slot name="8" /></div>
+      <div><slot name="9" /></div>
+    </div>
+  </div>
+</section>

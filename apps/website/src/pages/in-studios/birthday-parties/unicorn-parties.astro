@@ -4,6 +4,14 @@ import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
 import unicornParty from "@/assets/images/pages/parties/unicorn-party.jpg";
+import unicorn from "@/assets/images/pages/parties/packages/unicorn.png";
+import Creations from "@/components/creations.astro";
+import UnicornSlime from "@/components/creations/unicorn-slime.astro";
+import UnicornGlitterShimmer from "@/components/creations/unicorn-glitter-shimmer.astro";
+import UnicornSoap from "@/components/creations/unicorn-soap.astro";
+import UnicornBathBombs from "@/components/creations/unicorn-bath-bombs.astro";
+import UnicornBathCrystals from "@/components/creations/unicorn-bath-crystals.astro";
+import ButterflySoap from "@/components/creations/butterfly-soap.astro";
 ---
 
 <Layout
@@ -24,5 +32,17 @@ import unicornParty from "@/assets/images/pages/parties/unicorn-party.jpg";
         Here we love everything sparkles, glitter and magic!
       </span>
     </PageIntro>
+    <Creations
+      partyPackage="Unicorn"
+      image={unicorn}
+      imageAlt="Unicorn Party Package"
+    >
+      <UnicornSlime slot="1" />
+      <UnicornGlitterShimmer slot="2" />
+      <UnicornBathBombs slot="3" />
+      <UnicornSoap slot="4" />
+      <UnicornBathCrystals slot="5" />
+      <ButterflySoap slot="6" />
+    </Creations>
   </PartyLayout>
 </Layout>
