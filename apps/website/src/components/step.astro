@@ -36,7 +36,12 @@ const { number, color, icon, background, backgroundPosition, iconClass } =
       >{number}</span
     >
   </div>
-  <div class={cn("relative bg-white px-8 py-4 rounded-b-xl", iconClass)}>
+  <div
+    class={cn(
+      "relative h-[calc(100%-112px)] min-h-48 bg-white px-8 py-4 z-10 rounded-b-xl",
+      iconClass,
+    )}
+  >
     <slot name="content" />
     {
       icon && (
