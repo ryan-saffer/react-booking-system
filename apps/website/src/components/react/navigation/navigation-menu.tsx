@@ -15,7 +15,7 @@ import { useState } from "react";
 
 export const menu = [
   {
-    title: "In Studios",
+    title: "At Fizz Kidz",
     type: "dropdown",
     items: [
       {
