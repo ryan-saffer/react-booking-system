@@ -126,7 +126,9 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     week term
                 </h3>
                 <p className="text-center italic">No credit card details are required to enrol.</p>
-                <p className="mb-4 text-center italic">We will only invoice you after your free trial.</p>
+                <p className="mb-4 text-center italic">
+                    We will only invoice you after your free trial, if you choose to continue.
+                </p>
                 <SectionBreak title="Parent Details" />
                 <FormField
                     control={form.control}
