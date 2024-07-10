@@ -2,6 +2,7 @@
 import { cn } from "./react/lib/utils";
 
 type Props = {
+  title: string;
   color: string;
   number?: string;
   icon?: string;
@@ -11,12 +12,19 @@ type Props = {
   iconClass?: astroHTML.JSX.HtmlHTMLAttributes["class"];
 };
 
-const { number, color, icon, background, backgroundPosition, iconClass } =
-  Astro.props;
+const {
+  title,
+  number,
+  color,
+  icon,
+  background,
+  backgroundPosition,
+  iconClass,
+} = Astro.props;
 ---
 
 <div
-  class="relative z-10 w-full flex-1 justify-stretch rounded-xl shadow-around"
+  class="relative z-10 flex w-full flex-1 flex-col items-stretch justify-stretch rounded-xl shadow-around"
 >
   {
     background && (
@@ -26,19 +34,19 @@ const { number, color, icon, background, backgroundPosition, iconClass } =
     )
   }
   <div
-    class="relative flex h-28 items-center rounded-t-xl p-8"
+    class="relative flex min-h-28 flex-1 items-center rounded-t-xl p-8"
     style={{ background: color }}
   >
-    <h6 class="font-lilita text-3xl text-white">
-      <slot name="title" />
-    </h6>
+    <p class="pr-12 font-lilita text-3xl text-white">
+      {title}
+    </p>
     <span class="absolute -bottom-5 right-4 font-lilita text-9xl text-white"
       >{number}</span
     >
   </div>
   <div
     class={cn(
-      "relative h-[calc(100%-112px)] min-h-48 bg-white px-8 py-4 z-10 rounded-b-xl",
+      "relative h-full min-h-48 bg-white px-8 py-4 z-10 rounded-b-xl",
       iconClass,
     )}
   >

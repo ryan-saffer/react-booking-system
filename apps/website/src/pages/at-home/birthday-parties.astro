@@ -77,6 +77,7 @@ const { default: purpleDrop } = await import(
         class="flex flex-col items-center justify-center gap-4 min-[1400px]:flex-row min-[1400px]:items-stretch"
       >
         <Step
+          title="Pick your party package"
           color="#4FE16D"
           number="1"
           icon={greenClock}
@@ -85,7 +86,6 @@ const { default: purpleDrop } = await import(
           backgroundPosition="-bottom-24 -left-12"
           iconClass="min-h-[400px]"
         >
-          <span slot="title">Pick your<br /> party package</span>
           <div slot="content">
             <h3 class="mb-2 font-lilita text-2xl">1 hour party</h3>
             <StarBulletPoints content={["Two creations"]} className="pl-4" />
@@ -106,6 +106,7 @@ const { default: purpleDrop } = await import(
           class="h-16 w-fit self-center"
         />
         <Step
+          title="Choose Creations"
           color="#42D4F3"
           number="2"
           icon={blueCalendar}
@@ -114,7 +115,6 @@ const { default: purpleDrop } = await import(
           backgroundPosition="-bottom-24 -left-8"
           iconClass="min-h-[400px]"
         >
-          <span slot="title">Choose Creations</span>
           <div slot="content">
             <h3 class="mb-2 mt-4 font-lilita text-2xl">
               Creation choices and numbers
@@ -127,12 +127,13 @@ const { default: purpleDrop } = await import(
             />
           </div>
         </Step>
-        <Image
+        title <Image
           src={forwardArrow}
           alt="forward arrow"
           class="h-16 w-fit self-center"
         />
         <Step
+          title="On the day"
           color="#9044E2"
           number="3"
           icon={purpleHat}
@@ -141,7 +142,6 @@ const { default: purpleDrop } = await import(
           backgroundPosition="right-0 -bottom-24"
           iconClass="min-[415px]:min-h-[400px] min-h-[500px]"
         >
-          <span slot="title">On the day</span>
           <div slot="content">
             <StarBulletPoints
               content={[
@@ -163,8 +163,7 @@ const { default: purpleDrop } = await import(
         At Home Party Pricing
       </h6>
       <div class="flex flex-col gap-4 lg:flex-row">
-        <Step color="#9044E2">
-          <p slot="title" class="text-4xl">1 hour party</p>
+        <Step title="1 hour party" color="#9044E2">
           <div slot="content">
             <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
               $36 per child
@@ -182,8 +181,7 @@ const { default: purpleDrop } = await import(
             <p class="my-8 pl-12 italic">Minimum 12 children</p>
           </div>
         </Step>
-        <Step color="#9044E2">
-          <p slot="title" class="text-4xl">1.5 hour party</p>
+        <Step title="1.5 hour party" color="#9044E2">
           <div slot="content">
             <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
               $43 per child
@@ -201,8 +199,7 @@ const { default: purpleDrop } = await import(
             <p class="my-8 pl-12 italic">Minimum 12 children</p>
           </div>
         </Step>
-        <Step color="#9044E2">
-          <p slot="title" class="text-4xl">Travel Fee</p>
+        <Step title="Travel Fee" color="#9044E2">
           <div slot="content">
             <StarBulletPoints
               content={[
