@@ -14,7 +14,12 @@ const { image, imageAlt, className } = Astro.props;
 
 <div class={cn("flex w-full flex-col rounded-lg shadow-md", className)}>
   <div>
-    <Image src={image} alt={imageAlt} class="h-52 rounded-t-lg object-cover" />
+    <Image
+      src={image}
+      alt={imageAlt}
+      width={400}
+      class="h-52 rounded-t-lg object-cover"
+    />
   </div>
   <!-- <div class="h-full p-8"> -->
   <slot name="content" />

@@ -13,7 +13,8 @@ import { Button } from "@/components/react/ui/button";
       <Image
         src={logo}
         alt="Fizz Kidz Logo"
-        width={500}
+        widths={[100, 200]}
+        sizes="(min-width: 250px) 100, (min-width: 350px) 200"
         loading="eager"
         class="w-40 min-w-24"
       />
