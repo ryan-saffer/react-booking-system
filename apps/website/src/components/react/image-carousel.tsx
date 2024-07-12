@@ -4,11 +4,11 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui/carousel";
+} from "./ui/carousel";
 
 import type { CustomImage } from "@/types/types";
 
-function IncursionImageCarousel({ images }: { images: CustomImage[] }) {
+function ImageCarousel({ images }: { images: CustomImage[] }) {
   return (
     <Carousel className="m-12">
       <CarouselContent>
@@ -31,4 +31,4 @@ function IncursionImageCarousel({ images }: { images: CustomImage[] }) {
   );
 }
 
-export default IncursionImageCarousel;
+export default ImageCarousel;

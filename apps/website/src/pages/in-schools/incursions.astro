@@ -24,7 +24,7 @@ import earth1 from "@/assets/images/pages/incursions/earth-1.webp";
 import earth2 from "@/assets/images/pages/incursions/earth-2.jpg";
 import earth3 from "@/assets/images/pages/incursions/earth-3.jpg";
 import earth4 from "@/assets/images/pages/incursions/earth-4.jpg";
-import IncursionImageCarousel from "@/components/react/incursions/incursion-image-carousel";
+import ImageCarousel from "@/components/react/image-carousel";
 
 import classroomImage from "@/assets/images/pages/incursions/purple-classroom.jpg";
 import PrimaryButton from "@/components/primary-button.astro";
@@ -255,8 +255,12 @@ const earthImages = [
         <div
           class="flex w-full flex-col items-center justify-between gap-8 min-[900px]:max-w-6xl min-[900px]:flex-row min-[900px]:items-stretch"
         >
-          <CardWithImage image={kid1} imageAlt="smiling child holding up slime">
-            <div slot="content">
+          <CardWithImage
+            image={kid1}
+            imageAlt="smiling child holding up slime"
+            className="min-[900px]:max-w-xs"
+          >
+            <div slot="content" class="p-8">
               <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
                 Excitability and wonderment<br />(aka fun!)
               </h5>
@@ -266,8 +270,12 @@ const earthImages = [
               </p>
             </div>
           </CardWithImage>
-          <CardWithImage image={kid2} imageAlt="smiling child holding up slime">
-            <div slot="content">
+          <CardWithImage
+            image={kid2}
+            imageAlt="smiling child holding up slime"
+            className="min-[900px]:max-w-xs"
+          >
+            <div slot="content" class="p-8">
               <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
                 Passionate about hands on learning
               </h5>
@@ -276,8 +284,12 @@ const earthImages = [
               </p>
             </div>
           </CardWithImage>
-          <CardWithImage image={kid3} imageAlt="smiling child holding up slime">
-            <div slot="content">
+          <CardWithImage
+            image={kid3}
+            imageAlt="smiling child holding up slime"
+            className="min-[900px]:max-w-xs"
+          >
+            <div slot="content" class="p-8">
               <h5 class="mb-4 text-center font-lilita text-3xl text-[#9044E2]">
                 Science made easy
               </h5>
@@ -309,7 +321,7 @@ const earthImages = [
           client:idle
         />
         <div class="h-8"></div>
-        <IncursionImageCarousel
+        <ImageCarousel
           images={[
             ...chemicalImages,
             ...physicalImages,

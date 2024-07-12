@@ -1,19 +1,22 @@
 ---
 import { Image } from "astro:assets";
+import type { ClassValue } from "clsx";
+import { cn } from "./react/lib/utils";
 
 type Props = {
   image: ImageMetadata;
   imageAlt: string;
+  className?: ClassValue;
 };
 
-const { image, imageAlt } = Astro.props;
+const { image, imageAlt, className } = Astro.props;
 ---
 
-<div class="flex w-full flex-col rounded-lg shadow-md min-[900px]:max-w-xs">
+<div class={cn("flex w-full flex-col rounded-lg shadow-md", className)}>
   <div>
     <Image src={image} alt={imageAlt} class="h-52 rounded-t-lg object-cover" />
   </div>
-  <div class="p-8">
-    <slot name="content" />
-  </div>
+  <!-- <div class="h-full p-8"> -->
+  <slot name="content" />
+  <!-- </div> -->
 </div>
