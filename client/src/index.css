@@ -48,6 +48,7 @@ code {
 
 .gotham {
     font-family: 'GothamLight';
+    font-weight: 100;
 }
 
 @layer base {

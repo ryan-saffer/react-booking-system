@@ -24,7 +24,7 @@ export function DashboardLayout() {
                 >
                     <Menu />
                 </Button>
-                <Link to="/dashboard" preventScrollReset={true} className="hidden sm:block">
+                <Link to="/dashboard" preventScrollReset={true} className="hidden cursor-pointer sm:block">
                     <img src="/fizz-logo.png" className=" h-12" />
                 </Link>
                 <div className="absolute right-4 pr-4">

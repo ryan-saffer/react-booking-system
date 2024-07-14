@@ -525,7 +525,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     variant="outline"
                     onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
                 >
-                    Enrol Another Child
+                    {form.getValues('main.children').length === 0 ? 'Add Child' : 'Enrol Another Child'}
                     <Plus className="ml-2 h-4 w-4" />
                 </Button>
                 <SectionBreak title="Emergency Contact" />

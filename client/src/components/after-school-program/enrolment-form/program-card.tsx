@@ -33,7 +33,7 @@ export function ProgramCard({
                     </div>
                     {img && (
                         <div className="p-4">
-                            <img src={img} className="h-full max-w-28 object-contain" />
+                            <img src={img} className="h-28 w-28 object-contain" />
                         </div>
                     )}
                 </div>
