@@ -65,7 +65,7 @@ export const menu = [
       {
         type: "link",
         title: "After School Programs",
-        path: "/in-studios/after-school-programs",
+        path: "/after-school-programs",
       },
     ],
   },
