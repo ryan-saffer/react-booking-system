@@ -213,7 +213,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="bookings:read">
+                                        <ProtectedRoute permission="after-school-programs:read">
                                             <SelectClassPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -223,7 +223,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="bookings:read">
+                                        <ProtectedRoute permission="after-school-programs:read">
                                             <AfterSchoolProgramCheckinClassDetails />
                                         </ProtectedRoute>
                                     </Suspense>
