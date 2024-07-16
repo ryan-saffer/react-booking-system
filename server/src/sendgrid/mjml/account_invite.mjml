@@ -37,7 +37,7 @@
             You have been invited to the Fizz Kidz Portal.
           </mj-text>
           <mj-text color="#637381" font-size="16px">
-            In order to sign in, you will first need to create a password.
+            In order to sign in, you will first need to create a password. Click the button below to create one. If you are told that the link has expired, then simply <a href="https://bookings.fizzkidz.com.au/reset-password">reset your password here</a> and a new link will be sent to you.
           </mj-text>
           <mj-button background-color="#53c4d7" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ resetLink }}" width="300px" border="1px #53c4d7 solid" border-radius="20px">
             Create a password ↗️
