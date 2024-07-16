@@ -289,4 +289,9 @@ export type Emails = {
     wwccReminder: {
         employees: string[]
     }
+
+    accountInvite: {
+        firstname: string
+        resetLink: string
+    }
 }

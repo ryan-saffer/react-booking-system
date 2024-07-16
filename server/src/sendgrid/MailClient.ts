@@ -509,6 +509,20 @@ export class MailClient {
                     template: 'party_form_reminder.mjml',
                     useMjml: true,
                 }
+            case 'accountInvite':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Portal Invitation',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'account_invite.mjml',
+                    useMjml: true,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
