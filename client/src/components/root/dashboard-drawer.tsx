@@ -59,7 +59,7 @@ export function DashboardDrawer({
                         <p className="mb-2 pt-4 font-lilita text-xl">Programs</p>
                         <NavItem
                             to="bookings"
-                            label="Partis, Events & Incursions"
+                            label="Parties, Events & Incursions"
                             onClick={closeDrawer}
                             icon={<PartyPopper className="mr-2 h-4 w-4" />}
                         />
