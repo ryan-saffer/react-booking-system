@@ -4,6 +4,7 @@ import { handleIncursionFormSubmission } from '../../../events/core/handle-incur
 import { handlePartyFormSubmission } from '../../../party-bookings/core/handle-party-form-submission'
 import { handlePartyFormSubmissionV2 } from '../../../party-bookings/core/handle-party-form-submission-v2'
 import { handlePartyFormSubmissionV3 } from '../../../party-bookings/core/handle-party-form-submission-v3'
+import { handleOnboardingFormSubmission } from '../../../staff/core/onboarding/handle-onboarding-form-submission'
 import { onMessagePublished } from '../../../utilities'
 
 export const paperformPubSub = onMessagePublished('paperformSubmission', async (input) => {
@@ -21,6 +22,9 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
             break
         case 'incursion':
             await handleIncursionFormSubmission(data)
+            break
+        case 'onboarding':
+            await handleOnboardingFormSubmission(data.formData, data.pdfUrl)
             break
         default: {
             const exhaustiveCheck: never = form

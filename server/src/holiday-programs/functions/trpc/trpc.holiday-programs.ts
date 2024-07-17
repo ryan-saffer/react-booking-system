@@ -1,7 +1,6 @@
 import { FreeHolidayProgramBooking } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { checkDiscountCode } from '../../core/check-discount-code'
 import { CreateDiscountCode, createDiscountCode } from '../../core/create-discount-code'
 import {
@@ -29,5 +28,3 @@ export const holidayProgramsRouter = router({
         .input((input: unknown) => input as { code: string })
         .mutation(({ input }) => checkDiscountCode(input.code)),
 })
-
-export const holidayPrograms = onRequestTrpc(holidayProgramsRouter)

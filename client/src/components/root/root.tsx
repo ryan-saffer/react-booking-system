@@ -8,7 +8,7 @@ import { ConfigProvider, type ThemeConfig } from 'antd'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc } from '@utils/trpc'
-import { httpLink } from '@trpc/client'
+import { httpBatchLink } from '@trpc/client'
 import { useEmulators } from '@components/Firebase/firebase'
 import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
@@ -57,12 +57,16 @@ const antdTheme: ThemeConfig = {
 function _Root() {
     const firebase = useFirebase()
 
+    const domain = useEmulators
+        ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
+        : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
+
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         trpc.createClient({
             links: [
-                httpLink({
-                    url: '',
+                httpBatchLink({
+                    url: `${domain}/api/trpc`,
                     async headers() {
                         // first try refresh the users token - this means when returning to the app
                         // after a while, it will refresh the token and work nicely.
@@ -81,15 +85,6 @@ function _Root() {
                         return {
                             authorization: authToken,
                         }
-                    },
-                    fetch(url, options) {
-                        const normalisedUrl = url.toString().replace('.', '/') // replace first '.' with '/'
-                        const splitUrl = normalisedUrl.split('/')
-                        const [router, procedure] = [splitUrl[1], splitUrl[2]]
-                        const domain = useEmulators
-                            ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-                            : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
-                        return fetch(`${domain}/${router}/${procedure}`, options)
                     },
                 }),
             ],
