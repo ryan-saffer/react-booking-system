@@ -13,76 +13,90 @@ import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
 import { cn } from "../lib/utils";
 import { useState } from "react";
 
+export type MenuItem =
+  | { type: "link"; title: string; path: string }
+  | ({
+      type: "dropdown";
+      title: string;
+      items: Readonly<{ type: "link"; title: string; path: string }[]>;
+    } & ({ clickable: true; path: string } | { clickable: false }));
+
 export const menu = [
   {
-    title: "At Fizz Kidz",
+    title: "Birthday Parties",
+    clickable: true,
+    path: "/birthday-parties",
     type: "dropdown",
     items: [
       {
-        type: "dropdown",
-        title: "Birthday Parties",
-        path: "/in-studios/birthday-parties",
-        items: [
-          {
-            title: "Glitz and Glam Parties",
-            path: "/in-studios/birthday-parties/glam-parties",
-          },
-          {
-            title: "Science Parties",
-            path: "/in-studios/birthday-parties/science-parties",
-          },
-          {
-            title: "Slime Parties",
-            path: "/in-studios/birthday-parties/slime-parties",
-          },
-          {
-            title: "Safari Parties",
-            path: "/in-studios/birthday-parties/safari-parties",
-          },
-          {
-            title: "Unicorn Parties",
-            path: "/in-studios/birthday-parties/unicorn-parties",
-          },
-          {
-            title: "Tie Dye Parties",
-            path: "/in-studios/birthday-parties/tie-dye-parties",
-          },
-          {
-            title: "Taylor Swift Parties",
-            path: "/in-studios/birthday-parties/taylor-swift-parties",
-          },
-          {
-            title: "At Home Parties",
-            path: "/at-home/birthday-parties",
-          },
-        ],
+        title: "Glitz and Glam Parties",
+        path: "/birthday-parties/glam-parties",
+        type: "link",
       },
       {
+        title: "Science Parties",
+        path: "/birthday-parties/science-parties",
         type: "link",
-        title: "Holiday Programs",
-        path: "/in-studios/holiday-programs",
       },
       {
+        title: "Slime Parties",
+        path: "/birthday-parties/slime-parties",
         type: "link",
-        title: "After School Programs",
-        path: "/after-school-programs",
+      },
+      {
+        title: "Safari Parties",
+        path: "/birthday-parties/safari-parties",
+        type: "link",
+      },
+      {
+        title: "Unicorn Parties",
+        path: "/birthday-parties/unicorn-parties",
+        type: "link",
+      },
+      {
+        title: "Tie Dye Parties",
+        path: "/birthday-parties/tie-dye-parties",
+        type: "link",
+      },
+      {
+        title: "Taylor Swift Parties",
+        path: "/birthday-parties/taylor-swift-parties",
+        type: "link",
+      },
+      {
+        title: "At Home Parties",
+        path: "/birthday-parties/at-home-parties",
+        type: "link",
       },
     ],
   },
   {
-    title: "At Home",
+    type: "link",
+    title: "Holiday Programs",
+    path: "/holiday-programs",
+  },
+  {
     type: "dropdown",
+    clickable: true,
+    title: "After School Programs",
+    path: "/after-school-programs",
     items: [
       {
         type: "link",
-        title: "Birthday Parties",
-        path: "/at-home/birthday-parties",
+        title: "Science Program",
+        path: "/after-school-programs/science-program",
+      },
+      {
+        type: "link",
+        title: "Art & Makers Program",
+        path: "/after-school-programs/art-and-makers-program",
       },
     ],
   },
   {
     title: "In Schools",
     type: "dropdown",
+    clickable: false,
     items: [
       {
         type: "link",
@@ -105,6 +119,7 @@ export const menu = [
   {
     title: "Fizz Facts",
     type: "dropdown",
+    clickable: false,
     items: [
       {
         type: "link",
@@ -115,14 +130,14 @@ export const menu = [
       { type: "link", title: "Franchising", path: "/franchising" },
     ],
   },
-] as const;
+] as const satisfies MenuItem[];
 
 function NavigationMenu() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <>
-      <nav className="hidden min-[990px]:block">
+      <nav className="hidden min-[1110px]:block">
         {menu.map((menuItem) => {
           if (menuItem.type === "link") {
             return (
@@ -132,11 +147,12 @@ function NavigationMenu() {
                 path={menuItem.path}
               />
             );
-          } else {
+          } else if (menuItem.type === "dropdown") {
             return (
               <NavigationMenuDropdown
                 key={menuItem.title}
                 title={menuItem.title}
+                path={menuItem.clickable ? menuItem.path : ""}
                 submenus={menuItem.items}
               />
             );
@@ -144,7 +160,7 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="min-[990px]:hidden">
+      <aside className="min-[1110px]:hidden">
         <nav>
           <Button
             variant="ghost"
@@ -155,7 +171,7 @@ function NavigationMenu() {
           </Button>
           <div
             className={cn(
-              "absolute left-0 top-[85px] z-50 hidden h-screen w-full overflow-scroll border-t bg-white",
+              "absolute left-0 top-[64px] z-50 hidden h-screen w-full overflow-scroll border-t bg-white",
               {
                 block: showMobileMenu,
               },
@@ -194,7 +210,7 @@ function NavigationMenu() {
                                     <a href={item.path}>{item.title}</a>
                                   </AccordionTrigger>
                                   <AccordionContent className="ml-8 w-fit border-l p-0">
-                                    {item.items.map((nestedItem) => (
+                                    {/* {item.map((nestedItem) => (
                                       <NavigationMenuItemMobile
                                         key={nestedItem.title}
                                         title={nestedItem.title}
@@ -202,7 +218,7 @@ function NavigationMenu() {
                                         nested
                                         italic
                                       />
-                                    ))}
+                                    ))} */}
                                   </AccordionContent>
                                 </AccordionItem>
                               );

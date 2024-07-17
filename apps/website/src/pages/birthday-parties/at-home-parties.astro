@@ -13,6 +13,8 @@ import forwardArrow from "@/assets/images/pages/parties/forward-arrow.png";
 import PrimaryButton from "@/components/primary-button.astro";
 import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 
+import { menu } from "../../components/react/navigation/navigation-menu";
+
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
 );
@@ -39,11 +41,19 @@ const { default: purpleDrop } = await import(
   description="We can come to you, and run a fabulous birthday party at your home or venue!"
 >
   <main class="m-auto block max-w-[1380px] px-5 pt-8">
-    <div class="h-[10px]"></div>
     <BreadcrumbWrapper
+      client:idle
       items={[
-        { type: "not-link", title: "At Home" },
-        { type: "not-link", title: "Birthday Parties" },
+        {
+          type: "link",
+          title: "Birthday Parties",
+          path: "/birthday-parties",
+        },
+        {
+          type: "dropdown",
+          title: "At Home Parties",
+          items: menu[0].items,
+        },
       ]}
     />
     <PageIntro

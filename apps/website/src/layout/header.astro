@@ -1,27 +1,35 @@
 ---
 import { Image } from "astro:assets";
-import logo from "@/assets/images/Fizz Kidz Horizontal.png";
+import logoHorizontal from "@/assets/images/logo-horizontal.png";
+import logoStacked from "@/assets/images/logo-stacked.png";
 import NavigationMenu from "@/react-components/navigation/navigation-menu";
 import { Button } from "@/components/react/ui/button";
 ---
 
 <div
-  class="sticky top-0 z-50 flex min-h-20 justify-center bg-white px-8 py-2 shadow-lg"
+  class="sticky top-0 z-50 flex h-16 justify-center bg-white px-8 py-2 shadow-lg min-[1110px]:h-20"
 >
   <div class="flex w-full max-w-[1380px] items-center justify-between">
     <a href="/">
       <Image
-        src={logo}
+        src={logoHorizontal}
         alt="Fizz Kidz Logo"
         widths={[100, 300]}
         sizes="(min-width: 250px) 100, (min-width: 350px) 300"
         loading="eager"
-        class="w-40 min-w-24"
+        class="h-12 w-fit max-[1210px]:hidden max-[1110px]:block min-[1110px]:h-16"
+      />
+      <Image
+        src={logoStacked}
+        alt="Fizz Kidz Logo"
+        loading="eager"
+        width={200}
+        class="h-16 w-fit max-[1110px]:hidden min-[1210px]:hidden"
       />
     </a>
     <NavigationMenu client:load />
     <Button
-      className="hidden bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33] min-[1170px]:inline-flex"
+      className="hidden bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33] min-[1365px]:inline-flex"
       >Get in touch</Button
     >
   </div>

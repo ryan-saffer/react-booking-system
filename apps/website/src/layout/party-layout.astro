@@ -20,18 +20,14 @@ const { partyPackage } = Astro.props;
     client:idle
     items={[
       {
-        type: "not-link",
-        title: "In Studios",
-      },
-      {
         type: "link",
         title: "Birthday Parties",
-        path: "/in-studios/birthday-parties",
+        path: "/birthday-parties",
       },
       {
         type: "dropdown",
         title: `${partyPackage} Party`,
-        items: menu[0].items[0].items.map((it) => ({ type: "link", ...it })),
+        items: menu[0].items,
       },
     ]}
   />

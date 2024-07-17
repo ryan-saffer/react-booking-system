@@ -8,6 +8,7 @@ import {
 
 import { Fragment } from "react/jsx-runtime";
 import NavigationMenuDropdown from "./navigation/navigation-menu-dropdown";
+import { cn } from "./lib/utils";
 
 export function BreadcrumbWrapper({
   items,
@@ -18,30 +19,41 @@ export function BreadcrumbWrapper({
     | {
         type: "dropdown";
         title: string;
-        items: { type: "link"; title: string; path: string }[];
+        items: Readonly<{ type: "link"; title: string; path: string }[]>;
       }
   )[];
 }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        <BreadcrumbItem>
+        <BreadcrumbItem
+          className={cn("sm:block", { "hidden sm:block": items.length > 1 })}
+        >
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbSeparator
+          className={cn("sm:block", { "hidden sm:block": items.length > 1 })}
+        />
         {items.map((child, idx) => {
           let result;
           if (child.type === "link") {
             result = (
               <BreadcrumbItem>
-                <BreadcrumbLink href={child.path}>{child.title}</BreadcrumbLink>
+                <BreadcrumbLink
+                  className="text-xs min-[350px]:text-sm"
+                  href={child.path}
+                >
+                  {child.title}
+                </BreadcrumbLink>
               </BreadcrumbItem>
             );
           } else if (child.type === "not-link") {
             result = (
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <span>{child.title}</span>
+                  <span className="text-xs min-[350px]:text-sm">
+                    {child.title}
+                  </span>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             );
