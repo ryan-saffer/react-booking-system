@@ -6,15 +6,17 @@ import { cn } from "./react/lib/utils";
 type Props = {
   image: ImageMetadata;
   imageAlt: string;
+  eager?: boolean;
   className?: ClassValue;
 };
 
-const { image, imageAlt, className } = Astro.props;
+const { image, imageAlt, eager = false, className } = Astro.props;
 ---
 
 <div class={cn("flex w-fit flex-col rounded-lg shadow-md", className)}>
   <div>
     <Image
+      loading={eager ? "eager" : "lazy"}
       src={image}
       alt={imageAlt}
       width={500}

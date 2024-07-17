@@ -67,11 +67,28 @@ const numbers = [
 >
   <main class="m-auto block max-w-[1380px] px-5 py-8">
     <BreadcrumbWrapper
+      client:idle
       items={[
         {
           title: "After School Programs",
-          type: "link",
-          path: "/after-school-programs",
+          type: "dropdown",
+          items: [
+            {
+              type: "link",
+              title: "Birthday Parties",
+              path: "birthday-parties",
+            },
+            {
+              type: "link",
+              title: "Holiday Programs",
+              path: "holiday-programs",
+            },
+            {
+              type: "link",
+              title: "After School Programs",
+              path: "after-school-programs",
+            },
+          ],
         },
       ]}
     />

@@ -27,7 +27,9 @@ export function BreadcrumbWrapper({
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem
-          className={cn("sm:block", { "hidden sm:block": items.length > 1 })}
+          className={cn("text-xs min-[350px]:text-sm sm:block", {
+            "hidden sm:block": items.length > 1,
+          })}
         >
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
