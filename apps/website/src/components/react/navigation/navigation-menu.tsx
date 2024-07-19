@@ -100,8 +100,8 @@ export const menu = [
     items: [
       {
         type: "link",
-        title: "After School Program",
-        path: "/in-schools/after-school-program",
+        title: "After School Programs",
+        path: "/in-schools/after-school-programs",
       },
       { type: "link", title: "Incursions", path: "/in-schools/incursions" },
       {

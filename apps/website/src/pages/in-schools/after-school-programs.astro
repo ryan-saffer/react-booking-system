@@ -1,0 +1,31 @@
+---
+draft: true;
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+---
+
+<Layout
+  title="In School After School Programs | Fizz Kidz"
+  description="We engage your children in the fascinating nature of everyday science, and we do it by exploring hands-on science experiments!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-8">
+    <BreadcrumbWrapper
+      client:idle
+      items={[
+        { type: "not-link", title: "In Schools" },
+        {
+          type: "dropdown",
+          title: "After School Programs",
+          items: [
+            {
+              type: "link",
+              title: "After School Programs",
+              path: "after-school-programs",
+            },
+            { type: "link", title: "Incursions", path: "incursions" },
+          ],
+        },
+      ]}
+    />
+  </main>
+</Layout>
