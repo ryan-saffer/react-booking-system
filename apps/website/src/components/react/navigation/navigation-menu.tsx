@@ -123,6 +123,7 @@ export const menu = [
       },
       { type: "link", title: "Our Team", path: "/our-team" },
       { type: "link", title: "Franchising", path: "/franchising" },
+      { type: "link", title: "Policies", path: "/policies" },
     ],
   },
 ] as const satisfies MenuItem[];

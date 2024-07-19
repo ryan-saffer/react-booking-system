@@ -1,0 +1,21 @@
+---
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+---
+
+<Layout
+  title="Our Policies | Fizz Kidz"
+  description="This page includes our company policies, payment policies and privacy policies."
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-8">
+    <BreadcrumbWrapper
+      items={[
+        {
+          type: "link",
+          title: "Policies",
+          path: "/policies",
+        },
+      ]}
+    />
+  </main>
+</Layout>
