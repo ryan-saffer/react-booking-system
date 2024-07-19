@@ -1,5 +1,6 @@
 ---
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Step from "@/components/step.astro";
 import Layout from "@/layout/Layout.astro";
 ---
 
@@ -17,8 +18,236 @@ import Layout from "@/layout/Layout.astro";
         },
       ]}
     />
-    <section>
-      <h2 class="text-center font-lilita text-4xl">General Policies</h2>
+    <section class="my-12 flex flex-col gap-8">
+      <Step title="General Policies" color="#42D4F3">
+        <div slot="content">
+          <p class="mb-4">
+            At Fizz Kidz we consider the health, safety and wellbeing of kids
+            and young people to be our priority. We strive to create a safe and
+            welcoming environment that allows all children to participate and
+            have fun in our parties and programs.
+          </p>
+          <h4 class="font-lilita text-xl">Staff</h4>
+          <p class="mb-4">
+            Fizz Kidz recruits staff that have had significant experience
+            working with and caring for children. Each party or program is
+            facilitated by a certified Fizz Kidz facilitator. Our team of Fizz
+            Kidz hosts hold working with children checks and have agreed to the
+            Fizz Kidz Child Safety Code of Conduct Policy. Fizz Kidz hosts are
+            trained in using an epipen and taking appropriate steps if a Fizz
+            Kidz child has an allergic reaction. Our hosts have also undergone
+            food safe handling training.
+          </p>
+          <h4 class="font-lilita text-xl">Allergy</h4>
+          <p class="mb-4">
+            Fizz Kidz strives to maintain a nut-free environment. All foods
+            provided at the Fizz Kidz Venue are nut free (some items state 'May
+            Contain nuts') and we do our best to ensure all food brought into
+            the venue are nut free by alerting parents multiple times about our
+            policy. We are also more than happy to work with you to cater to
+            other allergy related concerns. While Fizz Kidz prioritises child's
+            safety, and is highly aware of allergic causes and symptoms, Fizz
+            Kidz does not take responsibility if a child has an allergic
+            reaction.
+          </p>
+          <h4 class="font-lilita text-xl">Products</h4>
+          <p class="mb-4">
+            Fizz Kidz has undergone research and testing of all the ingredients
+            used to make the creations. We believe our products are safe and
+            appropriate for children to use and enjoy. In every Fizz Kidz store
+            you will find a list of ingredients which you're welcome to look
+            through and ask questions about. If you have any concerns, please
+            feel free to contact us on (03) 9059 8144.
+          </p>
+        </div>
+      </Step>
+      <Step title="Payment Policies" color="#4FE16D">
+        <div slot="content">
+          <h4 class="font-lilita text-xl">Party Payment</h4>
+          <p class="mb-4">
+            Payment is made at the end of a Fizz Kidz party after our party
+            hosts have counted the number of guest that attended the party.
+            Payment must be made for a minimum of 12 guests. All guests who
+            participate in the creation making process during a party need to be
+            paid for. Children who are in the room however not making creations
+            (such as little siblings) will not be charged for. Cash or card
+            payment method are suitable and will be facilitated by Fizz Kidz
+            party hosts. If payment cannot be made via cash or card, an EFT to
+            the Fizz Kidz account can be processed on the day before leaving the
+            venue.
+          </p>
+          <h4 class="font-lilita text-xl">Party Cancellation Policy</h4>
+          <p class="mb-4">
+            While we would much prefer to not charge for a service that has not
+            been received, please understand that a cancelled party would have
+            otherwise been taken by another customer. A cancelled or rescheduled
+            event may incur the following fees:
+            <br /><br />
+            $150.00 if cancelled or rescheduled within 3 weeks of the event.
+            <br /><br />
+            $300.00 if cancelled or rescheduled within 2 weeks of the event.
+            <br /><br />
+            $450.00 if cancelled or rescheduled within 1 week of the event.
+          </p>
+          <h4 class="font-lilita text-xl">Holiday Program Payment</h4>
+          <p class="mb-4">
+            Payment for holiday programs can be made prior to drop-off via the
+            Fizz Kidz website. Otherwise payment must be processed upon drop-off
+            via cash or card. If payment cannot be made via cash or card, an EFT
+            to the Fizz Kidz account can be processed.
+          </p>
+          <h4 class="font-lilita text-xl">
+            Holiday Programv Cancellation Policy
+          </h4>
+          <p class="mb-4">
+            If you have paid online and can no longer attend the holiday
+            program, please let us know 48 hours before and we will refund you.
+          </p>
+        </div>
+      </Step>
+      <Step title="Privacy Policy" color="#9044E2">
+        <div slot="content">
+          <p class="mb-4">
+            Fizz Kidz Australia Pty Ltd is committed to providing quality
+            services to you and this policy outlines our ongoing obligations to
+            you in respect of how we manage your Personal Information.
+            <br /><br />
+            We have adopted the Australian Privacy Principles (APPs) contained in
+            the Privacy Act 1988 (Cth) (the Privacy Act). The NPPs govern the way
+            in which we collect, use, disclose, store, secure and dispose of your
+            Personal Information.
+            <br /><br />
+            A copy of the Australian Privacy Principles may be obtained from the
+            website of The Office of the Australian Information Commissioner at https://www.oaic.gov.au/.
+          </p>
+          <h4 class="font-lilita text-xl">
+            What is Personal Information and why do we collect it?
+          </h4>
+          <p class="mb-4">
+            Personal Information is information or an opinion that identifies an
+            individual. Examples of Personal Information we collect includes
+            names, addresses, email addresses, phone and facsimile numbers.
+            <br /><br />
+            This Personal Information is obtained in many ways including interviews,
+            correspondence, by telephone and facsimile, by email, via our website
+            www.fizzkidz.com.au, from your website, from media and publications,
+            from other publicly available sources, from cookies and from third parties.
+            We don't guarantee website links or policy of authorized third parties.
+            <br /><br />
+            We collect your Personal Information for the primary purpose of providing
+            our services to you, providing information to our clients and marketing.
+            We may also use your Personal Information for secondary purposes closely
+            related to the primary purpose, in circumstances where you would reasonably
+            expect such use or disclosure. You may unsubscribe from our mailing/marketing
+            lists at any time by contacting us in writing.
+            <br /><br />
+            When we collect Personal Information we will, where appropriate and where
+            possible, explain to you why we are collecting the information and how
+            we plan to use it.
+          </p>
+          <h4 class="font-lilita text-xl">Sensitive Information</h4>
+          <p class="mb-4">
+            Sensitive information is defined in the Privacy Act to include
+            information or opinion about such things as an individual's racial
+            or ethnic origin, political opinions, membership of a political
+            association, religious or philosophical beliefs, membership of a
+            trade union or other professional body, criminal record or health
+            information.
+            <br /><br />
+            Sensitive information will be used by us only:
+            <ul class="mb-4 list-disc pl-4">
+              <li>For the primary purpose for which it was obtained</li>
+              <li>
+                For a secondary purpose that is directly related to the primary
+                purpose
+              </li>
+              <li>
+                With your consent; or where required or authorized by law.
+              </li>
+            </ul>
+          </p>
+          <h4 class="font-lilita text-xl">Third Parties</h4>
+          <p class="mb-4">
+            Where reasonable and practicable to do so, we will collect your
+            Personal Information only from you. However, in some circumstances
+            we may be provided with information by third parties. In such a case
+            we will take reasonable steps to ensure that you are made aware of
+            the information provided to us by the third party.
+          </p>
+          <h4 class="font-lilita text-xl">
+            Disclosure of Personal Information
+          </h4>
+          <p class="mb-4">
+            Your Personal Information may be disclosed in a number of
+            circumstances including the following:
+            <ul class="mb-4 list-disc pl-4">
+              <li>
+                Third parties where you consent to the use or disclosure; and
+              </li>
+              <li>Where required or authorized by law.</li>
+            </ul>
+          </p>
+          <h4 class="font-lilita text-xl">
+            Security of Personal Information
+          </h4><p class="mb-4">
+            Our Personal Information is stored in a manner that reasonably
+            protects it from misuse and loss and from unauthorized access,
+            modification or disclosure.
+            <br /><br />
+            When your Personal Information is no longer needed for the purpose for
+            which it was obtained, we will take reasonable steps to destroy or permanently
+            de-identify your Personal Information. However, most of the Personal
+            Information is or will be stored in client files which will be kept by
+            us for a minimum of 7 years.
+          </p>
+          <h4 class="font-lilita text-xl">
+            Access to your Personal Information
+          </h4>
+          <p class="mb-4">
+            You may access the Personal Information we hold about you and to
+            update and/or correct it, subject to certain exceptions. If you wish
+            to access your Personal Information, please contact us in writing.
+            <br /><br />
+            Fizz Kidz Australia Pty Ltd will not charge any fee for your access request,
+            but may charge an administrative fee for providing a copy of your Personal
+            Information.
+            <br /><br />
+            In order to protect your Personal Information we may require identification
+            from you before releasing the requested information.
+          </p>
+          <h4 class="font-lilita text-xl">
+            Maintaining the Quality of your Personal Information
+          </h4>
+          <p class="mb-4">
+            It is important to us that your Personal Information is up to date.
+            We will take reasonable steps to make sure that your Personal
+            Information is accurate, complete and up-to-date. If you find that
+            the information we have is not up to date or is inaccurate, please
+            advise us as soon as practicable so we can update our records and
+            ensure we can continue to provide quality services to you.
+          </p>
+          <h4 class="font-lilita text-xl">Policy Updates</h4>
+          <p class="mb-4">
+            This Policy may change from time to time and is available on our
+            website.
+          </p>
+          <h4 class="font-lilita text-xl">
+            Privacy Policy Complaints and Enquiries
+          </h4>
+          <p class="mb-4">
+            If you have any queries or complaints about our Privacy Policy
+            please contact us at:
+            <br /><br />
+            Fizz Kidz Australia Pty Ltd
+            <br /><br />
+            20 Glenferrire Road, Malvern 3144
+            <br /><br />
+            bookings@fizzkidz.com.au
+            <br /><br />
+            03 90598144
+          </p>
+        </div>
+      </Step>
     </section>
   </main>
 </Layout>
