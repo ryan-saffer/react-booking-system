@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
+    "@astrojs/netlify": "^5.4.0",
     "@astrojs/react": "^3.5.0",
     "@astrojs/tailwind": "^5.1.0",
     "@hookform/resolvers": "^3.6.0",
@@ -24,6 +25,7 @@
     "@storyblok/js": "^3.0.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@uploadthing/react": "^6.7.2",
     "astro": "^4.10.2",
     "astro-loading-indicator": "^0.5.0",
     "class-variance-authority": "^0.7.0",
@@ -41,6 +43,7 @@
     "tailwindcss": "^3.4.4",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.5",
+    "uploadthing": "^6.13.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
