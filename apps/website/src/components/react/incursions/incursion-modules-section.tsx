@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import type { CustomImage } from "@/types/types";
 import { IncursionModule } from "./incursion-module";
 // @ts-ignore
-import blueParachute from "@/assets/images/pages/incursions/blue-parachute.svg";
+import blueParachute from "@/assets/images/pages/in-schools/incursions/blue-parachute.svg";
 import { cn } from "../lib/utils";
 // @ts-ignore
-import greenEarth from "@/assets/images/pages/incursions/green-earth.svg";
+import greenEarth from "@/assets/images/pages/in-schools/incursions/green-earth.svg";
 // @ts-ignore
-import purpleLightbulb from "@/assets/images/pages/incursions/purple-lightbulb.svg";
+import purpleLightbulb from "@/assets/images/pages/in-schools/incursions/purple-lightbulb.svg";
 // SVG IMPORTS
 // @ts-ignore
-import yellowTube from "@/assets/images/pages/incursions/yellow-tube.svg";
+import yellowTube from "@/assets/images/pages/in-schools/incursions/yellow-tube.svg";
 
 type Props = {
   chemicalImages: CustomImage[];

@@ -1,0 +1,73 @@
+---
+import { getImage } from "astro:assets";
+import LogoGrid from "./react/logo-grid";
+
+import abbotsford from "@/assets/images/pages/in-schools/incursions/schools/abbotsford.png";
+import auburn from "@/assets/images/pages/in-schools/incursions/schools/auburn.png";
+import blackburn from "@/assets/images/pages/in-schools/incursions/schools/blackburn.png";
+import eastBentleigh from "@/assets/images/pages/in-schools/incursions/schools/eastBentleigh.png";
+import flemington from "@/assets/images/pages/in-schools/incursions/schools/flemington.png";
+import hampton from "@/assets/images/pages/in-schools/incursions/schools/hampton.png";
+import holyFamily from "@/assets/images/pages/in-schools/incursions/schools/holyFamily.png";
+import huntingdale from "@/assets/images/pages/in-schools/incursions/schools/huntingdale.png";
+import malvern from "@/assets/images/pages/in-schools/incursions/schools/malvern.png";
+import mckinnon from "@/assets/images/pages/in-schools/incursions/schools/mckinnon.png";
+import oldOrchard from "@/assets/images/pages/in-schools/incursions/schools/oldOrchard.png";
+import ologc from "@/assets/images/pages/in-schools/incursions/schools/ologc.png";
+import ripponlea from "@/assets/images/pages/in-schools/incursions/schools/ripponlea.png";
+import stKilda from "@/assets/images/pages/in-schools/incursions/schools/stKilda.jpg";
+import stMichaels from "@/assets/images/pages/in-schools/incursions/schools/stMichaels.png";
+
+const abbotsfordOptimised = await getImage({ src: abbotsford, format: "webp" });
+const auburnOptimised = await getImage({ src: auburn, format: "webp" });
+const blackburnOptimised = await getImage({ src: blackburn, format: "webp" });
+const eastBentleighOptimised = await getImage({
+  src: eastBentleigh,
+  format: "webp",
+});
+const flemingtonOptimised = await getImage({ src: flemington, format: "webp" });
+const hamptonOptimised = await getImage({ src: hampton, format: "webp" });
+const holyFamilyOptimised = await getImage({ src: holyFamily, format: "webp" });
+const huntingdaleOptimised = await getImage({
+  src: huntingdale,
+  format: "webp",
+});
+const malvernOptimised = await getImage({ src: malvern, format: "webp" });
+const mckinnonOptimised = await getImage({ src: mckinnon, format: "webp" });
+const oldOrchardOptimised = await getImage({ src: oldOrchard, format: "webp" });
+const ologcOptimised = await getImage({ src: ologc, format: "webp" });
+const ripponleaOptimised = await getImage({ src: ripponlea, format: "webp" });
+const stKildaOptimised = await getImage({ src: stKilda, format: "webp" });
+const stMichaelsOptimised = await getImage({ src: stMichaels, format: "webp" });
+
+const schoolLogos = [
+  { image: abbotsfordOptimised, alt: "logo of abbotsford primary school" },
+  { image: auburnOptimised, alt: "logo of auburn primary school" },
+  { image: blackburnOptimised, alt: "logo of blackburn primary school" },
+  {
+    image: eastBentleighOptimised,
+    alt: "logo of east bentleigh primary school",
+  },
+  { image: flemingtonOptimised, alt: "logo of flemington primary school" },
+  { image: hamptonOptimised, alt: "logo of hampton primary school" },
+  { image: holyFamilyOptimised, alt: "logo of holy family primary school" },
+  { image: huntingdaleOptimised, alt: "logo of huntingdale primary school" },
+  { image: malvernOptimised, alt: "logo of malvern primary school" },
+  { image: mckinnonOptimised, alt: "logo of mckinnon primary school" },
+  { image: oldOrchardOptimised, alt: "logo of old orchard primary school" },
+  {
+    image: ologcOptimised,
+    alt: "logo of our lady of good counsel primary school",
+  },
+  { image: ripponleaOptimised, alt: "logo of ripponlea primary school" },
+  { image: stKildaOptimised, alt: "logo of st kilda primary school" },
+  { image: stMichaelsOptimised, alt: "logo of st michaels primary school" },
+];
+---
+
+<section>
+  <h6 class="mb-16 text-center font-lilita text-4xl md:mb-24 md:text-5xl">
+    Schools that have joined the science adventure
+  </h6>
+  <LogoGrid logos={schoolLogos} client:visible />
+</section>
