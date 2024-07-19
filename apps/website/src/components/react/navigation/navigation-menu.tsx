@@ -104,11 +104,6 @@ export const menu = [
         path: "/in-schools/after-school-programs",
       },
       { type: "link", title: "Incursions", path: "/in-schools/incursions" },
-      {
-        type: "link",
-        title: "School Celebrations",
-        path: "/in-schools/school-celebrations",
-      },
     ],
   },
   {
