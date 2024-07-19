@@ -1,0 +1,35 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import team from "@/assets/images/pages/our-team/all-staff.jpg";
+import JobListings from "@/components/react/job-listings";
+---
+
+<Layout
+  title="Careers | Fizz Kidz"
+  description="Want to work for Fizz Kidz? Apply for one of our open roles!"
+>
+  <main class="m-auto block max-w-[1380px] px-5 pt-8">
+    <BreadcrumbWrapper
+      items={[{ type: "link", title: "Careers", path: "/careers" }]}
+    />
+    <PageIntro
+      image={team}
+      imageAlt="Lots of Fizz Kidz staff all posing and laughing"
+      subtitle="We're buzzing with fun - join us!"
+      color="blue"
+      actionButtonText="Apply now"
+      actionButtonPath="#apply"
+    >
+      <span slot="title">Fizz Kidz Careers</span>
+      <span slot="content"
+        >Looking for a career working with kids? Get in touch!</span
+      >
+    </PageIntro>
+    <section class="my-24">
+      <h3 class="mb-8 text-center font-lilita text-5xl">Available roles</h3>
+      <JobListings client:idle />
+    </section>
+  </main>
+</Layout>
