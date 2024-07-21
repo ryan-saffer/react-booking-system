@@ -153,6 +153,7 @@ function JobListings() {
         <AccordionItem
           value={location.name}
           className={cn("px-4", { "border-b-0": idx > 2 })}
+          key={idx}
         >
           <AccordionTrigger className="font-bold">{`${location.name} Studio Party Facilitator`}</AccordionTrigger>
           <AccordionContent className="text-base">

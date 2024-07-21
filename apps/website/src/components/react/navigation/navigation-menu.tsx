@@ -6,12 +6,12 @@ import {
 } from "@/react-ui/accordion";
 
 import { Button } from "@/react-ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import NavigationMenuDropdown from "./navigation-menu-dropdown";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
 import { cn } from "../lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type MenuItem =
   | { type: "link"; title: string; path: string }
@@ -132,9 +132,34 @@ export const menu = [
 function NavigationMenu() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  useEffect(() => {
+    if (showMobileMenu) {
+      document.getElementById("main")?.classList.add("no-scroll");
+      document.getElementById("footer")?.classList.add("no-scroll");
+    } else {
+      document.getElementById("main")?.classList.remove("no-scroll");
+      document.getElementById("footer")?.classList.remove("no-scroll");
+    }
+
+    return () => {
+      document.getElementById("main")?.classList.remove("no-scroll");
+      document.getElementById("footer")?.classList.remove("no-scroll");
+    };
+  }, [showMobileMenu]);
+
+  useEffect(() => {
+    const onResize = () => {
+      setShowMobileMenu(false);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <>
-      <nav className="hidden min-[1110px]:block">
+      <nav className="hidden min-[1125px]:block">
         {menu.map((menuItem) => {
           if (menuItem.type === "link") {
             return (
@@ -157,86 +182,70 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="min-[1110px]:hidden">
+      <aside className="min-[1125px]:hidden">
         <nav>
           <Button
-            variant="ghost"
+            className="border-[#8F44E1]"
+            variant="outline"
             onClick={() => setShowMobileMenu((prev) => !prev)}
             aria-label="hamburger menu"
           >
-            <Menu color="#E81070" className="h-6 w-6" />
+            {showMobileMenu ? (
+              <X color="#8F44E1" className="h-6 w-6" />
+            ) : (
+              <Menu color="#8F44E1" className="h-6 w-6" />
+            )}
           </Button>
           <div
             className={cn(
-              "absolute left-0 top-[64px] z-50 hidden h-screen w-full overflow-scroll border-t bg-white",
+              "absolute left-0 right-0 top-[64px] z-50 h-[calc(100vh-64px)] w-screen overflow-y-auto border-t bg-white",
               {
                 block: showMobileMenu,
+                hidden: !showMobileMenu,
               },
             )}
           >
-            <ul>
-              <Accordion type="multiple">
-                {menu.map((menuItem) => {
-                  if (menuItem.type === "dropdown") {
-                    return (
-                      <AccordionItem
-                        value={menuItem.title}
-                        className="px-12"
-                        key={menuItem.title}
-                      >
-                        <AccordionTrigger>{menuItem.title}</AccordionTrigger>
-                        <AccordionContent className="w-full">
-                          {menuItem.items.map((item) => {
-                            if (item.type === "link") {
-                              return (
-                                <NavigationMenuItemMobile
-                                  key={item.title}
-                                  title={item.title}
-                                  path={item.path}
-                                  nested
-                                />
-                              );
-                            } else if (item.type === "dropdown") {
-                              return (
-                                <AccordionItem
-                                  value={item.title}
-                                  className="justify-start border-0"
-                                  key={item.title}
-                                >
-                                  <AccordionTrigger className="justify-between gap-4 p-4 underline">
-                                    <a href={item.path}>{item.title}</a>
-                                  </AccordionTrigger>
-                                  <AccordionContent className="ml-8 w-fit border-l p-0">
-                                    {/* {item.map((nestedItem) => (
-                                      <NavigationMenuItemMobile
-                                        key={nestedItem.title}
-                                        title={nestedItem.title}
-                                        path={nestedItem.path}
-                                        nested
-                                        italic
-                                      />
-                                    ))} */}
-                                  </AccordionContent>
-                                </AccordionItem>
-                              );
-                            }
-                          })}
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  } else {
-                    return (
-                      <NavigationMenuItemMobile
-                        key={menuItem.title}
-                        title={menuItem.title}
-                        path={menuItem.path}
-                        nested={false}
-                      />
-                    );
-                  }
-                })}
-              </Accordion>
-            </ul>
+            <Accordion type="multiple">
+              <NavigationMenuItemMobile title="Home" path="/" nested={false} />
+              {menu.map((menuItem) => {
+                if (menuItem.type === "dropdown") {
+                  return (
+                    <AccordionItem
+                      value={menuItem.title}
+                      className="px-12"
+                      key={menuItem.title}
+                    >
+                      <AccordionTrigger>
+                        {menuItem.clickable ? (
+                          <a href={menuItem.path}>{menuItem.title}</a>
+                        ) : (
+                          menuItem.title
+                        )}
+                      </AccordionTrigger>
+                      <AccordionContent className="w-full">
+                        {menuItem.items.map((item) => (
+                          <NavigationMenuItemMobile
+                            key={item.title}
+                            title={item.title}
+                            path={item.path}
+                            nested
+                          />
+                        ))}
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                } else {
+                  return (
+                    <NavigationMenuItemMobile
+                      key={menuItem.title}
+                      title={menuItem.title}
+                      path={menuItem.path}
+                      nested={false}
+                    />
+                  );
+                }
+              })}
+            </Accordion>
           </div>
         </nav>
       </aside>

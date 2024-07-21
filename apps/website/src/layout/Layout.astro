@@ -13,6 +13,13 @@ type Props = {
 const { title, description } = Astro.props;
 ---
 
+<style is:global>
+  .no-scroll {
+    position: fixed;
+    width: 100%;
+  }
+</style>
+
 <html lang="en" transition:animate="none" class="h-full">
   <head>
     <meta charset="utf-8" />
@@ -27,8 +34,9 @@ const { title, description } = Astro.props;
 
   <body class="flex flex-col">
     <Header />
-    <slot class="flex-1" />
+    <div id="main">
+      <slot class="flex-1" />
+    </div>
     <Footer />
   </body>
-
 </html>

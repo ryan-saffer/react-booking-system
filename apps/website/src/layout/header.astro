@@ -7,9 +7,18 @@ import { Button } from "@/components/react/ui/button";
 ---
 
 <div
-  class="sticky top-0 z-50 flex h-16 justify-center bg-white px-8 py-2 shadow-lg min-[1110px]:h-20"
+  class="sticky top-0 z-50 flex h-16 justify-center bg-white px-8 py-2 shadow-lg min-[1125px]:h-20"
 >
-  <div class="flex w-full max-w-[1380px] items-center justify-between">
+  <div
+    class="flex w-full max-w-[1380px] flex-row-reverse items-center justify-end gap-4 min-[1125px]:flex-row min-[1125px]:justify-between"
+  >
+    <a class="absolute right-8 min-[1125px]:hidden" href="/contact-us#contact">
+      <Button
+        className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+      >
+        Get in touch
+      </Button>
+    </a>
     <a href="/">
       <Image
         src={logoHorizontal}
@@ -17,18 +26,18 @@ import { Button } from "@/components/react/ui/button";
         widths={[100, 300]}
         sizes="(min-width: 250px) 100, (min-width: 350px) 300"
         loading="eager"
-        class="h-12 w-fit max-[1210px]:hidden max-[1110px]:block min-[1110px]:h-16"
+        class="hidden h-12 w-fit min-[450px]:block min-[1125px]:hidden min-[1125px]:h-16 min-[1212px]:block"
       />
       <Image
         src={logoStacked}
         alt="Fizz Kidz Logo"
         loading="eager"
         width={200}
-        class="h-16 w-fit max-[1110px]:hidden min-[1210px]:hidden"
+        class="h-16 w-fit max-[1124px]:hidden min-[1212px]:hidden"
       />
     </a>
     <NavigationMenu client:load />
-    <a class="hidden min-[1365px]:inline-flex" href="/contact-us">
+    <a class="hidden min-[1386px]:inline-flex" href="/contact-us#contact">
       <Button
         className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
       >
