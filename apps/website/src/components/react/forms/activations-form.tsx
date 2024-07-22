@@ -10,6 +10,7 @@ import {
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
+import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useForm } from "react-hook-form";
@@ -18,8 +19,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
-  contactName: z.string().min(1, "Contact name is required"),
+  name: z.string().min(1, "Contact name is required"),
   email: z.string().min(1, "Email address is required").email(),
+  contactNumber: z
+    .string()
+    .min(10, "Contact number must be at least 10 digits long")
+    .optional()
+    .or(z.literal("")),
   company: z.string().min(1, "Company / organisation is required"),
   preferredDateAndTime: z.string().min(1, "Please enter your preffered dates"),
   enquiry: z.string().min(1, "Please enter an enquiry"),
@@ -29,8 +35,9 @@ function ActivationsForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contactName: "",
+      name: "",
       email: "",
+      contactNumber: "",
       company: "",
       preferredDateAndTime: "",
       enquiry: "",
@@ -39,31 +46,39 @@ function ActivationsForm() {
 
   const [loading, setLoading] = useState(false);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    setTimeout(() => {
-      form.reset();
+    try {
+      await fetch(`${FORM_WEBHOOK}?formId=event`, {
+        body: JSON.stringify(values),
+        method: "POST",
+        mode: "no-cors",
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("There was an error submitting the form.");
+      return;
+    } finally {
       setLoading(false);
+    }
 
-      toast.success(
-        <div className="flex gap-4">
-          <CircleCheckBig className="mt-1 h-4 w-4" />
-          <div>
-            <p className="font-semibold">Enquiry recieved!</p>
-            <p>You should have an email with a copy of your submission.</p>
-            <p>
-              We typically respond to 90% of enquiries within 2 business days.
-            </p>
-          </div>
-        </div>,
-        {
-          duration: 15_000,
-        },
-      );
-    }, 200);
+    form.reset();
+
+    toast.success(
+      <div className="flex gap-4">
+        <CircleCheckBig className="mt-1 h-4 w-4" />
+        <div>
+          <p className="font-semibold">Enquiry recieved!</p>
+          <p>
+            We aim to get back to every enquiry within the same business day. 😄
+          </p>
+        </div>
+      </div>,
+      {
+        duration: 15_000,
+      },
+    );
   }
 
   return (
@@ -72,7 +87,7 @@ function ActivationsForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="contactName"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Your name *</FormLabel>
@@ -92,6 +107,22 @@ function ActivationsForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Your email *</FormLabel>
+              <FormControl>
+                <Input
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="contactNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Your best contact number</FormLabel>
               <FormControl>
                 <Input
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
@@ -152,7 +183,7 @@ function ActivationsForm() {
           )}
         />
         <Button
-          className="!mt-8 w-full rounded-full bg-[#B34495] hover:bg-[#B4589C] focus-visible:outline-purple-500"
+          className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
           type="submit"
         >
           {loading ? (
