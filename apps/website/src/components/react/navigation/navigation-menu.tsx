@@ -121,6 +121,7 @@ export const menu = [
         title: "Contact Us",
         path: "/contact-us",
       },
+      { type: "link", title: "Locations", path: "/locations" },
       { type: "link", title: "Our Team", path: "/our-team" },
       { type: "link", title: "Careers", path: "/careers" },
       { type: "link", title: "Franchising", path: "/franchising" },
