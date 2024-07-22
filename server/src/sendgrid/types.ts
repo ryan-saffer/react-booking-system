@@ -317,4 +317,22 @@ export type Emails = {
         preferredDateAndTime?: string
         enquiry: string
     }
+
+    websiteEventFormToCustomer: {
+        name: string
+        email: string
+        contactNumber?: string
+        company: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
+
+    websiteEventFormToFizz: {
+        name: string
+        email: string
+        contactNumber?: string
+        company: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
 }

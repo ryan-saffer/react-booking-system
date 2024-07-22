@@ -94,12 +94,38 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
             }
 
             case 'event': {
-                const formData = req.body as Form['event']
-                const [firstName, lastName] = formData['your-name'].split(' ')
+                const formData = JSON.parse(req.body) as Form['event']
+
+                await mailClient.sendEmail('websiteEventFormToCustomer', formData.email, {
+                    name: formData.name,
+                    email: formData.email,
+                    contactNumber: formData.contactNumber,
+                    company: formData.company,
+                    preferredDateAndTime: formData.preferredDateAndTime,
+                    enquiry: formData.enquiry,
+                })
+                await mailClient.sendEmail(
+                    'websiteEventFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        company: formData.company,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        subject: `Event - ${formData.name}`,
+                        replyTo: formData.email,
+                    }
+                )
+
+                const [firstName, lastName] = formData.name.split(' ')
                 await zohoClient.addBasicB2BContact({
                     firstName,
                     lastName,
-                    email: formData['your-email'],
+                    email: formData.email,
                     service: 'activation_event',
                     company: formData.company,
                 })

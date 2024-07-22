@@ -20,9 +20,12 @@ export type Form = {
         enquiry: string
     }
     event: {
-        'your-name': string
-        'your-email': string
+        name: string
+        email: string
+        contactNumber?: string
         company: string
+        preferredDateAndTime: string
+        enquiry: string
     }
     incursion: { 'your-name': string; school: string; 'your-email': string; phone: string }
 }

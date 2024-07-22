@@ -1,0 +1,116 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .text-link {
+        color: #5e6ebf
+      }
+
+      .table {
+        font-family: 'trebuchet ms', arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .table td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      .table tr:nth-child(even) {
+        background-color: #f3f4f6;
+      }
+    </mj-style>
+    <mj-style inline="inline">
+      .footer-link {
+        color: #888888
+      }
+    </mj-style>
+
+  </mj-head>
+  <mj-body background-color="#E7E7E7" width="600px">
+    <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+      <mj-column width="100%">
+        <mj-spacer height="30px" />
+        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+          Enquiry recieved!
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" padding-top="0">
+      <mj-column>
+        <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-wrapper padding-top="0" padding-bottom="0">
+      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+        <mj-column width="100%">
+          <mj-text color="#637381" font-size="16px">Hey {{ name }},</mj-text>
+          <mj-text color="#637381" font-size="16px">Thanks for reaching out to us!</mj-text>
+          <mj-text color="#637381" font-size="16px">We can't wait to chat all things Fizz 😄.</mj-text>
+          <mj-text color="#637381" font-size="16px"> We aim to get back to every enquiry within the same business day.</mj-text>
+          <mj-text color="#637381" font-size="16px">Feel free to call us anytime if you would like to talk through your enquiry. Our number is <a href="tel:+61390598144">03 9059 8144</a>. You can also just reply to this email.</mj-text>
+          <mj-text color="#637381" font-size="16px">Have a great day!</mj-text>
+          <mj-text color="#637381" font-size="16px">The Fizz Kidz team </mj-text>
+
+          <mj-text>- - - - - - - - - - - - - - - - - - - - </mj-text>
+
+          <mj-table css-class="table">
+            <colgroup>
+              <col span="1" style="width: 40%;">
+              <col span="1" style="width: 60%;">
+            </colgroup>
+
+            <tr>
+              <td><strong>Name:</strong></td>
+              <td>{{name}}</td>
+            </tr>
+
+            <tr>
+              <td><strong>Email:</strong></td>
+              <td>{{email}}</td>
+            </tr>
+
+            {{#contactNumber}}
+              <tr>
+                <td><strong>Best contact number:</strong></td>
+                <td>{{contactNumber}}</td>
+              </tr>
+            {{/contactNumber}}
+
+            <tr>
+              <td><strong>Company / Organisation:</strong></td>
+              <td>{{company}}</td>
+            </tr>
+
+            <tr>
+              <td><strong>Preferred Date and Time:</strong></td>
+              <td>{{preferredDateAndTime}}</td>
+            </tr>
+
+            <tr>
+              <td><strong>Enquiry:</strong></td>
+              <td>{{enquiry}}</td>
+            </tr>
+          </mj-table>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-wrapper full-width="full-width">
+      <mj-section padding-top="0">
+        <mj-group>
+          <mj-column width="100%" padding-right="0">
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+            </mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>
