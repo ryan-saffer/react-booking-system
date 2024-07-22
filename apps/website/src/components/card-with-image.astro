@@ -13,17 +13,15 @@ type Props = {
 const { image, imageAlt, eager = false, className } = Astro.props;
 ---
 
-<div class={cn("flex w-fit flex-col rounded-lg shadow-md", className)}>
-  <div>
+<div class={cn("rounded-xl shadow-md", className)}>
+  <div class="h-52 overflow-hidden rounded-t-xl">
     <Image
       loading={eager ? "eager" : "lazy"}
       src={image}
       alt={imageAlt}
       width={500}
-      class="h-52 w-full rounded-t-lg object-cover"
+      class="h-full w-full rounded-t-xl object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
     />
   </div>
-  <!-- <div class="h-full p-8"> -->
-  <slot name="content" />
-  <!-- </div> -->
+  <slot class="h-max" name="content" />
 </div>

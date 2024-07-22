@@ -102,21 +102,7 @@ const services = [
     image: parties,
     imageAlt: "Kid smiling in front of a birthda cake",
     color: "#F24DA1",
-  },
-  {
-    title: "Activations & Events",
-    subtitle:
-      "Fizz Kidz at shopping centres, government organisations, local libraries and more",
-    image: activations,
-    imageAlt: "Kids playing with slime at a shopping center",
-    color: "#42D4F3",
-  },
-  {
-    title: "School Incursions",
-    subtitle: "Make it easy for teachers to engage their kids in science!",
-    image: incursions,
-    imageAlt: "A child at school smiling and pouring something into a bottle",
-    color: "#A7CB5B",
+    path: "/birthday-parties"
   },
   {
     title: "Holiday Programs",
@@ -125,6 +111,7 @@ const services = [
     image: holidayPrograms,
     imageAlt: "A child holding a bath bomb and smiling at the camera",
     color: "#A7CB5B",
+    path: "/holiday-programs"
   },
   {
     title: "After-School Programs",
@@ -133,6 +120,24 @@ const services = [
     image: afterSchool,
     imageAlt: "Children at school gathered and working together",
     color: "#9044E2",
+    path: "/after-school-programs"
+  },
+  {
+    title: "Activations & Events",
+    subtitle:
+      "Fizz Kidz at shopping centres, government organisations, local libraries and more",
+    image: activations,
+    imageAlt: "Kids playing with slime at a shopping center",
+    color: "#42D4F3",
+    path: "/activations-and-events"
+  },
+  {
+    title: "School Incursions",
+    subtitle: "Make it easy for teachers to engage their kids in science!",
+    image: incursions,
+    imageAlt: "A child at school smiling and pouring something into a bottle",
+    color: "#A7CB5B",
+    path: "/in-schools/incursions"
   },
   {
     title: "Kinder Incursions",
@@ -141,6 +146,7 @@ const services = [
     image: kinderIncursions,
     imageAlt: "Little kids in smocks with messy hands laughing",
     color: "#F24DA1",
+    path: "/kinder-incursions"
   },
 ] as const;
 ---
@@ -276,15 +282,16 @@ const services = [
         {
           services.map((service, idx) => (
             <!--only first three images above the fold -->
+            <a href={service.path}>
             <CardWithImage
               eager={idx < 3}  
               image={service.image}
               imageAlt={service.imageAlt}
-              className="cursor-pointer group"
+              className="cursor-pointer group flex flex-col h-full"
             >
               <div
                 slot="content"
-                class="flex h-full flex-col justify-between p-8 group-hover:bg-gray-50"
+                class="flex flex-col flex-grow justify-between p-8 group-hover:bg-gray-50"
               >
                 <div>
                   <h4
@@ -306,6 +313,7 @@ const services = [
                 </div>
               </div>
             </CardWithImage>
+          </a>
           ))
         }
       </div>

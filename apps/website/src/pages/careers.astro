@@ -5,6 +5,7 @@ import Layout from "@/layout/Layout.astro";
 import team from "@/assets/images/pages/our-team/all-staff.jpg";
 import JobListings from "@/components/react/job-listings";
 import { ImageUploader } from "@/components/react/image-uploader";
+import CareersForm from "@/components/react/forms/careers-form";
 ---
 
 <Layout
@@ -28,12 +29,16 @@ import { ImageUploader } from "@/components/react/image-uploader";
         >Looking for a career working with kids? Get in touch!</span
       >
     </PageIntro>
-    <section class="my-24">
+    <section class="relative my-24">
       <h3 class="mb-8 text-center font-lilita text-5xl">Available roles</h3>
       <JobListings client:idle />
+      <div id="apply" class="absolute"></div>
     </section>
-    <section>
-      <ImageUploader client:idle />
+    <section class="mb-8">
+      <h3 class="mb-4 text-center font-lilita text-4xl">
+        Fill in the form below to apply for one of our open roles!
+      </h3>
+      <CareersForm client:idle />
     </section>
   </main>
 </Layout>
