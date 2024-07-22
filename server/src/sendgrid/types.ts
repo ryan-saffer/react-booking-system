@@ -294,4 +294,27 @@ export type Emails = {
         firstname: string
         resetLink: string
     }
+
+    // WEBSITE FORMS
+    websiteContactFormToCustomer: {
+        name: string
+        email: string
+        contactNumber: string
+        service: string
+        location?: string
+        suburb?: string
+        preferredDateAndTime?: string
+        enquiry: string
+    }
+
+    websiteContactFormToFizz: {
+        name: string
+        email: string
+        contactNumber: string
+        service: string
+        location?: string
+        suburb?: string
+        preferredDateAndTime?: string
+        enquiry: string
+    }
 }
