@@ -7,6 +7,7 @@ import {
     ContactFormLocationMap,
     Form,
     LocationDisplayValueMap,
+    ModuleDisplayValueMap,
     PartyFormLocationMap,
     ServiceDisplayValueMap,
 } from '../contact-form-7-types-v2'
@@ -133,13 +134,41 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
             }
 
             case 'incursion': {
-                const formData = req.body as Form['incursion']
-                const [firstName, lastName] = formData['your-name'].split(' ')
+                const formData = JSON.parse(req.body) as Form['incursion']
+
+                await mailClient.sendEmail('websiteIncurionFormToCustomer', formData.email, {
+                    name: formData.name,
+                    school: formData.school,
+                    email: formData.email,
+                    contactNumber: formData.contactNumber,
+                    preferredDateAndTime: formData.preferredDateAndTime,
+                    module: ModuleDisplayValueMap[formData.module],
+                    enquiry: formData.enquiry,
+                })
+                await mailClient.sendEmail(
+                    'websiteIncurionFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        school: formData.school,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        module: ModuleDisplayValueMap[formData.module],
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        subject: `Incursion - ${formData.name}, ${formData.school}`,
+                        replyTo: formData.email,
+                    }
+                )
+
+                const [firstName, lastName] = formData.name.split(' ')
                 await zohoClient.addBasicB2BContact({
                     firstName,
                     lastName,
-                    email: formData['your-email'],
-                    mobile: formData.phone,
+                    email: formData.email,
+                    mobile: formData.contactNumber,
                     service: 'incursion',
                     company: formData.school,
                 })

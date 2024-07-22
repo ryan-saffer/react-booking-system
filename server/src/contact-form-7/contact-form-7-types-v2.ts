@@ -27,7 +27,15 @@ export type Form = {
         preferredDateAndTime: string
         enquiry: string
     }
-    incursion: { 'your-name': string; school: string; 'your-email': string; phone: string }
+    incursion: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        module: IncursionFormModuleOption
+        enquiry: string
+    }
 }
 
 type ContactFormServiceOption =
@@ -40,6 +48,21 @@ type ContactFormServiceOption =
 
 type ContactFormLocationOption = 'balwyn' | 'cheltenham' | 'essendon' | 'malvern' | 'at-home' | 'other'
 
+type PartyFormLocationDropdownOption =
+    | 'Balwyn Studio'
+    | 'Cheltenham Studio'
+    | 'Essendon Studio'
+    | 'Malvern Studio'
+    | 'Mobile (at home)'
+    | 'Other'
+
+type IncursionFormModuleOption =
+    | 'chemicalScience'
+    | 'pushAndPull'
+    | 'lightAndSound'
+    | 'earthWeatherSustainability'
+    | 'notSure'
+
 export const ContactFormLocationMap: Record<ContactFormLocationOption, Location | undefined> = {
     'at-home': undefined,
     other: undefined,
@@ -48,14 +71,6 @@ export const ContactFormLocationMap: Record<ContactFormLocationOption, Location 
     essendon: Location.ESSENDON,
     malvern: Location.MALVERN,
 }
-
-type PartyFormLocationDropdownOption =
-    | 'Balwyn Studio'
-    | 'Cheltenham Studio'
-    | 'Essendon Studio'
-    | 'Malvern Studio'
-    | 'Mobile (at home)'
-    | 'Other'
 
 export const PartyFormLocationMap: Record<PartyFormLocationDropdownOption, Location | undefined> = {
     'Balwyn Studio': Location.BALWYN,
@@ -82,4 +97,12 @@ export const ServiceDisplayValueMap: Record<ContactFormServiceOption, string> = 
     incursion: 'School Incursions',
     activation: 'Activation & Event',
     other: 'Other',
+}
+
+export const ModuleDisplayValueMap: Record<IncursionFormModuleOption, string> = {
+    chemicalScience: 'Chemical Science',
+    pushAndPull: 'Push and Pull',
+    lightAndSound: 'Light and Sound',
+    earthWeatherSustainability: 'Earth, Weather and Sustainability',
+    notSure: 'A combination of the above / not sure',
 }

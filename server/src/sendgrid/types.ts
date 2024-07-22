@@ -335,4 +335,24 @@ export type Emails = {
         preferredDateAndTime: string
         enquiry: string
     }
+
+    websiteIncurionFormToCustomer: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        module: string
+        enquiry: string
+    }
+
+    websiteIncurionFormToFizz: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        module: string
+        enquiry: string
+    }
 }
