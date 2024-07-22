@@ -17,6 +17,7 @@ import {
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
+import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useForm } from "react-hook-form";
@@ -47,6 +48,7 @@ const formSchema = z
     location: z
       .enum(["balwyn", "cheltenham", "essendon", "malvern", "at-home", "other"])
       .optional(),
+    suburb: z.string().optional(),
     preferredDateAndTime: z.string().optional(),
     enquiry: z.string().min(1, "Please enter an enquiry"),
   })
@@ -69,6 +71,15 @@ const formSchema = z
         });
       }
     }
+    if (val.service === "party" && val.location === "at-home") {
+      if (!val.suburb) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please enter your suburb",
+          path: ["suburb"],
+        });
+      }
+    }
   });
 
 function ContactUsForm() {
@@ -79,6 +90,8 @@ function ContactUsForm() {
       email: "",
       contactNumber: "",
       service: undefined,
+      location: undefined,
+      suburb: "",
       preferredDateAndTime: "",
       enquiry: "",
     },
@@ -86,31 +99,38 @@ function ContactUsForm() {
 
   const [loading, setLoading] = useState(false);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    setTimeout(() => {
-      form.reset({ service: undefined });
+    try {
+      await fetch(`${FORM_WEBHOOK}?formId=contact`, {
+        body: JSON.stringify(values),
+        method: "POST",
+        mode: "no-cors",
+      });
+    } catch (err) {
+      console.error({ err });
+      toast.error("There was an error submitting the form.");
+      return;
+    } finally {
       setLoading(false);
+    }
 
-      toast.success(
-        <div className="flex gap-4">
-          <CircleCheckBig className="mt-1 h-4 w-4" />
-          <div>
-            <p className="font-semibold">Enquiry recieved!</p>
-            <p>You should have an email with a copy of your submission.</p>
-            <p>
-              We typically respond to 90% of enquiries within 2 business days.
-            </p>
-          </div>
-        </div>,
-        {
-          duration: 15_000,
-        },
-      );
-    }, 200);
+    form.reset({ service: undefined, location: undefined, suburb: "" });
+    toast.success(
+      <div className="flex gap-4">
+        <CircleCheckBig className="mt-1 h-4 w-4" />
+        <div>
+          <p className="font-semibold">Enquiry recieved!</p>
+          <p>
+            We aim to get back to every enquiry within the same business day. 😄
+          </p>
+        </div>
+      </div>,
+      {
+        duration: 15_000,
+      },
+    );
   }
 
   return (
@@ -239,6 +259,25 @@ function ContactUsForm() {
             )}
           />
         )}
+        {form.watch("service") === "party" &&
+          form.watch("location") === "at-home" && (
+            <FormField
+              control={form.control}
+              name="suburb"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Which suburb do you live in? *</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         {form.watch("service") === "party" && (
           <FormField
             control={form.control}
@@ -275,7 +314,7 @@ function ContactUsForm() {
           )}
         />
         <Button
-          className="!mt-8 w-full rounded-full bg-[#B34495] hover:bg-[#B4589C] focus-visible:outline-purple-500"
+          className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
           type="submit"
         >
           {loading ? (
