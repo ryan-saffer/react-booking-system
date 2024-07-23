@@ -48,6 +48,10 @@ export type Form = {
         reference: string
         resume: { name: string; url: string }
     }
+    mailingList: {
+        name: string
+        email: string
+    }
 }
 
 type ContactFormServiceOption =

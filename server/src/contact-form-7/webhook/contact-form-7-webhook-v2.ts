@@ -242,6 +242,19 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
                 break
             }
 
+            case 'mailingList': {
+                const formData = JSON.parse(req.body) as Form['mailingList']
+
+                const [firstName, lastName] = formData.name.split(' ')
+
+                await zohoClient.addBasicB2CContact({
+                    firstName,
+                    lastName,
+                    email: formData.email,
+                })
+                break
+            }
+
             default: {
                 const exhaustiveCheck: never = formId
                 // we always want to send a 200 to the wordpress plugin, so only log the error
