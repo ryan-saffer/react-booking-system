@@ -379,4 +379,24 @@ export type Emails = {
         application: string
         reference: string
     }
+
+    websitePartyFormToCustomer: {
+        name: string
+        email: string
+        contactNumber: string
+        location: string
+        suburb?: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
+
+    websitePartyFormToFizz: {
+        name: string
+        email: string
+        contactNumber: string
+        location: string
+        suburb?: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
 }

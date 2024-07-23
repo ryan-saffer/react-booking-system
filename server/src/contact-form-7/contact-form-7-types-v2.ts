@@ -1,12 +1,13 @@
 import { Location } from 'fizz-kidz'
 
 export type Form = {
-    'party-booking': {
-        'your-name': string
-        'your-email': string
-        phone: string
-        location: PartyFormLocationDropdownOption
-        datetime: string
+    party: {
+        name: string
+        email: string
+        contactNumber: string
+        location: ContactFormLocationOption
+        suburb?: string
+        preferredDateAndTime: string
         enquiry: string
     }
     contact: {
@@ -59,14 +60,6 @@ type ContactFormServiceOption =
 
 type ContactFormLocationOption = 'balwyn' | 'cheltenham' | 'essendon' | 'malvern' | 'at-home' | 'other'
 
-type PartyFormLocationDropdownOption =
-    | 'Balwyn Studio'
-    | 'Cheltenham Studio'
-    | 'Essendon Studio'
-    | 'Malvern Studio'
-    | 'Mobile (at home)'
-    | 'Other'
-
 type IncursionFormModuleOption =
     | 'chemicalScience'
     | 'pushAndPull'
@@ -91,13 +84,13 @@ export const ContactFormLocationMap: Record<ContactFormLocationOption, Location 
     malvern: Location.MALVERN,
 }
 
-export const PartyFormLocationMap: Record<PartyFormLocationDropdownOption, Location | undefined> = {
-    'Balwyn Studio': Location.BALWYN,
-    'Cheltenham Studio': Location.CHELTENHAM,
-    'Essendon Studio': Location.ESSENDON,
-    'Malvern Studio': Location.MALVERN,
-    'Mobile (at home)': undefined,
-    Other: undefined,
+export const PartyFormLocationMap: Record<ContactFormLocationOption, Location | undefined> = {
+    balwyn: Location.BALWYN,
+    cheltenham: Location.CHELTENHAM,
+    essendon: Location.ESSENDON,
+    malvern: Location.MALVERN,
+    'at-home': undefined,
+    other: undefined,
 }
 
 export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> = {

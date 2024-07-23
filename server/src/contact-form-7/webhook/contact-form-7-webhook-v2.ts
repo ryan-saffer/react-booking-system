@@ -23,15 +23,44 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
 
     try {
         switch (formId) {
-            case 'party-booking': {
-                const formData = JSON.parse(req.body) as Form['party-booking']
-                const [firstName, lastName] = formData['your-name'].split(' ')
+            case 'party': {
+                const formData = JSON.parse(req.body) as Form['party']
+
+                await mailClient.sendEmail('websitePartyFormToCustomer', formData.email, {
+                    name: formData.name,
+                    email: formData.email,
+                    contactNumber: formData.contactNumber,
+                    location: LocationDisplayValueMap[formData.location],
+                    suburb: formData.suburb,
+                    preferredDateAndTime: formData.preferredDateAndTime,
+                    enquiry: formData.enquiry,
+                })
+
+                await mailClient.sendEmail(
+                    'websitePartyFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        location: LocationDisplayValueMap[formData.location],
+                        suburb: formData.suburb,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        subject: `${LocationDisplayValueMap[formData.location]} - ${formData.name}`,
+                        replyTo: formData.email,
+                    }
+                )
+
+                const [firstName, lastName] = formData.name.split(' ')
                 await zohoClient.addBasicB2CContact({
                     firstName,
                     lastName: lastName || '',
-                    email: formData['your-email'],
+                    email: formData.email,
                     studio: PartyFormLocationMap[formData.location],
-                    mobile: formData.phone,
+                    mobile: formData.contactNumber,
                 })
                 break
             }
