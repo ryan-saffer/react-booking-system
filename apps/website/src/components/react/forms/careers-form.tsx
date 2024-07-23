@@ -1,4 +1,3 @@
-import { CircleCheckBig, LoaderCircle } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -17,9 +16,10 @@ import {
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
-import { ImageUploader } from "../image-uploader";
+import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { LoaderCircle } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { UploadButton } from "@/utils/uploadthing";
 import { useForm } from "react-hook-form";
@@ -67,7 +67,7 @@ function CareersForm() {
     },
   });
 
-  const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
+  const [file, setFile] = useState<{ name: string; url: string } | null>(null);
   const [uploadError, setUploadError] = useState({
     isError: false,
     message: "",
@@ -77,7 +77,7 @@ function CareersForm() {
 
   const handleCustomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (files.length === 0) {
+    if (!file) {
       setUploadError({
         isError: true,
         message: "Please upload your resume / CV",
@@ -86,9 +86,25 @@ function CareersForm() {
     form.handleSubmit(onSubmit)(e);
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (files.length === 0) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!file) {
       return;
+    }
+
+    setLoading(true);
+
+    try {
+      await fetch(`${FORM_WEBHOOK}?formId=careers`, {
+        body: JSON.stringify({ resume: file, ...values }),
+        method: "POST",
+        mode: "no-cors",
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("There was an error submitting the form.");
+      return;
+    } finally {
+      setLoading(false);
     }
 
     form.reset({
@@ -96,23 +112,13 @@ function CareersForm() {
       wwcc: undefined,
       driversLicense: undefined,
     });
-    console.log(values);
-    console.log(files);
-
-    setLoading(true);
-
-    // todo - after submitting, set files to empty array
-
-    setTimeout(() => {
-      setLoading(false);
-
-      toast.success(
-        "Application recieved! You should have an email with a copy of your submission. We will be in touch soon!",
-        {
-          duration: 15_000,
-        },
-      );
-    }, 200);
+    setFile(null);
+    toast.success(
+      "Application recieved! You should have an email with a copy of your submission. We will be in touch soon!",
+      {
+        duration: 15_000,
+      },
+    );
   }
 
   return (
@@ -291,12 +297,12 @@ function CareersForm() {
             Please upload your Resume / CV *
           </Label>
           <UploadButton
-            className="ut-button:bg-[#9044E2] mt-2 items-start"
+            className="mt-2 items-start ut-button:bg-[#9044E2]"
             endpoint="resumeUploader"
             onClientUploadComplete={(res) => {
               // Do something with the response
               setUploadError({ isError: false, message: "" });
-              setFiles(res.map((it) => ({ name: it.name, url: it.url })));
+              setFile({ name: res[0].name, url: res[0].url });
             }}
             onUploadError={(error: Error) => {
               // Do something with the error.
@@ -308,11 +314,9 @@ function CareersForm() {
               {uploadError.message}
             </p>
           )}
-          {files && (
+          {file && (
             <ul className="list-disc pl-4">
-              {files.map((file) => (
-                <li>{file.name}</li>
-              ))}
+              <li>{file.name}</li>
             </ul>
           )}
         </div>
