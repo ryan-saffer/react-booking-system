@@ -10,6 +10,7 @@ import {
 import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
+import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -32,31 +33,30 @@ function IncursionForm() {
 
   const [loading, setLoading] = useState(false);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    setTimeout(() => {
-      form.reset();
+    try {
+      await fetch(`${FORM_WEBHOOK}?formId=mailingList`, {
+        body: JSON.stringify(values),
+        method: "POST",
+        mode: "no-cors",
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("There was an error joining the mailing list.");
+      return;
+    } finally {
       setLoading(false);
+    }
 
-      toast.success(
-        <div className="flex gap-4">
-          <CircleCheckBig className="mt-1 h-4 w-4" />
-          <div>
-            <p className="font-semibold">Enquiry recieved!</p>
-            <p>You should have an email with a copy of your submission.</p>
-            <p>
-              We typically respond to 90% of enquiries within 2 business days.
-            </p>
-          </div>
-        </div>,
-        {
-          duration: 15_000,
-        },
-      );
-    }, 200);
+    form.reset();
+    toast.success(
+      "Done! Keep an eye out for the latest Fizz Kidz news and offers.",
+      {
+        duration: 15_000,
+      },
+    );
   }
 
   return (
