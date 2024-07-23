@@ -609,6 +609,36 @@ export class MailClient {
                     useMjml: false,
                 }
 
+            case 'websiteCareersFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Application Recieved!',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'website_careers_form_to_customer.mjml',
+                    useMjml: true,
+                }
+
+            case 'websiteCareersFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Job Application',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Job Application',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_careers_form_to_fizz.html',
+                    useMjml: false,
+                }
+
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

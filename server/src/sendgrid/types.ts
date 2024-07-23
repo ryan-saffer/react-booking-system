@@ -355,4 +355,28 @@ export type Emails = {
         module: string
         enquiry: string
     }
+
+    websiteCareersFormToCustomer: {
+        name: string
+        email: string
+        contactNumber: string
+        role: string
+        wwcc: string
+        driversLicense: string
+        application: string
+        reference: string
+    }
+
+    websiteCareersFormToFizz: {
+        name: string
+        email: string
+        contactNumber: string
+        role: string
+        wwcc: string
+        driversLicense: string
+        resumeUrl: string
+        resumeFilename: string
+        application: string
+        reference: string
+    }
 }

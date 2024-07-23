@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table>
+        <colgroup>
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 75%;">
+        </colgroup>
+
+        <tr>
+            <td><strong>Name:</strong></td>
+            <td>{{name}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{email}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Phone number:</strong></td>
+            <td>{{contactNumber}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Which role are you interested in?:</strong></td>
+            <td>{{role}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Do you have, or are willing to obtain, a Working With Children's Check?:</strong></td>
+            <td>{{wwcc}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Do you have a drivers license? (not required):</strong></td>
+            <td>{{driversLicense}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Resume / CV:</strong></td>
+            <td><a href="{{resumeUrl}}">{{resumeFilename}}</a></td>
+        </tr>
+
+        <tr>
+            <td><strong>Let us know why you want to work at Fizz Kidz:</strong></td>
+            <td>{{application}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>How did you hear about us?:</strong></td>
+            <td>{{reference}}</td>
+        </tr>
+
+    </table>
+</body>
+
+</html>

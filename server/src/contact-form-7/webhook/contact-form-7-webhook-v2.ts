@@ -9,6 +9,7 @@ import {
     LocationDisplayValueMap,
     ModuleDisplayValueMap,
     PartyFormLocationMap,
+    RoleDisplayValueMap,
     ServiceDisplayValueMap,
 } from '../contact-form-7-types-v2'
 
@@ -172,6 +173,43 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
                     service: 'incursion',
                     company: formData.school,
                 })
+                break
+            }
+
+            case 'careers': {
+                const formData = JSON.parse(req.body) as Form['careers']
+
+                await mailClient.sendEmail('websiteCareersFormToCustomer', formData.email, {
+                    name: formData.name,
+                    email: formData.email,
+                    contactNumber: formData.contactNumber,
+                    role: RoleDisplayValueMap[formData.role],
+                    wwcc: formData.wwcc,
+                    driversLicense: formData.driversLicense,
+                    application: formData.application,
+                    reference: formData.reference,
+                })
+
+                await mailClient.sendEmail(
+                    'websiteCareersFormToFizz',
+                    'people@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        role: formData.role,
+                        wwcc: formData.wwcc,
+                        driversLicense: formData.driversLicense,
+                        resumeFilename: formData.resume.name,
+                        resumeUrl: formData.resume.url,
+                        application: formData.application,
+                        reference: formData.reference,
+                    },
+                    {
+                        subject: `${formData.name} - Job Application`,
+                        replyTo: formData.email,
+                    }
+                )
                 break
             }
 

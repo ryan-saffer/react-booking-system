@@ -36,6 +36,17 @@ export type Form = {
         module: IncursionFormModuleOption
         enquiry: string
     }
+    careers: {
+        name: string
+        email: string
+        contactNumber: string
+        role: CareersFormRoleOption
+        wwcc: string
+        driversLicense: string
+        application: string
+        reference: string
+        resume: { name: string; url: string }
+    }
 }
 
 type ContactFormServiceOption =
@@ -62,6 +73,14 @@ type IncursionFormModuleOption =
     | 'lightAndSound'
     | 'earthWeatherSustainability'
     | 'notSure'
+
+type CareersFormRoleOption =
+    | 'cheltenham-manager'
+    | 'balwyn-facilitator'
+    | 'cheltenahm-facilitator'
+    | 'essendon-facilitator'
+    | 'malvern-facilitator'
+    | 'other'
 
 export const ContactFormLocationMap: Record<ContactFormLocationOption, Location | undefined> = {
     'at-home': undefined,
@@ -105,4 +124,13 @@ export const ModuleDisplayValueMap: Record<IncursionFormModuleOption, string> = 
     lightAndSound: 'Light and Sound',
     earthWeatherSustainability: 'Earth, Weather and Sustainability',
     notSure: 'A combination of the above / not sure',
+}
+
+export const RoleDisplayValueMap: Record<CareersFormRoleOption, string> = {
+    other: 'Other',
+    'cheltenham-manager': 'Cheltenham Manager',
+    'balwyn-facilitator': 'Balwyn Party Facilitator',
+    'cheltenahm-facilitator': 'Cheltenham Party Facilitator',
+    'essendon-facilitator': 'Essendon Party Facilitator',
+    'malvern-facilitator': 'Malvern Party Facilitator',
 }
