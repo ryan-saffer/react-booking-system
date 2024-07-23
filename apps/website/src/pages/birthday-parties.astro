@@ -78,7 +78,7 @@ const { default: purpleDrop } = await import(
           subtitle="The magic of glitter colour and exploding fun!"
           image={partyHero}
           imageAlt="Party Hero"
-          actionButtonPath="/"
+          actionButtonPath="/birthday-parties/book-a-party#book"
           actionButtonText="Book a Party"
           color="purple"
         >
@@ -194,7 +194,10 @@ const { default: purpleDrop } = await import(
         </div>
       </section>
       <div class="my-24 text-center">
-        <PrimaryButton text="Book a party" path="#test" />
+        <PrimaryButton
+          text="Book a party"
+          path="/birthday-parties/book-a-party#book"
+        />
       </div>
       <MixAndMatchParties />
       <Pricing />
@@ -211,7 +214,10 @@ const { default: purpleDrop } = await import(
         >
           Cheltenham, Balwyn, Essendon & Malvern studios
         </p>
-        <PrimaryButton text="Book a party" path="#contact" />
+        <PrimaryButton
+          text="Book a party"
+          path="/birthday-parties/book-a-party#book"
+        />
       </div>
       <Image
         class="absolute top-0 z-0 h-full object-cover"
@@ -238,10 +244,9 @@ const { default: purpleDrop } = await import(
           <div
             class="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-6 lg:justify-start"
           >
-            <!-- <PrimaryButton text="Book a party" path="#contact" /> -->
             <PrimaryButton
               text="At Home Party Details"
-              path="/birthday-parties/at-home"
+              path="/birthday-parties/at-home-parties"
             />
           </div>
         </div>

@@ -61,7 +61,7 @@ const { default: purpleDrop } = await import(
       imageAlt="A girl playing with slime and laughing in her backyard with friends in the background"
       subtitle="Sit back, relax and we will take care of everything!"
       actionButtonText="Book a party"
-      actionButtonPath="/book-a-party"
+      actionButtonPath="/birthday-parties/book-a-party#book"
       color="purple"
     >
       <span slot="title">At Home Birthday Parties</span>
@@ -304,7 +304,10 @@ const { default: purpleDrop } = await import(
         </div>
       </div>
       <div class="relative z-10 m-auto my-12 text-center">
-        <PrimaryButton text="Book a party" path="/book-a-party" />
+        <PrimaryButton
+          text="Book a party"
+          path="/birthday-parties/book-a-party#book"
+        />
       </div>
     </section>
     <MixAndMatchParties />
