@@ -12,6 +12,7 @@ class InstagramClient {
     return posts.data as ({
       media_url: string;
       permalink: string;
+      caption: string;
     } & (
       | {
           media_type: "VIDEO";
