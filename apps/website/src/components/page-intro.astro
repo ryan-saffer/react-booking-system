@@ -35,12 +35,12 @@ const colourHex =
         <slot name="title" />
       </h1>
       <h2
-        class="mb-8 font-lilita text-2xl sm:text-3xl"
+        class="mb-8 font-lilita text-3xl sm:text-4xl"
         style={{ color: colourHex }}
       >
         {subtitle}
       </h2>
-      <p class="mb-16 font-gotham text-sm font-semibold sm:text-base">
+      <p class="mb-16 font-gotham text-base font-semibold sm:text-lg">
         <slot name="content" />
       </p>
       <PrimaryButton text={actionButtonText} path={actionButtonPath} />
