@@ -1,2 +1,2 @@
 [images]
-  remote_images = ["https://a-ap.storyblok.com/.*"]
+  remote_images = ["https://a-ap.storyblok.com/.*", "https://scontent.cdninstagram/com/.*"]

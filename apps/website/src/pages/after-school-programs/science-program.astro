@@ -9,58 +9,10 @@ import blueCalendar from "@/assets/images/pages/parties/blue-calendar.svg";
 import greenClock from "@/assets/images/pages/parties/green-clock.svg";
 import PrimaryButton from "@/components/primary-button.astro";
 
-import term1 from "@/assets/images/pages/after-school-programs/science/term-1.png";
-import term2 from "@/assets/images/pages/after-school-programs/science/term-2.png";
-import term3 from "@/assets/images/pages/after-school-programs/science/term-3.png";
-import term4 from "@/assets/images/pages/after-school-programs/science/term-4.png";
-
 import greenDrops from "@/assets/images/pages/parties/drop-green.svg";
-import blueDrops from "@/assets/images/pages/parties/drop-blue.svg";
-import purpleDrops from "@/assets/images/pages/parties/drop-purple.svg";
 import FreeTrial from "@/components/free-trial.astro";
 import ScienceCurriculum from "@/components/science-curriculum.astro";
 import WhyChooseScienceProgram from "@/components/why-choose-science-program.astro";
-
-const terms = [
-  {
-    title: "Chemical Reactions",
-    icon: term1,
-    color: "#F14EA2",
-    drops: purpleDrops,
-    topics: [
-      "States of Matter",
-      "Acids and Bases",
-      "Chemical Reactions",
-      "Density",
-    ],
-  },
-  {
-    title: "Gravity & Force",
-    icon: term2,
-    color: "#9044E4",
-    drops: purpleDrops,
-    topics: ["Gravity", "Force", "Weight", "Push & Pull"],
-  },
-  {
-    title: "Light & Sounds",
-    icon: term3,
-    color: "#42D4F3",
-    drops: blueDrops,
-    topics: ["Electricity", "Light", "Sound", "Touch & Senses"],
-  },
-  {
-    title: "Earth & Sustainability",
-    icon: term4,
-    color: "#4FE16E",
-    drops: greenDrops,
-    topics: [
-      "Earth & Weather",
-      "Habitats",
-      "Sustainability",
-      "Renewable Energy",
-    ],
-  },
-] as const;
 ---
 
 <Layout

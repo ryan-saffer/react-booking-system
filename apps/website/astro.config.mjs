@@ -5,7 +5,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "hybrid",
+  output: "static",
   adapter: netlify(),
   integrations: [
     tailwind({
@@ -18,6 +18,10 @@ export default defineConfig({
       {
         protocol: "https",
         hostname: "**.storyblok.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.cdninstagram.com",
       },
     ],
   },

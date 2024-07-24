@@ -13,7 +13,6 @@ import {
 
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import type { MenuItem } from "./navigation-menu";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import { cn } from "../lib/utils";
 import { useState } from "react";
