@@ -12,9 +12,10 @@ type Props = {
   image: ImageMetadata;
   color: "pink" | "yellow" | "green" | "purple" | "blue";
   text: string;
+  flippable?: boolean;
 };
 
-const { image, color, text } = Astro.props;
+const { image, color, text, flippable = true } = Astro.props;
 
 const blob =
   color === "pink"
@@ -26,6 +27,17 @@ const blob =
         : color === "blue"
           ? blueBlob
           : yellowBlob;
+
+const hex =
+  color === "pink"
+    ? "#F24DA2"
+    : color === "green"
+      ? "#4EE16C"
+      : color === "purple"
+        ? "#8F44E1"
+        : color === "blue"
+          ? "#47D2F5"
+          : "#F6BA33";
 ---
 
 <style>
@@ -59,22 +71,50 @@ const blob =
   }
 </style>
 
-<div class="flip-card h-64 w-64">
-  <div class="flip-card-inner">
-    <div class="flip-card-front flex items-center justify-center bg-white">
-      <Image src={image} alt="Back Image" />
-    </div>
-    <div class="flip-card-back relative flex items-center justify-center">
+<div class={cn({ "flip-card h-64 w-64": flippable })}>
+  <div class={cn({ "flip-card-inner": flippable })}>
+    <div
+      class={cn(" flex items-center justify-center bg-white", {
+        "flip-card-front": flippable,
+        "flex-col": !flippable,
+      })}
+    >
       <Image
-        src={blob}
-        alt="background colour"
-        class={cn({ "-mr-8": color === "green", "-ml-8": color === "blue" })}
+        class="min-h-40 min-w-40 object-contain"
+        src={image}
+        alt="Back Image"
       />
-      <p
-        class="absolute max-w-[130px] text-wrap text-center font-lilita text-2xl font-semibold text-white"
-      >
-        {text}
-      </p>
+      {
+        !flippable && (
+          <p
+            class="pt-4 text-center font-lilita text-2xl"
+            style={{ color: hex }}
+          >
+            {text}
+          </p>
+        )
+      }
     </div>
+    {
+      flippable && (
+        <div
+          class={cn("relative flex items-center justify-center", {
+            "flip-card-back": flippable,
+          })}
+        >
+          <Image
+            src={blob}
+            alt="background colour"
+            class={cn({
+              "-mr-8": color === "green",
+              "-ml-8": color === "blue",
+            })}
+          />
+          <p class="absolute max-w-[130px] text-wrap text-center font-lilita text-2xl font-semibold text-white">
+            {text}
+          </p>
+        </div>
+      )
+    }
   </div>
 </div>

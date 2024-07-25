@@ -28,8 +28,8 @@ const { partyPackage, image, imageAlt } = Astro.props;
       <Image src={image} alt={imageAlt} />
       <PrimaryButton
         className="w-fit"
-        text="View all the creations here"
-        path="/creations"
+        text="View all creations"
+        path="/birthday-parties/creations"
       />
     </div>
     <div
@@ -44,6 +44,13 @@ const { partyPackage, image, imageAlt } = Astro.props;
       <div><slot name="7" /></div>
       <div><slot name="8" /></div>
       <div><slot name="9" /></div>
+    </div>
+    <div class="flex justify-center lg:hidden">
+      <PrimaryButton
+        className="w-fit"
+        text="View all creations"
+        path="/birthday-parties/creations"
+      />
     </div>
   </div>
 </section>

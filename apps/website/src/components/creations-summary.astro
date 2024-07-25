@@ -1,0 +1,33 @@
+---
+import FizzyBathBombsBlue from "./creations/fizzy-bath-bombs-blue.astro";
+import FluffySlimePink from "./creations/fluffy-slime-pink.astro";
+import GlitterFacePaint from "./creations/glitter-face-paint.astro";
+import GlitterSlime from "./creations/glitter-slime.astro";
+import RainbowBathBombs from "./creations/rainbow-bath-bombs.astro";
+import RainbowBathSalts from "./creations/rainbow-bath-salts.astro";
+import SparklingLipBalm from "./creations/sparkling-lip-balm.astro";
+import SugarLipScrub from "./creations/sugar-lip-scrub.astro";
+import UnicornSoap from "./creations/unicorn-soap.astro";
+
+type Props = {
+  title: string;
+  color: string;
+};
+
+const { title, color } = Astro.props;
+---
+
+<div class="mb-16">
+  <p class="mb-8 text-center font-lilita text-5xl" style={{ color }}>{title}</p>
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+    <slot name="1" />
+    <slot name="2" />
+    <slot name="3" />
+    <slot name="4" />
+    <slot name="5" />
+    <slot name="6" />
+    <slot name="7" />
+    <slot name="8" />
+    <slot name="9" />
+  </div>
+</div>

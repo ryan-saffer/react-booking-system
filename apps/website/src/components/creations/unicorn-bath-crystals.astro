@@ -2,6 +2,16 @@
 import FlipCreation from "../flip-creation.astro";
 
 import creation from "@/assets/images/creations/unicorn-bath-crystals.png";
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
 ---
 
-<FlipCreation image={creation} text="Unicorn Bath Crystals" color="blue" />
+<FlipCreation
+  flippable={flippable}
+  image={creation}
+  text="Unicorn Bath Crystals"
+  color="blue"
+/>
