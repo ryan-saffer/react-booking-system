@@ -110,7 +110,9 @@ function ContactUsForm() {
       });
     } catch (err) {
       console.error({ err });
-      toast.error("There was an error submitting the form.");
+      toast.error(
+        "There was an error submitting the form. Please send us an email at 'bookings@fizzkidz.com.au'.",
+      );
       return;
     } finally {
       setLoading(false);
