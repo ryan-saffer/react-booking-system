@@ -8,7 +8,7 @@ const instagramPosts = await instagramClient.getRecentPosts();
 const recentPosts = instagramPosts.slice(0, 9);
 ---
 
-<div class="m-auto grid w-fit grid-cols-2 gap-[2px] md:grid-cols-3">
+<div class="m-auto grid w-fit grid-cols-2 gap-1 md:grid-cols-3">
   {
     recentPosts.map((post, idx) => (
       <div
@@ -29,7 +29,7 @@ const recentPosts = instagramPosts.slice(0, 9);
           <div class="absolute top-0 hidden h-full w-full bg-black opacity-30 group-hover:block" />
           <div class="absolute top-0 hidden h-full w-full items-center justify-center group-hover:flex">
             <p class="flex items-center font-gotham text-white underline">
-              View on Instagram <ExternalLink className="w-4 h-4 ml-2" />
+              Open on Instagram <ExternalLink className="w-4 h-4 ml-2" />
             </p>
           </div>
         </a>
