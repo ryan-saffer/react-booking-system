@@ -246,8 +246,8 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     errors.contactEmail && errors.contactEmail.type === 'pattern'
                                         ? 'Email is not valid'
                                         : errors.contactEmail?.type === 'required'
-                                        ? 'Contact email is required'
-                                        : ''
+                                          ? 'Contact email is required'
+                                          : ''
                                 }
                                 label="Contact email"
                                 fullWidth
@@ -376,8 +376,12 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                         time: errors.slots?.[idx]?.endTime ? true : false,
                                     }}
                                     helperText={{
-                                        date: errors.slots?.[idx]?.endDate ? 'End date is required' : '',
-                                        time: errors.slots?.[idx]?.endTime ? 'End time is required' : '',
+                                        date: errors.slots?.[idx]?.endDate
+                                            ? errors.slots?.[idx]?.endDate.message || 'End date is required'
+                                            : '',
+                                        time: errors.slots?.[idx]?.endTime
+                                            ? errors.slots?.[idx]?.endTime.message || 'End time is required'
+                                            : '',
                                     }}
                                     disabled={disabled}
                                 />

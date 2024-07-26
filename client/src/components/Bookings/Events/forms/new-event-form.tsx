@@ -9,6 +9,7 @@ import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { trpc } from '@utils/trpc'
 import { Location, ScienceModule } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 
 const PREFIX = 'NewEventForm'
 
@@ -77,7 +78,35 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
             setEmailMessageError(true)
             return
         }
-        if (!isValid) {
+
+        // ensure all slot times end after they start
+        let dateError = false
+        for (let i = 0; i < values.slots.length; i++) {
+            const slot = values.slots[i]
+            const start = DateTime.fromObject({
+                year: slot.startDate?.year,
+                month: slot.startDate?.month,
+                day: slot.startDate?.day,
+                hour: slot.startTime?.hour,
+                minute: slot.startTime?.minute,
+            })
+
+            const end = DateTime.fromObject({
+                year: slot.endDate?.year,
+                month: slot.endDate?.month,
+                day: slot.endDate?.day,
+                hour: slot.endTime?.hour,
+                minute: slot.endTime?.minute,
+            })
+
+            if (end <= start) {
+                methods.setError(`slots.${i}.endDate`, { message: 'End time is before start time' })
+                methods.setError(`slots.${i}.endTime`, { message: 'End time is before start time' })
+                dateError = true
+            }
+        }
+
+        if (!isValid || dateError) {
             return
         }
 
