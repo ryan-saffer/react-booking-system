@@ -1,8 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { MailClient } from '../../sendgrid/MailClient'
-import { logError } from '../../utilities'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { MailClient } from '../../../sendgrid/MailClient'
+import { logError, throwFunctionsError } from '../../../utilities'
+import { ZohoClient } from '../../../zoho/zoho-client'
 import {
     ContactFormLocationMap,
     Form,
@@ -11,15 +11,13 @@ import {
     PartyFormLocationMap,
     RoleDisplayValueMap,
     ServiceDisplayValueMap,
-} from '../contact-form-7-types-v2'
+} from '../../core/website-form-types'
 
-export const contactForm7WebhookV2 = onRequest(async (req, res) => {
+export const websiteFormsWebhook = onRequest(async (req, res) => {
     const formId = req.query.formId as keyof Form
 
     const zohoClient = new ZohoClient()
     const mailClient = await MailClient.getInstance()
-
-    console.log(req.body)
 
     try {
         switch (formId) {
@@ -119,7 +117,10 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
                     })
                 } else {
                     // we always want to send a 200 to the wordpress plugin, so only log the error
-                    logError(`Unrecognised service when submitting contct form 7 'contact' form: '${service}'`)
+                    throwFunctionsError(
+                        'failed-precondition',
+                        `Unrecognised service when submitting website 'contact' form: '${service}'`
+                    )
                 }
                 break
             }
@@ -263,7 +264,8 @@ export const contactForm7WebhookV2 = onRequest(async (req, res) => {
             }
         }
     } catch (err) {
-        logError('error handling contact form 7 submission', JSON.stringify(err))
+        // TODO - log error too
+        throwFunctionsError('internal', 'error handling contact form 7 submission', err)
     }
 
     res.status(200).send()

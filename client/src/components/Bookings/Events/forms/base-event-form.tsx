@@ -377,10 +377,10 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     }}
                                     helperText={{
                                         date: errors.slots?.[idx]?.endDate
-                                            ? errors.slots?.[idx]?.endDate.message || 'End date is required'
+                                            ? errors.slots?.[idx]?.endDate?.message || 'End date is required'
                                             : '',
                                         time: errors.slots?.[idx]?.endTime
-                                            ? errors.slots?.[idx]?.endTime.message || 'End time is required'
+                                            ? errors.slots?.[idx]?.endTime?.message || 'End time is required'
                                             : '',
                                     }}
                                     disabled={disabled}
