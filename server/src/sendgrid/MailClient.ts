@@ -11,6 +11,12 @@ import { ClientStatus } from '../utilities/types'
 import type { Emails } from './types'
 
 type Options = {
+    /**
+     * Should a copy of this email be sent to 'bookings@fizzkidz.com.au'?
+     *
+     * @default true
+     */
+    bccBookings?: boolean
     from?: {
         name: string
         email: string
@@ -51,10 +57,15 @@ export class MailClient {
         throw new Error('Mail client not initialised')
     }
 
-    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
+    async sendEmail<T extends keyof Emails>(
+        email: T,
+        to: string,
+        values: Emails[T],
+        options: Options = { bccBookings: true }
+    ) {
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
-        if (env === 'prod') {
+        if (env === 'prod' && options.bccBookings) {
             emailInfo.bcc = [...(emailInfo.bcc || []), 'bookings@fizzkidz.com.au']
         }
         await this.#sgMail.send({ ...emailInfo, html })

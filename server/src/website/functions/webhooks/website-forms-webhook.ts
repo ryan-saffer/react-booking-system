@@ -1,7 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
 import { MailClient } from '../../../sendgrid/MailClient'
-import { logError, throwFunctionsError } from '../../../utilities'
+import { logError } from '../../../utilities'
 import { ZohoClient } from '../../../zoho/zoho-client'
 import {
     ContactFormLocationMap,
@@ -24,15 +24,22 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
             case 'party': {
                 const formData = JSON.parse(req.body) as Form['party']
 
-                await mailClient.sendEmail('websitePartyFormToCustomer', formData.email, {
-                    name: formData.name,
-                    email: formData.email,
-                    contactNumber: formData.contactNumber,
-                    location: LocationDisplayValueMap[formData.location],
-                    suburb: formData.suburb,
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    enquiry: formData.enquiry,
-                })
+                await mailClient.sendEmail(
+                    'websitePartyFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        location: LocationDisplayValueMap[formData.location],
+                        suburb: formData.suburb,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
 
                 await mailClient.sendEmail(
                     'websitePartyFormToFizz',
@@ -49,6 +56,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `${LocationDisplayValueMap[formData.location]} - ${formData.name}`,
                         replyTo: formData.email,
+                        bccBookings: false,
                     }
                 )
 
@@ -69,16 +77,23 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
 
                 const service = formData.service
 
-                await mailClient.sendEmail('websiteContactFormToCustomer', formData.email, {
-                    name: formData.name,
-                    email: formData.email,
-                    contactNumber: formData.contactNumber,
-                    service: ServiceDisplayValueMap[formData.service],
-                    enquiry: formData.enquiry,
-                    ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    suburb: formData.suburb,
-                })
+                await mailClient.sendEmail(
+                    'websiteContactFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        service: ServiceDisplayValueMap[formData.service],
+                        enquiry: formData.enquiry,
+                        ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        suburb: formData.suburb,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
                 await mailClient.sendEmail(
                     'websiteContactFormToFizz',
                     'bookings@fizzkidz.com.au',
@@ -95,6 +110,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
                         replyTo: formData.email,
+                        bccBookings: false,
                     }
                 )
 
@@ -116,11 +132,8 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         service: service === 'activation' ? 'activation_event' : 'incursion',
                     })
                 } else {
-                    // we always want to send a 200 to the wordpress plugin, so only log the error
-                    throwFunctionsError(
-                        'failed-precondition',
-                        `Unrecognised service when submitting website 'contact' form: '${service}'`
-                    )
+                    // we still want the user to see a success here, so only log the error
+                    logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
                 }
                 break
             }
@@ -128,14 +141,21 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
             case 'event': {
                 const formData = JSON.parse(req.body) as Form['event']
 
-                await mailClient.sendEmail('websiteEventFormToCustomer', formData.email, {
-                    name: formData.name,
-                    email: formData.email,
-                    contactNumber: formData.contactNumber,
-                    company: formData.company,
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    enquiry: formData.enquiry,
-                })
+                await mailClient.sendEmail(
+                    'websiteEventFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        company: formData.company,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
                 await mailClient.sendEmail(
                     'websiteEventFormToFizz',
                     'bookings@fizzkidz.com.au',
@@ -150,6 +170,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `Event - ${formData.name}`,
                         replyTo: formData.email,
+                        bccBookings: false,
                     }
                 )
 
@@ -167,15 +188,22 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
             case 'incursion': {
                 const formData = JSON.parse(req.body) as Form['incursion']
 
-                await mailClient.sendEmail('websiteIncurionFormToCustomer', formData.email, {
-                    name: formData.name,
-                    school: formData.school,
-                    email: formData.email,
-                    contactNumber: formData.contactNumber,
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    module: ModuleDisplayValueMap[formData.module],
-                    enquiry: formData.enquiry,
-                })
+                await mailClient.sendEmail(
+                    'websiteIncurionFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        school: formData.school,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        module: ModuleDisplayValueMap[formData.module],
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
                 await mailClient.sendEmail(
                     'websiteIncurionFormToFizz',
                     'bookings@fizzkidz.com.au',
@@ -191,6 +219,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `Incursion - ${formData.name}, ${formData.school}`,
                         replyTo: formData.email,
+                        bccBookings: false,
                     }
                 )
 
@@ -209,16 +238,25 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
             case 'careers': {
                 const formData = JSON.parse(req.body) as Form['careers']
 
-                await mailClient.sendEmail('websiteCareersFormToCustomer', formData.email, {
-                    name: formData.name,
-                    email: formData.email,
-                    contactNumber: formData.contactNumber,
-                    role: RoleDisplayValueMap[formData.role],
-                    wwcc: formData.wwcc,
-                    driversLicense: formData.driversLicense,
-                    application: formData.application,
-                    reference: formData.reference,
-                })
+                await mailClient.sendEmail(
+                    'websiteCareersFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        role: RoleDisplayValueMap[formData.role],
+                        wwcc: formData.wwcc,
+                        driversLicense: formData.driversLicense,
+                        resumeUrl: formData.resume.url,
+                        resumeFilename: formData.resume.name,
+                        application: formData.application,
+                        reference: formData.reference,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
 
                 await mailClient.sendEmail(
                     'websiteCareersFormToFizz',
@@ -227,7 +265,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         name: formData.name,
                         email: formData.email,
                         contactNumber: formData.contactNumber,
-                        role: formData.role,
+                        role: RoleDisplayValueMap[formData.role],
                         wwcc: formData.wwcc,
                         driversLicense: formData.driversLicense,
                         resumeFilename: formData.resume.name,
@@ -238,6 +276,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `${formData.name} - Job Application`,
                         replyTo: formData.email,
+                        bccBookings: false,
                     }
                 )
                 break
@@ -259,13 +298,15 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
             default: {
                 const exhaustiveCheck: never = formId
                 // we always want to send a 200 to the wordpress plugin, so only log the error
-                logError(`Contact form 7 submitted with invalid formId: '${exhaustiveCheck}'`)
-                break
+                logError(`Website form submitted with invalid formId: '${exhaustiveCheck}'`)
+                res.status(500).send()
+                return
             }
         }
     } catch (err) {
-        // TODO - log error too
-        throwFunctionsError('internal', 'error handling contact form 7 submission', err)
+        logError(`Error running website form webhook with id: ${formId}`, err, req.body)
+        res.status(500).send()
+        return
     }
 
     res.status(200).send()

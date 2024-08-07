@@ -363,6 +363,8 @@ export type Emails = {
         role: string
         wwcc: string
         driversLicense: string
+        resumeUrl: string
+        resumeFilename: string
         application: string
         reference: string
     }

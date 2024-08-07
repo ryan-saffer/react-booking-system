@@ -105,6 +105,11 @@
               <td>{{reference}}</td>
             </tr>
 
+            <tr>
+              <td><strong>Resume:</strong></td>
+              <td><a href="{{resumeUrl}}">{{resumeFilename}}</a></td>
+            </tr>
+
           </mj-table>
         </mj-column>
       </mj-section>
