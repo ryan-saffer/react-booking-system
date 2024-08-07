@@ -1,3 +1,5 @@
+import "@/styles/sonner.css";
+
 import {
   Form,
   FormControl,
@@ -13,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
@@ -21,7 +22,9 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { LoaderCircle } from "lucide-react";
 import { Textarea } from "../ui/textarea";
+import { Toaster } from "../ui/sonner";
 import { UploadButton } from "@/utils/uploadthing";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";

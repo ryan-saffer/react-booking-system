@@ -1,3 +1,5 @@
+import "@/styles/sonner.css";
+
 import {
   Form,
   FormControl,
@@ -6,12 +8,13 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Toaster, toast } from "sonner";
 
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { LoaderCircle } from "lucide-react";
+import { Toaster } from "../ui/sonner";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
