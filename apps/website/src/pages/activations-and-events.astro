@@ -43,6 +43,7 @@ import LogoGrid from "@/components/react/logo-grid";
 import staff from "@/assets/images/pages/activations-and-events/staff.png";
 import PrimaryButton from "@/components/primary-button.astro";
 import ActivationsForm from "@/components/react/forms/activations-form";
+import Reviews from "@/components/reviews.astro";
 
 const aflLogoOptimised = await getImage({ src: aflLogo, format: "webp" });
 const brimbankLogoOptimised = await getImage({
@@ -365,11 +366,31 @@ const logos = [
             ]}
           />
         </div>
-      </section><section>
+      </section>
+      <section>
         <h6 class="my-8 text-center font-lilita text-4xl md:my-20">
           You're in great company!
         </h6>
         <LogoGrid client:visible logos={logos} />
+      </section>
+      <section>
+        <Reviews
+          title="Hear what our partners have to say!"
+          reviews={[
+            {
+              review:
+                "Engaging Minecraft activation captivating kids and parents, with a friendly and proactive team. Meticulous planning and flexibility led to a positive experience for all participants, resulting in a great turnout and consistent engagement - loved every moment! 🌟",
+              writtenBy: "Genny, Sanctuary Lakes Shopping Center",
+              writtenYear: "2024",
+            },
+            {
+              review:
+                "This was our first time collaborating with Fizz Kids for an activity at CS Square shopping centre. We were very happy from the start of our inquiry to the end of the activity. The team were prompt with their communication and Customer facing was very professional yet fun. We will definitely be looking at more activations from them in the future!",
+              writtenBy: "Patric, SC Square",
+              writtenYear: "2024",
+            },
+          ]}
+        />
       </section>
     </div>
     <section class="relative mt-12">
