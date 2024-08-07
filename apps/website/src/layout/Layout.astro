@@ -22,13 +22,35 @@ const { title, description } = Astro.props;
 
 <html lang="en" transition:animate="none" class="h-full">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      type="text/partytown"
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-9T888DDK2Y"></script>
+    <script type="text/partytown">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", import.meta.env.PROD ? "G-9T888DDK2Y" : "");
+    </script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/open-graph/home.png" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/open-graph/home.png" />
+    <meta name="twitter:image:alt" content="A child smiling" />
   </head>
+
   <ViewTransitions />
   <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
 
