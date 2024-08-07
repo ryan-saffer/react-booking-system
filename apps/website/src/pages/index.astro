@@ -42,6 +42,7 @@ import graphics7 from "@/assets/svg/yellow-swirl.svg";
 import headerBottom from "@/assets/images/pages/home/header-bottom.svg";
 import headerBottomInverted from "@/assets/images/pages/home/header-bottom-inverted.svg";
 import InstagramGrid from "@/components/instagram-grid.astro";
+import PrimaryButton from "@/components/primary-button.astro";
 
 const values = [
   { icon: value1, text: "We foster wonderment and excitability" },
@@ -131,7 +132,7 @@ const services = [
   description="Fizz Kidz offers unique and fun holiday programs, after school programs, activations, events and kids birthday parties across Australia."
 >
   <main>
-    <section class="relative h-[600px]">
+    <section class="relative h-[700px] min-[450px]:h-[600px]">
       <div class="relative z-40 h-full bg-[#56C6D1]">
         <Image
           loading="eager"
@@ -215,6 +216,7 @@ const services = [
           >
             Birthday Parties, Holiday Programs, After School Programs and more!
           </p>
+          <PrimaryButton text="Book a Party" path="/birthday-parties/book-a-party" className="mt-8" />
         </div>
         <div class="relative h-full min-[1000px]:w-1/2">
           <Image
