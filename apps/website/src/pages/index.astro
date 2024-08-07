@@ -41,12 +41,7 @@ import graphics6 from "@/assets/svg/slime-purple.svg";
 import graphics7 from "@/assets/svg/yellow-swirl.svg";
 import headerBottom from "@/assets/images/pages/home/header-bottom.svg";
 import headerBottomInverted from "@/assets/images/pages/home/header-bottom-inverted.svg";
-import { instagramClient } from "@/utils/instagram-api-client";
 import InstagramGrid from "@/components/instagram-grid.astro";
-
-
-const allInstagramPosts = await instagramClient.getRecentPosts()
-const recentInstagramPosts = allInstagramPosts.slice(0, 20)
 
 const values = [
   { icon: value1, text: "We foster wonderment and excitability" },
