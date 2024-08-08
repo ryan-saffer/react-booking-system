@@ -70,4 +70,5 @@ export const CreationDisplayValuesMap: CreationKeyMap = {
     [Creations.midnightsSlime]: 'Midnights Slime',
     [Creations.red1989LipBalm]: 'Red 1989 Lip Balm',
     [Creations.loverGlitterFacePaint]: "'Lover' Glitter Face Paint",
+    [Creations.loverTieDyeScrunchies]: "'Lover' Tie Dye Scrunchies",
 }

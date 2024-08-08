@@ -67,4 +67,5 @@ export enum Creations {
     midnightsSlime = 'midnightsSlime',
     red1989LipBalm = 'red1989LipBalm',
     loverGlitterFacePaint = 'loverGlitterFacePaint',
+    loverTieDyeScrunchies = 'loverTieDyeScrunchies',
 }
