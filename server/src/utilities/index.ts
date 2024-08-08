@@ -8,7 +8,7 @@ import { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
 import { DateTime } from 'luxon'
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
-    return fireOnMessagePublished(topic, (event) => fn(event.data.message.json))
+    return fireOnMessagePublished({ topic, region: 'australia-southeast1' }, (event) => fn(event.data.message.json))
 }
 
 export async function publishToPubSub<T extends keyof PubSubFunctions>(topic: T, data: PubSubFunctions[T]) {
