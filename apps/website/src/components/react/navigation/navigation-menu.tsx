@@ -149,8 +149,12 @@ function NavigationMenu() {
   }, [showMobileMenu]);
 
   useEffect(() => {
+    let currentWidth = window.innerWidth;
     const onResize = () => {
-      setShowMobileMenu(false);
+      if (window.innerWidth !== currentWidth) {
+        currentWidth = window.innerWidth;
+        setShowMobileMenu(false);
+      }
     };
 
     window.addEventListener("resize", onResize);

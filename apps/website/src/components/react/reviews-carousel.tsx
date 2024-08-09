@@ -16,7 +16,7 @@ function ReviewsCarousel({
       <CarouselContent>
         {reviews.map((review, idx) => (
           <CarouselItem className="basis-full md:basis-1/2" key={idx}>
-            <div className="flex h-auto flex-col justify-between rounded-lg border bg-white p-8 md:h-full">
+            <div className="flex h-full flex-col justify-between rounded-lg border bg-white p-8 md:h-full">
               <p className="font-gotham text-sm italic">"{review.review}"</p>
               <p className="text-right text-sm font-semibold text-gray-500">
                 - {review.writtenBy} | {review.writtenYear}
