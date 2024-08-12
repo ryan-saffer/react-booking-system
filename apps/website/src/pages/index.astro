@@ -16,7 +16,7 @@ import studio from "@/assets/images/pages/home/studio.png";
 import fizzFansBgTop from "@/assets/images/pages/home/fizz-fans-bg-top.svg";
 import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg";
 import star from "@/assets/images/pages/home/star.svg";
-// import franchising from "@/assets/images/pages/home/franchising.png";
+import franchising from "@/assets/images/pages/home/franchising.png";
 import mailingListBg from "@/assets/images/pages/home/mailing-list-bg.svg";
 
 import location1 from "@/assets/images/pages/home/location-icon-1.svg";
@@ -25,11 +25,6 @@ import location3 from "@/assets/images/pages/home/location-icon-3.svg";
 import location4 from "@/assets/images/pages/home/location-icon-4.svg";
 import PartyThemes from "@/components/party-themes.astro";
 import ReviewsCarousel from "@/components/react/reviews-carousel";
-
-import value1 from "@/assets/images/pages/home/value-1.svg";
-import value2 from "@/assets/images/pages/home/value-2.svg";
-import value3 from "@/assets/images/pages/home/value-3.svg";
-import value4 from "@/assets/images/pages/home/value-4.svg";
 
 import MailingListForm from "@/components/react/forms/mailing-list-form";
 
@@ -43,13 +38,9 @@ import headerBottom from "@/assets/images/pages/home/header-bottom.svg";
 import headerBottomInverted from "@/assets/images/pages/home/header-bottom-inverted.svg";
 import InstagramGrid from "@/components/instagram-grid.astro";
 import PrimaryButton from "@/components/primary-button.astro";
+import Values from "@/components/values.astro";
 
-const values = [
-  { icon: value1, text: "We foster wonderment and excitability" },
-  { icon: value2, text: "We are passionate about kids' happiness and joy" },
-  { icon: value3, text: "We believe in the power of hands-on learning" },
-  { icon: value4, text: "We go above and beyond" },
-] as const;
+
 
 const locations = [
   {
@@ -83,7 +74,7 @@ const services = [
   {
     title: "Holiday Programs",
     subtitle:
-      "We create a new and exciting timetable each holiday period and the studios bring it to life!",
+      "With a new and exciting timetable each holiday period, school holidays are buzzing with fun!",
     image: holidayPrograms,
     imageAlt: "A child holding a bath bomb and smiling at the camera",
     color: "#A7CB5B",
@@ -92,7 +83,7 @@ const services = [
   {
     title: "After-School Programs",
     subtitle:
-      "The program offers children the opportunity to explore the fascinating nature of science!",
+      "Run in schools and at Fizz Kidz studios, children explore the fascinating world of science!",
     image: afterSchool,
     imageAlt: "Children at school gathered and working together",
     color: "#9044E2",
@@ -101,7 +92,7 @@ const services = [
   {
     title: "Activations & Events",
     subtitle:
-      "Fizz Kidz at shopping centres, government organisations, local libraries and more",
+      "We are experts in kids entertainment! Fizz Kidz will bring your next activation, event or workshop to life.",
     image: activations,
     imageAlt: "Kids playing with slime at a shopping center",
     color: "#42D4F3",
@@ -109,7 +100,7 @@ const services = [
   },
   {
     title: "School Incursions",
-    subtitle: "Make it easy for teachers to engage their kids in science!",
+    subtitle: "We engage your students in the fascinating nature of everyday science, and we do it by exploring hands-on science experiments!",
     image: incursions,
     imageAlt: "A child at school smiling and pouring something into a bottle",
     color: "#A7CB5B",
@@ -118,7 +109,7 @@ const services = [
   {
     title: "Our Locations",
     subtitle:
-      "See where we are, and find the closest Fizz Kidz studio to you!",
+      "Our Fizz Kidz studios are buzzing with fun! Find the closest Fizz Kidz studio to you.",
     image: energy,
     imageAlt: "Fizz Kids staff leading a room full of children",
     color: "#F24DA1",
@@ -300,7 +291,7 @@ const services = [
         <h3 class="my-8 text-center font-lilita text-5xl">Our Studios</h3>
         <h4 class="m-auto max-w-4xl text-center font-gotham text-2xl">
           The heart of Fizz Kidz are our Studios. Fizz Kidz studios are
-          captivating, welcoming,and brimming with excitement!
+          captivating, welcoming,and glowing with excitement!
         </h4>
         <div
           class="m-auto my-16 grid w-max max-w-4xl grid-cols-2 gap-12 min-[900px]:grid-cols-4"
@@ -335,9 +326,9 @@ const services = [
       <div class="bg-[#D6EAB5]">
         <div class="m-auto block max-w-[1380px] px-5 pt-8">
           <p class="mb-4 text-center font-lilita text-5xl">Fizz Fans</p>
-          <p class="m-auto max-w-4xl text-center font-gotham text-2xl">
-            We've hosted over <strong>50,000 parties and events</strong> and we are
-            incredibly good at what we're doing lorem ipsum
+          <p class="m-auto max-w-5xl text-center font-gotham text-2xl">
+            We've hosted over <strong>50,000 parties and events</strong> and are
+            incredibly good at what we do.
           </p>
           <div
             class="my-8 flex w-full flex-col items-center justify-center gap-8 md:flex-row"
@@ -400,7 +391,7 @@ const services = [
       <p class="text-center font-lilita text-4xl mb-8">Follow us on <a href="https://www.instagram.com/fizzkidzz/" target="_blank" class="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-transparent bg-clip-text">instagram</a></p>
       <InstagramGrid />
     </section>
-    <!-- <section class="m-auto my-12 block max-w-[1380px] px-5 pt-8 md:my-24">
+    <section class="m-auto my-12 block max-w-[1380px] px-5 pt-8 md:my-24">
       <div class="flex flex-col items-center justify-center gap-8 md:flex-row">
         <div class="flex flex-col gap-12 md:w-1/2">
           <h6 class="font-lilita text-5xl">Own a Franchise</h6>
@@ -427,25 +418,9 @@ const services = [
           alt="Fizz Kidz staff smiling and making slime"
         />
       </div>
-    </section> -->
+    </section>
   </main>
-  <section class="m-auto my-12 block max-w-[1380px] px-5 pt-8 md:my-24">
-    <p class="mb-16 text-center font-lilita text-5xl">Our Values</p>
-    <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
-      {
-        values.map((value) => (
-          <div class="flex flex-col items-center gap-6">
-            <Image
-              class="h-16 w-16 min-[450px]:h-32 min-[450px]:w-32"
-              src={value.icon}
-              alt="icon"
-            />
-            <p class="max-w-60 text-center font-gotham">{value.text}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+  <Values />
   <section>
     <Image class="w-full" src={mailingListBg} alt="purple background" />
     <div class="bg-[#9044E2]">

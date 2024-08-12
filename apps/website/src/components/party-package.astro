@@ -19,12 +19,12 @@ const { color, image, imageAlt, path, title } = Astro.props;
 </style>
 
 <div
-  class="package flex max-w-96 cursor-pointer flex-col items-center rounded-2xl border border-transparent py-0 hover:border-solid"
+  class="package max-w-96 cursor-pointer rounded-2xl border border-transparent py-0 hover:border-solid"
 >
-  <a href={path}>
+  <a href={path} class="flex flex-col items-center">
     <Image src={image} alt={imageAlt} class="w-full min-w-52 object-contain" />
     <p
-      class="my-4 text-center font-lilita text-2xl sm:text-3xl"
+      class="my-4 max-w-32 text-wrap text-center font-lilita text-2xl sm:max-w-96 sm:text-3xl"
       style={{ color }}
     >
       {title}

@@ -34,12 +34,12 @@ function AdditionalInfoAccordion() {
             <li>Party Packs - $15 each</li>
           </ul>
           <p className="mt-4">
-            Would like to talk through allergy concerns? Feel free to call us on
-            03 9059 8144, we are very happy to chat!
+            Would you like to talk through allergy concerns? Feel free to call
+            us on 03 9059 8144, we are very happy to chat!
             <br />
             <br />
             Please also let us know if you require a vegetarian menu. In this
-            case you're welcome to add any two items from the additional options
+            case you're welcome to add any two items from our additional options
             (besides a fruit platter) to swap instead of the party pies/sausage
             rolls free of change.
           </p>

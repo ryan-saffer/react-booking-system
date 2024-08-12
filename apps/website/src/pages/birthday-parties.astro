@@ -19,6 +19,7 @@ import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 import PartyPacks from "@/components/party-packs.astro";
 import PartyThemes from "@/components/party-themes.astro";
 import PartyFaq from "@/components/party-faq.astro";
+import Values from "@/components/values.astro";
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -75,7 +76,7 @@ const { default: purpleDrop } = await import(
       />
       <section class="mb-12 md:mb-40">
         <PageIntro
-          subtitle="The magic of glitter colour and exploding fun!"
+          subtitle="The magic of glitter, colour and exploding fun!"
           image={partyHero}
           imageAlt="Party Hero"
           actionButtonPath="/birthday-parties/book-a-party#book"
@@ -92,7 +93,7 @@ const { default: purpleDrop } = await import(
       </section>
       <PartyThemes />
       <section class="mt-16 md:mt-40">
-        <h2 class="mb-12 text-center font-lilita text-4xl md:mb-28 md:text-5xl">
+        <h2 class="mb-12 text-center font-lilita text-4xl md:mb-28 md:text-6xl">
           How it works
         </h2>
         <div
@@ -109,21 +110,21 @@ const { default: purpleDrop } = await import(
             iconClass="min-h-[400px]"
           >
             <div slot="content">
-              <h3 class="mb-2 font-lilita text-2xl">1.5 hour party</h3>
+              <h3 class="mb-2 font-lilita text-2xl">1.5 Hour Party</h3>
               <StarBulletPoints
                 content={[
-                  "Two creations",
-                  "Exclusive venue",
-                  "Two party hosts",
+                  "Two Creations Per Child",
+                  "Two Fantastic Party Hosts",
+                  "Exclusive Party Venue",
                 ]}
                 className="pl-4"
               />
-              <h3 class="mb-2 mt-4 font-lilita text-2xl">2 hour party</h3>
+              <h3 class="mb-2 mt-4 font-lilita text-2xl">2 Hour Party</h3>
               <StarBulletPoints
                 content={[
-                  "Three creations",
-                  "Exclusive venue",
-                  "Two party hosts",
+                  "Three Creations Per Child",
+                  "Two Fantastic Party Hosts",
+                  "Exclusive Party Venue",
                 ]}
                 className="pl-4"
               />
@@ -184,9 +185,9 @@ const { default: purpleDrop } = await import(
                 content={[
                   "Choose your favourite creations to make",
                   "Flexible & allergy aware party food",
-                  "Party invitations included",
+                  "Personalised online invitations [NEW!]",
                   "You can bring your own birthday cake",
-                  "Let us know the approx. number of children & which creations your child wants to make a week before the party",
+                  "Let us know the approx. number of children & which creations your child would like to make a week before the party",
                 ]}
               />
             </div>
@@ -237,7 +238,7 @@ const { default: purpleDrop } = await import(
             Sit back, relax and we will take care of everything!
           </p>
           <p class="text-center font-gotham font-medium lg:text-start">
-            Our fabulous Fizz Kidz staff will come to your home or a party venue
+            Our fabulous Fizz Kidz hosts will come to your home or a party venue
             near you, and run a fantastic stress-free party that we know your
             child, and their friends will love!
           </p>
@@ -256,6 +257,7 @@ const { default: purpleDrop } = await import(
           class="object-fit w-full lg:w-[60%]"
         />
       </section>
+      <Values />
     </div>
   </main>
 </Layout>

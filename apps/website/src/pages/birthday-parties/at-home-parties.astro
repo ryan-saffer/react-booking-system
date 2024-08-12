@@ -65,18 +65,15 @@ const { default: purpleDrop } = await import(
       color="purple"
     >
       <span slot="title">At Home Birthday Parties</span>
-      <span slot="content"
-        >Every child will make their own fabulous Fizz Kidz creations, choosing
-        their own colours, glitters and shapes! Throw in party games as well and
-        your child will have the best PARTY!
+      <span slot="content">
+        Our fabulous Fizz Kidz party host will come to your home or a party
+        venue near you, and run a fantastic, stress-free party that the birthday
+        child, and their friends will love!
       </span>
     </PageIntro>
     <h3
       class="m-auto mt-12 max-w-5xl text-center font-lilita text-2xl text-[#43D4F3] md:mt-48 md:text-3xl"
     >
-      Our fabulous Fizz Kidz party host will come to your home or a party venue
-      near you, and run a fantastic, stress-free party that the birthday child,
-      and their friends will love!
     </h3>
     <PartyThemes />
     <section class="mt-16 md:mt-40">
@@ -98,9 +95,15 @@ const { default: purpleDrop } = await import(
         >
           <div slot="content">
             <h3 class="mb-2 font-lilita text-2xl">1 hour party</h3>
-            <StarBulletPoints content={["Two creations"]} className="pl-4" />
+            <StarBulletPoints
+              content={["Two creations per child"]}
+              className="pl-4"
+            />
             <h3 class="mb-2 mt-4 font-lilita text-2xl">1.5 hour party</h3>
-            <StarBulletPoints content={["Three creations"]} className="pl-4" />
+            <StarBulletPoints
+              content={["Three creations per child"]}
+              className="pl-4"
+            />
             <h3 class="mb-2 mt-4 font-lilita text-2xl">Date / Time</h3>
             <StarBulletPoints
               content={[
@@ -116,7 +119,7 @@ const { default: purpleDrop } = await import(
           class="h-16 w-fit self-center"
         />
         <Step
-          title="Choose Creations"
+          title="Personalise"
           color="#42D4F3"
           number="2"
           icon={blueCalendar}
@@ -127,11 +130,18 @@ const { default: purpleDrop } = await import(
         >
           <div slot="content">
             <h3 class="mb-2 mt-4 font-lilita text-2xl">
-              Creation choices and numbers
+              Create your invitation
             </h3>
             <StarBulletPoints
               content={[
-                "Let us know the approx. number of children & which creations your child wants to make a week before the party",
+                "Choose from one of our Fizz Kidz designed invitation and customise with your childs party details.",
+              ]}
+              className="pl-4"
+            />
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">Creations & numbers</h3>
+            <StarBulletPoints
+              content={[
+                "Let us know the approx. number of children & which creations your child would like to make a week before the party",
               ]}
               className="pl-4"
             />
@@ -153,6 +163,7 @@ const { default: purpleDrop } = await import(
           iconClass="min-[415px]:min-h-[400px] min-h-[500px]"
         >
           <div slot="content">
+            <h3 class="mb-2 mt-4 font-lilita text-2xl">Get ready</h3>
             <StarBulletPoints
               content={[
                 "On the day, all we need is a table for kids to stand or sit around as well as access to water.",
@@ -183,12 +194,12 @@ const { default: purpleDrop } = await import(
             </p>
             <StarBulletPoints
               content={[
-                "A fantastic Fizz Kidz Party Host",
                 "Each child makes two Fizz Kidz creations",
-                "Party take home bags",
-                "Music speakers",
+                "Your fantastic Fizz Kidz Party Host",
                 "Dancing party games",
-                "Party Invitations",
+                "Party take home bags",
+                "Table cloths and music speakers provided",
+                "Customised Party Invitations",
               ]}
             />
             <p class="my-8 pl-12 italic">Minimum 12 children</p>
@@ -201,12 +212,12 @@ const { default: purpleDrop } = await import(
             </p>
             <StarBulletPoints
               content={[
-                "A fantastic Fizz Kidz Party Host",
                 "Each child makes three Fizz Kidz creations",
-                "Party take home bags",
-                "Music speakers",
+                "Your fantastic Fizz Kidz Party Host",
                 "Dancing party games",
-                "Party Invitations",
+                "Party take home bags",
+                "Table cloths and music speakers provided",
+                "Customised Party Invitations",
               ]}
             />
             <p class="my-8 pl-12 italic">Minimum 12 children</p>
@@ -222,6 +233,9 @@ const { default: purpleDrop } = await import(
                 "Zone 4: Currently not available",
               ]}
             />
+            <p class="my-8 pl-12 italic">
+              Distance is calculated from your closest Fizz Kidz studio
+            </p>
           </div>
         </Step>
       </div>
@@ -239,7 +253,7 @@ const { default: purpleDrop } = await import(
             class="relative z-10 h-full w-full rounded-2xl bg-white p-8 shadow-around"
           >
             <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">Inclusions</p>
-            <p class="mb-4 font-lilita text-2xl">Mobile parties include</p>
+            <p class="mb-4 font-lilita text-2xl">At Home parties include</p>
             <StarBulletPoints
               content={[
                 "Fabulous party host",

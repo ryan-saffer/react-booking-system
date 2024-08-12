@@ -11,7 +11,7 @@ import NavigationMenuDropdown from "./navigation-menu-dropdown";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
 import { cn } from "../lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type MenuItem =
   | { type: "link"; title: string; path: string }
@@ -133,13 +133,21 @@ export const menu = [
 function NavigationMenu() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const scrollPosition = useRef(0);
+
   useEffect(() => {
     if (showMobileMenu) {
+      scrollPosition.current = window.scrollY;
       document.getElementById("main")?.classList.add("no-scroll");
       document.getElementById("footer")?.classList.add("no-scroll");
     } else {
       document.getElementById("main")?.classList.remove("no-scroll");
       document.getElementById("footer")?.classList.remove("no-scroll");
+      window.scrollTo({
+        top: scrollPosition.current,
+        left: 0,
+        behavior: "instant",
+      });
     }
 
     return () => {
@@ -187,7 +195,7 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="min-[1125px]:hidden">
+      <aside className="overflow-y-scroll min-[1125px]:hidden">
         <nav>
           <Button
             className="border-[#8F44E1]"
