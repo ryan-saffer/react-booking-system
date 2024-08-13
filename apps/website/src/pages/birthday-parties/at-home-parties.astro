@@ -14,6 +14,7 @@ import PrimaryButton from "@/components/primary-button.astro";
 import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 
 import { menu } from "../../components/react/navigation/navigation-menu";
+import AtHomePartyFaq from "@/components/at-home-party-faq.astro";
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -301,24 +302,6 @@ const { default: purpleDrop } = await import(
             </p>
           </div>
         </div>
-        <div class="relative flex-1">
-          <div
-            class="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around"
-          >
-            <p class="mb-8 font-lilita text-4xl text-[#42D4F3]">FAQ</p>
-            <p class="mb-4 font-lilita text-2xl">
-              Feel free to call us any time with questions
-            </p>
-            <StarBulletPoints
-              content={[
-                "What do I need to provide? A table and access to water - that's it!",
-                "When should I let you know the number of kids that will attend? A week before the party.",
-                "What happens if an extra child attends on the day? No problem, we always pack a few extras!",
-                "How does payment work? We will only invoice you for the number of kids that actually make the creations (minimum payment for 12 children).",
-              ]}
-            />
-          </div>
-        </div>
       </div>
       <div class="relative z-10 m-auto my-12 text-center">
         <PrimaryButton
@@ -327,6 +310,7 @@ const { default: purpleDrop } = await import(
         />
       </div>
     </section>
+    <AtHomePartyFaq />
     <MixAndMatchParties />
   </main>
 </Layout>

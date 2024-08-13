@@ -32,7 +32,7 @@ const { program, className } = Astro.props;
     <p class="font-lilita text-3xl">
       {
         DateTime.fromJSDate(program.date).toFormat("EEE d") +
-          getDateSuffix(program.date.getDay())
+          getDateSuffix(program.date.getDate())
       }
     </p>
   </div>
@@ -60,15 +60,18 @@ const { program, className } = Astro.props;
       >
     </div>
     <div class="flex-grow rounded-b-xl bg-white p-6">
-      <p class="mb-4 font-lilita text-2xl" style={{ color: program.color }}>
+      <p
+        class="mb-4 text-nowrap font-lilita text-2xl"
+        style={{ color: program.color }}
+      >
         {program.title}
       </p>
-      <p class="text-sm font-semibold uppercase">
+      <p class="text-nowrap text-sm font-semibold uppercase">
         {
-          DateTime.fromJSDate(program.date).toFormat("EEEE d") +
-            getDateSuffix(program.date.getDay()) +
-            " " +
-            DateTime.fromJSDate(program.date).toFormat("MMMM")
+          `${DateTime.fromJSDate(program.date).toFormat("EEEE d")}${getDateSuffix(
+            program.date.getDate(),
+          )} 
+            ${DateTime.fromJSDate(program.date).toFormat("MMM")}`
         }
       </p>
       <p class="text-sm font-semibold uppercase">
