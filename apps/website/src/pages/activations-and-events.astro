@@ -45,6 +45,7 @@ import staff from "@/assets/images/pages/activations-and-events/staff.png";
 import PrimaryButton from "@/components/primary-button.astro";
 import ActivationsForm from "@/components/react/forms/activations-form";
 import Reviews from "@/components/reviews.astro";
+import Values from "@/components/values.astro";
 
 const aflLogoOptimised = await getImage({ src: aflLogo, format: "webp" });
 const brimbankLogoOptimised = await getImage({
@@ -440,7 +441,7 @@ const logos = [
       </div>
       <div id="contact"></div>
     </section>
-    <section class="m-auto block max-w-3xl px-5 py-8">
+    <section class="m-auto mt-12 block max-w-3xl px-5 py-8">
       <p class="mb-4 text-center font-lilita text-4xl">
         Contact us - we're friendly!
       </p>
@@ -454,5 +455,6 @@ const logos = [
       </p>
       <ActivationsForm client:visible />
     </section>
+    <Values />
   </main>
 </Layout>

@@ -15,6 +15,7 @@ import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 
 import { menu } from "../../components/react/navigation/navigation-menu";
 import AtHomePartyFaq from "@/components/at-home-party-faq.astro";
+import Values from "@/components/values.astro";
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -312,5 +313,6 @@ const { default: purpleDrop } = await import(
     </section>
     <AtHomePartyFaq />
     <MixAndMatchParties />
+    <Values />
   </main>
 </Layout>

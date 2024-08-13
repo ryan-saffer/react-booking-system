@@ -70,7 +70,7 @@ function NavigationMenuDropdown({
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </HybridHoverCardTrigger>
-        <HybridHoverCardContent className="flex w-fit flex-col p-3">
+        <HybridHoverCardContent className="z-[999] flex w-fit flex-col p-3">
           {submenus.map((menu, idx) => {
             if (menu.type === "link") {
               return (
