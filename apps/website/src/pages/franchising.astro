@@ -21,6 +21,7 @@ import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg
 import line from "@/assets/svg/curved-line.svg";
 import FaqAccordion from "@/components/react/faq-accordion";
 import fizzFam from "@/assets/images/pages/franchising/fizz-fam.png";
+import Values from "@/components/values.astro";
 
 const steps = [
   { image: one, title: "IT & Tech Support" },
@@ -50,21 +51,17 @@ const steps = [
       >
         <span slot="title">Fizz Kidz Franchising</span>
         <span slot="content">
-          Our mission is to excite and empower children through the delivery of
-          high-energy programs that are hands-on, interactive and inspire
-          creativity, imagination, and curiosity!<br /><br />
-          Our vision is to be the most energetic and engaging provider of fun, creative
-          and educational activities for kids across Australia.
-        </span></PageIntro
-      >
+          We are expert providers of kids' entertainment and we are looking to
+          bring the Fizz Kidz Fun to kids all across Australia!
+        </span>
+      </PageIntro>
       <section class="my-12 md:mb-24 md:mt-40">
         <h3 class="mb-4 text-center font-lilita text-5xl uppercase">
           Who we are
         </h3>
-        <p class="mb-12 text-center font-gotham text-2xl">
-          Fizz Kidz is the home of high-enegry enthusatism, larger then life
-          personalities and Fizz Kidz is the home of high-enegry enthusatism,
-          larger then life personalities and
+        <p class="m-auto mb-12 max-w-3xl text-center font-gotham text-2xl">
+          Fizz Kidz is the home of hands-on creativity, high-energy enthusiasm,
+          larger then life personalities and Fizzing Fun!
         </p>
         <div class="flex flex-col gap-8 md:flex-row">
           <CardWithImage
@@ -89,7 +86,7 @@ const steps = [
             className="w-full"
           >
             <div slot="content" class="p-8">
-              <p class="mb-4 font-lilita text-2xl text-[#9DCC45]">Our Values</p>
+              <p class="mb-4 font-lilita text-2xl text-[#9DCC45]">Our Vision</p>
               <p class="font-gotham text-lg">
                 Our vision is to be the most energetic and engaging provider of
                 fun, creative and educational activities for kids across
@@ -105,8 +102,8 @@ const steps = [
             <div slot="content" class="p-8">
               <p class="mb-4 font-lilita text-2xl text-[#4DC5D9]">Our Energy</p>
               <p class="font-gotham text-lg">
-                Filled with high-energy, hands-on activities, our parties are
-                known and loved by kids!
+                Filled with high-energy, hands-on activities, our parties and
+                programs are known and loved by kids!
               </p>
             </div>
           </CardWithImage>
@@ -126,14 +123,14 @@ const steps = [
             className="ml-4 mt-2"
             content={[
               "Proven and clear track record of success",
-              "Low capital investment,",
-              "Multiple revenue streams, ",
-              "Large opportunity for growth ",
+              "Low capital investment",
+              "Multiple revenue streams",
+              "Large opportunity for growth",
+              "Fizz Kidz head office manages all customer enquiries",
               "We are wholeheartedly committed to your success",
-              "Fizz Kidz Head Office managers all customer enquiries for you and hand the bookings over to you!  ",
-              "No full time staff required ",
-              "A model that can offer flexible work-life balance ",
-              "Custom built in-house technology that makes running your studio seamless",
+              "No full time staff required",
+              "A model that can offer flexible work-life balance",
+              "Custom-built in-house technology that makes running your studio seamless",
             ]}
           />
           <div
@@ -346,7 +343,7 @@ const steps = [
             {
               question: "How much does it cost to open a Fizz Kidz Studio?",
               answer:
-                "The total initial investment can range between $100,000 - $180,000 depending on site selection. This includes the franchise fees, training, studio fit-out, equipment, opening stock etc. to ensure you are set up to succeed.",
+                "The total initial investment can range between $110,000 - $180,000 depending on site selection. This includes the franchise fees, training, studio fit-out, equipment, opening stock etc. to ensure you are set up to succeed.",
             },
           ]}
         />
@@ -365,12 +362,11 @@ const steps = [
             Ready to join the Fizz Family?
           </p>
           <p class="font-gotham">
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam
-            nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
-            volutpat. Ut wisi enim ad minim veniam, quis nos- Lorem ipsum dolor
-            sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut
-            wisi enim ad minim
+            When you become a franchisee, you're not just starting a business;
+            you're joining a caring and thriving family that prioritises
+            everyone's success. We're looking for partners who share in our
+            values and are passionate about empowering and entertaining
+            children!
           </p>
           <div
             class="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-6 lg:justify-start"
@@ -380,6 +376,7 @@ const steps = [
         </div>
       </section>
     </div>
+    <section>TODO FORM</section>
+    <Values />
   </main>
-  <section></section>
 </Layout>

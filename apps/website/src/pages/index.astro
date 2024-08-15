@@ -9,15 +9,13 @@ import activations from "@/assets/images/pages/home/activations.jpg";
 import afterSchool from "@/assets/images/pages/home/after-school.jpg";
 import holidayPrograms from "@/assets/images/pages/home/holiday-programs.jpg";
 import incursions from "@/assets/images/pages/home/incursions.jpg";
-// import kinderIncursions from "@/assets/images/pages/home/kinder-incursions.jpg";
-import energy from '@/assets/images/pages/franchising/energy.jpg'
+import energy from "@/assets/images/pages/franchising/energy.jpg";
 import { ChevronRight } from "lucide-react";
 import studio from "@/assets/images/pages/home/studio.png";
 import fizzFansBgTop from "@/assets/images/pages/home/fizz-fans-bg-top.svg";
 import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg";
 import star from "@/assets/images/pages/home/star.svg";
 import franchising from "@/assets/images/pages/home/franchising.png";
-import mailingListBg from "@/assets/images/pages/home/mailing-list-bg.svg";
 
 import location1 from "@/assets/images/pages/home/location-icon-1.svg";
 import location2 from "@/assets/images/pages/home/location-icon-2.svg";
@@ -25,8 +23,6 @@ import location3 from "@/assets/images/pages/home/location-icon-3.svg";
 import location4 from "@/assets/images/pages/home/location-icon-4.svg";
 import PartyThemes from "@/components/party-themes.astro";
 import ReviewsCarousel from "@/components/react/reviews-carousel";
-
-import MailingListForm from "@/components/react/forms/mailing-list-form";
 
 import graphics1 from "@/assets/svg/atom.svg";
 import graphics3 from "@/assets/svg/dots.svg";
@@ -39,8 +35,7 @@ import headerBottomInverted from "@/assets/images/pages/home/header-bottom-inver
 import InstagramGrid from "@/components/instagram-grid.astro";
 import PrimaryButton from "@/components/primary-button.astro";
 import Values from "@/components/values.astro";
-
-
+import MailingList from "@/components/mailing-list.astro";
 
 const locations = [
   {
@@ -69,7 +64,7 @@ const services = [
     image: parties,
     imageAlt: "Kid smiling in front of a birthda cake",
     color: "#F24DA1",
-    path: "/birthday-parties"
+    path: "/birthday-parties",
   },
   {
     title: "Holiday Programs",
@@ -78,7 +73,7 @@ const services = [
     image: holidayPrograms,
     imageAlt: "A child holding a bath bomb and smiling at the camera",
     color: "#A7CB5B",
-    path: "/holiday-programs"
+    path: "/holiday-programs",
   },
   {
     title: "After-School Programs",
@@ -87,7 +82,7 @@ const services = [
     image: afterSchool,
     imageAlt: "Children at school gathered and working together",
     color: "#9044E2",
-    path: "/after-school-programs"
+    path: "/after-school-programs",
   },
   {
     title: "Activations & Events",
@@ -96,15 +91,16 @@ const services = [
     image: activations,
     imageAlt: "Kids playing with slime at a shopping center",
     color: "#42D4F3",
-    path: "/activations-and-events"
+    path: "/activations-and-events",
   },
   {
     title: "School Incursions",
-    subtitle: "We engage your students in the fascinating nature of everyday science, and we do it by exploring hands-on science experiments!",
+    subtitle:
+      "We engage your students in the fascinating nature of everyday science, and we do it by exploring hands-on science experiments!",
     image: incursions,
     imageAlt: "A child at school smiling and pouring something into a bottle",
     color: "#A7CB5B",
-    path: "/in-schools/incursions"
+    path: "/in-schools/incursions",
   },
   {
     title: "Our Locations",
@@ -113,7 +109,7 @@ const services = [
     image: energy,
     imageAlt: "Fizz Kids staff leading a room full of children",
     color: "#F24DA1",
-    path: "/locations"
+    path: "/locations",
   },
 ] as const;
 ---
@@ -172,7 +168,7 @@ const services = [
         class="absolute left-0 right-0 top-0 m-auto flex h-full w-full flex-col justify-between min-[1000px]:flex-row min-[1000px]:items-center min-[1150px]:max-w-[90rem] min-[1150px]:flex-row"
       >
         <div
-          class="mt-8 z-50 max-w-[29rem] px-4 min-[1000px]:w-[31rem] min-[1000px]:max-w-[31rem] min-[1000px]:pl-12 min-[1150px]:mt-0 min-[1150px]:w-[39rem] min-[1150px]:max-w-[39rem]"
+          class="z-50 mt-8 max-w-[29rem] px-4 min-[1000px]:w-[31rem] min-[1000px]:max-w-[31rem] min-[1000px]:pl-12 min-[1150px]:mt-0 min-[1150px]:w-[39rem] min-[1150px]:max-w-[39rem]"
         >
           <p
             class="min-[460px]:leading[1.4] whitespace-nowrap text-justify font-lilita text-5xl leading-[1.4] text-white [text-align-last:justify] min-[380px]:text-6xl min-[380px]:leading-[1.4] min-[460px]:text-7xl min-[1150px]:text-8xl"
@@ -207,34 +203,39 @@ const services = [
           >
             Birthday Parties, Holiday Programs, After School Programs and more!
           </p>
-          <PrimaryButton text="Book a Party" path="/birthday-parties/book-a-party" className="mt-8" />
+          <PrimaryButton
+            text="Book a Party"
+            path="/birthday-parties/book-a-party"
+            className="mt-8"
+          />
         </div>
         <div class="relative h-full min-[1000px]:w-1/2">
           <Image
             loading="eager"
             widths={[400, 530, 650]}
             sizes="(max-width: 800px) 400px, (max-width: 800px) 530px, (max-width:1000px) 650px"
-            class="z-40 absolute bottom-0 right-0 h-[340px] min-[460px]:h-[300px] w-auto object-cover min-[750px]:h-[400px] min-[1000px]:h-[500px]"
+            class="absolute bottom-0 right-0 z-40 h-[340px] w-auto object-cover min-[460px]:h-[300px] min-[750px]:h-[400px] min-[1000px]:h-[500px]"
             src={banngerGirl}
             alt="A girl smiling and holding a green bubbling volcano"
           />
         </div>
       </div>
-        <div class="absolute bottom-6 min-[350px]:bottom-8  min-[520px]:bottom-12 min-[680px]:bottom-16 min-[1020px]:bottom-24 min-[1380px]:bottom-32 w-full">
-          <Image
-            loading="eager"
-            class="z-20 absolute top-0 w-full rotate-180"
-            src={headerBottom}
-            alt="blue background wave"
-          />
-          <Image
-            loading="eager"
-            class="z-40 absolute top-0 w-full rotate-180"
-            src={headerBottomInverted}
-            alt="white backround"
-          />
-        </div>
-      
+      <div
+        class="absolute bottom-6 w-full min-[350px]:bottom-8 min-[520px]:bottom-12 min-[680px]:bottom-16 min-[1020px]:bottom-24 min-[1380px]:bottom-32"
+      >
+        <Image
+          loading="eager"
+          class="absolute top-0 z-20 w-full rotate-180"
+          src={headerBottom}
+          alt="blue background wave"
+        />
+        <Image
+          loading="eager"
+          class="absolute top-0 z-40 w-full rotate-180"
+          src={headerBottomInverted}
+          alt="white backround"
+        />
+      </div>
     </section>
     <section class="m-auto block max-w-[1380px] px-5">
       <p
@@ -249,39 +250,39 @@ const services = [
       <div class="my-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           services.map((service, idx) => (
-            <!--only first three images above the fold -->
+            // only first three images above the fold
             <a href={service.path}>
-            <CardWithImage
-              eager={idx < 3}  
-              image={service.image}
-              imageAlt={service.imageAlt}
-              className="cursor-pointer group flex flex-col h-full"
-            >
-              <div
-                slot="content"
-                class="flex flex-col flex-grow justify-between p-8 group-hover:bg-gray-50"
+              <CardWithImage
+                eager={idx < 3}
+                image={service.image}
+                imageAlt={service.imageAlt}
+                className="cursor-pointer group flex flex-col h-full"
               >
-                <div>
-                  <h4
-                    class="mb-2 font-lilita text-2xl uppercase"
-                    style={{ color: service.color }}
-                  >
-                    {service.title}
-                  </h4>
-                  <p class="font-gotham text-xl">{service.subtitle}</p>
+                <div
+                  slot="content"
+                  class="flex flex-grow flex-col justify-between p-8 group-hover:bg-gray-50"
+                >
+                  <div>
+                    <h4
+                      class="mb-2 font-lilita text-2xl uppercase"
+                      style={{ color: service.color }}
+                    >
+                      {service.title}
+                    </h4>
+                    <p class="font-gotham text-xl">{service.subtitle}</p>
+                  </div>
+                  <div class="mt-4 flex items-center gap-4">
+                    <p
+                      class="font-semibold uppercase"
+                      style={{ color: service.color }}
+                    >
+                      Learn More
+                    </p>
+                    <ChevronRight className="h-4 w-4" color={service.color} />
+                  </div>
                 </div>
-                <div class="mt-4 flex items-center gap-4">
-                  <p
-                    class="font-semibold uppercase"
-                    style={{ color: service.color }}
-                  >
-                    Learn More
-                  </p>
-                  <ChevronRight className="h-4 w-4" color={service.color} />
-                </div>
-              </div>
-            </CardWithImage>
-          </a>
+              </CardWithImage>
+            </a>
           ))
         }
       </div>
@@ -387,8 +388,17 @@ const services = [
       <Image src={fizzFansBgBottom} alt="background of green" class="w-full" />
     </section>
     <section class="m-auto block max-w-[1380px] px-5 pt-8">
-      <p class="text-center font-lilita text-5xl mb-4">We're social - join us!</p>
-      <p class="text-center font-lilita text-4xl mb-8">Follow us on <a href="https://www.instagram.com/fizzkidzz/" target="_blank" class="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-transparent bg-clip-text">instagram</a></p>
+      <p class="mb-4 text-center font-lilita text-5xl">
+        We're social - join us!
+      </p>
+      <p class="mb-8 text-center font-lilita text-4xl">
+        Follow us on <a
+          href="https://www.instagram.com/fizzkidzz/"
+          target="_blank"
+          class="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] bg-clip-text text-transparent"
+          >instagram</a
+        >
+      </p>
       <InstagramGrid />
     </section>
     <section class="m-auto my-12 block max-w-[1380px] px-5 pt-8 md:my-24">
@@ -396,15 +406,11 @@ const services = [
         <div class="flex flex-col gap-12 md:w-1/2">
           <h6 class="font-lilita text-5xl">Own a Franchise</h6>
           <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum
+            When you become a franchisee, you're not just starting a business;
+            you're joining a caring and thriving family that prioritises
+            everyone's success. We're looking for partners who share in our
+            values and are passionate about empowering and entertaining
+            children!
           </p>
           <PrimaryButton
             text="Let's Chat"
@@ -421,18 +427,5 @@ const services = [
     </section>
   </main>
   <Values />
-  <section>
-    <Image class="w-full" src={mailingListBg} alt="purple background" />
-    <div class="bg-[#9044E2]">
-      <div class="m-auto block max-w-[1380px] px-5 pb-8 pt-8">
-        <p class="mb-4 text-center font-lilita text-5xl text-white">
-          Join Our Mailing List
-        </p>
-        <p class="m-auto mb-6 text-center font-gotham font-thin text-white">
-          Be the ﬁrst to hear abour our special dicounts, events and more!
-        </p>
-        <MailingListForm client:visible />
-      </div>
-    </div>
-  </section>
+  <MailingList />
 </Layout>

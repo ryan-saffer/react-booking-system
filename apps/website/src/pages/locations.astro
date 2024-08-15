@@ -7,6 +7,8 @@ import balwyn from "@/assets/images/pages/locations/balwyn.jpg";
 import essendon from "@/assets/images/pages/locations/essendon.jpg";
 import malvern from "@/assets/images/pages/locations/malvern.jpg";
 import { Image } from "astro:assets";
+import Values from "@/components/values.astro";
+import MailingList from "@/components/mailing-list.astro";
 ---
 
 <Layout
@@ -26,14 +28,10 @@ import { Image } from "astro:assets";
       actionButtonText="Contact us"
     >
       <span slot="title">Fizz Kidz Locations</span>
-      <span slot="content"
-        >Fizz Kidz has studios in Balwyn, Cheltenham, Essendon and Malvern.</span
-      >
     </PageIntro>
     <section class="my-12 md:my-32">
       <h4 class="mb-16 text-center font-lilita text-5xl text-[#8BC34B]">
-        Colour, science, creatitivty and fun. That's whay Fizz Kidz is all
-        about!
+        The heart of Fizz Kidz are our Fizz Kidz Studios.
       </h4>
       <div
         class="mb-12 flex flex-col items-center justify-center gap-12 md:mb-28 lg:flex-row"
@@ -44,14 +42,11 @@ import { Image } from "astro:assets";
             273 Bay Road, Cheltenham VIC 3192
           </p>
           <p class="font-gotham text-lg">
-            We're so excited to bring a Fizz Kidz party venue to the bayside
-            community! The venue has amble 4 hour parking right out front, is
-            located opposite Aldi and conveniently just a 4 minute drive from
-            Westfield Southland!<br /><br /> The Fizz Kidz Cheltenham venue can accomodate
-            up to 28 children. <br /><br />Cafe for parents: The venue is
-            located two doors up for a cafe that is currently under
-            construction! The amazing restaurant/cafe should be open end of
-            2022!
+            Light and bright, conveniently located on Bay Rd, our Cheltenham
+            studio is covered in colour, and beaming with fun! The venue has
+            amble 4 hour parking right out front, is located opposite Aldi and
+            conveniently just a 4 minute drive from Westfield Southland.
+            <br /><br /> The Fizz Kidz Cheltenham venue can accomodate up to 28 children.
           </p>
         </div>
         <div class="mx-0 md:mx-8 lg:w-1/2">
@@ -79,15 +74,14 @@ import { Image } from "astro:assets";
           </p>
           <p class="font-gotham text-lg">
             Our stunning Essendon studio is big, colourful and bright with lots
-            of natural light! There is lots of 4 hour parking right outside the
+            of natural light. There is ample 4 hour parking right outside the
             studio on Raleigh street. The studio is located right next to PEGS
             Junior School. The Fizz Kidz Essendon studio can accomodate up to 30
-            children.<br /><br />Cafe for parents: Weedstock Pizzicheria is
+            children.<br /><br />Cafe for parents: Pizza By D'Asporto is
             conveniently located right next door to Fizz Kidz Essendon. Parents
-            are welcome to grab a coffee, or even a pizza!<br /><br /> Assembly Ground
-            is another great cafe just a two minute walk down the road and is a fantastic
-            family friendly cafe as-well. As parents of the children child your welcome
-            to have your child's parents stay at the party of suggest these options.
+            are welcome to grab a coffee, or even a pizza!<br /><br />Assembly
+            Ground is another great cafe just a two minute walk down the road
+            and is a fantastic family friendly cafe as-well.
           </p>
         </div>
       </div>
@@ -100,14 +94,15 @@ import { Image } from "astro:assets";
             20 Glenferrie Road, Malvern VIC 3144
           </p>
           <p class="font-gotham text-lg">
-            Oh we love the Malvern studio! The venue is conveniently located on
-            Glenferrie Road, there is plenty of street parking, a family
-            friendly cafes all around and lots of natural light. Malvern Fizz
-            Kidz can accomodate up to 28 children.<br /><br />Cafe for parents:
-            Tonic and Grace is a fabulous family friendly cafe located right
-            across the road. You're welcome to order coffee's, cakes, croissants
-            ect from them and bring into our studio or reserve a table for your
-            guests parents to go to during the party.
+            Our loved Malvern studio is conveniently located on Glenferrie Road
+            where there is plenty of street parking, family friendly cafes all
+            around and lots of natural light.
+            <br /><br />Malvern Fizz Kidz can accomodate up to 28 children.<br
+            /><br />Cafe for parents: Green Goose Cafe is a fabulous family
+            friendly cafe located right around the corner. You're welcome to
+            order coffee's, cakes, croissants etc from them and bring into our
+            studio or reserve a table for your guests parents to go to during
+            the party.
           </p>
         </div>
         <div class="mx-0 md:mx-8 lg:w-1/2">
@@ -134,16 +129,18 @@ import { Image } from "astro:assets";
             184 Whitehorse Rd, Balwyn 3103
           </p>
           <p class="font-gotham text-lg">
-            Fizz Kidz Balwyn is known and loved by the community! Located across
-            the road from the Balwyn Cinema's, this kids party venue in
-            Melbourne is bright with plenty of space to dance and have fun! Fizz
-            Kidz Balwyn studio can accomodate up to 30 children!<br /><br />Cafe
-            for parents: East and Co is a bright and big cafe that is next door
-            the Fizz Kidz studio. Republic of Letters is another fantastic cafe
-            across the road that specialises in French cuisine
+            Fizz Kidz Balwyn is known and loved by the community. Located across
+            the road from the Balwyn Cinema, this kids party venue in Melbourne
+            is bright with plenty of space to dance and have fun!
+            <br /><br />The Fizz Kidz Balwyn studio can accomodate up to 30
+            children.
+            <br /><br />Cafe for parents: East and Co is a bright and big cafe
+            that is conveniently located next door the Fizz Kidz studio.
           </p>
         </div>
       </div>
     </section>
+    <Values />
   </main>
+  <MailingList />
 </Layout>

@@ -17,6 +17,7 @@ import melissa from "@/assets/images/pages/our-team/melissa.jpg";
 // import energy from "@/assets/images/pages/our-team/energy.jpg";
 import tShirt from "@/assets/images/pages/our-team/t-shirt.png";
 import PrimaryButton from "@/components/primary-button.astro";
+import Values from "@/components/values.astro";
 
 const team = [
   { image: talia, name: "Talia Meltzer", title: "Managing Director" },
@@ -52,13 +53,13 @@ const team = [
       image={hero}
       imageAlt="Two Fizz Kids staff working and smiling"
       subtitle="We're all things fun!"
-      actionButtonText="Contact us"
-      actionButtonPath="/contact-us#contact"
+      actionButtonText="Fizz Kidz Careers"
+      actionButtonPath="/careers"
     >
       <span slot="title">Meet the Fizz Kidz team</span>
-      <span slot="content"
-        >Do you love working with kids? Do you love kids entertainment? Get in
-        touch!
+      <span slot="content">
+        We are on a mission to spread our Fizz Kidz Fun with as many kids as
+        possible!
       </span>
     </PageIntro>
     <section class="my-16 flex flex-col-reverse gap-8 lg:my-32 lg:flex-row">
@@ -118,7 +119,8 @@ const team = [
         <p
           class="text-center font-lilita text-4xl font-medium text-[#4DC5DA] lg:text-start"
         >
-          We are looking for solution driven, enthusiastic people to join us!
+          We are looking for enthusiastic and bubbly people who love working
+          with kids!
         </p>
         <div
           class="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-6 lg:justify-start"
@@ -127,5 +129,6 @@ const team = [
         </div>
       </div>
     </section>
+    <Values />
   </main>
 </Layout>
