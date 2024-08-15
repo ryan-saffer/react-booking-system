@@ -24,7 +24,13 @@ const morningProgramsLength = morningPrograms.length;
     <p class="font-lilita text-4xl">{week.dates}</p>
   </div>
   <div
-    class="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-0"
+    class={cn("grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:gap-x-0", {
+      "lg:grid-cols-5": morningPrograms.length === 5,
+      "lg:grid-cols-4": morningPrograms.length === 4,
+      "lg:grid-cols-3": morningPrograms.length === 3,
+      "lg:grid-cols-2": morningPrograms.length === 2,
+      "lg:grid-cols-1": morningPrograms.length === 1,
+    })}
   >
     {
       morningPrograms.map((morningProgram, idx) => {
