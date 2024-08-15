@@ -401,4 +401,28 @@ export type Emails = {
         preferredDateAndTime: string
         enquiry: string
     }
+
+    websiteFranchisingFormToCustomer: {
+        firstName: string
+        lastName: string
+        email: string
+        contactNumber: string
+        suburb: string
+        state: string
+        experience: string
+        interest: string
+        reference: string
+    }
+
+    websiteFranchisingFormToFizz: {
+        firstName: string
+        lastName: string
+        email: string
+        contactNumber: string
+        suburb: string
+        state: string
+        experience: string
+        interest: string
+        reference: string
+    }
 }

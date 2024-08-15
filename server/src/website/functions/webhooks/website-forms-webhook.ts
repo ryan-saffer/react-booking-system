@@ -6,6 +6,8 @@ import { ZohoClient } from '../../../zoho/zoho-client'
 import {
     ContactFormLocationMap,
     Form,
+    FranchisingExperienceDisplayValueMap,
+    FranchisingInterestDisplayValueMap,
     LocationDisplayValueMap,
     ModuleDisplayValueMap,
     PartyFormLocationMap,
@@ -292,6 +294,52 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     lastName,
                     email: formData.email,
                 })
+                break
+            }
+
+            case 'franchising': {
+                const formData = JSON.parse(req.body) as Form['franchising']
+
+                await mailClient.sendEmail(
+                    'websiteFranchisingFormToCustomer',
+                    formData.email,
+                    {
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        suburb: formData.suburb,
+                        state: formData.state,
+                        experience: FranchisingExperienceDisplayValueMap[formData.experience],
+                        interest: FranchisingInterestDisplayValueMap[formData.interest],
+                        reference: formData.reference,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
+
+                await mailClient.sendEmail(
+                    'websiteFranchisingFormToFizz',
+                    'info@fizzkidz.com.au',
+                    {
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        suburb: formData.suburb,
+                        state: formData.state,
+                        experience: FranchisingExperienceDisplayValueMap[formData.experience],
+                        interest: FranchisingInterestDisplayValueMap[formData.interest],
+                        reference: formData.reference,
+                    },
+                    {
+                        subject: `${formData.firstName} ${formData.lastName} - ${formData.suburb}, ${formData.state}`,
+                        replyTo: formData.email,
+                        bccBookings: false,
+                    }
+                )
+
                 break
             }
 

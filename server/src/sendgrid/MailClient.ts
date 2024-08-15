@@ -674,6 +674,34 @@ export class MailClient {
                     template: 'website_party_form_to_fizz.html',
                     useMjml: false,
                 }
+            case 'websiteFranchisingFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'info@fizzkidz.com.au',
+                    },
+                    template: 'website_franchising_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteFranchisingFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Franchising Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Franchsing Enquiry Recieved',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_franchising_form_to_fizz.html',
+                    useMjml: false,
+                }
 
             default: {
                 const exhaustiveCheck: never = email
