@@ -7,7 +7,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://fizzkidz.com.au",
+  site: "https://www.fizzkidz.com.au",
   output: "hybrid",
   adapter: netlify(),
   integrations: [
