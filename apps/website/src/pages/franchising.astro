@@ -22,6 +22,7 @@ import line from "@/assets/svg/curved-line.svg";
 import FaqAccordion from "@/components/react/faq-accordion";
 import fizzFam from "@/assets/images/pages/franchising/fizz-fam.png";
 import Values from "@/components/values.astro";
+import FranchisingForm from "@/components/react/forms/franchising-form";
 
 const steps = [
   { image: one, title: "IT & Tech Support" },
@@ -376,7 +377,14 @@ const steps = [
         </div>
       </section>
     </div>
-    <section>TODO FORM</section>
+    <div id="enquire" class="scroll-mt-24"></div>
+    <div class="m-auto max-w-3xl p-4">
+      <p class="mb-12 text-center font-lilita text-4xl">
+        Fill in the form to register your interest, and download a Franchise
+        Info Pack.
+      </p>
+      <FranchisingForm client:idle />
+    </div>
     <Values />
   </main>
 </Layout>
