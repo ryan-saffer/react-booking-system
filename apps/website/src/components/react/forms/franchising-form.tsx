@@ -107,10 +107,10 @@ function FranchisingForm() {
         duration: 15_000,
       },
     );
-    window.open(
-      `https://www.fizzkidz.com.au/franchising-brochure.pdf`,
-      "_blank",
-    );
+    // window.open(
+    //   `https://www.fizzkidz.com.au/franchising-brochure.pdf`,
+    //   "_blank",
+    // );
   }
 
   return (
