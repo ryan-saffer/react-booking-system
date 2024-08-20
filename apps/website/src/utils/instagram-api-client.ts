@@ -8,18 +8,24 @@ class InstagramClient {
       },
     );
 
-    const posts = await result.json();
-    return posts.data as ({
-      media_url: string;
-      permalink: string;
-      caption: string;
-    } & (
-      | {
-          media_type: "VIDEO";
-          thumbnail_url: string;
-        }
-      | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
-    ))[];
+    console.log(result.status);
+
+    if (result.status === 200) {
+      const posts = await result.json();
+      return posts.data as ({
+        media_url: string;
+        permalink: string;
+        caption: string;
+      } & (
+        | {
+            media_type: "VIDEO";
+            thumbnail_url: string;
+          }
+        | { media_type: "IMAGE" | "CAROUSEL_ALBUM" }
+      ))[];
+    } else {
+      return [];
+    }
   }
 }
 
