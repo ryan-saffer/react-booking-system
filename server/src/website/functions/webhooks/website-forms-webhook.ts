@@ -98,7 +98,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 )
                 await mailClient.sendEmail(
                     'websiteContactFormToFizz',
-                    'bookings@fizzkidz.com.au',
+                    service === 'incursion' ? 'melissa@fizzkidz.com.au' : 'bookings@fizzkidz.com.au',
                     {
                         name: formData.name,
                         email: formData.email,
@@ -112,7 +112,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
                         replyTo: formData.email,
-                        bccBookings: false,
+                        bccBookings: service === 'incursion', // bcc lami if sending to melissa for incursions
                     }
                 )
 
@@ -208,7 +208,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 )
                 await mailClient.sendEmail(
                     'websiteIncurionFormToFizz',
-                    'bookings@fizzkidz.com.au',
+                    'melissa@fizzkidz.com.au',
                     {
                         name: formData.name,
                         school: formData.school,
@@ -221,7 +221,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `Incursion - ${formData.name}, ${formData.school}`,
                         replyTo: formData.email,
-                        bccBookings: false,
+                        bccBookings: true,
                     }
                 )
 
