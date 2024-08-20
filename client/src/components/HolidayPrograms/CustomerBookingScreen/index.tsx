@@ -199,7 +199,7 @@ export const CustomerBookingScreen = () => {
     }
 
     return (
-        <Root width="centered">
+        <Root width="centered" useTailwindPreflight={false}>
             <Typography.Title level={4} style={{ margin: 24, marginTop: 0, textAlign: 'center' }}>
                 Holiday Program Booking Form
             </Typography.Title>

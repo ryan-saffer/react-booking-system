@@ -7,12 +7,14 @@ import { cn } from '@utils/tailwind'
 type Props = {
     width?: 'centered' | 'full'
     logoSize?: 'sm' | 'lg'
+    useTailwindPreflight?: boolean,
     children?: React.ReactNode
 }
 
 const defaultProps: Partial<Props> = {
     width: 'centered',
     logoSize: 'lg',
+    useTailwindPreflight: true
 }
 
 const Root: React.FC<Props> = (_props) => {
@@ -22,7 +24,7 @@ const Root: React.FC<Props> = (_props) => {
     }
 
     return (
-        <div className="twp relative flex min-h-[100vh] justify-center">
+        <div className={cn(" flex min-h-[100vh] justify-center", { "twp": props.useTailwindPreflight })}>
             <img
                 src="/backgrounds/bg-fizz-top-left.png"
                 className="absolute left-0 top-0 z-0 w-full max-w-[400px] object-contain"

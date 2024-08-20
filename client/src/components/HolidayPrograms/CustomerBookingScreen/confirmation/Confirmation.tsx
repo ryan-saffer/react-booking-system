@@ -66,7 +66,7 @@ export const Confirmation = () => {
 
     if (loading) {
         return (
-            <Root width="centered">
+            <Root width="centered" useTailwindPreflight={false}>
                 <Loader style={{ marginTop: 36, marginBottom: 12 }} />
             </Root>
         )
@@ -74,7 +74,7 @@ export const Confirmation = () => {
 
     if (error) {
         return (
-            <Root width="centered">
+            <Root width="centered" useTailwindPreflight={false}>
                 <Result
                     status="500"
                     title="Something went wrong"
@@ -84,7 +84,7 @@ export const Confirmation = () => {
         )
     }
     return (
-        <Root width="centered">
+        <Root width="centered" useTailwindPreflight={false}>
             <Result
                 status="success"
                 title="Booking confirmed"
