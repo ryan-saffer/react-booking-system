@@ -15,28 +15,28 @@ export const Navigation = () => {
                     <ListItem
                         title="Parties, Events & Incursions"
                         to="bookings"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-76-scaled-e1645523582564-pkvrc29l4f5in86v327lhv2aavc71eult9zjc8i5cw.jpeg"
+                        imgSrc="https://fizzkidz.com.au/images/parties.jpeg"
                     />
                     <ListItem
                         title="Holiday Programs"
                         to="holiday-program"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
+                        imgSrc="https://fizzkidz.com.au/images/holiday-programs.jpeg"
                     />
                     <ListItem
                         title="After School Program"
                         to="after-school-program"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
+                        imgSrc="https://fizzkidz.com.au/images/after-school.jpeg"
                     />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>
                 <ListItem
                     title="Creation Instructions"
                     to="creations"
-                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
+                    imgSrc="https://fizzkidz.com.au/images/body-glitter.jpeg"
                 />
                 <h2 className="lilita mb-3 mt-8 text-2xl">Useful Links</h2>
                 <ListItem
-                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
+                    imgSrc="https://fizzkidz.com.au/images/energy.jpeg"
                     title="Incident Reporting"
                     onClick={() =>
                         window.open(
