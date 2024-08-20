@@ -5,7 +5,7 @@ import { cn } from "./react/lib/utils";
 import { ExternalLink } from "lucide-react";
 
 const instagramPosts = await instagramClient.getRecentPosts();
-const recentPosts = instagramPosts.slice(0, 9);
+const recentPosts = instagramPosts.length > 1 ? instagramPosts.slice(0, 9) : [];
 ---
 
 <div class="m-auto grid w-fit grid-cols-2 gap-1 md:grid-cols-3">
