@@ -213,8 +213,8 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                     <Form {...form}>
                         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
                             <img
-                                src="https://fizzkidz.com.au/wp-content/uploads/2024/02/science.jpg"
-                                className="h-28 w-full object-cover"
+                                src="https://fizzkidz.com.au/images/science.jpg"
+                                className="h-28 w-full object-center object-cover"
                             />
                             <CardHeader className="space-y-1 py-0">
                                 <h2 className="font-lilita text-xl">Hello friend!</h2>

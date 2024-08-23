@@ -68,7 +68,7 @@ export const ChooseInvitationPage = () => {
                     </div>
                     <div className="box ml-4 mr-4 hidden min-w-[400px] max-w-[400px] items-center justify-center self-center rounded-3xl shadow-purple sm:ml-0 sm:mr-0 sm:max-w-[600px] md:flex min-[900px]:min-w-[450px]">
                         <img
-                            src="https://fizzkidz.com.au/wp-content/uploads/2021/01/party.jpg"
+                            src="https://fizzkidz.com.au/images/frame.jpg"
                             className="object-fill"
                         ></img>
                     </div>
