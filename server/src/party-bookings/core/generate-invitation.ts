@@ -29,7 +29,7 @@ export async function generateInvitation(input: GenerateInvitation) {
             defaultViewport: chromium.defaultViewport,
             executablePath: await chromium.executablePath(),
             headless: true,
-            ignoreHTTPSErrors: true,
+            acceptInsecureCerts: true,
         })
     }
     const [page] = await browser.pages()
