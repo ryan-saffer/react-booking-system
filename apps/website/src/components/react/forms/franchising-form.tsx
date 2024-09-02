@@ -20,6 +20,7 @@ import {
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -47,6 +48,7 @@ const formSchema = z.object({
     .enum(["browsing", "3", "6", "12", "12+"])
     .optional()
     .refine((it) => !!it, "Please select your interest level"),
+  enquiry: z.string().optional(),
   reference: z.string().min(1, "Please enter how you heard about us"),
 });
 
@@ -62,6 +64,7 @@ function FranchisingForm() {
       state: undefined,
       experience: undefined,
       interest: undefined,
+      enquiry: "",
       reference: "",
     },
   });
@@ -99,7 +102,7 @@ function FranchisingForm() {
           <p className="font-semibold">Enquiry recieved!</p>
           <p>
             We will be in touch soon to discuss things further! Your info pack
-            download should begin now. 😄
+            download should begin shortly. 😄
           </p>
         </div>
       </div>,
@@ -107,10 +110,12 @@ function FranchisingForm() {
         duration: 15_000,
       },
     );
-    // window.open(
-    //   `https://www.fizzkidz.com.au/franchising-brochure.pdf`,
-    //   "_blank",
-    // );
+    setTimeout(() => {
+      window.open(
+        `https://www.fizzkidz.com.au/fizz-kidz-franchising-brochure.pdf`,
+        "_blank",
+      );
+    }, 2000);
   }
 
   return (
@@ -291,6 +296,23 @@ function FranchisingForm() {
                   <SelectItem value="12+">Get started in 12+ months</SelectItem>
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="enquiry"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Enquiry</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  rows={5}
+                  {...field}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
