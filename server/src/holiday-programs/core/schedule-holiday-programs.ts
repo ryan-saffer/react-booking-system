@@ -1,9 +1,11 @@
 import { FieldValue } from 'firebase-admin/firestore'
 import { AcuityTypes, AcuityUtilities, FreeHolidayProgramBooking, PaidHolidayProgramBooking } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { SheetsClient } from '../../google/SheetsClient'
 import { logError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { bookHolidayProgramIntoAcuity } from './schedule-holiday-program-into-acuity'
@@ -85,6 +87,28 @@ export async function bookHolidayPrograms(
         } catch (err) {
             logError(`unable to add holiday program booking to zoho with parent email ${programs[0].parentEmail}`, err)
         }
+    }
+
+    // write additional info to spreadsheet to contact parent
+    const additionalNeedsPrograms = programs.filter((it) => it.childAdditionalInfo !== '')
+
+    if (additionalNeedsPrograms.length > 0) {
+        const sheetsClient = await SheetsClient.getInstance()
+        sheetsClient.addRowToSheet(
+            'holidayProgramAdditionalNeeds',
+            additionalNeedsPrograms.map((program) => [
+                appointments[0].calendar,
+                program.dateTime,
+                program.parentFirstName,
+                program.parentLastName,
+                program.parentEmail,
+                program.parentPhone,
+                program.childName,
+                Math.abs(DateTime.fromISO(program.childAge).diffNow('years').years).toFixed(0),
+                program.childAllergies,
+                program.childAdditionalInfo,
+            ])
+        )
     }
 
     // send confirmation email

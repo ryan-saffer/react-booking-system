@@ -6,6 +6,7 @@ import { ClientStatus } from '../utilities/types'
 const SHEETS = {
     anaphylacticChildrenChecklist: '1-LYEEUh4jaXQhs9QgBLazzKG0VcAIYKhDvE6qkeDcWU',
     afterSchoolProgramWaitlist: '1X2Y1TVkShfazGS6t2v-jbfJwQQCNXIApvE3G2kfJk-A',
+    holidayProgramAdditionalNeeds: '1doQKQJylAfGTQC5WnxMN-Ixib5T2JTka65rVhl6fP6E',
 }
 
 export class SheetsClient {
