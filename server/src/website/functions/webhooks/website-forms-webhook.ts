@@ -312,6 +312,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         state: formData.state,
                         experience: FranchisingExperienceDisplayValueMap[formData.experience],
                         interest: FranchisingInterestDisplayValueMap[formData.interest],
+                        enquiry: formData.enquiry,
                         reference: formData.reference,
                     },
                     {
@@ -331,6 +332,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         state: formData.state,
                         experience: FranchisingExperienceDisplayValueMap[formData.experience],
                         interest: FranchisingInterestDisplayValueMap[formData.interest],
+                        enquiry: formData.enquiry,
                         reference: formData.reference,
                     },
                     {

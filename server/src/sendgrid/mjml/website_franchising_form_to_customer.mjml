@@ -105,6 +105,13 @@
               <td>{{interest}}</td>
             </tr>
 
+            {{#enquiry}}
+              <tr>
+                <td><strong>Enquiry</strong></td>
+                <td>{{enquiry}}</td>
+              </tr>
+            {{/enquiry}}
+
             <tr>
               <td><strong>How did you hear about us:</strong></td>
               <td>{{reference}}</td>

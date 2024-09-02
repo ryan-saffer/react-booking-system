@@ -61,6 +61,7 @@ export type Form = {
         state: 'ACT' | 'NSW' | 'NT' | 'QLD' | 'TAS' | 'VIC' | 'WA'
         experience: FranchisingExperienceOption
         interest: FranchisingInterestOption
+        enquiry: string
         reference: string
     }
 }

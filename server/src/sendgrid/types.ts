@@ -411,6 +411,7 @@ export type Emails = {
         state: string
         experience: string
         interest: string
+        enquiry: string
         reference: string
     }
 
@@ -423,6 +424,7 @@ export type Emails = {
         state: string
         experience: string
         interest: string
+        enquiry: string
         reference: string
     }
 }
