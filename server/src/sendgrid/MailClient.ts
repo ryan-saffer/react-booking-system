@@ -57,12 +57,10 @@ export class MailClient {
         throw new Error('Mail client not initialised')
     }
 
-    async sendEmail<T extends keyof Emails>(
-        email: T,
-        to: string,
-        values: Emails[T],
-        options: Options = { bccBookings: true }
-    ) {
+    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], _options: Options = {}) {
+        const defaultOptions = { bccBookings: true }
+        const options = { ...defaultOptions, ..._options }
+
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
         if (env === 'prod' && options.bccBookings) {
