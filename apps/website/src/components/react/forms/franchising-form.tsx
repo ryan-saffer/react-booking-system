@@ -41,14 +41,13 @@ const formSchema = z.object({
     .optional()
     .refine((it) => !!it, "Please select a state"),
   experience: z
-    .enum(["owned", "not-owned"])
-    .optional()
-    .refine((it) => !!it, "Please select your experience"),
+    .string()
+    .min(1, "Please let us know your experience working with kids"),
   interest: z
     .enum(["browsing", "3", "6", "12", "12+"])
     .optional()
     .refine((it) => !!it, "Please select your interest level"),
-  enquiry: z.string().optional(),
+  enquiry: z.string().min(1, "Please tell us a bit about yourself!"),
   reference: z.string().min(1, "Please enter how you heard about us"),
 });
 
@@ -191,7 +190,13 @@ function FranchisingForm() {
           name="suburb"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>What suburb are you interested in *</FormLabel>
+              <FormLabel>
+                Which suburb do you want to open a studio in? *
+              </FormLabel>
+              <p className="text-sm">
+                Additionally, our thriving Balwyn and Cheltenham studios are
+                available to purchase!
+              </p>
               <FormControl>
                 <Input
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
@@ -241,30 +246,15 @@ function FranchisingForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Do you have any experience running a business *
+                Do you have any experience working with kids? *
               </FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select experience"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="owned">
-                    Yes - I have owned a business before
-                  </SelectItem>
-                  <SelectItem value="not-owned">
-                    No - This will be my first business
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <Textarea
+                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  rows={3}
+                  {...field}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -289,7 +279,7 @@ function FranchisingForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="browsing">Just Browsing</SelectItem>
+                  <SelectItem value="browsing">Just browsing</SelectItem>
                   <SelectItem value="3">Get started in 3 months</SelectItem>
                   <SelectItem value="6">Get started in 3-6 months</SelectItem>
                   <SelectItem value="12">Get started in 6-12 months</SelectItem>
@@ -305,7 +295,9 @@ function FranchisingForm() {
           name="enquiry"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Enquiry</FormLabel>
+              <FormLabel>
+                What interests you about Fizz Kidz? Tell us about you.
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
