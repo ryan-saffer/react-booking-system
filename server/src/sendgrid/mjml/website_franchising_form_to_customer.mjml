@@ -86,7 +86,7 @@
             </tr>
 
             <tr>
-              <td><strong>Suburb:</strong></td>
+              <td><strong>Which suburb do you want to open a studio in? :</strong></td>
               <td>{{suburb}}</td>
             </tr>
 
@@ -96,7 +96,7 @@
             </tr>
 
             <tr>
-              <td><strong>Do you have experience running a business:</strong></td>
+              <td><strong>Do you have any experience working with kids?:</strong></td>
               <td>{{experience}}</td>
             </tr>
 
@@ -105,12 +105,10 @@
               <td>{{interest}}</td>
             </tr>
 
-            {{#enquiry}}
-              <tr>
-                <td><strong>Enquiry</strong></td>
-                <td>{{enquiry}}</td>
-              </tr>
-            {{/enquiry}}
+            <tr>
+              <td><strong>What interests you about Fizz Kidz? Tell us about you.</strong></td>
+              <td>{{enquiry}}</td>
+            </tr>
 
             <tr>
               <td><strong>How did you hear about us:</strong></td>

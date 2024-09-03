@@ -59,7 +59,7 @@ export type Form = {
         contactNumber: string
         suburb: string
         state: 'ACT' | 'NSW' | 'NT' | 'QLD' | 'TAS' | 'VIC' | 'WA'
-        experience: FranchisingExperienceOption
+        experience: string
         interest: FranchisingInterestOption
         enquiry: string
         reference: string
@@ -90,8 +90,6 @@ type CareersFormRoleOption =
     | 'essendon-facilitator'
     | 'malvern-facilitator'
     | 'other'
-
-type FranchisingExperienceOption = 'owned' | 'not-owned'
 
 type FranchisingInterestOption = 'browsing' | '3' | '6' | '12' | '12+'
 
@@ -146,11 +144,6 @@ export const RoleDisplayValueMap: Record<CareersFormRoleOption, string> = {
     'cheltenahm-facilitator': 'Cheltenham Party Facilitator',
     'essendon-facilitator': 'Essendon Party Facilitator',
     'malvern-facilitator': 'Malvern Party Facilitator',
-}
-
-export const FranchisingExperienceDisplayValueMap: Record<FranchisingExperienceOption, string> = {
-    owned: 'Yes - I have owned a business before',
-    'not-owned': 'No - This will be my first business',
 }
 
 export const FranchisingInterestDisplayValueMap: Record<FranchisingInterestOption, string> = {
