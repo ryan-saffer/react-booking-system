@@ -9,7 +9,7 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   site: "https://www.fizzkidz.com.au",
   output: "hybrid",
-  adapter: netlify(),
+  adapter: netlify({ imageCDN: false }),
   integrations: [
     tailwind({
       applyBaseStyles: false,
