@@ -1,24 +1,13 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
-import {
-  HybridHoverCard,
-  HybridHoverCardContent,
-  HybridHoverCardTrigger,
-  TouchProvider,
-} from "../ui/hybrid-hover-card";
-
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import { cn } from "../lib/utils";
 import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 function NavigationMenuDropdown({
   title,
+  subtitle,
   submenus,
   path,
   delay = 100,
@@ -26,6 +15,7 @@ function NavigationMenuDropdown({
 }: {
   title: string;
   path?: string;
+  subtitle?: string;
   submenus: Readonly<
     (
       | { type: "link"; title: string; path: string }
@@ -43,93 +33,58 @@ function NavigationMenuDropdown({
   const [open, setOpen] = useState(false);
 
   return (
-    <TouchProvider>
-      <HybridHoverCard
-        open={open}
-        onOpenChange={setOpen}
-        openDelay={delay}
-        closeDelay={50}
-      >
-        {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score) */}
-        <HybridHoverCardTrigger asChild>
-          <Button
-            variant="ghost"
-            className={cn("group relative font-gotham hover:bg-transparent", {
-              "-ml-2 font-sans font-normal": isBreadcrumb,
-            })}
-            onClick={() => setOpen(true)}
-          >
-            <span
-              className={cn(
-                "text-base decoration-[#B34696] decoration-2 underline-offset-4 group-hover:underline",
-                { "text-xs min-[350px]:text-sm": isBreadcrumb },
-              )}
-            >
-              {path ? <a href={path}>{title}</a> : title}
-            </span>
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
-        </HybridHoverCardTrigger>
-        <HybridHoverCardContent className="z-[999] flex w-fit flex-col p-3">
-          {submenus.map((menu, idx) => {
-            if (menu.type === "link") {
-              return (
-                <NavigationMenuItemDesktop
-                  path={menu.path}
-                  title={menu.title}
-                  key={idx}
-                  className={isBreadcrumb ? "text-sm sm:text-base" : ""}
-                />
-              );
-            }
-
-            if (menu.type === "dropdown") {
-              return (
-                <Accordion type="multiple" key={menu.title}>
-                  <AccordionItem
-                    value={menu.title}
-                    className="border-none"
-                    date-state="open"
-                  >
-                    <AccordionTrigger className="h-10 min-w-72 rounded-xl p-3 font-gotham text-lg hover:bg-gray-50 hover:no-underline">
-                      {!!menu.path ? (
-                        <a
-                          href={menu.path}
-                          className="decoration-[#B34696] underline-offset-4 hover:underline"
-                        >
-                          {menu.title}
-                        </a>
-                      ) : (
-                        menu.title
-                      )}
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 py-0">
-                      {menu.items.map((item, idx) => {
-                        console.log(item.title);
-                        return (
-                          <AccordionItem
-                            key={idx}
-                            value={item.title}
-                            className={cn(
-                              "border-none p-2 font-gotham text-lg italic decoration-[#B34696] underline-offset-4",
-                              { "text-md": isBreadcrumb },
-                            )}
-                          >
-                            <a href={item.path} className="hover:underline">
-                              {item.title}
-                            </a>
-                          </AccordionItem>
-                        );
-                      })}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              );
-            }
+    <Popover open={open} onOpenChange={setOpen}>
+      {/* asChild ensures this isn't an anchor element, so no href is needed (improves lighthouse SEO score) */}
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className={cn("group relative font-gotham hover:bg-transparent", {
+            "-ml-2 font-sans font-normal": isBreadcrumb,
           })}
-        </HybridHoverCardContent>
-      </HybridHoverCard>
-    </TouchProvider>
+          onClick={() => setOpen(true)}
+        >
+          <span
+            className={cn(
+              "text-base decoration-[#B34696] decoration-2 underline-offset-4 group-hover:underline",
+              { "text-xs min-[350px]:text-sm": isBreadcrumb },
+            )}
+          >
+            {title}
+          </span>
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="z-[999] flex w-fit flex-col p-3">
+        {subtitle && (
+          <Button
+            variant="link"
+            className={cn(
+              "text-md group justify-start border border-[#9044E2] bg-[#9044E2] p-4 text-start font-gotham text-white hover:bg-[#9044E2]/70 hover:no-underline",
+            )}
+          >
+            <a
+              href={path}
+              className="w-full p-3 text-start decoration-[#9044E2] decoration-2 underline-offset-4"
+            >
+              {subtitle}
+            </a>
+            <ArrowRight />
+          </Button>
+        )}
+        {submenus.map((menu, idx) => {
+          if (menu.type === "link") {
+            return (
+              <NavigationMenuItemDesktop
+                path={menu.path}
+                title={menu.title}
+                key={idx}
+                className={isBreadcrumb ? "text-sm sm:text-base" : ""}
+              />
+            );
+          }
+        })}
+      </PopoverContent>
+    </Popover>
   );
 }
 

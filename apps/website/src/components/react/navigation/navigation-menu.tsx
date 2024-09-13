@@ -6,7 +6,7 @@ import {
 } from "@/react-ui/accordion";
 
 import { Button } from "@/react-ui/button";
-import { Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import NavigationMenuDropdown from "./navigation-menu-dropdown";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
@@ -19,13 +19,17 @@ export type MenuItem =
       type: "dropdown";
       title: string;
       items: Readonly<{ type: "link"; title: string; path: string }[]>;
-    } & ({ clickable: true; path: string } | { clickable: false }));
+    } & (
+      | { clickable: true; path: string; subTitle: string }
+      | { clickable: false }
+    ));
 
 export const menu = [
   {
     title: "Birthday Parties",
     clickable: true,
     path: "/birthday-parties",
+    subTitle: "See All Packages",
     type: "dropdown",
     items: [
       {
@@ -79,6 +83,7 @@ export const menu = [
     type: "dropdown",
     clickable: true,
     title: "After School Programs",
+    subTitle: "See All Programs",
     path: "/after-school-programs",
     items: [
       {
@@ -188,6 +193,7 @@ function NavigationMenu() {
                 key={menuItem.title}
                 title={menuItem.title}
                 path={menuItem.clickable ? menuItem.path : ""}
+                subtitle={menuItem.clickable ? menuItem.subTitle : ""}
                 submenus={menuItem.items}
               />
             );
@@ -228,14 +234,26 @@ function NavigationMenu() {
                       className="px-12"
                       key={menuItem.title}
                     >
-                      <AccordionTrigger>
-                        {menuItem.clickable ? (
-                          <a href={menuItem.path}>{menuItem.title}</a>
-                        ) : (
-                          menuItem.title
-                        )}
+                      <AccordionTrigger className="hover:no-underline">
+                        {menuItem.title}
                       </AccordionTrigger>
                       <AccordionContent className="w-full">
+                        {menuItem.clickable && (
+                          <Button
+                            variant="link"
+                            className={cn(
+                              "group w-full justify-start border border-[#9044E2] bg-[#9044E2] p-4 font-gotham text-lg text-white hover:bg-[#9044E2]/70 hover:no-underline",
+                            )}
+                          >
+                            <a
+                              href={menuItem.path}
+                              className="p-3 text-start decoration-[#B14795] decoration-2 underline-offset-4"
+                            >
+                              {menuItem.subTitle}
+                            </a>
+                            <ArrowRight className="h-6 w-6" />
+                          </Button>
+                        )}
                         {menuItem.items.map((item) => (
                           <NavigationMenuItemMobile
                             key={item.title}
