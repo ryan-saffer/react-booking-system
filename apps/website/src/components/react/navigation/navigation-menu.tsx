@@ -201,7 +201,7 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="overflow-y-scroll min-[1125px]:hidden">
+      <aside className="min-[1125px]:hidden">
         <nav>
           <Button
             className="border-[#8F44E1]"
