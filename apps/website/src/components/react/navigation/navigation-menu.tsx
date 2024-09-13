@@ -247,11 +247,11 @@ function NavigationMenu() {
                           >
                             <a
                               href={menuItem.path}
-                              className="p-3 text-start decoration-[#B14795] decoration-2 underline-offset-4"
+                              className="flex w-full items-center gap-4 p-3 text-start decoration-[#B14795] decoration-2 underline-offset-4"
                             >
                               {menuItem.subTitle}
+                              <ArrowRight className="h-6 w-6" />
                             </a>
-                            <ArrowRight className="h-6 w-6" />
                           </Button>
                         )}
                         {menuItem.items.map((item) => (

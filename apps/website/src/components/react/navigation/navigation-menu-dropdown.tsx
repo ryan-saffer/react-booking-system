@@ -1,16 +1,16 @@
-import { Button } from "../ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
+import { Button } from "../ui/button";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import { cn } from "../lib/utils";
 import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 function NavigationMenuDropdown({
   title,
   subtitle,
   submenus,
   path,
-  delay = 100,
   isBreadcrumb = false,
 }: {
   title: string;
@@ -59,16 +59,16 @@ function NavigationMenuDropdown({
           <Button
             variant="link"
             className={cn(
-              "text-md group justify-start border border-[#9044E2] bg-[#9044E2] p-4 text-start font-gotham text-white hover:bg-[#9044E2]/70 hover:no-underline",
+              "text-md group justify-start border border-[#9044E2] bg-[#9044E2] text-start font-gotham text-white hover:bg-[#9044E2]/70 hover:no-underline",
             )}
           >
             <a
               href={path}
-              className="w-full p-3 text-start decoration-[#9044E2] decoration-2 underline-offset-4"
+              className="flex w-full items-center gap-4 text-start decoration-[#9044E2] decoration-2 underline-offset-4"
             >
               {subtitle}
+              <ArrowRight />
             </a>
-            <ArrowRight />
           </Button>
         )}
         {submenus.map((menu, idx) => {
