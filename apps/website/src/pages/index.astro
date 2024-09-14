@@ -10,7 +10,7 @@ import afterSchool from "@/assets/images/pages/home/after-school.jpg";
 import holidayPrograms from "@/assets/images/pages/home/holiday-programs.jpg";
 import incursions from "@/assets/images/pages/home/incursions.jpg";
 import energy from "@/assets/images/pages/franchising/energy.jpg";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import studio from "@/assets/images/pages/home/studio.png";
 import fizzFansBgTop from "@/assets/images/pages/home/fizz-fans-bg-top.svg";
 import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg";
@@ -119,6 +119,17 @@ const services = [
   description="Fizz Kidz offers unique and fun holiday programs, after school programs, activations, events and kids birthday parties across Australia."
 >
   <main>
+    <div class="flex w-full justify-center bg-[#A7CB5B] p-4">
+      <div class="flex w-full max-w-[1380px] items-center justify-center">
+        <a
+          href="/franchising"
+          class="sm:text-md flex items-center gap-4 font-gotham text-sm text-white hover:underline md:text-2xl"
+        >
+          Franchising opportunities available, including our thriving Balwyn and
+          Cheltenham studios! ✨ <ArrowRight />
+        </a>
+      </div>
+    </div>
     <section class="relative h-[700px] min-[450px]:h-[600px]">
       <div class="relative z-40 h-full bg-[#56C6D1]">
         <Image
