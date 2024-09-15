@@ -31,7 +31,7 @@ function AdditionalInfoAccordion() {
               cheese/butter) - $35 (VV)
             </li>
             <li>Vegetarian Quiches - $35 (V)</li>
-            <li>Party Packs - $15 each</li>
+            {/* <li>Party Packs - $15 each</li> */}
           </ul>
           <p className="mt-4">
             Would you like to talk through allergy concerns? Feel free to call
