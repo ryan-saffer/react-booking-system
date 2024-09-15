@@ -794,9 +794,43 @@ export const taylorSwift = `
 * **Lover** Glitter Face Paint
 `
 
+const dinosaurFossils = {
+    name: 'Dinosaur Fossils',
+    markdown: `
+### Ingredients
+* Flour - 15ml X 3 
+* Coloured Sand - 15ml spoon X 1
+* Salt - 15ml spoon x 1 
+* Water - 7.5ml x 3
+
+### Recipe
+Start by giving each child a bowl and a popsicle stick to mix with.
+
+Let the kids choose their dinosaur and set it aside—it's going to be part of the magic later!
+
+1. Add flour into bowls and mix 
+2. Add coloured sand into bowls and mix 
+> Create amazement as the sand changes the colour of the flour! 
+3. Add salt into bowls and mix 
+> Explain that this ingredient is going to help our dinosaur fossils set and become hard over time
+4. Add water and mix 
+> Wow, watch the dry materials become wet! 
+> Now time to get messy, kids can mix with their hands and knead their mixture into a ball
+5. Kids place their ball onto the top of a slime lid, then press their dinosaur into it, then add a slime container on top. 
+
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1Be12cG_Omnmv9GmXZpugNF8K6YR-831R)
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1H_9bbLqu7UJL7IQkLn9Ae4uXv47kbFPt)
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1V5Sor_mK8xVp03fSOvv_J4eBC1fF1HN8)
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1gt_YUDQu4KVx1Pbpd1tT8k1cT3tIJG4q)
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1YawS_-E-XcvKGyxVgDbU6FhzP6dGY-g2)
+![dinosaurFossils](https://lh3.googleusercontent.com/d/1wpI0-_8eGck_K4w4OEL9ZXPTerhRI9Xj)
+`,
+}
+
 export const creations = [
     bathbombs,
     bugAnimalInSoap,
+    dinosaurFossils,
     expertMarbleBathBombs,
     fluffySlime,
     frozenSlime,

@@ -68,4 +68,6 @@ export enum Creations {
     red1989LipBalm = 'red1989LipBalm',
     loverGlitterFacePaint = 'loverGlitterFacePaint',
     loverTieDyeScrunchies = 'loverTieDyeScrunchies',
+    // end taylor swift
+    dinosaurFossils = 'dinosaurFossils',
 }
