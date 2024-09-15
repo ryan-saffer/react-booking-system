@@ -97,7 +97,8 @@
           <b style="color:#212b35">A week before the party</b>
           {{ managerName }} will email you a personalised online party form, where you can tell us the
           number
-          of guests attending as well as pick your creations, additional food and party packs.
+          of guests attending as well as pick your creations and order additional food.
+          <!-- When adding party packs back, mention them here -->
         </mj-text>
       </mj-column>
 

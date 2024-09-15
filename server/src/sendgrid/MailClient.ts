@@ -69,12 +69,12 @@ export class MailClient {
         await this.#sgMail.send({ ...emailInfo, html })
     }
 
-    private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
+    private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean) {
         const mjml = fs.readFileSync(path.resolve(__dirname, `sendgrid/mjml/${template}`), 'utf-8')
         const output = Mustache.render(mjml, values)
         if (useMjml) {
             const mjml2html = await import('mjml')
-            const mjmlOutput = mjml2html.default(output)
+            const mjmlOutput = mjml2html.default(output, { keepComments: false })
             if (mjmlOutput.errors.length > 0) {
                 mjmlOutput.errors.forEach((error) => {
                     logger.log(error.formattedMessage)
