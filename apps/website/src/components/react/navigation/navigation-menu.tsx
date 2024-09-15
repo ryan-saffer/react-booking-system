@@ -79,25 +79,25 @@ export const menu = [
     title: "Holiday Programs",
     path: "/holiday-programs",
   },
-  {
-    type: "dropdown",
-    clickable: true,
-    title: "After School Programs",
-    subTitle: "See All Programs",
-    path: "/after-school-programs",
-    items: [
-      {
-        type: "link",
-        title: "Science Program",
-        path: "/after-school-programs/science-program",
-      },
-      {
-        type: "link",
-        title: "Art & Makers Program",
-        path: "/after-school-programs/art-and-makers-program",
-      },
-    ],
-  },
+  // {
+  //   type: "dropdown",
+  //   clickable: true,
+  //   title: "After School Programs",
+  //   subTitle: "See All Programs",
+  //   path: "/after-school-programs",
+  //   items: [
+  //     {
+  //       type: "link",
+  //       title: "Science Program",
+  //       path: "/after-school-programs/science-program",
+  //     },
+  //     {
+  //       type: "link",
+  //       title: "Art & Makers Program",
+  //       path: "/after-school-programs/art-and-makers-program",
+  //     },
+  //   ],
+  // },
   {
     title: "In Schools",
     type: "dropdown",
@@ -116,6 +116,7 @@ export const menu = [
     type: "link",
     path: "/activations-and-events",
   },
+  { title: "Franchising", type: "link", path: "/franchising" },
   {
     title: "Fizz Facts",
     type: "dropdown",
@@ -129,7 +130,7 @@ export const menu = [
       { type: "link", title: "Locations", path: "/locations" },
       { type: "link", title: "Our Team", path: "/our-team" },
       { type: "link", title: "Careers", path: "/careers" },
-      { type: "link", title: "Franchising", path: "/franchising" },
+      // { type: "link", title: "Franchising", path: "/franchising" },
       { type: "link", title: "Policies", path: "/policies" },
     ],
   },
