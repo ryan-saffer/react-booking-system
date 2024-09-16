@@ -1,12 +1,14 @@
 import { getStore } from "@netlify/blobs";
 
+const SITE_ID = "44edea96-5fbf-4c21-b5b0-8e29832d5237";
+
 class InstagramClient {
   async getAccessToken() {
     // get current token
     const apiKeys = getStore({
       name: "apiKeys",
-      siteID: "44edea96-5fbf-4c21-b5b0-8e29832d5237",
-      token: "nfp_mcy5JDYzdDhbU4DGQocEFhqZJqdKtdHm2f52",
+      siteID: SITE_ID,
+      token: import.meta.env.NETLIFY_TOKEN,
     });
     const instagram = await apiKeys.getWithMetadata("instagram");
 
