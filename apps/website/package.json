@@ -18,6 +18,8 @@
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/tailwind": "^5.1.0",
     "@hookform/resolvers": "^3.6.0",
+    "@netlify/blobs": "^8.0.1",
+    "@netlify/functions": "^2.8.1",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-hover-card": "^1.0.7",
     "@radix-ui/react-label": "^2.1.0",
