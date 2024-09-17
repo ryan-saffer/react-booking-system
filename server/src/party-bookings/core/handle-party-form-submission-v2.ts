@@ -101,12 +101,14 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
-    // if its a two creation party, but they picked three or more creations, notify manager
-    const choseThreeCreations = booking.creation3 !== undefined
+    // if its a two creation party, but they picked three or more creations, notify manager (or if they picked more than 3 creations)
+    const creations = formMapper.getCreationDisplayValues()
+    const choseThreeCreations = creations.length === 3
     const requiresTwoCreations =
         (fullBooking.type === 'mobile' && fullBooking.partyLength === '1') ||
         (fullBooking.type !== 'mobile' && fullBooking.partyLength === '1.5')
-    if (choseThreeCreations && requiresTwoCreations) {
+
+    if ((choseThreeCreations && requiresTwoCreations) || creations.length > 3) {
         try {
             await mailClient.sendEmail(
                 'tooManyCreationsChosen',
@@ -165,7 +167,6 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
     // Grazing platter email not migrated from apps script - need to do if we ever bring them back
 
     const additions = formMapper.getAdditionDisplayValues(true)
-    const creations = formMapper.getCreationDisplayValues()
 
     const partyPacks = additions.filter((addition) => addition.includes('Party Pack'))
     if (partyPacks.length !== 0) {
