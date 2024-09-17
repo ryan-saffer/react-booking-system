@@ -67,12 +67,13 @@ export class PartyFormMapperV2 {
             }
         })
 
-        const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
-        partyPackKeys.forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                displayValues.push(AdditionsDisplayValuesMapPrices[pack])
-            }
-        })
+        // TODO: Add back once new party packs are ready to go
+        // const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
+        // partyPackKeys.forEach((pack) => {
+        //     if (this.isValidAddition(pack)) {
+        //         displayValues.push(AdditionsDisplayValuesMapPrices[pack])
+        //     }
+        // })
         return displayValues
     }
 
@@ -122,7 +123,8 @@ export class PartyFormMapperV2 {
             creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: getQuestionValue(this.responses, 'fun_facts'),
             questions: getQuestionValue(this.responses, 'questions'),
-            ...this.getPartyPacks(),
+            // TODO: add back when new party packs are ready to go
+            // ...this.getPartyPacks(),
         }
 
         return booking
@@ -179,13 +181,14 @@ export class PartyFormMapperV2 {
         return Object.keys(Additions).includes(addition)
     }
 
-    private getPartyPacks() {
-        const booking: Partial<Booking> = {}
-        this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                booking[pack] = true
-            }
-        })
-        return booking
-    }
+    // TODO: add back when new party packs are ready
+    // private getPartyPacks() {
+    //     const booking: Partial<Booking> = {}
+    //     this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
+    //         if (this.isValidAddition(pack)) {
+    //             booking[pack] = true
+    //         }
+    //     })
+    //     return booking
+    // }
 }
