@@ -73,6 +73,8 @@ export type Emails = {
         managerName: string
         managerMobile: string
         managerEmail: string
+        managerSubjectPronoun: string
+        managerObjectPronoun: string
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
         invitationsUrl: string

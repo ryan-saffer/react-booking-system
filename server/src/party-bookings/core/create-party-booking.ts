@@ -120,6 +120,8 @@ export async function createPartyBooking(_booking: Booking) {
                     managerName: manager.name,
                     managerEmail: manager.email,
                     managerMobile: manager.mobile,
+                    managerObjectPronoun: manager.objectPronoun,
+                    managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,

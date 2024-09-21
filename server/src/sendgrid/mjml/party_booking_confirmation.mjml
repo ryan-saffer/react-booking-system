@@ -85,9 +85,9 @@
           Contact
         </mj-text>
         <mj-text color="#637381" font-size="14px" padding-top="0">
-          Going forward, your best point of contact is our wonderful {{#isMobile}}mobile party{{/isMobile}}{{^isMobile}}{{ location }} store{{/isMobile}} manager, {{ managerName }}.
-          She will oversee the planning and running of {{ childName }}'s fabulous party!
-          You can contact {{ managerName }} on {{ managerMobile }} or email her at {{ managerEmail }}.
+          Going forward, your best point of contact is our wonderful {{#isMobile}}mobile party{{/isMobile}}{{^isMobile}}{{ location }} studio{{/isMobile}} manager, {{ managerName }}.
+          {{ managerSubjectPronoun }} will oversee the planning and running of {{ childName }}'s fabulous party!
+          You can contact {{ managerName }} on {{ managerMobile }} or email {{ managerObjectPronoun }} at {{ managerEmail }}.
           You can also just reply to this email directly :)
         </mj-text>
       </mj-column>

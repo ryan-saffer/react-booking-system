@@ -578,11 +578,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 id={createUniqueId(FormBookingFields.creation3, booking.id)}
                                 label="third creation"
                                 value={formValues[FormBookingFields.creation3].value || ''}
-                                disabled={
-                                    !editing || booking.type === 'studio'
-                                        ? booking.partyLength !== '2'
-                                        : booking.partyLength !== '1.5'
-                                }
+                                disabled={!editing}
                                 error={formValues[FormBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >
