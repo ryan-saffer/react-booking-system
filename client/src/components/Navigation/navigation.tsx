@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom'
 
 import { useOrg } from '@components/Session/use-org'
+import afterSchool from '@drawables/after-school.webp'
+import bodyGlitter from '@drawables/body-glitter.webp'
+import energy from '@drawables/energy.webp'
+import holidayPrograms from '@drawables/holiday-programs.webp'
+import jonah from '@drawables/jonah.webp'
+import parties from '@drawables/parties.webp'
 
 import styles from './navigation.module.css'
 
@@ -12,39 +18,35 @@ export const Navigation = () => {
             <div className="flex w-full max-w-lg flex-col">
                 <h2 className="lilita mb-3 mt-8 text-2xl">Programs</h2>
                 <div className="flex flex-col gap-3">
-                    <ListItem
-                        title="Parties, Events & Incursions"
-                        to="bookings"
-                        imgSrc="https://fizzkidz.com.au/images/parties.jpeg"
-                    />
-                    <ListItem
-                        title="Holiday Programs"
-                        to="holiday-program"
-                        imgSrc="https://fizzkidz.com.au/images/holiday-programs.jpeg"
-                    />
-                    <ListItem
-                        title="After School Program"
-                        to="after-school-program"
-                        imgSrc="https://fizzkidz.com.au/images/after-school.jpeg"
-                    />
+                    <ListItem title="Parties, Events & Incursions" to="bookings" imgSrc={parties} />
+                    <ListItem title="Holiday Programs" to="holiday-program" imgSrc={holidayPrograms} />
+                    <ListItem title="After School Program" to="after-school-program" imgSrc={afterSchool} />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>
-                <ListItem
-                    title="Creation Instructions"
-                    to="creations"
-                    imgSrc="https://fizzkidz.com.au/images/body-glitter.jpeg"
-                />
+                <ListItem title="Creation Instructions" to="creations" imgSrc={bodyGlitter} />
                 <h2 className="lilita mb-3 mt-8 text-2xl">Useful Links</h2>
-                <ListItem
-                    imgSrc="https://fizzkidz.com.au/images/energy.jpeg"
-                    title="Incident Reporting"
-                    onClick={() =>
-                        window.open(
-                            'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                            '_blank'
-                        )
-                    }
-                />
+                <div className="flex flex-col gap-3">
+                    <ListItem
+                        imgSrc={energy}
+                        title="Incident Reporting"
+                        onClick={() =>
+                            window.open(
+                                'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
+                                '_blank'
+                            )
+                        }
+                    />
+                    <ListItem
+                        imgSrc={jonah}
+                        title="Behaviour Management Plan"
+                        onClick={() =>
+                            window.open(
+                                'https://www.fizzkidz.com.au/holiday-programs-behaviour-management-plan.pdf',
+                                '_blank'
+                            )
+                        }
+                    />
+                </div>
                 {/* {(isAdmin || canAccessPayroll) && */}
                 {/* <> */}
                 {hasPermission('admin') && (
