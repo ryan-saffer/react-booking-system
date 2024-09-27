@@ -37,7 +37,7 @@
             Hi {{ contactName }},
           </mj-text>
           <mj-text color="#637381" font-size="16px" padding-bottom="16px">
-            Thank you for filling out the incursion form. Just to confirm, these are the dats and times of the incursion:
+            Thank you for filling out the incursion form. Just to confirm, these are the dates and times of the incursion:
           </mj-text>
           <mj-raw>
             <ul>
