@@ -7,6 +7,7 @@ import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import * as Logo from '@drawables/fizz-logo.png'
+import science from '@drawables/science.webp'
 import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -212,10 +213,7 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                 <Card className="mx-3 border-8 border-cyan-400">
                     <Form {...form}>
                         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-                            <img
-                                src="https://fizzkidz.com.au/images/science.jpg"
-                                className="h-28 w-full object-center object-cover"
-                            />
+                            <img src={science} className="h-28 w-full object-cover object-center" />
                             <CardHeader className="space-y-1 py-0">
                                 <h2 className="font-lilita text-xl">Hello friend!</h2>
                                 <CardDescription>
