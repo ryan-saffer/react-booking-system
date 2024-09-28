@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase-admin/auth'
-import { LocationOrMaster, ObjectKeys, Role, StaffAuthUser } from 'fizz-kidz'
+import { LocationOrMaster, ObjectKeys, Role, StaffUser } from 'fizz-kidz'
 
 import { TRPCError } from '@trpc/server'
 
@@ -33,6 +33,10 @@ export async function addUserToStudio({
             })
         }
 
+        // its impossible for an anonymous user to be found by email, since they don't have an email linked.
+        // so this is just needed to fix the types for below
+        if (dbUser.isAnonymous) return
+
         if (dbUser.accountType === 'customer') {
             // if the user already has a customer account, convert them to a staff account.
             dbUser = { ...dbUser, accountType: 'staff' } // important to update dbUser here, because it gets reassigned below, so doing this inline in the update function will break things.
@@ -40,7 +44,7 @@ export async function addUserToStudio({
         }
 
         // guaranteed to be a staff account at this point, cast it for types
-        dbUser = dbUser as StaffAuthUser
+        dbUser = dbUser as StaffUser
 
         if (dbUser.roles && ObjectKeys(dbUser.roles).includes(studio)) {
             // user already assigned to this studio
@@ -72,6 +76,7 @@ export async function addUserToStudio({
                     [studio]: role,
                 },
                 uid: newUser.uid,
+                isAnonymous: false,
             })
 
             // send them a welcome to the platform and a password reset link
