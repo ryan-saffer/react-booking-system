@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { ROLES } from 'fizz-kidz'
-import type { Role, StaffAuthUser } from 'fizz-kidz'
+import type { Role, StaffUser } from 'fizz-kidz'
 
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import { useAuth } from '@components/Hooks/context/useAuth'
@@ -30,8 +30,7 @@ import { NewUserDialog } from './new-user-dialog'
 
 import type { Row, SortingState } from '@tanstack/react-table'
 
-
-const columnHelper = createColumnHelper<StaffAuthUser>()
+const columnHelper = createColumnHelper<StaffUser>()
 
 export function ManageUsersTable() {
     const trpc = useTRPC()
@@ -47,17 +46,17 @@ export function ManageUsersTable() {
 
     const [removingUser, setRemovingUser] = useState<string | null>(null)
 
-    const [users, setUsers] = useState<Record<string, StaffAuthUser>>({})
+    const [users, setUsers] = useState<Record<string, StaffUser>>({})
     useEffect(() => {
         if (data) {
-            const users: Record<string, StaffAuthUser> = {}
+            const users: Record<string, StaffUser> = {}
             data.map((user) => (users[user.uid] = user))
             setUsers(users)
         }
     }, [data])
 
     const updateUser = useCallback(
-        async (row: Row<StaffAuthUser>, role: Role) => {
+        async (row: Row<StaffUser>, role: Role) => {
             const prevRoles = users[row.original.uid].roles
             try {
                 // optimistic update
@@ -241,7 +240,7 @@ export function ManageUsersTable() {
 
     const [sorting, setSorting] = useState<SortingState>([])
 
-    const table = useReactTable<StaffAuthUser>({
+    const table = useReactTable<StaffUser>({
         data: users && data ? data : [],
         columns,
         getCoreRowModel: getCoreRowModel(),
