@@ -1,5 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import { AuthUser, LocationOrMaster, Role, StaffUser } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
@@ -18,7 +18,7 @@ export const authRouter = router({
         .query(async ({ input }) => {
             if (!input.studio) return []
             const users = await DatabaseClient.getUsersByStudio(input.studio)
-            return users as StaffAuthUser[]
+            return users as StaffUser[]
         }),
     updateUserRole: authenticatedProcedure
         .input((input: unknown) => input as { uid: string; studio: LocationOrMaster; role: Role })

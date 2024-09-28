@@ -2,21 +2,31 @@ import { LocationOrMaster } from './location'
 import { Role } from './role'
 import { PartialRecord } from '..'
 
-type BaseAuthUser = {
+type BaseUser = {
     uid: string
-    email: string
     imageUrl: string | null
+    email?: string
     firstname?: string
     lastname?: string
 }
 
-export type StaffAuthUser = BaseAuthUser & {
+type BaseVerifiedUser = BaseUser & {
+    email: string
+    isAnonymous: false
+}
+
+export type StaffUser = BaseVerifiedUser & {
     roles?: PartialRecord<LocationOrMaster, Role>
     accountType: 'staff'
 }
 
-export type CustomerAuthUser = BaseAuthUser & {
+export type CustomerUser = BaseVerifiedUser & {
     accountType: 'customer'
 }
 
-export type AuthUser = StaffAuthUser | CustomerAuthUser
+export type AnonymousCustomerUser = BaseUser & {
+    accountType: 'customer'
+    isAnonymous: true
+}
+
+export type AuthUser = StaffUser | CustomerUser | AnonymousCustomerUser
