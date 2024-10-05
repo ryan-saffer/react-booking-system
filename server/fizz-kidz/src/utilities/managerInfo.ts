@@ -48,9 +48,9 @@ export function getManager(location: Location): {
             }
         case Location.MALVERN:
             return {
-                name: 'Emily',
+                name: 'Lami',
                 email: 'malvern@fizzkidz.com.au',
-                mobile: '0413 268 795',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
