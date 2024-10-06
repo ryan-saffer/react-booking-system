@@ -53,6 +53,7 @@
         "clsx": "^2.1.0",
         "date-fns": "^2.30.0",
         "dateformat": "^3.0.3",
+        "embla-carousel-react": "^8.3.0",
         "firebase": "^10.6.0",
         "fizz-kidz": "file:../server/fizz-kidz",
         "googleapis": "^39.2.0",
