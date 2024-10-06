@@ -123,6 +123,16 @@ const Account = lazy(() => import('./components/settings/account.js').then((modu
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
 )
+const CreateInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/create-invitation-page.js').then((module) => ({
+        default: module.CreateInvitationPage,
+    }))
+)
+const ChooseInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/choose-invitation-page.js').then((module) => ({
+        default: module.ChooseInvitationPage,
+    }))
+)
 
 const router = createBrowserRouter([
     {
@@ -437,6 +447,27 @@ const router = createBrowserRouter([
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ViewInvitationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: 'invitations-v2',
+                children: [
+                    {
+                        path: '',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <CreateInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'choose',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ChooseInvitationPageV2 />
                             </Suspense>
                         ),
                     },
