@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
                 '@constants': path.resolve(__dirname, './src/constants'),
                 '@drawables': path.resolve(__dirname, './src/drawables'),
                 '@utils': path.resolve(__dirname, './src/utilities'),
+                '@hooks': path.resolve(__dirname, './src/components/Hooks'),
             },
         },
         build: {

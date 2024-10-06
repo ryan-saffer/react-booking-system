@@ -140,10 +140,19 @@ const PlayLabSessionAttendancePage = lazy(() =>
         })
     )
 )
-
 const SchoolToStudioMapPage = lazy(() =>
     import('./components/after-school-program/school-to-studio-map/school-to-studio-map-page.js').then((module) => ({
         default: module.SchoolToStudioMapPage,
+    }))
+)
+const CreateInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/create-invitation-page.js').then((module) => ({
+        default: module.CreateInvitationPage,
+    }))
+)
+const ChooseInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/choose-invitation-page.js').then((module) => ({
+        default: module.ChooseInvitationPage,
     }))
 )
 
@@ -510,6 +519,27 @@ const router = createBrowserRouter([
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ViewInvitationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: 'invitations-v2',
+                children: [
+                    {
+                        path: '',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <CreateInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'choose',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ChooseInvitationPageV2 />
                             </Suspense>
                         ),
                     },

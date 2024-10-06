@@ -13,6 +13,7 @@
             "@constants/*": ["src/constants/*"],
             "@drawables/*": ["src/drawables/*"],
             "@utils/*": ["src/utilities/*"],
+            "@hooks/*": ["src/components/Hooks/*"],
             "fizz-kidz": ["../server/fizz-kidz/src"]
         },
 
