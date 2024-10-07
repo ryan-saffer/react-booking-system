@@ -1,9 +1,11 @@
 [images]
   remote_images = ["https://a-ap.storyblok.com/.*", "https://.*.cdninstagram.com/.*"]
 
+[build.processing.html]
+  pretty_urls = false
+
 [[redirects]]
   from = "/*/"
   to = "/:splat"
   status = 301
   force = true
-  conditions = { "path" = "/*.*/" }
