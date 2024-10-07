@@ -1,2 +1,8 @@
 [images]
   remote_images = ["https://a-ap.storyblok.com/.*", "https://.*.cdninstagram.com/.*"]
+
+[[redirects]]
+  from = "/*/"
+  to = "/:splat"
+  status = 301
+  force = true
