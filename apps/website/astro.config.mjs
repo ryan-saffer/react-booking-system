@@ -23,9 +23,6 @@ export default defineConfig({
     }),
   ],
   trailingSlash: "never",
-  build: {
-    format: "file",
-  },
   redirects: {
     "in-store-parties": "/birthday-parties",
     "glam-parties": "/birthday-parties/glam-parties",
