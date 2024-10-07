@@ -3,10 +3,3 @@
 
 [build.processing.html]
   pretty_urls = false
-
-[[redirects]]
-  from = "/*/"
-  to = "/:splat"
-  status = 301
-  force = true
-  conditions = { language = "en" }  # To apply it conditionally if needed
