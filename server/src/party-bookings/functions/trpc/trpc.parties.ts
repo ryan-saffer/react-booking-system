@@ -1,8 +1,9 @@
-import type { Booking, GenerateInvitation, Studio } from 'fizz-kidz'
+import type { Booking, GenerateInvitation, InvitationsV2, Studio } from 'fizz-kidz'
 
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
+import { generateInvitationV2 } from '@/party-bookings/core/generate-invitation-v2'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPartyFormUrl, getCakeFormUrl } from '@/party-bookings/core/utils.party'
 import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
@@ -30,4 +31,7 @@ export const partiesRouter = router({
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
+    generateInvitationV2: authenticatedProcedure
+        .input((input: unknown) => input as InvitationsV2.GenerateInvitation)
+        .mutation(({ input }) => generateInvitationV2(input)),
 })

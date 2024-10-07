@@ -1,6 +1,7 @@
 import { Location } from 'fizz-kidz'
 
 export type InvitationState = {
+    bookingId: string
     childName: string
     childAge: string
     date: Date
