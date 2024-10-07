@@ -9,6 +9,7 @@ import type {
     FirestoreBooking,
     HolidayProgramBooking,
     Invitation,
+    InvitationsV2,
     PaidHolidayProgramBooking,
 } from 'fizz-kidz'
 
@@ -95,8 +96,18 @@ export class FirestoreRefs {
         return (await FirestoreClient.getInstance()).collection('invitations') as Collection<Invitation>
     }
 
+    static async invitationsV2() {
+        return (await FirestoreClient.getInstance()).collection(
+            'invitations-v2'
+        ) as Collection<InvitationsV2.Invitation>
+    }
+
     static async invitation(id: string) {
         return (await this.invitations()).doc(id)
+    }
+
+    static async invitationV2(id: string) {
+        return (await this.invitationsV2()).doc(id)
     }
 
     static async discountCodes() {
