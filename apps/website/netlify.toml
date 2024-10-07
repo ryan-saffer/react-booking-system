@@ -9,3 +9,4 @@
   to = "/:splat"
   status = 301
   force = true
+  conditions = { language = "en" }  # To apply it conditionally if needed
