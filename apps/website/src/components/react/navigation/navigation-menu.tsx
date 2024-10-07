@@ -28,48 +28,48 @@ export const menu = [
   {
     title: "Birthday Parties",
     clickable: true,
-    path: "/birthday-parties",
+    path: "/birthday-parties/",
     subTitle: "See All Packages",
     type: "dropdown",
     items: [
       {
         title: "Glitz and Glam Parties",
-        path: "/birthday-parties/glam-parties",
+        path: "/birthday-parties/glam-parties/",
         type: "link",
       },
       {
         title: "Science Parties",
-        path: "/birthday-parties/science-parties",
+        path: "/birthday-parties/science-parties/",
         type: "link",
       },
       {
         title: "Slime Parties",
-        path: "/birthday-parties/slime-parties",
+        path: "/birthday-parties/slime-parties/",
         type: "link",
       },
       {
         title: "Safari Parties",
-        path: "/birthday-parties/safari-parties",
+        path: "/birthday-parties/safari-parties/",
         type: "link",
       },
       {
         title: "Unicorn Parties",
-        path: "/birthday-parties/unicorn-parties",
+        path: "/birthday-parties/unicorn-parties/",
         type: "link",
       },
       {
         title: "Tie Dye Parties",
-        path: "/birthday-parties/tie-dye-parties",
+        path: "/birthday-parties/tie-dye-parties/",
         type: "link",
       },
       {
         title: "Taylor Swift Parties",
-        path: "/birthday-parties/taylor-swift-parties",
+        path: "/birthday-parties/taylor-swift-parties/",
         type: "link",
       },
       {
         title: "At Home Parties",
-        path: "/birthday-parties/at-home-parties",
+        path: "/birthday-parties/at-home-parties/",
         type: "link",
       },
     ],
@@ -77,7 +77,7 @@ export const menu = [
   {
     type: "link",
     title: "Holiday Programs",
-    path: "/holiday-programs",
+    path: "/holiday-programs/",
   },
   // {
   //   type: "dropdown",
@@ -106,17 +106,17 @@ export const menu = [
       {
         type: "link",
         title: "After School Programs",
-        path: "/in-schools/after-school-programs",
+        path: "/in-schools/after-school-programs/",
       },
-      { type: "link", title: "Incursions", path: "/in-schools/incursions" },
+      { type: "link", title: "Incursions", path: "/in-schools/incursions/" },
     ],
   },
   {
     title: "Activations and Events",
     type: "link",
-    path: "/activations-and-events",
+    path: "/activations-and-events/",
   },
-  { title: "Franchising", type: "link", path: "/franchising" },
+  { title: "Franchising", type: "link", path: "/franchising/" },
   {
     title: "Fizz Facts",
     type: "dropdown",
@@ -125,13 +125,13 @@ export const menu = [
       {
         type: "link",
         title: "Contact Us",
-        path: "/contact-us",
+        path: "/contact-us/",
       },
-      { type: "link", title: "Locations", path: "/locations" },
-      { type: "link", title: "Our Team", path: "/our-team" },
-      { type: "link", title: "Careers", path: "/careers" },
+      { type: "link", title: "Locations", path: "/locations/" },
+      { type: "link", title: "Our Team", path: "/our-team/" },
+      { type: "link", title: "Careers", path: "/careers/" },
       // { type: "link", title: "Franchising", path: "/franchising" },
-      { type: "link", title: "Policies", path: "/policies" },
+      { type: "link", title: "Policies", path: "/policies/" },
     ],
   },
 ] as const satisfies MenuItem[];
