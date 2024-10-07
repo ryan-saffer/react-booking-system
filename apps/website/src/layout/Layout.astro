@@ -11,6 +11,8 @@ type Props = {
 };
 
 const { title, description } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <style is:global>
@@ -53,6 +55,7 @@ const { title, description } = Astro.props;
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content="/open-graph/home.jpg" />
     <meta name="twitter:image:alt" content="A child smiling" />
+    <link rel="canonical" href={canonicalUrl} />
   </head>
 
   <ViewTransitions />
