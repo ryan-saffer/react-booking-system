@@ -3,3 +3,9 @@
 
 [build.processing.html]
   pretty_urls = false
+
+[[redirects]]
+  from = "/*/"
+  to = "/:splat"
+  status = 301
+  force = true
