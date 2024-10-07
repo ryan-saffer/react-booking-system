@@ -91,12 +91,11 @@ export function LoginDialog({ open }: { open: boolean }) {
 
     return (
         <Dialog open={open}>
-            <DialogContent className="twp sm:max-w-[425px]">
+            <DialogContent className="twp sm:max-w-[425px]" hideCloseBtn>
                 <DialogHeader>
-                    <DialogTitle>Please login to continue</DialogTitle>
+                    <DialogTitle>Please create an account to continue</DialogTitle>
                     <DialogDescription>
-                        In order to share your invitation, and track RSVP's, you will need to create an account. This is
-                        to protect you and your guests' information.
+                        This is to protect you and your guests' information, so that you can track RSVP's.
                         <br />
                         <br />
                         It will just take 10 seconds, we promise!
@@ -115,7 +114,7 @@ export function LoginDialog({ open }: { open: boolean }) {
                     <Separator className="shrink" />
                 </div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full max-w-sm items-center gap-1.5">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full items-center gap-1.5">
                         <FormField
                             control={form.control}
                             name="email"

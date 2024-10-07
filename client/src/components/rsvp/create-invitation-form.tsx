@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { useRouterState } from '@hooks/use-router-state'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
@@ -17,7 +16,7 @@ import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
 import { INVITATIONS } from './constants/invitations'
-import { InvitationState } from './types'
+import { useInvitationRouterState } from './hooks/use-invitation-router-state'
 
 type TForm = {
     childName: string
@@ -39,32 +38,22 @@ export function CreateInvitationForm({
     selectedInvitationIdx: number
     onComplete: (invitationId: string) => void
 }) {
-    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
+    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitationV2.useMutation()
 
-    const state = useRouterState<InvitationState>()
+    const state = useInvitationRouterState()
 
     const form = useForm<TForm>({
         defaultValues: {
-            // childName: state?.childName || '',
-            // childAge: state?.childAge || '',
-            // date: state?.date,
-            // time: state?.time || '',
-            // type: state?.type || '',
-            // studio: state?.studio,
-            // address: state?.address || '',
-            // parentName: state?.parentName || '',
-            // rsvpDate: state?.rsvpDate,
-            // parentNumber: state?.parentNumber || '',
-            childName: 'Marlee',
-            childAge: '5',
-            date: new Date(),
-            time: '10am',
-            type: 'studio',
-            studio: Location.BALWYN,
-            address: '20 Mulgrave St, Elsternwick',
-            parentName: 'Ryan',
-            rsvpDate: new Date(),
-            parentNumber: '0413 892 120',
+            childName: state.childName,
+            childAge: state.childAge,
+            date: state.date,
+            time: state.time,
+            type: state.type,
+            studio: state.studio,
+            address: state.address,
+            parentName: state.parentName,
+            rsvpDate: state.rsvpDate,
+            parentNumber: state.parentNumber,
         },
     })
 
@@ -87,6 +76,7 @@ export function CreateInvitationForm({
                     rsvpDate: values.rsvpDate,
                     rsvpNumber: values.parentNumber,
                     invitation: INVITATIONS[selectedInvitationIdx].name,
+                    bookingId: state!.bookingId!,
                 })
             } else if (values.type === 'mobile') {
                 result = await generateInvitation({
@@ -100,12 +90,12 @@ export function CreateInvitationForm({
                     rsvpDate: values.rsvpDate,
                     rsvpNumber: values.parentNumber,
                     invitation: INVITATIONS[selectedInvitationIdx].name,
+                    bookingId: state!.bookingId!,
                 })
             }
 
             onComplete(result)
         } catch (err) {
-            console.error(err)
             toast.error('There was an error generating your invitation.')
         }
     }

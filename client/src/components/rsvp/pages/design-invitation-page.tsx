@@ -4,6 +4,7 @@ import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useAuth } from '@components/Hooks/context/useAuth'
 import { Button } from '@ui-components/button'
 import { Card, CardContent } from '@ui-components/card'
 import {
@@ -15,24 +16,25 @@ import {
     CarouselPrevious,
 } from '@ui-components/carousel'
 
-import { useRouterState } from '../../Hooks/use-router-state'
 import { INVITATIONS } from '../constants/invitations'
 import { CreateInvitationForm } from '../create-invitation-form'
+import { useInvitationRouterState } from '../hooks/use-invitation-router-state'
+import { LoginDialog } from '../login-dialog'
 import { Navbar } from '../navbar'
-import { InvitationState } from '../types'
 
-export function ChooseInvitationPage() {
-    const state = useRouterState<InvitationState>()
+export function DesignInvitationPage() {
+    const auth = useAuth()
+    const { childName } = useInvitationRouterState()
 
-    const childName = state.childName || ''
-
-    const [step, setStep] = useState(3)
-    const [invitationId, setInvitationId] = useState('BTWs4KNVGL3SBMqeJkQl')
+    const [step, setStep] = useState(1)
+    const [invitationId, setInvitationId] = useState('')
 
     const navigate = useNavigate()
 
     const [api, setApi] = useState<CarouselApi>()
     const [selectedInvitation, setSelectedInvitation] = useState(0)
+
+    const [finishPressed, setFinishPressed] = useState(false)
 
     useEffect(() => {
         if (!api) {
@@ -46,14 +48,29 @@ export function ChooseInvitationPage() {
         })
     }, [api])
 
+    useEffect(() => {
+        window.scrollTo({ top: 0 })
+    }, [step])
+
+    useEffect(() => {
+        if (!!auth && !auth.isAnonymous && finishPressed) {
+            // TODO: link invitation to booking and move to RSVP screen
+            console.log('time to link invitation and navigate to RSVP!')
+            navigate('/invitations-v2/manage/123')
+        }
+    }, [finishPressed, auth, navigate])
+
     function nextStep() {
-        setStep((prev) => prev + 1)
+        if (step === 3) {
+            setFinishPressed(true)
+        } else {
+            setStep((prev) => prev + 1)
+        }
     }
 
     function goBack() {
         if (step === 1) {
             navigate(-1)
-            // navigate('choose', { state })
             return
         }
 
@@ -82,7 +99,8 @@ export function ChooseInvitationPage() {
                     }}
                 />
             )}
-            {step === 3 && <Step3 invitationId={invitationId} />}
+            {step === 3 && <Step3 invitationId={invitationId} nextStep={nextStep} />}
+            <LoginDialog open={!!auth && auth.isAnonymous && finishPressed} />
         </div>
     )
 }
@@ -95,7 +113,7 @@ function Step1({ setApi, nextStep }: { setApi: (api: CarouselApi) => void; nextS
                 <br />
                 Choose the design of your invite
             </p>
-            <div className="flex justify-center pt-8">
+            <div className="flex justify-center pb-24 pt-8">
                 <Carousel className="w-[calc(100%-128px)]" setApi={setApi}>
                     <CarouselContent>
                         {INVITATIONS.map((invitation, index) => (
@@ -134,15 +152,13 @@ function Step2({
 }) {
     return (
         <>
-            <p className="mt-4 text-center">
-                Now let's put in your details to customise and share your invitation and manage your RSVP
-            </p>
+            <p className="my-8 text-center">Put in your details to customise your invitation.</p>
             <CreateInvitationForm selectedInvitationIdx={selectedInvitation} onComplete={onInvitationGenerated} />
         </>
     )
 }
 
-function Step3({ invitationId }: { invitationId: string }) {
+function Step3({ invitationId, nextStep }: { invitationId: string; nextStep: () => void }) {
     const firebase = useFirebase()
 
     const [invitationUrl, setInvitationUrl] = useState('')
@@ -163,19 +179,20 @@ function Step3({ invitationId }: { invitationId: string }) {
 
     return (
         <>
-            <p className="my-4 text-center">You're invitation is ready!</p>
-            <div className="flex items-center justify-center px-8 ">
-                <Img src={invitationUrl} loader={<Loader2 className="animate-spin" />} className="h-full" />
-            </div>
-            <Button className="mx-auto my-4 flex justify-center rounded-3xl bg-gray-800 px-16">Edit</Button>
-            <div className="pb-32" />
-            <div className="fixed bottom-0 w-full">
-                <div className="flex">
-                    <button className="h-16 w-1/2 bg-[#02D7F7] font-semibold">DOWNLOAD</button>
-                    <button className="h-16 w-1/2 bg-[#FFDC5D] font-semibold">SHARE</button>
+            <div className="px-8">
+                <p className="my-4 text-center">You're invitation is ready!</p>
+                <p className="my-4 text-center">Use the back arrow to edit the details or choose a different design.</p>
+                <div className="flex items-center justify-center">
+                    <Img src={invitationUrl} loader={<Loader2 className="animate-spin" />} className="h-full border" />
                 </div>
-                <button className="h-16 w-full bg-[#9B3EEA] text-center font-semibold text-white">NEXT</button>
+                <div className="pb-24" />
             </div>
+            <button
+                onClick={nextStep}
+                className="fixed bottom-0 h-16 w-full bg-[#9B3EEA] text-center font-semibold text-white"
+            >
+                FINISH AND SHARE
+            </button>
         </>
     )
 }

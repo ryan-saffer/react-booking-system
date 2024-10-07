@@ -11,6 +11,7 @@ export { Permission, RolePermissionMap } from './core/permission'
 export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './partyBookings/booking'
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
 export * from './partyBookings/Invitations'
+export * as InvitationsV2 from './partyBookings/invitations-v2'
 //#endregion
 
 //#region Acuity
