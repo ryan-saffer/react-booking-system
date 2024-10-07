@@ -58,11 +58,11 @@ import DinosaurFossils from "@/components/creations/dinosaur-fossils.astro";
     <div class="h-[10px]"></div>
     <BreadcrumbWrapper
       items={[
-        { type: "link", title: "Birthday Parties", path: "/birthday-parties" },
+        { type: "link", title: "Birthday Parties", path: "/birthday-parties/" },
         {
           type: "link",
           title: "Creations",
-          path: "birthday-parties/creations",
+          path: "birthday-parties/creations/",
         },
       ]}
     />
@@ -72,7 +72,7 @@ import DinosaurFossils from "@/components/creations/dinosaur-fossils.astro";
       subtitle="View all our creation options here"
       color="pink"
       actionButtonText="Book a party"
-      actionButtonPath="/birthday-parties/book-a-party#book"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
     >
       <span slot="title">Fizz Kidz Creations</span>
     </PageIntro>
