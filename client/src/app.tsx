@@ -548,7 +548,7 @@ const router = createBrowserRouter([
                         ),
                     },
                     {
-                        path: 'manage/:id',
+                        path: ':id',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ManageRsvpsPage />
