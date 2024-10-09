@@ -5,5 +5,5 @@ import { useAuth } from '@components/Hooks/context/useAuth'
 export function SignedOut({ children }: { children: ReactNode }) {
     const user = useAuth()
 
-    return user ? null : children
+    return user && !user.isAnonymous ? null : children
 }
