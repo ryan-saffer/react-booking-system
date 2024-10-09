@@ -36,13 +36,8 @@ export function LoginDialog({ open }: { open: boolean }) {
             console.log('link succesful')
         } catch (err: any) {
             console.error({ err })
-            if (err.code === 'auth/credential-already-in-use') {
+            if (err.code === 'auth/credential-already-in-use' || err.code === 'auth/email-already-in-use') {
                 try {
-                    // TODO: User already exists, so move their invitation data to the existing user
-                    // 1. look up the existing users uid using the err.customData.email
-                    // 2. move their invitation data to this user
-                    // 3. sign in using this credential (err.credential)
-
                     await firebase.signInWithCredential(err.credential)
                     return
                 } catch (error: any) {
@@ -55,7 +50,6 @@ export function LoginDialog({ open }: { open: boolean }) {
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log({ values })
         try {
             setLoading(true)
             await firebase.doCreateUserWithEmailAndPassword(values.email, values.password)

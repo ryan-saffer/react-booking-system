@@ -1,7 +1,14 @@
 import fs from 'fs'
 import path from 'path'
 
-import { InvitationOption, InvitationsV2, getLocationAddress } from 'fizz-kidz'
+import {
+    InvitationOption,
+    InvitationsV2,
+    WithUid,
+    WithoutId,
+    generateRandomString,
+    getLocationAddress,
+} from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
@@ -9,13 +16,20 @@ import puppeteer, { Browser } from 'puppeteer'
 
 import chromium from '@sparticuz/chromium'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { projectId } from '../../init'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
-export async function generateInvitationV2(input: InvitationsV2.GenerateInvitation) {
+/**
+ * Creates and uploads an invitation to storage, but does not create a document in firestore.
+ *
+ * Many invitations can be created, but a booking can only have one invitation linked to it.
+ * Linking an invitation happens after the invitation has been created, and the parent confirms to finalize.
+ *
+ * @param input
+ * @returns
+ */
+export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV2.Invitation>>) {
     // serialise back into a date
     input.date = new Date(input.date)
     input.rsvpDate = new Date(input.rsvpDate)
@@ -52,10 +66,9 @@ export async function generateInvitationV2(input: InvitationsV2.GenerateInvitati
     await page.setContent(output)
     const filename = 'invitation.png'
 
-    const newDocRef = (await FirestoreRefs.invitationsV2()).doc()
-    const newDocId = newDocRef.id
+    const id = generateRandomString()
 
-    const destination = `invitations/${newDocId}/${filename}`
+    const destination = `invitations-v2/${id}/${filename}`
 
     if (!fs.existsSync(`${__dirname}/temp`)) {
         await fsPromise.mkdir(`${__dirname}/temp`)
@@ -69,17 +82,27 @@ export async function generateInvitationV2(input: InvitationsV2.GenerateInvitati
     await storage.bucket(`${projectId}.appspot.com`).upload(`${__dirname}/temp/${filename}`, {
         destination,
     })
-    await DatabaseClient.createInvitation(newDocRef, input.date)
-    await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
+
+    // delete the file, and if the temp directory is empty afterwards, delete it
+    await fsPromise.rm(`${__dirname}/temp/${filename}`)
+    const files = await fsPromise.readdir(`${__dirname}/temp`)
+    if (files.length === 0) {
+        await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
+    }
 
     const mixpanel = await MixpanelClient.getInstance()
-    await mixpanel.track('invitation-generated', {
-        invitationId: newDocId,
+    await mixpanel.track('invitation-generated-v2', {
+        uid: input.uid,
+        invitationId: id,
         partyDate: input.date,
         invitation: input.invitation,
+        bookingId: input.bookingId,
+        parentName: input.rsvpName,
     })
 
-    return newDocId
+    console.log({ invitationId: id })
+
+    return id
 }
 
 const FileMap: Record<InvitationOption, string> = {

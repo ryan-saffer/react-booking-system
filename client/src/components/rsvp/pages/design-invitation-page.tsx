@@ -1,7 +1,9 @@
+import { InvitationsV2, WithoutUid } from 'fizz-kidz'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
@@ -15,6 +17,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@ui-components/carousel'
+import { trpc } from '@utils/trpc'
 
 import { INVITATIONS } from '../constants/invitations'
 import { CreateInvitationForm } from '../create-invitation-form'
@@ -27,7 +30,7 @@ export function DesignInvitationPage() {
     const { childName } = useInvitationRouterState()
 
     const [step, setStep] = useState(1)
-    const [invitationId, setInvitationId] = useState('')
+    const [invitation, setInvitation] = useState<WithoutUid<InvitationsV2.Invitation> | null>(null)
 
     const navigate = useNavigate()
 
@@ -35,6 +38,8 @@ export function DesignInvitationPage() {
     const [selectedInvitation, setSelectedInvitation] = useState(0)
 
     const [finishPressed, setFinishPressed] = useState(false)
+
+    const { mutateAsync: linkInvitation } = trpc.parties.linkInvitation.useMutation()
 
     useEffect(() => {
         if (!api) {
@@ -52,13 +57,27 @@ export function DesignInvitationPage() {
         window.scrollTo({ top: 0 })
     }, [step])
 
+    const hasCreatedAccount = !!auth && !auth.isAnonymous && finishPressed
+
     useEffect(() => {
-        if (!!auth && !auth.isAnonymous && finishPressed) {
-            // TODO: link invitation to booking and move to RSVP screen
-            console.log('time to link invitation and navigate to RSVP!')
-            navigate('/invitations-v2/manage/123')
+        async function _linkInvitation() {
+            if (hasCreatedAccount && invitation) {
+                try {
+                    await linkInvitation(invitation)
+                    navigate(`/invitations-v2/${invitation.id}`)
+                } catch (err: any) {
+                    toast.error(err?.message || 'There was an error finalising your invitation.', {
+                        duration: Infinity,
+                        closeButton: true,
+                    })
+                } finally {
+                    setFinishPressed(false)
+                }
+            }
         }
-    }, [finishPressed, auth, navigate])
+
+        _linkInvitation()
+    }, [hasCreatedAccount, invitation, linkInvitation, navigate])
 
     function nextStep() {
         if (step === 3) {
@@ -93,13 +112,15 @@ export function DesignInvitationPage() {
             {step === 2 && (
                 <Step2
                     selectedInvitation={selectedInvitation}
-                    onInvitationGenerated={(invitationId) => {
-                        setInvitationId(invitationId)
+                    onInvitationGenerated={(invitation) => {
+                        setInvitation(invitation)
                         nextStep()
                     }}
                 />
             )}
-            {step === 3 && <Step3 invitationId={invitationId} nextStep={nextStep} />}
+            {step === 3 && invitation && (
+                <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
+            )}
             <LoginDialog open={!!auth && auth.isAnonymous && finishPressed} />
         </div>
     )
@@ -148,7 +169,7 @@ function Step2({
     onInvitationGenerated,
 }: {
     selectedInvitation: number
-    onInvitationGenerated: (invitationId: string) => void
+    onInvitationGenerated: (invitation: WithoutUid<InvitationsV2.Invitation>) => void
 }) {
     return (
         <>
@@ -158,7 +179,7 @@ function Step2({
     )
 }
 
-function Step3({ invitationId, nextStep }: { invitationId: string; nextStep: () => void }) {
+function Step3({ invitationId, nextStep, loading }: { invitationId: string; nextStep: () => void; loading: boolean }) {
     const firebase = useFirebase()
 
     const [invitationUrl, setInvitationUrl] = useState('')
@@ -168,14 +189,16 @@ function Step3({ invitationId, nextStep }: { invitationId: string; nextStep: () 
             if (invitationId) {
                 const url = await firebase.storage
                     .ref()
-                    .child(`invitations/${invitationId}/invitation.png`)
+                    .child(`invitations-v2/${invitationId}/invitation.png`)
                     .getDownloadURL()
                 setInvitationUrl(url)
-                console.log(url)
+                console.log({ url })
             }
         }
         getInvitation()
     }, [invitationId, firebase.storage])
+
+    console.log({ invitationId })
 
     return (
         <>
@@ -189,9 +212,9 @@ function Step3({ invitationId, nextStep }: { invitationId: string; nextStep: () 
             </div>
             <button
                 onClick={nextStep}
-                className="fixed bottom-0 h-16 w-full bg-[#9B3EEA] text-center font-semibold text-white"
+                className="fixed bottom-0 flex h-16 w-full items-center justify-center bg-[#9B3EEA] text-center font-semibold text-white"
             >
-                FINISH AND SHARE
+                {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'FINISH AND SHARE'}
             </button>
         </>
     )

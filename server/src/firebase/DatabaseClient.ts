@@ -11,6 +11,7 @@ import type {
     WithoutId,
     StudioOrMaster,
     AuthUser,
+    InvitationsV2,
 } from 'fizz-kidz'
 import type { Document } from './FirestoreRefs'
 import { FirestoreRefs } from './FirestoreRefs'
@@ -236,6 +237,18 @@ class Client {
             },
             ref
         )
+    }
+
+    async createInvitationV2(invitation: InvitationsV2.Invitation) {
+        return this.#createDocument(invitation, (await FirestoreRefs.invitationsV2()).doc(invitation.id))
+    }
+
+    getInvitationV2(invitationId: string) {
+        return this.#getDocument(FirestoreRefs.invitationV2(invitationId))
+    }
+
+    async deleteInvitationV2(invitationId: string) {
+        return (await FirestoreRefs.invitationV2(invitationId)).delete()
     }
 
     async addGuestToInvitation(person: Invitation['claimedDiscountCode'][number], invitationId: string) {
