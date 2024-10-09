@@ -61,17 +61,13 @@ export function LoginDialog({ open }: { open: boolean }) {
                     <div className="flex items-center gap-4 font-medium">
                         <Info className="h-10 w-10" />
                         <span>
-                            An account with this email already exists. If you have forgotten your password, you can{' '}
-                            <Link
-                                to="/reset-password"
-                                state={{
-                                    afterLoginUrl: '/invitations-v2/choose',
-                                }}
-                                className="font-bold text-destructive"
-                            >
-                                reset it here.
+                            An account with this email already exists. Please
+                            <Link to="/sign-in" className="font-bold text-destructive">
+                                sign in
                             </Link>
                         </span>
+                        to your account, and then open the link in your booking confirmation email to generate your
+                        invitation again.
                     </div>,
                     { duration: 10000, closeButton: true }
                 )
