@@ -52,6 +52,14 @@ export class MixpanelClient {
 
 export type MixpanelEvent = {
     'invitation-generated': { invitationId: string; partyDate: Date; invitation: InvitationOption }
+    'invitation-generated-v2': {
+        uid: string
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationOption
+        parentName: string
+    }
     'invitation-coupon-signup': {
         invitationId: string
         view: // used the sidebar on desktop
@@ -65,5 +73,6 @@ export type MixpanelEvent = {
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
+    'invitation-generated-v2': 'Invitation Generated',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
 }

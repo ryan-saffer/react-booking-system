@@ -12,6 +12,7 @@ import type {
     WithoutId,
     LocationOrMaster,
     AuthUser,
+    InvitationsV2,
 } from 'fizz-kidz'
 import { FirestoreRefs, Document } from './FirestoreRefs'
 import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
@@ -247,6 +248,18 @@ class Client {
             },
             ref
         )
+    }
+
+    async createInvitationV2(invitation: InvitationsV2.Invitation) {
+        return this.#createDocument(invitation, (await FirestoreRefs.invitationsV2()).doc(invitation.id))
+    }
+
+    getInvitationV2(invitationId: string) {
+        return this.#getDocument(FirestoreRefs.invitationV2(invitationId))
+    }
+
+    async deleteInvitationV2(invitationId: string) {
+        return (await FirestoreRefs.invitationV2(invitationId)).delete()
     }
 
     async addGuestToInvitation(person: Invitation['claimedDiscountCode'][number], invitationId: string) {
