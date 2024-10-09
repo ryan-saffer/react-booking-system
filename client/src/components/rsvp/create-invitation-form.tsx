@@ -94,8 +94,16 @@ export function CreateInvitationForm({
             const result = await generateInvitation(invitation)
             console.log({ result })
             onComplete({ ...invitation, id: result })
-        } catch (err) {
-            toast.error('There was an error generating your invitation.')
+        } catch (err: any) {
+            if (err?.data?.code === 'UNAUTHORIZED') {
+                // This route is not technically protected, and clearing cookies can remove their anonymous login.
+                // In this case, they must return to the starting screen and sign in anonymously again.
+                toast.error(
+                    'There was an error generating your invitation. Please return to the link sent to you in your booking confirmation email.'
+                )
+            } else {
+                toast.error('There was an error generating your invitation.')
+            }
         }
     }
 
@@ -111,7 +119,12 @@ export function CreateInvitationForm({
                             <FormItem>
                                 <FormLabel>Child's Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Child's Name" autoComplete="off" {...field} />
+                                    <Input
+                                        placeholder="Child's Name"
+                                        autoComplete="off"
+                                        disabled={isLoading}
+                                        {...field}
+                                    />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -124,7 +137,12 @@ export function CreateInvitationForm({
                             <FormItem>
                                 <FormLabel>Child's Age</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Child's Age" autoComplete="off" {...field} />
+                                    <Input
+                                        placeholder="Child's Age"
+                                        autoComplete="off"
+                                        disabled={isLoading}
+                                        {...field}
+                                    />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -141,6 +159,7 @@ export function CreateInvitationForm({
                                         <FormControl>
                                             <Button
                                                 variant={'outline'}
+                                                disabled={isLoading}
                                                 className={cn(
                                                     'pl-3 text-left font-normal',
                                                     !field.value && 'text-muted-foreground'
@@ -174,7 +193,7 @@ export function CreateInvitationForm({
                             <FormItem>
                                 <FormLabel>Time (Ie 10am - 11:30am)</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Time" autoComplete="off" {...field} />
+                                    <Input placeholder="Time" autoComplete="off" disabled={isLoading} {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -186,7 +205,11 @@ export function CreateInvitationForm({
                         render={({ field }) => {
                             return (
                                 <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        disabled={isLoading}
+                                        defaultValue={field.value}
+                                    >
                                         <FormLabel>Party Location</FormLabel>
                                         <FormControl>
                                             <SelectTrigger>
@@ -215,7 +238,11 @@ export function CreateInvitationForm({
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        disabled={isLoading}
+                                    >
                                         <FormLabel>Studio</FormLabel>
                                         <FormControl>
                                             <SelectTrigger>
@@ -249,7 +276,12 @@ export function CreateInvitationForm({
                                 <FormItem>
                                     <FormLabel>Address</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Address" autoComplete="off" {...field} />
+                                        <Input
+                                            placeholder="Address"
+                                            autoComplete="off"
+                                            disabled={isLoading}
+                                            {...field}
+                                        />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -263,7 +295,7 @@ export function CreateInvitationForm({
                             <FormItem className="pb-2">
                                 <FormLabel>RSVP Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="RSVP Name" autoComplete="off" {...field} />
+                                    <Input placeholder="RSVP Name" autoComplete="off" disabled={isLoading} {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -280,6 +312,7 @@ export function CreateInvitationForm({
                                         <FormControl>
                                             <Button
                                                 variant={'outline'}
+                                                disabled={isLoading}
                                                 className={cn(
                                                     'pl-3 text-left font-normal',
                                                     !field.value && 'text-muted-foreground'
@@ -313,7 +346,12 @@ export function CreateInvitationForm({
                             <FormItem className="pb-4">
                                 <FormLabel>RSVP Mobile Number</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="RSVP Mobile Number" autoComplete="off" {...field} />
+                                    <Input
+                                        placeholder="RSVP Mobile Number"
+                                        autoComplete="off"
+                                        disabled={isLoading}
+                                        {...field}
+                                    />
                                 </FormControl>
                             </FormItem>
                         )}

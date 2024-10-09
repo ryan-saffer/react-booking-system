@@ -10,7 +10,7 @@ import { useOrg } from './use-org'
 export function ProtectedRoute({ permission, children }: { permission: Permission; children: ReactNode }) {
     const authUser = useAuth()
     const { hasPermission } = useOrg()
-    if (!authUser) {
+    if (!authUser || authUser.isAnonymous) {
         return <Navigate to="/sign-in" />
     }
 

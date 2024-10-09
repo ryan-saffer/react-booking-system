@@ -27,7 +27,9 @@ import { Navbar } from '../navbar'
 
 export function DesignInvitationPage() {
     const auth = useAuth()
-    const { childName } = useInvitationRouterState()
+
+    const state = useInvitationRouterState()
+    const { childName } = state
 
     const [step, setStep] = useState(1)
     const [invitation, setInvitation] = useState<WithoutUid<InvitationsV2.Invitation> | null>(null)
@@ -41,6 +43,7 @@ export function DesignInvitationPage() {
 
     const { mutateAsync: linkInvitation } = trpc.parties.linkInvitation.useMutation()
 
+    // track selected carousel item
     useEffect(() => {
         if (!api) {
             return
@@ -53,12 +56,14 @@ export function DesignInvitationPage() {
         })
     }, [api])
 
+    // scroll to top when moving between steps
     useEffect(() => {
         window.scrollTo({ top: 0 })
     }, [step])
 
     const hasCreatedAccount = !!auth && !auth.isAnonymous && finishPressed
 
+    // listening for when both authenticated and ready to move on
     useEffect(() => {
         async function _linkInvitation() {
             if (hasCreatedAccount && invitation) {
@@ -205,8 +210,15 @@ function Step3({ invitationId, nextStep, loading }: { invitationId: string; next
             <div className="px-8">
                 <p className="my-4 text-center">You're invitation is ready!</p>
                 <p className="my-4 text-center">Use the back arrow to edit the details or choose a different design.</p>
-                <div className="flex items-center justify-center">
-                    <Img src={invitationUrl} loader={<Loader2 className="animate-spin" />} className="h-full border" />
+                <div className="relative flex items-center justify-center">
+                    <Img
+                        src={invitationUrl}
+                        loader={<Loader2 className="animate-spin" />}
+                        className="h-full border"
+                        onContextMenu={() => false}
+                    />
+                    {/* Covers the image so it can't be right clicked and downloaded */}
+                    <div className="absolute h-full w-full" />
                 </div>
                 <div className="pb-24" />
             </div>
