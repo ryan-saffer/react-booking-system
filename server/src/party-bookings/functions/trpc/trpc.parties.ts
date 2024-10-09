@@ -1,4 +1,4 @@
-import { Booking, GenerateInvitation, InvitationsV2, Location } from 'fizz-kidz'
+import { Booking, GenerateInvitation, InvitationsV2, Location, WithoutId, WithoutUid } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
@@ -7,6 +7,7 @@ import { createPartyBooking } from '../../core/create-party-booking'
 import { deletePartyBooking } from '../../core/delete-party-booking'
 import { generateInvitation } from '../../core/generate-invitation'
 import { generateInvitationV2 } from '../../core/generate-invitation-v2'
+import { linkInvitation } from '../../core/link-invitation'
 import { updatePartyBooking } from '../../core/update-party-booking'
 import { getPrefilledFormUrl } from '../../core/utils.party'
 
@@ -34,8 +35,11 @@ export const partiesRouter = router({
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
     generateInvitationV2: authenticatedProcedure
-        .input((input: unknown) => input as InvitationsV2.GenerateInvitation)
-        .mutation(({ input }) => generateInvitationV2(input)),
+        .input((input: unknown) => input as WithoutId<WithoutUid<InvitationsV2.Invitation>>)
+        .mutation(({ input, ctx }) => generateInvitationV2({ ...input, uid: ctx.uid })),
+    linkInvitation: authenticatedProcedure
+        .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
+        .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
 })
 
 export const parties = onRequestTrpc(partiesRouter, '2GiB')

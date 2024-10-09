@@ -314,6 +314,16 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: 'Food package is required',
         },
+        invitationId: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        invitationOwnerUid: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
     }
 }
 
@@ -364,5 +374,7 @@ function getEmptyDomainBooking(): FormBooking {
         sendConfirmationEmail: true,
         oldPrices: false,
         includesFood: false,
+        invitationId: undefined,
+        invitationOwnerUid: undefined,
     }
 }

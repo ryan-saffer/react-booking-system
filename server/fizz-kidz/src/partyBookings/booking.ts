@@ -9,7 +9,7 @@ import { Creations } from './Creations'
 type AdditionKeys = keyof typeof Additions
 type AdditionKeyValues = { [key in AdditionKeys]: boolean }
 
-export interface BaseBooking extends AdditionKeyValues {
+export type BaseBooking = AdditionKeyValues & {
     eventId?: string
     parentFirstName: string
     parentLastName: string
@@ -35,21 +35,27 @@ export interface BaseBooking extends AdditionKeyValues {
     sendConfirmationEmail: boolean
     oldPrices: boolean
     includesFood: boolean
-}
+} & (
+        | {
+              invitationId: undefined
+              invitationOwnerUid: undefined // needed for security rules on the rsvps collection
+          }
+        | { invitationId: string; invitationOwnerUid: string }
+    )
 
 // separates date and time into separate values, for better use in forms
-export interface FormBooking extends BaseBooking {
+export type FormBooking = BaseBooking & {
     date: Date
     time: Date
 }
 
 // combines dateTime into single date
-export interface Booking extends BaseBooking {
+export type Booking = BaseBooking & {
     dateTime: Date
 }
 
 // used when retrieving from firestore, where dateTime is a firestore Timestamp
-export interface FirestoreBooking extends BaseBooking {
+export type FirestoreBooking = BaseBooking & {
     dateTime: firestore.Timestamp
 }
 
@@ -101,6 +107,8 @@ export const FormBookingFields: FormBookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    invitationId: 'invitationId',
+    invitationOwnerUid: 'invitationOwnerUid',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -150,4 +158,6 @@ export const BookingFields: BookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    invitationId: 'invitationId',
+    invitationOwnerUid: 'invitationOwnerUid',
 }
