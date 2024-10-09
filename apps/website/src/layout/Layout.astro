@@ -24,6 +24,22 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   }
 </style>
 
+<script is:inline>
+  /**
+   * This allows navigation directly to a hash route, where it will smoothly scroll after arriving on the page.
+   */
+  document.addEventListener("astro:page-load", () => {
+    if (window.location.hash) {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+        }, 100); // A slight delay to ensure the page has fully loaded
+      }
+    }
+  });
+</script>
+
 <html lang="en" transition:animate="none" class="h-full">
   <head>
     <!-- Google tag (gtag.js) -->
