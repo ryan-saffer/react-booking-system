@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { Location } from 'fizz-kidz'
+import { InvitationsV2, Location, WithoutUid } from 'fizz-kidz'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -36,7 +36,7 @@ export function CreateInvitationForm({
     onComplete,
 }: {
     selectedInvitationIdx: number
-    onComplete: (invitationId: string) => void
+    onComplete: (invitation: WithoutUid<InvitationsV2.Invitation>) => void
 }) {
     const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitationV2.useMutation()
 
@@ -63,38 +63,37 @@ export function CreateInvitationForm({
 
     const onSubmit = async (values: TForm) => {
         try {
-            let result = ''
-            if (values.type === 'studio') {
-                result = await generateInvitation({
-                    childName: values.childName,
-                    childAge: values.childAge,
-                    time: values.time,
-                    date: values.date,
-                    $type: 'studio',
-                    studio: values.studio,
-                    rsvpName: values.parentName,
-                    rsvpDate: values.rsvpDate,
-                    rsvpNumber: values.parentNumber,
-                    invitation: INVITATIONS[selectedInvitationIdx].name,
-                    bookingId: state!.bookingId!,
-                })
-            } else if (values.type === 'mobile') {
-                result = await generateInvitation({
-                    childName: values.childName,
-                    childAge: values.childAge,
-                    time: values.time,
-                    date: values.date,
-                    $type: 'mobile',
-                    address: values.address,
-                    rsvpName: values.parentName,
-                    rsvpDate: values.rsvpDate,
-                    rsvpNumber: values.parentNumber,
-                    invitation: INVITATIONS[selectedInvitationIdx].name,
-                    bookingId: state!.bookingId!,
-                })
-            }
-
-            onComplete(result)
+            const invitation =
+                values.type === 'studio'
+                    ? ({
+                          childName: values.childName,
+                          childAge: values.childAge,
+                          time: values.time,
+                          date: values.date,
+                          $type: 'studio',
+                          studio: values.studio,
+                          rsvpName: values.parentName,
+                          rsvpDate: values.rsvpDate,
+                          rsvpNumber: values.parentNumber,
+                          invitation: INVITATIONS[selectedInvitationIdx].name,
+                          bookingId: state!.bookingId!,
+                      } as const)
+                    : ({
+                          childName: values.childName,
+                          childAge: values.childAge,
+                          time: values.time,
+                          date: values.date,
+                          $type: 'mobile',
+                          address: values.address,
+                          rsvpName: values.parentName,
+                          rsvpDate: values.rsvpDate,
+                          rsvpNumber: values.parentNumber,
+                          invitation: INVITATIONS[selectedInvitationIdx].name,
+                          bookingId: state!.bookingId!,
+                      } as const)
+            const result = await generateInvitation(invitation)
+            console.log({ result })
+            onComplete({ ...invitation, id: result })
         } catch (err) {
             toast.error('There was an error generating your invitation.')
         }

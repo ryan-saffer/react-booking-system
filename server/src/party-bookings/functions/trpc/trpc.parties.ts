@@ -1,9 +1,10 @@
-import type { Booking, GenerateInvitation, InvitationsV2, Studio } from 'fizz-kidz'
+import type { Booking, GenerateInvitation, InvitationsV2, Studio, WithoutId, WithoutUid } from 'fizz-kidz'
 
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
 import { generateInvitationV2 } from '@/party-bookings/core/generate-invitation-v2'
+import { linkInvitation } from '@/party-bookings/core/link-invitation'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPartyFormUrl, getCakeFormUrl } from '@/party-bookings/core/utils.party'
 import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
@@ -32,6 +33,9 @@ export const partiesRouter = router({
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
     generateInvitationV2: authenticatedProcedure
-        .input((input: unknown) => input as InvitationsV2.GenerateInvitation)
-        .mutation(({ input }) => generateInvitationV2(input)),
+        .input((input: unknown) => input as WithoutId<WithoutUid<InvitationsV2.Invitation>>)
+        .mutation(({ input, ctx }) => generateInvitationV2({ ...input, uid: ctx.uid })),
+    linkInvitation: authenticatedProcedure
+        .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
+        .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
 })

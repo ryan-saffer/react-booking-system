@@ -1,7 +1,9 @@
 import { Location } from '..'
 
-type BaseInvitationProps = {
-    bookingId: string // multiple invitations can be made with the same bookingId, but the booking itself will store one invitation
+type BaseInvitation = {
+    id: string // same id used to upload to storage
+    uid: string // owner
+    bookingId: string
     childName: string
     childAge: string
     date: Date
@@ -11,21 +13,10 @@ type BaseInvitationProps = {
     rsvpNumber: string
     invitation: InvitationOption
 }
-type StudioInvitationProps = BaseInvitationProps & { $type: 'studio'; studio: Location }
-type MobileInvitationProps = BaseInvitationProps & { $type: 'mobile'; address: string }
+type StudioInvitation = BaseInvitation & { $type: 'studio'; studio: Location }
+type MobileInvitation = BaseInvitation & { $type: 'mobile'; address: string }
 
-export type GenerateInvitation = StudioInvitationProps | MobileInvitationProps
-
-// Stored in firestore
-export type Invitation = {
-    id: string
-    bookingId: string
-    date: Date
-    claimedDiscountCode: {
-        name: string
-        email: string
-    }[]
-}
+export type Invitation = StudioInvitation | MobileInvitation
 
 export type InvitationOption =
     | 'Freckles'
