@@ -69,7 +69,7 @@ export function DesignInvitationPage() {
             if (hasCreatedAccount && invitation) {
                 try {
                     await linkInvitation(invitation)
-                    navigate(`/invitations-v2/${invitation.id}`)
+                    navigate(`/invitation/v2/${invitation.id}`)
                 } catch (err: any) {
                     toast.error(err?.message || 'There was an error finalising your invitation.', {
                         duration: Infinity,

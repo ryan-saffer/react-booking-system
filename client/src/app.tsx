@@ -150,9 +150,11 @@ const DesignInvitationPageV2 = lazy(() =>
         default: module.DesignInvitationPage,
     }))
 )
-
-const ManageRsvpsPage = lazy(() =>
-    import('./components/rsvp/pages/manage-rsvps-page.js').then((module) => ({ default: module.ManageRsvpsPage }))
+const ViewInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/view-invitation-page.js').then((module) => ({ default: module.ViewInvitationPage }))
+)
+const RsvpPage = lazy(() =>
+    import('./components/rsvp/pages/rsvp-page.js').then((module) => ({ default: module.RsvpPage }))
 )
 
 const router = createBrowserRouter([
@@ -514,7 +516,7 @@ const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'invitations-v2',
+                path: 'invitation/v2',
                 children: [
                     {
                         path: '',
@@ -536,7 +538,15 @@ const router = createBrowserRouter([
                         path: ':id',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
-                                <ManageRsvpsPage />
+                                <ViewInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: ':id/rsvp',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <RsvpPage />
                             </Suspense>
                         ),
                     },
