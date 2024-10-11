@@ -40,6 +40,19 @@ export const partiesRouter = router({
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
+    rsvp: publicProcedure
+        .input(
+            (input: unknown) =>
+                input as {
+                    parentName: string
+                    parentEmail: string
+                    parentMobile: string
+                    children: { name: string; dob: Date; hasAllergies: boolean; allergies?: string }[]
+                    message?: string
+                    rsvp: 'attending' | 'not-attending'
+                }
+        )
+        .mutation(({ input }) => console.log(input)),
 })
 
 export const parties = onRequestTrpc(partiesRouter, '2GiB')

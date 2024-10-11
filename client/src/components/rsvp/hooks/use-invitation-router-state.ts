@@ -13,7 +13,7 @@ import { hasRequiredState } from '../utils/has-required-state'
  * @returns the invitation state
  */
 export function useInvitationRouterState() {
-    const state = useRouterState<InvitationState>()
+    const state = useRouterState<Partial<InvitationState>>()
 
     const navigate = useNavigate()
 
@@ -33,7 +33,7 @@ export function useInvitationRouterState() {
 
     useEffect(() => {
         if (!isValid) {
-            navigate('/invitations-v2')
+            navigate('/invitation/v2')
         }
     }, [isValid, navigate])
 
