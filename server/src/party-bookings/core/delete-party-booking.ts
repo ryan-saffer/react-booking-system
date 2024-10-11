@@ -3,6 +3,8 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
+import { deleteInvitationV2 } from './delete-invitation-v2'
+
 import type { DeletePartyBooking } from '../functions/trpc/trpc.parties'
 
 export async function deletePartyBooking(props: DeletePartyBooking) {
@@ -23,6 +25,11 @@ export async function deletePartyBooking(props: DeletePartyBooking) {
         } catch (err) {
             logError('Error marking party booking as closed lost while deleting', err, props)
         }
+    }
+
+    // if this party has an invitation, delete it
+    if (existingBooking.invitationId) {
+        await deleteInvitationV2(existingBooking.invitationId)
     }
 
     await DatabaseClient.deletePartyBooking(bookingId)

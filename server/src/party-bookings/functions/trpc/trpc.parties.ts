@@ -4,7 +4,9 @@ import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
 import { generateInvitationV2 } from '@/party-bookings/core/generate-invitation-v2'
-import { linkInvitation } from '@/party-bookings/core/link-invitation'
+import { linkInvitation } from '@/party-bookings/core/link-invitation-v2'
+import type { RsvpProps } from '@/party-bookings/core/rsvp-to-party-v2'
+import { RsvpToParty } from '@/party-bookings/core/rsvp-to-party-v2'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPartyFormUrl, getCakeFormUrl } from '@/party-bookings/core/utils.party'
 import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
@@ -39,16 +41,6 @@ export const partiesRouter = router({
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
     rsvp: publicProcedure
-        .input(
-            (input: unknown) =>
-                input as {
-                    parentName: string
-                    parentEmail: string
-                    parentMobile: string
-                    children: { name: string; dob: Date; hasAllergies: boolean; allergies?: string }[]
-                    message?: string
-                    rsvp: 'attending' | 'not-attending'
-                }
-        )
-        .mutation(({ input }) => console.log(input)),
+        .input((input: unknown) => input as WithoutId<RsvpProps>)
+        .mutation(({ input }) => RsvpToParty(input)),
 })
