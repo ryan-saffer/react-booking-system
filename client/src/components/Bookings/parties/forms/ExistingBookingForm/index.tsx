@@ -940,7 +940,8 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 onDelete={() => {
                     showConfirmationDialog({
                         dialogTitle: 'Delete Booking',
-                        dialogContent: 'Are you sure you want to delete this booking?',
+                        dialogContent:
+                            "This will also delete all invitations and RSVP's associated with this booking, and is irreversible. Are you sure you want to continue?",
                         confirmationButtonText: 'Delete',
                         onConfirm: handleDeleteBooking,
                     })

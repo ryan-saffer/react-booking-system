@@ -20,6 +20,8 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
+import { Checkbox } from '@ui-components/checkbox'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
     parentName: z.string().trim().min(1, { message: 'Please enter your name' }),
@@ -54,9 +56,16 @@ const formSchema = z.object({
             )
     ),
     message: z.string().trim().optional(),
+    joinMailingList: z.boolean(),
 })
 
-export function RsvpForm({ invitation }: { invitation: InvitationsV2.Invitation }) {
+export function RsvpForm({
+    invitation,
+    onComplete,
+}: {
+    invitation: InvitationsV2.Invitation
+    onComplete: (rsvp: 'attending' | 'not-attending') => void
+}) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -72,6 +81,7 @@ export function RsvpForm({ invitation }: { invitation: InvitationsV2.Invitation 
                 },
             ],
             message: '',
+            joinMailingList: true,
         },
     })
 
@@ -90,9 +100,13 @@ export function RsvpForm({ invitation }: { invitation: InvitationsV2.Invitation 
 
     const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (values, event) => {
         const rsvp = (event?.nativeEvent as any).submitter.value as 'attending' | 'not-attending'
-        console.log(rsvp)
-        console.log(values)
-        await sendRsvp({ ...values, rsvp })
+        try {
+            await sendRsvp({ ...values, rsvp, bookingId: invitation.bookingId })
+            onComplete(rsvp)
+        } catch {
+            // TODO - track this error
+            toast.error("There was a problem RSVP'ing. Please let the parent know directly if you are able to attend.")
+        }
     }
 
     return (
@@ -316,7 +330,27 @@ export function RsvpForm({ invitation }: { invitation: InvitationsV2.Invitation 
                         </FormItem>
                     )}
                 />
-                <div className={cn('flex w-full flex-col items-stretch justify-center gap-4', { 'py-4': isLoading })}>
+                <FormField
+                    control={form.control}
+                    name="joinMailingList"
+                    render={({ field }) => (
+                        <FormItem className="py-2">
+                            <div className="flex items-center space-y-0">
+                                <FormControl>
+                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                                <FormLabel className="ml-2 cursor-pointer">
+                                    Keep me informed about the latest Fizz Kidz programs and offers.
+                                </FormLabel>
+                            </div>
+                        </FormItem>
+                    )}
+                />
+                <div
+                    className={cn('flex w-full flex-col items-stretch justify-center gap-4', {
+                        'py-4': isLoading,
+                    })}
+                >
                     {isLoading ? (
                         <Loader />
                     ) : (

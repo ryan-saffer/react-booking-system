@@ -10,7 +10,7 @@ import { Navbar } from '../navbar'
 import { ViewInvitation } from '../view-invitation'
 
 /**
- * A landing page to decide to show the RSVP tracker or guest page, depending on who is logged in.
+ * A middleware page to decide to show the RSVP tracker or guest page, depending on who is logged in.
  */
 export function ViewInvitationPage() {
     const auth = useAuth()
