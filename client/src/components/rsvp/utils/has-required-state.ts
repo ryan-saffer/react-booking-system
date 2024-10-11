@@ -2,7 +2,6 @@
  * Pulled into its own function since its used for:
  *  - query params in the create invitation page
  *  - router state in the design page
- * @returns
  */
 export function hasRequiredState(
     bookingId: string | null,
