@@ -12,6 +12,7 @@ import type {
     StudioOrMaster,
     AuthUser,
     InvitationsV2,
+    Rsvp,
 } from 'fizz-kidz'
 import type { Document } from './FirestoreRefs'
 import { FirestoreRefs } from './FirestoreRefs'
@@ -94,7 +95,17 @@ class Client {
     }
 
     async deletePartyBooking(bookingId: string) {
-        return (await FirestoreRefs.partyBooking(bookingId)).delete()
+        // check for rsvps, and delete the collection if they exist
+        const rsvpsRef = await FirestoreRefs.rsvps(bookingId)
+        const rsvpsSnap = await rsvpsRef.get()
+        const deletePromises = rsvpsSnap.docs.map(async (doc) => {
+            const rsvpRef = await FirestoreRefs.rsvp(bookingId, doc.id)
+            return rsvpRef.delete()
+        })
+        await Promise.all(deletePromises)
+
+        const partyRef = await FirestoreRefs.partyBooking(bookingId)
+        await partyRef.delete()
     }
 
     getAfterSchoolEnrolment(appointmentId: string) {
@@ -249,6 +260,11 @@ class Client {
 
     async deleteInvitationV2(invitationId: string) {
         return (await FirestoreRefs.invitationV2(invitationId)).delete()
+    }
+
+    async addRsvpToParty(bookingId: string, rsvp: WithoutId<Rsvp>) {
+        const rsvpRef = (await FirestoreRefs.rsvps(bookingId)).doc()
+        return this.#createDocument(rsvp, rsvpRef)
     }
 
     async addGuestToInvitation(person: Invitation['claimedDiscountCode'][number], invitationId: string) {

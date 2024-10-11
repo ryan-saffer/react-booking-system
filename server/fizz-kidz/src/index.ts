@@ -12,6 +12,7 @@ export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './part
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
 export * from './partyBookings/Invitations'
 export * as InvitationsV2 from './partyBookings/invitations-v2'
+export * from './partyBookings/rsvp'
 //#endregion
 
 //#region Acuity
