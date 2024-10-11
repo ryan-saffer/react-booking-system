@@ -24,6 +24,7 @@ import { CreateInvitationForm } from '../create-invitation-form'
 import { useInvitationRouterState } from '../hooks/use-invitation-router-state'
 import { LoginDialog } from '../login-dialog'
 import { Navbar } from '../navbar'
+import { TRPCClientError } from '@trpc/client'
 
 export function DesignInvitationPage() {
     const auth = useAuth()
@@ -71,7 +72,11 @@ export function DesignInvitationPage() {
                     await linkInvitation(invitation)
                     navigate(`/invitation/v2/${invitation.id}`)
                 } catch (err: any) {
-                    toast.error(err?.message || 'There was an error finalising your invitation.', {
+                    let message = 'There was an error linking your invitation to your booking.'
+                    if (err instanceof TRPCClientError) {
+                        message = err.message
+                    }
+                    toast.error(message, {
                         duration: Infinity,
                         closeButton: true,
                     })
