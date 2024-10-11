@@ -56,22 +56,12 @@ export function ViewInvitation({ invitation }: { invitation: InvitationsV2.Invit
             <p className="m-auto my-8 w-full max-w-sm text-center font-lilita text-5xl">
                 Let {invitation.childName} know if you can come!
             </p>
-            <div className="flex w-full justify-center">
-                <div className="flex w-min flex-col items-stretch justify-center gap-4">
-                    <Button
-                        className="rounded-2xl bg-[#02D7F7] font-extrabold uppercase text-black hover:bg-[#02D7F7]/90"
-                        onClick={() => navigate('rsvp', { state: { invitation } })}
-                    >
-                        Attending
-                    </Button>
-                    <Button
-                        className="rounded-2xl bg-[#FFDC5D] font-extrabold uppercase text-black hover:bg-[#FFDC5D]/90"
-                        onClick={() => navigate('rsvp', { state: { invitation } })}
-                    >
-                        Can't make it
-                    </Button>
-                </div>
-            </div>
+            <Button
+                className="w-full rounded-2xl bg-[#02D7F7] font-extrabold uppercase text-black hover:bg-[#02D7F7]/90"
+                onClick={() => navigate('rsvp', { state: { invitation } })}
+            >
+                RSVP
+            </Button>
         </div>
     )
 }

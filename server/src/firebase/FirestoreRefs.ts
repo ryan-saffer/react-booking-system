@@ -11,6 +11,7 @@ import type {
     Invitation,
     InvitationsV2,
     PaidHolidayProgramBooking,
+    Rsvp,
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
@@ -108,6 +109,14 @@ export class FirestoreRefs {
 
     static async invitationV2(id: string) {
         return (await this.invitationsV2()).doc(id)
+    }
+
+    static async rsvps(bookingId: string) {
+        return (await this.partyBooking(bookingId)).collection('rsvps') as Collection<Rsvp>
+    }
+
+    static async rsvp(bookingId: string, rsvpId: string) {
+        return (await this.rsvps(bookingId)).doc(rsvpId)
     }
 
     static async discountCodes() {
