@@ -68,7 +68,7 @@
         "prompts": "^2.4.2",
         "ts-node": "^10.9.1",
         "tslint": "^6.1.2",
-        "typescript": "^5.5.2",
+        "typescript": "^5.6.3",
         "tsconfig-paths": "^4.2.0"
     },
     "engines": {
