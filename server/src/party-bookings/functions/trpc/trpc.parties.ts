@@ -6,7 +6,7 @@ import { generateInvitation } from '@/party-bookings/core/generate-invitation'
 import { generateInvitationV2 } from '@/party-bookings/core/generate-invitation-v2'
 import { linkInvitation } from '@/party-bookings/core/link-invitation-v2'
 import type { RsvpProps } from '@/party-bookings/core/rsvp-to-party-v2'
-import { RsvpToParty } from '@/party-bookings/core/rsvp-to-party-v2'
+import { rsvpToParty } from '@/party-bookings/core/rsvp-to-party-v2'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPartyFormUrl, getCakeFormUrl } from '@/party-bookings/core/utils.party'
 import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
@@ -42,5 +42,5 @@ export const partiesRouter = router({
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
     rsvp: publicProcedure
         .input((input: unknown) => input as WithoutId<RsvpProps>)
-        .mutation(({ input }) => RsvpToParty(input)),
+        .mutation(({ input }) => rsvpToParty(input)),
 })

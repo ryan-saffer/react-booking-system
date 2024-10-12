@@ -4,6 +4,7 @@ import { CalendarIcon, CircleX, Plus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { Fragment, useState } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import Loader from '@components/Shared/Loader'
@@ -11,6 +12,7 @@ import { getChildNumber } from '@components/after-school-program/enrolment-form/
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DateCalendar } from '@mui/x-date-pickers'
 import { Button } from '@ui-components/button'
+import { Checkbox } from '@ui-components/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
@@ -20,8 +22,6 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
-import { Checkbox } from '@ui-components/checkbox'
-import { toast } from 'sonner'
 
 const formSchema = z.object({
     parentName: z.string().trim().min(1, { message: 'Please enter your name' }),
