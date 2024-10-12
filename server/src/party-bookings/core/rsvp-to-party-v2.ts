@@ -1,4 +1,5 @@
 import { Rsvp, WithoutId } from 'fizz-kidz'
+
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export type RsvpProps = WithoutId<Rsvp> & {
@@ -6,7 +7,7 @@ export type RsvpProps = WithoutId<Rsvp> & {
     joinMailingList: boolean
 }
 
-export async function RsvpToParty(input: RsvpProps) {
+export async function rsvpToParty(input: RsvpProps) {
     const { bookingId, joinMailingList, ...rsvp } = input
     await DatabaseClient.addRsvpToParty(bookingId, rsvp)
 
