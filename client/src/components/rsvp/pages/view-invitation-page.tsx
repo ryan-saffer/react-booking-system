@@ -6,6 +6,7 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
 import Loader from '@components/Shared/Loader'
 
+import { ManageRsvps } from '../manage-rsvps'
 import { Navbar } from '../navbar'
 import { ViewInvitation } from '../view-invitation'
 
@@ -48,8 +49,8 @@ export function ViewInvitationPage() {
             )}
             {invitation.status === 'error' && <h1>Something went wrong loading this invitation</h1>}
             {invitation.status === 'loaded' && auth && auth.uid === invitation.result.uid && (
-                <h1>I own this invitation</h1>
-            )}{' '}
+                <ManageRsvps invitation={invitation.result} />
+            )}
             {invitation.status === 'loaded' && (!auth || auth.uid !== invitation.result.uid) && (
                 <ViewInvitation invitation={invitation.result} />
             )}
