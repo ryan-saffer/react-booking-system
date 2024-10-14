@@ -6,7 +6,7 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
 import Loader from '@components/Shared/Loader'
 
-import { ManageRsvps } from '../manage-rsvps'
+import { ManageRsvps } from '../manage-rsvps/manage-rsvps'
 import { Navbar } from '../navbar'
 import { ViewInvitation } from '../view-invitation'
 
@@ -22,20 +22,17 @@ export function ViewInvitationPage() {
     const [invitation, setInvitation] = useState<Service<InvitationsV2.Invitation>>({ status: 'loading' })
 
     useEffect(() => {
-        const unsub = firebase.db
-            .collection('invitations-v2')
-            .doc(id)
-            .onSnapshot((snap) => {
-                if (snap.exists) {
-                    const invitation = snap.data() as InvitationsV2.Invitation
-                    // serialise dates back into dates
-                    invitation.date = new Date(invitation.date)
-                    invitation.rsvpDate = new Date(invitation.rsvpDate)
-                    setInvitation({ status: 'loaded', result: invitation })
-                }
-            })
-
-        return () => unsub()
+        async function fetchInvitation() {
+            const snap = await firebase.db.collection('invitations-v2').doc(id).get()
+            if (snap.exists) {
+                const invitation = snap.data() as InvitationsV2.Invitation
+                // serialise dates back into dates
+                invitation.date = new Date(invitation.date)
+                invitation.rsvpDate = new Date(invitation.rsvpDate)
+                setInvitation({ status: 'loaded', result: invitation })
+            }
+        }
+        fetchInvitation()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
