@@ -1,14 +1,14 @@
 import { InvitationsV2 } from 'fizz-kidz'
 
 import { useRsvps } from '../hooks/use-rsvps'
-import { UseRsvpProps, useRsvpTable } from '../hooks/use-rsvp-table'
+import { UseRsvpTableProps, useRsvpTable } from '../hooks/use-rsvp-table'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { flexRender } from '@tanstack/react-table'
 import { Skeleton } from '@ui-components/skeleton'
 import { Fragment } from 'react'
 import { cn } from '@utils/tailwind'
 
-const emptyState: UseRsvpProps = {
+const emptyState: UseRsvpTableProps = {
     rsvps: [],
     updateRsvp: () => {},
 }
@@ -36,7 +36,7 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
                         <span className="font-extrabold">{rsvps.result.notAttendingCount}</span> Unable to attend
                     </p>
                     <div className="rounded-md border">
-                        <Table>
+                        <Table className="table-fixed">
                             <TableHeader>
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <TableRow key={headerGroup.id}>
@@ -45,7 +45,7 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
                                                 <TableHead
                                                     key={header.id}
                                                     className={cn(
-                                                        'text-xs sm:text-sm',
+                                                        'px-2 text-xs sm:text-sm',
                                                         header.column.columnDef.meta?.headerClassName
                                                     )}
                                                 >
@@ -68,6 +68,7 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
                                             <TableRow
                                                 onClick={() => row.toggleExpanded(!row.getIsExpanded())}
                                                 className="cursor-pointer"
+                                                data-state={row.getIsExpanded() && 'selected'}
                                             >
                                                 {row.getVisibleCells().map((cell) => (
                                                     <TableCell
@@ -127,10 +128,11 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
 function ExpandableContent({ label, value }: { label: string; value: string }) {
     return (
         <TableRow>
-            <TableCell className="p-2" colSpan={2}>
+            <TableCell />
+            <TableCell className="p-2" colSpan={1}>
                 {label}
             </TableCell>
-            <TableCell className="p-2" colSpan={2}>
+            <TableCell className="p-2" colSpan={3}>
                 {value}
             </TableCell>
         </TableRow>
