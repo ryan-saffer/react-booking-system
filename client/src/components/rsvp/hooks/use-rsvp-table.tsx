@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 import { createColumns, RsvpRow } from '../manage-rsvps/columns'
 import { Rsvp } from 'fizz-kidz'
 
-export type UseRsvpProps = {
+export type UseRsvpTableProps = {
     rsvps: Rsvp[]
     updateRsvp: (id: string, rsvp: Rsvp['rsvp']) => Promise<void> | void
 }
 
-export function useRsvpTable({ rsvps, updateRsvp }: UseRsvpProps) {
+export function useRsvpTable({ rsvps, updateRsvp }: UseRsvpTableProps) {
     // this reduces each child into its own row, along with the parent details
     const data = useMemo(
         () =>
