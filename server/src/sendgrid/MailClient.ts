@@ -120,6 +120,20 @@ export class MailClient {
                     template: 'holiday_program_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'holidayProgramHalloweenConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Halloween program booking confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'holiday_program_halloween_confirmation.mjml',
+                    useMjml: true,
+                }
             case 'afterSchoolEnrolmentConfirmation':
                 return {
                     emailInfo: {

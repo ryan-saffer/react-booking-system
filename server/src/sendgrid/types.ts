@@ -7,6 +7,14 @@ export type Emails = {
         bookings: { datetime: string; confirmationPage: string }[]
     }
 
+    // a temporary one off program for halloween 2024 from 4-5pm
+    holidayProgramHalloweenConfirmation: {
+        parentName: string
+        location: string
+        address: string
+        bookings: { datetime: string; confirmationPage: string }[]
+    }
+
     createDiscountCode: {
         name: string
         code: string
