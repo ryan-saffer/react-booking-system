@@ -5,13 +5,13 @@ import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/t
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { createPartyBooking } from '../../core/create-party-booking'
 import { deletePartyBooking } from '../../core/delete-party-booking'
-import { generateInvitation } from '../../core/generate-invitation'
-import { generateInvitationV2 } from '../../core/generate-invitation-v2'
-import { linkInvitation } from '../../core/link-invitation-v2'
-import { RsvpProps, rsvpToParty } from '../../core/rsvp-to-party-v2'
+import { editInvitation } from '../../core/invitations/edit-invitation-v2'
+import { generateInvitation } from '../../core/invitations/generate-invitation'
+import { generateInvitationV2 } from '../../core/invitations/generate-invitation-v2'
+import { linkInvitation } from '../../core/invitations/link-invitation-v2'
+import { RsvpProps, rsvpToParty } from '../../core/invitations/rsvp-to-party-v2'
 import { updatePartyBooking } from '../../core/update-party-booking'
 import { getPrefilledFormUrl } from '../../core/utils.party'
-import { editInvitation } from '../../core/edit-invitation-v2'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
