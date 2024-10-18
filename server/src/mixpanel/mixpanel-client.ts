@@ -60,7 +60,6 @@ export type MixpanelEvent = {
         invitation: InvitationOption
     }
     'invitation-generated-v2': {
-        uid: string
         bookingId: string
         invitationId: string
         partyDate: Date

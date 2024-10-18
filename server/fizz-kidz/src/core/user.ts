@@ -4,29 +4,19 @@ import type { PartialRecord } from '..'
 
 type BaseUser = {
     uid: string
+    email: string
     imageUrl: string | null
-    email?: string
     firstname?: string
     lastname?: string
 }
 
-type BaseVerifiedUser = BaseUser & {
-    email: string
-    isAnonymous: false
-}
-
-export type StaffUser = BaseVerifiedUser & {
+export type StaffUser = BaseUser & {
     roles?: PartialRecord<StudioOrMaster, Role>
     accountType: 'staff'
 }
 
-export type CustomerUser = BaseVerifiedUser & {
+export type CustomerUser = BaseUser & {
     accountType: 'customer'
 }
 
-export type AnonymousCustomerUser = BaseUser & {
-    accountType: 'customer'
-    isAnonymous: true
-}
-
-export type AuthUser = StaffUser | CustomerUser | AnonymousCustomerUser
+export type AuthUser = StaffUser | CustomerUser
