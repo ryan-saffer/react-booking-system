@@ -1,9 +1,8 @@
 import { format } from 'date-fns'
-import { InvitationsV2, Location, WithoutUid } from 'fizz-kidz'
-import { CalendarIcon, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { InvitationsV2, Location } from 'fizz-kidz'
+import { CalendarIcon } from 'lucide-react'
+import { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
@@ -13,104 +12,32 @@ import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { capitalise } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
-
-import { INVITATIONS } from './constants/invitations'
-import { useInvitationRouterState } from './hooks/use-invitation-router-state'
-
-type TForm = {
-    childName: string
-    childAge: string
-    date: Date
-    time: string
-    type: 'studio' | 'mobile' | ''
-    studio: Location
-    address: string
-    parentName: string
-    parentNumber: string
-    rsvpDate: Date
-}
 
 export function CreateInvitationForm({
-    selectedInvitationIdx,
-    onComplete,
+    defaultValues,
+    onSubmit,
+    isLoading,
+    submitButton,
+    className,
 }: {
-    selectedInvitationIdx: number
-    onComplete: (invitation: WithoutUid<InvitationsV2.Invitation>) => void
+    defaultValues: Partial<InvitationsV2.Invitation>
+    onSubmit: (values: InvitationsV2.Invitation) => void
+    isLoading: boolean
+    submitButton: ReactNode
+    className?: string
 }) {
-    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitationV2.useMutation()
-
-    const state = useInvitationRouterState()
-
-    const form = useForm<TForm>({
-        defaultValues: {
-            childName: state.childName,
-            childAge: state.childAge,
-            date: state.date,
-            time: state.time,
-            type: state.type,
-            studio: state.studio,
-            address: state.address,
-            parentName: state.parentName,
-            rsvpDate: state.rsvpDate,
-            parentNumber: state.parentNumber,
-        },
+    const form = useForm<InvitationsV2.Invitation>({
+        defaultValues,
     })
 
     // used to close calendar popover after date selection
     const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
     const [isRsvpCalendarOpen, setIsRsvpCalendarOpen] = useState(false)
 
-    const onSubmit = async (values: TForm) => {
-        try {
-            const invitation =
-                values.type === 'studio'
-                    ? ({
-                          childName: values.childName,
-                          childAge: values.childAge,
-                          time: values.time,
-                          date: values.date,
-                          $type: 'studio',
-                          studio: values.studio,
-                          rsvpName: values.parentName,
-                          rsvpDate: values.rsvpDate,
-                          rsvpNumber: values.parentNumber,
-                          invitation: INVITATIONS[selectedInvitationIdx].name,
-                          bookingId: state!.bookingId!,
-                      } as const)
-                    : ({
-                          childName: values.childName,
-                          childAge: values.childAge,
-                          time: values.time,
-                          date: values.date,
-                          $type: 'mobile',
-                          address: values.address,
-                          rsvpName: values.parentName,
-                          rsvpDate: values.rsvpDate,
-                          rsvpNumber: values.parentNumber,
-                          invitation: INVITATIONS[selectedInvitationIdx].name,
-                          bookingId: state!.bookingId!,
-                      } as const)
-            const result = await generateInvitation(invitation)
-            console.log({ result })
-            onComplete({ ...invitation, id: result })
-        } catch (err: any) {
-            if (err?.data?.code === 'UNAUTHORIZED') {
-                // This route is not technically protected, and clearing cookies can remove their anonymous login.
-                // In this case, they must return to the starting screen and sign in anonymously again.
-                toast.error(
-                    'There was an error generating your invitation. Please return to the link sent to you in your booking confirmation email.'
-                )
-            } else {
-                toast.error('There was an error generating your invitation.')
-            }
-        }
-    }
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="space-y-2 p-4 pb-20">
+                <div className={cn('space-y-2', className)}>
                     <FormField
                         control={form.control}
                         rules={{ required: true }}
@@ -200,11 +127,11 @@ export function CreateInvitationForm({
                     />
                     <FormField
                         control={form.control}
-                        name="type"
+                        name="$type"
                         rules={{ required: true }}
                         render={({ field }) => {
                             return (
-                                <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
+                                <FormItem>
                                     <Select
                                         onValueChange={field.onChange}
                                         disabled={isLoading}
@@ -231,7 +158,7 @@ export function CreateInvitationForm({
                             )
                         }}
                     />
-                    {form.watch('type') === 'studio' && (
+                    {form.watch('$type') === 'studio' && (
                         <FormField
                             control={form.control}
                             name="studio"
@@ -267,7 +194,7 @@ export function CreateInvitationForm({
                             )}
                         />
                     )}
-                    {form.watch('type') === 'mobile' && (
+                    {form.watch('$type') === 'mobile' && (
                         <FormField
                             control={form.control}
                             name="address"
@@ -340,7 +267,7 @@ export function CreateInvitationForm({
                     />
                     <FormField
                         control={form.control}
-                        name="parentNumber"
+                        name="parentMobile"
                         rules={{ required: true }}
                         render={({ field }) => (
                             <FormItem className="pb-4">
@@ -357,13 +284,7 @@ export function CreateInvitationForm({
                         )}
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="fixed bottom-0 flex h-16 w-full items-center justify-center bg-[#9B3EEA] font-bold text-white"
-                    disabled={isLoading}
-                >
-                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'Next'}
-                </button>
+                {submitButton}
             </form>
         </Form>
     )
