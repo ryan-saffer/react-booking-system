@@ -5,7 +5,6 @@ import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { Button } from '@ui-components/button'
 import { Card, CardContent } from '@ui-components/card'
@@ -25,6 +24,8 @@ import { useInvitationRouterState } from '../hooks/use-invitation-router-state'
 import { LoginDialog } from '../login-dialog'
 import { Navbar } from '../navbar'
 import { TRPCClientError } from '@trpc/client'
+import { useInvitationImage } from '../hooks/use-invitation-image'
+import Loader from '@components/Shared/Loader'
 
 export function DesignInvitationPage() {
     const auth = useAuth()
@@ -69,8 +70,8 @@ export function DesignInvitationPage() {
         async function _linkInvitation() {
             if (hasCreatedAccount && invitation) {
                 try {
-                    await linkInvitation(invitation)
-                    navigate(`/invitation/v2/${invitation.id}`)
+                    const { invitationId } = await linkInvitation(invitation)
+                    navigate(`/invitation/v2/${invitationId}`)
                 } catch (err: any) {
                     let message = 'There was an error linking your invitation to your booking.'
                     if (err instanceof TRPCClientError) {
@@ -181,34 +182,81 @@ function Step2({
     selectedInvitation: number
     onInvitationGenerated: (invitation: WithoutUid<InvitationsV2.Invitation>) => void
 }) {
+    const state = useInvitationRouterState()
+    const { bookingId, ...defaultValues } = state
+
+    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitationV2.useMutation()
+
+    const onSubmit = async (values: InvitationsV2.Invitation) => {
+        try {
+            const invitation =
+                values.$type === 'studio'
+                    ? ({
+                          childName: values.childName,
+                          childAge: values.childAge,
+                          time: values.time,
+                          date: values.date,
+                          $type: 'studio',
+                          studio: values.studio,
+                          parentName: values.parentName,
+                          rsvpDate: values.rsvpDate,
+                          parentMobile: values.parentMobile,
+                          invitation: INVITATIONS[selectedInvitation].name,
+                          bookingId,
+                      } as const)
+                    : ({
+                          childName: values.childName,
+                          childAge: values.childAge,
+                          time: values.time,
+                          date: values.date,
+                          $type: 'mobile',
+                          address: values.address,
+                          parentName: values.parentName,
+                          rsvpDate: values.rsvpDate,
+                          parentMobile: values.parentMobile,
+                          invitation: INVITATIONS[selectedInvitation].name,
+                          bookingId,
+                      } as const)
+
+            const { invitationId } = await generateInvitation(invitation)
+            onInvitationGenerated({ ...invitation, id: invitationId })
+        } catch (err: any) {
+            if (err?.data?.code === 'UNAUTHORIZED') {
+                // This page is not technically protected, and clearing cookies can remove their anonymous login.
+                // In this case, they must return to the starting screen and sign in anonymously again.
+                toast.error(
+                    'There was an error generating your invitation. Please return to the link sent to you in your booking confirmation email.'
+                )
+            } else {
+                toast.error('There was an error generating your invitation.')
+            }
+        }
+    }
+
     return (
-        <>
+        <div className="relative p-4">
             <p className="my-8 text-center">Put in your details to customise your invitation.</p>
-            <CreateInvitationForm selectedInvitationIdx={selectedInvitation} onComplete={onInvitationGenerated} />
-        </>
+            <CreateInvitationForm
+                defaultValues={defaultValues}
+                isLoading={isLoading}
+                onSubmit={onSubmit}
+                submitButton={
+                    <button
+                        type="submit"
+                        className="fixed bottom-0 -ml-4 flex h-16 w-full items-center justify-center bg-[#9B3EEA] font-bold text-white"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'Next'}
+                    </button>
+                }
+                className="pb-16"
+            />
+        </div>
     )
 }
 
 function Step3({ invitationId, nextStep, loading }: { invitationId: string; nextStep: () => void; loading: boolean }) {
-    const firebase = useFirebase()
-
-    const [invitationUrl, setInvitationUrl] = useState('')
-
-    useEffect(() => {
-        async function getInvitation() {
-            if (invitationId) {
-                const url = await firebase.storage
-                    .ref()
-                    .child(`invitations-v2/${invitationId}/invitation.png`)
-                    .getDownloadURL()
-                setInvitationUrl(url)
-                console.log({ url })
-            }
-        }
-        getInvitation()
-    }, [invitationId, firebase.storage])
-
-    console.log({ invitationId })
+    const invitationUrl = useInvitationImage(invitationId)
 
     return (
         <>
@@ -218,7 +266,7 @@ function Step3({ invitationId, nextStep, loading }: { invitationId: string; next
                 <div className="relative flex items-center justify-center">
                     <Img
                         src={invitationUrl}
-                        loader={<Loader2 className="animate-spin" />}
+                        loader={<Loader className="my-12" />}
                         className="h-full border"
                         onContextMenu={() => false}
                     />

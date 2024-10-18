@@ -2,27 +2,46 @@ import { InvitationsV2 } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { deleteInvitationV2 } from './delete-invitation-v2'
+import { moveInvitation } from './move-invitation-v2'
 
-export async function linkInvitation(input: InvitationsV2.Invitation) {
-    await DatabaseClient.createInvitationV2(input)
+export async function linkInvitation(invitation: InvitationsV2.Invitation) {
+    invitation.date = new Date(invitation.date)
+    invitation.rsvpDate = new Date(invitation.rsvpDate)
 
     // store invitationId against booking
-    const booking = await DatabaseClient.getPartyBooking(input.bookingId)
+    const booking = await DatabaseClient.getPartyBooking(invitation.bookingId)
 
     // if booking already has an invitation, check who the owner is
     if (booking.invitationId) {
         const existingInvitation = await DatabaseClient.getInvitationV2(booking.invitationId)
 
-        // if this user is the owner document, delete the existing invitation and delete it from storage
-        if (input.uid === existingInvitation.uid) {
+        // check if the user owns the existing invitation
+        if (invitation.uid === existingInvitation.uid) {
+            // since they own it, it is safe to link this invitation.
+            // however we need to replace the existing invitation with this new invitation,
+            // because the invitation may have already been shared and therefore the new invitation must have the same id as the old invitation.
+
+            // first delete the existing invitation
             await deleteInvitationV2(booking.invitationId)
+
+            // then move the new invitation to the old ones location
+            await moveInvitation(booking.invitationId, invitation)
+
+            return { invitationId: booking.invitationId }
         } else {
             throw new Error(
                 'This booking already has an invitation that is owned by another user. Please log in to the owners account to edit the invitation, or contact Fizz Kidz for help.'
             )
         }
-    }
+    } else {
+        await DatabaseClient.createInvitationV2(invitation)
 
-    // update the booking to reference the new invitation
-    await DatabaseClient.updatePartyBooking(input.bookingId, { invitationId: input.id, invitationOwnerUid: input.uid })
+        // update the booking to reference the new invitation
+        await DatabaseClient.updatePartyBooking(invitation.bookingId, {
+            invitationId: invitation.id,
+            invitationOwnerUid: invitation.uid,
+        })
+
+        return { invitationId: invitation.id }
+    }
 }

@@ -8,9 +8,9 @@ type BaseInvitation = {
     childAge: string
     date: Date
     time: string
-    rsvpName: string
+    parentName: string
     rsvpDate: Date
-    rsvpNumber: string
+    parentMobile: string
     invitation: InvitationOption
 }
 type StudioInvitation = BaseInvitation & { $type: 'studio'; studio: Location }

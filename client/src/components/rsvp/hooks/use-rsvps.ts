@@ -2,6 +2,7 @@ import { InvitationsV2, Rsvp, Service } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { UseRsvpTableProps } from './use-rsvp-table'
 
 export function useRsvps(invitation: InvitationsV2.Invitation) {
     const firebase = useFirebase()
@@ -11,7 +12,7 @@ export function useRsvps(invitation: InvitationsV2.Invitation) {
             rsvps: Rsvp[]
             attendingCount: number
             notAttendingCount: number
-            updateRsvp: (id: string, rsvp: Rsvp['rsvp']) => Promise<void>
+            updateRsvp: UseRsvpTableProps['updateRsvp']
         }>
     >({ status: 'loading' })
 

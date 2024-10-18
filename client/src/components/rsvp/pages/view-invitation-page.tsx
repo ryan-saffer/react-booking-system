@@ -9,6 +9,7 @@ import Loader from '@components/Shared/Loader'
 import { ManageRsvps } from '../manage-rsvps/manage-rsvps'
 import { Navbar } from '../navbar'
 import { ViewInvitation } from '../view-invitation'
+import { timestampConverter } from '@utils/firebase/converters'
 
 /**
  * A middleware page to decide to show the RSVP tracker or guest page, depending on who is logged in.
@@ -22,17 +23,18 @@ export function ViewInvitationPage() {
     const [invitation, setInvitation] = useState<Service<InvitationsV2.Invitation>>({ status: 'loading' })
 
     useEffect(() => {
-        async function fetchInvitation() {
-            const snap = await firebase.db.collection('invitations-v2').doc(id).get()
-            if (snap.exists) {
-                const invitation = snap.data() as InvitationsV2.Invitation
-                // serialise dates back into dates
-                invitation.date = new Date(invitation.date)
-                invitation.rsvpDate = new Date(invitation.rsvpDate)
-                setInvitation({ status: 'loaded', result: invitation })
-            }
-        }
-        fetchInvitation()
+        const unsub = firebase.db
+            .collection('invitations-v2')
+            .doc(id)
+            .withConverter(timestampConverter)
+            .onSnapshot((snap) => {
+                if (snap.exists) {
+                    const invitation = snap.data() as InvitationsV2.Invitation
+                    setInvitation({ status: 'loaded', result: invitation })
+                }
+            })
+
+        return () => unsub()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 

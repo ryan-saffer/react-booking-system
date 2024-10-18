@@ -10,6 +10,7 @@ import { linkInvitation } from '../../core/link-invitation-v2'
 import { RsvpProps, rsvpToParty } from '../../core/rsvp-to-party-v2'
 import { updatePartyBooking } from '../../core/update-party-booking'
 import { getPrefilledFormUrl } from '../../core/utils.party'
+import { editInvitation } from '../../core/edit-invitation-v2'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -40,6 +41,9 @@ export const partiesRouter = router({
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
+    editInvitation: authenticatedProcedure
+        .input((input: unknown) => input as InvitationsV2.Invitation)
+        .mutation(({ input }) => editInvitation(input)),
     rsvp: publicProcedure
         .input((input: unknown) => input as WithoutId<RsvpProps>)
         .mutation(({ input }) => rsvpToParty(input)),
