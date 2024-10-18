@@ -1,43 +1,15 @@
 import { InvitationsV2 } from 'fizz-kidz'
-import { Loader2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
+import { useInvitationImage } from './hooks/use-invitation-image'
 
 export function ViewInvitation({ invitation }: { invitation: InvitationsV2.Invitation }) {
-    const firebase = useFirebase()
-
-    const [loading, setLoading] = useState(true)
-    const [invitationUrl, setInvitationUrl] = useState('')
-
     const navigate = useNavigate()
 
-    useEffect(() => {
-        async function getUrl() {
-            const url = await firebase.storage
-                .ref()
-                .child(`invitations-v2/${invitation.id}/invitation.png`)
-                .getDownloadURL()
-            setInvitationUrl(url)
-            // give time for img component to load content
-            setTimeout(() => setLoading(false), 500)
-        }
-
-        getUrl()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    if (loading) {
-        return (
-            <div className="flex h-screen w-screen items-center justify-center">
-                <Loader />
-            </div>
-        )
-    }
+    const invitationUrl = useInvitationImage(invitation.id)
 
     return (
         <div className="p-8">
@@ -47,11 +19,7 @@ export function ViewInvitation({ invitation }: { invitation: InvitationsV2.Invit
                 {invitation.date.toDateString()}
             </p>
             <div className="flex items-center justify-center">
-                <Img
-                    src={invitationUrl}
-                    loader={<Loader2 className="animate-spin" />}
-                    className="max-h-[600px] border"
-                />
+                <Img src={invitationUrl} loader={<Loader className="my-6" />} className="max-h-[600px] border" />
             </div>
             <p className="m-auto my-8 w-full max-w-sm text-center font-lilita text-5xl">
                 Let {invitation.childName} know if you can come!

@@ -7,6 +7,7 @@ import {
     WithUid,
     WithoutId,
     generateRandomString,
+    getApplicationDomain,
     getLocationAddress,
 } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
@@ -17,8 +18,9 @@ import puppeteer, { Browser } from 'puppeteer'
 import chromium from '@sparticuz/chromium'
 
 import { StorageClient } from '../../firebase/StorageClient'
-import { projectId } from '../../init'
+import { env, projectId } from '../../init'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import QRCode from 'qrcode'
 
 /**
  * Creates and uploads an invitation to storage, but does not create a document in firestore.
@@ -48,10 +50,15 @@ export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV
     }
     const [page] = await browser.pages()
 
+    const id = generateRandomString()
+
+    const qrCode = await QRCode.toDataURL(`${getApplicationDomain(env)}/invitation/v2/${id}`)
+
     const htmlFile = FileMap[input.invitation]
     const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, {
         ...input,
+        qrCode,
         date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
@@ -65,8 +72,6 @@ export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV
     }
     await page.setContent(output)
     const filename = 'invitation.png'
-
-    const id = generateRandomString()
 
     const destination = `invitations-v2/${id}/${filename}`
 
@@ -97,12 +102,10 @@ export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV
         partyDate: input.date,
         invitation: input.invitation,
         bookingId: input.bookingId,
-        parentName: input.rsvpName,
+        parentName: input.parentName,
     })
 
-    console.log({ invitationId: id })
-
-    return id
+    return { invitationId: id }
 }
 
 const FileMap: Record<InvitationOption, string> = {
