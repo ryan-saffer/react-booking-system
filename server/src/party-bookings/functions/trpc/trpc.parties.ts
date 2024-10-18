@@ -35,9 +35,9 @@ export const partiesRouter = router({
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
-    generateInvitationV2: authenticatedProcedure
+    generateInvitationV2: publicProcedure
         .input((input: unknown) => input as WithoutId<WithoutUid<InvitationsV2.Invitation>>)
-        .mutation(({ input, ctx }) => generateInvitationV2({ ...input, uid: ctx.uid })),
+        .mutation(({ input }) => generateInvitationV2(input)),
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),

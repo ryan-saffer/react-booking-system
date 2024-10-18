@@ -63,7 +63,7 @@ export function DesignInvitationPage() {
         window.scrollTo({ top: 0 })
     }, [step])
 
-    const hasCreatedAccount = !!auth && !auth.isAnonymous && finishPressed
+    const hasCreatedAccount = !!auth && finishPressed
 
     // listening for when both authenticated and ready to move on
     useEffect(() => {
@@ -132,7 +132,7 @@ export function DesignInvitationPage() {
             {step === 3 && invitation && (
                 <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
             )}
-            <LoginDialog open={!!auth && auth.isAnonymous && finishPressed} />
+            <LoginDialog open={!auth && finishPressed} />
         </div>
     )
 }
