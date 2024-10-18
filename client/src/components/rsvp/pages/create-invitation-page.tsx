@@ -1,9 +1,5 @@
-import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
-import { useAuth } from '@components/Hooks/context/useAuth'
 import { Button } from '@ui-components/button'
 
 import { Navbar } from '../navbar'
@@ -15,11 +11,7 @@ import { hasRequiredState } from '../utils/has-required-state'
 export function CreateInvitationPage() {
     const [searchParams] = useSearchParams()
 
-    const firebase = useFirebase()
-    const auth = useAuth()
     const navigate = useNavigate()
-
-    const [signingIn, setSigningIn] = useState(false)
 
     const childName = searchParams.get('childName')
     const childAge = searchParams.get('childAge')
@@ -48,17 +40,6 @@ export function CreateInvitationPage() {
     )
 
     async function navigateToDesignInvitation() {
-        if (!auth) {
-            setSigningIn(true)
-            try {
-                await firebase.signInAnonymously()
-            } catch (err) {
-                console.error(err)
-                return
-            } finally {
-                setSigningIn(false)
-            }
-        }
         navigate('design', {
             state: {
                 bookingId,
@@ -109,9 +90,9 @@ export function CreateInvitationPage() {
                         <div className="mt-8 flex justify-center">
                             <Button
                                 onClick={navigateToDesignInvitation}
-                                className="m-auto rounded-3xl bg-[#9B3EEA] text-center"
+                                className="m-auto rounded-3xl bg-[#9B3EEA] text-center hover:bg-[#9B3EEA]/80"
                             >
-                                {signingIn ? <Loader2 className="h-4 w-4 animate-spin" /> : "Let's do it"}
+                                Let's do it
                             </Button>
                         </div>
                     </>

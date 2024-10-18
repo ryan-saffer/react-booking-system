@@ -6,5 +6,5 @@ import type { ReactNode } from 'react'
 export function SignedOut({ children }: { children: ReactNode }) {
     const user = useAuth()
 
-    return user && !user.isAnonymous ? null : children
+    return user ? null : children
 }
