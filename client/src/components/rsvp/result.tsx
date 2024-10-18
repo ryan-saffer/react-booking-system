@@ -35,7 +35,7 @@ export function Result({
             )
         }
         if (rsvp === 'not-attending') {
-            return `We are sorry you can't make it, and if anything changes just let ${invitation.rsvpName} know. 😄`
+            return `We are sorry you can't make it, and if anything changes just let ${invitation.parentName} know. 😄`
         }
     }
 
