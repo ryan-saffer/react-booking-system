@@ -53,7 +53,6 @@ export class MixpanelClient {
 export type MixpanelEvent = {
     'invitation-generated': { invitationId: string; partyDate: Date; invitation: InvitationOption }
     'invitation-generated-v2': {
-        uid: string
         bookingId: string
         invitationId: string
         partyDate: Date

@@ -32,10 +32,8 @@ export function LoginDialog({ open }: { open: boolean }) {
 
     const signInWithGoogle = async () => {
         try {
-            await firebase.linkWithGoogle()
-            console.log('link succesful')
+            await firebase.doSignInWithGoogle()
         } catch (err: any) {
-            console.error({ err })
             if (err.code === 'auth/credential-already-in-use' || err.code === 'auth/email-already-in-use') {
                 try {
                     await firebase.signInWithCredential(err.credential)

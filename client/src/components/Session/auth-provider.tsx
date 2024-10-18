@@ -40,23 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             } else {
                                 // user doesn't exist in db, which means they were not invited to the platform, so default them as a customer.
                                 // once created, it will fire this snapshot again, and will then correctly be found
-                                const newUser = authUser.isAnonymous
-                                    ? ({
-                                          uid: authUser.uid,
-                                          imageUrl: authUser.photoURL,
-                                          accountType: 'customer',
-                                          isAnonymous: true,
-                                      } satisfies AuthUser)
-                                    : ({
-                                          uid: authUser.uid,
-                                          email: authUser.email!, // all login options must include an email, so this will exist
-                                          imageUrl: authUser.photoURL,
-                                          accountType: 'customer',
-                                          isAnonymous: false,
-                                          firstname: authUser.displayName || '',
-                                      } satisfies AuthUser)
-
-                                console.log('creating user in db', { newUser })
+                                const newUser = {
+                                    uid: authUser.uid,
+                                    email: authUser.email!, // all login options must include an email, so this will exist
+                                    imageUrl: authUser.photoURL,
+                                    accountType: 'customer',
+                                    firstname: authUser.displayName || '',
+                                } satisfies AuthUser
 
                                 // users are only given read access to their user document in firestore, and must update/create their doc
                                 // through the backend (to avoid giving themselves admin privileges).

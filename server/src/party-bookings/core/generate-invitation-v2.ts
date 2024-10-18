@@ -4,8 +4,8 @@ import path from 'path'
 import {
     InvitationOption,
     InvitationsV2,
-    WithUid,
     WithoutId,
+    WithoutUid,
     generateRandomString,
     getApplicationDomain,
     getLocationAddress,
@@ -31,7 +31,7 @@ import QRCode from 'qrcode'
  * @param input
  * @returns
  */
-export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV2.Invitation>>) {
+export async function generateInvitationV2(input: WithoutId<WithoutUid<InvitationsV2.Invitation>>) {
     // serialise back into a date
     input.date = new Date(input.date)
     input.rsvpDate = new Date(input.rsvpDate)
@@ -97,7 +97,6 @@ export async function generateInvitationV2(input: WithoutId<WithUid<InvitationsV
 
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-generated-v2', {
-        uid: input.uid,
         invitationId: id,
         partyDate: input.date,
         invitation: input.invitation,
