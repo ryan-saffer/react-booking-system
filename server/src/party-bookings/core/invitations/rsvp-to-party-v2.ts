@@ -1,6 +1,6 @@
 import { Rsvp, WithoutId } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 
 export type RsvpProps = WithoutId<Rsvp> & {
     bookingId: string

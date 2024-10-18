@@ -1,4 +1,5 @@
 import { InvitationsV2 } from 'fizz-kidz'
+
 import { generateInvitationV2 } from './generate-invitation-v2'
 import { linkInvitation } from './link-invitation-v2'
 

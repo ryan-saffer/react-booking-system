@@ -14,13 +14,13 @@ import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
 import puppeteer, { Browser } from 'puppeteer'
+import QRCode from 'qrcode'
 
 import chromium from '@sparticuz/chromium'
 
-import { StorageClient } from '../../firebase/StorageClient'
-import { env, projectId } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
-import QRCode from 'qrcode'
+import { StorageClient } from '../../../firebase/StorageClient'
+import { env, projectId } from '../../../init'
+import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 
 /**
  * Creates and uploads an invitation to storage, but does not create a document in firestore.

@@ -11,11 +11,11 @@ import puppeteer from 'puppeteer'
 
 import chromium from '@sparticuz/chromium'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { StorageClient } from '../../firebase/StorageClient'
-import { projectId } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
+import { StorageClient } from '../../../firebase/StorageClient'
+import { projectId } from '../../../init'
+import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 
 export async function generateInvitation(input: GenerateInvitation) {
     // serialise back into a date
