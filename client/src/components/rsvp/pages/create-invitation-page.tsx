@@ -9,8 +9,8 @@ import { Button } from '@ui-components/button'
 import { Navbar } from '../navbar'
 import { hasRequiredState } from '../utils/has-required-state'
 
-// http://localhost:3000/invitation/v2?parentName=Ryan&parentNumber=0413892120&childName=Marlee&bookingId=0GSCAS0KUU7b2YffTXPR&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z
-// http://localhost:3000/invitation/v2?parentName=Ryan&parentNumber=0413892120&childName=Marlee&bookingId=1t29Q2jfALbvD4R4xpul&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z
+// http://localhost:3000/invitation/v2?parentName=Ryan&parentMobile=0413892120&childName=Marlee&bookingId=0GSCAS0KUU7b2YffTXPR&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&$type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z
+// http://localhost:3000/invitation/v2?parentName=Ryan&parentMobile=0413892120&childName=Marlee&bookingId=1t29Q2jfALbvD4R4xpul&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&$type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z
 
 export function CreateInvitationPage() {
     const [searchParams] = useSearchParams()
@@ -25,23 +25,23 @@ export function CreateInvitationPage() {
     const childAge = searchParams.get('childAge')
     const date = searchParams.get('date')
     const time = searchParams.get('time')
-    const type = searchParams.get('type')
+    const $type = searchParams.get('$type')
     const studio = searchParams.get('studio')
     const address = searchParams.get('address')
     const parentName = searchParams.get('parentName')
-    const parentNumber = searchParams.get('parentNumber')
+    const parentMobile = searchParams.get('parentMobile')
     const rsvpDate = searchParams.get('rsvpDate')
     const bookingId = searchParams.get('bookingId')
 
     const hasRequiredQueryParams = hasRequiredState(
         bookingId,
         parentName,
-        parentNumber,
+        parentMobile,
         childName,
         childAge,
         date,
         time,
-        type,
+        $type,
         studio,
         address,
         rsvpDate
@@ -65,13 +65,13 @@ export function CreateInvitationPage() {
                 childName,
                 childAge,
                 parentName,
-                parentNumber,
-                date,
+                parentMobile,
+                date: new Date(date!), // serialize into real date
                 time,
-                type,
+                $type,
                 studio,
                 address,
-                rsvpDate,
+                rsvpDate: new Date(rsvpDate!), // serialize into real date
             },
         })
     }

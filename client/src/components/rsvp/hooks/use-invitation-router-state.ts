@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { useRouterState } from '@components/Hooks/use-router-state'
 
-import { InvitationState } from '../types'
 import { hasRequiredState } from '../utils/has-required-state'
+import { InvitationsV2 } from 'fizz-kidz'
 
 /**
  * Ensures that all the required values are present in react routers state.
@@ -12,22 +12,22 @@ import { hasRequiredState } from '../utils/has-required-state'
  *
  * @returns the invitation state
  */
-export function useInvitationRouterState() {
-    const state = useRouterState<Partial<InvitationState>>()
+export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' | 'uid' | 'invitation'> {
+    const state = useRouterState<Partial<InvitationsV2.Invitation>>()
 
     const navigate = useNavigate()
 
     const isValid = hasRequiredState(
         state?.bookingId ?? null,
         state?.parentName ?? null,
-        state?.parentNumber ?? null,
+        state?.parentMobile ?? null,
         state?.childName ?? null,
         state?.childAge ?? null,
         state?.date ?? null,
         state?.time ?? null,
-        state?.type ?? null,
-        state?.studio ?? null,
-        state?.address ?? null,
+        state?.$type ?? null,
+        state?.$type === 'studio' ? state?.studio?.toString() ?? null : null,
+        state?.$type === 'mobile' ? state?.address ?? null : null,
         state?.rsvpDate ?? null
     )
 
@@ -42,12 +42,12 @@ export function useInvitationRouterState() {
         childName: state!.childName!,
         childAge: state!.childAge!,
         parentName: state!.parentName!,
-        parentNumber: state!.parentNumber!,
+        parentMobile: state!.parentMobile!,
         date: state!.date!,
         time: state!.time!,
-        type: state!.type!,
-        studio: state!.studio!,
-        address: state!.address!,
+        $type: state!.$type!,
+        ...(state!.$type === 'studio' && { studio: state!.studio! }),
+        ...(state!.$type === 'mobile' && { address: state!.address! }),
         rsvpDate: state!.rsvpDate!,
     }
 }
