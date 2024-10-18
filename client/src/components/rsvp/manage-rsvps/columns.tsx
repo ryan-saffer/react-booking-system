@@ -59,7 +59,7 @@ export function createColumns({ updateRsvp }: { updateRsvp: UseRsvpTableProps['u
                             <EllipsisVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="twp w-56">
                         <DropdownMenuLabel>RSVP</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioGroup
