@@ -2,6 +2,7 @@ import type { Booking, GenerateInvitation, InvitationsV2, Studio, WithoutId, Wit
 
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
+import { editInvitation } from '@/party-bookings/core/edit-invitation-v2'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
 import { generateInvitationV2 } from '@/party-bookings/core/generate-invitation-v2'
 import { linkInvitation } from '@/party-bookings/core/link-invitation-v2'
@@ -40,6 +41,9 @@ export const partiesRouter = router({
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
+    editInvitation: authenticatedProcedure
+        .input((input: unknown) => input as InvitationsV2.Invitation)
+        .mutation(({ input }) => editInvitation(input)),
     rsvp: publicProcedure
         .input((input: unknown) => input as WithoutId<RsvpProps>)
         .mutation(({ input }) => rsvpToParty(input)),
