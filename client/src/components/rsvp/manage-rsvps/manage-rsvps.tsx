@@ -1,21 +1,25 @@
-import { InvitationsV2 } from 'fizz-kidz'
-
-import { useRsvps } from '../hooks/use-rsvps'
-import { UseRsvpTableProps, useRsvpTable } from '../hooks/use-rsvp-table'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
-import { flexRender } from '@tanstack/react-table'
-import { Skeleton } from '@ui-components/skeleton'
 import { Fragment, useState } from 'react'
+
+import { flexRender } from '@tanstack/react-table'
+import { Button } from '@ui-components/button'
+import { Skeleton } from '@ui-components/skeleton'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
-import { ShareInvitaitonDialog } from './share-invitation-dialog'
+
+import { useInvitation } from '../hooks/use-invitation'
+import { UseRsvpTableProps, useRsvpTable } from '../hooks/use-rsvp-table'
+import { useRsvps } from '../hooks/use-rsvps'
 import { EditInvitationDialog } from './edit-invitation-dialog'
+import { ShareInvitaitonDialog } from './share-invitation-dialog'
 
 const emptyState: UseRsvpTableProps = {
     rsvps: [],
     updateRsvp: () => {},
+    deleteRsvp: () => {},
 }
 
-export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitation }) {
+export function ManageRsvps() {
+    const invitation = useInvitation()
     const rsvps = useRsvps(invitation)
 
     const table = useRsvpTable(
@@ -23,6 +27,7 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
             ? {
                   rsvps: rsvps.result.rsvps,
                   updateRsvp: rsvps.result.updateRsvp,
+                  deleteRsvp: rsvps.result.deleteRsvp,
               }
             : emptyState
     )
@@ -124,7 +129,8 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
                                                 colSpan={table.getAllColumns().length}
                                                 className="h-24 text-center"
                                             >
-                                                No RSVP's.
+                                                No one has RSVP'd yet. Click the share button to share your invitation
+                                                with all of {invitation.childName}'s friends!
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -134,26 +140,23 @@ export function ManageRsvps({ invitation }: { invitation: InvitationsV2.Invitati
                     </div>
                 )}
             </div>
-            <EditInvitationDialog
-                invitation={invitation}
-                isOpen={showEditDialog}
-                close={() => setShowEditDialog(false)}
-            />
-            <ShareInvitaitonDialog
-                invitation={invitation}
-                isOpen={showShareDialog}
-                close={() => setShowShareDialog(false)}
-            />
+            <EditInvitationDialog isOpen={showEditDialog} close={() => setShowEditDialog(false)} />
+            <ShareInvitaitonDialog isOpen={showShareDialog} close={() => setShowShareDialog(false)} />
             <div className="fixed bottom-0 flex h-16 w-full">
-                <button className="w-full bg-[#02D7F7] p-4 font-bold uppercase" onClick={() => setShowEditDialog(true)}>
+                <Button
+                    variant="blue"
+                    className="h-full w-full text-wrap rounded-none p-4 font-bold uppercase"
+                    onClick={() => setShowEditDialog(true)}
+                >
                     Preview Invitation
-                </button>
-                <button
-                    className="w-full bg-[#FFDC5D] p-4 font-bold uppercase"
+                </Button>
+                <Button
+                    variant="yellow"
+                    className="h-full w-full text-wrap rounded-none p-4 font-bold uppercase"
                     onClick={() => setShowShareDialog(true)}
                 >
                     Share Invitation
-                </button>
+                </Button>
             </div>
         </>
     )
