@@ -1,23 +1,19 @@
-import { Dialog, DialogContent } from '@ui-components/dialog'
 import { InvitationsV2 } from 'fizz-kidz'
+import { Download, Edit, Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { Img } from 'react-image'
-import { useInvitationImage } from '../hooks/use-invitation-image'
+
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
-import { useState } from 'react'
-import { CreateInvitationForm } from '../create-invitation-form'
+import { Dialog, DialogContent } from '@ui-components/dialog'
 import { trpc } from '@utils/trpc'
-import { Download, Edit, Loader2 } from 'lucide-react'
 
-export function EditInvitationDialog({
-    invitation,
-    isOpen,
-    close,
-}: {
-    invitation: InvitationsV2.Invitation
-    isOpen: boolean
-    close: () => void
-}) {
+import { CreateInvitationForm } from '../create-invitation-form'
+import { useInvitation } from '../hooks/use-invitation'
+import { useInvitationImage } from '../hooks/use-invitation-image'
+
+export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+    const invitation = useInvitation()
     const invitationUrl = useInvitationImage(invitation.id)
 
     const [isEditing, setIsEditing] = useState(false)
@@ -51,16 +47,13 @@ export function EditInvitationDialog({
                         <h5 className="my-4 text-center font-lilita text-2xl">Invitation Preview</h5>
                         <Img src={invitationUrl} loader={<Loader className="my-12" />} />
                         <div className="mt-4 flex w-full gap-2">
-                            <a href={invitationUrl} download="invitation.png" className="w-1/2">
-                                <Button className="w-full bg-[#FFDC5D] text-black hover:bg-[#FFDC5D]/80">
+                            <a className="w-1/2" href={invitationUrl} download="invitation.png" tabIndex={-1}>
+                                <Button variant="yellow" className="w-full">
                                     Download Invitation
                                     <Download className="ml-2 h-4 w-4" />
                                 </Button>
                             </a>
-                            <Button
-                                className="w-1/2 bg-[#9B3EEA] hover:bg-[#9B3EEA]/80"
-                                onClick={() => setIsEditing(true)}
-                            >
+                            <Button variant="darkPurple" className="w-1/2" onClick={() => setIsEditing(true)}>
                                 Edit Invitation
                                 <Edit className="ml-2 h-4 w-4" />
                             </Button>
