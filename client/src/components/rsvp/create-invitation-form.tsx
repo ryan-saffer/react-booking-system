@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { InvitationsV2, Location } from 'fizz-kidz'
 import { CalendarIcon } from 'lucide-react'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@ui-components/button'
@@ -9,7 +9,7 @@ import { Calendar } from '@ui-components/calendar'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
 import { capitalise } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
 
@@ -30,6 +30,8 @@ export function CreateInvitationForm({
         defaultValues,
     })
 
+    useEffect(() => form.setFocus('childName'), [form])
+
     // used to close calendar popover after date selection
     const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
     const [isRsvpCalendarOpen, setIsRsvpCalendarOpen] = useState(false)
@@ -37,7 +39,7 @@ export function CreateInvitationForm({
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className={cn('space-y-2', className)}>
+                <div className={cn('space-y-4', className)}>
                     <FormField
                         control={form.control}
                         rules={{ required: true }}
@@ -132,17 +134,13 @@ export function CreateInvitationForm({
                         render={({ field }) => {
                             return (
                                 <FormItem>
-                                    <Select
+                                    <SelectForm
+                                        label="Party Location"
                                         onValueChange={field.onChange}
                                         disabled={isLoading}
                                         defaultValue={field.value}
                                     >
-                                        <FormLabel>Party Location</FormLabel>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select the parties location" />
-                                            </SelectTrigger>
-                                        </FormControl>
+                                        <SelectValue placeholder="Select the parties location" />
                                         <SelectContent
                                             // https://github.com/shadcn-ui/ui/issues/2620#issuecomment-1918404840
                                             ref={(ref) => {
@@ -153,7 +151,7 @@ export function CreateInvitationForm({
                                             <SelectItem value="studio">Fizz Kidz studio</SelectItem>
                                             <SelectItem value="mobile">Mobile Party (at home)</SelectItem>
                                         </SelectContent>
-                                    </Select>
+                                    </SelectForm>
                                 </FormItem>
                             )
                         }}
@@ -165,17 +163,13 @@ export function CreateInvitationForm({
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <Select
+                                    <SelectForm
+                                        label="Studio"
                                         onValueChange={field.onChange}
                                         defaultValue={field.value}
                                         disabled={isLoading}
                                     >
-                                        <FormLabel>Studio</FormLabel>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a studio" />
-                                            </SelectTrigger>
-                                        </FormControl>
+                                        <SelectValue placeholder="Select a studio" />
                                         <SelectContent
                                             // https://github.com/shadcn-ui/ui/issues/2620#issuecomment-1918404840
                                             ref={(ref) => {
@@ -189,7 +183,7 @@ export function CreateInvitationForm({
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
-                                    </Select>
+                                    </SelectForm>
                                 </FormItem>
                             )}
                         />

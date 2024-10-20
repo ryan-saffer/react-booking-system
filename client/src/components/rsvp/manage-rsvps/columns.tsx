@@ -1,9 +1,13 @@
+import { Rsvp, RsvpStatus } from 'fizz-kidz'
+import { ChevronRight, EllipsisVertical, Trash2 } from 'lucide-react'
+
 import { createColumnHelper } from '@tanstack/react-table'
 import { Badge } from '@ui-components/badge'
 import { Button } from '@ui-components/button'
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
@@ -11,21 +15,28 @@ import {
     DropdownMenuTrigger,
 } from '@ui-components/dropdown-menu'
 import { cn } from '@utils/tailwind'
-import { Rsvp } from 'fizz-kidz'
-import { ChevronRight, EllipsisVertical } from 'lucide-react'
+
 import { UseRsvpTableProps } from '../hooks/use-rsvp-table'
 
 // An rsvp can have multiple children, but we want a row for every child
-export type RsvpRow = Omit<Rsvp, 'children'> & Rsvp['children'][number]
+export type RsvpRow = Omit<Rsvp, 'children'> & Rsvp['children'][number] & { childIdx: number }
 
 const columnHelper = createColumnHelper<RsvpRow>()
 
-export function createColumns({ updateRsvp }: { updateRsvp: UseRsvpTableProps['updateRsvp'] }) {
+export function createColumns({
+    updateRsvp,
+    deleteRsvp,
+}: {
+    updateRsvp: UseRsvpTableProps['updateRsvp']
+    deleteRsvp: UseRsvpTableProps['deleteRsvp']
+}) {
     return [
         columnHelper.display({
             id: 'chevron',
             cell: ({ row }) => (
-                <ChevronRight className={cn('h-4 w-4 transition-transform', { 'rotate-90': row.getIsExpanded() })} />
+                <ChevronRight
+                    className={cn('h-4 w-4 transition-transform duration-500', { 'rotate-90': row.getIsExpanded() })}
+                />
             ),
             meta: {
                 headerClassName: 'w-10',
@@ -59,17 +70,23 @@ export function createColumns({ updateRsvp }: { updateRsvp: UseRsvpTableProps['u
                             <EllipsisVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="twp w-56">
+                    <DropdownMenuContent align="end" className="twp w-56" onClick={(e) => e.stopPropagation()}>
                         <DropdownMenuLabel>RSVP</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioGroup
-                            onClick={(e) => e.stopPropagation()}
                             value={row.original.rsvp}
-                            onValueChange={(value) => updateRsvp(row.original.id, value as Rsvp['rsvp'])}
+                            onValueChange={(value) =>
+                                updateRsvp(row.original.id, row.original.childIdx, value as RsvpStatus)
+                            }
                         >
                             <DropdownMenuRadioItem value="attending">Attending</DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="not-attending">Not Attending</DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => deleteRsvp(row.original.id, row.original.childIdx)}>
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete RSVP
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             ),
