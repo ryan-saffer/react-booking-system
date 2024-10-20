@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui-components
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
@@ -302,23 +302,20 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             name={`main.children.${idx}.grade` as const}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Child Grade</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a grade" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {GRADES.map((grade) => (
-                                                    <SelectItem key={grade} value={grade}>
-                                                        {grade}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
+                                    <SelectForm
+                                        label="Child Grade"
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectValue placeholder="Select a grade" />
+                                        <SelectContent>
+                                            {GRADES.map((grade) => (
+                                                <SelectItem key={grade} value={grade}>
+                                                    {grade}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </SelectForm>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -328,32 +325,25 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             name={`main.children.${idx}.hasAllergies` as const}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Does {watchedChildren?.[idx].firstName || 'this child'} have any allergies?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes</SelectItem>
-                                                <SelectItem value="no">No</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
+                                    <SelectForm
+                                        label={` Does ${watchedChildren?.[idx].firstName || 'this child'} have any
+                                        allergies?`}
+                                        onValueChange={(value) => {
+                                            if (value === 'yes') {
+                                                field.onChange(true)
+                                            }
+                                            if (value === 'no') {
+                                                field.onChange(false)
+                                            }
+                                        }}
+                                        defaultValue={''}
+                                    >
+                                        <SelectValue placeholder="Please select" />
+                                        <SelectContent>
+                                            <SelectItem value="yes">Yes</SelectItem>
+                                            <SelectItem value="no">No</SelectItem>
+                                        </SelectContent>
+                                    </SelectForm>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -382,32 +372,24 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 name={`main.children.${idx}.isAnaphylactic` as const}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            Is {watchedChildren?.[idx].firstName || 'this child'} anaphylactic?
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Select
-                                                onValueChange={(value) => {
-                                                    if (value === 'yes') {
-                                                        field.onChange(true)
-                                                    }
-                                                    if (value === 'no') {
-                                                        field.onChange(false)
-                                                    }
-                                                }}
-                                                defaultValue={''}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Please select" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="yes">Yes</SelectItem>
-                                                    <SelectItem value="no">No</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </FormControl>
+                                        <SelectForm
+                                            label={`Is ${watchedChildren[idx].firstName || 'this child'} anaphylactic?`}
+                                            onValueChange={(value) => {
+                                                if (value === 'yes') {
+                                                    field.onChange(true)
+                                                }
+                                                if (value === 'no') {
+                                                    field.onChange(false)
+                                                }
+                                            }}
+                                            defaultValue={''}
+                                        >
+                                            <SelectValue placeholder="Please select" />
+                                            <SelectContent>
+                                                <SelectItem value="yes">Yes</SelectItem>
+                                                <SelectItem value="no">No</SelectItem>
+                                            </SelectContent>
+                                        </SelectForm>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -445,33 +427,24 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             name={`main.children.${idx}.needsSupport` as const}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Does {watchedChildren?.[idx].firstName || 'your child'} need extra support for
-                                        learning difficulties, disabilites or additional learning needs?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes</SelectItem>
-                                                <SelectItem value="no">No</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
+                                    <SelectForm
+                                        label={`Does ${watchedChildren?.[idx].firstName || 'your child'} need extra support for learning difficulties, disabilites or additional learning needs?`}
+                                        onValueChange={(value) => {
+                                            if (value === 'yes') {
+                                                field.onChange(true)
+                                            }
+                                            if (value === 'no') {
+                                                field.onChange(false)
+                                            }
+                                        }}
+                                        defaultValue={''}
+                                    >
+                                        <SelectValue placeholder="Please select" />
+                                        <SelectContent>
+                                            <SelectItem value="yes">Yes</SelectItem>
+                                            <SelectItem value="no">No</SelectItem>
+                                        </SelectContent>
+                                    </SelectForm>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -498,35 +471,24 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             name={`main.children.${idx}.permissionToPhotograph` as const}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        We love to show other parents the cool things that we do by taking pictures and
-                                        videos. Do you give permission for{' '}
-                                        {watchedChildren?.[idx].firstName || 'your child'} to be in our marketing
-                                        content?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes - I give permission</SelectItem>
-                                                <SelectItem value="no">No - I don't give permission</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
+                                    <SelectForm
+                                        label={`We love to show other parents the cool things that we do by taking pictures and videos. Do you give permission for ${watchedChildren?.[idx].firstName || 'your child'} to be in our marketing content?`}
+                                        onValueChange={(value) => {
+                                            if (value === 'yes') {
+                                                field.onChange(true)
+                                            }
+                                            if (value === 'no') {
+                                                field.onChange(false)
+                                            }
+                                        }}
+                                        defaultValue={''}
+                                    >
+                                        <SelectValue placeholder="Please select" />
+                                        <SelectContent>
+                                            <SelectItem value="yes">Yes - I give permission</SelectItem>
+                                            <SelectItem value="no">No - I don't give permission</SelectItem>
+                                        </SelectContent>
+                                    </SelectForm>
                                     <FormMessage />
                                 </FormItem>
                             )}

@@ -1,23 +1,19 @@
+import { getApplicationDomain } from 'fizz-kidz'
+import { Copy, Mail, MessageCircleMore } from 'lucide-react'
+import { WhatsappShareButton } from 'react-share'
+import { toast } from 'sonner'
+
 import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
 import { Dialog, DialogContent } from '@ui-components/dialog'
 import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
 import { Separator } from '@ui-components/separator'
-import { getApplicationDomain, InvitationsV2 } from 'fizz-kidz'
-import { Copy, MessageCircleMore, Mail } from 'lucide-react'
-import { WhatsappShareButton } from 'react-share'
-import { toast } from 'sonner'
 
-export function ShareInvitaitonDialog({
-    invitation,
-    isOpen,
-    close,
-}: {
-    invitation: InvitationsV2.Invitation
-    isOpen: boolean
-    close: () => void
-}) {
+import { useInvitation } from '../hooks/use-invitation'
+
+export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+    const invitation = useInvitation()
     const invitationText = `You're invited to ${invitation.childName}'s party!`
     const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/v2/${invitation.id}`
 
@@ -31,7 +27,7 @@ export function ShareInvitaitonDialog({
             <DialogContent className="twp">
                 <div className="flex flex-col p-4">
                     <h5 className="font-lilita text-2xl">Let the party begin!</h5>
-                    <p className="mt-2 font-gotham">
+                    <p className="mt-2 font-gotham tracking-tight">
                         Share your invitation with all of {invitation.childName}'s friends.
                         <br />
                         <br />
@@ -47,15 +43,19 @@ export function ShareInvitaitonDialog({
                     </div>
                     <Separator className="my-6" />
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
-                        <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
-                            <WhatsappShareButton id="whatsapp" url={inviteUrl}>
-                                <WhatsappIcon size={36} />
+                        <Button
+                            variant="ghost"
+                            className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
+                        >
+                            <WhatsappShareButton aria-hidden="true" tabIndex={-1} id="whatsapp" url={inviteUrl}>
+                                <WhatsappIcon aria-hidden="true" size={36} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
                                 Whatsapp
                             </Label>
-                        </div>
-                        <div
+                        </Button>
+                        <Button
+                            variant="ghost"
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
                             onClick={() => window.open(`sms://?body=${encodeURIComponent(inviteUrl)}`)}
                         >
@@ -63,8 +63,9 @@ export function ShareInvitaitonDialog({
                             <Label htmlFor="sms" className="mt-2 cursor-pointer">
                                 SMS
                             </Label>
-                        </div>
-                        <div
+                        </Button>
+                        <Button
+                            variant="ghost"
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
                             onClick={() =>
                                 window.open(
@@ -76,8 +77,9 @@ export function ShareInvitaitonDialog({
                             <Label htmlFor="email" className="mt-2 cursor-pointer">
                                 Email
                             </Label>
-                        </div>
-                        <div
+                        </Button>
+                        <Button
+                            variant="ghost"
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
                             onClick={copy}
                         >
@@ -85,7 +87,7 @@ export function ShareInvitaitonDialog({
                             <Label htmlFor="copy" className="mt-2 cursor-pointer">
                                 Copy
                             </Label>
-                        </div>
+                        </Button>
                     </div>
                 </div>
             </DialogContent>

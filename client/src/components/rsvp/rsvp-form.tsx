@@ -1,13 +1,12 @@
 import { format } from 'date-fns'
 import { InvitationsV2 } from 'fizz-kidz'
-import { CalendarIcon, CircleX, Plus } from 'lucide-react'
+import { CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { Fragment, useState } from 'react'
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
+import { Fragment, useEffect, useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import Loader from '@components/Shared/Loader'
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DateCalendar } from '@mui/x-date-pickers'
@@ -16,7 +15,7 @@ import { Checkbox } from '@ui-components/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
@@ -35,37 +34,34 @@ const formSchema = z.object({
                     .date()
                     .optional()
                     .refine((date) => !!date, 'Date of birth is required'),
-                hasAllergies: z
-                    .boolean()
-                    .optional()
-                    .refine((val) => val !== undefined, 'Select if the child has any allergies.'),
+                rsvp: z.enum(['attending', 'not-attending']),
+                hasAllergies: z.boolean().optional(),
                 allergies: z.string().optional(),
             })
-            // only require `allergies` if `hasAllergies` is true
-            .refine(
-                (data) => {
-                    if (data.hasAllergies && !data.allergies) {
-                        return false
+            .superRefine((val, ctx) => {
+                if (val.rsvp === 'attending') {
+                    if (val.hasAllergies === undefined) {
+                        ctx.addIssue({
+                            code: z.ZodIssueCode.custom,
+                            message: `Please select if ${val.name ?? 'this child'} has any allergies`,
+                            path: ['hasAllergies'],
+                        })
                     }
-                    return true
-                },
-                {
-                    message: `Please enter the child's allergies`,
-                    path: ['allergies'],
+                    if (val.hasAllergies && val.allergies === '') {
+                        ctx.addIssue({
+                            code: z.ZodIssueCode.custom,
+                            message: `Please enter ${val.name ?? 'this child'}s allergies`,
+                            path: ['allergies'],
+                        })
+                    }
                 }
-            )
+            })
     ),
     message: z.string().trim().optional(),
     joinMailingList: z.boolean(),
 })
 
-export function RsvpForm({
-    invitation,
-    onComplete,
-}: {
-    invitation: InvitationsV2.Invitation
-    onComplete: (rsvp: 'attending' | 'not-attending') => void
-}) {
+export function RsvpForm({ invitation, onComplete }: { invitation: InvitationsV2.Invitation; onComplete: () => void }) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -76,6 +72,7 @@ export function RsvpForm({
                 {
                     name: '',
                     dob: undefined,
+                    rsvp: undefined,
                     hasAllergies: undefined,
                     allergies: '',
                 },
@@ -94,15 +91,18 @@ export function RsvpForm({
         name: 'children',
     })
 
+    useEffect(() => {
+        form.setFocus('parentName')
+    }, [form])
+
     const { isLoading, mutateAsync: sendRsvp } = trpc.parties.rsvp.useMutation()
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
 
-    const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (values, event) => {
-        const rsvp = (event?.nativeEvent as any).submitter.value as 'attending' | 'not-attending'
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            await sendRsvp({ ...values, rsvp, bookingId: invitation.bookingId })
-            onComplete(rsvp)
+            await sendRsvp({ ...values, bookingId: invitation.bookingId })
+            onComplete()
         } catch {
             // TODO - track this error
             toast.error("There was a problem RSVP'ing. Please let the parent know directly if you are able to attend.")
@@ -111,267 +111,276 @@ export function RsvpForm({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-                <SectionBreak title="Parent Details" />
-                <FormField
-                    control={form.control}
-                    name="parentName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Parent Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Parent's Name" autoComplete="off" disabled={isLoading} {...field} />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="parentEmail"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Parent Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Parent's Email"
-                                    autoComplete="off"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="parentMobile"
-                    render={({ field }) => (
-                        <FormItem className="pb-2">
-                            <FormLabel>Parent Mobile</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Parent's Mobile"
-                                    autoComplete="off"
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <SectionBreak title="Children Details" />
-                {children.map((child, idx) => (
-                    <Fragment key={idx}>
-                        {children.length > 1 && (
-                            <div className="flex items-center gap-2">
-                                <h3 className="font-medium">{getChildNumber(idx + 1)}</h3>
-                                <TooltipProvider delayDuration={150}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 w-8 p-0"
-                                                type="button"
-                                                onClick={() => removeChild(idx)}
-                                            >
-                                                <CircleX className="h-4 w-4" color="#E16A92" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Remove child</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </div>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="mb-16 space-y-4">
+                    <SectionBreak title="Parent Details" />
+                    <FormField
+                        control={form.control}
+                        name="parentName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Parent Name</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Parent's Name"
+                                        autoComplete="off"
+                                        disabled={isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                            </FormItem>
                         )}
-                        <FormField
-                            key={child.id}
-                            control={form.control}
-                            name={`children.${idx}.name`}
-                            render={({ field }) => (
-                                <FormItem className="pb-2">
-                                    <FormLabel>Child first name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Child's first name"
-                                            autoComplete="off"
-                                            disabled={isLoading}
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`children.${idx}.dob` as const}
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Date of birth</FormLabel>
-                                    <Popover
-                                        open={openCalendars[child.id]}
-                                        onOpenChange={(open) =>
-                                            setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
-                                        }
-                                    >
-                                        <PopoverTrigger asChild>
+                    />
+                    <FormField
+                        control={form.control}
+                        name="parentEmail"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Parent Email</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Parent's Email" disabled={isLoading} {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="parentMobile"
+                        render={({ field }) => (
+                            <FormItem className="pb-2">
+                                <FormLabel>Parent Mobile</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Parent's Mobile" disabled={isLoading} {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <SectionBreak title="Children Details" />
+                    {children.map((child, idx) => {
+                        const watchChild = form.watch('children')[idx]
+                        return (
+                            <Fragment key={idx}>
+                                {children.length > 1 && (
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-medium">{getChildNumber(idx + 1)}</h3>
+                                        <TooltipProvider delayDuration={150}>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-8 w-8 p-0"
+                                                        type="button"
+                                                        onClick={() => removeChild(idx)}
+                                                    >
+                                                        <CircleX className="h-4 w-4" color="#E16A92" />
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Remove child</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    </div>
+                                )}
+                                <FormField
+                                    key={child.id}
+                                    control={form.control}
+                                    name={`children.${idx}.name`}
+                                    render={({ field }) => (
+                                        <FormItem className="pb-2">
+                                            <FormLabel>Child first name</FormLabel>
                                             <FormControl>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className={cn(
-                                                        'w-full pl-3 text-left font-normal',
-                                                        !field.value && 'text-muted-foreground'
-                                                    )}
+                                                <Input
+                                                    placeholder="Child's first name"
+                                                    autoComplete="off"
+                                                    disabled={isLoading}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={`children.${idx}.dob` as const}
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-col">
+                                            <FormLabel>Date of birth</FormLabel>
+                                            <Popover
+                                                open={openCalendars[child.id]}
+                                                onOpenChange={(open) =>
+                                                    setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
+                                                }
+                                            >
+                                                <PopoverTrigger asChild>
+                                                    <FormControl>
+                                                        <Button
+                                                            variant={'outline'}
+                                                            className={cn(
+                                                                'w-full pl-3 text-left font-normal',
+                                                                !field.value && 'text-muted-foreground'
+                                                            )}
+                                                            disabled={isLoading}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, 'PPP')
+                                                            ) : (
+                                                                <span>Pick a date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </FormControl>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0" align="start">
+                                                    <DateCalendar
+                                                        openTo="year"
+                                                        onChange={(datetime: DateTime | null, state) => {
+                                                            if (datetime && state === 'finish') {
+                                                                field.onChange(datetime.toJSDate())
+                                                                setOpenCalendars((prev) => ({
+                                                                    ...prev,
+                                                                    [child.id]: false,
+                                                                }))
+                                                            }
+                                                        }}
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={`children.${idx}.rsvp` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <SelectForm
+                                                label={`Will ${watchChild.name || 'this child'} be able to attend?`}
+                                                onValueChange={field.onChange}
+                                                defaultValue={''}
+                                                disabled={isLoading}
+                                            >
+                                                <SelectValue placeholder="Please select" />
+                                                <SelectContent>
+                                                    <SelectItem value="attending">Will attend</SelectItem>
+                                                    <SelectItem value="not-attending">Cannot attend</SelectItem>
+                                                </SelectContent>
+                                            </SelectForm>
+                                        </FormItem>
+                                    )}
+                                />
+                                {watchChild.rsvp === 'attending' && (
+                                    <FormField
+                                        control={form.control}
+                                        name={`children.${idx}.hasAllergies` as const}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <SelectForm
+                                                    label={`Does ${watchChild.name || 'this child'} have any allergies?`}
+                                                    onValueChange={(value) => {
+                                                        if (value === 'yes') {
+                                                            field.onChange(true)
+                                                        }
+                                                        if (value === 'no') {
+                                                            field.onChange(false)
+                                                        }
+                                                    }}
+                                                    defaultValue={''}
                                                     disabled={isLoading}
                                                 >
-                                                    {field.value ? (
-                                                        format(field.value, 'PPP')
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <DateCalendar
-                                                openTo="year"
-                                                onChange={(datetime: DateTime | null, state) => {
-                                                    if (datetime && state === 'finish') {
-                                                        field.onChange(datetime.toJSDate())
-                                                        setOpenCalendars((prev) => ({ ...prev, [child.id]: false }))
-                                                    }
-                                                }}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`children.${idx}.hasAllergies` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Does {form.watch('children')[idx].name || 'this child'} have any allergies?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                            disabled={isLoading}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
                                                     <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes</SelectItem>
-                                                <SelectItem value="no">No</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        {form.watch('children')[idx].hasAllergies && (
-                            <FormField
-                                control={form.control}
-                                name={`children.${idx}.allergies` as const}
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Please enter {form.watch('children')[idx].name || 'the child'}'s allergies
-                                            here
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Textarea disabled={isLoading} {...field} />
-                                        </FormControl>
-                                    </FormItem>
+                                                    <SelectContent>
+                                                        <SelectItem value="yes">Yes</SelectItem>
+                                                        <SelectItem value="no">No</SelectItem>
+                                                    </SelectContent>
+                                                </SelectForm>
+                                            </FormItem>
+                                        )}
+                                    />
                                 )}
-                            />
-                        )}
-                    </Fragment>
-                ))}
-                <Button
-                    className="w-full border-2 border-dashed bg-slate-50"
-                    type="button"
-                    variant="outline"
-                    onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
-                    disabled={isLoading}
-                >
-                    {form.getValues('children').length === 0 ? 'Add Child' : 'Add another child'}
-                    <Plus className="ml-2 h-4 w-4" />
-                </Button>
-                <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Message</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder={`An optional message to send to ${invitation.childName}'s parents`}
-                                    rows={4}
-                                    disabled={isLoading}
-                                    {...field}
-                                />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="joinMailingList"
-                    render={({ field }) => (
-                        <FormItem className="py-2">
-                            <div className="flex items-center space-y-0">
-                                <FormControl>
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-                                <FormLabel className="ml-2 cursor-pointer">
-                                    Keep me informed about the latest Fizz Kidz programs and offers.
-                                </FormLabel>
-                            </div>
-                        </FormItem>
-                    )}
-                />
-                <div
-                    className={cn('flex w-full flex-col items-stretch justify-center gap-4', {
-                        'py-4': isLoading,
+                                {watchChild.rsvp === 'attending' && watchChild.hasAllergies && (
+                                    <FormField
+                                        control={form.control}
+                                        name={`children.${idx}.allergies` as const}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Please enter {form.watch('children')[idx].name || 'the child'}'s
+                                                    allergies here
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Textarea disabled={isLoading} {...field} />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                )}
+                            </Fragment>
+                        )
                     })}
-                >
-                    {isLoading ? (
-                        <Loader />
-                    ) : (
-                        <>
-                            <Button
-                                className="rounded-2xl bg-[#02D7F7] font-extrabold uppercase text-black hover:bg-[#02D7F7]/90"
-                                type="submit"
-                                value="attending"
-                            >
-                                Attending
-                            </Button>
-                            <Button
-                                className="rounded-2xl bg-[#FFDC5D] font-extrabold uppercase text-black hover:bg-[#FFDC5D]/90"
-                                type="submit"
-                                value="not-attending"
-                            >
-                                Can't make it
-                            </Button>
-                        </>
-                    )}
+                    <Button
+                        className="w-full border-2 border-dashed bg-slate-50"
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                            appendChild(
+                                {
+                                    name: '',
+                                    dob: undefined,
+                                    rsvp: undefined,
+                                    hasAllergies: undefined,
+                                    allergies: '',
+                                } as any,
+                                { shouldFocus: true }
+                            )
+                        }
+                        disabled={isLoading}
+                    >
+                        {form.getValues('children').length === 0 ? 'Add Child' : 'Add another child'}
+                        <Plus className="ml-2 h-4 w-4" />
+                    </Button>
+                    <FormField
+                        control={form.control}
+                        name="message"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Message</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        placeholder={`An optional message to send to ${invitation.childName}'s parents`}
+                                        rows={4}
+                                        disabled={isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="joinMailingList"
+                        render={({ field }) => (
+                            <FormItem className="py-4">
+                                <div className="flex items-center justify-end space-y-0">
+                                    <FormControl>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                    <FormLabel className="ml-2 cursor-pointer">
+                                        Keep me informed about the latest Fizz Kidz programs and offers.
+                                    </FormLabel>
+                                </div>
+                            </FormItem>
+                        )}
+                    />
                 </div>
+                <Button
+                    variant="blue"
+                    className="fixed bottom-0 -ml-4 h-16 w-full rounded-none font-extrabold"
+                    type="submit"
+                >
+                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'RSVP'}
+                </Button>
             </form>
         </Form>
     )

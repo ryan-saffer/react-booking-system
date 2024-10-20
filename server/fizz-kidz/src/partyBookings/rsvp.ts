@@ -3,7 +3,16 @@ export type Rsvp = {
     parentName: string
     parentEmail: string
     parentMobile: string
-    children: { name: string; dob: Date; hasAllergies: boolean; allergies?: string }[]
+    children: Child[]
     message?: string
-    rsvp: 'attending' | 'not-attending'
 }
+
+type Child = {
+    name: string
+    dob: Date
+    rsvp: 'attending' | 'not-attending'
+    hasAllergies?: boolean
+    allergies?: string
+}
+
+export type RsvpStatus = Rsvp['children'][number]['rsvp']
