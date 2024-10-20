@@ -5,14 +5,15 @@ import { useParams } from 'react-router-dom'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
 import Loader from '@components/Shared/Loader'
+import { timestampConverter } from '@utils/firebase/converters'
 
+import { InvitationProvider } from '../hooks/invitation-provider'
 import { ManageRsvps } from '../manage-rsvps/manage-rsvps'
 import { Navbar } from '../navbar'
 import { ViewInvitation } from '../view-invitation'
-import { timestampConverter } from '@utils/firebase/converters'
 
 /**
- * A middleware page to decide to show the RSVP tracker or guest page, depending on who is logged in.
+ * Middleware that redirects to either Manage RSVP's or View Invitation, depending on who is logged in.
  */
 export function ViewInvitationPage() {
     const auth = useAuth()
@@ -31,6 +32,8 @@ export function ViewInvitationPage() {
                 if (snap.exists) {
                     const invitation = snap.data() as InvitationsV2.Invitation
                     setInvitation({ status: 'loaded', result: invitation })
+                } else {
+                    setInvitation({ status: 'error', error: 'not-found' })
                 }
             })
 
@@ -47,11 +50,11 @@ export function ViewInvitationPage() {
                 </div>
             )}
             {invitation.status === 'error' && <h1>Something went wrong loading this invitation</h1>}
-            {invitation.status === 'loaded' && auth && auth.uid === invitation.result.uid && (
-                <ManageRsvps invitation={invitation.result} />
-            )}
-            {invitation.status === 'loaded' && (!auth || auth.uid !== invitation.result.uid) && (
-                <ViewInvitation invitation={invitation.result} />
+            {invitation.status === 'loaded' && (
+                <InvitationProvider invitation={invitation.result}>
+                    {auth && auth.uid === invitation.result.uid && <ManageRsvps />}
+                    {(!auth || auth.uid !== invitation.result.uid) && <ViewInvitation />}
+                </InvitationProvider>
             )}
         </div>
     )
