@@ -33,6 +33,20 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
         location.reload() // needed to refetch the image from storage
     }
 
+    async function downloadInvitation() {
+        const result = await fetch(invitationUrl)
+        const blob = await result.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.style.display = 'none'
+        a.href = url
+        a.download = `${invitation.childName}'s Party Invitation.png`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        a.remove()
+    }
+
     return (
         <Dialog
             open={isOpen}
@@ -47,12 +61,10 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                         <h5 className="my-4 text-center font-lilita text-2xl">Invitation Preview</h5>
                         <Img src={invitationUrl} loader={<Loader className="my-12" />} />
                         <div className="mt-4 flex w-full gap-2">
-                            <a className="w-1/2" href={invitationUrl} download="invitation.png" tabIndex={-1}>
-                                <Button variant="yellow" className="w-full">
-                                    Download Invitation
-                                    <Download className="ml-2 h-4 w-4" />
-                                </Button>
-                            </a>
+                            <Button variant="yellow" className="w-1/2" onClick={downloadInvitation}>
+                                Download Invitation
+                                <Download className="ml-2 h-4 w-4" />
+                            </Button>
                             <Button variant="darkPurple" className="w-1/2" onClick={() => setIsEditing(true)}>
                                 Edit Invitation
                                 <Edit className="ml-2 h-4 w-4" />
