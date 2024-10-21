@@ -1,7 +1,9 @@
-import { InvitationsV2, WithoutId, WithoutUid, generateRandomString } from 'fizz-kidz'
-import fsPromise from 'fs/promises'
 import fs from 'fs'
 
+import { InvitationsV2, WithoutId, WithoutUid, generateRandomString } from 'fizz-kidz'
+import fsPromise from 'fs/promises'
+
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { StorageClient } from '../../../firebase/StorageClient'
 import { projectId } from '../../../init'
 import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
@@ -21,28 +23,34 @@ export async function generateInvitationV2(input: WithoutId<WithoutUid<Invitatio
     input.date = new Date(input.date)
     input.rsvpDate = new Date(input.rsvpDate)
 
-    const id = generateRandomString()
+    // check if this booking already has an invitation.
+    // if so, use the same id, since the qr code will need to link to the correct invitation.
+    const booking = await DatabaseClient.getPartyBooking(input.bookingId)
+    const id = booking.invitationId || generateRandomString()
+
+    // invitations are first stored in temp, and only moved to their actual location during linking.
+    // this makes it very easy to clear all unlinked invitations.
     const filename = 'invitation.png'
-    const destination = `invitations-v2/${id}/${filename}`
+    const LOCAL_PATH = `${__dirname}/temp/${id}/${filename}`
+    const FIREBASE_STORAGE_PATH = `invitations-v2/temp/${id}/${filename}`
 
     if (!fs.existsSync(`${__dirname}/temp`)) {
         await fsPromise.mkdir(`${__dirname}/temp`)
     }
+    if (!fs.existsSync(`${__dirname}/temp/${id}`)) {
+        await fsPromise.mkdir(`${__dirname}/temp/${id}`)
+    }
 
     const imageGenerator = new InvitationImageGenerator({ ...input, id })
-    await imageGenerator.generatePng(`${__dirname}/temp/${filename}`)
+    await imageGenerator.generatePng(LOCAL_PATH)
 
     const storage = await StorageClient.getInstance()
-    await storage.bucket(`${projectId}.appspot.com`).upload(`${__dirname}/temp/${filename}`, {
-        destination,
+    await storage.bucket(`${projectId}.appspot.com`).upload(LOCAL_PATH, {
+        destination: FIREBASE_STORAGE_PATH,
     })
 
-    // delete the file, and if the temp directory is empty afterwards, delete it
-    await fsPromise.rm(`${__dirname}/temp/${filename}`)
-    const files = await fsPromise.readdir(`${__dirname}/temp`)
-    if (files.length === 0) {
-        await fsPromise.rmdir(`${__dirname}/temp`, { recursive: true })
-    }
+    // delete the file locally since its not needed anymore
+    await fsPromise.rm(LOCAL_PATH)
 
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-generated-v2', {
