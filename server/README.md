@@ -4,16 +4,16 @@ This directory contains the backend Node.js application for the Fizz Kidz Portal
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Core Technologies](#core-technologies)
-- [Project Structure](#project-structure)
-- [Function Types](#function-types)
-  - [tRPC Routers](#trpc-routers)
-  - [Webhook Handlers](#webhook-handlers)
-  - [Pub/Sub Functions](#pubsub-functions)
-- [Key Design Patterns](#key-design-patterns)
-  - [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
-- [Development](#development)
+-   [Overview](#overview)
+-   [Core Technologies](#core-technologies)
+-   [Project Structure](#project-structure)
+-   [Function Types](#function-types)
+    -   [tRPC Routers](#trpc-routers)
+    -   [Webhook Handlers](#webhook-handlers)
+    -   [Pub/Sub Functions](#pubsub-functions)
+-   [Key Design Patterns](#key-design-patterns)
+    -   [Lazy Instantiation of SDK Clients](#lazy-instantiation-of-sdk-clients)
+-   [Development](#development)
 
 ## Overview
 
@@ -21,13 +21,13 @@ The server provides the API for the client application and handles background ta
 
 ## Core Technologies
 
-- **Runtime:** Node.js
-- **Language:** TypeScript
-- **Deployment:** Firebase Functions
-- **API:** tRPC
-- **Database:** Firebase Firestore (implicitly, via `fizz-kidz` module and Firebase Admin SDK usage)
-- **Messaging:** Google Cloud Pub/Sub
-- **Payments:** Square for all consumer payments (orders, payments, refunds). B2B invoices are issued via Xero.
+-   **Runtime:** Node.js
+-   **Language:** TypeScript
+-   **Deployment:** Firebase Functions
+-   **API:** tRPC
+-   **Database:** Firebase Firestore (implicitly, via `fizz-kidz` module and Firebase Admin SDK usage)
+-   **Messaging:** Google Cloud Pub/Sub
+-   **Payments:** Square for all consumer payments (orders, payments, refunds). B2B invoices are issued via Xero.
 
 ## Project Structure
 
@@ -79,7 +79,24 @@ Functions exported from `server/src/index.ts` are deployed via Firebase. The cur
     -   Dynamically importing the SDK (`await import('some-sdk')`) only when the client is first requested.
     -   This ensures that a function invocation doesn't pay the performance penalty of importing and parsing large SDKs unless that specific SDK is actually needed for the current operation. An example can be seen in `server/src/square/core/square-client.ts`.
 
-## Development
+## Installation
+
+Before running `npm install` the following packages must be installed using homebrew:
+
+```sh
+brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
+```
+
+This is needed for installation of the [canvas library](https://github.com/Automattic/node-canvas?tab=readme-ov-file#installation) on macOS with Apple Silicon.
+
+You can then install dependencies by running:
+
+```sh
+npm install canvas --build-from-source
+npm install
+```
+
+## Run Locally
 
 To run the server functions locally for development, Firebase emulators are used:
 
