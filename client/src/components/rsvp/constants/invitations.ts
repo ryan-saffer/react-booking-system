@@ -1,6 +1,6 @@
-import { InvitationOption } from 'fizz-kidz'
+import { InvitationsV2 } from 'fizz-kidz'
 
-export const INVITATIONS: { name: InvitationOption; src: string }[] = [
+export const INVITATIONS: { name: InvitationsV2.InvitationOption; src: string }[] = [
     {
         name: 'Freckles',
         src: '/invitations/Invitation-Freckles.png',

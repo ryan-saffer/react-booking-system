@@ -2,14 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { PNGStream, createCanvas, loadImage, registerFont } from 'canvas'
-import {
-    InvitationOption,
-    InvitationsV2,
-    ObjectKeys,
-    WithoutUid,
-    getApplicationDomain,
-    getLocationAddress,
-} from 'fizz-kidz'
+import { InvitationsV2, ObjectKeys, WithoutUid, getApplicationDomain, getLocationAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
@@ -138,7 +131,7 @@ type InvitationCoordinates = {
 }
 
 const InvitationInfo: Record<
-    InvitationOption,
+    InvitationsV2.InvitationOption,
     { filename: string; textInfo: InvitationCoordinates; qrCodePosition: 'top' | 'bottom' }
 > = {
     Freckles: {
@@ -269,103 +262,253 @@ const InvitationInfo: Record<
     },
     'Glitz & Glam': {
         filename: 'glitz.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
     'Bubbling Fun': {
         filename: 'bubbling.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
     'Bubbling Blue Fun': {
         filename: 'bubbling-blue.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
     'Slime Time': {
         filename: 'slime.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
     Swiftie: {
         filename: 'swift.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
     'Tie Dye': {
         filename: 'tie-dye.png',
+        qrCodePosition: 'bottom',
         textInfo: {
             childName: {
                 font: '120px lilita',
                 textAlign: 'center',
                 fillStyle: '#ABC954',
-                coords: { x: 740, y: 1060 },
+                coords: { x: 705, y: 860 },
             },
             date: {
                 font: 'bold 40px Open Sans Condensed Light',
                 fillStyle: 'black',
                 textAlign: 'left',
-                coords: { x: 482, y: 1345 },
+                coords: { x: 423, y: 1141 },
+            },
+            time: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 817, y: 1141 },
+            },
+            rsvpLine1: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 520, y: 1264 },
+            },
+            rsvpLine2: {
+                font: 'bold 40px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'left',
+                coords: { x: 558, y: 1319 },
+            },
+            address: {
+                font: '34px Open Sans Condensed Light',
+                fillStyle: 'black',
+                textAlign: 'center',
+                coords: { x: 877, y: 1781 },
             },
         },
     },
