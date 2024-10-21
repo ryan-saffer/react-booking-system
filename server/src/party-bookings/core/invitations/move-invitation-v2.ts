@@ -16,9 +16,9 @@ export async function moveInvitation(newId: string, _invitation: InvitationsV2.I
     const storage = await StorageClient.getInstance()
     await storage
         .bucket(`${projectId}.appspot.com`)
-        .file(`invitations-v2/${existingId}/invitation.png`)
+        .file(`invitations-v2/temp/${existingId}/invitation.png`)
         .move(`invitations-v2/${newId}/invitation.png`)
 
-    // move it in firestore
+    // move it in firestore (to move a firestore document you must create a new one..)
     await DatabaseClient.createInvitationV2({ ...invitation, id: newId })
 }
