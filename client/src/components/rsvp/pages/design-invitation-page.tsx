@@ -1,5 +1,5 @@
 import { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
@@ -7,15 +7,7 @@ import { toast } from 'sonner'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { Button } from '@ui-components/button'
-import { Card, CardContent } from '@ui-components/card'
-import {
-    Carousel,
-    CarouselApi,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from '@ui-components/carousel'
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@ui-components/carousel'
 import { trpc } from '@utils/trpc'
 
 import { INVITATIONS } from '../constants/invitations'
@@ -113,13 +105,13 @@ export function DesignInvitationPage() {
             {childName && (
                 <h1 className="mt-4 text-center font-lilita text-3xl text-[#9B3EEA]">{childName}'s Birthday party</h1>
             )}
-            <div className="relative">
-                <Button variant="outline" className="absolute left-8 top-1" onClick={goBack}>
+            <div className="relative m-auto max-w-3xl">
+                <Button variant="outline" className="absolute left-4 top-2" size="sm" onClick={goBack}>
                     <ArrowLeft />
                 </Button>
                 <p className=" mt-6 text-center font-lilita text-5xl">Step {step}</p>
             </div>
-            {step === 1 && <Step1 setApi={setApi} nextStep={nextStep} />}
+            {step === 1 && <Step1 api={api} setApi={setApi} nextStep={nextStep} />}
             {step === 2 && (
                 <Step2
                     selectedInvitation={selectedInvitation}
@@ -137,7 +129,15 @@ export function DesignInvitationPage() {
     )
 }
 
-function Step1({ setApi, nextStep }: { setApi: (api: CarouselApi) => void; nextStep: () => void }) {
+function Step1({
+    api,
+    setApi,
+    nextStep,
+}: {
+    api: CarouselApi
+    setApi: (api: CarouselApi) => void
+    nextStep: () => void
+}) {
     return (
         <>
             <p className="mt-4 text-center">
@@ -145,26 +145,43 @@ function Step1({ setApi, nextStep }: { setApi: (api: CarouselApi) => void; nextS
                 <br />
                 Choose the design of your invite
             </p>
-            <div className="flex justify-center pb-24 pt-8">
-                <Carousel className="w-[calc(100%-128px)]" setApi={setApi}>
-                    <CarouselContent>
-                        {INVITATIONS.map((invitation, index) => (
-                            <CarouselItem key={index} className="">
-                                <div className="p-1">
-                                    <Card>
-                                        <CardContent className="flex flex-col items-center justify-center gap-4 p-6">
-                                            <img src={invitation.src}></img>
-                                            <p className="font-semibold">{invitation.name}</p>
-                                        </CardContent>
-                                    </Card>
-                                </div>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                </Carousel>
+            <div className="my-4 flex items-center justify-center">
+                <p className="italic">Swipe to see more</p>
+                <ArrowRight className="ml-2 h-4 w-4" />
             </div>
+            <Carousel setApi={setApi} opts={{ align: 'center' }}>
+                <CarouselContent className="m-auto max-w-xl">
+                    {INVITATIONS.map((invitation, index) => (
+                        <CarouselItem key={index} className="basis-full pr-4">
+                            <div className="flex flex-col gap-4 rounded-xl border p-2">
+                                <p className="text-center text-xl font-semibold">{invitation.name}</p>
+                                <img src={invitation.src} className="w-full"></img>
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+            <div className="my-4 flex items-center justify-center gap-4 pb-20">
+                <Button
+                    disabled={!api?.canScrollPrev()}
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={() => api?.scrollPrev()}
+                >
+                    <ChevronLeft />
+                </Button>
+                <Button
+                    disabled={!api?.canScrollNext()}
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={() => api?.scrollNext()}
+                >
+                    <ChevronRight />
+                </Button>
+            </div>
+            {/* </div> */}
             <button
                 onClick={nextStep}
                 className="fixed bottom-0 flex h-16 w-full  items-center justify-center bg-[#9B3EEA] font-bold text-white"
