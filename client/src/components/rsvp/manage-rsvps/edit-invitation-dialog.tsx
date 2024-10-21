@@ -14,7 +14,7 @@ import { useInvitationImage } from '../hooks/use-invitation-image'
 
 export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
     const invitation = useInvitation()
-    const invitationUrl = useInvitationImage(invitation.id)
+    const invitationUrl = useInvitationImage(invitation.id, false)
 
     const [isEditing, setIsEditing] = useState(false)
 

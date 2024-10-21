@@ -1,4 +1,5 @@
 import type { Storage } from 'firebase-admin/storage'
+
 import { ClientStatus } from '../utilities/types'
 
 export class StorageClient {

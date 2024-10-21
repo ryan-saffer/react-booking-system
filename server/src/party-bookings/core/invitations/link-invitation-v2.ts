@@ -34,7 +34,8 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
             )
         }
     } else {
-        await DatabaseClient.createInvitationV2(invitation)
+        // move the file in storage from temp to its final location
+        await moveInvitation(invitation.id, invitation)
 
         // update the booking to reference the new invitation
         await DatabaseClient.updatePartyBooking(invitation.bookingId, {
