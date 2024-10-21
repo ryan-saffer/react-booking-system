@@ -29,7 +29,7 @@ export async function generateInvitationV2(input: WithoutId<WithoutUid<Invitatio
         await fsPromise.mkdir(`${__dirname}/temp`)
     }
 
-    const imageGenerator = new InvitationImageGenerator(input)
+    const imageGenerator = new InvitationImageGenerator({ ...input, id })
     await imageGenerator.generatePng(`${__dirname}/temp/${filename}`)
 
     const storage = await StorageClient.getInstance()

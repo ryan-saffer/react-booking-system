@@ -3,38 +3,38 @@ import { InvitationOption } from 'fizz-kidz'
 export const INVITATIONS: { name: InvitationOption; src: string }[] = [
     {
         name: 'Freckles',
-        src: '/invitations/Invitation+Envelope-Freckles.png',
+        src: '/invitations/Invitation-Freckles.png',
     },
     {
         name: 'Stripes',
-        src: '/invitations/Invitation+Envelope-Stripes.png',
+        src: '/invitations/Invitation-Stripes.png',
     },
     {
         name: 'Dots',
-        src: '/invitations/Invitation+Envelope-Dots.png',
+        src: '/invitations/Invitation-Dots.png',
     },
     {
         name: 'Glitz & Glam',
-        src: '/invitations/Invitation+Envelope-Glitz.png',
+        src: '/invitations/Invitation-Glitz.png',
     },
     {
         name: 'Swiftie',
-        src: '/invitations/Invitation+Envelope-Swift.png',
+        src: '/invitations/Invitation-Swift.png',
     },
     {
         name: 'Bubbling Fun',
-        src: '/invitations/Invitation+Envelope-Bubbling.png',
+        src: '/invitations/Invitation-Bubbling.png',
     },
     {
         name: 'Bubbling Blue Fun',
-        src: '/invitations/Invitation+Envelope-Bubbling-Blue.png',
+        src: '/invitations/Invitation-Bubbling-Blue.png',
     },
     {
         name: 'Slime Time',
-        src: '/invitations/Invitation+Envelope-Slime.png',
+        src: '/invitations/Invitation-Slime.png',
     },
     {
         name: 'Tie Dye',
-        src: '/invitations/Invitation+Envelope-Tye-Dye.png',
+        src: '/invitations/Invitation-Tye-Dye.png',
     },
 ]
