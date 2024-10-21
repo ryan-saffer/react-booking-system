@@ -43,17 +43,14 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
                     </div>
                     <Separator className="my-6" />
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
-                        <Button
-                            variant="ghost"
-                            className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"
-                        >
-                            <WhatsappShareButton aria-hidden="true" tabIndex={-1} id="whatsapp" url={inviteUrl}>
+                        <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                            <WhatsappShareButton className="" id="whatsapp" url={inviteUrl}>
                                 <WhatsappIcon aria-hidden="true" size={36} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
                                 Whatsapp
                             </Label>
-                        </Button>
+                        </div>
                         <Button
                             variant="ghost"
                             className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100"

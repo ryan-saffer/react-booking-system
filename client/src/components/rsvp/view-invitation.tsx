@@ -11,7 +11,7 @@ export function ViewInvitation() {
     const navigate = useNavigate()
 
     const invitation = useInvitation()
-    const invitationUrl = useInvitationImage(invitation.id)
+    const invitationUrl = useInvitationImage(invitation.id, false)
 
     return (
         <>
