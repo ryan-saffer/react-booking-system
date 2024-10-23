@@ -201,7 +201,7 @@ export const CustomerBookingScreen = () => {
     return (
         <Root width="centered" useTailwindPreflight={false}>
             <Typography.Title level={4} style={{ margin: 24, marginTop: 0, textAlign: 'center' }}>
-                Holiday Program Booking Form
+                Booking Form
             </Typography.Title>
             <Steps current={step - 1} style={{ marginBottom: 24 }}>
                 <Step title="Select classes" />
