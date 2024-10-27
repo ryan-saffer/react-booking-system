@@ -705,8 +705,14 @@ const volcano = {
 * Scissors
 * Bicarbonate Soda x 1 15ml FLAT spoon of for every 2 children
 * Red pre coloured vinegar (in jugs)
-* Trays x1 between 2
-* Cups x1 between 2
+
+_Parties with less than 20 children_:
+* 1 Tray per child
+* 1 Cup per child
+
+_Parties with 20 or more children_:
+* 1 Tray shared between 2 children
+* 1 Cup shared between 2 children
 
 > Fizz Tip: Do this creation last. This creation run a little different to all other creations as it's so imaginative. Facilitators MUST engage in activating the creative process. If done wrong, this creation can be a total flop. A good starting point is -  'Who has seen Moana?! There is a beautiful Volcano in Moana, that is magical! Your challenge is to create a volcano EVEN BETTER than that one!' 
 
