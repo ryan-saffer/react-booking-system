@@ -18,7 +18,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
         booking.partyFormFilledIn = true
         logger.log(booking)
     } catch (err) {
-        logError('error handling party form submission', err)
+        logError('error handling party form submission', err, { responses })
         return
     }
 
@@ -43,7 +43,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
                     oldCreations: getBookingCreations(existingBooking),
                     oldAdditions: getBookingAdditions(existingBooking),
                     newNumberOfKids: booking.numberOfChildren!,
-                    newCreations: formMapper.getCreationDisplayValues(),
+                    newCreations: formMapper.getCreationDisplayValues(existingBooking.type),
                     newAdditions: formMapper.getAdditionDisplayValues(false),
                     oldIncludesFood: existingBooking.includesFood,
                     newIncludesFood: booking.includesFood!,
@@ -102,7 +102,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     // if its a two creation party, but they picked three or more creations, notify manager (or if they picked more than 3 creations)
-    const creations = formMapper.getCreationDisplayValues()
+    const creations = formMapper.getCreationDisplayValues(existingBooking.type)
     const choseThreeCreations = creations.length === 3
     const requiresTwoCreations =
         (fullBooking.type === 'mobile' && fullBooking.partyLength === '1') ||
@@ -121,7 +121,7 @@ export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<P
                     dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString(DateTime.DATE_HUGE),
-                    chosenCreations: formMapper.getCreationDisplayValues(),
+                    chosenCreations: formMapper.getCreationDisplayValues(existingBooking.type),
                 },
                 {
                     replyTo: fullBooking.parentEmail,

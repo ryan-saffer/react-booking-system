@@ -45,8 +45,8 @@ export class PartyFormMapperV2 {
         return booking
     }
 
-    getCreationDisplayValues() {
-        const creationKeys = this.getCreations()
+    getCreationDisplayValues(type: Booking['type']) {
+        const creationKeys = this.getCreations(type)
         const creations: string[] = []
         creationKeys.forEach((creation) => {
             creations.push(CreationDisplayValuesMap[creation])
@@ -80,17 +80,34 @@ export class PartyFormMapperV2 {
     /**
      * Returns an array of SKUs for all selected creations.
      */
-    private getCreations() {
-        const creationSkus = [
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'glam_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'science_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'slime_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'safari_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'unicorn_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'expert_creations')),
-        ]
+    private getCreations(type: Booking['type']) {
+        const creationKeys =
+            type === 'studio'
+                ? ([
+                      'glam_creations',
+                      'science_creations',
+                      'slime_creations',
+                      'safari_creations',
+                      'unicorn_creations',
+                      'tie_dye_creations',
+                      'taylor_swift_creations',
+                      'expert_creations',
+                  ] as const)
+                : ([
+                      'glam_creations_mobile',
+                      'science_creations_mobile',
+                      'slime_creations_mobile',
+                      'safari_creations_mobile',
+                      'unicorn_creations_mobile',
+                      'tie_dye_creations_mobile',
+                      'taylor_swift_creations_mobile',
+                      'expert_creations_mobile',
+                  ] as const)
+
+        const creationSkus = creationKeys.reduce(
+            (acc, curr) => [...acc, ...this.mapProductToSku(getQuestionValue(this.responses, curr))],
+            [] as string[]
+        )
 
         // filter out any duplicate creation selections
         const filteredSkus = [...new Set(creationSkus)]
@@ -110,7 +127,7 @@ export class PartyFormMapperV2 {
      * shared across both in-store and mobile
      */
     private getSharedQuestions(type: Booking['type'], location: Location) {
-        const creations = this.getCreations()
+        const creations = this.getCreations(type)
 
         const booking: Partial<Booking> = {
             location: type === 'studio' ? this.mapLocation(getQuestionValue(this.responses, 'location')) : location, // mobile party forms have 'location=mobile', so this fixes it
