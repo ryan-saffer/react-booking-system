@@ -20,6 +20,15 @@ export type PartyForm = {
     tie_dye_creations: PFProduct[]
     taylor_swift_creations: PFProduct[]
     expert_creations: PFProduct[]
+    glam_creations_mobile: PFProduct[]
+    science_creations_mobile: PFProduct[]
+    slime_creations_mobile: PFProduct[]
+    safari_creations_mobile: PFProduct[]
+    unicorn_creations_mobile: PFProduct[]
+    tie_dye_creations_mobile: PFProduct[]
+    taylor_swift_creations_mobile: PFProduct[]
+    expert_creations_mobile: PFProduct[]
+    food_package: string
     additions: string[]
     party_packs: PFProduct[]
     fun_facts: string

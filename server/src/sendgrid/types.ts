@@ -133,6 +133,9 @@ export type Emails = {
         newNumberOfKids: string
         newCreations: string[]
         newAdditions: string[]
+        oldIncludesFood: boolean
+        newIncludesFood: boolean
+        isMobile: boolean
     }
 
     partyFormFilledInAgainV2: {
@@ -190,6 +193,7 @@ export type Emails = {
         hasQuestions: boolean
         managerName: string
         managerMobile: string
+        includesFood: boolean
     }
 
     partyFormConfirmationV2: {
