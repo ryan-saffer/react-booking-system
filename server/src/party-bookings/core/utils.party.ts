@@ -1,4 +1,11 @@
-import { Additions, AdditionsDisplayValuesMap, BaseBooking, Booking, CreationDisplayValuesMap } from 'fizz-kidz'
+import {
+    Additions,
+    AdditionsDisplayValuesMap,
+    BaseBooking,
+    Booking,
+    CreationDisplayValuesMap,
+    Creations,
+} from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 export const AdditionsFormMap: { [key: string]: Additions } = {
@@ -15,6 +22,18 @@ export const AdditionsFormMap: { [key: string]: Additions } = {
     'Wedges - $30': Additions.wedges,
     'Grazing Platter for Parents (Medium: 10-15 ppl) - $98': Additions.grazingPlatterMedium,
     'Grazing Platter for Parents (Large: 15-25 ppl) - $148': Additions.grazingPlatterLarge,
+}
+
+export const CreationsFormMap: { [key: string]: Creations } = {
+    'Glitter Slime': Creations.glitterSlime,
+    'Glitter Face Paint': Creations.glitterFacePaint,
+    'Rainbow Bath Crystals': Creations.rainbowBathCrystals,
+    'Unicorn Soap': Creations.unicornSoap,
+    'Fizzy Bath Bombs': Creations.bathBombs,
+    'Rainbow Bath Bombs': Creations.rainbowBathBombs,
+    'Sparkling Lip-Balm': Creations.lipBalm,
+    'Fluffy Slime': Creations.fluffySlime,
+    'Sugar Lip Scrub': Creations.sugarScrubLipBalm,
 }
 
 export function getBookingCreations(booking: BaseBooking) {
@@ -47,7 +66,7 @@ export function getBookingAdditions(booking: BaseBooking) {
 }
 
 export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://ovrhkys4.paperform.co/?location=${
+    let url = `https://tdazzggr.paperform.co/?location=${
         booking.type === 'studio' ? booking.location : 'mobile'
     }&id=${bookingId}`
     const encodedParams: { [key: string]: string } = {
@@ -55,7 +74,9 @@ export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
         parent_last_name: encodeURIComponent(booking.parentLastName),
         child_name: encodeURIComponent(booking.childName),
         child_age: encodeURIComponent(booking.childAge),
-        food_package: booking.includesFood ? 'include_food_package' : 'dont_include_food_package',
+        food_package: booking.includesFood
+            ? encodeURIComponent('Include the food package')
+            : encodeURIComponent('I will self-cater the party'),
     }
 
     Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))

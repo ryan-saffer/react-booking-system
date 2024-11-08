@@ -13,7 +13,7 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
             await handlePartyFormSubmission(data)
             break
         case 'party-v2':
-            await handlePartyFormSubmissionV2(data)
+            await handlePartyFormSubmissionV2(data, input.charge)
             break
         case 'incursion':
             await handleIncursionFormSubmission(data)

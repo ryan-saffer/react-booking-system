@@ -9,9 +9,8 @@ import {
     Location,
     PaperFormResponse,
     PartyFormV2,
-    PFProduct,
 } from 'fizz-kidz'
-import { AdditionsFormMap } from './utils.party'
+import { AdditionsFormMap, CreationsFormMap } from './utils.party'
 import { logger } from 'firebase-functions/v2'
 
 export class PartyFormMapperV2 {
@@ -39,6 +38,7 @@ export class PartyFormMapperV2 {
                 ...booking,
                 ...this.getFoodPackage(),
                 ...this.getAdditions(),
+                ...this.getCake(),
             }
         }
 
@@ -81,33 +81,21 @@ export class PartyFormMapperV2 {
      * Returns an array of SKUs for all selected creations.
      */
     private getCreations(type: Booking['type']) {
-        const creationKeys =
-            type === 'studio'
-                ? ([
-                      'glam_creations',
-                      'science_creations',
-                      'slime_creations',
-                      'safari_creations',
-                      'unicorn_creations',
-                      'tie_dye_creations',
-                      'taylor_swift_creations',
-                      'expert_creations',
-                  ] as const)
-                : ([
-                      'glam_creations_mobile',
-                      'science_creations_mobile',
-                      'slime_creations_mobile',
-                      'safari_creations_mobile',
-                      'unicorn_creations_mobile',
-                      'tie_dye_creations_mobile',
-                      'taylor_swift_creations_mobile',
-                      'expert_creations_mobile',
-                  ] as const)
+        const creationKeys = type === 'studio' ? (['glam_creations'] as const) : (['glam_creations'] as const)
 
-        const creationSkus = creationKeys.reduce(
-            (acc, curr) => [...acc, ...this.mapProductToSku(getQuestionValue(this.responses, curr))],
+        const creations = creationKeys.reduce(
+            (acc, curr) => [...acc, ...getQuestionValue(this.responses, curr)],
             [] as string[]
         )
+
+        const creationSkus = creations.map((creation) => {
+            if (Object.keys(CreationsFormMap).includes(creation)) {
+                return CreationsFormMap[creation]
+            } else {
+                logger.log(`Invalid creation form value found: '${creation}'`)
+                throw new Error(`Invalid creation form value found: '${creation}'`)
+            }
+        })
 
         // filter out any duplicate creation selections
         const filteredSkus = [...new Set(creationSkus)]
@@ -160,9 +148,6 @@ export class PartyFormMapperV2 {
         return (<any>Object).values(Location).includes(location)
     }
 
-    private mapProductToSku = (products: PFProduct[]) =>
-        products.map((it) => (it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU))
-
     private isValidCreation(creation: string): creation is Creations {
         return Object.keys(Creations).includes(creation)
     }
@@ -171,10 +156,10 @@ export class PartyFormMapperV2 {
         // paperform limits this question to only one option allowed, and questions is required,
         // so just get the first item.
         const value = getQuestionValue(this.responses, 'food_package')
-        if (value === 'include_food_package') {
+        if (value === 'Include the food package') {
             return { includesFood: true }
         }
-        if (value === 'dont_include_food_package') {
+        if (value === 'I will self-cater the party') {
             return { includesFood: false }
         }
 
@@ -196,6 +181,20 @@ export class PartyFormMapperV2 {
 
     private isValidAddition(addition: string): addition is Additions {
         return Object.keys(Additions).includes(addition)
+    }
+
+    private getCake() {
+        const cake = getQuestionValue(this.responses, 'cake')
+        const cakeFlavours = getQuestionValue(this.responses, 'cake_flavours')
+        const cakeSize = getQuestionValue(this.responses, 'cake_size')
+        const cakeMessage = getQuestionValue(this.responses, 'cake_message')
+
+        console.log({ cake })
+        console.log({ cakeFlavours })
+        console.log({ cakeSize })
+        console.log({ cakeMessage })
+
+        return {}
     }
 
     // TODO: add back when new party packs are ready

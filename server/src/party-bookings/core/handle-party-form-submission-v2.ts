@@ -8,9 +8,11 @@ import { logError, throwFunctionsError } from '../../utilities'
 import { PartyFormMapperV2 } from './party-form-mapper-v2'
 import { getBookingAdditions, getBookingCreations } from './utils.party'
 
-export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<PartyFormV2>) {
+export async function handlePartyFormSubmissionV2(responses: PaperFormResponse<PartyFormV2>, charge: any) {
     const formMapper = new PartyFormMapperV2(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
+
+    console.log({ charge })
 
     let booking: Partial<Booking> = {}
     try {

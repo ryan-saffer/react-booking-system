@@ -10,6 +10,7 @@ export interface PubSubFunctions {
         | {
               form: 'party-v2'
               data: PaperFormResponse<PartyFormV2>
+              charge: any
           }
         | {
               form: 'incursion'
