@@ -45,11 +45,24 @@ export type PartyFormV2 = {
     number_of_children_in_store: string
     number_of_children_mobile: string
     glam_creations: string[]
+    science_creations: string[]
+    slime_creations: string[]
+    safari_creations: string[]
+    unicorn_creations: string[]
+    tie_dye_creations: string[]
+    taylor_swift_creations: string[]
+    glam_creations_mobile: string[]
+    science_creations_mobile: string[]
+    slime_creations_mobile: string[]
+    safari_creations_mobile: string[]
+    unicorn_creations_mobile: string[]
+    tie_dye_creations_mobile: string[]
+    taylor_swift_creations_mobile: string[]
     food_package: string
     additions: string[]
     cake: string
     cake_flavours: string[]
-    cake_size: PFProduct[]
+    cake_size: 'small_cake' | 'medium_cake' | 'large_cake'
     cake_message: string
     party_packs: PFProduct[]
     fun_facts: string

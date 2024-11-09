@@ -153,6 +153,18 @@ export type Emails = {
         oldIncludesFood: boolean
         newIncludesFood: boolean
         isMobile: boolean
+        oldCake?: {
+            selection: string
+            size: string
+            flavours: string
+            message?: string
+        }
+        newCake?: {
+            selection: string
+            size: string
+            flavours: string
+            message?: string
+        }
     }
 
     tooManyCreationsChosen: {
@@ -208,6 +220,12 @@ export type Emails = {
         managerName: string
         managerMobile: string
         includesFood: boolean
+        cake?: {
+            selection: string
+            size: string
+            flavours: string
+            message?: string
+        }
     }
 
     partyFeedback: {
@@ -218,6 +236,18 @@ export type Emails = {
 
     invitationGuests: {
         name: string
+    }
+
+    cakeNotification: {
+        parentName: string
+        dateTime: string
+        studio: string
+        mobile: string
+        email: string
+        cakeSelection: string
+        cakeSize: string
+        cakeFlavours: string
+        cakeMessage?: string
     }
 
     // EVENTS

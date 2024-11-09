@@ -38,7 +38,7 @@ export class PartyFormMapperV2 {
                 ...booking,
                 ...this.getFoodPackage(),
                 ...this.getAdditions(),
-                ...this.getCake(),
+                cake: this.getCake(),
             }
         }
 
@@ -81,7 +81,26 @@ export class PartyFormMapperV2 {
      * Returns an array of SKUs for all selected creations.
      */
     private getCreations(type: Booking['type']) {
-        const creationKeys = type === 'studio' ? (['glam_creations'] as const) : (['glam_creations'] as const)
+        const creationKeys =
+            type === 'studio'
+                ? ([
+                      'glam_creations',
+                      'science_creations',
+                      'slime_creations',
+                      'safari_creations',
+                      'unicorn_creations',
+                      'tie_dye_creations',
+                      'taylor_swift_creations',
+                  ] as const)
+                : ([
+                      'glam_creations_mobile',
+                      'science_creations_mobile',
+                      'slime_creations_mobile',
+                      'safari_creations_mobile',
+                      'unicorn_creations_mobile',
+                      'tie_dye_creations_mobile',
+                      'taylor_swift_creations_mobile',
+                  ] as const)
 
         const creations = creationKeys.reduce(
             (acc, curr) => [...acc, ...getQuestionValue(this.responses, curr)],
@@ -183,18 +202,38 @@ export class PartyFormMapperV2 {
         return Object.keys(Additions).includes(addition)
     }
 
-    private getCake() {
+    getCake(): Booking['cake'] {
         const cake = getQuestionValue(this.responses, 'cake')
-        const cakeFlavours = getQuestionValue(this.responses, 'cake_flavours')
-        const cakeSize = getQuestionValue(this.responses, 'cake_size')
-        const cakeMessage = getQuestionValue(this.responses, 'cake_message')
+        if (cake !== 'I will bring my own cake') {
+            const cakeFlavours = getQuestionValue(this.responses, 'cake_flavours')
+            const cakeMessage = getQuestionValue(this.responses, 'cake_message')
 
-        console.log({ cake })
-        console.log({ cakeFlavours })
-        console.log({ cakeSize })
-        console.log({ cakeMessage })
+            return {
+                selection: cake,
+                flavours: cakeFlavours,
+                size: this.getCakeSize(),
+                ...(cakeMessage && { message: cakeMessage }),
+            }
+        } else {
+            return
+        }
+    }
 
-        return {}
+    // using this function assumes they have selected a cake
+    private getCakeSize() {
+        const size = getQuestionValue(this.responses, 'cake_size')
+        switch (size) {
+            case 'small_cake':
+                return 'Small (12-15 serves)'
+            case 'medium_cake':
+                return 'Medium (20-25 serves)'
+            case 'large_cake':
+                return 'Large (30-35 serves)'
+            default: {
+                const exhaustiveCheck: never = size
+                throw new Error(`Unhandled cake size in getCakeSize(): '${exhaustiveCheck}'`)
+            }
+        }
     }
 
     // TODO: add back when new party packs are ready

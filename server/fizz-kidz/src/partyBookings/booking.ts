@@ -27,7 +27,6 @@ export interface BaseBooking extends AdditionKeyValues {
     creation2: Creations | undefined
     creation3: Creations | undefined
     menu: 'standard' | 'glutenFree' | 'vegan' | undefined
-    cake: string
     cakeFlavour: CakeFlavours | undefined
     questions: string
     funFacts: string
@@ -35,6 +34,12 @@ export interface BaseBooking extends AdditionKeyValues {
     sendConfirmationEmail: boolean
     oldPrices: boolean
     includesFood: boolean
+    cake?: {
+        selection: string
+        flavours: string[]
+        size: string
+        message?: string
+    }
 }
 
 // separates date and time into separate values, for better use in forms

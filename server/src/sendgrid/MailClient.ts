@@ -686,7 +686,20 @@ export class MailClient {
                     template: 'website_franchising_form_to_fizz.html',
                     useMjml: false,
                 }
-
+            case 'cakeNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Cake Ordered',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'cake_notification.html',
+                    useMjml: false,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
