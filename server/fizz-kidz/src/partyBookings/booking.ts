@@ -38,6 +38,8 @@ export interface BaseBooking extends AdditionKeyValues {
         selection: string
         flavours: string[]
         size: string
+        served: string // bowls + spoon, waffle cones, bring their own
+        candles: string
         message?: string
     }
 }

@@ -5,7 +5,6 @@ import { publishToPubSub } from '../../../utilities'
 
 export const paperformWebhook = onRequest(async (req, res) => {
     logger.log(`${req.query.form} form submission received with submission id:`, req.body.submission_id)
-    console.log(req.body)
     if (req.query.form === 'incursion') {
         await publishToPubSub('paperformSubmission', { form: 'incursion', data: req.body.data })
     } else if (req.query.form === 'party') {

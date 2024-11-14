@@ -712,6 +712,32 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 value={booking.cake?.flavours.join(', ')}
                             />
                         </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeServed', booking.id)}
+                                name={'cakeServed'}
+                                label="How to serve"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.served}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeCandles', booking.id)}
+                                name={'cakeCandles'}
+                                label="Candles"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.candles}
+                            />
+                        </Grid>
                         {booking.cake?.message && (
                             <Grid item xs={6}>
                                 <TextField

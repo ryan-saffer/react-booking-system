@@ -157,12 +157,16 @@ export type Emails = {
             selection: string
             size: string
             flavours: string
+            served: string
+            candles: string
             message?: string
         }
         newCake?: {
             selection: string
             size: string
             flavours: string
+            served: string
+            candles: string
             message?: string
         }
     }
@@ -224,6 +228,8 @@ export type Emails = {
             selection: string
             size: string
             flavours: string
+            served: string
+            candles: string
             message?: string
         }
     }
@@ -247,6 +253,8 @@ export type Emails = {
         cakeSelection: string
         cakeSize: string
         cakeFlavours: string
+        cakeServed: string
+        cakeCandles: string
         cakeMessage?: string
     }
 

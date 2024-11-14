@@ -101,7 +101,9 @@
             <td style="border: 1px solid black; padding: 8px;">
                 {{ oldCake.selection }} <br />
                 {{ oldCake.size }} <br />
-                {{ oldCake.flavours }}
+                {{ oldCake.flavours }}<br />
+                {{ oldCake.served }}<br />
+                {{ oldCake.candles }}
                 {{ #oldCake.message }}
                 <br /> Message: "{{ oldCake.message }}"
                 {{ /oldCake.message}}
@@ -110,6 +112,8 @@
                 {{ newCake.selection }} <br />
                 {{ newCake.size }} <br />
                 {{ newCake.flavours }}
+                {{ newCake.served }}<br />
+                {{ newCake.candles }}
                 {{ #newCake.message }}
                 <br /> Message: "{{ newCake.message }}"
                 {{ /newCake.message}}

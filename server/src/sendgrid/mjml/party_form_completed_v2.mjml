@@ -114,7 +114,8 @@
                         Cake
                     </mj-text>
                     <mj-text color="#637381" font-size="14px" padding-top="0"
-                        >{{ cake.selection }}, {{ cake.size }}. {{ cake.flavours }}.</mj-text
+                        >{{ cake.selection }}, {{ cake.size }}. {{ cake.flavours }}. {{ cake.served }}. {{ cake.candles
+                        }}.</mj-text
                     >
                     {{ #cake.message }}
                     <mj-text color="#637381" font-size="14px" padding-top="0">Message: "{{ cake.message }}"</mj-text>

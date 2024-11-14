@@ -1,4 +1,3 @@
-import { logger } from 'firebase-functions/v2'
 import { Booking, PaperFormResponse, PartyFormV2, capitalise, getLocationAddress, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import Stripe from 'stripe'
@@ -22,7 +21,6 @@ export async function handlePartyFormSubmissionV2(
     try {
         booking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
         booking.partyFormFilledIn = true
-        logger.log({ booking })
     } catch (err) {
         logError('error handling party form submission', err, { responses })
         return
@@ -40,7 +38,7 @@ export async function handlePartyFormSubmissionV2(
             await stripe.paymentIntents.update(charge.payment_intent as string, {
                 description: `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
                     cake?.size
-                }. ${cake?.flavours.join(', ')}.`,
+                }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`,
                 customer: customerId,
                 receipt_email: booking.parentEmail!,
                 metadata: {
@@ -90,6 +88,8 @@ export async function handlePartyFormSubmissionV2(
                             selection: existingBooking.cake.selection,
                             size: existingBooking.cake.size,
                             flavours: existingBooking.cake.flavours.join(', '),
+                            served: existingBooking.cake.served,
+                            candles: existingBooking.cake.candles,
                             message: existingBooking.cake.message,
                         },
                     }),
@@ -98,6 +98,8 @@ export async function handlePartyFormSubmissionV2(
                             selection: booking.cake.selection,
                             size: booking.cake.size,
                             flavours: booking.cake.flavours.join(', '),
+                            served: booking.cake.served,
+                            candles: booking.cake.candles,
                             message: booking.cake.message,
                         },
                     }),
@@ -295,6 +297,8 @@ export async function handlePartyFormSubmissionV2(
                 cakeSelection: booking.cake.selection,
                 cakeSize: booking.cake.size,
                 cakeFlavours: booking.cake.flavours.join(', '),
+                cakeServed: booking.cake.served,
+                cakeCandles: booking.cake.candles,
                 cakeMessage: booking.cake.message,
             })
         } catch (err) {
@@ -325,6 +329,8 @@ export async function handlePartyFormSubmissionV2(
                         selection: fullBooking.cake.selection,
                         size: fullBooking.cake.size,
                         flavours: fullBooking.cake.flavours.join(', '),
+                        served: fullBooking.cake.served,
+                        candles: fullBooking.cake.candles,
                         message: fullBooking.cake.message,
                     },
                 }),

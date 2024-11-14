@@ -211,6 +211,8 @@ export class PartyFormMapperV2 {
             return {
                 selection: cake,
                 flavours: cakeFlavours,
+                served: this.getCakeServed(),
+                candles: this.getCakeCandles(),
                 size: this.getCakeSize(),
                 ...(cakeMessage && { message: cakeMessage }),
             }
@@ -232,6 +234,36 @@ export class PartyFormMapperV2 {
             default: {
                 const exhaustiveCheck: never = size
                 throw new Error(`Unhandled cake size in getCakeSize(): '${exhaustiveCheck}'`)
+            }
+        }
+    }
+
+    private getCakeServed() {
+        const served = getQuestionValue(this.responses, 'cake_served')
+        switch (served) {
+            case 'cup':
+                return 'Ice-cream cup with spoon'
+            case 'waffle_cones':
+                return 'Waffle Cones'
+            case 'bring_own_bowls':
+                return 'Bring my own serving bowls/cones'
+            default: {
+                const exhaustiveCheck: never = served
+                throw new Error(`Unhandled cake served in getCakeServed(): '${exhaustiveCheck}'`)
+            }
+        }
+    }
+
+    private getCakeCandles() {
+        const cakeCandles = getQuestionValue(this.responses, 'cake_candles')
+        switch (cakeCandles) {
+            case 'bring_own_candles':
+                return 'Include candles'
+            case 'provide_candles':
+                return 'Bring my own candles'
+            default: {
+                const exhaustiveCheck: never = cakeCandles
+                throw new Error(`Unhandled cake candles in getCakeCandles(): '${exhaustiveCheck}'`)
             }
         }
     }
