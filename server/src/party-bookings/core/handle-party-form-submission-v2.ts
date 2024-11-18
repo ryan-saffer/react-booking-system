@@ -282,7 +282,7 @@ export async function handlePartyFormSubmissionV2(
         try {
             await mailClient.sendEmail(
                 'cakeNotification',
-                env === 'prod' ? 'jarrod@birthdaycakeshop.com.au' : 'ryansaffer@gmail.com',
+                env === 'prod' ? 'orders@birthdaycakeshop.com.au' : 'ryansaffer@gmail.com',
                 {
                     parentName: fullBooking.parentFirstName,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
@@ -298,6 +298,7 @@ export async function handlePartyFormSubmissionV2(
                     studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
+                    numberOfChildren: fullBooking.numberOfChildren,
                     cakeSelection: booking.cake.selection,
                     cakeSize: booking.cake.size,
                     cakeFlavours: booking.cake.flavours.join(', '),

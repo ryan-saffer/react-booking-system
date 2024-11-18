@@ -250,6 +250,7 @@ export type Emails = {
         studio: string
         mobile: string
         email: string
+        numberOfChildren: string
         cakeSelection: string
         cakeSize: string
         cakeFlavours: string
