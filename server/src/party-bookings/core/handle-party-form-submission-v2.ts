@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import Stripe from 'stripe'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { getOrCreateCustomer } from '../../stripe/core/customers'
 import { StripeClient } from '../../stripe/core/stripe-client'
@@ -58,7 +59,7 @@ export async function handlePartyFormSubmissionV2(
         try {
             await mailClient.sendEmail(
                 'partyFormFilledInAgainV2',
-                getManager(booking.location!).email,
+                getManager(booking.location!, env).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
@@ -122,7 +123,7 @@ export async function handlePartyFormSubmissionV2(
         try {
             await mailClient.sendEmail(
                 'partyFormFoodPackageChanged',
-                getManager(booking.location!).email,
+                getManager(booking.location!, env).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
@@ -174,7 +175,7 @@ export async function handlePartyFormSubmissionV2(
         try {
             await mailClient.sendEmail(
                 'tooManyCreationsChosen',
-                getManager(fullBooking.location).email,
+                getManager(fullBooking.location, env).email,
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     parentEmail: fullBooking.parentEmail,
@@ -204,7 +205,7 @@ export async function handlePartyFormSubmissionV2(
         }
     }
 
-    const manager = getManager(fullBooking.location)
+    const manager = getManager(fullBooking.location, env)
 
     if (fullBooking.questions) {
         try {
@@ -279,28 +280,32 @@ export async function handlePartyFormSubmissionV2(
     // email the cake company if a cake was chosen
     if (booking.cake) {
         try {
-            await mailClient.sendEmail('cakeNotification', 'jarrod@birthdaycakeshop.com.au', {
-                parentName: fullBooking.parentFirstName,
-                dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
-                    zone: 'Australia/Melbourne',
-                }).toLocaleString({
-                    weekday: 'short',
-                    month: 'short',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                }),
-                studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
-                mobile: fullBooking.parentMobile,
-                email: fullBooking.parentEmail,
-                cakeSelection: booking.cake.selection,
-                cakeSize: booking.cake.size,
-                cakeFlavours: booking.cake.flavours.join(', '),
-                cakeServed: booking.cake.served,
-                cakeCandles: booking.cake.candles,
-                cakeMessage: booking.cake.message,
-            })
+            await mailClient.sendEmail(
+                'cakeNotification',
+                env === 'prod' ? 'jarrod@birthdaycakeshop.com.au' : 'ryansaffer@gmail.com',
+                {
+                    parentName: fullBooking.parentFirstName,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
+                    mobile: fullBooking.parentMobile,
+                    email: fullBooking.parentEmail,
+                    cakeSelection: booking.cake.selection,
+                    cakeSize: booking.cake.size,
+                    cakeFlavours: booking.cake.flavours.join(', '),
+                    cakeServed: booking.cake.served,
+                    cakeCandles: booking.cake.candles,
+                    cakeMessage: booking.cake.message,
+                }
+            )
         } catch (err) {
             logError(`error sending cake notification email for booking with id: ${formMapper.bookingId}`, err, {
                 booking,
