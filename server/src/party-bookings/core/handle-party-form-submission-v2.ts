@@ -298,7 +298,6 @@ export async function handlePartyFormSubmissionV2(
                     studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
-                    numberOfChildren: fullBooking.numberOfChildren,
                     cakeSelection: booking.cake.selection,
                     cakeSize: booking.cake.size,
                     cakeFlavours: booking.cake.flavours.join(', '),
