@@ -133,6 +133,9 @@ export type Emails = {
         newNumberOfKids: string
         newCreations: string[]
         newAdditions: string[]
+        oldIncludesFood: boolean
+        newIncludesFood: boolean
+        isMobile: boolean
     }
 
     partyFormFilledInAgainV2: {
@@ -150,22 +153,22 @@ export type Emails = {
         oldIncludesFood: boolean
         newIncludesFood: boolean
         isMobile: boolean
-    }
-
-    partyFormFilledInAgainV3: {
-        parentName: string
-        parentEmail: string
-        parentMobile: string
-        childName: string
-        dateTime: string
-        oldNumberOfKids: string
-        oldCreations: string[]
-        oldMenu: string
-        oldAdditions: string[]
-        newNumberOfKids: string
-        newCreations: string[]
-        newMenu: string
-        newAdditions: string[]
+        oldCake?: {
+            selection: string
+            size: string
+            flavours: string
+            served: string
+            candles: string
+            message?: string
+        }
+        newCake?: {
+            selection: string
+            size: string
+            flavours: string
+            served: string
+            candles: string
+            message?: string
+        }
     }
 
     tooManyCreationsChosen: {
@@ -206,6 +209,7 @@ export type Emails = {
         hasQuestions: boolean
         managerName: string
         managerMobile: string
+        includesFood: boolean
     }
 
     partyFormConfirmationV2: {
@@ -220,20 +224,14 @@ export type Emails = {
         managerName: string
         managerMobile: string
         includesFood: boolean
-    }
-
-    partyFormConfirmationV3: {
-        parentName: string
-        numberOfChildren: string
-        creations: string[]
-        isTyeDyeParty: boolean
-        menu: string
-        hasAdditions: boolean
-        additions: string[]
-        isMobile: boolean
-        hasQuestions: boolean
-        managerName: string
-        managerMobile: string
+        cake?: {
+            selection: string
+            size: string
+            flavours: string
+            served: string
+            candles: string
+            message?: string
+        }
     }
 
     partyFeedback: {
@@ -244,6 +242,20 @@ export type Emails = {
 
     invitationGuests: {
         name: string
+    }
+
+    cakeNotification: {
+        parentName: string
+        dateTime: string
+        studio: string
+        mobile: string
+        email: string
+        cakeSelection: string
+        cakeSize: string
+        cakeFlavours: string
+        cakeServed: string
+        cakeCandles: string
+        cakeMessage?: string
     }
 
     // EVENTS

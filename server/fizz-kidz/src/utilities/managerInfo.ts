@@ -10,7 +10,10 @@ import { Location } from '../core/location'
  * Possessive Adjective:
  * "If you have any questions, feel free to contact her team."
  */
-export function getManager(location: Location): {
+export function getManager(
+    location: Location,
+    env: 'dev' | 'prod' = 'prod'
+): {
     name: string
     email: string
     mobile: string
@@ -18,6 +21,16 @@ export function getManager(location: Location): {
     objectPronoun: string
     possesiveAdjective: string
 } {
+    if (env === 'dev') {
+        return {
+            name: 'Ryan',
+            email: 'ryansaffer@gmail.com',
+            mobile: '0413892120',
+            subjectPronoun: 'he',
+            objectPronoun: 'him',
+            possesiveAdjective: 'his',
+        }
+    }
     switch (location) {
         case Location.BALWYN:
             return {

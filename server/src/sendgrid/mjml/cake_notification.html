@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+</head>
+
+<body>
+    <h3>Booking Information</h3>
+    <table style="border-collapse: collapse">
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Studio</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ studio }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Date / Time</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ dateTime }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ parentName }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Email</td>
+            <td style="border: 1px solid black; padding: 8px;"><a href="mailto:{{ parentEmail }}">{{ email }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Phone</td>
+            <td style="border: 1px solid black; padding: 8px;"><a href="tel:{{ parentMobile }}">{{ mobile }}</a>
+            </td>
+        </tr>
+
+    </table>
+
+    <h3>Cake Details</h3>
+    <table style="border-collapse: collapse">
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Cake</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeSelection }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Size</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeSize }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Flavours</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeFlavours }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">How to serve</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeServed }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Candles</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeCandles }}</td>
+        </tr>
+        {{ #cakeMessage }}
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Message</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ cakeMessage }}</td>
+        </tr>
+        {{ /cakeMessage }}
+    </table>
+
+</body>
+
+</html>

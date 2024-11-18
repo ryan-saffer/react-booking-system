@@ -9,9 +9,8 @@ import {
     Location,
     PaperFormResponse,
     PartyFormV2,
-    PFProduct,
 } from 'fizz-kidz'
-import { AdditionsFormMap } from './utils.party'
+import { AdditionsFormMap, CreationsFormMap } from './utils.party'
 import { logger } from 'firebase-functions/v2'
 
 export class PartyFormMapperV2 {
@@ -39,6 +38,7 @@ export class PartyFormMapperV2 {
                 ...booking,
                 ...this.getFoodPackage(),
                 ...this.getAdditions(),
+                cake: this.getCake(),
             }
         }
 
@@ -91,7 +91,6 @@ export class PartyFormMapperV2 {
                       'unicorn_creations',
                       'tie_dye_creations',
                       'taylor_swift_creations',
-                      'expert_creations',
                   ] as const)
                 : ([
                       'glam_creations_mobile',
@@ -101,13 +100,21 @@ export class PartyFormMapperV2 {
                       'unicorn_creations_mobile',
                       'tie_dye_creations_mobile',
                       'taylor_swift_creations_mobile',
-                      'expert_creations_mobile',
                   ] as const)
 
-        const creationSkus = creationKeys.reduce(
-            (acc, curr) => [...acc, ...this.mapProductToSku(getQuestionValue(this.responses, curr))],
+        const creations = creationKeys.reduce(
+            (acc, curr) => [...acc, ...getQuestionValue(this.responses, curr)],
             [] as string[]
         )
+
+        const creationSkus = creations.map((creation) => {
+            if (Object.keys(CreationsFormMap).includes(creation)) {
+                return CreationsFormMap[creation]
+            } else {
+                logger.log(`Invalid creation form value found: '${creation}'`)
+                throw new Error(`Invalid creation form value found: '${creation}'`)
+            }
+        })
 
         // filter out any duplicate creation selections
         const filteredSkus = [...new Set(creationSkus)]
@@ -160,9 +167,6 @@ export class PartyFormMapperV2 {
         return (<any>Object).values(Location).includes(location)
     }
 
-    private mapProductToSku = (products: PFProduct[]) =>
-        products.map((it) => (it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU))
-
     private isValidCreation(creation: string): creation is Creations {
         return Object.keys(Creations).includes(creation)
     }
@@ -171,10 +175,10 @@ export class PartyFormMapperV2 {
         // paperform limits this question to only one option allowed, and questions is required,
         // so just get the first item.
         const value = getQuestionValue(this.responses, 'food_package')
-        if (value === 'include_food_package') {
+        if (value === 'Include the food package') {
             return { includesFood: true }
         }
-        if (value === 'dont_include_food_package') {
+        if (value === 'I will self-cater the party') {
             return { includesFood: false }
         }
 
@@ -196,6 +200,72 @@ export class PartyFormMapperV2 {
 
     private isValidAddition(addition: string): addition is Additions {
         return Object.keys(Additions).includes(addition)
+    }
+
+    getCake(): Booking['cake'] {
+        const cake = getQuestionValue(this.responses, 'cake')
+        if (cake !== 'I will bring my own cake') {
+            const cakeFlavours = getQuestionValue(this.responses, 'cake_flavours')
+            const cakeMessage = getQuestionValue(this.responses, 'cake_message')
+
+            return {
+                selection: cake,
+                flavours: cakeFlavours,
+                served: this.getCakeServed(),
+                candles: this.getCakeCandles(),
+                size: this.getCakeSize(),
+                ...(cakeMessage && { message: cakeMessage }),
+            }
+        } else {
+            return
+        }
+    }
+
+    // using this function assumes they have selected a cake
+    private getCakeSize() {
+        const size = getQuestionValue(this.responses, 'cake_size')
+        switch (size) {
+            case 'small_cake':
+                return 'Small (12-15 serves)'
+            case 'medium_cake':
+                return 'Medium (20-25 serves)'
+            case 'large_cake':
+                return 'Large (30-35 serves)'
+            default: {
+                const exhaustiveCheck: never = size
+                throw new Error(`Unhandled cake size in getCakeSize(): '${exhaustiveCheck}'`)
+            }
+        }
+    }
+
+    private getCakeServed() {
+        const served = getQuestionValue(this.responses, 'cake_served')
+        switch (served) {
+            case 'cup':
+                return 'Ice-cream cup with spoon'
+            case 'waffle_cones':
+                return 'Waffle Cones'
+            case 'bring_own_bowls':
+                return 'Bring my own serving bowls/cones'
+            default: {
+                const exhaustiveCheck: never = served
+                throw new Error(`Unhandled cake served in getCakeServed(): '${exhaustiveCheck}'`)
+            }
+        }
+    }
+
+    private getCakeCandles() {
+        const cakeCandles = getQuestionValue(this.responses, 'cake_candles')
+        switch (cakeCandles) {
+            case 'bring_own_candles':
+                return 'Include candles'
+            case 'provide_candles':
+                return 'Bring my own candles'
+            default: {
+                const exhaustiveCheck: never = cakeCandles
+                throw new Error(`Unhandled cake candles in getCakeCandles(): '${exhaustiveCheck}'`)
+            }
+        }
     }
 
     // TODO: add back when new party packs are ready

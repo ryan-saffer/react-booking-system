@@ -3,7 +3,6 @@ import 'typeface-roboto'
 import {
     Additions,
     AdditionsDisplayValuesMap,
-    CakeFlavours,
     CreationDisplayValuesMap,
     FirestoreBooking,
     FormBooking,
@@ -90,7 +89,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayCreation3 = formValues.creation3.value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
     // const displayMenu = formValues.menu?.value || editing
-    const displayCake = formValues.cake.value || editing
+    const displayCake = !!booking.cake
     const displayQuestions = formValues.questions.value || editing
     const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
@@ -676,44 +675,84 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id={createUniqueId(FormBookingFields.cake, booking.id)}
-                                name={FormBookingFields.cake}
+                                id={createUniqueId('cake', booking.id)}
+                                name={'cake'}
                                 label="Cake"
                                 fullWidth
                                 size="small"
-                                variant={editing || formValues[FormBookingFields.cake].value ? 'outlined' : 'filled'}
-                                disabled={!editing}
+                                variant="filled"
+                                disabled={true}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[FormBookingFields.cake].value}
-                                error={formValues[FormBookingFields.cake].error}
-                                onChange={handleFormChange}
+                                value={booking.cake?.selection}
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControl
+                            <TextField
+                                id={createUniqueId('cakeSize', booking.id)}
+                                name={'cakeSize'}
+                                label="Cake Size"
                                 fullWidth
                                 size="small"
-                                variant={formValues[FormBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
+                                variant="filled"
+                                disabled={true}
                                 classes={{ root: classes.disabled }}
-                            >
-                                <InputLabel>Cake flavour</InputLabel>
-                                <Select
-                                    name={FormBookingFields.cakeFlavour}
-                                    id={FormBookingFields.cakeFlavour}
-                                    label="cake flavour"
-                                    value={formValues[FormBookingFields.cakeFlavour].value || ''}
-                                    disabled={!editing}
-                                    error={formValues[FormBookingFields.cakeFlavour].error}
-                                    onChange={(e) => handleFormChange(e)}
-                                >
-                                    {Object.values(CakeFlavours).map((flavour) => (
-                                        <MenuItem key={flavour} value={flavour}>
-                                            {capitalise(flavour)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                value={booking.cake?.size}
+                            />
                         </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeFlavours', booking.id)}
+                                name={'cakeFlavours'}
+                                label="Cake Flavours"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.flavours.join(', ')}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeServed', booking.id)}
+                                name={'cakeServed'}
+                                label="How to serve"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.served}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeCandles', booking.id)}
+                                name={'cakeCandles'}
+                                label="Candles"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.candles}
+                            />
+                        </Grid>
+                        {booking.cake?.message && (
+                            <Grid item xs={6}>
+                                <TextField
+                                    id={createUniqueId('cakeMessage', booking.id)}
+                                    name="cakeMessage"
+                                    label="Cake Message"
+                                    fullWidth
+                                    size="small"
+                                    variant="filled"
+                                    disabled={true}
+                                    classes={{ root: classes.disabled }}
+                                    value={booking.cake.message}
+                                />
+                            </Grid>
+                        )}
                     </>
                 )}
                 {displayQuestionsCommentsFunFactsHeading && (

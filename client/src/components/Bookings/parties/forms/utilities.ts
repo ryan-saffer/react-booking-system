@@ -274,11 +274,6 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
-        cake: {
-            value: '',
-            error: false,
-            errorText: '',
-        },
         cakeFlavour: {
             value: undefined,
             error: false,
@@ -337,7 +332,6 @@ function getEmptyDomainBooking(): FormBooking {
         creation1: undefined,
         creation2: undefined,
         creation3: undefined,
-        cake: '',
         cakeFlavour: undefined,
         funFacts: '',
         questions: '',

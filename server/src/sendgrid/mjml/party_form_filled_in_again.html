@@ -8,40 +8,95 @@
 <body>
     <p>A parent has filled in a party form for a second time.</p>
     <p>This email is to warn you in case of a last minute change!</p>
-    <h3>- - - Party Details - - -</h3>
-    <p><strong>Parent: </strong>{{ parentName }}</p>
-    <p><strong>Parent Email: </strong><a href="mailto:{{ parentEmail }}">{{ parentEmail }}</a></p>
-    <p><strong>Parent Phone: </strong><a href="tel:{{ parentMobile }}">{{ parentMobile }}</a></p>
-    <p><strong>Child: </strong>{{ childName }}</p>
-    <p><strong>Date / Time: </strong>{{ dateTime }}</p>
-    <h3>- - - Previous Selections - - -</h3>
-    <p><strong>Number of kids: </strong>{{ oldNumberOfKids }}</p>
-    <p><strong>Selected Creations:</strong></p>
-    <ul>
-        {{#oldCreations}}
-        <li>{{.}}</li>
-        {{/oldCreations}}
-    </ul>
-    <p><strong>Selected Additions:</strong></p>
-    <ul>
-        {{#oldAdditions}}
-        <li>{{.}}</li>
-        {{/oldAdditions}}
-    </ul>
-    <h3>- - - New Selections - - -</h3>
-    <p><strong>Number of kids: </strong>{{ newNumberOfKids }}</p>
-    <p><strong>Selected Creations:</strong></p>
-    <ul>
-        {{#newCreations}}
-        <li>{{.}}</li>
-        {{/newCreations}}
-    </ul>
-    <p><strong>Selected Additions:</strong></p>
-    <ul>
-        {{#newAdditions}}
-        <li>{{.}}</li>
-        {{/newAdditions}}
-    </ul>
+
+    <table style="border-collapse: collapse">
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ parentName }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Email</td>
+            <td style="border: 1px solid black; padding: 8px;"><a href="mailto:{{ parentEmail }}">{{ parentEmail }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Parent Phone</td>
+            <td style="border: 1px solid black; padding: 8px;"><a href="tel:{{ parentMobile }}">{{ parentMobile }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Child</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ childName }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Date / Time</td>
+            <td style="border: 1px solid black; padding: 8px;">{{ dateTime }}</td>
+        </tr>
+    </table>
+
+    <table style="border-collapse: collapse; margin-top: 24px">
+
+        <tr>
+            <td></td>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Previous Selection</td>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">New Selection</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Creations</td>
+            <td style="border: 1px solid black; padding: 8px;">
+                <ul>
+                    {{#oldCreations}}
+                    <li>{{.}}</li>
+                    {{/oldCreations}}
+                </ul>
+            </td>
+            <td style="border: 1px solid black; padding: 8px;">
+                <ul>
+                    {{#newCreations}}
+                    <li>{{.}}</li>
+                    {{/newCreations}}
+                </ul>
+            </td>
+        </tr>
+        {{^isMobile}}
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Food Package</td>
+            <td style="border: 1px solid black; padding: 8px;">
+                {{#oldIncludesFood}}
+                Food included
+                {{/oldIncludesFood}}
+                {{^oldIncludesFood}}
+                Self Catering
+                {{/oldIncludesFood}}
+            </td>
+            <td style="border: 1px solid black; padding: 8px;">
+                {{#newIncludesFood}}
+                Food included
+                {{/newIncludesFood}}
+                {{^newIncludesFood}}
+                Self Catering
+                {{/newIncludesFood}}
+            </td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid black; padding: 8px; font-weight: 600;">Additions</td>
+            <td style="border: 1px solid black; padding: 8px;">
+                <ul>
+                    {{#oldAdditions}}
+                    <li>{{.}}</li>
+                    {{/oldAdditions}}
+                </ul>
+            </td>
+            <td style="border: 1px solid black; padding: 8px;">
+                <ul>
+                    {{#newAdditions}}
+                    <li>{{.}}</li>
+                    {{/newAdditions}}
+                </ul>
+            </td>
+        </tr>
+        {{/isMobile}}
+    </table>
 </body>
 
 </html>

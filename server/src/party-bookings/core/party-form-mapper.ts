@@ -37,6 +37,7 @@ export class PartyFormMapper {
         if (type !== 'mobile') {
             booking = {
                 ...booking,
+                ...this.getFoodPackage(),
                 ...this.getAdditions(),
             }
         }
@@ -44,8 +45,8 @@ export class PartyFormMapper {
         return booking
     }
 
-    getCreationDisplayValues() {
-        const creationKeys = this.getCreations()
+    getCreationDisplayValues(type: Booking['type']) {
+        const creationKeys = this.getCreations(type)
         const creations: string[] = []
         creationKeys.forEach((creation) => {
             creations.push(CreationDisplayValuesMap[creation])
@@ -66,29 +67,47 @@ export class PartyFormMapper {
             }
         })
 
-        const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
-        partyPackKeys.forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                displayValues.push(AdditionsDisplayValuesMapPrices[pack])
-            }
-        })
+        // TODO: Add back once new party packs are ready to go
+        // const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
+        // partyPackKeys.forEach((pack) => {
+        //     if (this.isValidAddition(pack)) {
+        //         displayValues.push(AdditionsDisplayValuesMapPrices[pack])
+        //     }
+        // })
         return displayValues
     }
 
     /**
      * Returns an array of SKUs for all selected creations.
      */
-    private getCreations() {
-        const creationSkus = [
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'glam_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'science_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'slime_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'safari_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'unicorn_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
-            ...this.mapProductToSku(getQuestionValue(this.responses, 'expert_creations')),
-        ]
+    private getCreations(type: Booking['type']) {
+        const creationKeys =
+            type === 'studio'
+                ? ([
+                      'glam_creations',
+                      'science_creations',
+                      'slime_creations',
+                      'safari_creations',
+                      'unicorn_creations',
+                      'tie_dye_creations',
+                      'taylor_swift_creations',
+                      'expert_creations',
+                  ] as const)
+                : ([
+                      'glam_creations_mobile',
+                      'science_creations_mobile',
+                      'slime_creations_mobile',
+                      'safari_creations_mobile',
+                      'unicorn_creations_mobile',
+                      'tie_dye_creations_mobile',
+                      'taylor_swift_creations_mobile',
+                      'expert_creations_mobile',
+                  ] as const)
+
+        const creationSkus = creationKeys.reduce(
+            (acc, curr) => [...acc, ...this.mapProductToSku(getQuestionValue(this.responses, curr))],
+            [] as string[]
+        )
 
         // filter out any duplicate creation selections
         const filteredSkus = [...new Set(creationSkus)]
@@ -108,7 +127,7 @@ export class PartyFormMapper {
      * shared across both in-store and mobile
      */
     private getSharedQuestions(type: Booking['type'], location: Location) {
-        const creations = this.getCreations()
+        const creations = this.getCreations(type)
 
         const booking: Partial<Booking> = {
             location: type === 'studio' ? this.mapLocation(getQuestionValue(this.responses, 'location')) : location, // mobile party forms have 'location=mobile', so this fixes it
@@ -121,7 +140,8 @@ export class PartyFormMapper {
             creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: getQuestionValue(this.responses, 'fun_facts'),
             questions: getQuestionValue(this.responses, 'questions'),
-            ...this.getPartyPacks(),
+            // TODO: add back when new party packs are ready to go
+            // ...this.getPartyPacks(),
         }
 
         return booking
@@ -147,6 +167,20 @@ export class PartyFormMapper {
         return Object.keys(Creations).includes(creation)
     }
 
+    private getFoodPackage() {
+        // paperform limits this question to only one option allowed, and questions is required,
+        // so just get the first item.
+        const value = getQuestionValue(this.responses, 'food_package')
+        if (value === 'include_food_package') {
+            return { includesFood: true }
+        }
+        if (value === 'dont_include_food_package') {
+            return { includesFood: false }
+        }
+
+        throw new Error(`Invalid response found for food package question: '${value}'`)
+    }
+
     private getAdditions() {
         const additions = getQuestionValue(this.responses, 'additions')
         additions.forEach((addition, index, array) => (array[index] = AdditionsFormMap[addition]))
@@ -164,13 +198,14 @@ export class PartyFormMapper {
         return Object.keys(Additions).includes(addition)
     }
 
-    private getPartyPacks() {
-        const booking: Partial<Booking> = {}
-        this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                booking[pack] = true
-            }
-        })
-        return booking
-    }
+    // TODO: add back when new party packs are ready
+    // private getPartyPacks() {
+    //     const booking: Partial<Booking> = {}
+    //     this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
+    //         if (this.isValidAddition(pack)) {
+    //             booking[pack] = true
+    //         }
+    //     })
+    //     return booking
+    // }
 }
