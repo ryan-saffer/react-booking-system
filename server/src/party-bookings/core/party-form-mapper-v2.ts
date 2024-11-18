@@ -246,7 +246,7 @@ export class PartyFormMapperV2 {
             case 'waffle_cones':
                 return 'Waffle Cones'
             case 'bring_own_bowls':
-                return 'Bring my own serving bowls/cones'
+                return 'Bring my own serving of bowls/cones'
             default: {
                 const exhaustiveCheck: never = served
                 throw new Error(`Unhandled cake served in getCakeServed(): '${exhaustiveCheck}'`)
