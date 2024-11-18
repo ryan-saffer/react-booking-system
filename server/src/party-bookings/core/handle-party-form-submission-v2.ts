@@ -279,7 +279,7 @@ export async function handlePartyFormSubmissionV2(
     // email the cake company if a cake was chosen
     if (booking.cake) {
         try {
-            await mailClient.sendEmail('cakeNotification', 'ryansaffer@gmail.com', {
+            await mailClient.sendEmail('cakeNotification', 'jarrod@birthdaycakeshop.com.au', {
                 parentName: fullBooking.parentFirstName,
                 dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                     zone: 'Australia/Melbourne',
