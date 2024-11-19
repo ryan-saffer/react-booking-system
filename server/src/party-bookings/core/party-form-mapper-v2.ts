@@ -257,9 +257,9 @@ export class PartyFormMapperV2 {
     private getCakeCandles() {
         const cakeCandles = getQuestionValue(this.responses, 'cake_candles')
         switch (cakeCandles) {
-            case 'bring_own_candles':
+            case 'include_candles':
                 return 'Include candles'
-            case 'provide_candles':
+            case 'bring_own_candles':
                 return 'Bring my own candles'
             default: {
                 const exhaustiveCheck: never = cakeCandles

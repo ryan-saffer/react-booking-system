@@ -64,7 +64,7 @@ export type PartyFormV2 = {
     cake_size: 'small_cake' | 'medium_cake' | 'large_cake'
     cake_flavours: string[]
     cake_served: 'cup' | 'waffle_cones' | 'bring_own_bowls'
-    cake_candles: 'provide_candles' | 'bring_own_candles'
+    cake_candles: 'include_candles' | 'bring_own_candles'
     cake_message: string
     party_packs: PFProduct[]
     fun_facts: string
