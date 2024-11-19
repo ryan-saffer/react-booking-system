@@ -5,7 +5,6 @@ import Stripe from 'stripe'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
-import { getOrCreateCustomer } from '../../stripe/core/customers'
 import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError, throwFunctionsError } from '../../utilities'
 import { PartyFormMapperV2 } from './party-form-mapper-v2'
@@ -145,20 +144,20 @@ export async function handlePartyFormSubmissionV2(
         try {
             const stripe = await StripeClient.getInstance()
             const cake = formMapper.getCake()
-            const customerId = await getOrCreateCustomer(
-                `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
-                fullBooking.parentEmail,
-                fullBooking.parentMobile
-            )
+            // update the payment description
+            const description = `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
+                cake?.size
+            }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`
             await stripe.paymentIntents.update(charge.payment_intent as string, {
-                description: `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
-                    cake?.size
-                }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`,
-                customer: customerId,
-                receipt_email: fullBooking.parentEmail,
+                description,
                 metadata: {
                     bookingId: formMapper.bookingId,
                 },
+            })
+            // update charge description and send the receipt
+            await stripe.charges.update(charge.id, {
+                description,
+                receipt_email: fullBooking.parentEmail,
             })
         } catch (err) {
             logError(`error updating stripe charge for birthday cake`, err, { responses, charge })
