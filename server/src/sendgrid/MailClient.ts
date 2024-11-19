@@ -696,6 +696,7 @@ export class MailClient {
                         },
                         subject: subject || 'Fizz Kidz Cake Ordered',
                         replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                        bcc: ['talia@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                     },
                     template: 'cake_notification.html',
                     useMjml: false,
