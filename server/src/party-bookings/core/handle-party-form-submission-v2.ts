@@ -27,30 +27,6 @@ export async function handlePartyFormSubmissionV2(
         return
     }
 
-    if (charge) {
-        try {
-            const stripe = await StripeClient.getInstance()
-            const cake = formMapper.getCake()
-            const customerId = await getOrCreateCustomer(
-                `${booking.parentFirstName} ${booking.parentLastName}`,
-                booking.parentEmail!,
-                booking.parentMobile!
-            )
-            await stripe.paymentIntents.update(charge.payment_intent as string, {
-                description: `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
-                    cake?.size
-                }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`,
-                customer: customerId,
-                receipt_email: booking.parentEmail!,
-                metadata: {
-                    bookingId: formMapper.bookingId,
-                },
-            })
-        } catch (err) {
-            logError(`error updating stripe charge for birthday cake`, err, { responses, charge })
-        }
-    }
-
     const mailClient = await MailClient.getInstance()
 
     // first check if the booking form has been filled in previously
@@ -163,6 +139,31 @@ export async function handlePartyFormSubmissionV2(
     }
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
+
+    // if they paid for a cake, update the description and send a receipt
+    if (charge) {
+        try {
+            const stripe = await StripeClient.getInstance()
+            const cake = formMapper.getCake()
+            const customerId = await getOrCreateCustomer(
+                `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
+                fullBooking.parentEmail,
+                fullBooking.parentMobile
+            )
+            await stripe.paymentIntents.update(charge.payment_intent as string, {
+                description: `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
+                    cake?.size
+                }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`,
+                customer: customerId,
+                receipt_email: fullBooking.parentEmail,
+                metadata: {
+                    bookingId: formMapper.bookingId,
+                },
+            })
+        } catch (err) {
+            logError(`error updating stripe charge for birthday cake`, err, { responses, charge })
+        }
+    }
 
     // if its a two creation party, but they picked three or more creations, notify manager (or if they picked more than 3 creations)
     const creations = formMapper.getCreationDisplayValues(existingBooking.type)
