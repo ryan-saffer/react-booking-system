@@ -27,6 +27,9 @@ export class SlingClient {
     }
 
     async #request(path: string, method: 'GET' | 'POST', data?: any, retryCount = 0): Promise<any> {
+        if (!this.#authToken) {
+            await this.#getAuthToken()
+        }
         const response = await fetch(`https://api.getsling.com/v1/${path}`, {
             method,
             headers: {
