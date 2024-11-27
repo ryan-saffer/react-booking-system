@@ -128,7 +128,10 @@ export function throwTrpcError(
     throw new TRPCError({
         code,
         message,
-        cause: { error, additionalInfo },
+        cause: {
+            error: error instanceof Error ? { message: error.message, stack: error.stack, name: error.name } : error,
+            additionalInfo,
+        },
     })
 }
 
