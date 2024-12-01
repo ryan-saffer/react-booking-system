@@ -6,6 +6,7 @@ import { editInvitation } from '@/party-bookings/core/invitations/edit-invitatio
 import { generateInvitation } from '@/party-bookings/core/invitations/generate-invitation'
 import { generateInvitationV2 } from '@/party-bookings/core/invitations/generate-invitation-v2'
 import { linkInvitation } from '@/party-bookings/core/invitations/link-invitation-v2'
+import { resetInvitation } from '@/party-bookings/core/invitations/reset-invitation-v2'
 import type { RsvpProps } from '@/party-bookings/core/invitations/rsvp-to-party-v2'
 import { rsvpToParty } from '@/party-bookings/core/invitations/rsvp-to-party-v2'
 import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
@@ -44,6 +45,9 @@ export const partiesRouter = router({
     editInvitation: authenticatedProcedure
         .input((input: unknown) => input as InvitationsV2.Invitation)
         .mutation(({ input }) => editInvitation(input)),
+    resetInvitation: authenticatedProcedure
+        .input((input: unknown) => input as { invitationId: string })
+        .mutation(({ input }) => resetInvitation(input.invitationId)),
     rsvp: publicProcedure
         .input((input: unknown) => input as WithoutId<RsvpProps>)
         .mutation(({ input }) => rsvpToParty(input)),
