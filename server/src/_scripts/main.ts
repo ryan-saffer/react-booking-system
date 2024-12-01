@@ -1,3 +1,5 @@
+import { Location, ObjectKeys } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
@@ -10,17 +12,20 @@ import {
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { generatePartyFormUrl } from './parties/generate-form'
+import { getParties } from './parties/get-parties'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
-
-;
 import { zohoTest } from './zoho-test'
 
-(async () => {
+;(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Get party bookings',
+                value: 'getParties',
+            },
             {
                 title: 'Delete Events By Email',
                 value: 'deleteEventsByEmail',
@@ -127,5 +132,76 @@ import { zohoTest } from './zoho-test'
     }
     if (script === 'getSelfCateredPartiesByNotes') {
         await getSelfCateredPartiesByNotes()
+    }
+    if (script === 'getParties') {
+        const { startDate, endDate, location, type } = await prompts([
+            { type: 'date', name: 'startDate', message: 'Enter a start date', initial: new Date() },
+            {
+                type: 'date',
+                name: 'endDate',
+                message: 'Enter an end date',
+                initial: (prev) => DateTime.fromJSDate(prev).plus({ years: 10 }).toJSDate(),
+            },
+            {
+                type: 'select',
+                name: 'filterByLocation',
+                message: 'Get all bookings, or filter by location?',
+                choices: [
+                    {
+                        title: 'All bookings',
+                        value: 'all',
+                    },
+                    {
+                        title: 'Certain location',
+                        value: 'certainLocation',
+                    },
+                ],
+            },
+            {
+                type: (prev) => (prev === 'certainLocation' ? 'select' : null),
+                name: 'location',
+                message: 'Select the location',
+                choices: ObjectKeys(Location).map((it) => ({
+                    value: Location[it],
+                    title: it,
+                })),
+            },
+            {
+                type: 'select',
+                name: 'filterByType',
+                message: 'Get all bookings, or filter by type?',
+                choices: [
+                    {
+                        title: 'All bookings',
+                        value: 'all',
+                    },
+                    {
+                        title: 'Certain type',
+                        value: 'certainType',
+                    },
+                ],
+            },
+            {
+                type: (prev) => (prev === 'certainType' ? 'select' : null),
+                name: 'type',
+                message: 'Select the type',
+                choices: [
+                    {
+                        value: 'studio',
+                        title: 'In studio',
+                    },
+                    {
+                        value: 'mobile',
+                        title: 'Mobile',
+                    },
+                ],
+            },
+        ])
+        getParties({
+            from: new Date(startDate),
+            to: new Date(endDate),
+            ...(location && { location }),
+            ...(type && { type }),
+        })
     }
 })()
