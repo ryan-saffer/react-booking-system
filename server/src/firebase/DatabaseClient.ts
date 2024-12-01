@@ -90,6 +90,23 @@ class Client {
         return this.#getDocument(FirestoreRefs.partyBooking(bookingId))
     }
 
+    async getPartyBookingByInvitationId(invitationId: string) {
+        const partiesRef = await FirestoreRefs.partyBookings()
+        const snap = await partiesRef.where('invitationId', '==', invitationId).get()
+        if (snap.size == 0) {
+            throw new Error(`Unable to find booking with invitation id: '${invitationId}'`)
+        }
+        if (snap.size > 1) {
+            throw new Error(`Multiple bookings found with invitation id: '${invitationId}'`)
+        }
+
+        const doc = snap.docs[0]
+        return {
+            id: doc.id,
+            booking: doc.data(),
+        }
+    }
+
     updatePartyBooking(bookingId: string, booking: Partial<Booking>) {
         return this.#updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
