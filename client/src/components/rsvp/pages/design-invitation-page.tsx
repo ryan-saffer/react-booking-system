@@ -1,5 +1,5 @@
 import { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'

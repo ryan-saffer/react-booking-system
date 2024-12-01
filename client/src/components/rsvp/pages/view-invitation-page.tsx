@@ -43,13 +43,16 @@ export function ViewInvitationPage() {
 
     return (
         <div className="twp">
-            <Navbar />
+            {(invitation.status === 'loading' || invitation.status === 'error') && <Navbar />}
+            {invitation.status === 'loaded' && <Navbar showResetButton invitationId={invitation.result.id} />}
             {invitation.status === 'loading' && (
                 <div className="flex h-screen w-screen items-center justify-center">
                     <Loader />
                 </div>
             )}
-            {invitation.status === 'error' && <h1>Something went wrong loading this invitation</h1>}
+            {invitation.status === 'error' && (
+                <h1>Something went wrong loading this invitation: '{invitation.error}'</h1>
+            )}
             {invitation.status === 'loaded' && (
                 <InvitationProvider invitation={invitation.result}>
                     {auth && auth.uid === invitation.result.uid && <ManageRsvps />}
