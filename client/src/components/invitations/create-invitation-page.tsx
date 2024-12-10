@@ -1,5 +1,3 @@
-import 'react-social-icons/whatsapp'
-
 import { format } from 'date-fns'
 import type { InvitationOption, Studio } from 'fizz-kidz'
 import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
