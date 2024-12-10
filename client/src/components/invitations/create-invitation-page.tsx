@@ -1,5 +1,3 @@
-import 'react-social-icons/whatsapp'
-
 import { format } from 'date-fns'
 import { InvitationOption, Location, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
