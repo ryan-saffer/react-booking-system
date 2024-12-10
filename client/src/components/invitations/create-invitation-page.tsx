@@ -525,7 +525,7 @@ function SuccessDialog({
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
                         <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
                             <WhatsappShareButton id="whatsapp" url={inviteUrl}>
-                                <WhatsappIcon size={36} round />
+                                <WhatsappIcon size={36} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
                                 Whatsapp
