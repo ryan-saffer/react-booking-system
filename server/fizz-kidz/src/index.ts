@@ -7,11 +7,13 @@ export { AdditionsDisplayValuesMapPrices } from './partyBookings/AdditionsDispla
 export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValuesMap'
 export { Location, LocationOrMaster } from './core/location'
 export { Role, ROLES } from './core/role'
-export { AuthUser, StaffAuthUser, CustomerAuthUser } from './core/user'
+export { AuthUser, StaffUser, CustomerUser } from './core/user'
 export { Permission, RolePermissionMap } from './core/permission'
 export type { BaseBooking, Booking, FormBooking, FirestoreBooking } from './partyBookings/booking'
 export { FormBookingFields, BookingFields } from './partyBookings/booking'
 export * from './partyBookings/Invitations'
+export * as InvitationsV2 from './partyBookings/invitations-v2'
+export * from './partyBookings/rsvp'
 //#endregion
 
 //#region Acuity

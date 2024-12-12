@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase-admin/auth'
-import { LocationOrMaster, ObjectKeys, Role, StaffAuthUser } from 'fizz-kidz'
+import { LocationOrMaster, ObjectKeys, Role, StaffUser } from 'fizz-kidz'
 
 import { TRPCError } from '@trpc/server'
 
@@ -40,7 +40,7 @@ export async function addUserToStudio({
         }
 
         // guaranteed to be a staff account at this point, cast it for types
-        dbUser = dbUser as StaffAuthUser
+        dbUser = dbUser as StaffUser
 
         if (dbUser.roles && ObjectKeys(dbUser.roles).includes(studio)) {
             // user already assigned to this studio

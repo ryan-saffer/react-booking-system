@@ -1,9 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 
 import { getAuth } from 'firebase-admin/auth'
-import { HttpsError } from 'firebase-functions/v2/https'
 
-import { initTRPC } from '@trpc/server'
+import { TRPCError, initTRPC } from '@trpc/server'
 import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/node-http'
 
 import { AcuityClient } from '../acuity/core/acuity-client'
@@ -26,7 +25,7 @@ const isAuthenticated = middleware(async ({ ctx, next }) => {
         const user = await getAuth().verifyIdToken(ctx.authToken || '')
         return next({ ctx: { ...ctx, uid: user.uid } })
     } catch {
-        throw new HttpsError('unauthenticated', 'procedure requires authentication')
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'procedure requires authentication' })
     }
 })
 

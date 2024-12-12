@@ -123,6 +123,22 @@ const Account = lazy(() => import('./components/settings/account.js').then((modu
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
 )
+const CreateInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/create-invitation-page.js').then((module) => ({
+        default: module.CreateInvitationPage,
+    }))
+)
+const DesignInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/design-invitation-page.js').then((module) => ({
+        default: module.DesignInvitationPage,
+    }))
+)
+const ViewInvitationPageV2 = lazy(() =>
+    import('./components/rsvp/pages/view-invitation-page.js').then((module) => ({ default: module.ViewInvitationPage }))
+)
+const RsvpPage = lazy(() =>
+    import('./components/rsvp/pages/rsvp-page.js').then((module) => ({ default: module.RsvpPage }))
+)
 
 const router = createBrowserRouter([
     {
@@ -437,6 +453,43 @@ const router = createBrowserRouter([
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ViewInvitationPage />
+                            </Suspense>
+                        ),
+                    },
+                ],
+            },
+            {
+                path: 'invitation/v2',
+                children: [
+                    {
+                        path: '',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <CreateInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'design',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <DesignInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: ':id',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ViewInvitationPageV2 />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: ':id/rsvp',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <RsvpPage />
                             </Suspense>
                         ),
                     },

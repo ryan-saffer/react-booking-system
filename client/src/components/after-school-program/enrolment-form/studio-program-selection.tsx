@@ -3,8 +3,8 @@ import { MessageCircleWarning } from 'lucide-react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
+import { FormField, FormItem, FormMessage } from '@ui-components/form'
+import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { trpc } from '@utils/trpc'
 
@@ -37,13 +37,12 @@ export function StudioProgramSelection() {
                 name="studio"
                 render={({ field }) => (
                     <FormItem className="space-y-4">
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormLabel className="text-md">Which studio would you like to attend?</FormLabel>
-                            <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a studio" />
-                                </SelectTrigger>
-                            </FormControl>
+                        <SelectForm
+                            label="Which studio would you like to attend?"
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                        >
+                            <SelectValue placeholder="Select a studio" />
                             <SelectContent>
                                 {Object.values(Location).map((location) => (
                                     <SelectItem value={location} key={location}>
@@ -51,7 +50,7 @@ export function StudioProgramSelection() {
                                     </SelectItem>
                                 ))}
                             </SelectContent>
-                        </Select>
+                        </SelectForm>
                         <FormMessage />
                     </FormItem>
                 )}

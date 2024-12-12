@@ -1,5 +1,3 @@
-import 'react-social-icons/whatsapp'
-
 import { format } from 'date-fns'
 import { InvitationOption, Location, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
@@ -8,7 +6,6 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
 import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
-import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
@@ -28,6 +25,7 @@ import { trpc } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
+import { WhatsappIcon } from '@drawables/icons/whatsapp'
 
 type TForm = {
     childName: string
@@ -488,7 +486,6 @@ function SuccessDialog({
                     .child(`invitations/${invitationId}/invitation.png`)
                     .getDownloadURL()
                 setInvitationUrl(url)
-                console.log(url)
             }
         }
         getInvitation()
@@ -515,7 +512,7 @@ function SuccessDialog({
                     <div className="grid grid-cols-2 items-center justify-center p-4 min-[350px]:grid-cols-4">
                         <div className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg p-2 hover:bg-slate-100">
                             <WhatsappShareButton id="whatsapp" url={inviteUrl}>
-                                <SocialIcon network="whatsapp" style={{ width: 36, height: 36 }} />
+                                <WhatsappIcon size={36} />
                             </WhatsappShareButton>
                             <Label htmlFor="whatsapp" className="mt-2 cursor-pointer">
                                 Whatsapp

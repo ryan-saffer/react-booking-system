@@ -42,6 +42,12 @@ class Firebase {
         localStorage.removeItem('authUser')
     }
 
+    signInAnonymously = () => this.auth.signInAnonymously()
+
+    linkWithGoogle = () => this.auth.currentUser?.linkWithPopup(this.googleProvider)
+
+    signInWithCredential = (credential: firebase.auth.AuthCredential) => this.auth.signInWithCredential(credential)
+
     resetPassword = (email: string) => this.auth.sendPasswordResetEmail(email)
 }
 
