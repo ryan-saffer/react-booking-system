@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase-admin/firestore'
 import {
     Booking,
     FirestoreBooking,
+    Location,
     capitalise,
     getApplicationDomain,
     getLocationAddress,
@@ -126,6 +127,7 @@ export async function createPartyBooking(_booking: Booking) {
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
+                    canOrderCake: booking.type === 'studio' && booking.location === Location.MALVERN,
                 },
                 { replyTo: manager.email }
             )

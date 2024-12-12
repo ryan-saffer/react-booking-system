@@ -87,6 +87,7 @@ export type Emails = {
         studioPhotoUrl: string
         invitationsUrl: string
         includesFood: boolean
+        canOrderCake: boolean
     }
 
     partyForm: {
