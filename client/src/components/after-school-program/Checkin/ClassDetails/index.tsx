@@ -2,7 +2,7 @@ import { Card, Result } from 'antd'
 import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'

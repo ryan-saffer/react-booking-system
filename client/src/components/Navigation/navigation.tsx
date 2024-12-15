@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 import { useOrg } from '@components/Session/use-org'
 import afterSchool from '@drawables/after-school.webp'

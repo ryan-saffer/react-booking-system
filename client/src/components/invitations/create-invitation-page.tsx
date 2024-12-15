@@ -6,7 +6,7 @@ import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } fr
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 import { WhatsappShareButton } from 'react-share'
 import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'

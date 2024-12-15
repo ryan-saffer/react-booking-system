@@ -1,6 +1,6 @@
 import { Result } from 'antd'
 import { useContext, useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'

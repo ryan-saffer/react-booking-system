@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router'
 
 import { Button } from '@ui-components/button'
 import { Separator } from '@ui-components/separator'

@@ -1,7 +1,7 @@
 import { Button, Checkbox } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'

@@ -1,5 +1,5 @@
 import { LogOut, Settings } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'

@@ -2,7 +2,7 @@ import { Loader2 } from 'lucide-react'
 import { CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { toast } from 'sonner'
 import { z } from 'zod'
 

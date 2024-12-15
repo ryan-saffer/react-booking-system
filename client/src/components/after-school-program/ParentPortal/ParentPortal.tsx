@@ -1,6 +1,6 @@
 import { Divider, Result, Typography } from 'antd'
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFetchAfterSchoolProgramEnrolment from '@components/Hooks/api/use-fetch-after-school-program-enrolment'

@@ -1,7 +1,7 @@
 import { Result } from 'antd'
 import { AfterSchoolEnrolment, Service } from 'fizz-kidz'
 import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'

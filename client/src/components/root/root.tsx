@@ -1,5 +1,5 @@
 import mixpanel from 'mixpanel-browser'
-import { Outlet, ScrollRestoration } from 'react-router-dom'
+import { Outlet, ScrollRestoration } from 'react-router'
 
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'

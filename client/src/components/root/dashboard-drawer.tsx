@@ -10,7 +10,7 @@ import {
     Users,
 } from 'lucide-react'
 import { ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router'
 
 import { useOrg } from '@components/Session/use-org'
 import { useMediaQuery } from '@mui/material'

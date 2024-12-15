@@ -1,6 +1,6 @@
 import { InvitationOption } from 'fizz-kidz'
 import { RefObject, useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router'
 
 import frame from '@drawables/frame.webp'
 import { Separator } from '@ui-components/separator'

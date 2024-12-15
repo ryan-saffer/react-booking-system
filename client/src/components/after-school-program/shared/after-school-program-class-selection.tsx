@@ -1,7 +1,7 @@
 import { AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
 import { Label } from '@ui-components/label'

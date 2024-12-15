@@ -2,7 +2,7 @@ import '/fonts/LilitaOne-Regular.ttf'
 import '/fonts/Gotham-Light.otf'
 
 import { Suspense, lazy } from 'react'
-import { Navigate, RouterProvider, createBrowserRouter, useSearchParams } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter, useSearchParams } from 'react-router'
 
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'

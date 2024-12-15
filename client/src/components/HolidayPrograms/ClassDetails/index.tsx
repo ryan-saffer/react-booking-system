@@ -2,7 +2,7 @@ import { Card, Collapse, Empty } from 'antd'
 import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFetchAppointments from '@components/Hooks/api/UseFetchAppointments'
