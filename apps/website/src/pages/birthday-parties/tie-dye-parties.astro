@@ -8,7 +8,7 @@ import tieDyePackage from "@/assets/images/pages/parties/packages/tie-dye.png";
 import Creations from "@/components/party-package-creations.astro";
 import TieDyeSoap from "@/components/creations/tie-dye-soap.astro";
 import TieDyePillow from "@/components/creations/tie-dye-pillow.astro";
-import RainbowBathSalts from "@/components/creations/rainbow-bath-salts.astro";
+import TieDyeRainbowBathSalts from "@/components/creations/tie-dye-rainbow-bath-salts.astro";
 import TieDyeToteBags from "@/components/creations/tie-dye-tote-bags.astro";
 import TieDyeSocks from "@/components/creations/tie-dye-socks.astro";
 import TieDyeScrunchies from "@/components/creations/tie-dye-scrunchies.astro";
@@ -38,12 +38,12 @@ import TieDyeScrunchies from "@/components/creations/tie-dye-scrunchies.astro";
       image={tieDyePackage}
       imageAlt="Tie Dye Party Package"
     >
-      <TieDyeSoap slot="1" />
-      <TieDyePillow slot="2" />
-      <RainbowBathSalts slot="3" />
-      <TieDyeToteBags slot="4" />
-      <TieDyeSocks slot="5" />
-      <TieDyeScrunchies slot="6" />
+      <TieDyeToteBags flippable={false} slot="1" />
+      <TieDyeSocks flippable={false} slot="2" />
+      <TieDyePillow flippable={false} slot="3" />
+      <TieDyeSoap flippable={false} slot="4" />
+      <TieDyeScrunchies flippable={false} slot="5" />
+      <TieDyeRainbowBathSalts flippable={false} slot="6" />
     </Creations>
   </PartyLayout>
 </Layout>
