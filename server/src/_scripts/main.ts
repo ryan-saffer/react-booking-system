@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
+import { getEnrolments } from './after-school-program/get-enrolments'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
 import {
@@ -25,6 +26,10 @@ import { zohoTest } from './zoho-test'
             {
                 title: 'Get party bookings',
                 value: 'getParties',
+            },
+            {
+                title: 'Get after school program enrolments',
+                value: 'getAfterSchoolEnrolments',
             },
             {
                 title: 'Delete Events By Email',
@@ -203,5 +208,17 @@ import { zohoTest } from './zoho-test'
             ...(location && { location }),
             ...(type && { type }),
         })
+    }
+    if (script === 'getAfterSchoolEnrolments') {
+        const { term } = await prompts([
+            {
+                message: "Enter term (eg. 'Term 4, 2024')",
+                hint: 'Term 4, 2024',
+                instructions: 'Term 4, 2024',
+                type: 'text',
+                name: 'term',
+            },
+        ])
+        getEnrolments(term)
     }
 })()

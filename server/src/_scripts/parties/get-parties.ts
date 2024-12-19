@@ -1,3 +1,6 @@
+import fs from 'fs'
+import path from 'path'
+
 import { Booking, Creations, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -93,6 +96,7 @@ export async function getParties({
     })
 
     console.log({ creations })
+    generateCSV(creations)
 
     const holSnap = await firestore.collectionGroup('programs').get()
     const programs = holSnap.docs.filter((it) => {
@@ -122,4 +126,18 @@ export async function getParties({
 
     console.log('Total events: ', Object.keys(eventIds).length)
     console.log('Total event slots: ', totalSlots)
+}
+
+function generateCSV(data: object) {
+    // Convert object to an array of [key, value] pairs
+    const rows = Object.entries(data)
+
+    // Add headers for the CSV
+    const csvContent = ['Item,Quantity', ...rows.map(([key, value]) => `${key},${value}`)].join('\n')
+
+    // Write the CSV content to a file named 'output.csv'
+    const filePath = path.join(__dirname, 'output.csv')
+    fs.writeFileSync(filePath, csvContent, 'utf8')
+
+    console.log(`CSV file has been written to ${filePath}`)
 }

@@ -52,6 +52,7 @@
         "@types/stripe": "^7.13.23",
         "@typescript-eslint/eslint-plugin": "^6.7.5",
         "@typescript-eslint/parser": "^6.7.5",
+        "colorette": "^2.0.20",
         "concurrently": "^8.2.1",
         "copyfiles": "^2.4.1",
         "csv-parse": "^5.3.0",
@@ -62,7 +63,7 @@
         "mockdate": "^3.0.5",
         "nyc": "^15.1.0",
         "prompts": "^2.4.2",
-        "ts-node": "^10.9.1",
+        "ts-node": "^10.9.2",
         "tslint": "^6.1.2",
         "typescript": "^5.0.4"
     },
