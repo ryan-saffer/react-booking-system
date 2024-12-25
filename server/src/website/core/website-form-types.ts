@@ -52,6 +52,10 @@ export type Form = {
         name: string
         email: string
     }
+    holidayProgramDiscount: {
+        name: string
+        email: string
+    }
     franchising: {
         firstName: string
         lastName: string

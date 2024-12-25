@@ -61,9 +61,11 @@ export type MixpanelEvent = {
             // used the section just sitting under the invite on mobile (no drawer)
             | 'scroll'
     }
+    'holiday-program-website-discount': { name: string; email: string }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
+    'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
 }

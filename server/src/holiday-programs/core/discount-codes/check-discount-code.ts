@@ -1,4 +1,4 @@
-import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 
 export async function checkDiscountCode(code: string) {
     const existingDiscountCodes = await DatabaseClient.checkDiscountCode(code)

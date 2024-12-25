@@ -1,13 +1,12 @@
 import { DiscountCode, WithoutId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { MixpanelClient, MixpanelEvent } from '../../mixpanel/mixpanel-client'
-import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwTrpcError } from '../../utilities'
-import { generateRandomString } from '../../utilities/stringUtils'
-import { ZohoClient } from '../../zoho/zoho-client'
-import { checkDiscountCode } from './check-discount-code'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { MixpanelClient, MixpanelEvent } from '../../../mixpanel/mixpanel-client'
+import { MailClient } from '../../../sendgrid/MailClient'
+import { logError } from '../../../utilities'
+import { ZohoClient } from '../../../zoho/zoho-client'
+import { generateDiscountCode } from './generate-discount-code'
 
 export type CreateDiscountCodeFromInvitation = WithoutId<
     Omit<
@@ -26,27 +25,7 @@ export type CreateDiscountCodeFromInvitation = WithoutId<
  * Could technically be abused, as it's exposed publically. Future improvements could issue a single code per email address.
  */
 export async function createDiscountCodeFromInvitation(discountCode: CreateDiscountCodeFromInvitation) {
-    const code = `${discountCode.name}-${generateRandomString(5)}`
-    const existingCode = await checkDiscountCode(code)
-    if (existingCode !== 'not-found') {
-        throwTrpcError('PRECONDITION_FAILED', `Discount code '${code}' already exists.`)
-    }
-
-    const CUT_OFF_DATES = [
-        DateTime.fromISO('2024-04-10'),
-        DateTime.fromISO('2024-07-10'),
-        DateTime.fromISO('2024-10-03'),
-        DateTime.fromISO('2025-01-20'),
-    ]
-
-    const today = new Date()
-    let expiryDate = new Date()
-
-    for (const date of CUT_OFF_DATES.reverse()) {
-        if (today < date.toJSDate()) {
-            expiryDate = date.toJSDate()
-        }
-    }
+    const { code, expiryDate } = await generateDiscountCode(discountCode.name)
 
     try {
         const zohoClient = new ZohoClient()
@@ -57,15 +36,6 @@ export async function createDiscountCodeFromInvitation(discountCode: CreateDisco
     } catch (err) {
         logError('error adding birthday party guest contact to zoho', err)
     }
-
-    await DatabaseClient.createDiscountCode({
-        code,
-        discountType: 'percentage',
-        discountAmount: 10,
-        expiryDate,
-        numberOfUses: 0,
-        numberOfUsesAllocated: 1,
-    })
 
     await DatabaseClient.addGuestToInvitation(
         { name: discountCode.name, email: discountCode.email },

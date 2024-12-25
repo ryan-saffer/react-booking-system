@@ -1,5 +1,7 @@
 import { onRequest } from 'firebase-functions/v2/https'
 
+import { generateDiscountCode } from '../../../holiday-programs/core/discount-codes/generate-discount-code'
+import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 import { MailClient } from '../../../sendgrid/MailClient'
 import { logError } from '../../../utilities'
 import { ZohoClient } from '../../../zoho/zoho-client'
@@ -294,6 +296,22 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     email: formData.email,
                 })
                 break
+            }
+
+            case 'holidayProgramDiscount': {
+                const formData = req.body as Form['holidayProgramDiscount']
+                const [firstName, lastName] = formData.name.split(' ')
+                const data = await generateDiscountCode(firstName)
+                await zohoClient.addBasicB2CContact({
+                    firstName,
+                    lastName,
+                    email: formData.email,
+                })
+                const mixpanelClient = await MixpanelClient.getInstance()
+                await mixpanelClient.track('holiday-program-website-discount', formData)
+
+                res.status(200).json(data)
+                return
             }
 
             case 'franchising': {

@@ -2,12 +2,12 @@ import { FreeHolidayProgramBooking } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
-import { checkDiscountCode } from '../../core/check-discount-code'
-import { CreateDiscountCode, createDiscountCode } from '../../core/create-discount-code'
+import { checkDiscountCode } from '../../core/discount-codes/check-discount-code'
+import { CreateDiscountCode, createDiscountCode } from '../../core/discount-codes/create-discount-code'
 import {
     CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
-} from '../../core/create-discount-code-from-invitation'
+} from '../../core/discount-codes/create-discount-code-from-invitation'
 import { bookHolidayPrograms } from '../../core/schedule-holiday-programs'
 
 export const holidayProgramsRouter = router({
