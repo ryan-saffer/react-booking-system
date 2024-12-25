@@ -4,6 +4,10 @@ import Header from "@/layout/header.astro";
 import Footer from "@/layout/footer.astro";
 import { ViewTransitions } from "astro:transitions";
 import LoadingIndicator from "astro-loading-indicator/component";
+import { HolidayProgramDiscountDialog } from "@/components/react/holiday-program-discount-dialog";
+import { getImage } from "astro:assets";
+import discountImage from "@/assets/images/holiday-program-discount-dialog/discount-image.png";
+import frame from "@/assets/images/holiday-program-discount-dialog/frame.png";
 
 type Props = {
   title: string;
@@ -13,6 +17,15 @@ type Props = {
 const { title, description } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+const discountImageOptimised = await getImage({
+  src: discountImage,
+  format: "webp",
+});
+const frameOptimised = await getImage({
+  src: frame,
+  format: "webp",
+});
 ---
 
 <style is:global>
@@ -76,6 +89,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
   <ViewTransitions />
   <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
+  <HolidayProgramDiscountDialog
+    client:idle
+    promotionalImage={{
+      img: discountImageOptimised,
+      alt: "promotion image of two kids laughing",
+    }}
+    frame={{ img: frameOptimised }}
+  />
 
   <body class="flex flex-col">
     <Header />
