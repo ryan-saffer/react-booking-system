@@ -125,7 +125,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                 if (paymentIntent.id !== '') {
                     await updatePaymentIntentMutation.mutateAsync({
                         id: paymentIntent.id,
-                        amount: totalPrice * 100,
+                        amount: Math.floor(totalPrice * 100),
                         programs: createPriceMap(),
                         discount: discount,
                     })
