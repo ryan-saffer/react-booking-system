@@ -71,16 +71,28 @@ const Step1: React.FC<Props> = ({
                 </Select>
             </Form.Item>
             {filteredClasses && filteredClasses.length !== 0 && (
-                <Alert
-                    type="info"
-                    message="Check our website to see what we will be making each day."
-                    action={
-                        <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs" target='_blank'>
-                            View schedule
-                        </Button>
-                    }
-                    style={{ marginBottom: 16 }}
-                />
+                <>
+                    <Alert
+                        type="info"
+                        message="Check our website to see what we will be making each day."
+                        action={
+                            <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs" target="_blank">
+                                View schedule
+                            </Button>
+                        }
+                        style={{ marginBottom: 8 }}
+                    />
+                    <Alert
+                        className="twp mb-4 p-3"
+                        type="warning"
+                        description={
+                            <p>
+                                If you would like your child to <strong>stay for the day</strong>, simply book the
+                                morning and afternoon program, bring lunch and we will supervise the break!
+                            </p>
+                        }
+                    />
+                </>
             )}
             {filteredClasses?.map((klass) => {
                 const name = `${klass.id}-checkbox`
