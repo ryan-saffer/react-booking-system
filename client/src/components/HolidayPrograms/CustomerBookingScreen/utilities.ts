@@ -34,6 +34,7 @@ export function calculateDiscountedAmount(total: number, discount: DiscountCode)
 }
 
 export function getSameDayClasses(classes: AcuityTypes.Api.Class[]) {
+    return [] // removing this feature for now
     const sameDayClasses: number[] = []
     for (let i = 0; i < classes.length; i++) {
         for (let j = i + 1; j < classes.length; j++) {
