@@ -2,13 +2,13 @@ import { Location } from '../core/location'
 
 /**
  * Subject Pronoun:
- * "Jenny will be your manager, she is great!"
+ * "Jenny will be your manager, he is great!"
  *
  * Object Pronoun:
- * "Jenny is your best point of contact, and you can reach her on..."
+ * "Jenny is your best point of contact, and you can reach him on..."
  *
  * Possessive Adjective:
- * "If you have any questions, feel free to contact her team."
+ * "If you have any questions, feel free to contact his team."
  */
 export function getManager(
     location: Location,
@@ -52,12 +52,12 @@ export function getManager(
             }
         case Location.CHELTENHAM:
             return {
-                name: 'Ben',
+                name: 'Bronwyn',
                 email: 'cheltenham@fizzkidz.com.au',
-                mobile: '0490 450 282',
-                subjectPronoun: 'he',
-                objectPronoun: 'him',
-                possesiveAdjective: 'his',
+                mobile: '0435 906 395',
+                subjectPronoun: 'she',
+                objectPronoun: 'her',
+                possesiveAdjective: 'her',
             }
         case Location.MALVERN:
             return {
