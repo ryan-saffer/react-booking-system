@@ -3,6 +3,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
 import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
+import { logError } from '../../utilities'
 
 export type AcuityWebhookData = {
     action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | 'order.completed'
@@ -41,6 +42,7 @@ export const asWebhook = onRequest(async (req, resp) => {
                 return
         }
     } catch (error) {
+        logError('error running acuity webhook', error)
         resp.status(500).send(error)
         return
     }
