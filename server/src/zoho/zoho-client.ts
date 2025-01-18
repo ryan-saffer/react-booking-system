@@ -258,7 +258,6 @@ export class ZohoClient {
                 Company: company || '',
                 ...baseProps,
             }),
-            // TODO  - If its an actiation or an event it should be assigned to lami, not melissa
             this.createLead({
                 company: company || '',
                 source: 'Website Form',
@@ -278,7 +277,7 @@ export class ZohoClient {
                     Email: props.email,
                     Phone: props.mobile || '',
                     Company: props.company,
-                    Owner: '76392000000284519', // melissa
+                    Owner: '76392000000333090', // Lami
                     Lead_Source: props.source,
                     Lead_Status: 'New Lead',
                 },
