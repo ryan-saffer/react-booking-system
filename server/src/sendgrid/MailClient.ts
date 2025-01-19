@@ -59,7 +59,13 @@ export class MailClient {
 
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], _options: Options = {}) {
         const defaultOptions = { bccBookings: true }
-        const options = { ...defaultOptions, ..._options }
+        let options = { ...defaultOptions, ..._options }
+
+        // if the email is being sent to bookings@fizz, and `bccBookings` is set to true, it will fail.
+        // fix this here in case.
+        if (options.bccBookings && to === 'bookings@fizzkidz.com.au') {
+            options = { ...options, bccBookings: false }
+        }
 
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)

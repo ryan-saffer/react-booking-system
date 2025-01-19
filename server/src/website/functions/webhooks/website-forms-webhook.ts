@@ -59,7 +59,6 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `${LocationDisplayValueMap[formData.location]} - ${formData.name}`,
                         replyTo: formData.email,
-                        bccBookings: false,
                     }
                 )
 
@@ -172,7 +171,6 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `Event - ${formData.name}`,
                         replyTo: formData.email,
-                        bccBookings: false,
                     }
                 )
 
@@ -221,7 +219,6 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     {
                         subject: `Incursion - ${formData.name}, ${formData.school}`,
                         replyTo: formData.email,
-                        bccBookings: true,
                     }
                 )
 
