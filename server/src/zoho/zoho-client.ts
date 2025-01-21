@@ -165,6 +165,7 @@ export class ZohoClient {
             Child_Birthday_4?: string // !! ISO date string
             Child_Name_5?: string
             Child_Birthday_5?: string // !! ISO date string
+            Recently_Booked_Party?: boolean
         }>
     ) {
         const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
@@ -200,6 +201,8 @@ export class ZohoClient {
             customer_type: 'B2C',
             branch: capitalise(studio),
             Party_Date: DateTime.fromJSDate(partyDate).toISODate(),
+            // resets after 180 days in zoho campaigns automation
+            Recently_Booked_Party: true,
             ...baseProps,
         })
     }
