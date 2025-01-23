@@ -2,6 +2,12 @@
 import { Image } from "astro:assets";
 import PrimaryButton from "./primary-button.astro";
 import freeTrial from "@/assets/images/pages/after-school-programs/free-trial.png";
+
+type Props = {
+  type: "studio" | "school";
+};
+
+const { type } = Astro.props;
 ---
 
 <section class="my-16 flex flex-col gap-16 lg:flex-row lg:gap-8">
@@ -25,7 +31,7 @@ import freeTrial from "@/assets/images/pages/after-school-programs/free-trial.pn
     >
       <PrimaryButton
         text="Enrol for a free trial"
-        path="https://bookings.fizzkidz.com.au/after-school-program-enrolment-form?type=studio"
+        path=`https://bookings.fizzkidz.com.au/after-school-program-enrolment-form?type=${type}`
       />
     </div>
   </div>
