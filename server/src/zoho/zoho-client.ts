@@ -81,6 +81,7 @@ export class ZohoClient {
             Party_Type?: 'Studio' | 'Mobile' | ''
             Party_Date?: string
             Company?: string
+            Holiday_Program_Date?: string
         }>
     ) {
         const { childName, childBirthdayISO, ...rest } = values
@@ -166,6 +167,7 @@ export class ZohoClient {
             Child_Name_5?: string
             Child_Birthday_5?: string // !! ISO date string
             Recently_Booked_Party?: boolean
+            Holiday_Program_Date?: string // !! ISO date string
         }>
     ) {
         const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
@@ -215,20 +217,46 @@ export class ZohoClient {
         })
     }
 
-    addHolidayProgramContact(
+    async addHolidayProgramContact(
         props: WithBaseProps<{
             studio: Location | 'test'
             childName: string
-            childBirthdayISO: string // ISO string
+            childBirthdayISO: string // ISO string,
+            holidayProgramDateISO: string // ISO string
         }>
     ) {
-        const { studio, childName, childBirthdayISO, ...baseProps } = props
+        const { studio, childName, childBirthdayISO, holidayProgramDateISO, ...baseProps } = props
+
+        // need to check if this parent already has a holiday program date.
+        // if not, add the date in, otherwise don't include it.
+        const searchResult = await this.#request({
+            endpoint: `Contacts/search?email=${encodeURIComponent(baseProps.email)})`,
+            method: 'GET',
+        })
+
+        if (!searchResult) {
+            // customer does not exist in zoho, so add them as new with the child
+            return this.#addParentWithChild({
+                service: 'Holiday Program',
+                branch: capitalise(studio),
+                customer_type: 'B2C',
+                childName,
+                childBirthdayISO,
+                Holiday_Program_Date: holidayProgramDateISO,
+                ...baseProps,
+            })
+        }
+
+        const existingContact = searchResult.data[0]
+        const existingDate = existingContact['Holiday_Program_Date']
+
         return this.#addParentWithChild({
             service: 'Holiday Program',
             branch: capitalise(studio),
             customer_type: 'B2C',
             childName,
             childBirthdayISO,
+            ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
             ...baseProps,
         })
     }

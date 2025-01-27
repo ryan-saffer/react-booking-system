@@ -14,7 +14,6 @@ import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { generatePartyFormUrl } from './parties/generate-form'
 import { getParties } from './parties/get-parties'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
-import { zohoTest } from './zoho-test'
 
 ;(async () => {
     const { script } = await prompts({
@@ -29,10 +28,6 @@ import { zohoTest } from './zoho-test'
             {
                 title: 'Delete Events By Email',
                 value: 'deleteEventsByEmail',
-            },
-            {
-                title: 'Zoho Test',
-                value: 'zohoTest',
             },
             {
                 title: 'List all users',
@@ -109,14 +104,6 @@ import { zohoTest } from './zoho-test'
     }
     if (script === 'listAllUsers') {
         await getAllUsers()
-    }
-
-    if (script === 'zohoTest') {
-        try {
-            await zohoTest()
-        } catch (err) {
-            console.log(err)
-        }
     }
 
     if (script === 'deleteEventsByEmail') {

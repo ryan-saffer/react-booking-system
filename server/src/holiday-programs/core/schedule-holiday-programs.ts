@@ -64,6 +64,9 @@ export async function bookHolidayPrograms(
 
     const programs = props.free ? props.programs : paidPrograms.map(({ program }) => program)
 
+    // get the first date. since sort() sorts in place, make a copy with map().
+    const firstProgram = programs.map((it) => it).sort((a, b) => (a.dateTime < b.dateTime ? -1 : 0))[0]
+
     // write to crm
     if (programs[0].joinMailingList) {
         const zohoClient = new ZohoClient()
@@ -82,6 +85,7 @@ export async function bookHolidayPrograms(
                     studio: AcuityUtilities.getStudioByCalendarId(program.calendarId),
                     childName: program.childName,
                     childBirthdayISO: program.childAge,
+                    holidayProgramDateISO: firstProgram.dateTime.split('T')[0],
                 })
             }
         } catch (err) {
