@@ -34,7 +34,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     const updateLabelMutation = trpc.acuity.updateLabel.useMutation()
 
     const notSignedIn = appointment.labels === null
-    const isSignedIn = appointment.labels !== null && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
+    const isSignedIn = appointment.labels && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
 
     const childName = AcuityUtilities.retrieveFormAndField(
         appointment,

@@ -8,7 +8,7 @@ export interface Appointment {
     classID: number
     type: string
     price: string
-    labels: Label[]
+    labels?: Label[]
     forms: Form[]
     notes: string
     calendar: string

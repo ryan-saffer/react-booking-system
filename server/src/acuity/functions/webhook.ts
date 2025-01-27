@@ -3,6 +3,7 @@ import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
 import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
+import { checkInToCrm } from '../../holiday-programs/core/check-in-to-crm'
 import { logError } from '../../utilities'
 
 export type AcuityWebhookData = {
@@ -33,6 +34,16 @@ export const asWebhook = onRequest(async (req, resp) => {
                     return
                 } else {
                     logger.log('ignoring cancelled program with id:', data.appointmentTypeID)
+                    resp.status(200).send()
+                    return
+                }
+            case 'changed':
+                if (isHolidayProgram(data.appointmentTypeID)) {
+                    await checkInToCrm(data)
+                    resp.status(200).send()
+                    return
+                } else {
+                    logger.log('ignoring changed program with id:', data.appointmentTypeID)
                     resp.status(200).send()
                     return
                 }

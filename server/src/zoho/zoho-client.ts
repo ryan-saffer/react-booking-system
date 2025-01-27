@@ -168,6 +168,7 @@ export class ZohoClient {
             Child_Birthday_5?: string // !! ISO date string
             Recently_Booked_Party?: boolean
             Holiday_Program_Date?: string // !! ISO date string
+            Holiday_Program_Checked_In?: boolean
         }>
     ) {
         const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
@@ -259,6 +260,35 @@ export class ZohoClient {
             ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
             ...baseProps,
         })
+    }
+
+    /**
+     * Check if the provided program date matches the holiday program date in zoho.
+     * If so, mark the customer as checked in.
+     */
+    async holidayProgramCheckin({ email, programDate }: { email: string; programDate: string }) {
+        const searchResult = await this.#request({
+            endpoint: `Contacts/search?email=${encodeURIComponent(email)})`,
+            method: 'GET',
+        })
+
+        if (!searchResult) {
+            // weird that they have a holiday program booking but not found in Zoho...
+            return
+        }
+
+        const existingContact = searchResult.data[0]
+        const existingDate = existingContact['Holiday_Program_Date']
+
+        if (existingDate === programDate) {
+            await this.#upsertContact({
+                firstName: existingContact.First_Name,
+                service: 'Holiday Program',
+                email: email,
+                customer_type: 'B2C',
+                Holiday_Program_Checked_In: true,
+            })
+        }
     }
 
     addAfterSchoolProgramContact(props: WithBaseProps<{ childName: string; childBirthdayISO: string }>) {
