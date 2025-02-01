@@ -6,16 +6,16 @@ import PartyLayout from "@/layout/party-layout.astro";
 import bodyGlitter from "@/assets/images/pages/parties/body-glitter.jpg";
 
 import glitz from "@/assets/images/pages/parties/packages/glitz-and-glam.png";
-import GlitterSlime from "@/components/creations/glitter-slime.astro";
 import GlitterFacePaint from "@/components/creations/glitter-face-paint.astro";
 import RainbowBathSalts from "@/components/creations/rainbow-bath-salts.astro";
 import Creations from "@/components/party-package-creations.astro";
 import UnicornSoap from "@/components/creations/unicorn-soap.astro";
-import FizzyBathBombs from "@/components/creations/fizzy-bath-bombs-blue.astro";
 import RainbowBathBombs from "@/components/creations/rainbow-bath-bombs.astro";
 import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
-import FluffySlimePink from "@/components/creations/fluffy-slime-pink.astro";
-import SugarLipScrub from "@/components/creations/sugar-lip-scrub.astro";
+import FairySlime from "@/components/creations/fairy-slime.astro";
+import GlitterSoap from "@/components/creations/glitter-soap.astro";
+import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
+import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
 ---
 
 <Layout
@@ -24,6 +24,7 @@ import SugarLipScrub from "@/components/creations/sugar-lip-scrub.astro";
 >
   <PartyLayout partyPackage="Glitz and Glam">
     <PageIntro
+      slot="intro"
       subtitle="Bring the glitter, sparkles and fun to your child's next party!"
       image={bodyGlitter}
       imageAlt="hands holding colourful body glitter containers"
@@ -37,16 +38,20 @@ import SugarLipScrub from "@/components/creations/sugar-lip-scrub.astro";
         with you after the party!
       </span>
     </PageIntro>
-    <Creations partyPackage="Glitz and Glam" image={glitz} imageAlt="test">
-      <GlitterSlime slot="1" />
-      <GlitterFacePaint slot="2" />
-      <RainbowBathSalts slot="3" />
-      <RainbowBathBombs slot="4" />
-      <FizzyBathBombs slot="5" />
-      <UnicornSoap slot="6" />
-      <SparklingLipBalm slot="7" />
-      <FluffySlimePink slot="8" />
-      <SugarLipScrub slot="9" />
+    <Creations
+      partyPackage="Glitz and Glam"
+      image={glitz}
+      imageAlt="Three girls smiling"
+    >
+      <FairySlime slot="1" flippable={false} />
+      <GlitterFacePaint slot="2" flippable={false} />
+      <RainbowBathSalts slot="3" flippable={false} />
+      <GlitterSoap slot="4" flippable={false} />
+      <SparklingLipBalm slot="5" flippable={false} />
+      <UnicornSoap slot="6" flippable={false} />
+      <RainbowBathBombs slot="7" flippable={false} />
+      <UnicornBathCrumble slot="8" flippable={false} />
+      <GlitterHairGel slot="9" flippable={false} />
     </Creations>
   </PartyLayout>
 </Layout>

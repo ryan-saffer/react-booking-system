@@ -48,6 +48,16 @@ export const menu = [
         type: "link",
       },
       {
+        title: "Fairy Parties",
+        path: "/birthday-parties/fairy-parties",
+        type: "link",
+      },
+      {
+        title: "Fluid Bears Parties",
+        path: "/birthday-parties/fluid-bears-parties",
+        type: "link",
+      },
+      {
         title: "Safari Parties",
         path: "/birthday-parties/safari-parties/",
         type: "link",

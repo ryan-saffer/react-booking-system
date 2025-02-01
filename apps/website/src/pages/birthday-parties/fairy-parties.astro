@@ -1,0 +1,55 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import fairyParty from "@/assets/images/pages/parties/fairy-party.webp";
+import fairy from "@/assets/images/pages/parties/packages/fairies.png";
+import Creations from "@/components/party-package-creations.astro";
+import UnicornSoap from "@/components/creations/unicorn-soap.astro";
+import FairyWands from "@/components/creations/fairy-wands.astro";
+import FairySlime from "@/components/creations/fairy-slime.astro";
+import PixieGlitter from "@/components/creations/pixie-glitter.astro";
+import FairyBracelets from "@/components/creations/fairy-bracelets.astro";
+import FairyLipBalm from "@/components/creations/fairy-lip-balm.astro";
+import FairyBathBombs from "@/components/creations/fairy-bath-bombs.astro";
+import MarshmallowSlime from "@/components/creations/marshmallow-slime.astro";
+import FairyHairGel from "@/components/creations/fairy-hair-gel.astro";
+---
+
+<Layout
+  title="Book a Kids Fairy Birthday Party in Melbourne | Fizz Kidz"
+  description="A party package full of sparkles, magic and fairies!"
+>
+  <PartyLayout partyPackage="Fairy">
+    <PageIntro
+      slot="intro"
+      subtitle="Welcome to the magical world of fairies!"
+      image={fairyParty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="pink"
+    >
+      <span slot="title">Fairy Kids Birthday Parties</span>
+      <span slot="content">
+        Here we love everything sparkles, glitter and magic!
+      </span>
+    </PageIntro>
+    <Creations
+      partyPackage="Fairy"
+      image={fairy}
+      imageAlt="Fairy Party Package"
+    >
+      <FairySlime slot="1" flippable={false} />
+      <PixieGlitter slot="2" flippable={false} />
+      <FairyBracelets slot="3" flippable={false} />
+      <FairyLipBalm slot="4" flippable={false} />
+      <FairyWands slot="5" flippable={false} />
+      <UnicornSoap slot="6" flippable={false} />
+      <FairyBathBombs slot="7" flippable={false} />
+      <MarshmallowSlime slot="8" flippable={false} />
+      <FairyHairGel slot="9" flippable={false} />
+    </Creations>
+  </PartyLayout>
+</Layout>

@@ -23,6 +23,7 @@ import DinosaurFossils from "@/components/creations/dinosaur-fossils.astro";
 >
   <PartyLayout partyPackage="Safari">
     <PageIntro
+      slot="intro"
       subtitle="Roar! Welcome to the jungle!"
       image={safariParty}
       imageAlt="hands holding colourful body glitter containers"
@@ -40,15 +41,15 @@ import DinosaurFossils from "@/components/creations/dinosaur-fossils.astro";
       image={dinosaurFossils}
       imageAlt="Safari Party Package"
     >
-      <AnimalSoap slot="1" />
-      <MonsterSlimePurple slot="2" />
-      <SandSlime slot="3" />
-      <BugsInBathBombs slot="4" />
-      <AnimalsInSoap slot="5" />
-      <MonsterSlimeGreen slot="6" />
-      <DinosaurFossils slot="7" />
-      <FizzyBathBombsGreen slot="8" />
-      <BubblingVolcanoes slot="9" />
+      <AnimalSoap slot="1" flippable={false} />
+      <MonsterSlimePurple slot="2" flippable={false} />
+      <SandSlime slot="3" flippable={false} />
+      <BugsInBathBombs slot="4" flippable={false} />
+      <AnimalsInSoap slot="5" flippable={false} />
+      <MonsterSlimeGreen slot="6" flippable={false} />
+      <DinosaurFossils slot="7" flippable={false} />
+      <FizzyBathBombsGreen slot="8" flippable={false} />
+      <BubblingVolcanoes slot="9" flippable={false} />
     </Creations>
   </PartyLayout>
 </Layout>

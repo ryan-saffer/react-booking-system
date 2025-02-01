@@ -23,6 +23,7 @@ import TsScrunchies from "@/components/creations/ts-scrunchies.astro";
 >
   <PartyLayout partyPackage="Taylor Swift">
     <PageIntro
+      slot="intro"
       subtitle="Join us for the best Swiftie Party!"
       image={taylorSwiftParty}
       imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
@@ -41,15 +42,15 @@ import TsScrunchies from "@/components/creations/ts-scrunchies.astro";
       image={taylorSwiftPackage}
       imageAlt="Taylor Swift Party Package"
     >
-      <TsBathBombs slot="1" />
-      <TsScrunchies slot="2" />
-      <TsButterflySoap slot="3" />
-      <TsBracelets slot="4" />
-      <TsRainbowBathBombs slot="5" />
-      <TsGoldSlime slot="6" />
-      <TsMidnightsSlime slot="7" />
-      <TsLipBalm slot="8" />
-      <TsFacePaint slot="9" />
+      <TsBathBombs slot="1" flippable={false} />
+      <TsScrunchies slot="2" flippable={false} />
+      <TsButterflySoap slot="3" flippable={false} />
+      <TsBracelets slot="4" flippable={false} />
+      <TsRainbowBathBombs slot="5" flippable={false} />
+      <TsGoldSlime slot="6" flippable={false} />
+      <TsMidnightsSlime slot="7" flippable={false} />
+      <TsLipBalm slot="8" flippable={false} />
+      <TsFacePaint slot="9" flippable={false} />
     </Creations>
   </PartyLayout>
 </Layout>

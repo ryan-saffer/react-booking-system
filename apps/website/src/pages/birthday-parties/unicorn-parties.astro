@@ -6,12 +6,12 @@ import PartyLayout from "@/layout/party-layout.astro";
 import unicornParty from "@/assets/images/pages/parties/unicorn-party.jpg";
 import unicorn from "@/assets/images/pages/parties/packages/unicorn.png";
 import Creations from "@/components/party-package-creations.astro";
-import UnicornSlime from "@/components/creations/unicorn-slime.astro";
-import UnicornGlitterShimmer from "@/components/creations/unicorn-glitter-shimmer.astro";
 import UnicornSoap from "@/components/creations/unicorn-soap.astro";
 import UnicornBathBombs from "@/components/creations/unicorn-bath-bombs.astro";
-import UnicornBathCrystals from "@/components/creations/unicorn-bath-crystals.astro";
-import ButterflySoap from "@/components/creations/butterfly-soap.astro";
+import UnicornCloudSlime from "@/components/creations/unicorn-cloud-slime.astro";
+import FairyWands from "@/components/creations/fairy-wands.astro";
+import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
+import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
 ---
 
 <Layout
@@ -20,6 +20,7 @@ import ButterflySoap from "@/components/creations/butterfly-soap.astro";
 >
   <PartyLayout partyPackage="Unicorn">
     <PageIntro
+      slot="intro"
       subtitle="Welcome to the magical world of Unicorns!"
       image={unicornParty}
       imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
@@ -37,12 +38,12 @@ import ButterflySoap from "@/components/creations/butterfly-soap.astro";
       image={unicorn}
       imageAlt="Unicorn Party Package"
     >
-      <UnicornSlime slot="1" />
-      <UnicornGlitterShimmer slot="2" />
-      <UnicornBathBombs slot="3" />
-      <UnicornSoap slot="4" />
-      <UnicornBathCrystals slot="5" />
-      <ButterflySoap slot="6" />
+      <FairyWands slot="1" flippable={false} />
+      <SparklingLipBalm slot="2" flippable={false} />
+      <UnicornBathCrumble slot="3" flippable={false} />
+      <UnicornSoap slot="4" flippable={false} />
+      <UnicornBathBombs slot="5" flippable={false} />
+      <UnicornCloudSlime slot="6" flippable={false} />
     </Creations>
   </PartyLayout>
 </Layout>
