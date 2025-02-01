@@ -10,7 +10,7 @@ import { cn } from "./react/lib/utils";
 
 type Props = {
   image: ImageMetadata;
-  color: "pink" | "yellow" | "green" | "purple" | "blue";
+  color: "pink" | "yellow" | "green" | "purple" | "blue" | "white";
   text: string;
   flippable?: boolean;
 };
@@ -37,7 +37,9 @@ const hex =
         ? "#8F44E1"
         : color === "blue"
           ? "#47D2F5"
-          : "#F6BA33";
+          : color === "yellow"
+            ? "#F6BA33"
+            : "#FFFFFF";
 ---
 
 <style>

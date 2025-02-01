@@ -2,6 +2,7 @@
 import PageIntro from "@/components/page-intro.astro";
 import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
+import { Image } from "astro:assets";
 
 import slime from "@/assets/images/pages/parties/slime-party.jpg";
 import slimePackage from "@/assets/images/pages/parties/slime-creations-hero.png";
@@ -18,6 +19,11 @@ import MarshmallowSlime from "@/components/creations/marshmallow-slime.astro";
 import SwiftieSlime from "@/components/creations/swiftie-slime.astro";
 import FluffySlimeBlue from "@/components/creations/fluffy-slime-blue.astro";
 import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime-green.astro";
+import blackWave from "@/assets/images/pages/parties/black-wave.svg";
+import slimeLab from "@/assets/images/pages/parties/slime-lab.png";
+import SlimeBase from "@/components/creations/slime-base.astro";
+import SlimeColour from "@/components/creations/slime-colour.astro";
+import SlimeAddIns from "@/components/creations/slime-add-ins.astro";
 ---
 
 <Layout
@@ -59,5 +65,32 @@ import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime
       <RainbowSlime slot="11" flippable={false} />
       <FrozenSparkleSlimeGreen slot="12" flippable={false} />
     </Creations>
+    <Image
+      src={blackWave}
+      alt="black background wave"
+      class="left-0 right-0 w-screen"
+    />
+    <section class="bg-black">
+      <div class="m-auto block max-w-[1380px] px-5 pt-4">
+        <Image src={slimeLab} alt="slime lab" height="300" />
+        <p class="py-4 font-lilita text-xl text-white md:text-3xl">
+          You can either choose the slime you would like all your friends to
+          make or choose SLIME LAB and everyone can choose their own glue base,
+          colour and add-ons!
+        </p>
+        <div
+          class="m-auto flex flex-col justify-center md:flex-row lg:max-w-5xl"
+        >
+          <SlimeBase flippable={false} />
+          <SlimeColour flippable={false} />
+          <SlimeAddIns flippable={false} />
+        </div>
+      </div>
+    </section>
+    <Image
+      src={blackWave}
+      alt="black background wave"
+      class="-mt-1 w-screen rotate-180"
+    />
   </PartyLayout>
 </Layout>
