@@ -31,6 +31,9 @@ export default withUt({
         "green-lg": "-50px 50px 0px -1px rgba(78, 216, 95, 0.2)",
         "green-md": "-25px 25px 0px -1px rgba(78, 216, 95, 0.2)",
         "green-sm": "-10px 10px 0px -1px rgba(78, 216, 95, 0.2)",
+        "gold-lg": "-50px 50px 0px -1px rgb(197, 179, 88, 0.2)",
+        "gold-md": "-25px 25px 0px -1px rgb(197, 179, 88, 0.2)",
+        "gold-sm": "-10px 10px 0px -1px rgb(197, 179, 88, 0.2)",
         around: "rgba(0, 0, 0, 0.35) 0px 5px 15px;",
       },
       colors: {
