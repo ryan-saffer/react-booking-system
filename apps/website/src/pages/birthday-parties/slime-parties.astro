@@ -2,19 +2,28 @@
 import PageIntro from "@/components/page-intro.astro";
 import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
+import { Image } from "astro:assets";
 
 import slime from "@/assets/images/pages/parties/slime-party.jpg";
 import slimePackage from "@/assets/images/pages/parties/slime-creations-hero.png";
 import Creations from "@/components/party-package-creations.astro";
-import GlitterSlime from "@/components/creations/glitter-slime.astro";
-import MonsterSlimePurple from "@/components/creations/monster-slime-purple.astro";
-import FluffySlimeGreen from "@/components/creations/fluffy-slime-green.astro";
-import UnicornSlime from "@/components/creations/unicorn-slime.astro";
 import RainbowSlime from "@/components/creations/rainbow-slime.astro";
-import InstantSnowSlime from "@/components/creations/instant-snow-slime.astro";
-import GalaxySlime from "@/components/creations/galaxy-slime.astro";
-import FluffySlimePink from "@/components/creations/fluffy-slime-pink.astro";
-import FrozenSparkleSlime from "@/components/creations/frozen-sparkle-slime.astro";
+import FairySlime from "@/components/creations/fairy-slime.astro";
+import BirthdayCakeSlime from "@/components/creations/birthday-cake-slime.astro";
+import MonsterSlimeGreen from "@/components/creations/monster-slime-green.astro";
+import CandySlime from "@/components/creations/candy-slime.astro";
+import UnicornCloudSlime from "@/components/creations/unicorn-cloud-slime.astro";
+import SpidermanSlime from "@/components/creations/spiderman-slime.astro";
+import NutellaSlime from "@/components/creations/nutella-slime.astro";
+import MarshmallowSlime from "@/components/creations/marshmallow-slime.astro";
+import SwiftieSlime from "@/components/creations/swiftie-slime.astro";
+import FluffySlimeBlue from "@/components/creations/fluffy-slime-blue.astro";
+import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime-green.astro";
+import blackWave from "@/assets/images/pages/parties/black-wave.svg";
+import slimeLab from "@/assets/images/pages/parties/slime-lab.png";
+import SlimeBase from "@/components/creations/slime-base.astro";
+import SlimeColour from "@/components/creations/slime-colour.astro";
+import SlimeAddIns from "@/components/creations/slime-add-ins.astro";
 ---
 
 <Layout
@@ -23,6 +32,7 @@ import FrozenSparkleSlime from "@/components/creations/frozen-sparkle-slime.astr
 >
   <PartyLayout partyPackage="Slime">
     <PageIntro
+      slot="intro"
       subtitle="Slime, slime and more slime!"
       image={slime}
       imageAlt="a kid holding a long stretch of slime and smiling"
@@ -40,16 +50,43 @@ import FrozenSparkleSlime from "@/components/creations/frozen-sparkle-slime.astr
       image={slimePackage}
       imageAlt="Slime Party Pacakge"
       partyPackage="Slime"
+      hideLeftImage
     >
-      <GlitterSlime slot="1" />
-      <MonsterSlimePurple slot="2" />
-      <FluffySlimeGreen slot="3" />
-      <RainbowSlime slot="4" />
-      <UnicornSlime slot="5" />
-      <InstantSnowSlime slot="6" />
-      <GalaxySlime slot="7" />
-      <FrozenSparkleSlime slot="8" />
-      <FluffySlimePink slot="9" />
+      <FairySlime slot="1" flippable={false} />
+      <BirthdayCakeSlime slot="2" flippable={false} />
+      <MonsterSlimeGreen slot="3" flippable={false} />
+      <CandySlime slot="4" flippable={false} />
+      <UnicornCloudSlime slot="5" flippable={false} />
+      <FluffySlimeBlue slot="6" flippable={false} />
+      <SpidermanSlime slot="7" flippable={false} />
+      <NutellaSlime slot="8" flippable={false} />
+      <MarshmallowSlime slot="9" flippable={false} />
+      <SwiftieSlime slot="10" flippable={false} />
+      <RainbowSlime slot="11" flippable={false} />
+      <FrozenSparkleSlimeGreen slot="12" flippable={false} />
     </Creations>
+    <Image src={blackWave} alt="black background wave" class="w-screen" />
+    <section class="bg-black">
+      <div class="m-auto block max-w-[1380px] px-5 pt-4">
+        <Image src={slimeLab} alt="slime lab" height="300" />
+        <p class="py-4 font-lilita text-xl text-white md:text-3xl">
+          Are you slime obsessed and would like to design your slime friom
+          scratch? Sounds great! Choose 'Slime Lab' and custom design your
+          personalised slime!
+        </p>
+        <div
+          class="m-auto flex flex-col justify-center md:flex-row lg:max-w-5xl"
+        >
+          <SlimeBase flippable={false} />
+          <SlimeColour flippable={false} />
+          <SlimeAddIns flippable={false} />
+        </div>
+      </div>
+    </section>
+    <Image
+      src={blackWave}
+      alt="black background wave"
+      class="-mt-1 w-screen rotate-180"
+    />
   </PartyLayout>
 </Layout>

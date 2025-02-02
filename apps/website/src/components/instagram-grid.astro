@@ -22,7 +22,7 @@ const recentPosts = instagramPosts.length > 1 ? instagramPosts.slice(0, 9) : [];
             src={
               post.media_type === "VIDEO" ? post.thumbnail_url : post.media_url
             }
-            alt={post.caption}
+            alt={post.caption || ""}
             width={500}
             height={500}
           />

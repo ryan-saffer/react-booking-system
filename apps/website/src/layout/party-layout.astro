@@ -16,28 +16,33 @@ type Props = {
 const { partyPackage } = Astro.props;
 ---
 
-<main class="m-auto block max-w-[1380px] px-5 pt-4">
-  <BreadcrumbWrapper
-    client:idle
-    items={[
-      {
-        type: "link",
-        title: "Birthday Parties",
-        path: "/birthday-parties/",
-      },
-      {
-        type: "dropdown",
-        title: `${partyPackage} Party`,
-        items: menu[0].items,
-      },
-    ]}
-  />
+<main>
+  <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <BreadcrumbWrapper
+      client:idle
+      items={[
+        {
+          type: "link",
+          title: "Birthday Parties",
+          path: "/birthday-parties/",
+        },
+        {
+          type: "dropdown",
+          title: `${partyPackage} Party`,
+          items: menu[0].items,
+        },
+      ]}
+    />
+    <slot name="intro" />
+  </div>
   <slot />
-  <Pricing />
-  <PartyInformation partyPackage={partyPackage} />
-  <PartyFaq />
-  <!-- <PartyPacks /> -->
-  <PartyReviews />
-  <MixAndMatchParties />
-  <Values />
+  <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <Pricing />
+    <PartyInformation partyPackage={partyPackage} />
+    <PartyFaq />
+    <!-- <PartyPacks /> -->
+    <PartyReviews />
+    <MixAndMatchParties />
+    <Values />
+  </div>
 </main>

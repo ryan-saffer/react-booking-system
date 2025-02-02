@@ -1,0 +1,12 @@
+---
+import FlipCreation from "../flip-creation.astro";
+
+import creation from "@/assets/images/creations/fluid-bears-4.png";
+type Props = {
+  flippable?: boolean;
+};
+
+const { flippable = true } = Astro.props;
+---
+
+<FlipCreation flippable={flippable} image={creation} text="" color="blue" />

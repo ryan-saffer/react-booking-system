@@ -10,7 +10,7 @@ type Props = {
   imageAlt: string;
   actionButtonText: string;
   actionButtonPath: string;
-  color: "purple" | "blue" | "pink" | "green";
+  color: "purple" | "blue" | "pink" | "green" | "gold";
 };
 
 const { subtitle, image, imageAlt, actionButtonPath, actionButtonText, color } =
@@ -23,7 +23,9 @@ const colourHex =
       ? "#F24DA2"
       : color === "green"
         ? "#4ED85F"
-        : "#4DC5DA"; // blue
+        : color === "blue"
+          ? "#4DC5DA"
+          : "#F6BA33	"; // gold
 ---
 
 <section class="min-[1200px]:mt-12">
@@ -62,6 +64,8 @@ const colourHex =
             color === "pink",
           "shadow-green-sm sm:shadow-green-md md:shadow-green-lg":
             color === "green",
+          "shadow-gold-sm sm:shadow-gold-md md:shadow-gold-lg":
+            color === "gold",
         })}
       />
     </div>
