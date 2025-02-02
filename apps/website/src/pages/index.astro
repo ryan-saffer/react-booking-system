@@ -10,12 +10,12 @@ import afterSchool from "@/assets/images/pages/home/after-school.jpg";
 import holidayPrograms from "@/assets/images/pages/home/holiday-programs.jpg";
 import incursions from "@/assets/images/pages/home/incursions.jpg";
 import energy from "@/assets/images/pages/franchising/energy.jpg";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import studio from "@/assets/images/pages/home/studio.png";
 import fizzFansBgTop from "@/assets/images/pages/home/fizz-fans-bg-top.svg";
 import fizzFansBgBottom from "@/assets/images/pages/home/fizz-fans-bg-bottom.svg";
 import star from "@/assets/images/pages/home/star.svg";
-import franchising from "@/assets/images/pages/home/franchising.png";
+// import franchising from "@/assets/images/pages/home/franchising.png";
 
 import location1 from "@/assets/images/pages/home/location-icon-1.svg";
 import location2 from "@/assets/images/pages/home/location-icon-2.svg";
@@ -36,6 +36,7 @@ import InstagramGrid from "@/components/instagram-grid.astro";
 import PrimaryButton from "@/components/primary-button.astro";
 import Values from "@/components/values.astro";
 import MailingList from "@/components/mailing-list.astro";
+import SlimeLab from "@/components/slime-lab.astro";
 
 const locations = [
   {
@@ -290,6 +291,29 @@ const services = [
     <section class="m-auto mt-12 block max-w-[1380px] px-5">
       <PartyThemes />
     </section>
+    <SlimeLab />
+    <div
+      class="m-auto flex w-full max-w-[1300px] justify-between gap-8 px-12 md:gap-24"
+    >
+      <Image
+        class="w-8 md:w-16"
+        width="100"
+        src={graphics1}
+        alt="science graphic"
+      />
+      <Image
+        class="w-8 md:w-16"
+        width="100"
+        src={graphics3}
+        alt="science graphic"
+      />
+      <Image
+        class="w-8 md:w-16"
+        width="50"
+        src={graphics4}
+        alt="science graphic"
+      />
+    </div>
     <section>
       <Image
         class="min-h-96 w-full object-cover"

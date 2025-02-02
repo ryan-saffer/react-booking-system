@@ -19,11 +19,7 @@ import MarshmallowSlime from "@/components/creations/marshmallow-slime.astro";
 import SwiftieSlime from "@/components/creations/swiftie-slime.astro";
 import FluffySlimeBlue from "@/components/creations/fluffy-slime-blue.astro";
 import FrozenSparkleSlimeGreen from "@/components/creations/frozen-sparkle-slime-green.astro";
-import blackWave from "@/assets/images/pages/parties/black-wave.svg";
-import slimeLab from "@/assets/images/pages/parties/slime-lab.png";
-import SlimeBase from "@/components/creations/slime-base.astro";
-import SlimeColour from "@/components/creations/slime-colour.astro";
-import SlimeAddIns from "@/components/creations/slime-add-ins.astro";
+import SlimeLab from "@/components/slime-lab.astro";
 ---
 
 <Layout
@@ -65,28 +61,6 @@ import SlimeAddIns from "@/components/creations/slime-add-ins.astro";
       <RainbowSlime slot="11" flippable={false} />
       <FrozenSparkleSlimeGreen slot="12" flippable={false} />
     </Creations>
-    <Image src={blackWave} alt="black background wave" class="w-screen" />
-    <section class="bg-black">
-      <div class="m-auto block max-w-[1380px] px-5 pt-4">
-        <Image src={slimeLab} alt="slime lab" height="300" />
-        <p class="py-4 font-lilita text-xl text-white md:text-3xl">
-          Are you slime obsessed and would like to design your slime friom
-          scratch? Sounds great! Choose 'Slime Lab' and custom design your
-          personalised slime!
-        </p>
-        <div
-          class="m-auto flex flex-col justify-center md:flex-row lg:max-w-5xl"
-        >
-          <SlimeBase flippable={false} />
-          <SlimeColour flippable={false} />
-          <SlimeAddIns flippable={false} />
-        </div>
-      </div>
-    </section>
-    <Image
-      src={blackWave}
-      alt="black background wave"
-      class="-mt-1 w-screen rotate-180"
-    />
+    <SlimeLab />
   </PartyLayout>
 </Layout>
