@@ -33,7 +33,7 @@ export const menu = [
     type: "dropdown",
     items: [
       {
-        title: "Glitz and Glam Parties",
+        title: "Glam Parties",
         path: "/birthday-parties/glam-parties/",
         type: "link",
       },
@@ -126,7 +126,7 @@ export const menu = [
     type: "link",
     path: "/activations-and-events/",
   },
-  { title: "Franchising", type: "link", path: "/franchising/" },
+  // { title: "Franchising", type: "link", path: "/franchising/" },
   {
     title: "Fizz Facts",
     type: "dropdown",

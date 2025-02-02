@@ -20,9 +20,9 @@ import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
 
 <Layout
   title="Book a Kids Birthday Glam Birthday Party in Melbourne | Fizz Kidz"
-  description="This pamper party package is made for all things glitzy and glamorous!"
+  description="This pamper party package is made for all things glamorous!"
 >
-  <PartyLayout partyPackage="Glitz and Glam">
+  <PartyLayout partyPackage="Glam">
     <PageIntro
       slot="intro"
       subtitle="Bring the glitter, sparkles and fun to your child's next party!"
@@ -32,17 +32,13 @@ import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
       actionButtonPath="/birthday-parties/book-a-party/#book"
       color="pink"
     >
-      <span slot="title">Glitz and Glam Kids Birthday Party</span>
+      <span slot="title">Glam Kids Birthday Party</span>
       <span slot="content">
         Make your very own sparkling and dazzling pamper products to take home
         with you after the party!
       </span>
     </PageIntro>
-    <Creations
-      partyPackage="Glitz and Glam"
-      image={glitz}
-      imageAlt="Three girls smiling"
-    >
+    <Creations partyPackage="Glam" image={glitz} imageAlt="Three girls smiling">
       <FairySlime slot="1" flippable={false} />
       <GlitterFacePaint slot="2" flippable={false} />
       <RainbowBathSalts slot="3" flippable={false} />
