@@ -3,7 +3,7 @@ import 'typeface-roboto'
 import {
     Additions,
     AdditionsDisplayValuesMap,
-    CreationDisplayValuesMap,
+    CREATIONS,
     FirestoreBooking,
     FormBooking,
     FormBookingFields,
@@ -132,16 +132,13 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
     const getCreationMenuItems = useCallback(() => {
         // Sort the creation by their display value
-        // this is particularly difficult, so first invert the CreationDisplayValues object
+        // this is particularly difficult, so first invert the CREATIONS object
         // see https://stackoverflow.com/a/23013726/7870403
-        const invertedCreationDisplayValues = Object.entries(CreationDisplayValuesMap).reduce(
-            (ret: { [key: string]: any }, entry) => {
-                const [key, value] = entry
-                ret[value] = key
-                return ret
-            },
-            {}
-        )
+        const invertedCreationDisplayValues = Object.entries(CREATIONS).reduce<Record<string, string>>((acc, curr) => {
+            const [key, value] = curr
+            acc[value] = key
+            return acc
+        }, {})
 
         // then sort it by key
         const creationDisplayValues = Object.keys(invertedCreationDisplayValues)

@@ -3,14 +3,14 @@ import {
     AdditionsDisplayValuesMap,
     AdditionsDisplayValuesMapPrices,
     Booking,
-    CreationDisplayValuesMap,
-    Creations,
+    CREATIONS,
+    getKeyByValue,
     getQuestionValue,
     Location,
     PaperFormResponse,
     PartyFormV2,
 } from 'fizz-kidz'
-import { AdditionsFormMap, CreationsFormMap } from './utils.party'
+import { AdditionsFormMap } from './utils.party'
 import { logger } from 'firebase-functions/v2'
 
 export class PartyFormMapperV2 {
@@ -49,7 +49,7 @@ export class PartyFormMapperV2 {
         const creationKeys = this.getCreations(type)
         const creations: string[] = []
         creationKeys.forEach((creation) => {
-            creations.push(CreationDisplayValuesMap[creation])
+            creations.push(CREATIONS[creation])
         })
         return creations
     }
@@ -81,12 +81,19 @@ export class PartyFormMapperV2 {
      * Returns an array of SKUs for all selected creations.
      */
     private getCreations(type: Booking['type']) {
+        /**
+         * Currently creations are separated in PaperForms. This is for the case that a creation
+         * is offered only in-studio. To remove it as an option, just remove it from the '_mobile' version in Paperform and done.
+         * It means maintaining PaperForm is a bit more effort... but worth it for these cases.
+         */
         const creationKeys =
             type === 'studio'
                 ? ([
                       'glam_creations',
                       'science_creations',
                       'slime_creations',
+                      'fairy_creations',
+                      'fluid_bear_creations',
                       'safari_creations',
                       'unicorn_creations',
                       'tie_dye_creations',
@@ -96,6 +103,8 @@ export class PartyFormMapperV2 {
                       'glam_creations_mobile',
                       'science_creations_mobile',
                       'slime_creations_mobile',
+                      'fairy_creations_mobile',
+                      'fluid_bear_creations_mobile',
                       'safari_creations_mobile',
                       'unicorn_creations_mobile',
                       'tie_dye_creations_mobile',
@@ -108,8 +117,9 @@ export class PartyFormMapperV2 {
         )
 
         const creationSkus = creations.map((creation) => {
-            if (Object.keys(CreationsFormMap).includes(creation)) {
-                return CreationsFormMap[creation]
+            const creationSku = getKeyByValue(CREATIONS, creation)
+            if (creationSku) {
+                return creationSku
             } else {
                 logger.log(`Invalid creation form value found: '${creation}'`)
                 throw new Error(`Invalid creation form value found: '${creation}'`)
@@ -117,16 +127,9 @@ export class PartyFormMapperV2 {
         })
 
         // filter out any duplicate creation selections
-        const filteredSkus = [...new Set(creationSkus)]
+        const uniqueSkus = [...new Set(creationSkus)]
 
-        return filteredSkus.map((creation) => {
-            if (this.isValidCreation(creation)) {
-                return creation
-            } else {
-                logger.log(`invalid creation SKU found: ${creation}`)
-                throw new Error(`invalid creation SKU found: ${creation}`)
-            }
-        })
+        return uniqueSkus
     }
 
     /**
@@ -165,10 +168,6 @@ export class PartyFormMapperV2 {
 
     private isValidLocation(location: string): location is Location {
         return (<any>Object).values(Location).includes(location)
-    }
-
-    private isValidCreation(creation: string): creation is Creations {
-        return Object.keys(Creations).includes(creation)
     }
 
     private getFoodPackage() {

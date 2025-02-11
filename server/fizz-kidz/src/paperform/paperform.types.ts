@@ -3,38 +3,6 @@ import { WWCC } from '..'
 export type PFProduct = { SKU: string; quantity: number }
 export type PFFile = { url: string; name: string; type: string }
 
-export type PartyForm = {
-    id: string
-    location: string
-    parent_first_name: string
-    parent_last_name: string
-    child_name: string
-    child_age: string
-    number_of_children_in_store: string
-    number_of_children_mobile: string
-    glam_creations: PFProduct[]
-    science_creations: PFProduct[]
-    slime_creations: PFProduct[]
-    safari_creations: PFProduct[]
-    unicorn_creations: PFProduct[]
-    tie_dye_creations: PFProduct[]
-    taylor_swift_creations: PFProduct[]
-    expert_creations: PFProduct[]
-    glam_creations_mobile: PFProduct[]
-    science_creations_mobile: PFProduct[]
-    slime_creations_mobile: PFProduct[]
-    safari_creations_mobile: PFProduct[]
-    unicorn_creations_mobile: PFProduct[]
-    tie_dye_creations_mobile: PFProduct[]
-    taylor_swift_creations_mobile: PFProduct[]
-    expert_creations_mobile: PFProduct[]
-    food_package: string
-    additions: string[]
-    party_packs: PFProduct[]
-    fun_facts: string
-    questions: string
-}
-
 export type PartyFormV2 = {
     id: string
     location: string
@@ -47,6 +15,8 @@ export type PartyFormV2 = {
     glam_creations: string[]
     science_creations: string[]
     slime_creations: string[]
+    fairy_creations: string[]
+    fluid_bear_creations: string[]
     safari_creations: string[]
     unicorn_creations: string[]
     tie_dye_creations: string[]
@@ -54,6 +24,8 @@ export type PartyFormV2 = {
     glam_creations_mobile: string[]
     science_creations_mobile: string[]
     slime_creations_mobile: string[]
+    fairy_creations_mobile: string[]
+    fluid_bear_creations_mobile: string[]
     safari_creations_mobile: string[]
     unicorn_creations_mobile: string[]
     tie_dye_creations_mobile: string[]

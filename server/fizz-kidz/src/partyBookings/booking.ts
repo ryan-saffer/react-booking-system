@@ -4,7 +4,7 @@ import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/512759
 import { Location } from '../core/location'
 import { Additions } from './Additions'
 import { CakeFlavours } from './CakeFlavours'
-import { Creations } from './Creations'
+import type { Creation } from './creations'
 
 type AdditionKeys = keyof typeof Additions
 type AdditionKeyValues = { [key in AdditionKeys]: boolean }
@@ -23,9 +23,9 @@ export interface BaseBooking extends AdditionKeyValues {
     address: string
     numberOfChildren: string
     notes: string
-    creation1: Creations | undefined
-    creation2: Creations | undefined
-    creation3: Creations | undefined
+    creation1: Creation | undefined
+    creation2: Creation | undefined
+    creation3: Creation | undefined
     menu: 'standard' | 'glutenFree' | 'vegan' | undefined
     cakeFlavour: CakeFlavours | undefined
     questions: string

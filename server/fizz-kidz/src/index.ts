@@ -1,8 +1,7 @@
 //#region Bookings
 export { Additions } from './partyBookings/Additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
-export { Creations } from './partyBookings/Creations'
-export { CreationDisplayValuesMap } from './partyBookings/CreationDisplayValuesMap'
+export { Creation, CREATIONS } from './partyBookings/creations'
 export { AdditionsDisplayValuesMapPrices } from './partyBookings/AdditionsDisplayValuesMapPrices'
 export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValuesMap'
 export { Location, LocationOrMaster } from './core/location'

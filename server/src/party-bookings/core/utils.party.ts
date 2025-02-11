@@ -1,11 +1,4 @@
-import {
-    Additions,
-    AdditionsDisplayValuesMap,
-    BaseBooking,
-    Booking,
-    CreationDisplayValuesMap,
-    Creations,
-} from 'fizz-kidz'
+import { Additions, AdditionsDisplayValuesMap, BaseBooking, Booking, CREATIONS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 export const AdditionsFormMap: { [key: string]: Additions } = {
@@ -24,63 +17,16 @@ export const AdditionsFormMap: { [key: string]: Additions } = {
     'Grazing Platter for Parents (Large: 15-25 ppl) - $148': Additions.grazingPlatterLarge,
 }
 
-export const CreationsFormMap: { [key: string]: Creations } = {
-    'Glitter Slime': Creations.glitterSlime,
-    'Glitter Face Paint': Creations.glitterFacePaint,
-    'Rainbow Bath Crystals': Creations.rainbowBathCrystals,
-    'Unicorn Soap': Creations.unicornSoap,
-    'Fizzy Bath Bombs': Creations.bathBombs,
-    'Rainbow Bath Bombs': Creations.rainbowBathBombs,
-    'Sparkling Lip-Balm': Creations.lipBalm,
-    'Fluffy Slime': Creations.fluffySlime,
-    'Sugar Lip Scrub': Creations.sugarScrubLipBalm,
-    'Bubbling Volcanoes': Creations.volcanoes,
-    'Wobbly Galaxy Soap': Creations.wobblyGalaxySoap,
-    'Instant Snow Slime': Creations.instantSnowSlime,
-    'Dinosaur Fossils': Creations.dinosaurFossils,
-    'Monster Slime': Creations.monsterSlime,
-    'Wobbly Star Soap': Creations.wobblyStarSoap,
-    'Fairy Glitter Slime': Creations.glitterSlime,
-    'Unicorn Slime': Creations.unicornSlime,
-    'Rainbow Slime': Creations.rainbowSlime,
-    'Galaxy Slime': Creations.galaxySlime,
-    'Frozen Sparkle Slime': Creations.frozenSparkleSlime,
-    'Animal Soap': Creations.animalSoap,
-    'Animals in Soap': Creations.animalsInSoap,
-    'Sand Slime': Creations.sandSlime,
-    'Animals in Bath Bombs': Creations.animalsInBathBombs,
-    'Bugs in Bath Bombs': Creations.bugsInBathBombs,
-    'Unicorn Glitter Shimmer': Creations.unicornGlitterShimmer,
-    'Unicorn Bath Crystals': Creations.unicornBathCrystals,
-    'Butterfly Soap': Creations.butterflySoap,
-    'Unicorn Bath Bombs': Creations.unicornBathBombs,
-    'Tie Dye Soap': Creations.tieDyeSoap,
-    'Tie Dye Pillow': Creations.tieDyePillow,
-    'Marble Crystals': Creations.marbleCrystals,
-    'Tie Dye Tote Bags': Creations.tieDyeToteBags,
-    'Tie Dye Socks': Creations.tieDyeSocks,
-    'Tie Dye Scrunchies': Creations.tieDyeScrunchie,
-    "'Speak Now' Purple Bath Bombs": Creations.speakNowPurpleBathbombs,
-    "'Lover' Tie Dye Scrunchies": Creations.loverTieDyeScrunchies,
-    'Folklore Butterfly Soap': Creations.folkloreButterflySoap,
-    'Friendship Bracelets': Creations.friendshipBracelets,
-    "'Lover' Rainbow Bath Bombs": Creations.loverRainbowBathBombs,
-    'Fearless Gold Slime': Creations.fearlessGoldSlime,
-    'Midnights Slime': Creations.midnightsSlime,
-    'Red 1989 Lip Balm': Creations.red1989LipBalm,
-    "'Lover' Glitter Face Paint": Creations.loverGlitterFacePaint,
-}
-
 export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []
     if (booking.creation1) {
-        result.push(CreationDisplayValuesMap[booking.creation1])
+        result.push(CREATIONS[booking.creation1])
     }
     if (booking.creation2) {
-        result.push(CreationDisplayValuesMap[booking.creation2])
+        result.push(CREATIONS[booking.creation2])
     }
     if (booking.creation3) {
-        result.push(CreationDisplayValuesMap[booking.creation3])
+        result.push(CREATIONS[booking.creation3])
     }
     return result
 }

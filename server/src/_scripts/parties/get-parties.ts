@@ -1,4 +1,4 @@
-import { Booking, Creations, Location } from 'fizz-kidz'
+import { Booking, Creation, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { FirestoreClient } from '../../firebase/FirestoreClient'
@@ -63,7 +63,7 @@ export async function getParties({
     console.log('Malvern: ', malvern.length)
     console.log('Mobile: ', mobile.length)
 
-    const creations: Partial<Record<Creations, number>> = {}
+    const creations: Partial<Record<Creation, number>> = {}
 
     filteredBookings.forEach((booking) => {
         if (booking.creation1) {
