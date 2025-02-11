@@ -7,9 +7,9 @@ export const paperformWebhook = onRequest(async (req, res) => {
     logger.log(`${req.query.form} form submission received with submission id:`, req.body.submission_id)
     if (req.query.form === 'incursion') {
         await publishToPubSub('paperformSubmission', { form: 'incursion', data: req.body.data })
-    } else if (req.query.form === 'party-v2') {
+    } else if (req.query.form === 'party') {
         await publishToPubSub('paperformSubmission', {
-            form: 'party-v2',
+            form: 'party',
             data: req.body.data,
             charge: req.body.charge?.charge,
         })

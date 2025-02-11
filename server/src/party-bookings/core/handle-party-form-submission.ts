@@ -1,4 +1,4 @@
-import { Booking, PaperFormResponse, PartyFormV2, capitalise, getLocationAddress, getManager } from 'fizz-kidz'
+import { Booking, PaperFormResponse, PartyForm, capitalise, getLocationAddress, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import Stripe from 'stripe'
 
@@ -7,14 +7,14 @@ import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError, throwFunctionsError } from '../../utilities'
-import { PartyFormMapperV2 } from './party-form-mapper-v2'
+import { PartyFormMapper } from './party-form-mapper'
 import { getBookingAdditions, getBookingCreations } from './utils.party'
 
-export async function handlePartyFormSubmissionV2(
-    responses: PaperFormResponse<PartyFormV2>,
+export async function handlePartyFormSubmission(
+    responses: PaperFormResponse<PartyForm>,
     charge: Stripe.Charge | undefined
 ) {
-    const formMapper = new PartyFormMapperV2(responses)
+    const formMapper = new PartyFormMapper(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     let booking: Partial<Booking> = {}
