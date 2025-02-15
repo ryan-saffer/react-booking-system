@@ -111,15 +111,27 @@ export async function getParties({
     const eventsSnap = await firestore.collectionGroup('eventSlots').get()
     const eventIds: Record<string, boolean> = {}
     let totalSlots = 0
+    let totalHours = 0
     eventsSnap.docs.forEach((doc) => {
         const event = doc.data()
         const startTime = event.startTime.toDate() as Date
+        const endTime = event.endTime.toDate() as Date
         if (startTime.getFullYear() === 2024) {
             eventIds[event.eventId] = true
             totalSlots++
+
+            const diffDuration = DateTime.fromJSDate(endTime).diff(DateTime.fromJSDate(startTime))
+            const diffInHours = diffDuration.as('hours')
+            if (diffInHours < 0) {
+                // some slots bugged in 2024 with wonky start and end times
+                totalHours += 1
+            } else {
+                totalHours += diffInHours
+            }
         }
     })
 
     console.log('Total events: ', Object.keys(eventIds).length)
     console.log('Total event slots: ', totalSlots)
+    console.log('Total hours of events:', totalHours)
 }
