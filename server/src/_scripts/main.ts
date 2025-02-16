@@ -14,6 +14,7 @@ import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { generatePartyFormUrl } from './parties/generate-form'
 import { getParties } from './parties/get-parties'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
+import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices'
 
 ;(async () => {
     const { script } = await prompts({
@@ -32,6 +33,10 @@ import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties
             {
                 title: 'List all users',
                 value: 'listAllUsers',
+            },
+            {
+                title: 'Update all bookings to old prices',
+                value: 'updatePartiesToOldPrices',
             },
             {
                 title: 'Generate party form URL',
@@ -190,5 +195,8 @@ import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties
             ...(location && { location }),
             ...(type && { type }),
         })
+    }
+    if (script === 'updatePartiesToOldPrices') {
+        await updatePartiesToOldPrices()
     }
 })()
