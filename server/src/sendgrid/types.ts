@@ -137,23 +137,6 @@ export type Emails = {
         oldIncludesFood: boolean
         newIncludesFood: boolean
         isMobile: boolean
-    }
-
-    partyFormFilledInAgainV2: {
-        parentName: string
-        parentEmail: string
-        parentMobile: string
-        childName: string
-        dateTime: string
-        oldNumberOfKids: string
-        oldCreations: string[]
-        oldAdditions: string[]
-        newNumberOfKids: string
-        newCreations: string[]
-        newAdditions: string[]
-        oldIncludesFood: boolean
-        newIncludesFood: boolean
-        isMobile: boolean
         oldCake?: {
             selection: string
             size: string
@@ -200,20 +183,6 @@ export type Emails = {
     }
 
     partyFormConfirmation: {
-        parentName: string
-        numberOfChildren: string
-        creations: string[]
-        isTyeDyeParty: boolean
-        hasAdditions: boolean
-        additions: string[]
-        isMobile: boolean
-        hasQuestions: boolean
-        managerName: string
-        managerMobile: string
-        includesFood: boolean
-    }
-
-    partyFormConfirmationV2: {
         parentName: string
         numberOfChildren: string
         creations: string[]

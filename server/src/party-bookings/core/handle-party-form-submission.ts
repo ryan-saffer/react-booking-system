@@ -33,7 +33,7 @@ export async function handlePartyFormSubmission(
         // form has been filled in before, notify manager of the change
         try {
             await mailClient.sendEmail(
-                'partyFormFilledInAgainV2',
+                'partyFormFilledInAgain',
                 getManager(booking.location!, env).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
@@ -315,7 +315,7 @@ export async function handlePartyFormSubmission(
 
     try {
         await mailClient.sendEmail(
-            'partyFormConfirmationV2',
+            'partyFormConfirmation',
             fullBooking.parentEmail,
             {
                 parentName: fullBooking.parentFirstName,
