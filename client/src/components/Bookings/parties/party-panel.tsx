@@ -78,13 +78,8 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                             's {booking.childAge}th
                         </Typography>
                     </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                        }}
-                    >
+                    <div className="mr-2 flex flex-col flex-wrap justify-end gap-1 sm:flex-row">
+                        {booking.oldPrices && <CustomChip label="Old Prices" color="#FFD6A7" />}
                         {booking.type === 'studio' && booking.includesFood === false && (
                             <CustomChip label="Self-catered" color="#fecaca" />
                         )}
@@ -110,18 +105,8 @@ function CustomChip({ label, color }: { label: string; color: string }) {
     return (
         <Typography
             variant="body1"
-            className="gotham"
-            sx={{
-                fontWeight: 1000,
-                fontSize: 14,
-                textAlign: 'center',
-                background: color,
-                px: 2,
-                py: 1,
-                borderRadius: 1,
-                marginRight: 1,
-                width: 120,
-            }}
+            className="gotham min-w-[120px] rounded-sm px-4 py-2 text-center text-sm font-extralight"
+            style={{ background: color }}
         >
             {label}
         </Typography>
