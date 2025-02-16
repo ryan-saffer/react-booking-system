@@ -1,16 +1,14 @@
 import {
-    Additions,
-    AdditionsDisplayValuesMap,
-    AdditionsDisplayValuesMapPrices,
+    ADDITIONS,
     Booking,
     CREATIONS,
     getKeyByValue,
     getQuestionValue,
     Location,
+    ObjectEntries,
     PaperFormResponse,
     PartyForm,
 } from 'fizz-kidz'
-import { AdditionsFormMap } from './utils.party'
 import { logger } from 'firebase-functions/v2'
 
 export class PartyFormMapper {
@@ -37,7 +35,7 @@ export class PartyFormMapper {
             booking = {
                 ...booking,
                 ...this.getFoodPackage(),
-                ...this.getAdditions(),
+                ...this.#getAdditionsAsPartialBooking(),
                 cake: this.getCake(),
             }
         }
@@ -55,17 +53,13 @@ export class PartyFormMapper {
     }
 
     getAdditionDisplayValues(showPrices: boolean) {
-        const additionKeys = getQuestionValue(this.responses, 'additions')
+        const additions = this.#mapAdditionFormValuesToAdditionKeys()
         const displayValues: string[] = []
-        additionKeys.forEach((addition) => {
-            if (this.isValidAddition(addition)) {
-                if (showPrices) {
-                    displayValues.push(AdditionsDisplayValuesMapPrices[addition])
-                } else {
-                    displayValues.push(AdditionsDisplayValuesMap[addition])
-                }
-            }
-        })
+        for (const addition of additions) {
+            displayValues.push(
+                showPrices ? ADDITIONS[addition].displayValueWithPrice : ADDITIONS[addition].displayValue
+            )
+        }
 
         // TODO: Add back once new party packs are ready to go
         // const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
@@ -184,21 +178,33 @@ export class PartyFormMapper {
         throw new Error(`Invalid response found for food package question: '${value}'`)
     }
 
-    private getAdditions() {
-        const additions = getQuestionValue(this.responses, 'additions')
-        additions.forEach((addition, index, array) => (array[index] = AdditionsFormMap[addition]))
-        const booking: Partial<Booking> = {}
-        additions.forEach((addition) => {
-            if (this.isValidAddition(addition)) {
-                booking[addition] = true
+    /**
+     * Paperform just returns the additional food options as string matching their display value on the form.
+     * This will lookup each addition and return the key, or throw an error if it can't find one.
+     */
+    #mapAdditionFormValuesToAdditionKeys() {
+        const formValues = getQuestionValue(this.responses, 'additions')
+        const additions = formValues.map((formValue) => {
+            const addition = ObjectEntries(ADDITIONS).find(
+                ([, additionKey]) => additionKey.displayValueWithPrice === formValue
+            )?.[0]
+            if (!addition) {
+                throw new Error(`Could not find addition that matches chosen form value of '${formValue}'`)
             }
+            return addition
+        })
+
+        return additions
+    }
+
+    #getAdditionsAsPartialBooking() {
+        const booking: Partial<Booking> = {}
+        const additions = this.#mapAdditionFormValuesToAdditionKeys()
+        additions.forEach((addition) => {
+            booking[addition] = true
         })
 
         return booking
-    }
-
-    private isValidAddition(addition: string): addition is Additions {
-        return Object.keys(Additions).includes(addition)
     }
 
     getCake(): Booking['cake'] {

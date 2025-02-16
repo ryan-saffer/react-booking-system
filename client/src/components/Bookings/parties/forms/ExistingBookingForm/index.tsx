@@ -1,8 +1,7 @@
 import 'typeface-roboto'
 
 import {
-    Additions,
-    AdditionsDisplayValuesMap,
+    ADDITIONS,
     CREATIONS,
     FirestoreBooking,
     FormBooking,
@@ -94,7 +93,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     let additionSelected = false
-    for (const addition of Object.values(Additions)) {
+    for (const addition of ObjectKeys(ADDITIONS)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -644,7 +643,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         <Grid item xs={12}>
                             <Typography variant="h6">Additions</Typography>
                         </Grid>
-                        {ObjectKeys(Additions).map((addition) => (
+                        {ObjectKeys(ADDITIONS).map((addition) => (
                             <Grid item xs={6} sm={3} key={addition}>
                                 <FormControlLabel
                                     control={
@@ -658,7 +657,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                             onChange={handleFormCheckboxChange}
                                         />
                                     }
-                                    label={AdditionsDisplayValuesMap[addition]}
+                                    label={ADDITIONS[addition].displayValue}
                                     classes={{ root: classes.disabled }}
                                 />
                             </Grid>

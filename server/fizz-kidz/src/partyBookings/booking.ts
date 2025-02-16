@@ -2,12 +2,11 @@
 import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 
 import { Location } from '../core/location'
-import { Additions } from './Additions'
 import { CakeFlavours } from './CakeFlavours'
+import { Addition } from './additions'
 import type { Creation } from './creations'
 
-type AdditionKeys = keyof typeof Additions
-type AdditionKeyValues = { [key in AdditionKeys]: boolean }
+type AdditionKeyValues = Record<Addition, boolean>
 
 export interface BaseBooking extends AdditionKeyValues {
     eventId?: string
@@ -108,6 +107,8 @@ export const FormBookingFields: FormBookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
+    unicornFizzPartyPack: 'unicornFizzPartyPack',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -157,4 +158,6 @@ export const BookingFields: BookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
+    unicornFizzPartyPack: 'unicornFizzPartyPack',
 }

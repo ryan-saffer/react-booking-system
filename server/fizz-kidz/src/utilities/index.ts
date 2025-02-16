@@ -11,6 +11,13 @@ export function ObjectKeys<T extends object>(object: T) {
     return Object.keys(object) as (keyof T)[]
 }
 
+// Fixes the typing of `Object.entries()`
+export function ObjectEntries<T extends object>(object: T) {
+    return Object.entries(object) as {
+        [K in keyof T]: [K, T[K]]
+    }[keyof T][]
+}
+
 export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>
 }

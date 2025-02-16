@@ -274,6 +274,16 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        dinosaurFizzPartyPack: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
+        unicornFizzPartyPack: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
         cakeFlavour: {
             value: undefined,
             error: false,
@@ -354,6 +364,8 @@ function getEmptyDomainBooking(): FormBooking {
         lipBalmPartyPack: false,
         dinosaurBathBombPartyPack: false,
         slimePartyPack: false,
+        dinosaurFizzPartyPack: false,
+        unicornFizzPartyPack: false,
         partyFormFilledIn: false,
         sendConfirmationEmail: true,
         oldPrices: false,

@@ -1,21 +1,5 @@
-import { Additions, AdditionsDisplayValuesMap, BaseBooking, Booking, CREATIONS } from 'fizz-kidz'
+import { ADDITIONS, Addition, BaseBooking, Booking, CREATIONS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-
-export const AdditionsFormMap: { [key: string]: Additions } = {
-    'Chicken Nuggets - $35': Additions.chickenNuggets,
-    'Fairy Bread - $30': Additions.fairyBread,
-    'Gluten Free Fairy Bread - $40': Additions.glutenFreeFairyBread,
-    'Fruit Platter - $45': Additions.fruitPlatter,
-    'Frankfurts - $25': Additions.frankfurts,
-    'Sandwich Platter - butter & cheese, vegemite & butter,  cheese & tomato - $35': Additions.sandwichPlatter,
-    'Vegetarian Spring Rolls - $30': Additions.vegetarianSpringRolls,
-    'Vegetarian Quiches - $35': Additions.vegetarianQuiche,
-    'Watermelon Platter - $25': Additions.watermelonPlatter,
-    'Potato Gems - $30': Additions.potatoGems,
-    'Wedges - $30': Additions.wedges,
-    'Grazing Platter for Parents (Medium: 10-15 ppl) - $98': Additions.grazingPlatterMedium,
-    'Grazing Platter for Parents (Large: 15-25 ppl) - $148': Additions.grazingPlatterLarge,
-}
 
 export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []
@@ -33,17 +17,18 @@ export function getBookingCreations(booking: BaseBooking) {
 
 export function getBookingAdditions(booking: BaseBooking) {
     const output: string[] = []
-    // iterate each property of the booking
     for (const key of Object.keys(booking)) {
-        // and check if its an addition
-        if (Object.keys(Additions).includes(key)) {
-            // and include it if its true
-            if ((booking as any)[key]) {
-                output.push((AdditionsDisplayValuesMap as any)[key])
+        if (isAddition(key)) {
+            if (booking[key] === true) {
+                output.push(ADDITIONS[key].displayValue)
             }
         }
     }
     return output
+}
+
+export function isAddition(key: string): key is Addition {
+    return Object.keys(key).includes(key)
 }
 
 export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
