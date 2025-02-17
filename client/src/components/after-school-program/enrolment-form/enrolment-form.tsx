@@ -129,6 +129,12 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                 <p className="mb-4 text-center italic">
                     We will only invoice you after your free trial, if you choose to continue.
                 </p>
+                <p className="text-sm">
+                    Our free trial is designed for families genuinely interested in enrolling in our After School
+                    Program. Please only book if you're available to attend and have no other time commitments. We
+                    kindly ask that you only register if you're considering joining the full-term program, as spaces are
+                    limited. Thank you! 😊
+                </p>
                 <SectionBreak title="Parent Details" />
                 <FormField
                     control={form.control}
@@ -655,6 +661,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                         </FormItem>
                     )}
                 />
+
                 <Button
                     type="submit"
                     disabled={submitting}

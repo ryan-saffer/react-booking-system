@@ -76,7 +76,6 @@ const DiscountInput: React.FC<Props> = ({ setDiscount, total }) => {
                     content={
                         <>
                             <p>Only one discount can be applied at a time.</p>
-                            <p>The 'same day discount' will be overriden by any discount added here.</p>
                         </>
                     }
                 >
