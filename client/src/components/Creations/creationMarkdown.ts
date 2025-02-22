@@ -650,9 +650,9 @@ const unicornSlime = {
 const tieDye = {
     name: 'Tie Dye',
     markdown: `
-> Fizz Tip: This creation MUST have aprons and gloves worn by children UNLESS there is parental/guardian permission to not. Upon entry, it does well to flag with each parent, what is involved and what MIGHT happen if tie dye gets on clothes. NONE of this is to come into contact with food - this is to be prepared outside of the kitchen. Aprons on chairs as kids come into the venue to save time putting them on later.
+> Fizz Tip: This creation MUST have aprons and gloves worn by children UNLESS there is parental/guardian permission to not. Upon entry, it does well to flag with each parent, what is involved and what MIGHT happen if tie dye gets on clothes. None of this is to come into contact with food - this is to be prepared outside of the kitchen. Aprons on chairs as kids come into the venue to save time putting them on later.
 ### Ingredients
-* Whatever is being tie dyed PRE SOAKED in soda ash
+* Tie Dye item to be PRE SOAKED in _Soda Ash - see instructions below_
 * Dye
 * Gloves
 * Rubber bands x minimum of 4 per child
@@ -660,26 +660,28 @@ const tieDye = {
 * Trays x1 per child
 * Zip lock bags
 
-### Recipe
-Pre soak the tie dye in the creation washing sinks (not food area). All tie dye items into warm water and a quarter cup of soda ash mixed in. 
+### Preparation
+**Preparing the Tie Dye item**
+1. In a hand washing basin or large tub fill with the following ratio **1 cup of soda ash for every 4 liters of warm water.**
+2. Soak the items, making sure they are completely wet. 
+3. Rince the items out thoroughly making sure there is as little water still in the item as possible. 
+4. Place each item in a separate tub ready to go to each child
 
-Items to be wrung out tightly to rid of all excess water - items should not be dripping. Items are placed into tray ready to go for the creation.
+**Preparing the Tie Dye**
+1. You should prepare three bottles per colour - PINK, YELLOW AND BLUE- each of these makes another colour if mixed together. Add 2.5ml of pigment to each bottle. It is best to pre-make the dye fresh each week. 
 
-Prepare colour dye into bottles - 3 bottles per colour PINK/RED, YELLOW AND BLUE- each of these makes another colour if mixed together. Colour dye from a previous weekend should not be used, it does not have the same strength.
-
-![tie dye](https://lh3.googleusercontent.com/d/1jD3Dtp5DaBAeQKLHHMTmVOu_FP9XOuwf)
-![tie dye](https://lh3.googleusercontent.com/d/1Xxr16i_8yibanP42elCUD1EzX1MWCr60)
-
-1. Hand out tie dye items
-2. Tie time - Explain process first and then hand out rubber bands -  Tying on rubber bands TIGHTLY which will give the design - everyones will be different, no wrong design
-3. Fizz Tip: Most children have done tie dye before and have their own design ideas if they are stuck/need ideas, see below for swirl, dots and sausage patterns. Always good to use someones as an example or have a spare on hand
-4. Once all have finished their design make sure they are put INTO their trays
-5. Dye time - explain the dye process first then hand out bottles
+### Running the Tie Dye Party
+1. Hand out one tie dye item to each child in the tray 
+2. In your excited and enthusiastic Fizz Kidz voice, explain that there are three ways we can make our tie Dye creations and they have names! 
+* Scrunchy: Demonstrate how you scrunch your tie dye item up and then tie rubber bands around it.
+* Rolley: Demonstrate how you roll your item up like a long roll and then tie rubber bands all the way down. This will create line effects.
+* Swirley: Demonstrate how to place one finger in the middle of your tie dye item, swirl the item around it, and then add rubber hands tightly. 
+3. Dye time - explain the dye process first then hand out bottles
 > Fizz Tip: this step does require kids to be paying attention please make sure this happens. 'Cool thing about tie dye is it never comes off, this is your design forever! Bad thing about tie dye is it never comes off…so make sure these bottles are handled with care so as not to have a spill and get onto your clothes!!'
-6. All white parts of the item to have colour, little squirts at a time. A little goes a long way. Making sure ANY spills are cleaned up with paper towel immediately and the items stay in the tray
-7. Facilitators to put items into zip lock bags and then into creation bags when kids are finishing up
+4. All white parts of the item to have colour, little squirts at a time. A little goes a long way. Making sure ANY spills are cleaned up with paper towel immediately and the items stay in the tray
+5. Facilitators to put items into zip lock bags and then into creation bags when kids are finishing up
 > Fizz Tip: Watch out for the kids who say they are still going but it's just a pool of Shrek swamp colour, time to finish
-8. Gloves off and into tray
+6. Gloves off and into tray
 
 ### Fizz Tipz and Trickz
 Items go home in the zip lock bag and stay in that for 24 hours. Then all rubber bands come off to be put into the washing machine with NOTHING ELSE. It just needs the quickest RINSE cycle - cold to warm water. Then left to air dry. Once washed once, can be washed with anything. 
@@ -746,7 +748,7 @@ const wobblySoap = {
 * Colour Dye x1 drop
 * Scent (if requested) x2 shakes
 * Glitter - biodegradable only (if requested)
-* Popsicle Sticks x1 per child
+* Popsicle Scks x1 per child
 * Soap molds
 
 > Fizz Tip: ALWAYS do this creation first in any party or holiday program
