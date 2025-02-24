@@ -6,6 +6,7 @@ import cheltenham from "@/assets/images/pages/locations/cheltenham.jpg";
 import balwyn from "@/assets/images/pages/locations/balwyn.jpg";
 import essendon from "@/assets/images/pages/locations/essendon.jpg";
 import malvern from "@/assets/images/pages/locations/malvern.jpg";
+import kingsville from "@/assets/images/pages/locations/kingsville.png";
 import { Image } from "astro:assets";
 import Values from "@/components/values.astro";
 import MailingList from "@/components/mailing-list.astro";
@@ -34,6 +35,35 @@ import MailingList from "@/components/mailing-list.astro";
       <h4 class="mb-16 text-center font-lilita text-5xl text-[#8BC34B]">
         The heart of Fizz Kidz are our Fizz Kidz Studios.
       </h4>
+      <div
+        class="mb-12 flex flex-col-reverse items-center justify-center gap-12 md:mb-28 lg:flex-row"
+      >
+        <div class="mx-0 md:mx-8 lg:w-1/2">
+          <Image
+            class="rounded-xl shadow-pink-sm md:shadow-pink-md"
+            src={kingsville}
+            alt="The kingsville studio"
+          />
+        </div>
+        <div class="lg:w-1/2">
+          <h5 class="font-lilita text-4xl">Kingsville Kids Party Venue</h5>
+          <p class="mb-4 font-lilita text-4xl">
+            238 Somerville Rd, Kingsville, VIC 3012
+          </p>
+          <p class="font-gotham text-lg">
+            Our brand-new Kingsville studio is the perfect space for kids to
+            unleash their creativity, have fun, and get messy! Conveniently
+            located on Somerville Road, our spacious and vibrant studio offers
+            plenty of room for kids to dance, create, and explore!<br /><br />
+            There is ample parking available nearby, making drop-offs and pick-ups
+            a breeze. Plus, a cozy café is just meters away, so parents can relax
+            with a coffee while the kids enjoy their Fizz Kidz experience.<br
+            /><br />
+            We can't wait to bring the magic of Fizz Kidz to Melbourne's west - come
+            and celebrate, create, and have a blast with us in Kingsville!
+          </p>
+        </div>
+      </div>
       <div
         class="mb-12 flex flex-col items-center justify-center gap-12 md:mb-28 lg:flex-row"
       >

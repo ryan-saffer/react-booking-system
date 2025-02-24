@@ -126,6 +126,7 @@ export const menu = [
     type: "link",
     path: "/activations-and-events/",
   },
+  { type: "link", title: "Careers", path: "/careers/" },
   // { title: "Franchising", type: "link", path: "/franchising/" },
   {
     title: "Fizz Facts",
@@ -139,7 +140,6 @@ export const menu = [
       },
       { type: "link", title: "Locations", path: "/locations/" },
       { type: "link", title: "Our Team", path: "/our-team/" },
-      { type: "link", title: "Careers", path: "/careers/" },
       // { type: "link", title: "Franchising", path: "/franchising" },
       { type: "link", title: "Policies", path: "/policies/" },
     ],
