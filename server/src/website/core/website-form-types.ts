@@ -78,7 +78,7 @@ type ContactFormServiceOption =
     | 'activation'
     | 'other'
 
-type ContactFormLocationOption = 'balwyn' | 'cheltenham' | 'essendon' | 'malvern' | 'at-home' | 'other'
+type ContactFormLocationOption = `${Location}` | 'at-home' | 'other'
 
 type IncursionFormModuleOption =
     | 'chemicalScience'
@@ -103,6 +103,7 @@ export const ContactFormLocationMap: Record<ContactFormLocationOption, Location 
     balwyn: Location.BALWYN,
     cheltenham: Location.CHELTENHAM,
     essendon: Location.ESSENDON,
+    kingsville: Location.KINGSVILLE,
     malvern: Location.MALVERN,
 }
 
@@ -110,6 +111,7 @@ export const PartyFormLocationMap: Record<ContactFormLocationOption, Location | 
     balwyn: Location.BALWYN,
     cheltenham: Location.CHELTENHAM,
     essendon: Location.ESSENDON,
+    kingsville: Location.KINGSVILLE,
     malvern: Location.MALVERN,
     'at-home': undefined,
     other: undefined,
@@ -120,6 +122,7 @@ export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> 
     balwyn: 'Balwyn Studio',
     cheltenham: 'Cheltenham Studio',
     essendon: 'Essendon Studio',
+    kingsville: 'Kingsville Studio',
     malvern: 'Malvern Studio',
     'at-home': 'At Home',
 }

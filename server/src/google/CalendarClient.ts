@@ -154,6 +154,10 @@ export class CalendarClient {
                         return env === 'prod'
                             ? 'fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com'
                             : 'c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com'
+                    case Location.KINGSVILLE:
+                        return env === 'prod'
+                            ? 'c_c5ed845cf900830382f3da6a88f96f8a9f5c5af76e4ba6656fcf7dbf589c77fc@group.calendar.google.com'
+                            : 'c_07737c232df8345b6ec19eadc978c266e31bf252eb26e323213cfb49e868192c@group.calendar.google.com'
                     case Location.MALVERN:
                         return env === 'prod'
                             ? 'fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com'

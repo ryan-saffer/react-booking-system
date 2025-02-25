@@ -41,6 +41,15 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
+        case Location.CHELTENHAM:
+            return {
+                name: 'Bronwyn',
+                email: 'cheltenham@fizzkidz.com.au',
+                mobile: '0435 906 395',
+                subjectPronoun: 'she',
+                objectPronoun: 'her',
+                possesiveAdjective: 'her',
+            }
         case Location.ESSENDON:
             return {
                 name: 'Lami',
@@ -50,11 +59,11 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
-        case Location.CHELTENHAM:
+        case Location.KINGSVILLE:
             return {
-                name: 'Bronwyn',
-                email: 'cheltenham@fizzkidz.com.au',
-                mobile: '0435 906 395',
+                name: 'Kym',
+                email: 'kym@fizzkidz.com.au',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
