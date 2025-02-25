@@ -36,7 +36,15 @@ const formSchema = z
       .string()
       .min(10, "Contact number must be at least 10 digits long"),
     location: z
-      .enum(["balwyn", "cheltenham", "essendon", "malvern", "at-home", "other"])
+      .enum([
+        "balwyn",
+        "cheltenham",
+        "essendon",
+        "kingsville",
+        "malvern",
+        "at-home",
+        "other",
+      ])
       .optional()
       .refine((it) => !!it, "Please select a location"),
     suburb: z.string().optional(),
@@ -184,6 +192,7 @@ function BookAPartyForm() {
                   <SelectItem value="balwyn">Balwyn</SelectItem>
                   <SelectItem value="cheltenham">Cheltenham</SelectItem>
                   <SelectItem value="essendon">Essendon</SelectItem>
+                  <SelectItem value="kingsville">Kingsville</SelectItem>
                   <SelectItem value="malvern">Malvern</SelectItem>
                   <SelectItem value="at-home">At Home</SelectItem>
                   <SelectItem value="other">Other</SelectItem>

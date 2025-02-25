@@ -49,7 +49,15 @@ const formSchema = z
         message: "Please select which experience you are interested in",
       }),
     location: z
-      .enum(["balwyn", "cheltenham", "essendon", "malvern", "at-home", "other"])
+      .enum([
+        "balwyn",
+        "cheltenham",
+        "essendon",
+        "kingsville",
+        "malvern",
+        "at-home",
+        "other",
+      ])
       .optional(),
     suburb: z.string().optional(),
     preferredDateAndTime: z.string().optional(),
@@ -254,6 +262,7 @@ function ContactUsForm() {
                     <SelectItem value="balwyn">Balwyn</SelectItem>
                     <SelectItem value="cheltenham">Cheltenham</SelectItem>
                     <SelectItem value="essendon">Essendon</SelectItem>
+                    <SelectItem value="kingsville">Kingsville</SelectItem>
                     <SelectItem value="malvern">Malvern</SelectItem>
                     <SelectItem value="at-home">At Home</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
