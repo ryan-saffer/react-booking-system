@@ -353,6 +353,7 @@ export type Emails = {
         email: string
         contactNumber: string
         role: string
+        location: string
         wwcc: string
         driversLicense: string
         resumeUrl: string
@@ -366,6 +367,7 @@ export type Emails = {
         email: string
         contactNumber: string
         role: string
+        location: string
         wwcc: string
         driversLicense: string
         resumeUrl: string

@@ -42,6 +42,7 @@ export type Form = {
         email: string
         contactNumber: string
         role: CareersFormRoleOption
+        location: Location
         wwcc: string
         driversLicense: string
         application: string
@@ -87,13 +88,7 @@ type IncursionFormModuleOption =
     | 'earthWeatherSustainability'
     | 'notSure'
 
-type CareersFormRoleOption =
-    | 'cheltenham-manager'
-    | 'balwyn-facilitator'
-    | 'cheltenahm-facilitator'
-    | 'essendon-facilitator'
-    | 'malvern-facilitator'
-    | 'other'
+type CareersFormRoleOption = 'manager' | 'supervisor' | 'facilitator' | 'other'
 
 type FranchisingInterestOption = 'browsing' | '3' | '6' | '12' | '12+'
 
@@ -146,11 +141,9 @@ export const ModuleDisplayValueMap: Record<IncursionFormModuleOption, string> = 
 
 export const RoleDisplayValueMap: Record<CareersFormRoleOption, string> = {
     other: 'Other',
-    'cheltenham-manager': 'Cheltenham Manager',
-    'balwyn-facilitator': 'Balwyn Party Facilitator',
-    'cheltenahm-facilitator': 'Cheltenham Party Facilitator',
-    'essendon-facilitator': 'Essendon Party Facilitator',
-    'malvern-facilitator': 'Malvern Party Facilitator',
+    manager: 'Studio Manager',
+    supervisor: 'Studio Supervisor',
+    facilitator: 'Studio Facilitator',
 }
 
 export const FranchisingInterestDisplayValueMap: Record<FranchisingInterestOption, string> = {
