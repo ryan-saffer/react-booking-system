@@ -37,18 +37,18 @@ const formSchema = z.object({
     .string()
     .min(10, "Contact number must be at least 10 digits long"),
   role: z
-    .enum([
-      "cheltenham-manager",
-      "balwyn-facilitator",
-      "cheltenahm-facilitator",
-      "essendon-facilitator",
-      "malvern-facilitator",
-      "other",
-    ])
+    .enum(["manager", "supervisor", "facilitator", "other"])
     .optional()
     .refine((it) => !!it, {
       message: "Please select which role you are applying for",
     }),
+  location: z.enum([
+    "balwyn",
+    "cheltenham",
+    "essendon",
+    "kingsville",
+    "malvern",
+  ]),
   wwcc: z.enum(["yes", "no"]),
   driversLicense: z.enum(["yes", "no"]),
   application: z.string().min(1, "Please answer"),
@@ -198,19 +198,43 @@ function CareersForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="cheltenham-manager">
-                    Cheltenham Studio Manager
-                  </SelectItem>
-                  <SelectItem value="balwyn-facilitator">
-                    Balwyn Studio Party Facilitator
-                  </SelectItem>
-                  <SelectItem value="essendon-facilitator">
-                    Essendon Studio Party Facilitator
-                  </SelectItem>
-                  <SelectItem value="malvern-facilitator">
-                    Malvern Studio Party Facilitator
+                  <SelectItem value="manager">Studio Manager</SelectItem>
+                  <SelectItem value="supervisor">Studio Supervisor</SelectItem>
+                  <SelectItem value="facilitator">
+                    Studio Facilitator
                   </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Which location do you want to work at? *</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    aria-label="select location"
+                  >
+                    {field.value ? <SelectValue /> : "Select location"}
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="balwyn">Balwyn</SelectItem>
+                  <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                  <SelectItem value="essendon">Essendon</SelectItem>
+                  <SelectItem value="kingsville">Kingsville</SelectItem>
+                  <SelectItem value="malvern">Malvern</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
