@@ -12,6 +12,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectForm,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -195,19 +196,12 @@ function IncursionForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Science Module *</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select module"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  {/* <Input
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  {...field}
-                  /> */}
-                </FormControl>
+              <SelectForm
+                label="Science Module *"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <SelectValue />
                 <SelectContent>
                   <SelectItem value="chemicalScience">
                     Chemical Science
@@ -221,7 +215,7 @@ function IncursionForm() {
                     A combination of the above / not sure
                   </SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}

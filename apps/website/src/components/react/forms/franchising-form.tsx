@@ -12,6 +12,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectForm,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -212,20 +213,13 @@ function FranchisingForm() {
           name="state"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Which state is that in?</FormLabel>
-              <Select
+              <SelectForm
+                label="Which state is that in?"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select experience"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue />
                 <SelectContent>
                   <SelectItem value="ACT">ACT</SelectItem>
                   <SelectItem value="NSW">NSW</SelectItem>
@@ -235,7 +229,7 @@ function FranchisingForm() {
                   <SelectItem value="VIC">VIC</SelectItem>
                   <SelectItem value="WA">WA</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -264,20 +258,13 @@ function FranchisingForm() {
           name="interest"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Please select your interest level *</FormLabel>
-              <Select
+              <SelectForm
+                label="Please select your interest level *"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select experience"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue />
                 <SelectContent>
                   <SelectItem value="browsing">Just browsing</SelectItem>
                   <SelectItem value="3">Get started in 3 months</SelectItem>
@@ -285,7 +272,7 @@ function FranchisingForm() {
                   <SelectItem value="12">Get started in 6-12 months</SelectItem>
                   <SelectItem value="12+">Get started in 12+ months</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}

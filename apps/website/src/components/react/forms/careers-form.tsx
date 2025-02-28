@@ -11,6 +11,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectForm,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -183,20 +184,13 @@ function CareersForm() {
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Which role are you applying for? *</FormLabel>
-              <Select
+              <SelectForm
+                label="Which role are you applying for? *"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select role"
-                  >
-                    {field.value ? <SelectValue /> : "Select role"}
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue placeholder="Select role" />
                 <SelectContent>
                   <SelectItem value="manager">Studio Manager</SelectItem>
                   <SelectItem value="supervisor">Studio Supervisor</SelectItem>
@@ -205,7 +199,7 @@ function CareersForm() {
                   </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -215,20 +209,13 @@ function CareersForm() {
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Which location do you want to work at? *</FormLabel>
-              <Select
+              <SelectForm
+                label="Which location do you want to work at? *"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select location"
-                  >
-                    {field.value ? <SelectValue /> : "Select location"}
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue placeholder="Select location" />
                 <SelectContent>
                   <SelectItem value="balwyn">Balwyn</SelectItem>
                   <SelectItem value="cheltenham">Cheltenham</SelectItem>
@@ -236,7 +223,7 @@ function CareersForm() {
                   <SelectItem value="kingsville">Kingsville</SelectItem>
                   <SelectItem value="malvern">Malvern</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -246,28 +233,18 @@ function CareersForm() {
           name="wwcc"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Do you have, or are willing to obtain, a Working With Children's
-                Check? *
-              </FormLabel>
-              <Select
+              <SelectForm
+                label="Do you have, or are willing to obtain, a Working With Children's Check? *"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select wwcc status"
-                  >
-                    {field.value ? <SelectValue /> : "Please answer"}
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue placeholder="Please answer" />
                 <SelectContent>
                   <SelectItem value="yes">Yes</SelectItem>
                   <SelectItem value="no">No</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -277,27 +254,18 @@ function CareersForm() {
           name="driversLicense"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Do you have a drivers license? (Having one is not required!) *
-              </FormLabel>
-              <Select
+              <SelectForm
+                label="Do you have a drivers license? (Having one is not required!) *"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select drivers license status"
-                  >
-                    {field.value ? <SelectValue /> : "Please answer"}
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue placeholder="Please answer" />
                 <SelectContent>
                   <SelectItem value="yes">Yes</SelectItem>
                   <SelectItem value="no">No</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -356,8 +324,9 @@ function CareersForm() {
             <FormItem>
               <FormLabel>How did you hear about us? *</FormLabel>
               <FormControl>
-                <Input
+                <Textarea
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                  rows={2}
                   {...field}
                 />
               </FormControl>

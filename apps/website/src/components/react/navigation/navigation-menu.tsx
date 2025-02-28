@@ -26,7 +26,7 @@ export type MenuItem =
 
 export const menu = [
   {
-    title: "Birthday Parties",
+    title: "Birthday parties",
     clickable: true,
     path: "/birthday-parties/",
     subTitle: "See All Packages",
@@ -86,7 +86,7 @@ export const menu = [
   },
   {
     type: "link",
-    title: "Holiday Programs",
+    title: "Holiday programs",
     path: "/holiday-programs/",
   },
   // {
@@ -109,27 +109,27 @@ export const menu = [
   //   ],
   // },
   {
-    title: "In Schools",
+    title: "In schools",
     type: "dropdown",
     clickable: false,
     items: [
       {
         type: "link",
-        title: "After School Programs",
+        title: "After school programs",
         path: "/in-schools/after-school-programs/",
       },
       { type: "link", title: "Incursions", path: "/in-schools/incursions/" },
     ],
   },
   {
-    title: "Activations and Events",
+    title: "Activations and events",
     type: "link",
     path: "/activations-and-events/",
   },
   { type: "link", title: "Careers", path: "/careers/" },
   // { title: "Franchising", type: "link", path: "/franchising/" },
   {
-    title: "Fizz Facts",
+    title: "Fizz facts",
     type: "dropdown",
     clickable: false,
     items: [

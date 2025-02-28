@@ -12,6 +12,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectForm,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -203,22 +204,13 @@ function ContactUsForm() {
           name="service"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Which Fizz Kidz experience are you interested in?
-              </FormLabel>
-              <Select
+              <SelectForm
+                label="Which Fizz Kidz experience are you interested in?"
                 onValueChange={field.onChange}
                 defaultValue={field.value}
                 value={field.value}
               >
-                <FormControl>
-                  <SelectTrigger
-                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                    aria-label="select experience"
-                  >
-                    {field.value ? <SelectValue /> : "Select experience"}
-                  </SelectTrigger>
-                </FormControl>
+                <SelectValue placeholder="Select experience" />
                 <SelectContent>
                   <SelectItem value="party">Birthday Party</SelectItem>
                   <SelectItem value="holiday-program">
@@ -233,7 +225,7 @@ function ContactUsForm() {
                   </SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
-              </Select>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
@@ -245,19 +237,12 @@ function ContactUsForm() {
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Which location are you interested in?</FormLabel>
-                <Select
+                <SelectForm
+                  label="Which location are you interested in?"
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
-                    <SelectTrigger
-                      className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                      aria-label="select experience"
-                    >
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
+                  <SelectValue />
                   <SelectContent>
                     <SelectItem value="balwyn">Balwyn</SelectItem>
                     <SelectItem value="cheltenham">Cheltenham</SelectItem>
@@ -267,7 +252,7 @@ function ContactUsForm() {
                     <SelectItem value="at-home">At Home</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
-                </Select>
+                </SelectForm>
                 <FormMessage />
               </FormItem>
             )}
