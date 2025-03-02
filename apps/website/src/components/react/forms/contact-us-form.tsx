@@ -10,11 +10,9 @@ import {
   FormMessage,
 } from "../ui/form";
 import {
-  Select,
   SelectContent,
   SelectForm,
   SelectItem,
-  SelectTrigger,
   SelectValue,
 } from "../ui/select";
 
@@ -63,6 +61,12 @@ const formSchema = z
     suburb: z.string().optional(),
     preferredDateAndTime: z.string().optional(),
     enquiry: z.string().min(1, "Please enter an enquiry"),
+    reference: z
+      .enum(["google", "instagram", "word-of-mouth", "attended-fizz", "other"])
+      .optional()
+      .refine((it) => !!it, {
+        message: "Please select how you heard about us",
+      }),
   })
   .superRefine((val, ctx) => {
     if (val.service === "party" || val.service === "holiday-program") {
@@ -106,6 +110,7 @@ function ContactUsForm() {
       suburb: "",
       preferredDateAndTime: "",
       enquiry: "",
+      reference: undefined,
     },
   });
 
@@ -308,6 +313,31 @@ function ContactUsForm() {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="reference"
+          render={({ field }) => (
+            <FormItem>
+              <SelectForm
+                label="How did you hear about us?"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <SelectValue />
+                <SelectContent>
+                  <SelectItem value="google">Google search</SelectItem>
+                  <SelectItem value="instagram">Instagram</SelectItem>
+                  <SelectItem value="word-of-mouth">Word of mouth</SelectItem>
+                  <SelectItem value="attended-fizz">
+                    Attended a Fizz Kidz experience
+                  </SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}
