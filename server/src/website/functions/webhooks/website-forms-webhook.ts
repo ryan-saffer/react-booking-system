@@ -12,6 +12,7 @@ import {
     LocationDisplayValueMap,
     ModuleDisplayValueMap,
     PartyFormLocationMap,
+    ReferenceDisplayValueMap,
     RoleDisplayValueMap,
     ServiceDisplayValueMap,
 } from '../../core/website-form-types'
@@ -21,6 +22,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
 
     const zohoClient = new ZohoClient()
     const mailClient = await MailClient.getInstance()
+    const mixpanelClient = await MixpanelClient.getInstance()
 
     try {
         switch (formId) {
@@ -38,6 +40,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         enquiry: formData.enquiry,
+                        reference: ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         bccBookings: false,
@@ -55,6 +58,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         enquiry: formData.enquiry,
+                        reference: ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         subject: `${LocationDisplayValueMap[formData.location]} - ${formData.name}`,
@@ -70,6 +74,14 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     studio: PartyFormLocationMap[formData.location],
                     mobile: formData.contactNumber,
                 })
+
+                await mixpanelClient.track('website-enquiry', {
+                    form: 'party',
+                    service: 'party',
+                    location: formData.location,
+                    reference: formData.reference,
+                })
+
                 break
             }
 
@@ -91,6 +103,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
                         suburb: formData.suburb,
+                        reference: ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         bccBookings: false,
@@ -108,6 +121,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
                         suburb: formData.suburb,
+                        reference: ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
@@ -136,6 +150,14 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     // we still want the user to see a success here, so only log the error
                     logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
                 }
+
+                await mixpanelClient.track('website-enquiry', {
+                    form: 'contact',
+                    service,
+                    location: formData.location,
+                    reference: formData.reference,
+                })
+
                 break
             }
 
@@ -182,6 +204,13 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     service: 'activation_event',
                     company: formData.company,
                 })
+
+                await mixpanelClient.track('website-enquiry', {
+                    form: 'event',
+                    service: 'activation',
+                    reference: undefined,
+                })
+
                 break
             }
 
@@ -231,6 +260,9 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     service: 'incursion',
                     company: formData.school,
                 })
+
+                await mixpanelClient.track('website-enquiry', { form: 'incursion', service: 'incursion' })
+
                 break
             }
 
@@ -293,6 +325,9 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     lastName,
                     email: formData.email,
                 })
+
+                await mixpanelClient.track('website-enquiry', { form: 'mailingList' })
+
                 break
             }
 
@@ -305,7 +340,6 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     lastName,
                     email: formData.email,
                 })
-                const mixpanelClient = await MixpanelClient.getInstance()
                 await mixpanelClient.track('holiday-program-website-discount', formData)
 
                 res.status(200).json(data)

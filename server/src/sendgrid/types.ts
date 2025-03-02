@@ -297,6 +297,7 @@ export type Emails = {
         suburb?: string
         preferredDateAndTime?: string
         enquiry: string
+        reference: string
     }
 
     websiteContactFormToFizz: {
@@ -308,6 +309,7 @@ export type Emails = {
         suburb?: string
         preferredDateAndTime?: string
         enquiry: string
+        reference: string
     }
 
     websiteEventFormToCustomer: {
@@ -384,6 +386,7 @@ export type Emails = {
         suburb?: string
         preferredDateAndTime: string
         enquiry: string
+        reference: string
     }
 
     websitePartyFormToFizz: {
@@ -394,6 +397,7 @@ export type Emails = {
         suburb?: string
         preferredDateAndTime: string
         enquiry: string
+        reference: string
     }
 
     websiteFranchisingFormToCustomer: {

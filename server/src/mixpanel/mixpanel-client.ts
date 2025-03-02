@@ -4,6 +4,12 @@ import type { Mixpanel } from 'mixpanel'
 
 import { env } from '../init'
 import { ClientStatus } from '../utilities/types'
+import type {
+    ContactFormLocationOption,
+    ContactFormServiceOption,
+    Form,
+    ReferenceOption,
+} from '../website/core/website-form-types'
 
 export class MixpanelClient {
     private static instance: MixpanelClient
@@ -62,10 +68,17 @@ export type MixpanelEvent = {
             | 'scroll'
     }
     'holiday-program-website-discount': { name: string; email: string }
+    'website-enquiry': {
+        form: keyof Form
+        service?: ContactFormServiceOption
+        location?: ContactFormLocationOption
+        reference?: ReferenceOption
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
+    'website-enquiry': 'Website Enquiry',
 }

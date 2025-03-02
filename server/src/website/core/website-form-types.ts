@@ -9,6 +9,7 @@ export type Form = {
         suburb?: string
         preferredDateAndTime: string
         enquiry: string
+        reference: ReferenceOption
     }
     contact: {
         name: string
@@ -19,6 +20,7 @@ export type Form = {
         suburb?: string
         preferredDateAndTime?: string
         enquiry: string
+        reference: ReferenceOption
     }
     event: {
         name: string
@@ -71,7 +73,7 @@ export type Form = {
     }
 }
 
-type ContactFormServiceOption =
+export type ContactFormServiceOption =
     | 'party'
     | 'holiday-program'
     | 'after-school-program'
@@ -79,7 +81,9 @@ type ContactFormServiceOption =
     | 'activation'
     | 'other'
 
-type ContactFormLocationOption = `${Location}` | 'at-home' | 'other'
+export type ReferenceOption = 'google' | 'instagram' | 'word-of-mouth' | 'attended-fizz' | 'other'
+
+export type ContactFormLocationOption = `${Location}` | 'at-home' | 'other'
 
 type IncursionFormModuleOption =
     | 'chemicalScience'
@@ -120,6 +124,14 @@ export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> 
     kingsville: 'Kingsville Studio',
     malvern: 'Malvern Studio',
     'at-home': 'At Home',
+}
+
+export const ReferenceDisplayValueMap: Record<ReferenceOption, string> = {
+    google: 'Google Search',
+    instagram: 'Instagram',
+    'word-of-mouth': 'Word of mouth',
+    'attended-fizz': 'Attended a Fizz Kidz experience',
+    other: 'Other',
 }
 
 export const ServiceDisplayValueMap: Record<ContactFormServiceOption, string> = {
