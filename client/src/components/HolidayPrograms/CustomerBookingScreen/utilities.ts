@@ -1,6 +1,6 @@
 import { AcuityTypes, DiscountCode } from 'fizz-kidz'
 
-export const PROGRAM_PRICE = 49
+export const PROGRAM_PRICE = 54
 export const DISCOUNT_PRICE = 4
 
 export function calculateTotal(
