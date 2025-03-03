@@ -13,6 +13,12 @@ export const paperformWebhook = onRequest(async (req, res) => {
             data: req.body.data,
             charge: req.body.charge?.charge,
         })
+    } else if (req.query.form === 'party-v2') {
+        await publishToPubSub('paperformSubmission', {
+            form: 'party-v2',
+            data: req.body.data,
+            charge: req.body.charge?.charge,
+        })
     } else {
         logger.error(`unrecognised form sent to webhook: ${req.query.form}`)
         res.sendStatus(500)

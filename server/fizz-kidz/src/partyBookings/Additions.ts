@@ -1,4 +1,4 @@
-const PROD_ADDITIONS = {
+export const PROD_ADDITIONS = {
     chickenNuggets: {
         displayValue: 'Chicken Nuggets',
         displayValueWithPrice: 'Chicken Nuggets - $35',
@@ -13,9 +13,6 @@ const PROD_ADDITIONS = {
     vegetarianQuiche: { displayValue: 'Vegetarian Quiches', displayValueWithPrice: 'Vegetarian Quiches - $35' },
     watermelonPlatter: { displayValue: 'Watermelon Platter', displayValueWithPrice: 'Watermelon Platter - $25' },
     wedges: { displayValue: 'Wedges', displayValueWithPrice: 'Wedges - $30' },
-} as const
-
-const PARTY_PACKS = {
     dinosaurFizzPartyPack: {
         displayValue: 'Dinosaur Fizz Party Pack',
         displayValueWithPrice: 'Dinosaur Fizz Party Pack - $12.80 each',
@@ -64,5 +61,5 @@ const DEPRECATED_ADDITIONS = {
     },
 } as const
 
-export const ADDITIONS = { ...PROD_ADDITIONS, ...PARTY_PACKS, ...DEPRECATED_ADDITIONS } as const
+export const ADDITIONS = { ...PROD_ADDITIONS, ...DEPRECATED_ADDITIONS } as const
 export type Addition = keyof typeof ADDITIONS

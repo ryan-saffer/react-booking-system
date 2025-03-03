@@ -1,5 +1,5 @@
 //#region Bookings
-export { ADDITIONS, Addition } from './partyBookings/additions'
+export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
 export { Creation, CREATIONS } from './partyBookings/creations'
 export { Location, LocationOrMaster } from './core/location'

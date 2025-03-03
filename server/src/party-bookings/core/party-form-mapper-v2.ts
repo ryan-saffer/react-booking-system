@@ -1,21 +1,22 @@
 import {
     ADDITIONS,
+    Booking,
     CREATIONS,
     getKeyByValue,
     getQuestionValue,
     Location,
     ObjectEntries,
-    type Booking,
-    type PaperFormResponse,
-    type PartyForm,
+    ObjectKeys,
+    PaperFormResponse,
+    type PartyFormV2,
 } from 'fizz-kidz'
 import { logger } from 'firebase-functions/v2'
 
-export class PartyFormMapper {
-    responses: PaperFormResponse<PartyForm>
+export class PartyFormMapperV2 {
+    responses: PaperFormResponse<PartyFormV2>
     bookingId: string
 
-    constructor(responses: PaperFormResponse<PartyForm>) {
+    constructor(responses: PaperFormResponse<PartyFormV2>) {
         this.responses = responses
         this.bookingId = getQuestionValue(this.responses, 'id')
     }
@@ -61,13 +62,11 @@ export class PartyFormMapper {
             )
         }
 
-        // TODO: Add back once new party packs are ready to go
-        // const partyPackKeys = this.mapProductToSku(getQuestionValue(this.responses, 'party_packs'))
-        // partyPackKeys.forEach((pack) => {
-        //     if (this.isValidAddition(pack)) {
-        //         displayValues.push(AdditionsDisplayValuesMapPrices[pack])
-        //     }
-        // })
+        const partyPackKey = this.#mapPartyPackToAdditionKey()
+        if (partyPackKey) {
+            displayValues.push(ADDITIONS[partyPackKey].displayValueWithPrice)
+        }
+
         return displayValues
     }
 
@@ -144,8 +143,7 @@ export class PartyFormMapper {
             creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: getQuestionValue(this.responses, 'fun_facts'),
             questions: getQuestionValue(this.responses, 'questions'),
-            // TODO: add back when new party packs are ready to go
-            // ...this.getPartyPacks(),
+            ...this.#getPartyPacksAsPartialBooking(),
         }
 
         return booking
@@ -186,7 +184,7 @@ export class PartyFormMapper {
         const formValues = getQuestionValue(this.responses, 'additions')
         const additions = formValues.map((formValue) => {
             const addition = ObjectEntries(ADDITIONS).find(
-                ([, additionKey]) => additionKey.displayValueWithPrice === formValue
+                ([, additionKey]) => formValue === additionKey.displayValueWithPrice
             )?.[0]
             if (!addition) {
                 throw new Error(`Could not find addition that matches chosen form value of '${formValue}'`)
@@ -197,10 +195,19 @@ export class PartyFormMapper {
         return additions
     }
 
+    #mapPartyPackToAdditionKey() {
+        const partyPack = getQuestionValue(this.responses, 'party_packs')
+        if (!partyPack) return // not filled in
+        const partyPackKey = ObjectKeys(ADDITIONS).find((it) => it === partyPack)
+        if (!partyPackKey) {
+            throw new Error(`Could not find party pack that matches chosen form value of '${partyPack}'`)
+        }
+        return partyPackKey
+    }
+
     #getAdditionsAsPartialBooking() {
         const booking: Partial<Booking> = {}
-        const additions = this.#mapAdditionFormValuesToAdditionKeys()
-        additions.forEach((addition) => {
+        this.#mapAdditionFormValuesToAdditionKeys().forEach((addition) => {
             booking[addition] = true
         })
 
@@ -273,14 +280,12 @@ export class PartyFormMapper {
         }
     }
 
-    // TODO: add back when new party packs are ready
-    // private getPartyPacks() {
-    //     const booking: Partial<Booking> = {}
-    //     this.mapProductToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
-    //         if (this.isValidAddition(pack)) {
-    //             booking[pack] = true
-    //         }
-    //     })
-    //     return booking
-    // }
+    #getPartyPacksAsPartialBooking() {
+        const booking: Partial<Booking> = {}
+        const key = this.#mapPartyPackToAdditionKey()
+        if (key) {
+            booking[key] = true
+        }
+        return booking
+    }
 }

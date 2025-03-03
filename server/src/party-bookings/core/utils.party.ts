@@ -32,7 +32,7 @@ export function isAddition(key: string): key is Addition {
 }
 
 export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://tdazzggr.paperform.co/?location=${
+    let url = `https://wjgedoax.paperform.co/?location=${
         booking.type === 'studio' ? booking.location : 'mobile'
     }&id=${bookingId}`
     const encodedParams: { [key: string]: string } = {

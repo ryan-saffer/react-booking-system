@@ -1,4 +1,4 @@
-import { IncursionForm, PaperFormResponse, PartyForm } from '../paperform'
+import { IncursionForm, PaperFormResponse, PartyForm, type PartyFormV2 } from '../paperform'
 
 export interface PubSubFunctions {
     createEmployee: { employeeId: string }
@@ -6,6 +6,11 @@ export interface PubSubFunctions {
         | {
               form: 'party'
               data: PaperFormResponse<PartyForm>
+              charge: any
+          }
+        | {
+              form: 'party-v2'
+              data: PaperFormResponse<PartyFormV2>
               charge: any
           }
         | {
