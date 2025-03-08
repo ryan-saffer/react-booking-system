@@ -67,6 +67,7 @@ const formSchema = z
       .refine((it) => !!it, {
         message: "Please select how you heard about us",
       }),
+    referenceOther: z.string().optional(),
   })
   .superRefine((val, ctx) => {
     if (val.service === "party" || val.service === "holiday-program") {
@@ -111,6 +112,7 @@ function ContactUsForm() {
       preferredDateAndTime: "",
       enquiry: "",
       reference: undefined,
+      referenceOther: "",
     },
   });
 
@@ -342,6 +344,25 @@ function ContactUsForm() {
             </FormItem>
           )}
         />
+        {form.watch("reference") === "other" && (
+          <FormField
+            control={form.control}
+            name="referenceOther"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
+                    rows={2}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <Button
           className="!mt-8 w-full rounded-full bg-[#9044E2] hover:bg-[#a56ae6] focus-visible:outline-purple-500"
           type="submit"
