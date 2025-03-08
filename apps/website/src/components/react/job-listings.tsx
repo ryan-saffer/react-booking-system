@@ -5,18 +5,6 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 
-import { cn } from "./lib/utils";
-
-const locations = [
-  { name: "Balwyn", address: "184 Whitehorse Road, Balwyn 3103" },
-  { name: "Cheltenham", address: "273 Bay Rd, Cheltenham VIC 3192" },
-  { name: "Essendon", address: "75 Raleigh St, Essendon VIC 3040" },
-  {
-    name: "Malvern",
-    address: "20 Glenferrie Rd, Malvern VIC 3144",
-  },
-] as const;
-
 function JobListings() {
   return (
     <Accordion type="multiple" className="rounded-2xl border">

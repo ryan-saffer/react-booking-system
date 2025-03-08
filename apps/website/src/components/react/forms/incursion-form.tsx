@@ -10,11 +10,9 @@ import {
   FormMessage,
 } from "../ui/form";
 import {
-  Select,
   SelectContent,
   SelectForm,
   SelectItem,
-  SelectTrigger,
   SelectValue,
 } from "../ui/select";
 
