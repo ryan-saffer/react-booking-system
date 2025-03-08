@@ -40,7 +40,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         enquiry: formData.enquiry,
-                        reference: ReferenceDisplayValueMap[formData.reference],
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         bccBookings: false,
@@ -58,7 +61,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
                         enquiry: formData.enquiry,
-                        reference: ReferenceDisplayValueMap[formData.reference],
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         subject: `${LocationDisplayValueMap[formData.location]} - ${formData.name}`,
@@ -80,6 +86,8 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     service: 'party',
                     location: formData.location,
                     reference: formData.reference,
+                    ...(formData.reference === 'other' &&
+                        formData.referenceOther && { referenceOther: formData.referenceOther }),
                 })
 
                 break
@@ -103,7 +111,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
                         suburb: formData.suburb,
-                        reference: ReferenceDisplayValueMap[formData.reference],
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         bccBookings: false,
@@ -121,7 +132,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                         ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
                         preferredDateAndTime: formData.preferredDateAndTime,
                         suburb: formData.suburb,
-                        reference: ReferenceDisplayValueMap[formData.reference],
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
                     },
                     {
                         subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
@@ -156,6 +170,8 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     service,
                     location: formData.location,
                     reference: formData.reference,
+                    ...(formData.reference === 'other' &&
+                        formData.referenceOther && { referenceOther: formData.referenceOther }),
                 })
 
                 break

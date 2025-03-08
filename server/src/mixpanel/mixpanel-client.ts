@@ -73,6 +73,7 @@ export type MixpanelEvent = {
         service?: ContactFormServiceOption
         location?: ContactFormLocationOption
         reference?: ReferenceOption
+        referenceOther?: string
     }
 }
 

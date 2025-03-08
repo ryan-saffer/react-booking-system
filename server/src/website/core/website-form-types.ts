@@ -10,6 +10,7 @@ export type Form = {
         preferredDateAndTime: string
         enquiry: string
         reference: ReferenceOption
+        referenceOther?: string
     }
     contact: {
         name: string
@@ -21,6 +22,7 @@ export type Form = {
         preferredDateAndTime?: string
         enquiry: string
         reference: ReferenceOption
+        referenceOther?: string
     }
     event: {
         name: string
