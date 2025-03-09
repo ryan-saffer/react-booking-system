@@ -69,7 +69,7 @@ export async function bookHolidayPrograms(
     const firstProgram = programs.map((it) => it).sort((a, b) => (a.dateTime < b.dateTime ? -1 : 0))[0]
 
     // write to crm
-    if (programs[0].joinMailingList) {
+    if (firstProgram.joinMailingList) {
         const zohoClient = new ZohoClient()
         try {
             // cannot use `Promise.all()` here, since each child is added individually.
@@ -90,7 +90,7 @@ export async function bookHolidayPrograms(
                 })
             }
         } catch (err) {
-            logError(`unable to add holiday program booking to zoho with parent email ${programs[0].parentEmail}`, err)
+            logError(`unable to add holiday program booking to zoho with parent email ${firstProgram.parentEmail}`, err)
         }
     }
 
@@ -129,14 +129,19 @@ export async function bookHolidayPrograms(
         }
     }
 
-    // track
+    // tracking
     const location = AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId)
     if (location !== 'test') {
         const mixpanel = await MixpanelClient.getInstance()
+
+        // first get some info about the booking
+        const uniqueChildNamesCount = new Set(programs.map((b) => b.childName)).size
+
         await mixpanel.track('holiday-program-booking', {
             distinct_id: firstProgram.parentEmail,
             location,
             numberOfSlots: programs.length,
+            numberOfKids: uniqueChildNamesCount,
         })
     }
 }

@@ -88,6 +88,7 @@ export type MixpanelEvent = {
         distinct_id: string
         location: Location
         numberOfSlots: number
+        numberOfKids: number
     }
 }
 
