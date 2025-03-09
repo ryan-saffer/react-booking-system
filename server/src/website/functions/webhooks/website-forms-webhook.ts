@@ -82,6 +82,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 })
 
                 await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
                     form: 'party',
                     service: 'party',
                     location: formData.location,
@@ -166,6 +167,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 }
 
                 await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
                     form: 'contact',
                     service,
                     location: formData.location,
@@ -222,6 +224,7 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 })
 
                 await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
                     form: 'event',
                     service: 'activation',
                     reference: undefined,
@@ -277,7 +280,11 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     company: formData.school,
                 })
 
-                await mixpanelClient.track('website-enquiry', { form: 'incursion', service: 'incursion' })
+                await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
+                    form: 'incursion',
+                    service: 'incursion',
+                })
 
                 break
             }
@@ -342,7 +349,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     email: formData.email,
                 })
 
-                await mixpanelClient.track('website-enquiry', { form: 'mailingList' })
+                await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
+                    form: 'mailingList',
+                })
 
                 break
             }
@@ -356,7 +366,10 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                     lastName,
                     email: formData.email,
                 })
-                await mixpanelClient.track('holiday-program-website-discount', formData)
+                await mixpanelClient.track('holiday-program-website-discount', {
+                    name: formData.name,
+                    distinct_id: formData.email,
+                })
 
                 res.status(200).json(data)
                 return

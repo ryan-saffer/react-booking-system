@@ -57,8 +57,13 @@ export class MixpanelClient {
 }
 
 export type MixpanelEvent = {
-    'invitation-generated': { invitationId: string; partyDate: Date; invitation: InvitationOption }
+    'invitation-generated': {
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationOption
+    }
     'invitation-coupon-signup': {
+        distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
         | 'sidebar'
@@ -67,8 +72,12 @@ export type MixpanelEvent = {
             // used the section just sitting under the invite on mobile (no drawer)
             | 'scroll'
     }
-    'holiday-program-website-discount': { name: string; email: string }
+    'holiday-program-website-discount': {
+        distinct_id: string
+        name: string
+    }
     'website-enquiry': {
+        distinct_id: string
         form: keyof Form
         service?: ContactFormServiceOption
         location?: ContactFormLocationOption

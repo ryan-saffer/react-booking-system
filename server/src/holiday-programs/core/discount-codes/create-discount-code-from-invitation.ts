@@ -51,6 +51,7 @@ export async function createDiscountCodeFromInvitation(discountCode: CreateDisco
 
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-coupon-signup', {
+        distinct_id: discountCode.email,
         invitationId: discountCode.invitationId,
         view: discountCode.viewUsed,
     })
