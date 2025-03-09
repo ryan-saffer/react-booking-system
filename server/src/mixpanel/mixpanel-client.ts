@@ -1,5 +1,5 @@
 import { logger } from 'firebase-functions/v2'
-import { InvitationOption } from 'fizz-kidz'
+import { InvitationOption, type Location } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
 
 import { env } from '../init'
@@ -75,6 +75,11 @@ export type MixpanelEvent = {
         reference?: ReferenceOption
         referenceOther?: string
     }
+    'holiday-program-booking': {
+        distinct_id: string
+        location: Location
+        numberOfSlots: number
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
@@ -82,4 +87,5 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',
+    'holiday-program-booking': 'Holiday Program Booking',
 }

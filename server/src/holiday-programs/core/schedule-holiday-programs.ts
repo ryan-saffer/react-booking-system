@@ -6,6 +6,7 @@ import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { SheetsClient } from '../../google/SheetsClient'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { logError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { bookHolidayProgramIntoAcuity } from './schedule-holiday-program-into-acuity'
@@ -126,5 +127,16 @@ export async function bookHolidayPrograms(
         } catch (err) {
             logError('Error while updating discount code during holiday program registration', err, { code })
         }
+    }
+
+    // track
+    const location = AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId)
+    if (location !== 'test') {
+        const mixpanel = await MixpanelClient.getInstance()
+        await mixpanel.track('holiday-program-booking', {
+            distinct_id: firstProgram.parentEmail,
+            location,
+            numberOfSlots: programs.length,
+        })
     }
 }
