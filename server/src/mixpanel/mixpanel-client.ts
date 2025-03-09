@@ -90,6 +90,15 @@ export type MixpanelEvent = {
         numberOfSlots: number
         numberOfKids: number
     }
+    'birthday-party-booking': {
+        distinct_id: string
+        location: Location
+        length: '1' | '1.5' | '2'
+        includesFood: boolean
+        type: 'studio' | 'mobile'
+        childAge: string
+        date: string // ISO
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
@@ -98,4 +107,5 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',
     'holiday-program-booking': 'Holiday Program Booking',
+    'birthday-party-booking': 'Birthday Party Booking',
 }

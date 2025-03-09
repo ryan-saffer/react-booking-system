@@ -19,6 +19,7 @@ import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
@@ -139,4 +140,16 @@ export async function createPartyBooking(_booking: Booking) {
             )
         }
     }
+
+    // analytics
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('birthday-party-booking', {
+        distinct_id: booking.parentEmail,
+        location: booking.location,
+        length: booking.partyLength,
+        includesFood: booking.includesFood,
+        type: booking.type,
+        childAge: booking.childAge,
+        date: booking.dateTime.toDate().toISOString(),
+    })
 }
