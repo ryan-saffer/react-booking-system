@@ -99,6 +99,19 @@ export type MixpanelEvent = {
         childAge: string
         date: string // ISO
     }
+    'birthday-party-form-completed': {
+        distinct_id: string
+        creations: string[]
+        additions: string[]
+        orderedPartyPack: boolean
+        partyPack?: string
+        cakeOrdered: boolean
+        cakeSelection?: string
+        cakeFlavours?: string[]
+        cakeSize?: string
+        cakeServed?: string
+        cakeCandles?: string
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
@@ -108,4 +121,5 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'website-enquiry': 'Website Enquiry',
     'holiday-program-booking': 'Holiday Program Booking',
     'birthday-party-booking': 'Birthday Party Booking',
+    'birthday-party-form-completed': 'Birthday Party Form Completed',
 }

@@ -9,6 +9,7 @@ import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError, throwFunctionsError } from '../../utilities'
 import { getBookingAdditions, getBookingCreations } from './utils.party'
 import { PartyFormMapperV2 } from './party-form-mapper-v2'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export async function handlePartyFormSubmissionV2(
     responses: PaperFormResponse<PartyFormV2>,
@@ -352,4 +353,23 @@ export async function handlePartyFormSubmissionV2(
     } catch (err) {
         logError(`error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`, err)
     }
+
+    // analytics
+    const mixpanel = await MixpanelClient.getInstance()
+    const additionsWithoutPartyPacks = additions.filter((addition) => !addition.includes('Party Pack'))
+    await mixpanel.track('birthday-party-form-completed', {
+        distinct_id: fullBooking.parentEmail,
+        creations,
+        additions: additionsWithoutPartyPacks,
+        orderedPartyPack: partyPacks.length !== 0,
+        ...(partyPacks.length > 0 && { partyPack: partyPacks[0] }), // form does not allow multiple selection so only ever one.
+        cakeOrdered: !!booking.cake,
+        ...(!!booking.cake && {
+            cakeSelection: fullBooking.cake?.selection,
+            cakeFlavours: fullBooking.cake?.flavours,
+            cakeServed: fullBooking.cake?.served,
+            cakeSize: fullBooking.cake?.size,
+            cakeCandles: fullBooking.cake?.candles,
+        }),
+    })
 }
