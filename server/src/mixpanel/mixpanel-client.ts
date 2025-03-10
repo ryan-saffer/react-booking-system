@@ -84,11 +84,15 @@ export type MixpanelEvent = {
         reference?: ReferenceOption
         referenceOther?: string
     }
+    'holiday-program-checkout-reached': {
+        distinct_id: string
+    }
     'holiday-program-booking': {
         distinct_id: string
         location: Location
         numberOfSlots: number
         numberOfKids: number
+        discountCode?: string
     }
     'birthday-party-booking': {
         distinct_id: string
@@ -119,6 +123,7 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',
+    'holiday-program-checkout-reached': 'Holiday Program Checkout Reached',
     'holiday-program-booking': 'Holiday Program Booking',
     'birthday-party-booking': 'Birthday Party Booking',
     'birthday-party-form-completed': 'Birthday Party Form Completed',

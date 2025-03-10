@@ -142,6 +142,7 @@ export async function bookHolidayPrograms(
             location,
             numberOfSlots: programs.length,
             numberOfKids: uniqueChildNamesCount,
+            ...(code && { discountCode: code }),
         })
     }
 }

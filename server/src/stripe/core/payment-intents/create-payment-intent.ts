@@ -1,7 +1,9 @@
 import { CreatePaymentIntentParams } from 'fizz-kidz'
-import { StripeClient } from '../stripe-client'
-import { getOrCreateCustomer } from '../customers'
+
+import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 import { throwTrpcError } from '../../../utilities'
+import { getOrCreateCustomer } from '../customers'
+import { StripeClient } from '../stripe-client'
 
 export async function createPaymentIntent(input: CreatePaymentIntentParams) {
     // first create the customer
@@ -32,6 +34,12 @@ export async function createPaymentIntent(input: CreatePaymentIntentParams) {
     })
 
     if (paymentIntent.client_secret) {
+        // analytics
+        const mixpanel = await MixpanelClient.getInstance()
+        await mixpanel.track('holiday-program-checkout-reached', {
+            distinct_id: input.email,
+        })
+
         return {
             id: paymentIntent.id,
             clientSecret: paymentIntent.client_secret,
