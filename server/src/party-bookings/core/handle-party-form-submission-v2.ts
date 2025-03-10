@@ -356,7 +356,8 @@ export async function handlePartyFormSubmissionV2(
 
     // analytics
     const mixpanel = await MixpanelClient.getInstance()
-    const additionsWithoutPartyPacks = additions.filter((addition) => !addition.includes('Party Pack'))
+    const additionsWithoutPrices = formMapper.getAdditionDisplayValues(false)
+    const additionsWithoutPartyPacks = additionsWithoutPrices.filter((addition) => !addition.includes('Party Pack'))
     await mixpanel.track('birthday-party-form-completed', {
         distinct_id: fullBooking.parentEmail,
         creations,
