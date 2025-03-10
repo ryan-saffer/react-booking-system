@@ -7,6 +7,7 @@ import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { SheetsClient } from '../../google/SheetsClient'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { bookHolidayProgramIntoAcuity } from './schedule-holiday-program-into-acuity'
@@ -134,12 +135,19 @@ export async function bookHolidayPrograms(
     if (location !== 'test') {
         const mixpanel = await MixpanelClient.getInstance()
 
-        // first get some info about the booking
         const uniqueChildNamesCount = new Set(programs.map((b) => b.childName)).size
+
+        let amount = 0
+        if (!props.free) {
+            const stripe = await StripeClient.getInstance()
+            const paymentIntent = await stripe.paymentIntents.retrieve(props.paymentIntentId)
+            amount = paymentIntent.amount / 100
+        }
 
         await mixpanel.track('holiday-program-booking', {
             distinct_id: firstProgram.parentEmail,
             location,
+            amount,
             numberOfSlots: programs.length,
             numberOfKids: uniqueChildNamesCount,
             ...(code && { discountCode: code }),
