@@ -106,6 +106,8 @@ export type MixpanelEvent = {
     }
     'birthday-party-form-completed': {
         distinct_id: string
+        type: 'mobile' | 'studio'
+        location: Location
         creations: string[]
         additions: string[]
         orderedPartyPack: boolean
