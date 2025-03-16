@@ -34,18 +34,18 @@ export function getManager(
     switch (location) {
         case Location.BALWYN:
             return {
-                name: 'Bronwyn',
+                name: 'Lami',
                 email: 'balwyn@fizzkidz.com.au',
-                mobile: '0435 906 395',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
         case Location.CHELTENHAM:
             return {
-                name: 'Bronwyn',
+                name: 'Lami',
                 email: 'cheltenham@fizzkidz.com.au',
-                mobile: '0435 906 395',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
