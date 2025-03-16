@@ -2,7 +2,7 @@
 import PageIntro from "@/components/page-intro.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
-import kingsville from "@/assets/images/pages/locations/kingsville.png";
+import essendon from "@/assets/images/pages/locations/essendon.jpg";
 import birthday from "@/assets/images/pages/locations/kingsville/birthday.jpg";
 import holidayPrograms from "@/assets/images/pages/locations/kingsville/holiday-programs.jpg";
 import contact from "@/assets/images/pages/locations/kingsville/contact.jpg";
@@ -11,7 +11,7 @@ import { getImage, Image } from "astro:assets";
 import CardWithImage from "@/components/card-with-image.astro";
 import ImageCarousel from "@/components/react/image-carousel";
 import Smocks from "@/assets/images/pages/parties/creations/hero.jpg";
-// import Reviews from "@/components/reviews.astro";
+import Reviews from "@/components/reviews.astro";
 import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
@@ -21,8 +21,8 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
 ---
 
 <Layout
-  title="Cheltenham | Fizz Kidz"
-  description="Cheltenham birthday parties, holiday programs, toddler programs and more!"
+  title="Essendon | Fizz Kidz"
+  description="Essendon birthday parties, holiday programs, toddler programs and more!"
 >
   <div class="m-auto block max-w-[1380px] px-5 pt-4">
     <BreadcrumbWrapper
@@ -35,7 +35,7 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         },
         {
           type: "dropdown",
-          title: "Kingsville",
+          title: "Essendon",
           items: [
             {
               type: "link",
@@ -67,22 +67,21 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
       ]}
     />
     <PageIntro
-      image={kingsville}
-      imageAlt="A picture of the kingsville studio"
-      subtitle="Fizz Kidz in Melbourne's West!"
+      image={essendon}
+      imageAlt="A picture of the essendon studio"
+      subtitle="The Ultimate Kids' Destination of Fun"
       color="purple"
       actionButtonPath="/contact-us"
       actionButtonText="Get in touch"
     >
-      <span slot="title">Fizz Kidz Kingsville Studio</span>
+      <span slot="title">Fizz Kidz Essendon Studio</span>
       <span slot="content"
-        >Our brand-new Kingsville studio is a bright, engaging space designed
-        for hands-on creativity, where kids can explore, experiment, and bring
-        their ideas to life!
+        >Our Essendon studio is a vibrant, hands-on, light filled space where
+        kids unleash their creativity!
       </span>
     </PageIntro>
     <p class="mt-36 text-center font-lilita text-5xl">
-      Brand-New Creative Hub in the Heart of Kingsville!
+      Creativity & fun in the heart of Essendon!
     </p>
     <section
       class="my-12 flex flex-col-reverse gap-8 md:pb-12 md:pt-16 lg:flex-row"
@@ -95,34 +94,34 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         />
       </div>
       <div class="flex flex-col justify-center lg:w-1/2">
-        <p class="font-bold">Fizz Kidz Kingsville Studio</p>
-        <p>238 Somerville Rd, Kingsville VIC 3012</p>
+        <p class="font-bold">Fizz Kidz Essendon Studio</p>
+        <p>75 Ralight Street Essendon 3040</p>
         <p class="mt-4 font-bold">Phone</p>
         <p><a href="tel:0390598144">(03) 9059 8144</a></p>
         <p class="mt-4 font-bold">Email</p>
         <p>
           <a href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>
         </p>
-        <p class="mt-4 font-bold">About Fizz Kidz Cheltenham</p>
+        <p class="mt-4 font-bold">About Fizz Kidz Essendon</p>
         <p>
-          Our brand-new Kingsville studio is the perfect place for kids to
-          unleash their creativity, have fun, and get messy!
+          Our stunning Essendon studio is big, colourful and bright with lots of
+          natural light.
           <ul class="mb-4 list-disc pl-4">
+            <li>Amble four hour parking right outside</li>
+            <li>Located next door to PEGS Junior College</li>
+            <li>Accommodate up to 30 children at birthday parties</li>
             <li>
-              Conveniently located on Somerville Road, making it easy to access.
-            </li>
-            <li>A large, open space for kids to dance, create, and explore.</li>
-            <li>
-              A cozy café just meters away, perfect for parents to grab a
-              coffee!
-            </li>
-            <li>
-              Ample parking available nearby for easy drop-offs and pick-ups.
-            </li>
-            <li>
-              We're thrilled to bring the magic of Fizz Kidz to Melbourne's
-              west—come celebrate, create, and have a blast with us in
-              Kingsville!
+              Cafe for parents:
+              <ul class="mb-4 list-[circle] pl-6">
+                <li>
+                  Pizza By D'Asporto is conveniently located right next door.
+                  Parents are welcome to grab a coffee, or even a pizza!
+                </li>
+                <li>
+                  Assembly Groud is another great cafe, located two minutes walk
+                  down Napier street.
+                </li>
+              </ul>
             </li>
           </ul>
         </p>
@@ -130,7 +129,7 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
     </section>
     <section class="mb-12 md:mb-20">
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.0633660584967!2d144.8752550775895!3d-37.81198473393911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad667ed880855ef%3A0x4570623e7fb50814!2sFizz%20Kidz%20(Kingsville%2C%20VIC)!5e0!3m2!1sen!2sau!4v1742120947777!5m2!1sen!2sau"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3154.5740298803826!2d144.9160536775877!3d-37.7531364305785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65dc3246af4ab%3A0x141336d61c4cc492!2sFizz%20Kidz!5e0!3m2!1sen!2sau!4v1742120892841!5m2!1sen!2sau"
         width="100%"
         height="450"
         style="border:0;border-radius:12px"
@@ -170,9 +169,8 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
               Holiday Programs
             </p>
             <p class="font-gotham text-lg">
-              Keep your kids engaged and having fun during the holidays at Fizz
-              Kidz Kingsville! Come and enjoy exciting new hands-on activities
-              that spark your kids imagination!
+              Our Essendon holiday programs keep kids engaged with exciting
+              activities, creative projects, and plenty of fun!
             </p>
           </div>
         </CardWithImage>
@@ -187,14 +185,14 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
             <p class="mb-4 font-lilita text-2xl text-[#9044E2]">Contact Us</p>
             <p class="font-gotham text-lg">
               Have questions or would like to chat? Get in touch with our
-              Kingsville team, we would love to help!
+              Essendon team, we would love to help!
             </p>
           </div>
         </CardWithImage>
       </a>
     </section>
     <section class="mt-24">
-      <p class="text-center font-lilita text-3xl">Kingsville Studio Gallery</p>
+      <p class="text-center font-lilita text-3xl">Essendon Studio Gallery</p>
       <ImageCarousel
         client:idle
         loop
@@ -210,37 +208,37 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         ]}
       />
     </section>
-    <!-- <section>
+    <section>
       <Reviews
         title="Hear what our parents have to say!"
         reviews={[
           {
             review:
-              "My 7 year old daughters had an awesome birthday party at Fizz Kidz. Brendan and Lilly were excellent hosts - engaging, helpful and the kids thought they were very funny. I self catered but they still helped set up and serve the food. The party guests all loved taking home their sparkly slime and lip balm. Highly recommend.",
-            writtenBy: "Julia",
+              "Was an absolute hit amongst kids (and parents)! Love the space and love that it only holds 1 booking at a time! The hosts were fantastic and super helpful! Received lots of raves about the place so you guys must be doing something right! Thankyou so much again 💓",
+            writtenBy: "Lisa-Marie",
+            writtenYear: "March 2025",
+          },
+          {
+            review:
+              "What a fun party!? Charlie and Tara are absolute black belts in child wrangling, and the kids had the most fun! They loved making the slime and tie dye scrunchies and the added breaks of dance and freeze were just perfectly timed! We will be back!",
+            writtenBy: "Jessica",
             writtenYear: "February 2025",
           },
           {
             review:
-              "When I asked my daughter, turning 7 this year, what party she wanted she immediately said Fizz Kids. She had her 6 year old part at the Malvern venue and clearly it made an impression! We were happy to book it again so that is saying something. This year we went to Cheltenham and if I was to pick a venue it would probably be this one simply because it is so light and airy and spacious plus parking is so easy (logistics matters, people!). That said we would also happily go back to Malvern. We have now had two parties at Fizz Kids and can confidently say it has been a great experience both times. The venues are set up perfectly, the hosts are so great with kids and keeping things fun and interesting and the activities are perfect. Our hosts (Ben and I think Lilly? Sorry if I go the name wrong!) were fantastic and immediately started interacting with Charlie when we arrived 10 minutes early. They also adapted so quickly to her needs (yelling happy birthday upset her as she's sensitive to noise at the moment so Ben quickly changed it to the best whisper of Happy Birthday). They are also so flexible and great communicators throughout the booking and lead up. You only get charged for the kids that go and we had a few extras on the day without any problems at all. I would not be surprised if my daughter asks for it again for her 8th birthday and we would happily oblige.",
-            writtenBy: "Sara",
-            writtenYear: "November 2024",
+              "We had an absolutely fantastic experience at Fizz kids Essendon! From start to finish, everything was so well organized and fun. The staff were incredibly friendly and attentive, ensuring every detail was taken care of. The games were engaging, and the staff kept everyone laughing and having a blast. I would highly recommend this venue for any parent looking to throw an unforgettable birthday party",
+            writtenBy: "Emma",
+            writtenYear: "February 2025",
           },
           {
             review:
-              "We didn't know what to expect. It was amazing. The team is fantastic with kids. Getting them involved and excited. Everyone loved it",
-            writtenBy: "Hala",
-            writtenYear: "November 2024",
-          },
-          {
-            review:
-              "The kids had a great time there. There were 2 hosts who were fully focused on keeping the kids entertained and helping them out with the activities. They were on time, well organised and managed the kids well. A good stress free venue kids parties !",
-            writtenBy: "Abhi",
-            writtenYear: "October 2024",
+              "I had my sons 6th birthday at fizz kids this Saturday and Eliza and Harry were amazing. They were great at keeping the kids engaged and super helpful with any questions I had. I highly recommend fizz kids if your looking for your next kids party 🥳 🎉",
+            writtenBy: "Courtney",
+            writtenYear: "January 2025",
           },
         ]}
       />
-    </section> -->
+    </section>
   </div>
   <Image
     src={blueWave}
@@ -250,29 +248,28 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
   <div class="bg-[#43D4F3]">
     <div class="m-auto block max-w-[1380px] px-5 pt-4">
       <p class="h2 text-lg font-bold">
-        THE ULTIMATE KIDS PARTY AND HOLIDAY PROGRAM VENUE IN KINGSVILLE,
-        MELBOURNE VIC
+        THE ULTIMATE KIDS PARTY AND HOLIDAY PROGRAM VENUE IN ESSENDON, MELBOURNE
+        VIC
       </p>
       <p class="h2 mt-2">
-        Welcome to Fizz Kidz - Kingsville's Most Creative Kids Party & Activity
+        Welcome to Fizz Kidz - Essendon's Most Creative Kids Party & Activity
         Venue
       </p>
       <p class="mt-2">
-        Located in the heart of <strong>Kingsville, Melbourne VIC</strong>, Fizz
+        Located in the heart of <strong>Essendon, Melbourne VIC</strong>, Fizz
         Kidz is the go-to destination for
         <strong
           >fun, hands-on kids' parties and exciting school holiday programs.
-        </strong> Our bright and energetic studio is designed to <strong
-          >spark creativity and deliver unforgettable experiences,</strong
-        > making every visit full of <strong>
+        </strong> Our vibrant studio is designed to spark creativity and deliver
+        unforgettable experiences, making every visit full of <strong>
           laughter, learning, and interactive fun.
         </strong>
       </p>
       <p class="h2 mt-4 text-lg font-bold">
-        Unforgettable Kids' Birthday Parties at Fizz Kidz Kingsville
+        Unforgettable Kids' Birthday Parties at Fizz Kidz Essendon
       </p>
       <p>
-        Looking for the <strong>best kids' party venue in Kingsville?</strong> Fizz
+        Looking for the <strong>best kids' party venue in Essendon?</strong> Fizz
         Kidz specializes in <strong>creative birthday parties</strong>, where
         kids can <strong
           >make slime, mix bath bombs, design tie-dye creations, and more!</strong
@@ -281,7 +278,7 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         for every child.
       </p>
       <p class="h2 mt-4 text-lg font-bold">
-        Your Go-To School Holiday Program in Kingsville
+        Your Go-To School Holiday Program in Essendon
       </p>
       <p>
         Fizz Kidz <strong>holiday programs</strong> keep kids entertained with hands-on,
@@ -291,11 +288,11 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         the school break!
       </p>
       <p class="h2 mt-4 text-lg font-bold">
-        A Fun-Filled Venue for Kids' Activities in Kingsville
+        A Fun-Filled Venue for Kids' Activities in Essendon
       </p>
       <p>
-        Beyond birthday parties and holiday programs, our Kingsville studio is
-        the perfect place for <strong
+        Beyond birthday parties and holiday programs, our Essendon studio is the
+        perfect place for <strong
           >kids' workshops, incursions, and special events.</strong
         >
         Whether you're looking for a <strong
@@ -303,7 +300,7 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         > or a creative activity to keep little hands busy, Fizz Kidz has something
         for everyone.
       </p><p class="h2 mt-4 text-lg font-bold">
-        Join the Fun at Fizz Kidz Kingsville!
+        Join the Fun at Fizz Kidz Essendon!
       </p>
       <p>
         We invite you to <strong>discover the magic of Fizz Kidz</strong> — where
@@ -317,7 +314,7 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
       </p>
       <p class="h2 mt-4 text-lg font-bold">Contact Us</p>
       <p>
-        Visit <strong>Fizz Kidz Kingsville, Melbourne VIC,</strong> or get in touch
+        Visit <strong>Fizz Kidz Essendon, Melbourne VIC,</strong> or get in touch
         to book your next <strong>party, workshop, or holiday program.</strong> Let's
         create something amazing together!
       </p>
