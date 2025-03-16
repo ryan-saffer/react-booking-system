@@ -55,11 +55,13 @@ const Step1: React.FC<Props> = ({
                 <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
                     {(() => {
                         if (import.meta.env.VITE_ENV === 'prod') {
-                            return Object.values(Location).map((location) => (
-                                <Option value={location} key={location}>
-                                    {capitalise(location)}
-                                </Option>
-                            ))
+                            return Object.values(Location)
+                                .filter((it) => it !== Location.KINGSVILLE)
+                                .map((location) => (
+                                    <Option value={location} key={location}>
+                                        {capitalise(location)}
+                                    </Option>
+                                ))
                         } else {
                             return (
                                 <Option value="test" key="test">
