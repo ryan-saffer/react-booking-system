@@ -7,7 +7,7 @@ import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 
-import { DISCOUNT_PRICE, PROGRAM_PRICE, getSameDayClasses } from '../utilities'
+import { PRICE_MAP, getSameDayClasses } from '../utilities'
 import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
 import { Form } from '..'
 
@@ -25,13 +25,14 @@ const Root = styled('div')({
 })
 
 type Props = {
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
     selectedClasses: AcuityTypes.Api.Class[]
     paymentIntentId: string
     discount: DiscountCode | undefined
 }
 
-const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, discount }) => {
+const Payment: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, paymentIntentId, discount }) => {
     const stripe = useStripe()
     const elements = useElements()
     const firebase = useContext(FirebaseContext) as Firebase
@@ -74,10 +75,7 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
 
         const programs: PaidHolidayProgramBooking[] = selectedClasses.flatMap((klass) =>
             form.children.map((child) => ({
-                appointmentTypeId:
-                    import.meta.env.VITE_ENV === 'prod'
-                        ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
-                        : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                appointmentTypeId,
                 dateTime: klass.time,
                 calendarId: klass.calendarID,
                 parentFirstName: form.parentFirstName,
@@ -93,10 +91,10 @@ const Payment: React.FC<Props> = ({ form, selectedClasses, paymentIntentId, disc
                 discountCode: discount?.code || (discountedPrograms.includes(klass.id) ? 'allday' : ''),
                 amountCharged:
                     discount !== undefined
-                        ? PROGRAM_PRICE
+                        ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE
                         : discountedPrograms.includes(klass.id)
-                          ? PROGRAM_PRICE - DISCOUNT_PRICE
-                          : PROGRAM_PRICE,
+                          ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE - PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE
+                          : PRICE_MAP[appointmentTypeId].PROGRAM_PRICE,
                 booked: false,
                 joinMailingList,
             }))

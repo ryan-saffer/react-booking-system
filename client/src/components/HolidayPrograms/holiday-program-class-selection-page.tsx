@@ -118,7 +118,7 @@ export const HolidayProgramSelectionPage = () => {
     }
 
     return (
-        <Root className="dashboard-full-screen flex justify-center bg-slate-100 px-4">
+        <Root className="flex justify-center bg-slate-100 px-4 dashboard-full-screen">
             <div className="w-full max-w-5xl">
                 <h1 className="lilita text-2xl">Holiday Programs</h1>
                 <Paper className={cssClasses.paper}>

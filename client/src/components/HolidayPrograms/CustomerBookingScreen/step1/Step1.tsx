@@ -1,16 +1,17 @@
 import { Alert, Button, Card, Checkbox, Form, Select, Tag } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
-import { AcuityTypes, Location } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import { capitalise } from '@utils/stringUtilities'
 
-import { DISCOUNT_PRICE, getSameDayClasses } from '../utilities'
+import { getSameDayClasses, PRICE_MAP } from '../utilities'
 
 const { Option } = Select
 
 type Props = {
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     classes: AcuityTypes.Api.Class[]
     selectedClasses: AcuityTypes.Api.Class[]
     selectedStore: string
@@ -19,6 +20,7 @@ type Props = {
 }
 
 const Step1: React.FC<Props> = ({
+    appointmentTypeId,
     classes,
     selectedStore,
     setSelectedStore,
@@ -56,7 +58,12 @@ const Step1: React.FC<Props> = ({
                     {(() => {
                         if (import.meta.env.VITE_ENV === 'prod') {
                             return Object.values(Location)
-                                .filter((it) => it !== Location.KINGSVILLE)
+                                .filter(
+                                    (location) =>
+                                        !!classes.find(
+                                            (it) => it.calendarID === AcuityConstants.StoreCalendars[location]
+                                        )
+                                )
                                 .map((location) => (
                                     <Option value={location} key={location}>
                                         {capitalise(location)}
@@ -72,30 +79,32 @@ const Step1: React.FC<Props> = ({
                     })()}
                 </Select>
             </Form.Item>
-            {filteredClasses && filteredClasses.length !== 0 && (
-                <>
-                    <Alert
-                        type="info"
-                        message="Check our website to see what we will be making each day."
-                        action={
-                            <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs" target="_blank">
-                                View schedule
-                            </Button>
-                        }
-                        style={{ marginBottom: 8 }}
-                    />
-                    <Alert
-                        className="twp mb-4 p-3"
-                        type="warning"
-                        description={
-                            <p>
-                                If you would like your child to <strong>stay for the day</strong>, simply book the
-                                morning and afternoon program, bring lunch and we will supervise the break!
-                            </p>
-                        }
-                    />
-                </>
-            )}
+            {appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM &&
+                filteredClasses &&
+                filteredClasses.length !== 0 && (
+                    <>
+                        <Alert
+                            type="info"
+                            message="Check our website to see what we will be making each day."
+                            action={
+                                <Button type="link" href="https://www.fizzkidz.com.au/holiday-programs" target="_blank">
+                                    View schedule
+                                </Button>
+                            }
+                            style={{ marginBottom: 8 }}
+                        />
+                        <Alert
+                            className="twp mb-4 p-3"
+                            type="warning"
+                            description={
+                                <p>
+                                    If you would like your child to <strong>stay for the day</strong>, simply book the
+                                    morning and afternoon program, bring lunch and we will supervise the break!
+                                </p>
+                            }
+                        />
+                    </>
+                )}
             {filteredClasses?.map((klass) => {
                 const name = `${klass.id}-checkbox`
                 const slotsAvailable = getSlotsAvailable(klass)
@@ -122,7 +131,9 @@ const Step1: React.FC<Props> = ({
                                 </p>
                             )}
                             {discountedClasses.includes(klass.id) && (
-                                <Tag color="green">All day discount: -${DISCOUNT_PRICE}.00</Tag>
+                                <Tag color="green">
+                                    All day discount: -${PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE}.00
+                                </Tag>
                             )}
                         </Checkbox>
                     </Form.Item>

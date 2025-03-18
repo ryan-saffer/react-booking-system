@@ -1,20 +1,33 @@
-import { AcuityTypes, DiscountCode } from 'fizz-kidz'
+import { capitalise } from '@utils/stringUtilities'
+import { AcuityConstants, AcuityTypes, DiscountCode } from 'fizz-kidz'
 
-export const PROGRAM_PRICE = 54
-export const DISCOUNT_PRICE = 4
+export const PRICE_MAP: Record<
+    AcuityConstants.AppointmentTypeValue,
+    { PROGRAM_PRICE: number; DISCOUNT_PRICE: number }
+> = {
+    [AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM]: {
+        PROGRAM_PRICE: 54,
+        DISCOUNT_PRICE: 4,
+    },
+    [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM]: {
+        PROGRAM_PRICE: 54,
+        DISCOUNT_PRICE: 4,
+    },
+}
 
 export function calculateTotal(
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue,
     selectedClasses: AcuityTypes.Api.Class[],
     discountedClasses: number[],
     numberOfChildren: number,
     discount?: DiscountCode
 ) {
-    const originalTotal = selectedClasses.length * numberOfChildren * PROGRAM_PRICE
+    const originalTotal = selectedClasses.length * numberOfChildren * PRICE_MAP[appointmentTypeId].PROGRAM_PRICE
     let amountDiscounted: number
     if (discount) {
         amountDiscounted = calculateDiscountedAmount(originalTotal, discount)
     } else {
-        amountDiscounted = discountedClasses.length * numberOfChildren * DISCOUNT_PRICE
+        amountDiscounted = discountedClasses.length * numberOfChildren * PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE
     }
     const totalPrice = originalTotal - amountDiscounted
 
@@ -48,4 +61,33 @@ export function getSameDayClasses(classes: AcuityTypes.Api.Class[]) {
     }
 
     return sameDayClasses
+}
+
+export function getProgramName(
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue,
+    selectedStore: string,
+    parentFirstName: string,
+    parentLastName: string
+) {
+    switch (appointmentTypeId) {
+        case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
+        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+            return `${capitalise(selectedStore)} Store Holiday Program - ${parentFirstName} ${parentLastName}`
+        default: {
+            const exhaustiveCheck: never = appointmentTypeId
+            throw new Error(`Unhandled value for getProgramName(): '${exhaustiveCheck}'`)
+        }
+    }
+}
+
+export function getProgramType(appointmentTypeId: AcuityConstants.AppointmentTypeValue) {
+    switch (appointmentTypeId) {
+        case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
+        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+            return 'holiday_program' as const
+        default: {
+            const exhaustiveCheck: never = appointmentTypeId
+            throw new Error(`Unhandled value for getProgramType(): '${exhaustiveCheck}'`)
+        }
+    }
 }
