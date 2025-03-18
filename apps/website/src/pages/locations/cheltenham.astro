@@ -17,7 +17,17 @@ import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
 import faq from "@/assets/images/pages/parties/faq.png";
 
-const carouselImage = await getImage({ src: Smocks, format: "webp" });
+import carousel1Image from "@/assets/images/pages/locations/cheltenham/cheltenham1.jpg";
+import carousel2Image from "@/assets/images/pages/locations/cheltenham/cheltenham2.jpg";
+import carousel3Image from "@/assets/images/pages/locations/cheltenham/cheltenham3.jpg";
+import carousel4Image from "@/assets/images/pages/locations/cheltenham/cheltenham4.jpg";
+import carousel5Image from "@/assets/images/pages/locations/cheltenham/cheltenham5.jpg";
+
+const carousel1 = await getImage({ src: carousel1Image, format: "webp" });
+const carousel2 = await getImage({ src: carousel2Image, format: "webp" });
+const carousel3 = await getImage({ src: carousel3Image, format: "webp" });
+const carousel4 = await getImage({ src: carousel4Image, format: "webp" });
+const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
 ---
 
 <Layout
@@ -106,9 +116,14 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         <p class="mt-4 font-bold">About Fizz Kidz Cheltenham</p>
         <p>
           Light and bright, conveniently located on Bay Rd, our Cheltenham
-          studio is covered in colour, and beaming with fun! The venue has amble
-          4 hour parking right out front, is located opposite Aldi and
-          conveniently just a 4 minute drive from Westfield Southland.
+          studio is covered in colour, and beaming with fun!
+          <ul class="mb-4 list-disc pl-4">
+            <li>Amble four hour parking right out front</li>
+            <li>
+              Located opposite Aldi and conveniently just a 4 minute drive from
+              Westfield Southland! Drop off and get some errands done!
+            </li>
+          </ul>
         </p>
       </div>
     </section>
@@ -183,14 +198,11 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
         client:idle
         loop
         images={[
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
-          { image: carouselImage, alt: "Alt" },
+          { image: carousel1, alt: "Alt" },
+          { image: carousel2, alt: "Alt" },
+          { image: carousel3, alt: "Alt" },
+          { image: carousel4, alt: "Alt" },
+          { image: carousel5, alt: "Alt" },
         ]}
       />
     </section>
@@ -328,30 +340,31 @@ const carouselImage = await getImage({ src: Smocks, format: "webp" });
             client:idle
             items={[
               {
-                question: "When do I choose my creations?",
-                answer: "10 days before your childs upcoming party!",
-              },
-              {
-                question: "When do I let you know numbers?",
+                question:
+                  "How many children can Fizz Kidz accommodate for parties?",
                 answer:
-                  "10 days before your childs upcoming party. We will only charge you for the number of kids that turn up!",
+                  "We accommodate up to 28 children, with a total venue capacity of 35 people.",
               },
               {
-                question: "Can I change the party food if I like?",
-                answer: "Yes we have options!",
-              },
-              {
-                question: "When do you take payment?",
-                answer: "At the end of the party. We do not take any deposit.",
-              },
-              {
-                question: "Can we bring food for parents?",
+                question: "Do parents stay for holiday programs?",
                 answer:
-                  "Sure, please make sure it's nut free and let us know before the party.",
+                  "Our holiday programs are designed as a drop-off experience. However, if a child feels more comfortable with a parent staying, they are welcome to do so.",
               },
               {
-                question: "Can parents stay during the party?",
-                answer: "Sure, parents can stay or drop off.",
+                question: "Does Fizz Kidz accept the Child Care Subsidy (CCS)?",
+                answer:
+                  "Unfortunately, no. Fizz Kidz operates as an entertainment center, which does not fall under the Child Care Subsidy.",
+              },
+              {
+                question: "Where are your Fizz Kidz locations?",
+                answer:
+                  "Fizz Kidz has multiple studio locations! Check out our website or contact us to find your nearest venue. ",
+              },
+              {
+                question:
+                  "How do I find more information about your Fizz Kidz birthday parties?",
+                answer:
+                  "We have lots of party themes for you to choose from! Click here to explore! ",
               },
             ]}
           />
