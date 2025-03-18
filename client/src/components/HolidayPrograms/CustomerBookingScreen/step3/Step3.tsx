@@ -52,7 +52,7 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, sele
     const discountedClasses = useMemo(() => getSameDayClasses(selectedClasses), [selectedClasses])
     const { totalPrice, originalTotal } = useMemo(
         () => calculateTotal(appointmentTypeId, selectedClasses, discountedClasses, form.children.length, discount),
-        [selectedClasses, discountedClasses, discount, form.children]
+        [selectedClasses, discountedClasses, discount, form.children, appointmentTypeId]
     )
     const isFree = totalPrice === 0
 
