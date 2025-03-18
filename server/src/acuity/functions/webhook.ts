@@ -28,6 +28,7 @@ export const asWebhook = onRequest(async (req, resp) => {
     try {
         switch (data.action) {
             case 'canceled':
+                // ONLY HOLIDAY PROGRAMS GET REFUNDED - CURRENTLY OTHER PROGRAMS NOT SUPPORTED (ie kingsville opening)
                 if (isHolidayProgram(data.appointmentTypeID)) {
                     await cancelHolidayProgram(data)
                     resp.status(200).send()
@@ -38,6 +39,7 @@ export const asWebhook = onRequest(async (req, resp) => {
                     return
                 }
             case 'changed':
+                // ONLY HOLIDAY PROGRAMS CHECK IN TO CRM - CURRENTLY OTHER PROGRAMS NOT SUPPORTED (ie kingsville opening)
                 if (isHolidayProgram(data.appointmentTypeID)) {
                     await checkInToCrm(data)
                     resp.status(200).send()

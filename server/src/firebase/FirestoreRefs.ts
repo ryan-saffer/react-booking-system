@@ -26,6 +26,11 @@ export class FirestoreRefs {
         return (await FirestoreClient.getInstance()).collection('bookings').doc(id) as Document<Booking>
     }
 
+    /**
+     * Not used just for holiday programs, but other acuity programs as well, such as studio opening sessions.
+     * Since it's essentially the exact same thing but just with a different appointmentTypeId, reusing
+     * holiday programs is much simpler, and renaming it was too much hastle.
+     */
     static async holidayProgramBooking(paymentIntentId: string) {
         return (await FirestoreClient.getInstance())
             .collection('holidayProgramBookings')

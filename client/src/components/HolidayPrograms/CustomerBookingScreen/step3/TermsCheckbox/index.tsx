@@ -9,7 +9,10 @@ export type TermsCheckboxHandle = {
     showWarning: () => void
 }
 
-const _TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle> = (_, ref) => {
+const _TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle, { showCancellationPolicy: boolean }> = (
+    { showCancellationPolicy },
+    ref
+) => {
     const [termsChecked, setTermsChecked] = useState(false)
 
     useImperativeHandle(ref, () => ({
@@ -46,8 +49,15 @@ const _TermsCheckbox: ForwardRefRenderFunction<TermsCheckboxHandle> = (_, ref) =
                 <Checkbox checked={termsChecked} onChange={(e) => onToggle(e.target.checked)} />
                 <div style={{ cursor: 'pointer', marginLeft: 8 }} onClick={() => onToggle(!termsChecked)}>
                     I have read and agreed to the{' '}
-                    <Typography.Link onClick={(e) => showModal(e, 'cancellation')}>Cancellation Policy</Typography.Link>{' '}
-                    and the <Typography.Link onClick={(e) => showModal(e, 'terms')}>Terms & Conditions</Typography.Link>
+                    {showCancellationPolicy && (
+                        <>
+                            <Typography.Link onClick={(e) => showModal(e, 'cancellation')}>
+                                Cancellation Policy
+                            </Typography.Link>{' '}
+                            and the{' '}
+                        </>
+                    )}
+                    <Typography.Link onClick={(e) => showModal(e, 'terms')}>Terms & Conditions</Typography.Link>
                 </div>
             </div>
             {showTermsWarning && (

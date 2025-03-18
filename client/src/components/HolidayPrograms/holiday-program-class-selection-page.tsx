@@ -1,7 +1,7 @@
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Button, Paper } from '@mui/material'
 import { Skeleton } from '@mui/material'
@@ -75,6 +75,9 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 export const HolidayProgramSelectionPage = () => {
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
+
     const nowRef = useRef(Date.now())
 
     const navigate = useNavigate()
@@ -90,7 +93,7 @@ export const HolidayProgramSelectionPage = () => {
     } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId:
             import.meta.env.VITE_ENV === 'prod'
-                ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                ? appointmentTypeId
                 : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
         includeUnavailable: true,
         minDate: nowRef.current,
@@ -117,10 +120,24 @@ export const HolidayProgramSelectionPage = () => {
         }
     }
 
+    const renderProgramTitle = () => {
+        switch (appointmentTypeId) {
+            case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
+            case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+                return 'Holiday Programs'
+            case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
+                return 'Kingsville Opening'
+            default: {
+                const exhaustive: never = appointmentTypeId
+                throw new Error(`Unhandled appointment type in renderProgramTitle(): ${exhaustive}`)
+            }
+        }
+    }
+
     return (
-        <Root className="dashboard-full-screen flex justify-center bg-slate-100 px-4">
+        <Root className="flex justify-center bg-slate-100 px-4 dashboard-full-screen">
             <div className="w-full max-w-5xl">
-                <h1 className="lilita text-2xl">Holiday Programs</h1>
+                <h1 className="lilita text-2xl">{renderProgramTitle()}</h1>
                 <Paper className={cssClasses.paper}>
                     <div className={cssClasses.main}>
                         {

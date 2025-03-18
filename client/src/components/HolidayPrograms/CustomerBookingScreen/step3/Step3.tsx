@@ -1,15 +1,14 @@
 import { Result } from 'antd'
-import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
+import { capitalise, type AcuityConstants, type AcuityTypes, type DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { capitalise } from '@utils/stringUtilities'
 import { trpc } from '@utils/trpc'
 
-import { DISCOUNT_PRICE, PROGRAM_PRICE, calculateTotal, getSameDayClasses } from '../utilities'
+import { PRICE_MAP, calculateTotal, getProgramName, getProgramType, getSameDayClasses } from '../utilities'
 import BookingSummary from './BookingSummary'
 import DiscountInput from './DiscountInput'
 import FreeConfirmationButton from './FreeConfirmationButton'
@@ -28,12 +27,13 @@ export type ItemSummary = { childName: string; dateTime: string; discounted: boo
 type ChildForm = { childName: string }
 
 type Props = {
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
     selectedClasses: AcuityTypes.Api.Class[]
     selectedStore: string
 }
 
-const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
+const Step3: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, selectedStore }) => {
     const [paymentIntent, setPaymentIntent] = useState({
         id: '',
         clientSecret: '',
@@ -51,7 +51,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
 
     const discountedClasses = useMemo(() => getSameDayClasses(selectedClasses), [selectedClasses])
     const { totalPrice, originalTotal } = useMemo(
-        () => calculateTotal(selectedClasses, discountedClasses, form.children.length, discount),
+        () => calculateTotal(appointmentTypeId, selectedClasses, discountedClasses, form.children.length, discount),
         [selectedClasses, discountedClasses, discount, form.children]
     )
     const isFree = totalPrice === 0
@@ -83,7 +83,11 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             dateTime: item.dateTime,
             // if using a discount code, all individual prices are the full amount
             // if not using a discount code, set according to if each individual item is discounted (ie same day)
-            amount: discount?.code ? PROGRAM_PRICE : item.discounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE,
+            amount: discount?.code
+                ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE
+                : item.discounted
+                  ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE - PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE
+                  : PRICE_MAP[appointmentTypeId].PROGRAM_PRICE,
         }))
 
     // this ref is needed because in strict mode, createPaymentIntent runs twice
@@ -97,10 +101,13 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
                     email: form.parentEmail,
                     phone: form.phone,
                     amount: amount * 100,
-                    description: `${capitalise(selectedStore)} Store Holiday Program - ${form.parentFirstName} ${
+                    description: getProgramName(
+                        appointmentTypeId,
+                        capitalise(selectedStore),
+                        form.parentFirstName,
                         form.parentLastName
-                    }`,
-                    programType: 'holiday_program',
+                    ),
+                    programType: getProgramType(appointmentTypeId),
                     programs: createPriceMap(),
                     discount: discount,
                 })
@@ -167,6 +174,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
     return (
         <>
             <BookingSummary
+                appointmentTypeId={appointmentTypeId}
                 summarisedItems={summarisedList}
                 total={totalPrice}
                 originalTotal={originalTotal !== totalPrice ? originalTotal : undefined}
@@ -177,6 +185,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             {!isFree && (
                 <Elements stripe={stripePromise} options={options}>
                     <Payment
+                        appointmentTypeId={appointmentTypeId}
                         form={form}
                         selectedClasses={selectedClasses}
                         paymentIntentId={paymentIntent.id}
@@ -186,6 +195,7 @@ const Step3: React.FC<Props> = ({ form, selectedClasses, selectedStore }) => {
             )}
             {isFree && discount?.code && (
                 <FreeConfirmationButton
+                    appointmentTypeId={appointmentTypeId}
                     form={form}
                     selectedClasses={selectedClasses}
                     discountCode={discount?.code}

@@ -40,7 +40,7 @@ export const stripeWebhook = onRequest(async (request, response) => {
             logger.log('payment intent succeeded')
             const paymentIntent = event.data.object as Stripe.PaymentIntent
             const metadata = paymentIntent.metadata as Metadata
-            if (metadata.programType === 'holiday_program') {
+            if (metadata.programType === 'holiday_program' || metadata.programType === 'studio_opening') {
                 logger.log('beginning to book holiday programs')
                 try {
                     await bookHolidayPrograms({

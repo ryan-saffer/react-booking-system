@@ -1,11 +1,12 @@
 import { List, Tag, Typography } from 'antd'
-import type { DiscountCode } from 'fizz-kidz'
+import type { AcuityConstants, DiscountCode } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction } from 'react'
 
-import { DISCOUNT_PRICE, PROGRAM_PRICE } from '../utilities'
+import { PRICE_MAP } from '../utilities'
 import { ItemSummary } from './Step3'
 
 type Props = {
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     summarisedItems: ItemSummary[]
     total: number
     discount: DiscountCode | undefined
@@ -13,7 +14,14 @@ type Props = {
     setDiscount: Dispatch<SetStateAction<DiscountCode | undefined>>
 }
 
-const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, originalTotal, setDiscount }) => {
+const BookingSummary: React.FC<Props> = ({
+    appointmentTypeId,
+    summarisedItems,
+    total,
+    discount,
+    originalTotal,
+    setDiscount,
+}) => {
     return (
         <List
             header={<Typography.Title level={4}>Booking summary</Typography.Title>}
@@ -50,13 +58,18 @@ const BookingSummary: React.FC<Props> = ({ summarisedItems, total, discount, ori
                                 {item.childName} - {item.dateTime}
                             </Typography.Text>
                             <Typography.Text style={{ textAlign: 'end' }}>
-                                ${(isDiscounted ? PROGRAM_PRICE - DISCOUNT_PRICE : PROGRAM_PRICE).toFixed(2)}{' '}
-                                {isDiscounted && <del>(${PROGRAM_PRICE.toFixed(2)})</del>}
+                                $
+                                {(isDiscounted
+                                    ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE -
+                                      PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE
+                                    : PRICE_MAP[appointmentTypeId].PROGRAM_PRICE
+                                ).toFixed(2)}{' '}
+                                {isDiscounted && <del>(${PRICE_MAP[appointmentTypeId].PROGRAM_PRICE.toFixed(2)})</del>}
                             </Typography.Text>
                         </div>
                         {isDiscounted && (
                             <Tag color="green" style={{ marginTop: 4 }}>
-                                All day discount: -${DISCOUNT_PRICE.toFixed(2)}
+                                All day discount: -${PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE.toFixed(2)}
                             </Tag>
                         )}
                     </List.Item>

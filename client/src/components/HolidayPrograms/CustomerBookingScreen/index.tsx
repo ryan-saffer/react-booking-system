@@ -12,6 +12,7 @@ import { trpc } from '@utils/trpc'
 import Step1 from './step1/Step1'
 import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
+import { useSearchParams } from 'react-router-dom'
 
 const { Step } = Steps
 
@@ -33,6 +34,9 @@ export type Form = {
 }
 
 export const CustomerBookingScreen = () => {
+    const [searchParams] = useSearchParams()
+    const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
+
     const nowRef = useRef(Date.now())
 
     const [formValues, setFormValues] = useState<Partial<Form>>({})
@@ -48,7 +52,7 @@ export const CustomerBookingScreen = () => {
     const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId:
             import.meta.env.VITE_ENV === 'prod'
-                ? AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM
+                ? appointmentTypeId
                 : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
         includeUnavailable: true,
         minDate: nowRef.current,
@@ -90,6 +94,7 @@ export const CustomerBookingScreen = () => {
                 case 1:
                     return (
                         <Step1
+                            appointmentTypeId={appointmentTypeId}
                             classes={data}
                             selectedClasses={selectedClasses}
                             selectedStore={selectedStore}
@@ -102,6 +107,7 @@ export const CustomerBookingScreen = () => {
                 case 3:
                     return (
                         <Step3
+                            appointmentTypeId={appointmentTypeId}
                             form={formValues as Form}
                             selectedClasses={selectedClasses}
                             selectedStore={selectedStore}
