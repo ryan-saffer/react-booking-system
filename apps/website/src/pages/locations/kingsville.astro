@@ -1,0 +1,482 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import kingsville from "@/assets/images/pages/locations/kingsville.png";
+import birthday from "@/assets/images/pages/locations/kingsville/birthday.jpg";
+import holidayPrograms from "@/assets/images/pages/locations/kingsville/holiday-programs.jpg";
+import contact from "@/assets/images/pages/locations/kingsville/contact.jpg";
+import slime from "@/assets/images/pages/locations/kingsville/slime.jpg";
+import { getImage, Image } from "astro:assets";
+import CardWithImage from "@/components/card-with-image.astro";
+import ImageCarousel from "@/components/react/image-carousel";
+// import Reviews from "@/components/reviews.astro";
+import blueWave from "@/assets/images/pages/locations/blue-wave.svg";
+import yellowWave from "@/assets/images/pages/locations/yellow-wave.svg";
+import Values from "@/components/values.astro";
+import FaqAccordion from "@/components/react/faq-accordion";
+import faq from "@/assets/images/pages/parties/faq.png";
+import opening1 from "@/assets/images/pages/locations/kingsville/opening1.jpg";
+import opening2 from "@/assets/images/pages/locations/kingsville/opening2.png";
+import opening3 from "@/assets/images/pages/locations/kingsville/opening3.png";
+
+import carousel1Image from "@/assets/images/pages/locations/kingsville/kingsville1.jpg";
+import carousel2Image from "@/assets/images/pages/locations/kingsville/kingsville2.jpg";
+import carousel3Image from "@/assets/images/pages/locations/kingsville/kingsville3.jpg";
+import carousel4Image from "@/assets/images/pages/locations/kingsville/kingsville4.jpg";
+import carousel5Image from "@/assets/images/pages/locations/kingsville/kingsville5.jpg";
+import { Button } from "@/components/react/ui/button";
+
+const carousel1 = await getImage({ src: carousel1Image, format: "webp" });
+const carousel2 = await getImage({ src: carousel2Image, format: "webp" });
+const carousel3 = await getImage({ src: carousel3Image, format: "webp" });
+const carousel4 = await getImage({ src: carousel4Image, format: "webp" });
+const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
+---
+
+<Layout
+  title="Kingsville | Fizz Kidz"
+  description="Kingsville birthday parties, holiday programs, toddler programs and more!"
+>
+  <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <BreadcrumbWrapper
+      client:idle
+      items={[
+        {
+          type: "link",
+          title: "Locations",
+          path: "/locations",
+        },
+        {
+          type: "dropdown",
+          title: "Kingsville",
+          items: [
+            {
+              type: "link",
+              path: "/locations/balwyn",
+              title: "Balwyn",
+            },
+            {
+              type: "link",
+              path: "/locations/cheltenham",
+              title: "Cheltenham",
+            },
+            {
+              type: "link",
+              path: "/locations/essendon",
+              title: "Essendon",
+            },
+            {
+              type: "link",
+              path: "/locations/kingsville",
+              title: "Kingsville",
+            },
+            {
+              type: "link",
+              path: "/locations/malvern",
+              title: "Malvern",
+            },
+          ],
+        },
+      ]}
+    />
+    <PageIntro
+      image={kingsville}
+      imageAlt="A picture of the kingsville studio"
+      subtitle="Fizz Kidz in Melbourne's West!"
+      color="purple"
+      actionButtonPath="/contact-us"
+      actionButtonText="Get in touch"
+    >
+      <span slot="title">Fizz Kidz Kingsville Studio</span>
+      <span slot="content"
+        >Our brand-new Kingsville studio is a bright, engaging space designed
+        for hands-on creativity, where kids can explore, experiment, and bring
+        their ideas to life!
+      </span>
+    </PageIntro>
+  </div>
+  <Image
+    src={yellowWave}
+    alt="yellow background wave"
+    class="left-0 right-0 mt-12 w-screen"
+  />
+  <div class="bg-[#FFDC5D] py-4">
+    <div class="m-auto block max-w-[1380px] px-5">
+      <p class="text-center font-lilita text-6xl">Kingsville Open Day</p>
+      <p class="mt-6 text-center font-gotham text-xl font-semibold">
+        Join us for our Fizz Kidz Kingsville Open Day! 🎉<br />
+        Choose your favourite session and join us in celevrating the opening of our
+        new Melbourne West Studio!<br />Each session is just $10, so grab your
+        spot and get ready for an AWESOME hands-on experience.<br />
+        <u>Limited spots available, we suggest you book ASAP.</u><br />We can't
+        wait to see you there!
+      </p>
+      <a
+        href="https://bookings.fizzkidz.com.au/programs?id=75381458"
+        class="mt-6 flex justify-center"
+      >
+        <Button
+          className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+        >
+          Book Now
+        </Button>
+      </a>
+      <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <CardWithImage image={opening1} imageAlt="two messy kids">
+          <div slot="content" class="p-8">
+            <p class="font-lilita text-3xl text-[#9044E2]">
+              Under 5's Potions Session
+            </p>
+            <p class="mt-2 font-semibold">
+              Friday 25th April<br />10:00am - 11:00am
+            </p>
+            <p class="mt-2">
+              A fun and interactive toddler exploration session where little
+              ones play, create, and get messy! Share a special memory with your
+              child or watch in awe as they immerse themselves in our sensory
+              wonderland.
+            </p>
+          </div>
+        </CardWithImage>
+        <CardWithImage image={opening2} imageAlt="two messy kids">
+          <div slot="content" class="p-8">
+            <p class="font-lilita text-3xl text-[#9DCC46]">
+              Chemical Reactions
+            </p>
+            <p class="mt-2 font-semibold">
+              Friday 25th April<br />11:30am - 12:30pm
+            </p>
+            <ul class="mb-4 mt-2 list-disc pl-4">
+              <li>Bubbling Volcano</li>
+              <li>Fizzy Bath Bombs</li>
+              <li>Space Spin Tops</li>
+            </ul>
+          </div>
+        </CardWithImage>
+        <CardWithImage image={opening3} imageAlt="two messy kids">
+          <div slot="content" class="p-8">
+            <p class="font-lilita text-3xl text-[#4DC5D9]">Roaring Rainbows</p>
+            <p class="mt-2 font-semibold">
+              Friday 25th April<br />1:00pm - 2:00pm
+            </p>
+            <ul class="mb-4 mt-2 list-disc pl-4">
+              <li>Drip Paint Fluid Bears</li>
+              <li>Rainbow Sparkle Slime</li>
+              <li>Tie Dye Splash Pillow Cases</li>
+            </ul>
+          </div>
+        </CardWithImage>
+      </div>
+      <a
+        href="https://bookings.fizzkidz.com.au/programs?id=75381458"
+        class="mt-6 flex justify-center"
+      >
+        <Button
+          className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+        >
+          Book Now
+        </Button>
+      </a>
+    </div>
+  </div>
+  <Image
+    src={yellowWave}
+    alt="yellow background wave"
+    class="left-0 right-0 w-screen rotate-180"
+  />
+  <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <p class="mt-36 text-center font-lilita text-5xl">
+      Brand-New Creative Hub in the Heart of Kingsville!
+    </p>
+    <section
+      class="my-12 flex flex-col-reverse gap-8 md:pb-12 md:pt-16 lg:flex-row"
+    >
+      <div class="px-0 sm:px-12 lg:w-1/2">
+        <Image
+          class="rounded-2xl object-contain shadow-green-sm sm:shadow-green-md"
+          src={slime}
+          alt="Two Fizz Kids staff standing under an archway"
+        />
+      </div>
+      <div class="flex flex-col justify-center lg:w-1/2">
+        <p class="font-bold">Fizz Kidz Kingsville Studio</p>
+        <p>238 Somerville Rd, Kingsville VIC 3012</p>
+        <p class="mt-4 font-bold">Phone</p>
+        <p><a href="tel:0390598144">(03) 9059 8144</a></p>
+        <p class="mt-4 font-bold">Email</p>
+        <p>
+          <a href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>
+        </p>
+        <p class="mt-4 font-bold">About Fizz Kidz Kingsville</p>
+        <p>
+          Our brand-new Kingsville studio is the perfect place for kids to
+          unleash their creativity, have fun, and get messy!
+          <ul class="mb-4 list-disc pl-4">
+            <li>
+              Conveniently located on Somerville Road, making it easy to access.
+            </li>
+            <li>A large, open space for kids to dance, create, and explore.</li>
+            <li>
+              A cozy café just meters away, perfect for parents to grab a
+              coffee!
+            </li>
+            <li>
+              Ample parking available nearby for easy drop-offs and pick-ups.
+            </li>
+            <li>
+              We're thrilled to bring the magic of Fizz Kidz to Melbourne's
+              west—come celebrate, create, and have a blast with us in
+              Kingsville!
+            </li>
+          </ul>
+        </p>
+      </div>
+    </section>
+    <section class="mb-12 md:mb-20">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.0633660584967!2d144.8752550775895!3d-37.81198473393911!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad667ed880855ef%3A0x4570623e7fb50814!2sFizz%20Kidz%20(Kingsville%2C%20VIC)!5e0!3m2!1sen!2sau!4v1742120947777!5m2!1sen!2sau"
+        width="100%"
+        height="450"
+        style="border:0;border-radius:12px"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </section>
+    <section class="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <a href="/birthday-parties">
+        <CardWithImage
+          className="group h-full w-full cursor-pointer"
+          image={birthday}
+          imageAlt="Kids holding slime"
+        >
+          <div
+            slot="content"
+            class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
+          >
+            <p class="mb-4 font-lilita text-2xl text-[#9044E2]">
+              Birthday Parties
+            </p>
+            <p class="font-gotham text-lg">
+              Celebrate with a fun-filled, hands-on party at Fizz Kidz Essendon,
+              where kids create and take home amazing creations!
+            </p>
+          </div>
+        </CardWithImage>
+      </a>
+      <a href="/holiday-programs">
+        <CardWithImage
+          className="group h-full w-full cursor-pointer"
+          image={holidayPrograms}
+          imageAlt="Kids holding slime"
+        >
+          <div slot="content" class="p-8 group-hover:bg-gray-50">
+            <p class="mb-4 font-lilita text-2xl text-[#9044E2]">
+              Holiday Programs
+            </p>
+            <p class="font-gotham text-lg">
+              Keep your kids engaged and having fun during the holidays at Fizz
+              Kidz Kingsville! Come and enjoy exciting new hands-on activities
+              that spark your kids imagination!
+            </p>
+          </div>
+        </CardWithImage>
+      </a>
+      <a href="/contact-us">
+        <CardWithImage
+          className="group h-full w-full cursor-pointer"
+          image={contact}
+          imageAlt="Kids holding slime"
+        >
+          <div slot="content" class="p-8 group-hover:bg-gray-50">
+            <p class="mb-4 font-lilita text-2xl text-[#9044E2]">Contact Us</p>
+            <p class="font-gotham text-lg">
+              Have questions or would like to chat? Get in touch with our
+              Kingsville team, we would love to help!
+            </p>
+          </div>
+        </CardWithImage>
+      </a>
+    </section>
+    <section class="mt-24">
+      <p class="text-center font-lilita text-3xl">Kingsville Studio Gallery</p>
+      <ImageCarousel
+        client:idle
+        loop
+        images={[
+          { image: carousel1, alt: "Alt" },
+          { image: carousel2, alt: "Alt" },
+          { image: carousel3, alt: "Alt" },
+          { image: carousel4, alt: "Alt" },
+          { image: carousel5, alt: "Alt" },
+        ]}
+      />
+    </section>
+    <!-- <section>
+      <Reviews
+        title="Hear what our parents have to say!"
+        reviews={[
+          {
+            review:
+              "My 7 year old daughters had an awesome birthday party at Fizz Kidz. Brendan and Lilly were excellent hosts - engaging, helpful and the kids thought they were very funny. I self catered but they still helped set up and serve the food. The party guests all loved taking home their sparkly slime and lip balm. Highly recommend.",
+            writtenBy: "Julia",
+            writtenYear: "February 2025",
+          },
+          {
+            review:
+              "When I asked my daughter, turning 7 this year, what party she wanted she immediately said Fizz Kids. She had her 6 year old part at the Malvern venue and clearly it made an impression! We were happy to book it again so that is saying something. This year we went to Cheltenham and if I was to pick a venue it would probably be this one simply because it is so light and airy and spacious plus parking is so easy (logistics matters, people!). That said we would also happily go back to Malvern. We have now had two parties at Fizz Kids and can confidently say it has been a great experience both times. The venues are set up perfectly, the hosts are so great with kids and keeping things fun and interesting and the activities are perfect. Our hosts (Ben and I think Lilly? Sorry if I go the name wrong!) were fantastic and immediately started interacting with Charlie when we arrived 10 minutes early. They also adapted so quickly to her needs (yelling happy birthday upset her as she's sensitive to noise at the moment so Ben quickly changed it to the best whisper of Happy Birthday). They are also so flexible and great communicators throughout the booking and lead up. You only get charged for the kids that go and we had a few extras on the day without any problems at all. I would not be surprised if my daughter asks for it again for her 8th birthday and we would happily oblige.",
+            writtenBy: "Sara",
+            writtenYear: "November 2024",
+          },
+          {
+            review:
+              "We didn't know what to expect. It was amazing. The team is fantastic with kids. Getting them involved and excited. Everyone loved it",
+            writtenBy: "Hala",
+            writtenYear: "November 2024",
+          },
+          {
+            review:
+              "The kids had a great time there. There were 2 hosts who were fully focused on keeping the kids entertained and helping them out with the activities. They were on time, well organised and managed the kids well. A good stress free venue kids parties !",
+            writtenBy: "Abhi",
+            writtenYear: "October 2024",
+          },
+        ]}
+      />
+    </section> -->
+  </div>
+  <Image
+    src={blueWave}
+    alt="blue background wave"
+    class="left-0 right-0 w-screen"
+  />
+  <div class="bg-[#43D4F3]">
+    <div class="m-auto block max-w-[1380px] px-5 pt-4">
+      <p class="h2 text-lg font-bold">
+        THE ULTIMATE KIDS PARTY AND HOLIDAY PROGRAM VENUE IN KINGSVILLE,
+        MELBOURNE VIC
+      </p>
+      <p class="h2 mt-2">
+        Welcome to Fizz Kidz - Kingsville's Most Creative Kids Party & Activity
+        Venue
+      </p>
+      <p class="mt-2">
+        Located in the heart of <strong>Kingsville, Melbourne VIC</strong>, Fizz
+        Kidz is the go-to destination for
+        <strong
+          >fun, hands-on kids' parties and exciting school holiday programs.
+        </strong> Our bright and energetic studio is designed to <strong
+          >spark creativity and deliver unforgettable experiences,</strong
+        > making every visit full of <strong>
+          laughter, learning, and interactive fun.
+        </strong>
+      </p>
+      <p class="h2 mt-4 text-lg font-bold">
+        Unforgettable Kids' Birthday Parties at Fizz Kidz Kingsville
+      </p>
+      <p>
+        Looking for the <strong>best kids' party venue in Kingsville?</strong> Fizz
+        Kidz specializes in <strong>creative birthday parties</strong>, where
+        kids can <strong
+          >make slime, mix bath bombs, design tie-dye creations, and more!</strong
+        > Our <strong>high-energy party hosts</strong> ensure a seamless and engaging
+        experience, with plenty of fun activities, party games, and take-home creations
+        for every child.
+      </p>
+      <p class="h2 mt-4 text-lg font-bold">
+        Your Go-To School Holiday Program in Kingsville
+      </p>
+      <p>
+        Fizz Kidz <strong>holiday programs</strong> keep kids entertained with hands-on,
+        themed activities like <strong
+          >science experiments, arts and crafts, and sensory</strong
+        > play. Perfect for keeping kids engaged, inspired, and having fun during
+        the school break!
+      </p>
+      <p class="h2 mt-4 text-lg font-bold">
+        A Fun-Filled Venue for Kids' Activities in Kingsville
+      </p>
+      <p>
+        Beyond birthday parties and holiday programs, our Kingsville studio is
+        the perfect place for <strong
+          >kids' workshops, incursions, and special events.</strong
+        >
+        Whether you're looking for a <strong
+          >stress-free party experience</strong
+        > or a creative activity to keep little hands busy, Fizz Kidz has something
+        for everyone.
+      </p><p class="h2 mt-4 text-lg font-bold">
+        Join the Fun at Fizz Kidz Kingsville!
+      </p>
+      <p>
+        We invite you to <strong>discover the magic of Fizz Kidz</strong> — where
+        kids can explore, create, and celebrate in a vibrant, hands-on environment.
+        Whether you're planning a <strong
+          >birthday party, school holiday activity, or special event,</strong
+        >
+        we're here to make it <strong
+          >exciting, fun, and completely hassle-free.</strong
+        >
+      </p>
+      <p class="h2 mt-4 text-lg font-bold">Contact Us</p>
+      <p>
+        Visit <strong>Fizz Kidz Kingsville, Melbourne VIC,</strong> or get in touch
+        to book your next <strong>party, workshop, or holiday program.</strong> Let's
+        create something amazing together!
+      </p>
+    </div>
+  </div>
+  <Image
+    src={blueWave}
+    alt="blue background wave"
+    class="left-0 right-0 w-screen rotate-180"
+  />
+  <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <section class="md:my-18 my-12">
+      <h6 class="mb-4 text-center font-lilita text-4xl md:text-5xl">
+        Frequently Asked Questions
+      </h6>
+      <div class="flex w-full flex-col items-center gap-8 md:flex-row">
+        <Image
+          class="hidden w-2/5 md:block"
+          src={faq}
+          alt="Three girls smiling"
+        />
+        <div class="w-full md:w-3/5">
+          <FaqAccordion
+            client:idle
+            items={[
+              {
+                question:
+                  "How many children can Fizz Kidz accommodate for parties?",
+                answer:
+                  "We accommodate up to 28 children, with a total venue capacity of 35 people.",
+              },
+              {
+                question: "Do parents stay for holiday programs?",
+                answer:
+                  "Our holiday programs are designed as a drop-off experience. However, if a child feels more comfortable with a parent staying, they are welcome to do so.",
+              },
+              {
+                question: "Does Fizz Kidz accept the Child Care Subsidy (CCS)?",
+                answer:
+                  "Unfortunately, no. Fizz Kidz operates as an entertainment center, which does not fall under the Child Care Subsidy.",
+              },
+              {
+                question: "Where are your Fizz Kidz locations?",
+                answer:
+                  "Fizz Kidz has multiple studio locations! Check out our website or contact us to find your nearest venue. ",
+              },
+              {
+                question:
+                  "How do I find more information about your Fizz Kidz birthday parties?",
+                answer:
+                  "We have lots of party themes for you to choose from! Click here to explore! ",
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </section>
+    <Values />
+  </div>
+</Layout>

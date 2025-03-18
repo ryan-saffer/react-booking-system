@@ -8,9 +8,15 @@ import {
 
 import type { CustomImage } from "@/types/types";
 
-function ImageCarousel({ images }: { images: CustomImage[] }) {
+function ImageCarousel({
+  images,
+  loop = false,
+}: {
+  images: CustomImage[];
+  loop?: boolean;
+}) {
   return (
-    <Carousel className="m-12">
+    <Carousel className="m-12" opts={{ loop }}>
       <CarouselContent>
         {images.map((image, idx) => (
           <CarouselItem

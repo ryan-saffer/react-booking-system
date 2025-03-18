@@ -126,6 +126,20 @@ export const menu = [
     type: "link",
     path: "/activations-and-events/",
   },
+  {
+    title: "Locations",
+    type: "dropdown",
+    clickable: true,
+    path: "/locations",
+    subTitle: "See All Locations",
+    items: [
+      { type: "link", path: "/locations/balwyn", title: "Balwyn" },
+      { type: "link", path: "/locations/cheltenham", title: "Cheltenham" },
+      { type: "link", path: "/locations/essendon", title: "Essendon" },
+      { type: "link", path: "/locations/kingsville", title: "Kingsville" },
+      { type: "link", path: "/locations/malvern", title: "Malvern" },
+    ],
+  },
   { type: "link", title: "Careers", path: "/careers/" },
   // { title: "Franchising", type: "link", path: "/franchising/" },
   {
@@ -138,7 +152,6 @@ export const menu = [
         title: "Contact Us",
         path: "/contact-us/",
       },
-      { type: "link", title: "Locations", path: "/locations/" },
       { type: "link", title: "Our Team", path: "/our-team/" },
       // { type: "link", title: "Franchising", path: "/franchising" },
       { type: "link", title: "Policies", path: "/policies/" },
