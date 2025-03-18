@@ -126,7 +126,7 @@ export class MailClient {
                     template: 'holiday_program_confirmation.mjml',
                     useMjml: true,
                 }
-            case 'holidayProgramHalloweenConfirmation':
+            case 'kingsvilleOpeningConfirmation':
                 return {
                     emailInfo: {
                         to,
@@ -134,10 +134,10 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        subject: subject || 'Halloween program booking confirmation',
+                        subject: subject || 'Kingsville open day booking confirmation',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
-                    template: 'holiday_program_halloween_confirmation.mjml',
+                    template: 'kingsville_opening_confirmation.mjml',
                     useMjml: true,
                 }
             case 'afterSchoolEnrolmentConfirmation':

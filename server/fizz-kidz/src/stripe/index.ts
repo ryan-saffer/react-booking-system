@@ -7,7 +7,7 @@ export type CreatePaymentIntentParams = {
     amount: number
     description: string
     programs: { childName: string; dateTime: string; amount: number }[]
-    programType: 'holiday_program' | 'science_club'
+    programType: 'holiday_program' | 'science_club' | 'studio_opening'
     discount: DiscountCode | undefined
 }
 
@@ -17,7 +17,7 @@ export type CreatePaymentIntentResponse = {
 }
 
 export type Metadata = {
-    programType: 'holiday_program' | 'science_club'
+    programType: 'holiday_program' | 'science_club' | 'studio_opening'
     discount: string
     programCount: string
 }

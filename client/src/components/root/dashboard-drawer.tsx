@@ -64,7 +64,7 @@ export function DashboardDrawer({
                             icon={<PartyPopper className="mr-2 h-4 w-4" />}
                         />
                         <NavItem
-                            to="holiday-program"
+                            to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '11036399' : '15026605'}`}
                             label="Holiday Programs"
                             icon={<Calendar className="mr-2 h-4 w-4" />}
                             onClick={closeDrawer}
@@ -128,13 +128,14 @@ export function DashboardDrawer({
 }
 
 function NavItem({ to, label, icon, onClick }: { to: string; label: string; icon: ReactNode; onClick: () => void }) {
-    const { pathname } = useLocation()
+    const location = useLocation()
     return (
         <Link
             onClick={onClick}
             to={to}
             className={cn('z-[100] flex items-center rounded-xl p-3 hover:bg-slate-200', {
-                'bg-[#B14594] text-white hover:bg-[#a23f88]': pathname === `/dashboard/${to}`,
+                'bg-[#B14594] text-white hover:bg-[#a23f88]':
+                    `${location.pathname}${location.search}` === `/dashboard/${to}`,
             })}
         >
             {icon}

@@ -1,5 +1,11 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import { AcuityTypes, AcuityUtilities, FreeHolidayProgramBooking, PaidHolidayProgramBooking } from 'fizz-kidz'
+import {
+    AcuityConstants,
+    AcuityTypes,
+    AcuityUtilities,
+    FreeHolidayProgramBooking,
+    PaidHolidayProgramBooking,
+} from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
@@ -132,7 +138,8 @@ export async function bookHolidayPrograms(
 
     // tracking
     const location = AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId)
-    if (location !== 'test') {
+    // not currently tracking other programs (ie kingsville opening)
+    if (location !== 'test' && firstProgram.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM) {
         const mixpanel = await MixpanelClient.getInstance()
 
         const uniqueChildNamesCount = new Set(programs.map((b) => b.childName)).size

@@ -387,7 +387,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'holiday-programs',
+                path: 'programs',
                 children: [
                     {
                         index: true,

@@ -19,7 +19,11 @@ export const Navigation = () => {
                 <h2 className="lilita mb-3 mt-8 text-2xl">Programs</h2>
                 <div className="flex flex-col gap-3">
                     <ListItem title="Parties, Events & Incursions" to="bookings" imgSrc={parties} />
-                    <ListItem title="Holiday Programs" to="holiday-program" imgSrc={holidayPrograms} />
+                    <ListItem
+                        title="Holiday Programs"
+                        to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '11036399' : '15026605'}`}
+                        imgSrc={holidayPrograms}
+                    />
                     <ListItem title="After School Program" to="after-school-program" imgSrc={afterSchool} />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>

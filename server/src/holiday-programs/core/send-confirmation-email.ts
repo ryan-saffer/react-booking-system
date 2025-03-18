@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 
 import { MailClient } from '../../sendgrid/MailClient'
 import { Emails } from '../../sendgrid/types'
-import { logError } from '../../utilities'
 
 export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appointment[]) {
     const sortedAppointments = appointments.sort((a, b) => {
@@ -20,9 +19,8 @@ export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appoin
         return a.datetime < b.datetime ? -1 : a.datetime > b.datetime ? 1 : child1Name < child2Name ? 1 : -1
     })
     const bookings: Emails['holidayProgramConfirmation']['bookings'] = sortedAppointments.map((appointment) => {
-        const isHalloween = appointment.datetime.includes('2024-10-31')
         const startTime = DateTime.fromISO(appointment.datetime, { setZone: true })
-        const endTime = isHalloween ? startTime.plus({ hours: 1 }) : startTime.plus({ hours: 2, minutes: 30 })
+        const endTime = startTime.plus({ minutes: parseInt(appointment.duration) })
         return {
             datetime: `${AcuityUtilities.retrieveFormAndField(
                 appointment,
@@ -33,30 +31,31 @@ export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appoin
         }
     })
 
-    const isHalloween = bookings.some((it) => it.datetime.includes('Oct 31'))
-    const includesNotHalloween = bookings.some((it) => !it.datetime.includes('Oct 31'))
-
-    if (isHalloween && includesNotHalloween) {
-        logError('A parent has booked into both the holiday program and halloween program at the same time', null, {
-            appointments,
-        })
-    }
-
     const mailClient = await MailClient.getInstance()
-    if (isHalloween) {
-        await mailClient.sendEmail('holidayProgramHalloweenConfirmation', appointments[0].email, {
-            parentName: appointments[0].firstName,
-            location: `Fizz Kidz ${appointments[0].calendar}`,
-            address: appointments[0].location,
-            bookings,
-        })
-    } else {
-        await mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
-            parentName: appointments[0].firstName,
-            location: `Fizz Kidz ${appointments[0].calendar}`,
-            address: appointments[0].location,
-            bookings,
-        })
+
+    const appointmentTypeId = sortedAppointments[0].appointmentTypeID as AcuityConstants.AppointmentTypeValue
+    switch (appointmentTypeId) {
+        case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
+        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+            await mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
+                parentName: appointments[0].firstName,
+                location: `Fizz Kidz ${appointments[0].calendar}`,
+                address: appointments[0].location,
+                bookings,
+            })
+            break
+        case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
+            await mailClient.sendEmail('kingsvilleOpeningConfirmation', appointments[0].email, {
+                parentName: appointments[0].firstName,
+                location: `Fizz Kidz ${appointments[0].calendar}`,
+                address: appointments[0].location,
+                bookings,
+            })
+            break
+        default: {
+            const exhaustiveCheck: never = appointmentTypeId
+            throw new Error(`Unhandled booking confirmation email for program with id: ${exhaustiveCheck}`)
+        }
     }
     return
 }

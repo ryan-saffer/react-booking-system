@@ -1,4 +1,3 @@
-import { capitalise } from '@utils/stringUtilities'
 import { AcuityConstants, AcuityTypes, DiscountCode } from 'fizz-kidz'
 
 export const PRICE_MAP: Record<
@@ -12,6 +11,10 @@ export const PRICE_MAP: Record<
     [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM]: {
         PROGRAM_PRICE: 54,
         DISCOUNT_PRICE: 4,
+    },
+    [AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING]: {
+        PROGRAM_PRICE: 10,
+        DISCOUNT_PRICE: 0,
     },
 }
 
@@ -72,7 +75,9 @@ export function getProgramName(
     switch (appointmentTypeId) {
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
         case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
-            return `${capitalise(selectedStore)} Store Holiday Program - ${parentFirstName} ${parentLastName}`
+            return `${selectedStore} Store Holiday Program - ${parentFirstName} ${parentLastName}`
+        case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
+            return `${selectedStore} Studio Opening - ${parentFirstName} ${parentLastName}`
         default: {
             const exhaustiveCheck: never = appointmentTypeId
             throw new Error(`Unhandled value for getProgramName(): '${exhaustiveCheck}'`)
@@ -85,6 +90,8 @@ export function getProgramType(appointmentTypeId: AcuityConstants.AppointmentTyp
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
         case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
             return 'holiday_program' as const
+        case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
+            return 'studio_opening' as const
         default: {
             const exhaustiveCheck: never = appointmentTypeId
             throw new Error(`Unhandled value for getProgramType(): '${exhaustiveCheck}'`)

@@ -34,12 +34,13 @@ export async function createPaymentIntent(input: CreatePaymentIntentParams) {
     })
 
     if (paymentIntent.client_secret) {
-        // analytics
-        const mixpanel = await MixpanelClient.getInstance()
-        await mixpanel.track('holiday-program-checkout-reached', {
-            distinct_id: input.email,
-        })
-
+        if (input.programType === 'holiday_program') {
+            // analytics
+            const mixpanel = await MixpanelClient.getInstance()
+            await mixpanel.track('holiday-program-checkout-reached', {
+                distinct_id: input.email,
+            })
+        }
         return {
             id: paymentIntent.id,
             clientSecret: paymentIntent.client_secret,

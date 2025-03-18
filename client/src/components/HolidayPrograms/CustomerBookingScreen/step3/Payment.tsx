@@ -125,7 +125,7 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, pa
             //`Elements` instance that was used to create the Payment Element
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/holiday-programs/confirmation`,
+                return_url: `${window.location.origin}/programs/confirmation`,
                 receipt_email: form.parentEmail,
             },
         })
@@ -153,7 +153,10 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, pa
             <Checkbox className="mt-4" onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
                 Keep me informed about the latest Fizz Kidz programs and offers.
             </Checkbox>
-            <TermsCheckbox ref={termsRef} />
+            <TermsCheckbox
+                ref={termsRef}
+                showCancellationPolicy={appointmentTypeId !== AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING}
+            />
             <Button
                 ref={submitButtonRef}
                 className={classes.primaryButton}

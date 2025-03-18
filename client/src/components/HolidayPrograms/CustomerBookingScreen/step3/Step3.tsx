@@ -1,5 +1,5 @@
 import { Result } from 'antd'
-import type { AcuityConstants, AcuityTypes, DiscountCode } from 'fizz-kidz'
+import { capitalise, type AcuityConstants, type AcuityTypes, type DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -103,7 +103,7 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, sele
                     amount: amount * 100,
                     description: getProgramName(
                         appointmentTypeId,
-                        selectedStore,
+                        capitalise(selectedStore),
                         form.parentFirstName,
                         form.parentLastName
                     ),
@@ -195,6 +195,7 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, sele
             )}
             {isFree && discount?.code && (
                 <FreeConfirmationButton
+                    appointmentTypeId={appointmentTypeId}
                     form={form}
                     selectedClasses={selectedClasses}
                     discountCode={discount?.code}

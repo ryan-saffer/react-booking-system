@@ -1,5 +1,5 @@
 import { Button, Checkbox } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -24,13 +24,20 @@ const Root = styled('div')({
 })
 
 type Props = {
+    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
     selectedClasses: AcuityTypes.Api.Class[]
     discountCode: string
     setError: Dispatch<SetStateAction<boolean>>
 }
 
-const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discountCode, setError }) => {
+const FreeConfirmationButton: React.FC<Props> = ({
+    appointmentTypeId,
+    form,
+    selectedClasses,
+    discountCode,
+    setError,
+}) => {
     const navigate = useNavigate()
 
     const termsRef = useRef<TermsCheckboxHandle>(null)
@@ -72,7 +79,7 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
                     }))
                 )
             )
-            navigate('/holiday-programs/confirmation?free=true')
+            navigate('/programs/confirmation?free=true')
         } catch {
             setError(true)
             setSubmitting(false)
@@ -84,7 +91,10 @@ const FreeConfirmationButton: React.FC<Props> = ({ form, selectedClasses, discou
             <Checkbox onChange={(e) => setJoinMailingList(e.target.checked)} checked={joinMailingList}>
                 Keep me informed about the latest Fizz Kidz programs and offers.
             </Checkbox>
-            <TermsCheckbox ref={termsRef} />
+            <TermsCheckbox
+                ref={termsRef}
+                showCancellationPolicy={appointmentTypeId !== AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING}
+            />
             <Button
                 className={classes.primaryButton}
                 block
