@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { GenerateInvitation, InvitationOption, getLocationAddress } from 'fizz-kidz'
+import { GenerateInvitation, InvitationOption, addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
@@ -38,6 +38,7 @@ export async function generateInvitation(input: GenerateInvitation) {
     const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, {
         ...input,
+        childAge: addOrdinalSuffix(input.childAge),
         date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
