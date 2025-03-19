@@ -3,14 +3,16 @@ import dayjs from 'dayjs'
 import React, { useState } from 'react'
 
 import { SimpleTextRule } from '@utils/formUtils'
+import { AcuityConstants } from 'fizz-kidz'
 
 const { TextArea } = Input
 
 type Props = {
+    appointmentTypeId: number
     childNumber: number
 }
 
-export const ChildForm: React.FC<Props> = ({ childNumber }) => {
+export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) => {
     const [hasAllergies, setHasAllergies] = useState(false)
 
     return (
@@ -25,13 +27,22 @@ export const ChildForm: React.FC<Props> = ({ childNumber }) => {
             <Form.Item
                 name={[childNumber, 'childAge']}
                 label="Child's date of birth"
-                extra={'The minimum age is 4 years old, and all children must be completely toilet trained 😊'}
+                extra={
+                    appointmentTypeId !== AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING &&
+                    'The minimum age is 4 years old, and all children must be completely toilet trained 😊'
+                }
                 rules={[
                     {
                         type: 'object' as const,
                         required: true,
                         validator: (_, value: dayjs.Dayjs) => {
                             if (!value) return Promise.reject(new Error("Please input child's age"))
+
+                            if (appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING) {
+                                // remove age limit on kingsville since 18+ months is allowed.
+                                return Promise.resolve()
+                            }
+
                             const fourYearsAgo = dayjs().subtract(4, 'years')
                             const thirteenYearsAgo = dayjs().subtract(13, 'years')
 

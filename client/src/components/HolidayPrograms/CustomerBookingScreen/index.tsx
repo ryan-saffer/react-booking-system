@@ -123,7 +123,7 @@ export const CustomerBookingScreen = () => {
                         />
                     )
                 case 2:
-                    return <Step2 selectedClasses={selectedClasses} />
+                    return <Step2 appointmentTypeId={appointmentTypeId} selectedClasses={selectedClasses} />
                 case 3:
                     return (
                         <Step3

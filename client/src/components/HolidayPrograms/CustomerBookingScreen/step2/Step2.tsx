@@ -9,10 +9,11 @@ import { ChildForm } from './ChildForm'
 const { Text } = Typography
 
 type Props = {
+    appointmentTypeId: number
     selectedClasses: AcuityTypes.Api.Class[]
 }
 
-export const Step2: React.FC<Props> = ({ selectedClasses }) => {
+export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) => {
     const [showModal, setShowModal] = useState(false)
 
     return (
@@ -103,7 +104,7 @@ export const Step2: React.FC<Props> = ({ selectedClasses }) => {
                                         Child #{index + 1}
                                         <MinusCircleOutlined style={{ marginLeft: 12 }} onClick={() => remove(index)} />
                                     </Divider>
-                                    <ChildForm childNumber={index} />
+                                    <ChildForm appointmentTypeId={appointmentTypeId} childNumber={index} />
                                 </Fragment>
                             ))}
                             <Form.Item key="addChild" style={{ marginBottom: 0 }}>
