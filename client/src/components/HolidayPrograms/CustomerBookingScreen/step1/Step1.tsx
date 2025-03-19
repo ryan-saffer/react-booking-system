@@ -105,6 +105,22 @@ const Step1: React.FC<Props> = ({
                         />
                     </>
                 )}
+            {appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING &&
+                filteredClasses &&
+                filteredClasses.length !== 0 && (
+                    <Alert
+                        type="info"
+                        message={
+                            <p style={{ margin: 0 }}>
+                                The <strong>10am</strong> session is for kids <strong>18 months - 5 years old.</strong>
+                                <br />
+                                The <strong>11:30 and 1:00pm</strong> sessions are for kids{' '}
+                                <strong>4 - 12 years old.</strong>
+                            </p>
+                        }
+                        style={{ marginBottom: 8 }}
+                    />
+                )}
             {filteredClasses?.map((klass) => {
                 const name = `${klass.id}-checkbox`
                 const slotsAvailable = getSlotsAvailable(klass)
