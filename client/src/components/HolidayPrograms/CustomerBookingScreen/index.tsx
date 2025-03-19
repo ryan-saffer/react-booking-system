@@ -49,6 +49,9 @@ export const CustomerBookingScreen = () => {
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
+    // just for kingsville opening
+    const [tooManyClassesChosen, setTooManyClassesChosen] = useState(false)
+
     const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeId:
             import.meta.env.VITE_ENV === 'prod'
@@ -69,14 +72,31 @@ export const CustomerBookingScreen = () => {
 
     const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
         if (isSuccess) {
-            const selectedClass = data?.filter((it) => it.id === e.target.value)[0]
+            const selectedClass = data.filter((it) => it.id === e.target.value)[0]
             const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
+
             if (e.target.checked) {
                 if (!classAlreadySelected) {
                     setSelectedClasses([...selectedClasses, selectedClass])
+
+                    // for kingsville, when checking from 1 to 2, enable the error
+                    if (
+                        selectedClasses.length === 1 &&
+                        appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING
+                    ) {
+                        setTooManyClassesChosen(true)
+                    }
                 }
             } else {
                 setSelectedClasses(selectedClasses.filter((it) => it.id !== e.target.value))
+
+                // for kingsville opening, when unchecking from 2 to 1, disable the error
+                if (
+                    selectedClasses.length === 2 &&
+                    appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING
+                ) {
+                    setTooManyClassesChosen(false)
+                }
             }
 
             // Clear the list of children, to fix bug where you can add many children,
@@ -175,7 +195,7 @@ export const CustomerBookingScreen = () => {
                         borderColor: 'white',
                     }}
                     className="font-bold shadow-none disabled:text-white"
-                    disabled={selectedClasses.length === 0}
+                    disabled={selectedClasses.length === 0 || tooManyClassesChosen}
                     onClick={async () => {
                         setTimeout(() => continueButtonRef.current?.blur())
                         try {
@@ -226,6 +246,9 @@ export const CustomerBookingScreen = () => {
                         </Button>
                     )}
                     {renderForm()}
+                    {tooManyClassesChosen && (
+                        <p style={{ color: 'red', margin: 0 }}>You can only register into one class at a time.</p>
+                    )}
                     <>
                         {renderForwardButton()}
                         {renderBackButton()}
