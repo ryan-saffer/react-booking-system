@@ -450,6 +450,7 @@ export class MailClient {
                         },
                         subject: subject || 'Not Continuing With Term Notification',
                         replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                        bcc: ['kym@fizzkidz.com.au'],
                     },
                     template: 'not_continuing_after_school_notification.html',
                     useMjml: false,
