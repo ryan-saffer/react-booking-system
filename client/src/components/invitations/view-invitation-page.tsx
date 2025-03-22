@@ -205,10 +205,7 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                 <div className="mb-8 flex flex-col p-4">
                     <h2 className="font-lilita text-lg md:text-xl">Welcome to the world of Fizz Kidz</h2>
                     <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
-                    <p className="font-gotham">
-                        You can download and save your invitation to your phone by choosing 'Download invitation' from
-                        the menu.
-                    </p>
+                    <p className="font-gotham">We can't wait to celebrate with you!</p>
                 </div>
                 <Card className="mx-3 border-8 border-cyan-400">
                     <Form {...form}>
