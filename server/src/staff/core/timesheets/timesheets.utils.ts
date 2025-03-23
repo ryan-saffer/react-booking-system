@@ -459,7 +459,20 @@ export class TimesheetRow {
                     : this._isMonSat()
                     ? 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
                     : 'PT/FT Ordinary Hours - Sunday - Essendon'
-
+            case Location.KINGSVILLE:
+                return this.isCasual
+                    ? this._isYoungerThan18()
+                        ? this._isMonSat()
+                            ? this.isRateAbove18()
+                                ? 'Casual Ordinary Hours - Mon to Sat - Kingsville'
+                                : '16&17yo Casual Ordinary Hours - Mon to Sat - Kings'
+                            : 'Casual Ordinary Hours - Sunday - Kingsville'
+                        : this._isMonSat()
+                        ? 'Casual Ordinary Hours - Mon to Sat - Kingsville'
+                        : 'Casual Ordinary Hours - Sunday - Kingsville'
+                    : this._isMonSat()
+                    ? 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
+                    : 'PT/FT Ordinary Hours - Sunday - Kingsville'
             case Location.MALVERN:
                 return this.isCasual
                     ? this._isYoungerThan18()
@@ -523,6 +536,16 @@ export class TimesheetRow {
                     : this._isMonSat()
                     ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
                     : 'ON CALL - Cas Ord Hrs - Sunday - Essend'
+            case Location.KINGSVILLE:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? this.isRateAbove18()
+                            ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
+                            : 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
+                        : 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
+                    : this._isMonSat()
+                    ? 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
+                    : 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
             case Location.MALVERN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
@@ -572,6 +595,14 @@ export class TimesheetRow {
                     : this._isMonSat()
                     ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
                     : 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+            case Location.KINGSVILLE:
+                return this._isYoungerThan18()
+                    ? this._isMonSat()
+                        ? 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
+                        : 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
+                    : this._isMonSat()
+                    ? 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
+                    : 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
             case Location.MALVERN:
                 return this._isYoungerThan18()
                     ? this._isMonSat()
@@ -605,6 +636,10 @@ export class TimesheetRow {
                 return this._isMonSat()
                     ? 'Overtime Hours - First 3 Hrs - Mon to Sat - Essen'
                     : 'Overtime Hours - First 3 Hrs - Sunday - Essendon'
+            case Location.KINGSVILLE:
+                return this._isMonSat()
+                    ? 'Overtime Hours - First 3 Hrs - Mon to Sat - Kings'
+                    : 'Overtime Hours - First 3 Hrs - Sunday - Kingsville'
             case Location.MALVERN:
                 return this._isMonSat()
                     ? 'Overtime Hours - First 3 Hrs - Mon to Sat - Malv'
@@ -624,6 +659,8 @@ export class TimesheetRow {
                 return 'Overtime Hours - After 3 Hrs - Cheltenham'
             case Location.ESSENDON:
                 return 'Overtime Hours - After 3 Hrs - Essendon'
+            case Location.KINGSVILLE:
+                return 'Overtime Hours - After 3 Hrs - Kingsville'
             case Location.MALVERN:
                 return 'Overtime Hours - After 3 Hrs - Malvern'
             case Location.MOBILE:
@@ -664,6 +701,7 @@ export enum Location {
     BALWYN = 'BALWYN',
     CHELTENHAM = 'CHELTENHAM',
     ESSENDON = 'ESSENDON',
+    KINGSVILLE = 'KINGSVILLE',
     MALVERN = 'MALVERN',
     MOBILE = 'MOBILE',
 }
@@ -696,6 +734,7 @@ const LocationsMap: { [key: number]: Location } = {
     4809521: Location.BALWYN,
     11315826: Location.CHELTENHAM,
     4895739: Location.ESSENDON,
+    22982854: Location.KINGSVILLE,
     4809537: Location.MALVERN,
     5557282: Location.MOBILE,
 } as const
@@ -704,6 +743,7 @@ type CasualOrdinaryMonSat =
     | 'Casual Ordinary Hours - Mon to Sat - Balwyn'
     | 'Casual Ordinary Hours - Mon to Sat - Chelt'
     | 'Casual Ordinary Hours - Mon to Sat - Essendon'
+    | 'Casual Ordinary Hours - Mon to Sat - Kingsville'
     | 'Casual Ordinary Hours - Mon to Sat - Malvern'
     | 'Casual Ordinary Hours - Mon to Sat - Mobile'
 
@@ -711,6 +751,7 @@ type CasualOrdinarySunday =
     | 'Casual Ordinary Hours - Sunday - Balwyn'
     | 'Casual Ordinary Hours - Sunday - Chelt'
     | 'Casual Ordinary Hours - Sunday - Essendon'
+    | 'Casual Ordinary Hours - Sunday - Kingsville'
     | 'Casual Ordinary Hours - Sunday - Malvern'
     | 'Casual Ordinary Hours - Sunday - Mobile'
 
@@ -718,6 +759,7 @@ type PTFTOrdinaryMonSat =
     | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
     | 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
     | 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
     | 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
     | 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
 
@@ -725,6 +767,7 @@ type PTFTOrdinaryHoursSunday =
     | 'PT/FT Ordinary Hours - Sunday - Balwyn'
     | 'PT/FT Ordinary Hours - Sunday - Chelt'
     | 'PT/FT Ordinary Hours - Sunday - Essendon'
+    | 'PT/FT Ordinary Hours - Sunday - Kingsville'
     | 'PT/FT Ordinary Hours - Sunday - Malvern'
     | 'PT/FT Ordinary Hours - Sunday - Mobile'
 
@@ -732,6 +775,7 @@ type OnCallCasualOrdinaryMonSat =
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
 
@@ -739,6 +783,7 @@ type OnCallCasualOrdinarySunday =
     | 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
     | 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
     | 'ON CALL - Cas Ord Hrs - Sunday - Essend'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
     | 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
 
@@ -746,6 +791,7 @@ type CalledInCasualOrdinaryMonSat =
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
 
@@ -753,6 +799,7 @@ type CalledInCasualOrdinarySunday =
     | 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
 
@@ -760,6 +807,7 @@ type Under18CasualOrdinaryHoursMonSat =
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Balw'
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt'
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Esse'
+    | '16&17yo Casual Ordinary Hours - Mon to Sat - Kings'
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Malv'
     | '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil'
 
@@ -767,6 +815,7 @@ type Under18OnCallOrdinaryHoursMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
 
@@ -774,6 +823,7 @@ type Under18CalledInOrdinaryHoursMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
+    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
 
@@ -781,6 +831,7 @@ type OvertimeFirstThreeHoursMonSat =
     | 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn'
     | 'Overtime Hours - First 3 Hrs - Mon to Sat - Chelt'
     | 'Overtime Hours - First 3 Hrs - Mon to Sat - Essen'
+    | 'Overtime Hours - First 3 Hrs - Mon to Sat - Kings'
     | 'Overtime Hours - First 3 Hrs - Mon to Sat - Malv'
     | 'Overtime Hours - First 3 Hrs - Mon to Sat - Mobile'
 
@@ -788,6 +839,7 @@ type OvertimeAfterThreeHours =
     | 'Overtime Hours - After 3 Hrs - Balwyn'
     | 'Overtime Hours - After 3 Hrs - Cheltenham'
     | 'Overtime Hours - After 3 Hrs - Essendon'
+    | 'Overtime Hours - After 3 Hrs - Kingsville'
     | 'Overtime Hours - After 3 Hrs - Malvern'
     | 'Overtime Hours - After 3 Hrs - Mobile'
 
@@ -795,6 +847,7 @@ type OvertimeFirstThreeHoursSunday =
     | 'Overtime Hours - First 3 Hrs - Sunday - Balwyn'
     | 'Overtime Hours - First 3 Hrs - Sunday - Cheltenham'
     | 'Overtime Hours - First 3 Hrs - Sunday - Essendon'
+    | 'Overtime Hours - First 3 Hrs - Sunday - Kingsville'
     | 'Overtime Hours - First 3 Hrs - Sunday - Malvern'
     | 'Overtime Hours - First 3 Hrs - Sunday - Mobile'
 
