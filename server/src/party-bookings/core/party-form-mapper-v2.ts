@@ -6,7 +6,6 @@ import {
     getQuestionValue,
     Location,
     ObjectEntries,
-    ObjectKeys,
     PaperFormResponse,
     type PartyFormV2,
 } from 'fizz-kidz'
@@ -198,7 +197,9 @@ export class PartyFormMapperV2 {
     #mapPartyPackToAdditionKey() {
         const partyPack = getQuestionValue(this.responses, 'party_packs')
         if (!partyPack) return // not filled in
-        const partyPackKey = ObjectKeys(ADDITIONS).find((it) => it === partyPack)
+        const partyPackKey = ObjectEntries(ADDITIONS).find(
+            ([, additionKey]) => partyPack === additionKey.displayValue
+        )?.[0]
         if (!partyPackKey) {
             throw new Error(`Could not find party pack that matches chosen form value of '${partyPack}'`)
         }
