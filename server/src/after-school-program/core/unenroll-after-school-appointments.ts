@@ -2,6 +2,7 @@ import { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieve-latest-invoice'
 import { StripeClient } from '../../stripe/core/stripe-client'
@@ -59,6 +60,19 @@ export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchool
                     )
                 }
             }
+
+            // 6. Analytics
+            const mixpanel = await MixpanelClient.getInstance()
+            await mixpanel.track('after-school-program-unenrolment', {
+                distinct_id: enrolment.parent.email,
+                type: enrolment.type,
+                inStudio: enrolment.inStudio,
+                appointmentTypeId: enrolment.appointmentTypeId,
+                calendarId: enrolment.calendarId,
+                childAge: enrolment.child.age,
+                childGrade: enrolment.child.grade,
+                className: enrolment.className,
+            })
         })
     )
 }

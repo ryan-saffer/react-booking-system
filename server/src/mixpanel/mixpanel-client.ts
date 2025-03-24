@@ -119,6 +119,26 @@ export type MixpanelEvent = {
         cakeServed?: string
         cakeCandles?: string
     }
+    'after-school-program-enrolment': {
+        distinct_id: string
+        type: 'science' | 'art'
+        inStudio: boolean
+        appointmentTypeId: number
+        calendarId: number
+        childAge: string
+        childGrade: string
+        className: string
+    }
+    'after-school-program-unenrolment': {
+        distinct_id: string
+        type: 'science' | 'art'
+        inStudio: boolean
+        appointmentTypeId: number
+        calendarId: number
+        childAge: string
+        childGrade: string
+        className: string
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
@@ -130,4 +150,6 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'holiday-program-booking': 'Holiday Program Booking',
     'birthday-party-booking': 'Birthday Party Booking',
     'birthday-party-form-completed': 'Birthday Party Form Completed',
+    'after-school-program-enrolment': 'After School Program Enrolment',
+    'after-school-program-unenrolment': 'After School Program Unenrolment',
 }

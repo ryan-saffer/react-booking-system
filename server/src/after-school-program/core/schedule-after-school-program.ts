@@ -16,6 +16,7 @@ import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { StorageClient } from '../../firebase/StorageClient'
 import { SheetsClient } from '../../google/SheetsClient'
 import { projectId } from '../../init'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
@@ -216,6 +217,19 @@ export default async function scheduleAfterSchoolProgram(
             logError(`unable to send parent portal email for enrolment with id: '${appointment.id}'`, err)
         }
     }
+
+    // analytics
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('after-school-program-enrolment', {
+        distinct_id: input.parent.email,
+        type: input.type,
+        inStudio: input.inStudio,
+        appointmentTypeId: input.appointmentTypeId,
+        calendarId: input.calendarId,
+        childAge: input.child.age,
+        childGrade: input.child.grade,
+        className: input.className,
+    })
 }
 
 function getStudioLocation(studio: Location | 'test') {
