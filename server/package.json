@@ -9,7 +9,7 @@
         "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run ts:check -- --watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
         "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml lib",
         "deploy": "firebase deploy --only functions",
-        "ts:check": "tsc",
+        "ts:check": "tsc --noEmit",
         "lint": "eslint -c .eslintrc.json --ext .ts src",
         "logs": "firebase functions:log",
         "serve": "concurrently \"npm run build:watch\" \"firebase emulators:start --only functions,pubsub --inspect-functions\"",
