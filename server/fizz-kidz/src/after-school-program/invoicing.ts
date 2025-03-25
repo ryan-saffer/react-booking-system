@@ -24,21 +24,5 @@ export type InvoiceStatusMap = { [key: string]: InvoiceStatus }
 
 export interface SendInvoiceParams {
     id: string
-    price: string
-    [key: string]: string
-}
-
-// prices depend on how many weeks they are attending the program for
-// use this map to include the number of weeks in the invoice
-export const PriceWeekMap: { [key: string]: string } = {
-    '260': '10',
-    '234': '9',
-    '208': '8',
-    '182': '7',
-    '156': '6',
-    '130': '5',
-    '104': '4',
-    '78': '3',
-    '52': '2',
-    '26': '1',
+    numberOfWeeks: number
 }

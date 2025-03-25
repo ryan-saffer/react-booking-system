@@ -1,13 +1,12 @@
-import { AfterSchoolEnrolment, InvoiceStatusMap, PriceWeekMap, SendInvoiceParams } from 'fizz-kidz'
+import { AfterSchoolEnrolment, InvoiceStatusMap, SendInvoiceParams } from 'fizz-kidz'
 
 import * as StripeConfig from '../../../config/stripe'
+import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { env } from '../../../init'
 import { throwTrpcError } from '../../../utilities'
-import { PricesMap } from '../prices-map'
 import { StripeClient } from '../stripe-client'
 import { retrieveLatestInvoice } from './retrieve-latest-invoice'
 import { sendInvoice } from './send-invoice'
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
 
 const stripeConfig = env === 'prod' ? StripeConfig.PROD_CONFIG : StripeConfig.DEV_CONFIG
 
@@ -30,16 +29,16 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
                 }
             }
 
+            const amount = invoiceData.numberOfWeeks * parseFloat(enrolment.price) * 100 // cents
+
             // 3. send invoice
             const invoice = await sendInvoice({
                 firstName: enrolment.parent.firstName,
                 lastName: enrolment.parent.lastName,
                 email: enrolment.parent.email,
                 phone: enrolment.parent.phone,
-                description: `${enrolment.child.firstName} - ${enrolment.className} - ${
-                    PriceWeekMap[invoiceData.price]
-                } Weeks`,
-                price: PricesMap[invoiceData.price],
+                description: `${enrolment.child.firstName} - ${enrolment.className} - ${invoiceData.numberOfWeeks} Weeks`,
+                amount,
                 metadata: { programType: enrolment.type === 'science' ? 'science_program' : 'art_program' },
             })
 
@@ -57,7 +56,7 @@ export async function sendInvoices(input: SendInvoiceParams[]) {
             // 5. set the result
             invoiceStatusMap[invoiceData.id] = {
                 status: 'UNPAID',
-                amount: parseInt(invoiceData.price) * 100,
+                amount,
                 dashboardUrl: `${stripeConfig.STRIPE_DASHBOARD}/invoices/${invoice.id}`,
                 paymentUrl: invoice.hosted_invoice_url || '',
             }

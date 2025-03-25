@@ -1,6 +1,7 @@
 import type Stripe from 'stripe'
-import { StripeClient } from '../stripe-client'
+
 import { getOrCreateCustomer } from '../customers'
+import { StripeClient } from '../stripe-client'
 
 export async function sendInvoice(input: {
     firstName: string
@@ -8,11 +9,11 @@ export async function sendInvoice(input: {
     email: string
     phone: string
     description: string
-    price: string
+    amount: number
     daysUntilDue?: number
     metadata?: Stripe.Emptyable<Stripe.MetadataParam>
 }) {
-    const { firstName, lastName, email, phone, description, price, daysUntilDue = 3, metadata } = input
+    const { firstName, lastName, email, phone, description, amount, daysUntilDue = 3, metadata } = input
     // 1. get or create customer
     const customer = await getOrCreateCustomer(`${firstName} ${lastName}`, email, phone)
 
@@ -21,7 +22,8 @@ export async function sendInvoice(input: {
     const invoiceItems = await stripe.invoiceItems.create({
         customer,
         description,
-        price,
+        amount,
+        currency: 'AUD',
     })
 
     // 3. create the invoice

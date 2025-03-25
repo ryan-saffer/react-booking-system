@@ -64,6 +64,10 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         includeUnavailable: true,
     })
 
+    function formatCurrency(amount: number) {
+        return amount % 1 === 0 ? `$${amount}` : `$${amount.toFixed(2)}`
+    }
+
     /**
      * Sync the required 'main' or 'waitingList' section with if the class is full.
      */
@@ -122,8 +126,8 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         return (
             <>
                 <h3 className="my-2 text-center text-xl font-semibold">
-                    ${parseInt(selectedProgram.price) * numClasses} for {numClasses === 8 ? 'an' : 'a'} {numClasses}{' '}
-                    week term
+                    {formatCurrency(parseFloat(selectedProgram.price) * numClasses)} for {numClasses === 8 ? 'an' : 'a'}{' '}
+                    {numClasses} week term
                 </h3>
                 <p className="text-center italic">No credit card details are required to enrol.</p>
                 <p className="mb-4 text-center italic">

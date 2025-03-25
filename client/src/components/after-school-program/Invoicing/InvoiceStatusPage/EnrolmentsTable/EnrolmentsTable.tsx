@@ -1,6 +1,6 @@
 import { Button, Dropdown, MenuProps, Space, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table'
-import { AcuityTypes, AfterSchoolEnrolment, PriceWeekMap } from 'fizz-kidz'
+import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
@@ -143,13 +143,13 @@ const _EnrolmentsTable: React.FC<Props> = ({
                         dialogContent: `Select the amount you'd like to invoice the selected parents. This will also void any existing invoices. If sending to many people, this could take a while! (Up to 3 minutes)`,
                         confirmationButtonText: 'Send Invoices',
                         listItems: {
-                            title: 'Invoice Price',
-                            items: Object.entries(PriceWeekMap).map(([key, value]) => ({
-                                key,
-                                value: `$${key} (${value} weeks)`,
+                            title: 'Number of weeks',
+                            items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((it) => ({
+                                key: `${it}`,
+                                value: `${it} weeks`,
                             })),
                         },
-                        onConfirm: (selectedPrice) => sendInvoices(selectedPrice),
+                        onConfirm: (numberOfWeeks) => sendInvoices(parseInt(numberOfWeeks)),
                     })
                 }
                 break
@@ -187,11 +187,11 @@ const _EnrolmentsTable: React.FC<Props> = ({
         }
     }
 
-    const sendInvoices = async (price: string) => {
+    const sendInvoices = async (numberOfWeeks: number) => {
         setLoading(true)
         try {
             const result = await sendInvoicesMutation.mutateAsync(
-                selectedRowKeys.map((it) => ({ id: it.toString(), price }))
+                selectedRowKeys.map((it) => ({ id: it.toString(), numberOfWeeks }))
             )
             trpcUtils.stripe.retrieveInvoiceStatuses.setData(
                 { appointmentIds: enrolments.map((it) => it.id) },
