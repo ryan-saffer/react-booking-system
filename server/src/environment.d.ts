@@ -19,6 +19,7 @@ declare global {
             ZOHO_REFRESH_TOKEN: string
             ZOHO_CLIENT_ID: string
             ZOHO_CLIENT_SECRET: string
+            STORYBLOK_TOKEN: string
         }
     }
 }

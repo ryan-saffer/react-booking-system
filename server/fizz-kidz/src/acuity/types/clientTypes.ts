@@ -1,3 +1,5 @@
+import type { AcuityTypes } from '../..'
+
 // For querying acuity, ie all appointments from a certain type and calendar
 export type FetchAppointmentsParams = {
     appointmentTypeId: number
@@ -72,4 +74,10 @@ export type CheckCertificateParams = {
     certificate: string
     appointmentTypeId: number
     email: string
+}
+
+// Combines the class with potential details of the class
+export type Class = AcuityTypes.Api.Class & {
+    title?: string
+    creations?: string[]
 }

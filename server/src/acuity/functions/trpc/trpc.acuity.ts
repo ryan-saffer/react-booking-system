@@ -1,7 +1,8 @@
-import { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
 import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
+import { mergeAcuityWithStoryblok } from '../../core/merge-storyblok-with-acuity'
 
 export const acuityRouter = router({
     updateLabel: acuityAuthenticatedProcedure
@@ -21,8 +22,25 @@ export const acuityRouter = router({
         .query(({ ctx, input }) => ctx.acuityClient.getAppointments(input.ids)),
     classAvailability: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.ClassAvailabilityParams)
-        .query(({ ctx, input }) =>
-            ctx.acuityClient.getClasses(input.appointmentTypeId, input.includeUnavailable, input.minDate)
+        .query(
+            /***
+             * Returns acuity classes, but in the case the class is a holiday program, it will additionally return the title and creations.
+             */
+            async ({ ctx, input }): Promise<AcuityTypes.Client.Class[]> => {
+                const acuityPrograms = await ctx.acuityClient.getClasses(
+                    input.appointmentTypeId,
+                    input.includeUnavailable,
+                    input.minDate
+                )
+
+                // for holiday programs, get the storyblok programs and merge them together
+                if (input.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM) {
+                    const mergedPrograms = await mergeAcuityWithStoryblok(acuityPrograms)
+                    return mergedPrograms
+                }
+
+                return acuityPrograms
+            }
         ),
 })
 

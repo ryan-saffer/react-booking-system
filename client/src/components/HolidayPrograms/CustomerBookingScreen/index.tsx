@@ -3,6 +3,7 @@ import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import dayjs from 'dayjs'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import { LeftOutlined } from '@ant-design/icons'
 import Loader from '@components/Shared/Loader'
@@ -12,7 +13,6 @@ import { trpc } from '@utils/trpc'
 import Step1 from './step1/Step1'
 import { Step2 } from './step2/Step2'
 import Step3 from './step3/Step3'
-import { useSearchParams } from 'react-router-dom'
 
 const { Step } = Steps
 

@@ -6,13 +6,13 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 import { capitalise } from '@utils/stringUtilities'
 
-import { getSameDayClasses, PRICE_MAP } from '../utilities'
+import { PRICE_MAP, getSameDayClasses } from '../utilities'
 
 const { Option } = Select
 
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
-    classes: AcuityTypes.Api.Class[]
+    classes: AcuityTypes.Client.Class[]
     selectedClasses: AcuityTypes.Api.Class[]
     selectedStore: string
     setSelectedStore: Dispatch<SetStateAction<string>>
@@ -27,7 +27,7 @@ const Step1: React.FC<Props> = ({
     onClassSelectionChange,
     selectedClasses,
 }) => {
-    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>()
+    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Client.Class[]>()
 
     useEffect(() => {
         if (selectedStore !== '') {
@@ -130,8 +130,9 @@ const Step1: React.FC<Props> = ({
                             value={klass.id}
                             disabled={klass.slotsAvailable === 0}
                             onChange={onClassSelectionChange}
+                            style={{ marginBottom: 2 }}
                         >
-                            <p style={{ marginTop: 0, marginBottom: 4 }}>
+                            <p style={{ marginTop: 0, marginBottom: 0, fontSize: 15, fontWeight: 500 }}>
                                 {DateTime.fromISO(klass.time).toLocaleString({
                                     weekday: 'long',
                                     month: 'short',
@@ -141,8 +142,13 @@ const Step1: React.FC<Props> = ({
                                     hour12: true,
                                 })}
                             </p>
+                            {klass.title && (
+                                <p style={{ margin: 0, fontSize: 14 }}>
+                                    <i>{klass.title}</i>
+                                </p>
+                            )}
                             {slotsAvailable && (
-                                <p style={{ marginTop: 0, marginBottom: 4 }}>
+                                <p style={{ marginTop: 0, marginBottom: 0, fontSize: 14 }}>
                                     [<em>{slotsAvailable}</em>]
                                 </p>
                             )}
