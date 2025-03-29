@@ -92,7 +92,7 @@ const fluffySlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
 4. Add shaving cream
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -123,7 +123,7 @@ const galaxySlime = {
 2. Add sodium bicarbonate and mix
 3. Add colour dye: 1 drop of pink/red and 2 drops of blue (adjust accordingly) 
 4. Add glitter 
-5. Activate and take slimes out of bowls
+5. Activate and take slimes out of bowls. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into containers
 
@@ -196,7 +196,7 @@ const glitterSlime = {
 3. Add colour
 > Fizz Tip: Can mix colours, just be clear with kids that multiple colours mixed together might make an interesting colour
 4. Add glitter - lots of options!
-5. Activate and remove all slime from bowls
+5. Activate and remove all slime from bowls. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -225,7 +225,7 @@ const instantSnowSlime = {
 1. Add the glue to bowls and mix - lots of bubbles
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
-4. Activate and remove all slime from bowls for children to play with
+4. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 5. Add activated snow - get all slimes flat like pancake and put into slimes
 > Fizz Tip: Sprinkle from above like it's snowing!
@@ -394,7 +394,7 @@ const rainbowTieDySlime = {
 ### Recipe
 1. Add the glue to bowls and mix - lots of bubbles
 2. Add the sodium bicarbonate to bowls and mix
-3. Activate and remove all slime from bowls for children to play with
+3. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 4. Split slime into sections and flatten like pancakes
 > Fizz Tip: the younger the kids are, the less sections. For Example 3-5 year olds only separate into two sections, if 5-7 split into 3 sections and 7 + split into four sections
@@ -431,7 +431,7 @@ const sandSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour and mix
 4. Add sand and mix
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -565,7 +565,7 @@ const monsterSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
 4. Add glitter
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Add googly eyes and make slime into a monster!!
 7. Put into slime containers
@@ -599,7 +599,7 @@ const frozenSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
 4. Add glitter
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -632,7 +632,7 @@ const unicornSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
 4. Add glitter
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -859,7 +859,7 @@ Let the kids choose their dinosaur and set it aside—it's going to be part of t
 2. Add sodium bicarbonate into bowls and mix thoroughly with popsicle sticks. 
 3. Add a few drops of yellow colouring (Time to colour your cake mixture!) 
 4. Add a handful of shaving cream and mix until fluffy. 
-5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. 
+5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is all about encouraging hands-on fun! Let children explore the slime by touching it. Before they dive in, describe what the ideal slime consistency should feel like—smooth, stretchy, and slightly sticky!
 7. Once the slime is fully decorated and mixed, have children place their slime into slime containers to take home..
 6. Ask children to flatten their slime into a pancake shape on the table. Go around the room and sprinkle one shake of birthday cake sprinkles onto each child's slime. Let them fold and mix the sprinkles into the slime! 
@@ -893,7 +893,7 @@ Today we are making Candy Slime! Yum!! What's your favourite candy!?
 2. Add sodium bicarbonate into bowls and mix thoroughly with popsicle sticks. 
 3. Add a few drops of blue or pink colouring (What colour candy would you like your slime to be!?)
 4. Add a handful of shaving cream and mix until fluffy.
-5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. 
+5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is all about encouraging hands-on fun! Let children explore the slime by touching it. Before they dive in, describe what the ideal slime consistency should feel like—smooth, stretchy, and slightly sticky!
 6. Ask children to flatten their slime into a pancake shape on the table. Go around the room and sprinkle one shake of sprinkles (candy!) onto each child's slime. Let them fold and mix the sprinkles into the slime! 
 7. Add Glitter (More Candy!!)
@@ -925,7 +925,7 @@ const nutellaSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add brown chocolate colour
 4. Add shaving cream
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Add black (“chocolate chips”) into the slime and mix
 7. Have fun and then place them into slime containers to take home. 
@@ -957,7 +957,7 @@ const unicornCloudSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add both red and blue colour dye to create a purple colour
 4. Add a handful of shaving cream
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 
 ### Making Instant Snow
@@ -998,7 +998,7 @@ Today we are making Sanrio Slime! Who likes Hello Kitty?
 1. Add glue to bowls and mix well, creating lots of fun bubbles as the kids stir! and swirl! 
 2. Add sodium bicarbonate into bowls and mix thoroughly with popsicle sticks. 
 3. Add a few drops of pink colouring (What colour is Saniro?)
-4. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. 
+4. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is all about encouraging hands-on fun! Let children explore the slime by touching it. Before they dive in, describe what the ideal slime consistency should feel like—smooth, stretchy, and slightly sticky!
 6. Ask children to flatten their slime into a pancake shape on the table. Go around the room and sprinkle some pink, gold or silver glitter onto each child's slime. Let them fold and mix the sprinkles into the slime! 
 7. Once the slime is fully decorated and mixed, have children place their slime into slime containers to take home..
@@ -1030,7 +1030,7 @@ Today we are making Spiderman Slime! Who likes Spiderman!? What colour is Spider
 2. Add sodium bicarbonate into bowls and mix thoroughly with popsicle sticks. Wow it looks like Spiderman's web! 
 3. Add a few drops of red colouring (What colour is spiderman?)
 4. Now it's time to add Spiderman's web!! Add a handful of shaving cream and mix until fluffy. 
-5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. 
+5. Add activator and stir until the slime forms and can be removed from the sides of the bowl easily. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is all about encouraging hands-on fun! Let children explore the slime by touching it. Before they dive in, describe what the ideal slime consistency should feel like—smooth, stretchy, and slightly sticky!
 6. Ask children to flatten their slime into a pancake shape on the table. Go around the room and sprinkle one shake of blue glitter into each child's slime. Now we have Spiderman's two colours and the slime is complete! Let kids fold and mix the glitter into the slime. 
 8. Kids play with their slime. Once the slime is fully decorated and mixed, have children place their slime into slime containers to take home..
@@ -1058,7 +1058,7 @@ const marshmallowSlime = {
 2. Add the sodium bicarbonate to bowls and mix
 3. Add colour
 4. Add shaving cream
-5. Activate and remove all slime from bowls for children to play with
+5. Activate and remove all slime from bowls for children to play with. (See activator instructions at the top of the page)
 > Fizz Tip: Fizz is about encouraging children to be hands on so don't discourage them from touching their slime - instead tell the children what consistency the slime should be BEFORE they touch it
 6. Put into slime containers
 
@@ -1291,8 +1291,8 @@ Create excitement with the kids by asking questions about their designs:
 3. Ask each child to choose one color bead to tie at the end of their elastic. This will act as the base bead.
 4. **Designing the Bracelet**
 * Let the kids pick and arrange their bead colors directly on the table to plan their design.
-* Once they’ve finalized their design, they can start threading the beads onto the elastic.
-* While the kids are threading their beads, one facilitator will go around the table (starting with the birthday child) and ask each child what ONE word they’d like to add to their bracelet.
+* Once they've finalized their design, they can start threading the beads onto the elastic.
+* While the kids are threading their beads, one facilitator will go around the table (starting with the birthday child) and ask each child what ONE word they'd like to add to their bracelet.
 5. **Tying the Bracelet**
 Explain the buddy system:
 * Each child works in pairs to help each other tie their bracelets.
@@ -1323,7 +1323,7 @@ const fairyBathBombs = {
 5. Add scent (if requested) and mix
 > Fizz Tip: can be added at the end on top of bath bombs! Or in the middle for a glitter bomb effect
 6. Each child receives one bath bomb container and presses all their mixture into their container as hard as they can with thumbs and heel of hands
-> Fizz Tip: explain that it’s like a sandcastle, the more they press down the better it will be
+> Fizz Tip: explain that it's like a sandcastle, the more they press down the better it will be
 7. Put RIGHT SIDE UP, still in container into bags after facilitator checks they are all pressed down
 
 ### Fizz Tipz and Trickz
@@ -1349,7 +1349,7 @@ const fluidBears = {
 4. Facilitators to place paint squeezy bottles on the table
 5. Help kids share the colours around. 
 > FIZZ TIP: It may be easier for kids to stand up in order to squeeze the paint down the bear. 
-> FIZZ TIP: You don’t want to over do it as it will blend the colours too much and create a yucky colour!! _**Best to choose TWO-THREE CLOURS + WHITE..**_ 
+> FIZZ TIP: You don't want to over do it as it will blend the colours too much and create a yucky colour!! _**Best to choose TWO-THREE CLOURS + WHITE..**_ 
 6. Once complete, surprise the kids by asking them if they want to add GLITTER!? 
 7. Lastly, hold the bear by the keyring, place it in a slime container to set. The bear should set within an hour. 
 
@@ -1358,6 +1358,32 @@ const fluidBears = {
 ![fluidBears](https://lh3.googleusercontent.com/d/1836YpHuqmbjVGRNVGV230qGCsJMvetuC)
 ![fluidBears](https://lh3.googleusercontent.com/d/1LzQoK0YDcveut56uZjshwvur9wKn2VaX)
     `,
+}
+
+export const slimeActivator = {
+    name: 'Slime Activator (for all slimes)',
+    markdown: `
+### Instructions
+1. Add _2 x 5ml spoons of Borax_ to the container.
+2. Fill the container with warm water.
+3. Cover the hole with your finger and shake well to mix.
+
+**Ratio for Reference:** 1 X 5ml spoon of Borax to every 1 cup of warm water.
+
+### Safety Precautions
+Borax is a chemical that must be kept out of reach of young children and should only be used by children under supervision when making slime.\\
+Borax should be stored in the back area of the studio, away from children and food.\\
+Slime Activator should be made at the hand-washing sink, ensuring children are not present during preparation.\\
+Always wash hands thoroughly after preparing the Slime Activator. Ensure children understand that slime is not edible when making Slime.\\
+Both children and facilitators must wash their hands after playing with slime.
+
+### Is borax safe to use?
+Yes, borax is safe to use in slime when handled properly.\\
+As the slime still contains chemicals, it is important to wash your hands well after playing with slime and avoid contact with your eyes and mouth.
+
+![borax](https://lh3.googleusercontent.com/d/1xWA5vgOIRW_MCcIjLfjj-6ySS0VCdDUY)
+![borax](https://lh3.googleusercontent.com/d/1S1y4n3nOgm03CC2JTvTtJ-SLnmf2mjSs)
+`,
 }
 
 export const creations = [
