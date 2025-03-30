@@ -29,7 +29,7 @@ type ChildForm = { childName: string }
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
-    selectedClasses: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Client.Class[]
     selectedStore: string
 }
 

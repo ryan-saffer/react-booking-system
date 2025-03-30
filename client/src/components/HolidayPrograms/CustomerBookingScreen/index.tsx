@@ -45,7 +45,7 @@ export const CustomerBookingScreen = () => {
     const continueButtonRef = useRef<HTMLButtonElement>(null)
 
     const [selectedStore, setSelectedStore] = useState('')
-    const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Api.Class[]>([])
+    const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Client.Class[]>([])
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 

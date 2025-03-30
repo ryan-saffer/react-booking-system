@@ -34,7 +34,10 @@ export const acuityRouter = router({
                 )
 
                 // for holiday programs, get the storyblok programs and merge them together
-                if (input.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM) {
+                if (
+                    input.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM ||
+                    input.appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
+                ) {
                     const mergedPrograms = await mergeAcuityWithStoryblok(acuityPrograms)
                     return mergedPrograms
                 }

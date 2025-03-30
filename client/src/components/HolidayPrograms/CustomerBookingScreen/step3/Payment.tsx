@@ -27,7 +27,7 @@ const Root = styled('div')({
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
-    selectedClasses: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Client.Class[]
     paymentIntentId: string
     discount: DiscountCode | undefined
 }
@@ -97,6 +97,8 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form, selectedClasses, pa
                           : PRICE_MAP[appointmentTypeId].PROGRAM_PRICE,
                 booked: false,
                 joinMailingList,
+                ...(klass.title && { title: klass.title }),
+                ...(klass.creations && { creations: klass.creations }),
             }))
         )
 

@@ -158,6 +158,8 @@ export async function bookHolidayPrograms(
             numberOfSlots: programs.length,
             numberOfKids: uniqueChildNamesCount,
             ...(code && { discountCode: code }),
+            ...(firstProgram.title && { title: firstProgram.title }),
+            ...(firstProgram.creations && { creations: firstProgram.creations }),
         })
     }
 }

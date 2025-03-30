@@ -17,6 +17,8 @@ export interface BaseHolidayProgramBooking {
     discountCode: string
     amountCharged: number
     joinMailingList: boolean
+    title?: string // title of the program if it exists (coming from storyblok)
+    creations?: string[] // creations being made in the program if it exists (coming from storyblok)
 }
 
 interface BookedPaidHolidayProgram extends BaseHolidayProgramBooking {

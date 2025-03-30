@@ -26,7 +26,7 @@ const Root = styled('div')({
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
-    selectedClasses: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Client.Class[]
     discountCode: string
     setError: Dispatch<SetStateAction<boolean>>
 }
@@ -76,6 +76,8 @@ const FreeConfirmationButton: React.FC<Props> = ({
                         discountCode: discountCode,
                         amountCharged: 0,
                         joinMailingList,
+                        title: klass.title,
+                        creations: klass.creations,
                     }))
                 )
             )

@@ -13,7 +13,7 @@ const { Option } = Select
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
     classes: AcuityTypes.Client.Class[]
-    selectedClasses: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Client.Class[]
     selectedStore: string
     setSelectedStore: Dispatch<SetStateAction<string>>
     onClassSelectionChange: (e: CheckboxChangeEvent) => void

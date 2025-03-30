@@ -6,11 +6,12 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 
 import { ChildForm } from './ChildForm'
+
 const { Text } = Typography
 
 type Props = {
     appointmentTypeId: number
-    selectedClasses: AcuityTypes.Api.Class[]
+    selectedClasses: AcuityTypes.Client.Class[]
 }
 
 export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) => {
