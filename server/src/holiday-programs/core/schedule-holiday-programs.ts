@@ -151,7 +151,9 @@ export async function bookHolidayPrograms(
             amount = paymentIntent.amount / 100
         }
 
-        const childAgesSet = new Set(programs.map((program) => program.childAge))
+        const childAgesSet = new Set(
+            programs.map((program) => Math.abs(DateTime.fromISO(program.childAge).diffNow('years').years).toFixed(0))
+        )
         const titlesSet = new Set(programs.map((program) => program.title).filter((it) => it !== undefined))
         const creationsSet = new Set(
             programs.reduce((acc, program) => [...acc, ...(program.creations ? program.creations : [])], [] as string[])
@@ -169,8 +171,8 @@ export async function bookHolidayPrograms(
             numberOfKids: uniqueChildNamesCount,
             childAges,
             ...(code && { discountCode: code }),
-            ...(titles.length && titles),
-            ...(creations.length && creations),
+            ...(titles.length && { titles }),
+            ...(creations.length && { creations }),
         })
     }
 }
