@@ -151,15 +151,26 @@ export async function bookHolidayPrograms(
             amount = paymentIntent.amount / 100
         }
 
+        const childAgesSet = new Set(programs.map((program) => program.childAge))
+        const titlesSet = new Set(programs.map((program) => program.title).filter((it) => it !== undefined))
+        const creationsSet = new Set(
+            programs.reduce((acc, program) => [...acc, ...(program.creations ? program.creations : [])], [] as string[])
+        )
+
+        const childAges = [...childAgesSet]
+        const titles = [...titlesSet]
+        const creations = [...creationsSet]
+
         await mixpanel.track('holiday-program-booking', {
             distinct_id: firstProgram.parentEmail,
             location,
             amount,
             numberOfSlots: programs.length,
             numberOfKids: uniqueChildNamesCount,
+            childAges,
             ...(code && { discountCode: code }),
-            ...(firstProgram.title && { title: firstProgram.title }),
-            ...(firstProgram.creations && { creations: firstProgram.creations }),
+            ...(titles.length && titles),
+            ...(creations.length && creations),
         })
     }
 }

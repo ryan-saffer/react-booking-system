@@ -94,6 +94,9 @@ export type MixpanelEvent = {
         numberOfSlots: number
         numberOfKids: number
         discountCode?: string
+        childAges: string[]
+        titles?: string[]
+        creations?: string[]
     }
     'birthday-party-booking': {
         distinct_id: string
