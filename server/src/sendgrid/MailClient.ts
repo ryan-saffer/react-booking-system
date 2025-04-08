@@ -680,6 +680,35 @@ export class MailClient {
                     template: 'cake_notification.html',
                     useMjml: false,
                 }
+
+            case 'websitePartyLabFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_party_lab_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websitePartyLabFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party Lab Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_party_lab_form_to_fizz.html',
+                    useMjml: false,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)

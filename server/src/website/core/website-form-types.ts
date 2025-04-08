@@ -73,6 +73,17 @@ export type Form = {
         enquiry: string
         reference: string
     }
+    partyLab: {
+        name: string
+        email: string
+        contactNumber: string
+        location: ContactFormLocationOption
+        session: string
+        type: string
+        enquiry?: string
+        reference: ReferenceOption
+        referenceOther?: string
+    }
 }
 
 export type ContactFormServiceOption =

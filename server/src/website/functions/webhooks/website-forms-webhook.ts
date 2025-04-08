@@ -423,6 +423,54 @@ export const websiteFormsWebhook = onRequest(async (req, res) => {
                 break
             }
 
+            case 'partyLab': {
+                const formData = JSON.parse(req.body) as Form['partyLab']
+
+                await mailClient.sendEmail(
+                    'websitePartyLabFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        location: LocationDisplayValueMap[formData.location],
+                        session: formData.session,
+                        type: formData.type,
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
+
+                await mailClient.sendEmail(
+                    'websitePartyLabFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        location: LocationDisplayValueMap[formData.location],
+                        session: formData.session,
+                        type: formData.type,
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
+                    },
+                    {
+                        subject: `${formData.name} - Party Lab`,
+                        replyTo: formData.email,
+                        bccBookings: false,
+                    }
+                )
+
+                break
+            }
+
             default: {
                 const exhaustiveCheck: never = formId
                 // we always want to send a 200 to the wordpress plugin, so only log the error

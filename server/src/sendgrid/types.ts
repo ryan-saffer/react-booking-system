@@ -424,4 +424,26 @@ export type Emails = {
         enquiry: string
         reference: string
     }
+
+    websitePartyLabFormToCustomer: {
+        name: string
+        email: string
+        contactNumber: string
+        location: string
+        session: string
+        type: string
+        enquiry?: string
+        reference: string
+    }
+
+    websitePartyLabFormToFizz: {
+        name: string
+        email: string
+        contactNumber: string
+        location: string
+        session: string
+        type: string
+        enquiry?: string
+        reference: string
+    }
 }
