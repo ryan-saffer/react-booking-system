@@ -1,4 +1,4 @@
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityTypes, ObjectEntries } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -152,15 +152,22 @@ export const HolidayProgramSelectionPage = () => {
                                         onChange={handleCalendarChange}
                                     >
                                         {import.meta.env.VITE_ENV === 'prod' &&
-                                            Object.entries(AcuityConstants.StoreCalendars).map(
-                                                ([store, calendarId]) => {
+                                            ObjectEntries(AcuityConstants.StoreCalendars)
+                                                .filter(
+                                                    ([location]) =>
+                                                        !!classes?.find(
+                                                            (it) =>
+                                                                it.calendarID ===
+                                                                AcuityConstants.StoreCalendars[location]
+                                                        )
+                                                )
+                                                .map(([store, calendarId]) => {
                                                     return (
                                                         <MenuItem key={calendarId} value={calendarId}>
                                                             {capitalise(store)}
                                                         </MenuItem>
                                                     )
-                                                }
-                                            )}
+                                                })}
                                         {import.meta.env.VITE_ENV === 'dev' && (
                                             <MenuItem
                                                 key={AcuityConstants.TestCalendarId}

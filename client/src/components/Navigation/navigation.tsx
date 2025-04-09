@@ -6,6 +6,7 @@ import bodyGlitter from '@drawables/body-glitter.webp'
 import energy from '@drawables/energy.webp'
 import holidayPrograms from '@drawables/holiday-programs.webp'
 import jonah from '@drawables/jonah.webp'
+import kingsville from '@drawables/kingsville.jpg'
 import parties from '@drawables/parties.webp'
 
 import styles from './navigation.module.css'
@@ -25,6 +26,11 @@ export const Navigation = () => {
                         imgSrc={holidayPrograms}
                     />
                     <ListItem title="After School Program" to="after-school-program" imgSrc={afterSchool} />
+                    <ListItem
+                        title="Kingsville Opening"
+                        to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '75381458' : '15026605'}`}
+                        imgSrc={kingsville}
+                    />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>
                 <ListItem title="Creation Instructions" to="creations" imgSrc={bodyGlitter} />

@@ -41,6 +41,12 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
         AcuityConstants.Forms.CHILDREN_DETAILS,
         AcuityConstants.FormFields.CHILDREN_NAMES
     )
+    const childAge = AcuityUtilities.retrieveFormAndField(
+        appointment,
+        AcuityConstants.Forms.CHILDREN_DETAILS,
+        AcuityConstants.FormFields.CHILDREN_AGES
+    )
+
     const allergies = AcuityUtilities.retrieveFormAndField(
         appointment,
         AcuityConstants.Forms.CHILDREN_DETAILS,
@@ -153,7 +159,17 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
     }
 
     return (
-        <StyledPanel className={classes.panel} header={childName} key={appointment.id} {...props} extra={renderExtra()}>
+        <StyledPanel
+            className={classes.panel}
+            header={
+                <p style={{ margin: 0 }}>
+                    {childName} <i>({childAge})</i>
+                </p>
+            }
+            key={appointment.id}
+            {...props}
+            extra={renderExtra()}
+        >
             <List
                 dataSource={childInfo}
                 renderItem={(item) =>
