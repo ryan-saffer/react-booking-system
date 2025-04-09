@@ -20,24 +20,56 @@ type Service =
     | ''
 
 export class ZohoClient {
-    #accessToken = null
+    // Current valid access token
+    #accessToken: string | null = null
 
+    // A Promise that represents an in-progress refresh request (if any)
+    #refreshingTokenPromise: Promise<void> | null = null
+
+    /**
+     * Refresh the OAuth token.
+     * If another refresh is already in progress, we'll just wait on that.
+     */
     async #refreshAccessToken() {
-        const result = await fetch(
-            `https://accounts.zoho.com.au/oauth/v2/token?refresh_token=${process.env.ZOHO_REFRESH_TOKEN}&client_id=${process.env.ZOHO_CLIENT_ID}&client_secret=${process.env.ZOHO_CLIENT_SECRET}&grant_type=refresh_token`,
-            { method: 'POST' }
-        )
-        if (result.ok) {
-            const body = await result.json()
-            this.#accessToken = body.access_token
+        // If a refresh is already happening, wait for it to finish
+        if (this.#refreshingTokenPromise) {
+            return this.#refreshingTokenPromise
+        }
+
+        // Otherwise, start a new refresh
+        this.#refreshingTokenPromise = (async () => {
+            const result = await fetch(
+                `https://accounts.zoho.com.au/oauth/v2/token?refresh_token=${process.env.ZOHO_REFRESH_TOKEN}&client_id=${process.env.ZOHO_CLIENT_ID}&client_secret=${process.env.ZOHO_CLIENT_SECRET}&grant_type=refresh_token`,
+                { method: 'POST' }
+            )
+            if (result.ok) {
+                const body = await result.json()
+                this.#accessToken = body.access_token
+            } else {
+                // If the refresh fails, throw an error so it rejects the Promise
+                throw new Error(`Failed to refresh token. Status: ${result.status}`)
+            }
+        })()
+
+        try {
+            // Wait for the refresh request to complete
+            await this.#refreshingTokenPromise
+        } finally {
+            // Once it's done (even if it fails), reset the Promise
+            this.#refreshingTokenPromise = null
         }
     }
 
+    /**
+     * Generic request method that will:
+     * 1) Try with the current token.
+     * 2) If 401, refresh token (synchronously if needed) and retry once.
+     */
     async #request(
         props: { endpoint: string; method: 'GET' } | { endpoint: string; method: 'POST'; data: Record<string, any>[] },
         retryCount = 1
     ): Promise<any> {
-        const request = () =>
+        const doFetch = () =>
             fetch(`https://www.zohoapis.com.au/crm/v6/${props.endpoint}`, {
                 headers: {
                     Authorization: `Zoho-oauthtoken ${this.#accessToken}`,
@@ -48,23 +80,25 @@ export class ZohoClient {
                 }),
             })
 
-        // try request first, and see if it works.
-        // if not refresh the access token and try again.
-        const result = await request()
+        const result = await doFetch()
+
         if (result.ok) {
             if (result.status === 204) {
                 // no content
                 return null
             }
             return result.json()
-        } else if (result.status === 401 && retryCount === 1) {
-            // invalid oauth token, refresh the token and try again
+        }
+
+        if (result.status === 401 && retryCount === 1) {
+            // refresh token (waiting if another request is already refreshing it)
             await this.#refreshAccessToken()
             return this.#request(props, retryCount - 1)
-        } else {
-            const error = await result.json()
-            throw error
         }
+
+        // Otherwise, throw the error body
+        const errorBody = await result.json().catch(() => ({}))
+        throw errorBody
     }
 
     /**
