@@ -10,6 +10,7 @@ import type {
     HolidayProgramBooking,
     Invitation,
     PaidHolidayProgramBooking,
+    ZohoAccessToken,
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
@@ -118,5 +119,9 @@ export class FirestoreRefs {
 
     static async user(uid: string) {
         return (await this.users()).doc(uid)
+    }
+
+    static async zohoAccessToken() {
+        return (await FirestoreClient.getInstance()).doc('accessTokens/zoho') as Document<ZohoAccessToken>
     }
 }

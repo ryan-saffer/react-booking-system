@@ -313,6 +313,18 @@ class Client {
                 return user.accountType === 'staff' && user.roles && Object.keys(user.roles).includes(studio)
             })
     }
+
+    getZohoAccessToken() {
+        return this.#getDocument(FirestoreRefs.zohoAccessToken())
+    }
+
+    startRefreshingZohoAccessToken() {
+        return this.#updateDocument(FirestoreRefs.zohoAccessToken(), { isRefreshing: true })
+    }
+
+    setZohoAccessToken(accessToken: string) {
+        return this.#updateDocument(FirestoreRefs.zohoAccessToken(), { accessToken, isRefreshing: false })
+    }
 }
 
 const DatabaseClient = new Client()

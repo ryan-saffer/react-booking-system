@@ -1,6 +1,8 @@
 import { Booking, Location, capitalise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
+import { DatabaseClient } from '../firebase/DatabaseClient'
+
 type BaseProps = {
     firstName: string
     lastName?: string
@@ -23,40 +25,42 @@ export class ZohoClient {
     // Current valid access token
     #accessToken: string | null = null
 
-    // A Promise that represents an in-progress refresh request (if any)
-    #refreshingTokenPromise: Promise<void> | null = null
+    /**
+     * Get the access token from firestore. If its currently being refreshed, wait for that to finish.
+     *
+     * This mechanism is in place due to many concurrent requests leading to race conditions.
+     * Particularly an issue during holiday program sign in where the acuity webhook fires many events all at once.
+     */
+    async #getAccessToken() {
+        let waitingForRefresh = true
+        while (waitingForRefresh) {
+            const { accessToken, isRefreshing } = await DatabaseClient.getZohoAccessToken()
+            waitingForRefresh = isRefreshing
+            this.#accessToken = accessToken
+            if (isRefreshing) {
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 200)
+                })
+            }
+        }
+    }
 
     /**
-     * Refresh the OAuth token.
-     * If another refresh is already in progress, we'll just wait on that.
+     * Refresh the access token, and store in firestore that a refresh is in progress.
      */
     async #refreshAccessToken() {
-        // If a refresh is already happening, wait for it to finish
-        if (this.#refreshingTokenPromise) {
-            return this.#refreshingTokenPromise
-        }
-
-        // Otherwise, start a new refresh
-        this.#refreshingTokenPromise = (async () => {
-            const result = await fetch(
-                `https://accounts.zoho.com.au/oauth/v2/token?refresh_token=${process.env.ZOHO_REFRESH_TOKEN}&client_id=${process.env.ZOHO_CLIENT_ID}&client_secret=${process.env.ZOHO_CLIENT_SECRET}&grant_type=refresh_token`,
-                { method: 'POST' }
-            )
-            if (result.ok) {
-                const body = await result.json()
-                this.#accessToken = body.access_token
-            } else {
-                // If the refresh fails, throw an error so it rejects the Promise
-                throw new Error(`Failed to refresh token. Status: ${result.status}`)
-            }
-        })()
-
-        try {
-            // Wait for the refresh request to complete
-            await this.#refreshingTokenPromise
-        } finally {
-            // Once it's done (even if it fails), reset the Promise
-            this.#refreshingTokenPromise = null
+        await DatabaseClient.startRefreshingZohoAccessToken()
+        const result = await fetch(
+            `https://accounts.zoho.com.au/oauth/v2/token?refresh_token=${process.env.ZOHO_REFRESH_TOKEN}&client_id=${process.env.ZOHO_CLIENT_ID}&client_secret=${process.env.ZOHO_CLIENT_SECRET}&grant_type=refresh_token`,
+            { method: 'POST' }
+        )
+        if (result.ok) {
+            const body = await result.json()
+            await DatabaseClient.setZohoAccessToken(body.access_token)
+            this.#accessToken = body.access_token
+        } else {
+            await DatabaseClient.setZohoAccessToken('error')
+            throw new Error('Error refreshing zoho access token')
         }
     }
 
@@ -79,6 +83,10 @@ export class ZohoClient {
                     body: JSON.stringify({ data: props.data }),
                 }),
             })
+
+        if (!this.#accessToken) {
+            await this.#getAccessToken()
+        }
 
         const result = await doFetch()
 
