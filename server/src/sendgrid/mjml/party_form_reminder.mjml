@@ -1,72 +1,83 @@
 <mjml>
-  <mj-head>
-    <mj-attributes>
-      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
-      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
-    </mj-attributes>
-    <mj-style inline="inline">
-      .text-link {
-        color: #5e6ebf
-      }
-    </mj-style>
-    <mj-style inline="inline">
-      .footer-link {
-        color: #888888
-      }
-    </mj-style>
-
-  </mj-head>
-  <mj-body background-color="#E7E7E7" width="600px">
-    <mj-section background-color="#4bc5d9" padding-bottom='0px'>
-      <mj-column width="100%">
-        <mj-spacer height="30px" />
-        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-          Don't forget to fill in your party form!
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding-top="0">
-      <mj-column>
-        <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
-      </mj-column>
-    </mj-section>
-    <mj-wrapper padding-top="0" padding-bottom="0">
-      <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
-        <mj-column width="100%">
-          <mj-text color="#637381" font-size="16px">
-            Hi
-            {{ parentName }},
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            {{ managerName }} here! This is a friendly reminder to please have your party form filled in by tomorrow. This will help us to prepare for and ensure any special requirements are met in time for {{ childName }}'s party! You can access your personalised form by clicking on the button below.
-          </mj-text>
-        </mj-column>
-        <mj-column width="100%">
-          <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ prefilledFormUrl }}" width="300px" border="1px #9ecc47 solid">
-            Party Form ↗️
-          </mj-button>
-          <mj-text color="#637381" font-size="16px">
-            If you have any questions or concerns, feel free to reach out to me by either replying to this email, or calling me on {{ managerMobile }}.
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            See you soon!
-          </mj-text>
-          <mj-text color="#637381" font-size="16px">
-            {{ managerName }} and the Fizz Kidz team.
-          </mj-text>
-        </mj-column>
-      </mj-section>
-    </mj-wrapper>
-    <mj-wrapper full-width="full-width">
-      <mj-section padding-top="0">
-        <mj-group>
-          <mj-column width="100%" padding-right="0">
-            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
-            </mj-text>
-          </mj-column>
-        </mj-group>
-      </mj-section>
-    </mj-wrapper>
-  </mj-body>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text
+                font-weight="400"
+                font-size="16px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style> .btn-block a { display: block !important; } </mj-style>
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom="0px">
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    Don't forget to fill in your party form!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        {{ managerName }} here! This is a friendly reminder to please have your party form filled in by
+                        tomorrow. This will help us to prepare for and ensure any special requirements are met in time
+                        for {{ childName }}'s party! You can access your personalised form by clicking on the button
+                        below.
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-button
+                        css-class="btn-block"
+                        background-color="#9ecc47"
+                        padding="20px"
+                        align="center"
+                        color="#ffffff"
+                        font-size="17px"
+                        font-weight="bold"
+                        href="{{ prefilledFormUrl }}"
+                        width="300px"
+                        border="1px #9ecc47 solid"
+                    >
+                        Party Form ↗️
+                    </mj-button>
+                    <mj-text color="#637381" font-size="16px">
+                        If you have any questions or concerns, feel free to reach out to me by either replying to this
+                        email, or calling me on {{ managerMobile }}.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px"> See you soon! </mj-text>
+                    <mj-text color="#637381" font-size="16px"> {{ managerName }} and the Fizz Kidz team. </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
 </mjml>

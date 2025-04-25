@@ -12,6 +12,7 @@
         </mj-attributes>
         <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
         <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style> .btn-block a { display: block !important; } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#eec73b" padding-bottom="0px">
@@ -181,6 +182,7 @@
                     to create a personalised invitation to share with {{childName}}'s friends!</mj-text
                 >
                 <mj-button
+                    css-class="btn-block"
                     background-color="#4BC5D9"
                     padding="20px"
                     align="center"
