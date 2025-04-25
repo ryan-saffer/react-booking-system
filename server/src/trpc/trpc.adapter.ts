@@ -1,10 +1,12 @@
 import { MemoryOption, logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { AnyRouter } from '@trpc/server'
+import { AnyRouter, type TRPCError } from '@trpc/server'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 
 import { createContext } from './trpc'
+
+const ERRORS_TO_IGNORE: TRPCError['code'][] = ['PRECONDITION_FAILED', 'UNAUTHORIZED']
 
 export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory?: MemoryOption) {
     return onRequest(
@@ -13,7 +15,7 @@ export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory
             router,
             createContext,
             onError: ({ error, input, path }) => {
-                if (error.code === 'PRECONDITION_FAILED') {
+                if (ERRORS_TO_IGNORE.includes(error.code)) {
                     // not an error worth logging
                     return
                 }
