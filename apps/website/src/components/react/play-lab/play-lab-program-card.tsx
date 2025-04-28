@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import type { CustomImage } from "@/types/types";
 import { HoverTag } from "./tooltip-tag";
-import PrimaryButton from "@/components/primary-button.astro";
 import { cn } from "../lib/utils";
 
 const PlayLabProgramCard = ({
