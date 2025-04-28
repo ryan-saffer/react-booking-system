@@ -4,9 +4,11 @@ import { ourFileRouter } from "@/server/uploadthing";
 export const prerender = false;
 
 // Export routes for Next App Router
-export const { GET, POST } = createRouteHandler({
+const handler = createRouteHandler({
   router: ourFileRouter,
   config: {
-    uploadthingSecret: import.meta.env.UPLOADTHING_SECRET,
+    token: import.meta.env.UPLOADTHING_TOKEN,
   },
 });
+
+export { handler as GET, handler as POST };
