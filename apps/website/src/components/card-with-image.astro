@@ -13,8 +13,13 @@ type Props = {
 const { image, imageAlt, eager = false, className } = Astro.props;
 ---
 
-<div class={cn("rounded-xl shadow-md bg-white", className)}>
-  <div class="h-52 overflow-hidden rounded-t-xl">
+<div
+  class={cn(
+    "flex flex-col rounded-xl shadow-md bg-white overflow-hidden h-full",
+    className,
+  )}
+>
+  <div class="h-52 flex-shrink-0 overflow-hidden rounded-t-xl">
     <Image
       loading={eager ? "eager" : "lazy"}
       src={image}

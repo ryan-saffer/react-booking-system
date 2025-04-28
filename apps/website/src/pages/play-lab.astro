@@ -1,0 +1,182 @@
+---
+import { getImage, Image } from "astro:assets";
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import CardWithImage from "@/components/card-with-image.astro";
+import hero from "@/assets/images/pages/home/kinder-incursions.jpg";
+import purpleWave from "@/assets/images/pages/play-lab/purple-wave.svg";
+import graphics from "@/assets/images/pages/play-lab/graphics.png";
+import swing from "@/assets/images/pages/play-lab/swing.png";
+import littleExplorers from "@/assets/images/pages/play-lab/little-explorers.jpg";
+import creativeKinders from "@/assets/images/pages/play-lab/creative-kinders.jpg";
+import allAgesBanner from "@/assets/images/pages/play-lab/all-ages-banner.png";
+import littleExplorersBanner from "@/assets/images/pages/play-lab/little-explorers-banner.jpg";
+import creativeKindersBanner from "@/assets/images/pages/play-lab/creative-kinders-banner.png";
+import allPlays from "@/assets/images/pages/play-lab/all-plays.jpg";
+import { HoverTag } from "@/components/react/play-lab/tooltip-tag";
+import PrimaryButton from "@/components/primary-button.astro";
+import FaqAccordion from "@/components/react/faq-accordion";
+import faq from "@/assets/images/pages/parties/faq.png";
+import Values from "@/components/values.astro";
+import PartyLabForm from "@/react-components/forms/party-lab-form";
+import PlayLabProgramsSection from "@/react-components/play-lab/play-lab-programs-section";
+
+const littleExplorersOptimised = await getImage({
+  src: littleExplorers,
+  format: "webp",
+});
+const creativeKindersOptimised = await getImage({
+  src: creativeKinders,
+  format: "webp",
+});
+const allPlaysOptimised = await getImage({
+  src: allPlays,
+  format: "webp",
+});
+---
+
+<Layout
+  title="Browse and book programs and activites for toddlers aged 18 months to 5 years. | Fizz Kidz"
+  description="A program specialy designed for kids aged 18 months to 5 years."
+>
+  <section class="m-auto block max-w-[1380px] px-5 pt-4">
+    <div class="h-[10px]"></div>
+    <BreadcrumbWrapper
+      items={[{ type: "link", title: "Play Lab", path: "/play-lab/" }]}
+    />
+    <PageIntro
+      color="blue"
+      image={hero}
+      imageAlt="Two kids in smocks with messy hands and laughing"
+      subtitle="A program specialy designed for kids aged 18 months to 5 years."
+      actionButtonText="Register Interest"
+      actionButtonPath="/careers/"
+    >
+      <span slot="title">Fizz Kidz Play Lab</span>
+      <span slot="content">
+        Experience a world of exploration and sensory experiences.<br /><br />
+        Art swings, sensory tubs, science experiments, creative art stations and
+        magnetic walls!
+      </span>
+    </PageIntro>
+  </section>
+  <Image
+    src={purpleWave}
+    alt="blue background wave"
+    class="left-0 right-0 w-screen"
+  />
+  <section class="relative bg-[#E7BAFF]">
+    <Image
+      src={graphics}
+      alt="graphics"
+      class="absolute right-0 top-0 z-10 w-60 rotate-180"
+    />
+    <div class="relative z-20 m-auto block max-w-[1380px] px-5 pt-4">
+      <div class="flex items-center gap-8 py-8">
+        <div class="w-full lg:w-1/2">
+          <p class="mb-10 text-center font-lilita text-5xl">Why Play Lab?</p>
+          <p class="font-gotham text-2xl font-light">
+            We believe in the magic of <span class="font-bold"
+              >child-led play.</span
+            > Our sensory sessions are designed for little hands to explore freely,
+            create joyfully, and get wonderfully messy!<br /><br />With a <span
+              class="font-bold">"let them"</span
+            > approach, we welcome the chaos, mess, laughter and squeals of delight.<br
+            /><br /><span class="font-bold">
+              Our sessions are for you just as much as they are for your child.
+            </span>Whether you're a parent, grandparent or caregiver, come bond,
+            share special moments and connect with your little one.<br /><br
+            />With only <span class="font-bold">15 children per session,</span> our
+            expertly fun facilitators guide playful, sensory-rich experiences that
+            spark creativity and connection.<br /><br />It'll also get you both
+            out of the house for an hour!
+          </p>
+        </div>
+        <Image
+          src={swing}
+          alt="girl on a swing"
+          class="hidden w-1/2 max-w-[600px] rounded-2xl border-[12px] border-white lg:block"
+        />
+      </div>
+    </div>
+  </section>
+  <Image
+    src={purpleWave}
+    alt="blue background wave"
+    class="left-0 right-0 -mt-1 w-screen rotate-180"
+  />
+  <section class="m-auto block max-w-[1380px] px-5 pt-4">
+    <p class="mb-12 text-center font-lilita text-6xl">
+      Fizz Kidz Play Lab Programs
+    </p>
+    <PlayLabProgramsSection
+      client:load
+      littleExplorersImage={{
+        image: littleExplorersOptimised,
+        alt: "Two kids in smocks laughing",
+      }}
+      creativeKindersImage={{
+        image: creativeKindersOptimised,
+        alt: "A cardboard car covered in paint",
+      }}
+      allPlaysImage={{
+        image: allPlaysOptimised,
+        alt: "A girl amazed as she plays with paint",
+      }}
+    />
+    <section class="my-12 md:my-20">
+      <h6 class="mb-4 text-center font-lilita text-4xl md:text-5xl">
+        Frequently Asked Questions
+      </h6>
+      <div class="flex w-full flex-col items-center gap-8 md:flex-row">
+        <Image
+          class="hidden w-2/5 md:block"
+          src={faq}
+          alt="Three girls smiling"
+        />
+        <div class="w-full md:w-3/5">
+          <FaqAccordion
+            client:idle
+            items={[
+              {
+                question: "When do I choose my creations?",
+                answer: "10 days before your childs upcoming party!",
+              },
+              {
+                question: "When do I let you know numbers?",
+                answer:
+                  "10 days before your childs upcoming party. We will only charge you for the number of kids that turn up!",
+              },
+              {
+                question: "Can I change the party food if I like?",
+                answer: "Yes we have options!",
+              },
+              {
+                question: "When do you take payment?",
+                answer: "At the end of the party. We do not take any deposit.",
+              },
+              {
+                question: "Can we bring food for parents?",
+                answer:
+                  "Sure, please make sure it's nut free and let us know before the party.",
+              },
+              {
+                question: "Can parents stay during the party?",
+                answer: "Sure, parents can stay or drop off.",
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </section>
+    <div class="m-auto mb-12 mt-0 max-w-4xl p-4">
+      <p class="mb-12 text-center font-lilita text-4xl">
+        Bookings will be available soon, but in the meantime, register your
+        interest and we will be in touch!
+      </p>
+      <PartyLabForm client:idle />
+    </div>
+    <Values />
+  </section>
+</Layout>
