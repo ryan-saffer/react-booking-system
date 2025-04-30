@@ -42,13 +42,20 @@ const PlayLabProgramsSection = ({
   }, [selectedModule, queuedModule]);
 
   const handleModuleClicked = (newModule: Module) => {
-    if (selectedModule === null) {
+    // handle a card is already queued to be closed
+    if (selectedModule === null && queuedModule !== null) {
+      setQueuedModule(newModule);
+    } else if (selectedModule === null) {
       setSelectedModule(newModule);
     } else if (selectedModule === newModule) {
       setSelectedModule(null);
     } else {
-      setQueuedModule(newModule);
-      setSelectedModule(null);
+      if (isMobile) {
+        setSelectedModule(newModule);
+      } else {
+        setQueuedModule(newModule);
+        setSelectedModule(null);
+      }
     }
   };
 
@@ -93,20 +100,18 @@ const PlayLabProgramsSection = ({
             supports early development through play.
           </p>
           <img
-            className="my-12 h-60 w-full rounded-3xl object-cover"
+            className="my-12 h-60 w-full rounded-lg object-cover"
             src={littleExplorersImage.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Tuesdays</p>
-                <p className="mb-2 text-lg">9:30am - 10:15am</p>
-                <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">10:30am - 11:15am</p>
+                <p className="text-xl font-extrabold">Thursdays</p>
+                <p className="text-lg">9:15am - 10:00am</p>
               </div>
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
                   Pricing
                 </p>
@@ -118,7 +123,7 @@ const PlayLabProgramsSection = ({
                 </p>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-2xl bg-white p-8 shadow-around md:w-1/2">
+            <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
               <p className="mb-4 text-2xl font-bold">
                 Learning grows week by week over the term, guided by past
                 adventures.
@@ -189,20 +194,18 @@ const PlayLabProgramsSection = ({
             curiosity!
           </p>
           <img
-            className="my-12 h-60 w-full rounded-3xl object-cover"
+            className="my-12 h-60 w-full rounded-lg object-cover"
             src={creativeKindersImage.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Tuesdays</p>
-                <p className="mb-2 text-lg">9:30am - 10:15am</p>
                 <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">10:30am - 11:15am</p>
+                <p className="text-lg">11:00am - 12:00pm</p>
               </div>
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
                   Pricing
                 </p>
@@ -214,7 +217,7 @@ const PlayLabProgramsSection = ({
                 </p>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-2xl bg-white p-8 shadow-around md:w-1/2">
+            <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
               <p className="mb-4 text-2xl font-bold">
                 Learning grows week by week over the term, guided by past
                 adventures.
@@ -285,20 +288,20 @@ const PlayLabProgramsSection = ({
             joyful mess-making!
           </p>
           <img
-            className="my-12 h-60 w-full rounded-3xl object-cover"
+            className="my-12 h-60 w-full rounded-lg object-cover"
             src={allPlaysImage.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Tuesdays</p>
-                <p className="mb-2 text-lg">9:30am - 10:15am</p>
                 <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">10:30am - 11:15am</p>
+                <p className="mb-2 text-lg">9:15am - 10:15am</p>
+                <p className="text-xl font-extrabold">Thursdays</p>
+                <p className="text-lg">10:45am - 11:45am</p>
               </div>
-              <div className="relative z-10 h-full rounded-2xl bg-white p-8 shadow-around">
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
                   Pricing
                 </p>
@@ -310,7 +313,7 @@ const PlayLabProgramsSection = ({
                 </p>
               </div>
             </div>
-            <div className="flex w-full flex-col rounded-2xl bg-white p-8 shadow-around md:w-1/2">
+            <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
               <p className="mb-4 text-2xl font-bold">
                 Learning grows week by week over the term, guided by past
                 adventures.
