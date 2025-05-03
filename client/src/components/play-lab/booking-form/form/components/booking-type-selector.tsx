@@ -15,7 +15,7 @@ export function BookingTypeSelector() {
         form.setValue('appointmentTypeId', null)
     }
 
-    if (formStage !== 'studio-selection') return null
+    if (formStage !== 'program-selection') return null
     if (!studio) return null
 
     return (

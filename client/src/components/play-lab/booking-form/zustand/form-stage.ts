@@ -6,17 +6,16 @@ type State = {
     previousStage: () => void
 }
 
-type FormStage = 'studio-selection' | 'appointment-type-selection' | 'class-selection'
+type FormStage = 'program-selection' | 'form'
 
 export const useFormStage = create<State>((set, get) => ({
-    formStage: 'studio-selection',
+    formStage: 'program-selection',
     nextStage: () => {
         const currentStage = get().formStage
-        if (currentStage === 'studio-selection') set({ formStage: 'class-selection' })
-        else if (currentStage === 'appointment-type-selection') set({ formStage: 'class-selection' })
+        if (currentStage === 'program-selection') set({ formStage: 'form' })
     },
     previousStage: () => {
         const currentStage = get().formStage
-        if (currentStage === 'class-selection') set({ formStage: 'appointment-type-selection' })
+        if (currentStage === 'form') set({ formStage: 'program-selection' })
     },
 }))

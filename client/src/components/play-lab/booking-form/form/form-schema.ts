@@ -4,6 +4,36 @@ import { z } from 'zod'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 
+const childSchema = z
+    .object({
+        // All fields here are optional to allow appending an empty child (see https://github.com/orgs/react-hook-form/discussions/10211)
+        // By using `refine()` on each optional field, we still enforce that they have a value.
+        firstName: z.string().trim().min(1, 'Child first name is required'),
+        lastName: z.string().trim().min(1, 'Child last name is required'),
+        dob: z
+            .date()
+            .optional()
+            .refine((date) => !!date, 'Date of birth is required'),
+        hasAllergies: z
+            .boolean()
+            .optional()
+            .refine((val) => val !== undefined, 'Select if the child has any allergies.'),
+        allergies: z.string().optional(),
+    })
+    // only require `allergies` if `hasAllergies` is true
+    .refine(
+        (data) => {
+            if (data.hasAllergies && !data.allergies) {
+                return false
+            }
+            return true
+        },
+        {
+            message: `Please enter the child's allergies`,
+            path: ['allergies'],
+        }
+    )
+
 export const formSchema = z.object({
     studio: z.custom<Location>((value) => !!value, 'Please select a studio.').nullable(),
     bookingType: z.enum(['term-booking', 'casual']),
@@ -12,7 +42,7 @@ export const formSchema = z.object({
     parentLastName: z.string().trim().min(1, 'Parent last name is required'),
     parentEmailAddress: z.string().email().trim().toLowerCase(),
     parentPhone: z.string().min(10, 'Number must be at least 10 digits').regex(phoneRegex, 'Invalid Number').trim(),
-    // children: z.array(childSchema),
+    children: z.array(childSchema),
     emergencyContactName: z.string().trim().min(1, 'Emergency contact name is required'),
     emergencyContactRelation: z.string().trim().min(1, 'Emergency contact relation is required'),
     emergencyContactNumber: z
@@ -20,11 +50,11 @@ export const formSchema = z.object({
         .min(10, 'Number must be at least 10 digits')
         .regex(phoneRegex, 'Invalid number')
         .trim(),
-    pickupPeople: z.array(
-        z.object({
-            pickupPerson: z.string().trim().min(1, 'Pickup person cannot be empty'),
-        })
-    ),
+    // pickupPeople: z.array(
+    //     z.object({
+    //         pickupPerson: z.string().trim().min(1, 'Pickup person cannot be empty'),
+    //     })
+    // ),
     termsAndConditions: z.boolean().refine((val) => val, 'Please accept the terms and conditions'),
     joinMailingList: z.boolean(),
 })

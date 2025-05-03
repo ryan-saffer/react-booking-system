@@ -5,7 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@ui-components/form'
 import { Separator } from '@ui-components/separator'
 
-import { BookingForm } from '../form/booking-form'
+import { BackButton } from '../form/components/back-button'
+import { BookingForm } from '../form/components/booking-form'
+import { BookingTypeSelector } from '../form/components/booking-type-selector'
+import { CasualProgramSelector } from '../form/components/casual-program-selector'
+import { StudioSelector } from '../form/components/studio-selector'
+import { TermProgramSelector } from '../form/components/term-program-selector'
 import { PlayLabBookingForm, formSchema } from '../form/form-schema'
 
 export function PlayLabEnrolmentPage() {
@@ -18,20 +23,19 @@ export function PlayLabEnrolmentPage() {
             parentLastName: '',
             parentEmailAddress: '',
             parentPhone: '',
-            // children: [
-            //     {
-            //         firstName: '',
-            //         lastName: '',
-            //         dob: undefined,
-            //         grade: undefined,
-            //         hasAllergies: undefined,
-            //         allergies: undefined,
-            //     },
-            // ],
+            children: [
+                {
+                    firstName: '',
+                    lastName: '',
+                    dob: undefined,
+                    hasAllergies: undefined,
+                    allergies: undefined,
+                },
+            ],
             emergencyContactName: '',
             emergencyContactRelation: '',
             emergencyContactNumber: '',
-            pickupPeople: [{ pickupPerson: '' }],
+            // pickupPeople: [{ pickupPerson: '' }],
             termsAndConditions: false,
             joinMailingList: true,
         },
@@ -45,6 +49,11 @@ export function PlayLabEnrolmentPage() {
                 <FormProvider {...form}>
                     <Form {...form}>
                         <form>
+                            <BackButton />
+                            <StudioSelector />
+                            <BookingTypeSelector />
+                            <TermProgramSelector />
+                            <CasualProgramSelector />
                             <BookingForm />
                         </form>
                     </Form>

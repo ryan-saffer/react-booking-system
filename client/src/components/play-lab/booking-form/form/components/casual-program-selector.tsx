@@ -16,7 +16,7 @@ import { FormLabel } from '@ui-components/form'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
-    const { formStage } = useFormStage()
+    const { formStage, nextStage } = useFormStage()
 
     const { selectedClasses } = useAcuityStore()
 
@@ -48,7 +48,7 @@ export function CasualProgramSelector() {
         { enabled: !!appointmentTypes, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
     )
 
-    if (formStage !== 'studio-selection') return null
+    if (formStage !== 'program-selection') return null
     if (!bookingType || bookingType !== 'casual') return null
 
     if (isLoadingAppointmentTypes || isLoadingClasses) return <Loader />
@@ -82,7 +82,7 @@ export function CasualProgramSelector() {
                 />
                 {selectedDay && <SessionSelector classes={classes} selectedDay={selectedDay} />}
                 {Object.keys(selectedClasses).length !== 0 && (
-                    <Button className="mt-4 w-full" type="button">
+                    <Button className="mt-4 w-full font-semibold" type="button" onClick={nextStage}>
                         Continue
                     </Button>
                 )}

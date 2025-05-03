@@ -11,7 +11,7 @@ export function StudioSelector() {
 
     const { formStage } = useFormStage()
 
-    if (formStage !== 'studio-selection') return null
+    if (formStage !== 'program-selection') return null
 
     return (
         <FormField

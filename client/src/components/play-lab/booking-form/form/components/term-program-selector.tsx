@@ -29,7 +29,7 @@ export function TermProgramSelector() {
 
     const bookingType = form.watch('bookingType')
 
-    if (formStage !== 'studio-selection') return null
+    if (formStage !== 'program-selection') return null
     if (!bookingType || bookingType === 'casual') return null
 
     if (isLoading) return <Loader />
@@ -66,6 +66,7 @@ export function TermProgramSelector() {
  */
 function ContinueOrError() {
     const form = useBookingForm()
+    const { nextStage } = useFormStage()
     const studio = form.watch('studio')
     const appointmentTypeId = form.watch('appointmentTypeId')
 
@@ -115,7 +116,7 @@ function ContinueOrError() {
         }
 
         return (
-            <Button className="mt-4 w-full" type="button">
+            <Button className="mt-4 w-full font-semibold" type="button" onClick={nextStage}>
                 Continue
             </Button>
         )
