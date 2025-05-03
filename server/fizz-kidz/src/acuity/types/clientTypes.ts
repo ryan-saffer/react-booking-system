@@ -13,6 +13,8 @@ export type GetAppointmentsParams = {
     ids: number[]
 }
 
+export type PlayLabAppointmentType = 'play-lab-test'
+
 export type GetAppointmentTypesParams = {
     category?: Array<
         | 'Science Club'
@@ -31,6 +33,7 @@ export type GetAppointmentTypesParams = {
         | 'art-malvern'
         | 'art-cheltenham'
         | 'art-kingsville'
+        | PlayLabAppointmentType
     >
     availableToBook?: boolean
 }
@@ -65,7 +68,7 @@ export type UpdateAppointmentParams = {
 }
 
 export type ClassAvailabilityParams = {
-    appointmentTypeId: number
+    appointmentTypeIds: number[]
     includeUnavailable: boolean
     minDate?: number
 }

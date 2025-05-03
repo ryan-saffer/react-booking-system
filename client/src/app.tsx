@@ -123,6 +123,11 @@ const Account = lazy(() => import('./components/settings/account.js').then((modu
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
 )
+const PlayLabEnrolmentPage = lazy(() =>
+    import('./components/play-lab/booking-form/pages/play-lab-enrolment-page.js').then((module) => ({
+        default: module.PlayLabEnrolmentPage,
+    }))
+)
 
 const router = createBrowserRouter([
     {
@@ -407,6 +412,14 @@ const router = createBrowserRouter([
                         ),
                     },
                 ],
+            },
+            {
+                path: 'play-lab-enrolment',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <PlayLabEnrolmentPage />
+                    </Suspense>
+                ),
             },
             {
                 path: 'invitations',

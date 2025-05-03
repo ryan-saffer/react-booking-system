@@ -71,6 +71,8 @@ export type Class = {
     slotsAvailable: number
     time: string
     appointmentTypeID: number
+    name: string
+    description: string
 }
 
 export type Calendar = {

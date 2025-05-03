@@ -42,7 +42,7 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
     })
 
     const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeId: selectedAppointmentType?.id || 0,
+        appointmentTypeIds: [selectedAppointmentType?.id || 0],
         includeUnavailable: true,
         minDate: nowRef.current,
     })

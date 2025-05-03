@@ -60,7 +60,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         isError,
         data: classes,
     } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeId: selectedProgram!.id,
+        appointmentTypeIds: [selectedProgram!.id],
         includeUnavailable: true,
     })
 

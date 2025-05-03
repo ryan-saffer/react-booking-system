@@ -68,7 +68,7 @@ export default async function scheduleAfterSchoolProgram(
     // schedule into all appointments of the program, along with the document id
     let appointments: AcuityTypes.Api.Appointment[]
     try {
-        const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
+        const classes = await acuityClient.getClasses([input.appointmentTypeId], false, Date.now())
         appointments = await Promise.all(
             classes.map((it) =>
                 acuityClient.scheduleAppointment({
