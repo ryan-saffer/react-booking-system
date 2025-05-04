@@ -23,7 +23,7 @@ export function CasualProgramSelector() {
     const bookingType = form.watch('bookingType')
 
     const minDate = useMemo(() => Date.now(), [])
-    const [selectedDay, setSelectedDay] = useState(new Date())
+    const [selectedDay, setSelectedDay] = useState<Date | null>(null)
 
     const {
         data: appointmentTypes,
@@ -68,18 +68,21 @@ export function CasualProgramSelector() {
             <>
                 <FormLabel className="text-md">Session Selection</FormLabel>
                 <Calendar
-                    today={new Date()}
                     onDayClick={(day) => {
                         setSelectedDay(day)
                     }}
                     modifiers={{
                         disabled: (date) => !classes.some((klass) => isSameDay(klass.time, date)),
-                        selected: (date) => Object.values(selectedClasses).some((klass) => isSameDay(klass.time, date)),
+                        today: new Date(),
+                        programSelected: (date) =>
+                            Object.values(selectedClasses).some((klass) => isSameDay(klass.time, date)),
+                        selected: (date) => (selectedDay ? isSameDay(date, selectedDay) : false),
                     }}
                     modifiersClassNames={{
                         disabled: 'hover:bg-white text-muted-foreground opacity-50',
                         today: 'bg-gray-100 !rounded-full',
-                        selected: 'bg-green-200 hover:bg-green-100 !rounded-full',
+                        programSelected: 'bg-green-200 hover:bg-green-100 !rounded-full',
+                        selected: 'text-purple-600 !font-extrabold underline',
                     }}
                     styles={{
                         caption_start: { width: '100%' },
@@ -87,6 +90,7 @@ export function CasualProgramSelector() {
                             width: '100%',
                         },
                         cell: { width: '100%', cursor: 'not-allowed', background: 'white' },
+                        day: { color: '!font-semibold' },
                     }}
                 />
                 {selectedDay && <SessionSelector classes={classes} selectedDay={selectedDay} />}
@@ -101,9 +105,15 @@ export function CasualProgramSelector() {
 }
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
+    const form = useBookingForm()
     const { selectedClasses, toggleClass } = useCartStore()
 
-    const filteredClasses = classes.filter((it) => isSameDay(it.time, selectedDay))
+    const numberOfKids = form.watch('children').length
+
+    const filteredClasses = useMemo(
+        () => classes.filter((it) => isSameDay(it.time, selectedDay)),
+        [classes, selectedDay]
+    )
 
     if (!filteredClasses.length) return null
 
@@ -123,7 +133,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                     'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
                                 }
                             )}
-                            onClick={() => toggleClass(klass)}
+                            onClick={() => toggleClass(klass, numberOfKids)}
                         >
                             <div>
                                 <p className="font-lilita text-lg" style={{ color }}>

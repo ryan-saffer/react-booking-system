@@ -19,6 +19,7 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
+import { useCartStore } from '../../zustand/cart-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 
@@ -26,14 +27,26 @@ export function CustomerDetails() {
     const form = useBookingForm()
     const { formStage, nextStage } = useFormStage()
 
+    const calculateTotal = useCartStore((store) => store.calculateTotal)
+
     const {
         fields: children,
-        append: appendChild,
-        remove: removeChild,
+        append,
+        remove,
     } = useFieldArray({
         control: form.control,
         name: 'children',
     })
+
+    function appendChild() {
+        append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
+        calculateTotal(form.getValues().children.length)
+    }
+
+    function removeChild(idx: number) {
+        remove(idx)
+        calculateTotal(form.getValues().children.length)
+    }
 
     // const {
     //     fields: pickupPeople,
@@ -256,7 +269,7 @@ export function CustomerDetails() {
                 className="border-2 border-dashed bg-slate-50"
                 type="button"
                 variant="outline"
-                onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
+                onClick={appendChild}
             >
                 {form.getValues('children').length === 0 ? 'Add child' : 'Add another child'}
                 <Plus className="ml-2 h-4 w-4" />
