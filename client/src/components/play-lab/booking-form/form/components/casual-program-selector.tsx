@@ -9,7 +9,7 @@ import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useProgramStore, type LocalAcuityClass } from '../../zustand/program-store'
+import { useCartStore, type LocalAcuityClass } from '../../zustand/cart-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 import { FormLabel } from '@ui-components/form'
@@ -18,7 +18,7 @@ export function CasualProgramSelector() {
     const form = useBookingForm()
     const { formStage, nextStage } = useFormStage()
 
-    const { selectedClasses } = useProgramStore()
+    const { selectedClasses } = useCartStore()
 
     const bookingType = form.watch('bookingType')
 
@@ -63,6 +63,7 @@ export function CasualProgramSelector() {
     if (isErrorAppointmentTypes || isErrorClasses) return <p>Error</p>
 
     if (isSuccessClasses) {
+        console.log(classes)
         return (
             <>
                 <FormLabel className="text-md">Session Selection</FormLabel>
@@ -100,7 +101,7 @@ export function CasualProgramSelector() {
 }
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
-    const { selectedClasses, toggleClass } = useProgramStore()
+    const { selectedClasses, toggleClass } = useCartStore()
 
     const filteredClasses = classes.filter((it) => isSameDay(it.time, selectedDay))
 

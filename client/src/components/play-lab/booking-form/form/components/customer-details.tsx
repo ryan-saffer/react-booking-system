@@ -250,110 +250,110 @@ export function CustomerDetails() {
                             )}
                         />
                     )}
-                    <Button
-                        className="border-2 border-dashed bg-slate-50"
-                        type="button"
-                        variant="outline"
-                        onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
-                    >
-                        {form.getValues('children').length === 0 ? 'Add child' : 'Add another child'}
-                        <Plus className="ml-2 h-4 w-4" />
-                    </Button>
-                    <SectionBreak title="Emergency Contact" />
-                    <p>This person will be contacted in the case we cannot get hold of you.</p>
-                    <FormField
-                        control={form.control}
-                        name="emergencyContactName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Emergency Contact Name</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="emergencyContactRelation"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Emergency Contact Relation</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="emergencyContactNumber"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Emergency Contact Number</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="termsAndConditions"
-                        render={({ field }) => (
-                            <FormItem className="mt-2">
-                                <div className="flex items-center space-y-0">
-                                    <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                    </FormControl>
-                                    <FormLabel className="ml-2 cursor-pointer">
-                                        I have read and agreed to the{' '}
-                                        <span
-                                            className="text-blue-500 hover:underline"
-                                            onClick={() => setShowTermsAndConditions(true)}
-                                        >
-                                            Terms and Conditions.
-                                        </span>
-                                    </FormLabel>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="joinMailingList"
-                        render={({ field }) => (
-                            <FormItem className="mb-2">
-                                <div className="flex items-center space-y-0">
-                                    <FormControl>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                    </FormControl>
-                                    <FormLabel className="ml-2 cursor-pointer">
-                                        Keep me informed about the latest Fizz Kidz programs and offers.
-                                    </FormLabel>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <Button type="submit" className="font-semibold">
-                        Continue to payment
-                    </Button>
-                    <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
-                        <DialogContent className="twp">
-                            <DialogHeader>
-                                <DialogTitle>Terms and Conditions</DialogTitle>
-                            </DialogHeader>
-                            <TermsAndConditions />
-                        </DialogContent>
-                    </Dialog>
                 </Fragment>
             ))}
+            <Button
+                className="border-2 border-dashed bg-slate-50"
+                type="button"
+                variant="outline"
+                onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
+            >
+                {form.getValues('children').length === 0 ? 'Add child' : 'Add another child'}
+                <Plus className="ml-2 h-4 w-4" />
+            </Button>
+            <SectionBreak title="Emergency Contact" />
+            <p>This person will be contacted in the case we cannot get hold of you.</p>
+            <FormField
+                control={form.control}
+                name="emergencyContactName"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Emergency Contact Name</FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="emergencyContactRelation"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Emergency Contact Relation</FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="emergencyContactNumber"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Emergency Contact Number</FormLabel>
+                        <FormControl>
+                            <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="termsAndConditions"
+                render={({ field }) => (
+                    <FormItem className="mt-2">
+                        <div className="flex items-center space-y-0">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <FormLabel className="ml-2 cursor-pointer">
+                                I have read and agreed to the{' '}
+                                <span
+                                    className="text-blue-500 hover:underline"
+                                    onClick={() => setShowTermsAndConditions(true)}
+                                >
+                                    Terms and Conditions.
+                                </span>
+                            </FormLabel>
+                        </div>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="joinMailingList"
+                render={({ field }) => (
+                    <FormItem className="mb-2">
+                        <div className="flex items-center space-y-0">
+                            <FormControl>
+                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                            <FormLabel className="ml-2 cursor-pointer">
+                                Keep me informed about the latest Fizz Kidz programs and offers.
+                            </FormLabel>
+                        </div>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <Button type="submit" className="font-semibold">
+                Continue to payment
+            </Button>
+            <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
+                <DialogContent className="twp">
+                    <DialogHeader>
+                        <DialogTitle>Terms and Conditions</DialogTitle>
+                    </DialogHeader>
+                    <TermsAndConditions />
+                </DialogContent>
+            </Dialog>
         </form>
     )
 }

@@ -73,6 +73,7 @@ export type Class = {
     appointmentTypeID: number
     name: string
     description: string
+    price: string
 }
 
 export type Calendar = {
