@@ -22,9 +22,9 @@ import { cn } from '@utils/tailwind'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 
-export function BookingForm() {
+export function CustomerDetails() {
     const form = useBookingForm()
-    const { formStage } = useFormStage()
+    const { formStage, nextStage } = useFormStage()
 
     const {
         fields: children,
@@ -51,7 +51,7 @@ export function BookingForm() {
     if (formStage !== 'form') return null
 
     return (
-        <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(nextStage)}>
             <SectionBreak title="Parent Details" />
             <FormField
                 control={form.control}
@@ -341,7 +341,7 @@ export function BookingForm() {
                         )}
                     />
 
-                    <Button type="button" className="font-semibold">
+                    <Button type="submit" className="font-semibold">
                         Continue to payment
                     </Button>
                     <Dialog open={showTermsAndConditions} onOpenChange={() => setShowTermsAndConditions(false)}>
@@ -354,7 +354,7 @@ export function BookingForm() {
                     </Dialog>
                 </Fragment>
             ))}
-        </div>
+        </form>
     )
 }
 

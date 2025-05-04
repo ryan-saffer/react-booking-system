@@ -36,7 +36,7 @@ const childSchema = z
 
 export const formSchema = z.object({
     studio: z.custom<Location>((value) => !!value, 'Please select a studio.').nullable(),
-    bookingType: z.enum(['term-booking', 'casual']),
+    bookingType: z.enum(['term-booking', 'casual']).nullable(),
     appointmentTypeId: z.number().nullable(),
     parentFirstName: z.string().trim().min(1, 'Parent first name is required'),
     parentLastName: z.string().trim().min(1, 'Parent last name is required'),

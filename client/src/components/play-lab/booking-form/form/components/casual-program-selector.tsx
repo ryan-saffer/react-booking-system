@@ -9,7 +9,7 @@ import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useAcuityStore, type LocalAcuityClass } from '../../zustand/acuity-store'
+import { useProgramStore, type LocalAcuityClass } from '../../zustand/program-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 import { FormLabel } from '@ui-components/form'
@@ -18,7 +18,7 @@ export function CasualProgramSelector() {
     const form = useBookingForm()
     const { formStage, nextStage } = useFormStage()
 
-    const { selectedClasses } = useAcuityStore()
+    const { selectedClasses } = useProgramStore()
 
     const bookingType = form.watch('bookingType')
 
@@ -29,10 +29,15 @@ export function CasualProgramSelector() {
         data: appointmentTypes,
         isLoading: isLoadingAppointmentTypes,
         isError: isErrorAppointmentTypes,
-    } = trpc.acuity.getAppointmentTypes.useQuery({
-        category: ['play-lab-test'],
-        availableToBook: false,
-    })
+    } = trpc.acuity.getAppointmentTypes.useQuery(
+        {
+            category: ['play-lab-test'],
+            availableToBook: false,
+        },
+        {
+            enabled: formStage === 'program-selection',
+        }
+    )
 
     const {
         data: classes,
@@ -45,7 +50,10 @@ export function CasualProgramSelector() {
             includeUnavailable: true,
             minDate,
         },
-        { enabled: !!appointmentTypes, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
+        {
+            enabled: !!appointmentTypes && formStage === 'program-selection',
+            select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })),
+        }
     )
 
     if (formStage !== 'program-selection') return null
@@ -92,7 +100,7 @@ export function CasualProgramSelector() {
 }
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
-    const { selectedClasses, toggleClass } = useAcuityStore()
+    const { selectedClasses, toggleClass } = useProgramStore()
 
     const filteredClasses = classes.filter((it) => isSameDay(it.time, selectedDay))
 
