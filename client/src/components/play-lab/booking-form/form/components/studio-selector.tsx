@@ -3,6 +3,7 @@ import { Location, capitalise } from 'fizz-kidz'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 
+import { useCartStore } from '../../zustand/cart-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 
@@ -10,6 +11,7 @@ export function StudioSelector() {
     const form = useBookingForm()
 
     const { formStage } = useFormStage()
+    const clearCart = useCartStore((store) => store.clearCart)
 
     if (formStage !== 'program-selection') return null
 
@@ -22,7 +24,7 @@ export function StudioSelector() {
                     <Select
                         onValueChange={(value) => {
                             field.onChange(value)
-                            // nextStage()
+                            clearCart()
                         }}
                         defaultValue={field.value ?? undefined}
                     >

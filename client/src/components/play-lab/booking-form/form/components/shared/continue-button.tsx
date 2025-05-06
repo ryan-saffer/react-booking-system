@@ -22,7 +22,7 @@ export function ContinueButton() {
     const numberOfSessions = Object.values(selectedClasses).length
 
     return (
-        <Button className="mt-4 w-full font-semibold" type="button" onClick={nextStage}>
+        <Button className="mt-2 w-full font-semibold" type="button" onClick={nextStage}>
             Continue
             <br />
             {numberOfSessions} session

@@ -105,7 +105,7 @@ function ContinueOrError() {
 
     if (!studio) return null
 
-    if (isLoading) return <Loader />
+    if (isLoading) return <Loader className="mt-4" />
     if (isError) return <p>Error</p>
 
     if (isSuccess) {
@@ -146,8 +146,8 @@ function ContinueOrError() {
 
         return (
             <>
-                <ContinueButton />
                 <ReturnButton />
+                <ContinueButton />
             </>
         )
     }
