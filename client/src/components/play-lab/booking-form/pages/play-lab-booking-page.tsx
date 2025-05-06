@@ -10,7 +10,9 @@ import { BookingTypeSelector } from '../form/components/booking-type-selector'
 import { CasualProgramSelector } from '../form/components/casual-program-selector'
 import { CustomerDetails } from '../form/components/customer-details'
 import { Payment } from '../form/components/payment'
+import { Stepper } from '../form/components/stepper'
 import { StudioSelector } from '../form/components/studio-selector'
+import { Success } from '../form/components/sucess'
 import { TermProgramSelector } from '../form/components/term-program-selector'
 import { PlayLabBookingForm, formSchema } from '../form/form-schema'
 
@@ -49,6 +51,7 @@ export function PlayLabBookingPage() {
                 <h1 className="text-center font-lilita text-2xl font-extralight">Play Lab Booking Form</h1>
                 <Separator className="my-4" />
                 <Form {...form}>
+                    <Stepper />
                     <BackButton />
                     <StudioSelector />
                     <BookingTypeSelector />
@@ -56,6 +59,7 @@ export function PlayLabBookingPage() {
                     <CasualProgramSelector />
                     <CustomerDetails />
                     <Payment />
+                    <Success />
                 </Form>
             </div>
         </Root>

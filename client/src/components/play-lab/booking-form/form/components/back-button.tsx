@@ -7,7 +7,7 @@ import { useFormStage } from '../../zustand/form-stage'
 export function BackButton() {
     const { formStage, previousStage } = useFormStage()
 
-    if (formStage === 'program-selection') return null
+    if (formStage === 'program-selection' || formStage === 'success') return null
 
     return (
         <Button className="mb-4" variant="outline" size="sm" type="button" onClick={previousStage}>

@@ -2,6 +2,8 @@ import { PartyPopper } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 
+import Loader from '@components/Shared/Loader'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
@@ -11,20 +13,19 @@ import { useBookingForm } from '../form-schema'
 
 export function Payment() {
     const form = useBookingForm()
-    const { formStage } = useFormStage()
+    const formStage = useFormStage((store) => store.formStage)
+    const nextStage = useFormStage((store) => store.nextStage)
     const { selectedClasses, discount, subtotal, total } = useCartStore()
 
     const children = form.watch('children')
 
-    const { mutate, isSuccess } = trpc.square.createPayment.useMutation()
+    const { mutateAsync, isLoading, isError } = trpc.square.createPayment.useMutation()
 
     function formatClassTime(date: Date) {
         return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
     }
 
     if (formStage !== 'payment') return null
-
-    if (isSuccess) return <div>Success!</div>
 
     return (
         <>
@@ -86,10 +87,10 @@ export function Payment() {
             <PaymentForm
                 applicationId="sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g"
                 locationId="L834ATV1QTRQW"
-                cardTokenizeResponseReceived={({ status, token }) => {
+                cardTokenizeResponseReceived={async ({ status, token }) => {
                     // TODO add verify buyer token
                     if (status === 'OK' && token) {
-                        mutate({
+                        await mutateAsync({
                             token,
                             locationId: 'L834ATV1QTRQW',
                             amount: total * 100,
@@ -108,6 +109,7 @@ export function Payment() {
                                   }
                                 : null,
                         })
+                        nextStage()
                     }
                 }}
                 createVerificationDetails={() => ({
@@ -143,13 +145,28 @@ export function Payment() {
                     },
                 })}
             >
-                <div className="mt-8">
-                    <ApplePay className="mb-4" />
-                    <GooglePay className="mb-4" />
-                    <CreditCard
-                        buttonProps={{ css: { backgroundColor: '#AC4390', '&:hover': { backgroundColor: '#B4589C' } } }}
-                    />
-                </div>
+                {isLoading ? (
+                    <Loader className="mt-4" />
+                ) : (
+                    <div className="mt-8">
+                        <ApplePay className="mb-4" />
+                        <GooglePay className="mb-4" />
+                        <CreditCard
+                            buttonProps={{
+                                css: { backgroundColor: '#AC4390', '&:hover': { backgroundColor: '#B4589C' } },
+                            }}
+                        />
+                    </div>
+                )}
+                {isError && (
+                    <Alert variant="destructive">
+                        <AlertTitle className="font-semibold">Something went wrong</AlertTitle>
+                        <AlertDescription className="font-medium">
+                            There was an error booking in your sessions. Please try again later or contact us at
+                            bookings@fizzkidz.com.au
+                        </AlertDescription>
+                    </Alert>
+                )}
             </PaymentForm>
         </>
     )
