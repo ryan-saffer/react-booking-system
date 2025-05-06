@@ -1,5 +1,7 @@
+import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
-import { MessageCircleWarning } from 'lucide-react'
+import { ChevronLeft, MessageCircleWarning } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -7,8 +9,10 @@ import { Button } from '@ui-components/button'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
+import { useCartStore } from '../../zustand/cart-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
+import { ContinueButton } from './shared/continue-button'
 
 /**
  * Renders the list of appointment types.
@@ -66,14 +70,38 @@ export function TermProgramSelector() {
  */
 function ContinueOrError() {
     const form = useBookingForm()
-    const { nextStage } = useFormStage()
+
+    const setSelectedClasses = useCartStore((store) => store.setSelectedClasses)
+
     const studio = form.watch('studio')
     const appointmentTypeId = form.watch('appointmentTypeId')
+    const numberOfKids = form.watch('children').length
 
     const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery(
         { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true },
-        { enabled: !!appointmentTypeId }
+        { enabled: !!appointmentTypeId, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
     )
+
+    const filteredClasses = useMemo(
+        () => (isSuccess ? data.filter((it) => it.calendar.toLowerCase().includes(studio!)) : []),
+        [isSuccess, data, studio]
+    )
+    const hasClasses = filteredClasses.length > 0
+    const isFull = filteredClasses.some((klass) => klass.slotsAvailable === 0)
+
+    useEffect(() => {
+        if (isSuccess && hasClasses && !isFull) {
+            setSelectedClasses(filteredClasses, numberOfKids)
+        }
+    }, [isSuccess, hasClasses, isFull, filteredClasses, setSelectedClasses, numberOfKids])
+
+    function ReturnButton() {
+        return (
+            <Button variant="outline" className="mt-2 w-full" onClick={() => form.setValue('appointmentTypeId', null)}>
+                <ChevronLeft className="mr-2 h-4 w-4" /> Return to all programs
+            </Button>
+        )
+    }
 
     if (!studio) return null
 
@@ -81,44 +109,46 @@ function ContinueOrError() {
     if (isError) return <p>Error</p>
 
     if (isSuccess) {
-        const filteredClasses = data.filter((it) => it.calendar.toLowerCase().includes(studio))
-
-        const hasClasses = filteredClasses.length !== 0
-        const isFull = filteredClasses.some((klass) => klass.slotsAvailable === 0)
-
         if (!hasClasses) {
             return (
-                <Alert className="mt-4">
-                    <MessageCircleWarning className="h-4 w-4" />
-                    <AlertTitle>No classes available</AlertTitle>
-                    <AlertDescription>
-                        Unfortunately there are no classes available to book at the moment. Come back later and check
-                        again.
-                    </AlertDescription>
-                </Alert>
+                <>
+                    <Alert className="mt-4">
+                        <MessageCircleWarning className="h-4 w-4" />
+                        <AlertTitle>No classes available</AlertTitle>
+                        <AlertDescription>
+                            Unfortunately there are no classes available to book at the moment. Come back later and
+                            check again.
+                        </AlertDescription>
+                    </Alert>
+                    <ReturnButton />
+                </>
             )
         }
 
         if (isFull) {
             return (
-                <Alert className="mt-4">
-                    <MessageCircleWarning className="h-4 w-4" />
-                    <AlertTitle>One or more classes are full</AlertTitle>
-                    <AlertDescription>
-                        Unfortunately one or more of the classes for the term are full, so a term booking is
-                        unavailable.
-                        <br />
-                        <br />
-                        You are still welcome to book casual sessions by changing your selection above.
-                    </AlertDescription>
-                </Alert>
+                <>
+                    <Alert className="mt-4">
+                        <MessageCircleWarning className="h-4 w-4" />
+                        <AlertTitle>One or more classes are full</AlertTitle>
+                        <AlertDescription>
+                            Unfortunately one or more of the classes for the term are full, so a term booking is
+                            unavailable.
+                            <br />
+                            <br />
+                            You are still welcome to book casual sessions by changing your selection above.
+                        </AlertDescription>
+                    </Alert>
+                    <ReturnButton />
+                </>
             )
         }
 
         return (
-            <Button className="mt-4 w-full font-semibold" type="button" onClick={nextStage}>
-                Continue
-            </Button>
+            <>
+                <ContinueButton />
+                <ReturnButton />
+            </>
         )
     }
 }
@@ -126,24 +156,24 @@ function ContinueOrError() {
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
     const appointmentTypeId = form.watch('appointmentTypeId')
-    const { day, time, description, color } = JSON.parse(program.description)
+    const { day, time, description, ages, color } = JSON.parse(program.description)
     return (
         <div
             key={program.id}
-            className={cn('cursor-pointer rounded-xl border p-8 hover:bg-gray-50', {
+            className={cn('cursor-pointer rounded-xl border p-5 hover:bg-gray-50', {
                 'bg-gray-100 hover:bg-gray-100': selected,
             })}
             onClick={() => {
                 if (appointmentTypeId) form.setValue('appointmentTypeId', null)
                 else form.setValue('appointmentTypeId', program.id)
-                // nextStage()
             }}
         >
-            <p className={'font-lilita text-3xl'} style={{ color }}>
+            <p className={'font-lilita text-2xl'} style={{ color }}>
                 {program.name}
             </p>
-            <p className="text-lg font-semibold">{day}</p>
-            <p className="mb-4 text-lg font-semibold">{time}</p>
+            <p className="mb-2 text-sm italic">{ages}</p>
+            <p className="font-semibold">{day}</p>
+            <p className="mb-4 font-semibold">{time}</p>
             <p className="mt-3">{description}</p>
         </div>
     )

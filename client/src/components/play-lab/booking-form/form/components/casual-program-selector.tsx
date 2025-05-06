@@ -4,7 +4,6 @@ import { useMemo } from 'react'
 import { useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
-import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
@@ -13,12 +12,13 @@ import { useCartStore, type LocalAcuityClass } from '../../zustand/cart-store'
 import { useFormStage } from '../../zustand/form-stage'
 import { useBookingForm } from '../form-schema'
 import { FormLabel } from '@ui-components/form'
+import { ContinueButton } from './shared/continue-button'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
-    const { formStage, nextStage } = useFormStage()
+    const { formStage } = useFormStage()
 
-    const { selectedClasses } = useCartStore()
+    const selectedClasses = useCartStore((store) => store.selectedClasses)
 
     const bookingType = form.watch('bookingType')
 
@@ -94,11 +94,7 @@ export function CasualProgramSelector() {
                     }}
                 />
                 {selectedDay && <SessionSelector classes={classes} selectedDay={selectedDay} />}
-                {Object.keys(selectedClasses).length !== 0 && (
-                    <Button className="mt-4 w-full font-semibold" type="button" onClick={nextStage}>
-                        Continue
-                    </Button>
-                )}
+                {Object.keys(selectedClasses).length !== 0 && <ContinueButton />}
             </>
         )
     }
@@ -139,8 +135,8 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                 <p className="font-lilita text-lg" style={{ color }}>
                                     {klass.name}
                                 </p>
-                                <p>{klass.time.toDateString()}</p>
-                                <p>{time}</p>
+                                <p className="text-sm font-bold">{klass.time.toDateString()}</p>
+                                <p className="text-sm">{time}</p>
                             </div>
                             {isSelected && <CheckCircleIcon className="mr-6 h-6 w-6 text-green-500" />}
                         </div>

@@ -41,9 +41,9 @@ export function Payment() {
                         children.map((child, idx) => (
                             <TableRow key={`${klass.id}-${idx}`}>
                                 <TableCell>
-                                    <span className="font-bold">{klass.name}</span>
+                                    <span className="font-bold">{formatClassTime(klass.time)}</span>
                                     <br />
-                                    {formatClassTime(klass.time)}
+                                    {klass.name}
                                 </TableCell>
                                 <TableCell>{child.firstName}</TableCell>
                                 <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
@@ -65,7 +65,8 @@ export function Payment() {
                             <TableRow className="bg-green-200 hover:bg-green-200/80">
                                 <TableCell colSpan={2} className="py-2 font-light italic text-green-800">
                                     <div className="flex items-center">
-                                        Discount <PartyPopper className="ml-2 h-5 w-5" />
+                                        <PartyPopper className="mr-2 h-5 w-5" />
+                                        {discount.description}
                                     </div>
                                 </TableCell>
                                 <TableCell className="py-2 text-right font-light italic text-green-800">

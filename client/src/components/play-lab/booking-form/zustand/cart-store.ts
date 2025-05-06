@@ -4,11 +4,17 @@ import { create } from 'zustand'
 export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date }
 
 interface Cart {
+    // the classes curently in the cart
     selectedClasses: Record<number, LocalAcuityClass>
-    discount: { type: 'percentage' | 'number'; amount: number } | null // between 0-1 for percentage
+    // add/remove a particular class from the cart
+    toggleClass: (klass: LocalAcuityClass, numberOfKids: number) => void
+    // replaces all items in the cart with these classes
+    setSelectedClasses: (classes: LocalAcuityClass[], numberOfKids: number) => void
+    // clears the cart
+    clearCart: () => void
+    discount: { type: 'percentage' | 'number'; amount: number; description: string } | null // between 0-1 for percentage
     subtotal: number
     total: number
-    toggleClass: (klass: LocalAcuityClass, numberOfKids: number) => void
     calculateTotal: (numberOfKids: number) => void
 }
 
@@ -28,28 +34,36 @@ export const useCartStore = create<Cart>()((set, get) => ({
             get().calculateTotal(numberOfKids)
         }
     },
+    setSelectedClasses: (classes, numberOfKids) => {
+        set({ selectedClasses: classes.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {}) })
+        get().calculateTotal(numberOfKids)
+    },
+    clearCart: () => {
+        set({ selectedClasses: {} })
+    },
     calculateTotal: (numberOfKids: number) => {
-        const selectedClasses = get().selectedClasses
-        const { discount, subtotal, total } = calculateTotal(Object.values(selectedClasses), numberOfKids)
+        const classes = Object.values(get().selectedClasses)
+
+        const subtotal = classes.reduce((acc, curr) => acc + parseFloat(curr.price), 0) * numberOfKids
+
+        let discountPercent = 0
+        let description = ''
+        if (classes.length < 2) discountPercent = 0
+        else if (classes.length < 4) {
+            discountPercent = 0.05
+            description = 'Multi session discount - 2 or more sessions'
+        } else if (classes.length < 6) {
+            discountPercent = 0.1
+            description = 'Multi session discount - 4 or more sessions'
+        } else if (classes.length >= 6) {
+            discountPercent = 0.2
+            description = 'Multi session discount - 6 or more sessions'
+        }
+
+        const total = subtotal - subtotal * discountPercent
+        const discount =
+            discountPercent === 0 ? null : ({ type: 'percentage', amount: discountPercent, description } as const)
+
         set({ discount, subtotal, total })
     },
 }))
-
-function calculateTotal(
-    classes: LocalAcuityClass[],
-    numberOfKids: number
-): Pick<Cart, 'discount' | 'subtotal' | 'total'> {
-    const subtotal = classes.reduce((acc, curr) => acc + parseFloat(curr.price), 0) * numberOfKids
-
-    let discountPercent = 0
-    if (classes.length < 2) discountPercent = 0
-    else if (classes.length < 4) discountPercent = 0.1
-    else if (classes.length < 8) discountPercent = 0.15
-    else if (classes.length >= 8) discountPercent = 0.2
-
-    const total = subtotal - subtotal * discountPercent
-
-    const discount = discountPercent === 0 ? null : ({ type: 'percentage', amount: discountPercent } as const)
-
-    return { discount, subtotal, total }
-}
