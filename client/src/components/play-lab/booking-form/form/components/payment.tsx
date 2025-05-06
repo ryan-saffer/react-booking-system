@@ -143,7 +143,7 @@ export function Payment() {
                 })}
             >
                 <div className="mt-8">
-                    <ApplePay />
+                    <ApplePay className="mb-4" />
                     <GooglePay className="mb-4" />
                     <CreditCard
                         buttonProps={{ css: { backgroundColor: '#AC4390', '&:hover': { backgroundColor: '#B4589C' } } }}
