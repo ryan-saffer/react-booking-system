@@ -10,7 +10,7 @@ export function BackButton() {
     if (formStage === 'program-selection' || formStage === 'success') return null
 
     return (
-        <Button className="mb-4" variant="outline" size="sm" type="button" onClick={previousStage}>
+        <Button variant="outline" size="sm" type="button" onClick={previousStage}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back
         </Button>

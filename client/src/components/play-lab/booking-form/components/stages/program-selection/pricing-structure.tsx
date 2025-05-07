@@ -29,7 +29,7 @@ export function PricingStructure() {
                         <TableCell>10% discount</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell className="border-r text-right font-bold">Term Enrolment - 6 sessions</TableCell>
+                        <TableCell className="border-r text-right font-bold">Term enrolment - 6 sessions</TableCell>
                         <TableCell className="font-bold">20% discount</TableCell>
                     </TableRow>
                 </TableBody>

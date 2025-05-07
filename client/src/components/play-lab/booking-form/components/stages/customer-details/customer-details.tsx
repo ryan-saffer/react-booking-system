@@ -40,12 +40,12 @@ export function CustomerDetails() {
 
     function appendChild() {
         append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
-        calculateTotal(form.getValues().children.length)
+        calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
     }
 
     function removeChild(idx: number) {
         remove(idx)
-        calculateTotal(form.getValues().children.length)
+        calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
     }
 
     // const {
@@ -64,7 +64,7 @@ export function CustomerDetails() {
     if (formStage !== 'form') return null
 
     return (
-        <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(nextStage)}>
+        <form className="mt-4 flex flex-col gap-4" onSubmit={form.handleSubmit(nextStage)}>
             <SectionBreak title="Parent Details" />
             <FormField
                 control={form.control}

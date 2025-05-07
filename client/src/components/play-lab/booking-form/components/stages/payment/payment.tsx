@@ -29,6 +29,7 @@ export function Payment() {
 
     return (
         <>
+            <p className="mb-2 text-center text-xl font-bold">Booking Summary</p>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -74,8 +75,8 @@ export function Payment() {
                                 </TableCell>
                                 <TableCell className="py-2 text-right font-light italic text-green-800">
                                     {discount.type === 'percentage'
-                                        ? `${discount.amount * 100}%`
-                                        : `$${discount.amount.toFixed(2)}`}
+                                        ? `${discount.amount * 100}% off`
+                                        : `$${discount.amount.toFixed(2)} off`}
                                 </TableCell>
                             </TableRow>
                         </>

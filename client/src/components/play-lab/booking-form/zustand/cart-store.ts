@@ -24,15 +24,16 @@ export const useCartStore = create<Cart>()((set, get) => ({
     subtotal: 0,
     total: 0,
     toggleClass: (klass, numberOfKids, isTermEnrolment) => {
-        const selectedClasses = get().selectedClasses
-        if (selectedClasses[klass.id]) {
-            delete selectedClasses[klass.id]
-            set({ selectedClasses })
-            get().calculateTotal(numberOfKids, isTermEnrolment)
+        const current = get().selectedClasses
+        let next: Record<number, LocalAcuityClass>
+        if (current[klass.id]) {
+            next = { ...current }
+            delete next[klass.id]
         } else {
-            set({ selectedClasses: { ...selectedClasses, [klass.id]: klass } })
-            get().calculateTotal(numberOfKids, isTermEnrolment)
+            next = { ...current, [klass.id]: klass }
         }
+        set({ selectedClasses: next })
+        get().calculateTotal(numberOfKids, isTermEnrolment)
     },
     setSelectedClasses: (classes, numberOfKids) => {
         set({ selectedClasses: classes.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {}) })
@@ -59,7 +60,7 @@ export const useCartStore = create<Cart>()((set, get) => ({
         }
         if (classes.length >= 6 && isTermEnrolment) {
             discountPercent = 0.2
-            description = 'Term Enrolment Discount'
+            description = 'Term enrolment discount'
         }
 
         const total = subtotal - subtotal * discountPercent

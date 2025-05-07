@@ -13,6 +13,7 @@ import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
 import { FormLabel } from '@ui-components/form'
 import { ContinueButton } from './continue-button'
+import { Separator } from '@ui-components/separator'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
@@ -63,7 +64,6 @@ export function CasualProgramSelector() {
     if (isErrorAppointmentTypes || isErrorClasses) return <p>Error</p>
 
     if (isSuccessClasses) {
-        console.log(classes)
         return (
             <>
                 <FormLabel className="text-md">Session Selection</FormLabel>
@@ -117,7 +117,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
 
     return (
         <>
-            <p className="mb-4">Available Sessions</p>
+            <Separator className="my-4" />
             <div className="flex flex-col gap-4">
                 {filteredClasses.map((klass) => {
                     const { time, color } = JSON.parse(klass.description)
