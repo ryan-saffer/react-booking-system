@@ -125,22 +125,28 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                     return (
                         <div
                             key={klass.id}
-                            className={cn(
-                                'flex cursor-pointer items-center justify-between rounded-md border p-4 hover:bg-gray-50',
-                                {
-                                    'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
-                                }
-                            )}
+                            className={cn('relative  cursor-pointer rounded-md border p-4 hover:bg-gray-50', {
+                                'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
+                            })}
                             onClick={() => toggleClass(klass, numberOfKids, bookingType === 'term-booking')}
                         >
-                            <div>
+                            <div className="w-full">
                                 <p className="font-lilita text-lg" style={{ color }}>
                                     {klass.name}
                                 </p>
                                 <p className="text-sm font-bold">{klass.time.toDateString()}</p>
-                                <p className="text-sm">{time}</p>
+                                <div className="flex w-full justify-between">
+                                    <p className="text-sm">{time}</p>
+                                    {klass.slotsAvailable <= 5 && (
+                                        <p className="text-sm font-semibold italic">
+                                            {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
+                                        </p>
+                                    )}
+                                </div>
                             </div>
-                            {isSelected && <CheckCircleIcon className="mr-6 h-6 w-6 text-green-500" />}
+                            {isSelected && (
+                                <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
+                            )}
                         </div>
                     )
                 })}
