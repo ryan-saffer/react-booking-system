@@ -38,19 +38,21 @@ export function Payment() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {Object.values(selectedClasses).map((klass) =>
-                        children.map((child, idx) => (
-                            <TableRow key={`${klass.id}-${idx}`}>
-                                <TableCell>
-                                    <span className="font-bold">{formatClassTime(klass.time)}</span>
-                                    <br />
-                                    {klass.name}
-                                </TableCell>
-                                <TableCell>{child.firstName}</TableCell>
-                                <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
-                            </TableRow>
-                        ))
-                    )}
+                    {Object.values(selectedClasses)
+                        .sort((a, b) => (a.time > b.time ? 1 : -1))
+                        .map((klass) =>
+                            children.map((child, idx) => (
+                                <TableRow key={`${klass.id}-${idx}`}>
+                                    <TableCell>
+                                        <span className="font-bold">{formatClassTime(klass.time)}</span>
+                                        <br />
+                                        {klass.name}
+                                    </TableCell>
+                                    <TableCell>{child.firstName}</TableCell>
+                                    <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
+                                </TableRow>
+                            ))
+                        )}
                 </TableBody>
                 <TableFooter>
                     {discount && (
@@ -146,7 +148,19 @@ export function Payment() {
                 })}
             >
                 {isLoading ? (
-                    <Loader className="mt-4" />
+                    <>
+                        <p className="mt-4 text-center">Processing payment...</p>
+                        <p className="mt-2 text-center">Please do not close or refresh this window.</p>
+                        <Loader className="mt-4" />
+                    </>
+                ) : isError ? (
+                    <Alert variant="destructive" className="mt-4">
+                        <AlertTitle className="font-semibold">Something went wrong</AlertTitle>
+                        <AlertDescription className="font-medium">
+                            There was an error booking in your sessions. Please try again later or contact us at
+                            bookings@fizzkidz.com.au
+                        </AlertDescription>
+                    </Alert>
                 ) : (
                     <div className="mt-8">
                         <ApplePay className="mb-4" />
@@ -157,15 +171,6 @@ export function Payment() {
                             }}
                         />
                     </div>
-                )}
-                {isError && (
-                    <Alert variant="destructive">
-                        <AlertTitle className="font-semibold">Something went wrong</AlertTitle>
-                        <AlertDescription className="font-medium">
-                            There was an error booking in your sessions. Please try again later or contact us at
-                            bookings@fizzkidz.com.au
-                        </AlertDescription>
-                    </Alert>
                 )}
             </PaymentForm>
         </>

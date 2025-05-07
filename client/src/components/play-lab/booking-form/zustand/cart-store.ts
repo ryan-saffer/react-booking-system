@@ -7,7 +7,7 @@ interface Cart {
     // the classes curently in the cart
     selectedClasses: Record<number, LocalAcuityClass>
     // add/remove a particular class from the cart
-    toggleClass: (klass: LocalAcuityClass, numberOfKids: number) => void
+    toggleClass: (klass: LocalAcuityClass, numberOfKids: number, isTermEnrolment: boolean) => void
     // replaces all items in the cart with these classes
     setSelectedClasses: (classes: LocalAcuityClass[], numberOfKids: number) => void
     // clears the cart
@@ -15,7 +15,7 @@ interface Cart {
     discount: { type: 'percentage' | 'number'; amount: number; description: string } | null // between 0-1 for percentage
     subtotal: number
     total: number
-    calculateTotal: (numberOfKids: number) => void
+    calculateTotal: (numberOfKids: number, isTermEnrolment: boolean) => void
 }
 
 export const useCartStore = create<Cart>()((set, get) => ({
@@ -23,41 +23,43 @@ export const useCartStore = create<Cart>()((set, get) => ({
     discount: null,
     subtotal: 0,
     total: 0,
-    toggleClass: (klass, numberOfKids) => {
+    toggleClass: (klass, numberOfKids, isTermEnrolment) => {
         const selectedClasses = get().selectedClasses
         if (selectedClasses[klass.id]) {
             delete selectedClasses[klass.id]
             set({ selectedClasses })
-            get().calculateTotal(numberOfKids)
+            get().calculateTotal(numberOfKids, isTermEnrolment)
         } else {
             set({ selectedClasses: { ...selectedClasses, [klass.id]: klass } })
-            get().calculateTotal(numberOfKids)
+            get().calculateTotal(numberOfKids, isTermEnrolment)
         }
     },
     setSelectedClasses: (classes, numberOfKids) => {
         set({ selectedClasses: classes.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {}) })
-        get().calculateTotal(numberOfKids)
+        get().calculateTotal(numberOfKids, true) // true since only set all classes at once for a term selection
     },
     clearCart: () => {
         set({ selectedClasses: {} })
     },
-    calculateTotal: (numberOfKids: number) => {
+    calculateTotal: (numberOfKids: number, isTermEnrolment: boolean) => {
         const classes = Object.values(get().selectedClasses)
 
         const subtotal = classes.reduce((acc, curr) => acc + parseFloat(curr.price), 0) * numberOfKids
 
         let discountPercent = 0
         let description = ''
-        if (classes.length < 2) discountPercent = 0
-        else if (classes.length < 4) {
+        if (classes.length > 0) discountPercent = 0
+        if (classes.length >= 2) {
             discountPercent = 0.05
             description = 'Multi session discount - 2 or more sessions'
-        } else if (classes.length < 6) {
+        }
+        if (classes.length >= 4) {
             discountPercent = 0.1
             description = 'Multi session discount - 4 or more sessions'
-        } else if (classes.length >= 6) {
+        }
+        if (classes.length >= 6 && isTermEnrolment) {
             discountPercent = 0.2
-            description = 'Multi session discount - 6 or more sessions'
+            description = 'Term Enrolment Discount'
         }
 
         const total = subtotal - subtotal * discountPercent

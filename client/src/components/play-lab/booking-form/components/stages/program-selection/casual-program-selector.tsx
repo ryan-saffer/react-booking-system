@@ -102,9 +102,11 @@ export function CasualProgramSelector() {
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
     const form = useBookingForm()
-    const { selectedClasses, toggleClass } = useCartStore()
+    const selectedClasses = useCartStore((store) => store.selectedClasses)
+    const toggleClass = useCartStore((cart) => cart.toggleClass)
 
     const numberOfKids = form.watch('children').length
+    const bookingType = form.watch('bookingType')
 
     const filteredClasses = useMemo(
         () => classes.filter((it) => isSameDay(it.time, selectedDay)),
@@ -129,7 +131,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                     'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
                                 }
                             )}
-                            onClick={() => toggleClass(klass, numberOfKids)}
+                            onClick={() => toggleClass(klass, numberOfKids, bookingType === 'term-booking')}
                         >
                             <div>
                                 <p className="font-lilita text-lg" style={{ color }}>

@@ -12,9 +12,9 @@ export function Success() {
     return (
         <Alert variant="success">
             <CheckCircle className="h-4 w-4" />
-            <AlertTitle className="font-semibold">Done!</AlertTitle>
+            <AlertTitle className="font-semibold">Booked!</AlertTitle>
             <AlertDescription className="font-medium">
-                Your sessions have been booked, and should have an email confirmation any minute.
+                Your sessions have been booked, and you should have an email confirmation any second.
                 <br />
                 <br />
                 We can't wait to see you soon!

@@ -1,10 +1,10 @@
 import { FormField, FormItem, FormLabel } from '@ui-components/form'
-import { Table, TableBody, TableCell, TableRow } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
 
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
+import { PricingStructure } from './pricing-structure'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()
@@ -23,39 +23,7 @@ export function BookingTypeSelector() {
 
     return (
         <>
-            <div className="m-auto my-6 flex flex-col justify-center rounded-sm border bg-slate-50">
-                <div className="p-4">
-                    <p className="text-center font-lilita text-lg tracking-wide">Play Lab Pricing Structure</p>
-                    <p className="text-center text-sm text-muted-foreground">
-                        Our sessions are designed to build on your child's skills week to week, with a new engaging
-                        experience offered each session!
-                    </p>
-                </div>
-                <Table className="[&_td]:py-2 [&_th]:h-10">
-                    <colgroup>
-                        <col className="w-1/2" />
-                        <col className="w-1/2" />
-                    </colgroup>
-                    <TableBody className="border-t">
-                        <TableRow>
-                            <TableCell className="border-r text-right">1 session</TableCell>
-                            <TableCell>$35</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="border-r text-right">2 or more sessions</TableCell>
-                            <TableCell>5% discount</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="border-r text-right">4 or more sessions</TableCell>
-                            <TableCell>10% discount</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="border-r text-right">6 or more sessions</TableCell>
-                            <TableCell>20% discount</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </div>
+            <PricingStructure />
             <FormField
                 control={form.control}
                 name="bookingType"
@@ -75,10 +43,11 @@ export function BookingTypeSelector() {
                                     }
                                 }}
                             >
-                                <p>Term Booking</p>
-                                <p className="text-xs text-muted-foreground">
+                                <p>Term 2 Enrolment</p>
+                                <p className="text-sm text-muted-foreground">
                                     Book into the same day and time, every week over a term.
                                 </p>
+                                <p className="text-sm italic text-muted-foreground">Begins week of May 15th</p>
                             </div>
                             <div
                                 className={cn('cursor-pointer rounded-md border px-3 py-2 text-sm hover:bg-gray-50', {
@@ -93,7 +62,7 @@ export function BookingTypeSelector() {
                                 }}
                             >
                                 <p>Casual Booking</p>
-                                <p className="text-xs text-muted-foreground">Choose only the sessions you want.</p>
+                                <p className="text-sm text-muted-foreground">Choose only the sessions you want.</p>
                             </div>
                         </div>
                     </FormItem>

@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
 import { ChevronLeft, MessageCircleWarning } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -46,13 +46,12 @@ export function TermProgramSelector() {
                 <p className="text-md mb-4 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     Which program would you like to book?
                 </p>
-                {appointmentTypeId && (
+                {appointmentTypeId ? (
                     <>
                         <ProgramCard program={data.find((it) => it.id === appointmentTypeId)!} selected />
                         <ContinueOrError />
                     </>
-                )}
-                {!appointmentTypeId && (
+                ) : (
                     <div className="flex flex-col gap-4">
                         {data.map((program) => (
                             <ProgramCard key={program.id} program={program} />
@@ -77,8 +76,10 @@ function ContinueOrError() {
     const appointmentTypeId = form.watch('appointmentTypeId')
     const numberOfKids = form.watch('children').length
 
+    const now = useRef(Date.now())
+
     const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery(
-        { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true },
+        { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true, minDate: now.current },
         { enabled: !!appointmentTypeId, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
     )
 
@@ -156,17 +157,20 @@ function ContinueOrError() {
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
     const appointmentTypeId = form.watch('appointmentTypeId')
-    const { day, time, description, ages, color } = JSON.parse(program.description)
+    const { day, time, description, begins, ages, color } = JSON.parse(program.description)
+
+    function handleCardClick() {
+        if (appointmentTypeId) form.setValue('appointmentTypeId', null)
+        else form.setValue('appointmentTypeId', program.id)
+    }
+
     return (
         <div
             key={program.id}
             className={cn('flex cursor-pointer gap-4 rounded-xl border p-5 hover:bg-gray-50', {
                 'bg-gray-100 hover:bg-gray-100': selected,
             })}
-            onClick={() => {
-                if (appointmentTypeId) form.setValue('appointmentTypeId', null)
-                else form.setValue('appointmentTypeId', program.id)
-            }}
+            onClick={handleCardClick}
         >
             <img className="max-w-[100px] rounded-md object-cover" src={program.image} />
             <div>
@@ -175,7 +179,8 @@ function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.A
                 </p>
                 <p className="mb-2 text-sm italic">{ages}</p>
                 <p className="font-semibold">{day}</p>
-                <p className="mb-4 font-semibold">{time}</p>
+                <p className="font-semibold">{time}</p>
+                <p className="mb-4 font-semibold">{begins}</p>
                 <p className="mt-3">{description}</p>
             </div>
         </div>
