@@ -1,5 +1,5 @@
 import { isSameDay, parseISO } from 'date-fns'
-import { CheckCircleIcon } from 'lucide-react'
+import { CheckCircleIcon, RefreshCcw } from 'lucide-react'
 import { useMemo } from 'react'
 import { useState } from 'react'
 
@@ -11,9 +11,9 @@ import { trpc } from '@utils/trpc'
 import { useCartStore, type LocalAcuityClass } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
-import { FormLabel } from '@ui-components/form'
 import { ContinueButton } from './continue-button'
 import { Separator } from '@ui-components/separator'
+import { Button } from '@ui-components/button'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
@@ -45,6 +45,7 @@ export function CasualProgramSelector() {
         isSuccess: isSuccessClasses,
         isLoading: isLoadingClasses,
         isError: isErrorClasses,
+        refetch,
     } = trpc.acuity.classAvailability.useQuery(
         {
             appointmentTypeIds: appointmentTypes?.map((type) => type.id) || [],
@@ -66,7 +67,12 @@ export function CasualProgramSelector() {
     if (isSuccessClasses) {
         return (
             <>
-                <FormLabel className="text-md">Session Selection</FormLabel>
+                <div className="my-2 flex items-center justify-between">
+                    <p className="text-md font-medium">Session Selection</p>
+                    <Button variant="ghost" onClick={() => refetch()}>
+                        <RefreshCcw className="h-4 w-4" />
+                    </Button>
+                </div>
                 <Calendar
                     onDayClick={(day) => {
                         setSelectedDay(day)
