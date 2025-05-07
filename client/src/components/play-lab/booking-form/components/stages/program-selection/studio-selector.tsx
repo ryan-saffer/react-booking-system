@@ -3,9 +3,9 @@ import { Location, capitalise } from 'fizz-kidz'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 
-import { useCartStore } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
 
 export function StudioSelector() {
     const form = useBookingForm()

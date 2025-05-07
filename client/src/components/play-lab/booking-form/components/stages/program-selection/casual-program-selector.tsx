@@ -8,11 +8,11 @@ import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore, type LocalAcuityClass } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
+import { useCartStore, type LocalAcuityClass } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
 import { FormLabel } from '@ui-components/form'
-import { ContinueButton } from './shared/continue-button'
+import { ContinueButton } from './continue-button'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()

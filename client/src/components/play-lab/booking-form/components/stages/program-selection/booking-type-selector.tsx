@@ -2,9 +2,9 @@ import { FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Table, TableBody, TableCell, TableRow } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
 
-import { useCartStore } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()

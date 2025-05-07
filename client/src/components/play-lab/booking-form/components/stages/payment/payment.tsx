@@ -7,9 +7,9 @@ import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
 
 export function Payment() {
     const form = useBookingForm()

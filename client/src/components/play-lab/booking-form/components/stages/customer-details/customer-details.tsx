@@ -19,9 +19,9 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
-import { useCartStore } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
 
 export function CustomerDetails() {
     const form = useBookingForm()

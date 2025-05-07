@@ -9,10 +9,10 @@ import { Button } from '@ui-components/button'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore } from '../../zustand/cart-store'
-import { useFormStage } from '../../zustand/form-stage'
-import { useBookingForm } from '../form-schema'
-import { ContinueButton } from './shared/continue-button'
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
+import { ContinueButton } from './continue-button'
 
 /**
  * Renders the list of appointment types.
