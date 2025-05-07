@@ -119,6 +119,12 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
         [classes, selectedDay]
     )
 
+    function handleSessionClick(klass: LocalAcuityClass) {
+        if (klass.slotsAvailable > 0) {
+            toggleClass(klass, numberOfKids, bookingType === 'term-booking')
+        }
+    }
+
     if (!filteredClasses.length) return null
 
     return (
@@ -133,8 +139,9 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                             key={klass.id}
                             className={cn('relative  cursor-pointer rounded-md border p-4 hover:bg-gray-50', {
                                 'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
+                                'cursor-not-allowed bg-slate-100 hover:bg-slate-100': klass.slotsAvailable === 0,
                             })}
-                            onClick={() => toggleClass(klass, numberOfKids, bookingType === 'term-booking')}
+                            onClick={() => handleSessionClick(klass)}
                         >
                             <div className="w-full">
                                 <p className="font-lilita text-lg" style={{ color }}>
@@ -145,7 +152,9 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                     <p className="text-sm">{time}</p>
                                     {klass.slotsAvailable <= 5 && (
                                         <p className="text-sm font-semibold italic">
-                                            {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
+                                            {klass.slotsAvailable === 0
+                                                ? 'No spots left'
+                                                : `${klass.slotsAvailable} spot${klass.slotsAvailable > 1 ? 's' : ''} left`}
                                         </p>
                                     )}
                                 </div>
