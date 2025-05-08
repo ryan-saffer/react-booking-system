@@ -34,6 +34,7 @@ export function PlayLabBookingPage() {
                     dob: new Date(),
                     hasAllergies: false,
                     allergies: undefined,
+                    additionalInfo: undefined,
                 },
             ],
             emergencyContactName: 'Talia Meltzer',

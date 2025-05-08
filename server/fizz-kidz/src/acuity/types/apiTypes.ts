@@ -74,6 +74,7 @@ export type Class = {
     name: string
     description: string
     price: string
+    duration: number
 }
 
 export type Calendar = {

@@ -1,5 +1,6 @@
 import { Location } from '../core/location'
 import { Booking } from '../partyBookings/booking'
+import { capitalise } from './stringUtilities'
 
 export function getLocationAddress(location: Location) {
     switch (location) {
@@ -134,4 +135,12 @@ export function getReviewUrl(location: Location) {
             throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)
         }
     }
+}
+
+export function studioNameAndAddress(studio: Location | 'test') {
+    if (studio === 'test') {
+        return 'TEST'
+    }
+
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
 }

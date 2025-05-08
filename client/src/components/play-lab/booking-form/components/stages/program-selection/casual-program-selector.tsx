@@ -120,7 +120,8 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
     )
 
     function handleSessionClick(klass: LocalAcuityClass) {
-        if (klass.slotsAvailable > 0) {
+        // dont allow selecting full classes, unless it's already selected and they are trying to unselect it
+        if (klass.slotsAvailable > 0 || selectedClasses[klass.id]) {
             toggleClass(klass, numberOfKids, bookingType === 'term-booking')
         }
     }
@@ -139,7 +140,8 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                             key={klass.id}
                             className={cn('relative  cursor-pointer rounded-md border p-4 hover:bg-gray-50', {
                                 'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
-                                'cursor-not-allowed bg-slate-100 hover:bg-slate-100': klass.slotsAvailable === 0,
+                                'cursor-not-allowed bg-slate-100 hover:bg-slate-100':
+                                    klass.slotsAvailable === 0 && !selectedClasses[klass.id],
                             })}
                             onClick={() => handleSessionClick(klass)}
                         >
@@ -151,7 +153,11 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                 <div className="flex w-full justify-between">
                                     <p className="text-sm">{time}</p>
                                     {klass.slotsAvailable <= 5 && (
-                                        <p className="text-sm font-semibold italic">
+                                        <p
+                                            className={cn('text-sm font-semibold italic', {
+                                                'text-red-600': klass.slotsAvailable === 0,
+                                            })}
+                                        >
                                             {klass.slotsAvailable === 0
                                                 ? 'No spots left'
                                                 : `${klass.slotsAvailable} spot${klass.slotsAvailable > 1 ? 's' : ''} left`}

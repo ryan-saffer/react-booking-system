@@ -6,7 +6,7 @@ import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 
 import { createContext } from './trpc'
 
-const ERRORS_TO_IGNORE: TRPCError['code'][] = ['PRECONDITION_FAILED', 'UNAUTHORIZED']
+const ERRORS_TO_IGNORE: TRPCError['code'][] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CONFLICT']
 
 export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory?: MemoryOption) {
     return onRequest(

@@ -15,12 +15,12 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         const paymentIntentId = AcuityUtilities.retrieveFormAndField(
             appointment,
             AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
-            AcuityConstants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID
+            AcuityConstants.FormFields.PAYMENT_ID
         )
         const amountCharged = AcuityUtilities.retrieveFormAndField(
             appointment,
             AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
-            AcuityConstants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED
+            AcuityConstants.FormFields.AMOUNT_CHARGED
         )
 
         // if no payment intent id, it means it has been deleted from the appointment manually.

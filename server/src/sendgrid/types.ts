@@ -20,6 +20,13 @@ export type Emails = {
         expiryDate: string
     }
 
+    // PLAY LAB
+    playLabBookingConfirmation: {
+        parentName: string
+        location: string
+        bookings: { time: string; details: string }[]
+    }
+
     // AFTER SCHOOL PROGRAM
     termContinuationEmail: {
         parentName: string

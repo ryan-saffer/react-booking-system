@@ -19,6 +19,7 @@ const childSchema = z
             .optional()
             .refine((val) => val !== undefined, 'Select if the child has any allergies.'),
         allergies: z.string().optional(),
+        additionalInfo: z.string().optional(),
     })
     // only require `allergies` if `hasAllergies` is true
     .refine(

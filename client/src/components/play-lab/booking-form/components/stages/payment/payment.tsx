@@ -1,5 +1,6 @@
 import { PartyPopper } from 'lucide-react'
 import { DateTime } from 'luxon'
+import { useEffect } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 
 import Loader from '@components/Shared/Loader'
@@ -19,13 +20,91 @@ export function Payment() {
 
     const children = form.watch('children')
 
-    const { mutateAsync, isLoading, isError } = trpc.square.createPayment.useMutation()
+    const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
+
+    useEffect(() => {
+        if (formStage !== 'payment') {
+            reset()
+        }
+    }, [formStage, reset])
 
     function formatClassTime(date: Date) {
         return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
     }
 
+    async function book(token: string) {
+        await mutateAsync({
+            classes: Object.values(selectedClasses).map((klass) => ({
+                ...klass,
+                time: DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toISO(),
+            })),
+            parentFirstName: form.getValues().parentFirstName,
+            parentLastName: form.getValues().parentLastName,
+            parentPhone: form.getValues().parentPhone,
+            parentEmail: form.getValues().parentEmailAddress,
+            emergencyContactName: form.getValues().emergencyContactName,
+            emergencyContactPhone: form.getValues().emergencyContactNumber,
+            emergencyContactRelation: form.getValues().emergencyContactRelation,
+            children: form.getValues().children.map((child) => ({ ...child, dob: child.dob.toISOString() })),
+            joinMailingList: form.getValues().joinMailingList,
+            payment: {
+                token,
+                locationId: 'L834ATV1QTRQW',
+                amount: total * 100,
+                lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                    children.map((child) => ({
+                        name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
+                        amount: parseInt(klass.price) * 100,
+                        quantity: '1',
+                        classId: klass.id,
+                    }))
+                ),
+                discount: discount
+                    ? {
+                          ...discount,
+                          amount: discount.amount * 100,
+                          name: `Multi session discount - ${discount.amount * 100}%`,
+                      }
+                    : null,
+            },
+        })
+        nextStage()
+    }
+
+    function renderError() {
+        if (isError) {
+            let errorMessage =
+                'There was an error booking in your sessions. Please try again later or contact us at bookings@fizzkidz.com.au'
+            let errorTitle = 'Something went wrong'
+
+            if (error.data?.code === 'CONFLICT') {
+                errorMessage =
+                    "One or more of your selected sessions does not have enough spots available. Please return to the 'Select Sessions' screen and review your selected sessions."
+                errorTitle = 'One or more sessions are full'
+            }
+
+            return (
+                <Alert variant="destructive" className="mt-4">
+                    <AlertTitle className="font-semibold">{errorTitle}</AlertTitle>
+                    <AlertDescription className="font-medium">{errorMessage}</AlertDescription>
+                </Alert>
+            )
+        }
+
+        return null
+    }
+
     if (formStage !== 'payment') return null
+
+    if (isLoading) {
+        return (
+            <>
+                <p className="mt-4 text-center">Processing payment...</p>
+                <p className="mt-2 text-center">Please do not close or refresh this window.</p>
+                <Loader className="mt-4" />
+            </>
+        )
+    }
 
     return (
         <>
@@ -93,26 +172,7 @@ export function Payment() {
                 cardTokenizeResponseReceived={async ({ status, token }) => {
                     // TODO add verify buyer token
                     if (status === 'OK' && token) {
-                        await mutateAsync({
-                            token,
-                            locationId: 'L834ATV1QTRQW',
-                            amount: total * 100,
-                            lineItems: Object.values(selectedClasses).flatMap((klass) =>
-                                children.map((child) => ({
-                                    name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
-                                    amount: parseInt(klass.price) * 100,
-                                    quantity: '1',
-                                }))
-                            ),
-                            discount: discount
-                                ? {
-                                      ...discount,
-                                      amount: discount.amount * 100,
-                                      name: `Multi session discount - ${discount.amount * 100}%`,
-                                  }
-                                : null,
-                        })
-                        nextStage()
+                        book(token)
                     }
                 }}
                 createVerificationDetails={() => ({
@@ -148,20 +208,8 @@ export function Payment() {
                     },
                 })}
             >
-                {isLoading ? (
-                    <>
-                        <p className="mt-4 text-center">Processing payment...</p>
-                        <p className="mt-2 text-center">Please do not close or refresh this window.</p>
-                        <Loader className="mt-4" />
-                    </>
-                ) : isError ? (
-                    <Alert variant="destructive" className="mt-4">
-                        <AlertTitle className="font-semibold">Something went wrong</AlertTitle>
-                        <AlertDescription className="font-medium">
-                            There was an error booking in your sessions. Please try again later or contact us at
-                            bookings@fizzkidz.com.au
-                        </AlertDescription>
-                    </Alert>
+                {isError ? (
+                    renderError()
                 ) : (
                     <div className="mt-8">
                         <ApplePay className="mb-4" />

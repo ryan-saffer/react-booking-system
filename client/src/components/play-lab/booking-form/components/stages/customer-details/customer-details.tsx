@@ -7,6 +7,15 @@ import { useFieldArray } from 'react-hook-form'
 import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { DateCalendar } from '@mui/x-date-pickers'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@ui-components/alert-dialog'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui-components/dialog'
@@ -27,7 +36,10 @@ export function CustomerDetails() {
     const form = useBookingForm()
     const { formStage, nextStage } = useFormStage()
 
+    const selectedClasses = useCartStore((store) => store.selectedClasses)
     const calculateTotal = useCartStore((store) => store.calculateTotal)
+
+    const [showNotEnoughSpotsDialog, setShowNotEnoughSpotsDialog] = useState(false)
 
     const {
         fields: children,
@@ -39,8 +51,17 @@ export function CustomerDetails() {
     })
 
     function appendChild() {
-        append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
-        calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
+        // first check if there is room
+        const foundFullClass = Object.values(selectedClasses).some(
+            (klass) => klass.slotsAvailable < form.getValues().children.length + 1
+        )
+
+        if (foundFullClass) {
+            setShowNotEnoughSpotsDialog(true)
+        } else {
+            append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
+            calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
+        }
     }
 
     function removeChild(idx: number) {
@@ -263,6 +284,22 @@ export function CustomerDetails() {
                             )}
                         />
                     )}
+                    <FormField
+                        control={form.control}
+                        name={`children.${idx}.additionalInfo` as const}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>
+                                    Is there additional information you would like us to know about{' '}
+                                    {form.watch('children')[idx].firstName || 'this child'}?
+                                </FormLabel>
+                                <FormControl>
+                                    <Textarea {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </Fragment>
             ))}
             <Button
@@ -367,6 +404,20 @@ export function CustomerDetails() {
                     <TermsAndConditions />
                 </DialogContent>
             </Dialog>
+            <AlertDialog open={showNotEnoughSpotsDialog} onOpenChange={setShowNotEnoughSpotsDialog}>
+                <AlertDialogContent className="twp">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Not enough spots available</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            One or more of the sessions you selected does not have enough spots for another child. You
+                            can change your selected sessions by going back to the 'Select Sessions' step.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction>Got it</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </form>
     )
 }
