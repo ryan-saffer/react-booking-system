@@ -1,40 +1,32 @@
+import { Separator } from '@ui-components/separator'
 import { Table, TableBody, TableCell, TableRow } from '@ui-components/table'
+import { cn } from '@utils/tailwind'
 
 export function PricingStructure() {
+    const tiers = [
+        { label: '1 session', value: '$35' },
+        { label: '2+ sessions', value: '5% discount' },
+        { label: '4+ sessions', value: '10% discount' },
+        { label: 'Term enrolment (6 sessions)', value: '20% discount', featured: true },
+    ]
+
     return (
-        <div className="m-auto my-6 flex flex-col justify-center rounded-sm border bg-slate-50">
-            <div className="p-4">
-                <p className="text-center font-lilita text-lg tracking-wide">Play Lab Pricing Structure</p>
-                <p className="text-center text-sm text-muted-foreground">
-                    Our sessions are designed to build on your child's skills week to week, with a new engaging
-                    experience offered each session!
-                </p>
+        <div className="mx-auto my-8 max-w-md rounded-md border">
+            <div className="px-6 py-4">
+                <p className="text-center font-lilita text-lg tracking-wide">Play Lab Pricing</p>
             </div>
-            <Table className="[&_td]:py-2 [&_th]:h-10">
-                <colgroup>
-                    <col className="w-1/2" />
-                    <col className="w-1/2" />
-                </colgroup>
-                <TableBody className="border-t">
-                    <TableRow>
-                        <TableCell className="border-r text-right">1 session</TableCell>
-                        <TableCell>$35</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="border-r text-right">2 or more sessions</TableCell>
-                        <TableCell>5% discount</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="border-r text-right">4 or more sessions</TableCell>
-                        <TableCell>10% discount</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="border-r text-right font-bold">
-                            Term enrolment
-                            <br />6 sessions
-                        </TableCell>
-                        <TableCell className="font-bold">20% discount</TableCell>
-                    </TableRow>
+            <Separator />
+            <Table className="divide-y divide-gray-200 rounded-lg bg-white text-sm shadow [&_td]:px-6 [&_td]:py-3">
+                <TableBody>
+                    {tiers.map(({ label, value, featured }, i) => (
+                        <TableRow
+                            key={i}
+                            className={cn(featured ? 'bg-gray-50 font-semibold text-gray-900' : 'text-gray-700')}
+                        >
+                            <TableCell>{label}</TableCell>
+                            <TableCell className="text-right">{value}</TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </div>

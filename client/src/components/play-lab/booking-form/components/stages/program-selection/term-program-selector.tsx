@@ -188,21 +188,26 @@ function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.A
     return (
         <div
             key={program.id}
-            className={cn('flex cursor-pointer gap-4 rounded-xl border p-5 hover:bg-gray-50', {
-                'bg-gray-100 hover:bg-gray-100': selected,
-            })}
             onClick={handleCardClick}
+            className={cn('flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50', {
+                'border-blue-200 bg-blue-50': selected,
+                'border-gray-200 bg-white': !selected,
+            })}
         >
-            <img className="max-w-[100px] rounded-md object-cover" src={program.image} />
-            <div>
-                <p className={'font-lilita text-2xl'} style={{ color }}>
-                    {program.name}
-                </p>
-                <p className="mb-2 text-sm italic">{ages}</p>
-                <p className="font-semibold">{day}</p>
-                <p className="font-semibold">{time}</p>
-                <p className="mb-4 font-semibold">{begins}</p>
-                <p className="mt-3">{description}</p>
+            <img src={program.image} alt={program.name} className="h-20 w-20 flex-shrink-0 rounded-md object-cover" />
+
+            <div className="ml-4 flex-1 space-y-1">
+                <h3 className="text-lg font-semibold text-gray-900">{program.name}</h3>
+
+                <div className="flex flex-wrap text-sm text-gray-500">
+                    <span>{ages}</span>
+                </div>
+
+                <div className="text-sm text-gray-700">
+                    {day} · {time}
+                </div>
+
+                <div className="text-xs text-gray-500">{begins}</div>
             </div>
         </div>
     )

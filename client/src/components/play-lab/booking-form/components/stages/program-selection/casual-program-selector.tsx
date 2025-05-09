@@ -213,7 +213,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                 {klass.slotsAvailable <= 5 && (
                                     <p
                                         className={cn('text-sm font-semibold italic', {
-                                            'text-rose-700': klass.slotsAvailable === 0,
+                                            'text-slate-800': klass.slotsAvailable === 0,
                                         })}
                                     >
                                         {klass.slotsAvailable === 0
