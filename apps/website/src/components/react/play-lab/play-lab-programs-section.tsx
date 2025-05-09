@@ -9,12 +9,18 @@ type Module = "little-explorers" | "create-kinders" | "all-playz" | null;
 
 const PlayLabProgramsSection = ({
   littleExplorersImage,
+  littleExplorersBanner,
   creativeKindersImage,
+  creativeKindersBanner,
   allPlaysImage,
+  allPlaysBanner,
 }: {
   littleExplorersImage: CustomImage;
+  littleExplorersBanner: CustomImage;
   creativeKindersImage: CustomImage;
+  creativeKindersBanner: CustomImage;
   allPlaysImage: CustomImage;
+  allPlaysBanner: CustomImage;
 }) => {
   const [isMobile, setIsMobile] = useState(true);
 
@@ -77,7 +83,7 @@ const PlayLabProgramsSection = ({
           title: "Little Explorers",
           subtitle: "18 months - 3 years",
           description:
-            "Designed for toddlers on the move, experience sensory-rich fun that supports early development through play.",
+            "Squish, splash., and sparkle! Little ones explore colourufl senesory fun, try exciting new activies and grow social confidence - all while sharing giggles and special moments with their grown-up.",
           buttons: [
             {
               color: "#F6BA33",
@@ -92,35 +98,43 @@ const PlayLabProgramsSection = ({
           <p className="text-center font-lilita text-4xl text-white sm:text-6xl">
             Little Explorers
           </p>
-          <p className="mt-2 text-center font-lilita text-2xl font-semibold">
-            18 months - 3 years
+          <p className="mt-2 text-center text-2xl font-bold">
+            Ages 18 months - 3 years
           </p>
-          <p className="mt-4 text-center text-lg">
-            Designed for toddlers on the move, experience sensory-rich fun that
-            supports early development through play.
+          <p className="mt-4 text-center text-xl font-semibold">
+            Squish, splash., and sparkle! Little ones explore colourufl senesory
+            fun, try exciting new activies and grow social confidence - all
+            while sharing giggles and special moments with their grown-up.
           </p>
           <img
             className="my-12 h-60 w-full rounded-lg object-cover"
-            src={littleExplorersImage.image.src}
+            src={littleExplorersBanner.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Thursdays</p>
-                <p className="text-lg">9:15am - 10:00am</p>
+                <p className="text-xl font-extrabold">Wednesdays</p>
+                <p className="text-lg">9:00am - 10:00am</p>
               </div>
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
-                  Pricing
+                  Your child will:
                 </p>
-                <p className="text-xl font-extrabold">Casual</p>
-                <p className="mb-2 text-lg">$35</p>
-                <p className="text-xl font-extrabold">Term Pack</p>
-                <p className="text-lg">
-                  $240 <span className="italic">($30 pw)</span>
-                </p>
+                <ul className="mb-4 list-disc pl-4">
+                  <li>Delight in hands-on, mess-free play</li>
+                  <li>Discover coourful, sensroy-rich materials</li>
+                  <li>Try exciting new art, science and craft activities</li>
+                  <li>
+                    Be supported by yourselves and our wonderful team as they
+                    grow social skills with other children in the session
+                  </li>
+                  <li>
+                    Bond and make memories with their special caregiver in a
+                    safe, welcoming nd playful environment
+                  </li>
+                </ul>
               </div>
             </div>
             <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
@@ -145,9 +159,11 @@ const PlayLabProgramsSection = ({
                     </li>
                   </ul>
                 </div>
-                <Button className="bg-[#9044E2] hover:bg-[#9044E2]/90">
-                  Register Interest
-                </Button>
+                <a href="https://bookings.fizzkidz.com.au/play-lab-booking">
+                  <Button className="w-full bg-[#9044E2] uppercase hover:bg-[#9044E2]/90">
+                    Book today
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
@@ -165,7 +181,7 @@ const PlayLabProgramsSection = ({
           title: "Creative Kinders",
           subtitle: "3 - 5 years",
           description:
-            "Hands-on fun designed to inspire creativity, confidence, and messy curiosity!",
+            "Big imaginations. bold creations! Kids take the lead in messy-fun art, cart, and science adventures - building skills, confidence and friendships while creating projects they're proud to take home.",
           buttons: [
             {
               color: "#F6BA33",
@@ -186,16 +202,17 @@ const PlayLabProgramsSection = ({
           <p className="text-center font-lilita text-4xl text-white sm:text-6xl">
             Creative Kinders
           </p>
-          <p className="mt-2 text-center font-lilita text-2xl font-semibold">
-            3 - 5 years
+          <p className="mt-2 text-center text-2xl font-bold">
+            Ages 3 - 5 years
           </p>
-          <p className="mt-4 text-center text-lg">
-            Hands-on fun designed to inspire creativity, confidence, and messy
-            curiosity!
+          <p className="mt-4 text-center text-xl font-semibold">
+            Big imaginations. bold creations! Kids take the lead in messy-fun
+            art, cart, and science adventures - building skills, confidence and
+            friendships while creating projects they're proud to take home.
           </p>
           <img
             className="my-12 h-60 w-full rounded-lg object-cover"
-            src={creativeKindersImage.image.src}
+            src={creativeKindersBanner.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
@@ -203,18 +220,32 @@ const PlayLabProgramsSection = ({
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
                 <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">11:00am - 12:00pm</p>
+                <p className="text-lg">9:30am - 10:30am</p>
               </div>
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
-                  Pricing
+                  Your child will:
                 </p>
-                <p className="text-xl font-extrabold">Casual</p>
-                <p className="mb-2 text-lg">$35</p>
-                <p className="text-xl font-extrabold">Term Pack</p>
-                <p className="text-lg">
-                  $240 <span className="italic">($30 pw)</span>
-                </p>
+                <ul className="mb-4 list-disc pl-4">
+                  <li>Take the lead in their own hands-on, creative play</li>
+                  <li>
+                    Dive into immersive art science and craft projects that
+                    encourage imagination and problem-solving skills
+                  </li>
+                  <li>
+                    Build on craft skills to create meaningful take-home
+                    projects that spark continued play, storytelling, and a
+                    sstrong sense of pride in their unique creations
+                  </li>
+                  <li>
+                    Express themselves confidently while bilding friendships and
+                    practicing teamwork
+                  </li>
+                  <li>
+                    Share joyful, meaningful moments with their caregiver in a
+                    warm, supportive environment
+                  </li>
+                </ul>
               </div>
             </div>
             <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
@@ -239,9 +270,11 @@ const PlayLabProgramsSection = ({
                     </li>
                   </ul>
                 </div>
-                <Button className="bg-[#9044E2] hover:bg-[#9044E2]/90">
-                  Register Interest
-                </Button>
+                <a href="https://bookings.fizzkidz.com.au/play-lab-booking">
+                  <Button className="w-full bg-[#9044E2] uppercase hover:bg-[#9044E2]/90">
+                    Book today
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
@@ -280,16 +313,16 @@ const PlayLabProgramsSection = ({
           <p className="text-center font-lilita text-4xl text-white sm:text-6xl">
             All Playz
           </p>
-          <p className="mt-2 text-center font-lilita text-2xl font-semibold">
-            18 months - 5 years
+          <p className="mt-2 text-center text-2xl font-bold">
+            Ages 18 months - 5 years
           </p>
-          <p className="mt-4 text-center text-lg">
+          <p className="mt-4 text-center text-xl font-semibold">
             A mixed-age facilitated adventure of sensory play, discovery, and
             joyful mess-making!
           </p>
           <img
             className="my-12 h-60 w-full rounded-lg object-cover"
-            src={allPlaysImage.image.src}
+            src={allPlaysBanner.image.src}
             alt="ALl ages banner"
           />
           <div className="flex flex-col gap-12 md:flex-row">
@@ -303,14 +336,30 @@ const PlayLabProgramsSection = ({
               </div>
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
-                  Pricing
+                  Your child will:
                 </p>
-                <p className="text-xl font-extrabold">Casual</p>
-                <p className="mb-2 text-lg">$35</p>
-                <p className="text-xl font-extrabold">Term Pack</p>
-                <p className="text-lg">
-                  $240 <span className="italic">($30 pw)</span>
-                </p>
+                <ul className="mb-4 list-disc pl-4">
+                  <li>
+                    Explore hands-on, mess-free play with colourful,
+                    sensory-rich material
+                  </li>
+                  <li>
+                    Enjoy fun and engaging art, science and craft activities
+                    designed for all abilities
+                  </li>
+                  <li>
+                    Build confidence, creativity, and early problem-solving
+                    skills through guided and independent play
+                  </li>
+                  <li>
+                    Create take-home projects that spark pride, storytelling and
+                    continued play at home
+                  </li>
+                  <li>
+                    Share special bonding moments with their caregiver while
+                    being supported by our passionate team
+                  </li>
+                </ul>
               </div>
             </div>
             <div className="flex w-full flex-col rounded-lg bg-white p-8 shadow-md md:w-1/2">
@@ -335,9 +384,11 @@ const PlayLabProgramsSection = ({
                     </li>
                   </ul>
                 </div>
-                <Button className="bg-[#9044E2] hover:bg-[#9044E2]/90">
-                  Register Interest
-                </Button>
+                <a href="https://bookings.fizzkidz.com.au/play-lab-booking">
+                  <Button className="w-full bg-[#9044E2] uppercase hover:bg-[#9044E2]/90">
+                    Book today
+                  </Button>
+                </a>
               </div>
             </div>
           </div>

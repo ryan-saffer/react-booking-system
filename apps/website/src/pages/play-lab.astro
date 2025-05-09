@@ -8,8 +8,11 @@ import purpleWave from "@/assets/images/pages/play-lab/purple-wave.svg";
 import graphics from "@/assets/images/pages/play-lab/graphics.png";
 import swing from "@/assets/images/pages/play-lab/swing.jpg";
 import littleExplorers from "@/assets/images/pages/play-lab/little-explorers.jpg";
+import littleExplorersBanner from "@/assets/images/pages/play-lab/little-explorers-banner.jpg";
 import creativeKinders from "@/assets/images/pages/play-lab/creative-kinders.jpg";
+import creativeKindersBanner from "@/assets/images/pages/play-lab/creative-kinders-banner.jpg";
 import allPlays from "@/assets/images/pages/play-lab/all-plays.jpg";
+import allPlaysBanner from "@/assets/images/pages/play-lab/all-plays-banner.jpg";
 import FaqAccordion from "@/components/react/faq-accordion";
 import faq from "@/assets/images/pages/parties/faq.png";
 import Values from "@/components/values.astro";
@@ -17,17 +20,31 @@ import PartyLabForm from "@/react-components/forms/party-lab-form";
 import PlayLabProgramsSection from "@/react-components/play-lab/play-lab-programs-section";
 import PlayLabDaySchedule from "@/components/play-lab-day-schedule.astro";
 import Reviews from "@/components/reviews.astro";
+import headerVideo from "@/assets/images/pages/play-lab/play-lab-header.mp4";
+import PrimaryButton from "@/components/primary-button.astro";
 
 const littleExplorersOptimised = await getImage({
   src: littleExplorers,
+  format: "webp",
+});
+const littleExplorersBannerOptimised = await getImage({
+  src: littleExplorersBanner,
   format: "webp",
 });
 const creativeKindersOptimised = await getImage({
   src: creativeKinders,
   format: "webp",
 });
+const creativeKindersBannerOptimised = await getImage({
+  src: creativeKindersBanner,
+  format: "webp",
+});
 const allPlaysOptimised = await getImage({
   src: allPlays,
+  format: "webp",
+});
+const allPlaysBannerOptimised = await getImage({
+  src: allPlaysBanner,
   format: "webp",
 });
 ---
@@ -43,11 +60,11 @@ const allPlaysOptimised = await getImage({
     />
     <PageIntro
       color="blue"
-      image={hero}
-      imageAlt="Two kids in smocks with messy hands and laughing"
+      type="video"
+      videoUrl={headerVideo}
       subtitle="Sparking creativity and curiosity with fun, hands-on science, art, and craft experiences for kids aged 18 months to 5 years!"
-      actionButtonText="Register Interest"
-      actionButtonPath="/careers/"
+      actionButtonText="Book today"
+      actionButtonPath="https://bookings.fizzkidz.com.au/play-lab-booking"
     >
       <span slot="title">Fizz Kidz Play Lab</span>
       <span slot="content">
@@ -128,13 +145,25 @@ const allPlaysOptimised = await getImage({
         image: littleExplorersOptimised,
         alt: "Two kids in smocks laughing",
       }}
+      littleExplorersBanner={{
+        image: littleExplorersBannerOptimised,
+        alt: "a banner image",
+      }}
       creativeKindersImage={{
         image: creativeKindersOptimised,
         alt: "A cardboard car covered in paint",
       }}
+      creativeKindersBanner={{
+        image: creativeKindersBannerOptimised,
+        alt: "a banner image",
+      }}
       allPlaysImage={{
         image: allPlaysOptimised,
         alt: "A girl amazed as she plays with paint",
+      }}
+      allPlaysBanner={{
+        image: allPlaysBannerOptimised,
+        alt: "a banner image",
       }}
     />
     <section>
@@ -196,37 +225,25 @@ const allPlaysOptimised = await getImage({
       reviews={[
         {
           review:
-            "We had my daughters party yesterday and the hosts were amazing. I got to sit back and relax and they ran the party for us. The kids had a ball. They were so good with the kids. 10/10 Thank you for making my daughters birthday so special.",
-          writtenBy: "Violeta",
-          writtenYear: "2023",
+            "We LOVED Play Lab! We attended the open day and loved how sensory and creative the session was. My little one is shy, but the Play Lab environment helped him come out of his shell. We truly can’t wait to come back. ",
+          writtenBy: "Liz",
+          writtenYear: "2025",
         },
         {
           review:
-            " My son had the most amazing birthday party at Fizz Kids and it exceeded my expectations by a long shot. Not only did the kids get to make fun and messy creations but the party hosts were sensational. They were so engaging with the kids and kept them involved the entire time, playing games in between each activity which the kids loved. The food package was very generous with lots of options to choose from. All the parents that attended with their kids were very impressed with they way it was run and how great the hosts were with the kids - aged 4-5.  Special thank you to Paddy, who without missing a beat cleaned up my sons 'power spew' as well.  I cannot recommend this party venue enough 😊",
-          writtenBy: "Robin",
-          writtenYear: "2023",
+            "My daughter talks about it nonstop. She loved the experiments and came home so proud of her work. The staff are so kind and thoughtful — it felt like a second home.",
+          writtenBy: "Jess",
+          writtenYear: "2025",
         },
         {
           review:
-            "Such an easy process, From booking through to the day, clear information and all done online. Pace of the party was great, the kids loved it. Lots of food and staff were really lovely, accommodating, enthusiastic and engaging with the kids. We had 14 kids plus parents and the space was big enough for that number plus parents. 5th birthday party for 1.5 hours was perfect, with a few younger siblings and the younger ones were entertained as well. Great option to outsource a party that is value for money. Would highly recommended!",
+            "I took my 18 month old and 4 year old and it was wonderful that they both could enjoy the space. I had a friend with me, and we chatted while the other ones explored. We will be back for sure.",
           writtenBy: "Siobhan",
-          writtenYear: "2023",
-        },
-        {
-          review:
-            " We just hosted our daughter's birthday party at Fizz Kids Essendon and boy was it a hit!! The booking/organising of the function is so easy and really detailed. The party itself was wonderful, our hosts were so helpful and kept all the children happy and entertained! They were so excited and engaged with the experiences too. Highly recommend Fizz Kids Essendon and look forward to coming back for holiday club!!",
-          writtenBy: "Dee",
-          writtenYear: "2023",
-        },
-        {
-          review:
-            "We had my daughter's 9th birthday at Fizz Kidz Essendon and I have only great things to say about the experience. Great activities, helpful and engaging staff, well considered schedule (having kids decorate their own bags at the start is a great idea!), and a really fun vibe. It was such a relief to just hand everything over for a change!",
-          writtenBy: "Chelsea",
-          writtenYear: "2024",
+          writtenYear: "2025",
         },
       ]}
     />
-    <section class="my-12 md:my-20">
+    <section class="mt-12 md:mt-20">
       <h6 class="mb-4 text-center font-lilita text-4xl md:text-5xl">
         Frequently Asked Questions
       </h6>
@@ -241,42 +258,45 @@ const allPlaysOptimised = await getImage({
             client:idle
             items={[
               {
-                question: "When do I choose my creations?",
-                answer: "10 days before your childs upcoming party!",
-              },
-              {
-                question: "When do I let you know numbers?",
+                question: "How do I book a session?",
                 answer:
-                  "10 days before your childs upcoming party. We will only charge you for the number of kids that turn up!",
+                  "You can book online through our website, or contact us directly and we'll help you find a time that works best for you and your child.",
               },
               {
-                question: "Can I change the party food if I like?",
-                answer: "Yes we have options!",
-              },
-              {
-                question: "When do you take payment?",
-                answer: "At the end of the party. We do not take any deposit.",
-              },
-              {
-                question: "Can we bring food for parents?",
+                question: "What age group is Play Lab for?",
                 answer:
-                  "Sure, please make sure it's nut free and let us know before the party.",
+                  "Play Lab is designed for children aged 1 to 5 years old. Activities are thoughtfully adapted to suit each developmental stage, so everyone can enjoy and benefit from the session — from curious toddlers to creative preschoolers.",
               },
               {
-                question: "Can parents stay during the party?",
-                answer: "Sure, parents can stay or drop off.",
+                question: "Do I stay with my child during the session?",
+                answer:
+                  "If your child is under 4 years old, yes. For this age group Play Lab is a caregiver-and-child program. You'll share in the fun, support their exploration, and make special memories together - without the clean-up! Children aged 4-6 years old are very welcome to attend independently, our team provides gentle guidance and lots of support throughout the session.",
+              },
+              {
+                question: "What types of activities do you run?",
+                answer:
+                  "Each session includes a mix of art, science, sensory, and craft-based activities. For younger children, the focus is on exploration and play. For older children, we introduce elements of creative thinking, self-expression, and take-home projects.",
+              },
+              {
+                question: "How long is each session?",
+                answer: "Each Play Lab session runs for 60 minutes.",
+              },
+              {
+                question:
+                  "My child has special needs. Is this program appropriate?",
+                answer:
+                  "Absolutely. We welcome all children and are passionate about creating an inclusive, supportive environment for every child. We encourage you to call us as we'd love to chat about how we can best support your child in the Play Lab space.",
               },
             ]}
           />
         </div>
       </div>
     </section>
-    <div class="m-auto mb-12 mt-0 max-w-4xl p-4">
-      <p class="mb-12 text-center font-lilita text-4xl">
-        Bookings will be available soon, but in the meantime, register your
-        interest and we will be in touch!
-      </p>
-      <PartyLabForm client:idle />
+    <div class="mt-6 flex w-full justify-center">
+      <PrimaryButton
+        text="Book Today"
+        path="https://bookings.fizzkidz.com.au/play-lab-booking"
+      />
     </div>
     <Values />
   </section>
