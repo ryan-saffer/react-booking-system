@@ -146,16 +146,33 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                             onClick={() => handleSessionClick(klass)}
                         >
                             <div className="w-full">
-                                <p className="font-lilita text-lg" style={{ color }}>
+                                <p
+                                    className={cn('font-lilita text-lg', {
+                                        'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
+                                    })}
+                                    style={{ color }}
+                                >
                                     {klass.name}
                                 </p>
-                                <p className="text-sm font-bold">{klass.time.toDateString()}</p>
+                                <p
+                                    className={cn('text-sm font-bold', {
+                                        'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
+                                    })}
+                                >
+                                    {klass.time.toDateString()}
+                                </p>
                                 <div className="flex w-full justify-between">
-                                    <p className="text-sm">{time}</p>
+                                    <p
+                                        className={cn('text-sm', {
+                                            'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
+                                        })}
+                                    >
+                                        {time}
+                                    </p>
                                     {klass.slotsAvailable <= 5 && (
                                         <p
                                             className={cn('text-sm font-semibold italic', {
-                                                'text-red-600': klass.slotsAvailable === 0,
+                                                'text-rose-700': klass.slotsAvailable === 0,
                                             })}
                                         >
                                             {klass.slotsAvailable === 0

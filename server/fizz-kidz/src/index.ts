@@ -49,3 +49,4 @@ export * from './events/Event'
 export * from './events/incursion-module-map'
 
 export * from './zoho/zoho.types'
+export * from './square'

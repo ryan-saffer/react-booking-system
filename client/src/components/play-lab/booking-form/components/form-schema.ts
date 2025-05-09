@@ -1,4 +1,5 @@
 import type { Location } from 'fizz-kidz'
+import { DateTime } from 'luxon'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -10,10 +11,16 @@ const childSchema = z
         // By using `refine()` on each optional field, we still enforce that they have a value.
         firstName: z.string().trim().min(1, 'Child first name is required'),
         lastName: z.string().trim().min(1, 'Child last name is required'),
-        dob: z
-            .date()
-            .optional()
-            .refine((date) => !!date, 'Date of birth is required'),
+        dob: z.date({ required_error: 'Date of birth is required', invalid_type_error: 'Invalid date' }).refine(
+            (date) => {
+                const now = DateTime.now()
+                const ageInMonths = now.diff(DateTime.fromJSDate(date), 'months').months
+                return ageInMonths >= 18 && ageInMonths <= 84
+            },
+            {
+                message: 'Child age must be between 18 months and 6 years old',
+            }
+        ),
         hasAllergies: z
             .boolean()
             .optional()

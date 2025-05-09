@@ -11,6 +11,10 @@ import { trpc } from '@utils/trpc'
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
+import { getSquareLocationId } from 'fizz-kidz'
+
+const SQUARE_APPLICATION_ID =
+    import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
 
 export function Payment() {
     const form = useBookingForm()
@@ -19,6 +23,7 @@ export function Payment() {
     const { selectedClasses, discount, subtotal, total } = useCartStore()
 
     const children = form.watch('children')
+    const studio = form.watch('studio')
 
     const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
 
@@ -27,6 +32,8 @@ export function Payment() {
             reset()
         }
     }, [formStage, reset])
+
+    const squareLocationId = studio ? getSquareLocationId(studio) : ''
 
     function formatClassTime(date: Date) {
         return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
@@ -167,8 +174,8 @@ export function Payment() {
                 </TableFooter>
             </Table>
             <PaymentForm
-                applicationId="sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g"
-                locationId="L834ATV1QTRQW"
+                applicationId={SQUARE_APPLICATION_ID}
+                locationId={squareLocationId}
                 cardTokenizeResponseReceived={async ({ status, token }) => {
                     // TODO add verify buyer token
                     if (status === 'OK' && token) {
