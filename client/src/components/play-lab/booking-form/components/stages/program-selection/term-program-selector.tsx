@@ -1,6 +1,6 @@
 import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
-import { ChevronLeft, MessageCircleWarning } from 'lucide-react'
+import { AlertCircle, ChevronLeft, MessageCircleWarning } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 
 import Loader from '@components/Shared/Loader'
@@ -27,7 +27,7 @@ export function TermProgramSelector() {
     const appointmentTypeId = form.watch('appointmentTypeId')
 
     const { data, isLoading, isSuccess, isError } = trpc.acuity.getAppointmentTypes.useQuery({
-        category: ['play-lab-test'],
+        category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
         availableToBook: false,
     })
 
@@ -38,9 +38,30 @@ export function TermProgramSelector() {
 
     if (isLoading) return <Loader />
 
-    if (isError) return <p>Error</p>
+    if (isError)
+        return (
+            <Alert className="mt-4" variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Something went wrong</AlertTitle>
+                <AlertDescription>
+                    There was an error retrieving the available sessions. Please try again later.
+                </AlertDescription>
+            </Alert>
+        )
 
     if (isSuccess) {
+        if (data.length === 0) {
+            return (
+                <Alert className="mt-4">
+                    <MessageCircleWarning className="h-4 w-4" />
+                    <AlertTitle>No classes available</AlertTitle>
+                    <AlertDescription>
+                        Unfortunately there are no classes available to book at the moment. Come back later and check
+                        again.
+                    </AlertDescription>
+                </Alert>
+            )
+        }
         return (
             <>
                 <p className="text-md mb-4 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">

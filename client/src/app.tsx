@@ -414,7 +414,7 @@ const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'play-lab-enrolment',
+                path: 'play-lab-booking',
                 Component: () => (
                     <Suspense fallback={<Loader fullScreen />}>
                         <PlayLabBookingPage />

@@ -1,5 +1,3 @@
-import { Location, capitalise } from 'fizz-kidz'
-
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 
@@ -35,19 +33,9 @@ export function StudioSelector() {
                             </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                            {import.meta.env.VITE_ENV === 'prod' &&
-                                Object.values(Location)
-                                    // .filter(
-                                    //     (location) =>
-                                    //         !!data.find(
-                                    //             (it) => it.calendarID === AcuityConstants.StoreCalendars[location]
-                                    //         )
-                                    // )
-                                    .map((location) => (
-                                        <SelectItem value={location} key={location}>
-                                            {capitalise(location)}
-                                        </SelectItem>
-                                    ))}
+                            {import.meta.env.VITE_ENV === 'prod' && (
+                                <SelectItem value="kingsville">Kingsville</SelectItem>
+                            )}
                             {import.meta.env.VITE_ENV === 'dev' && (
                                 <SelectItem value="test" key="test">
                                     Test

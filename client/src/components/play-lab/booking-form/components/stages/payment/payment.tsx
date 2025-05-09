@@ -1,4 +1,4 @@
-import { PartyPopper } from 'lucide-react'
+import { AlertCircle, PartyPopper } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
@@ -94,6 +94,7 @@ export function Payment() {
 
             return (
                 <Alert variant="destructive" className="mt-4">
+                    <AlertCircle className="h-4 w-4" />
                     <AlertTitle className="font-semibold">{errorTitle}</AlertTitle>
                     <AlertDescription className="font-medium">{errorMessage}</AlertDescription>
                 </Alert>

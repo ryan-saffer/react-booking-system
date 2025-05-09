@@ -45,9 +45,8 @@ export function BookingTypeSelector() {
                             >
                                 <p>Term 2 Enrolment</p>
                                 <p className="text-sm text-muted-foreground">
-                                    Book into the same day and time, every week over a term.
+                                    Book into the same day and time, every week over the term.
                                 </p>
-                                <p className="text-sm italic text-muted-foreground">Begins week of May 15th</p>
                             </div>
                             <div
                                 className={cn('cursor-pointer rounded-md border px-3 py-2 text-sm hover:bg-gray-50', {
