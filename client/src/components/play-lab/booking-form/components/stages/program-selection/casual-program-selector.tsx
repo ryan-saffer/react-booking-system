@@ -1,5 +1,5 @@
 import { isSameDay, parseISO } from 'date-fns'
-import { AlertCircle, CheckCircleIcon, MessageCircleWarning, RefreshCcw } from 'lucide-react'
+import { AlertCircle, CheckCircleIcon, ChevronLeft, MessageCircleWarning, RefreshCcw } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
@@ -14,18 +14,19 @@ import { ContinueButton } from './continue-button'
 import { Separator } from '@ui-components/separator'
 import { Button } from '@ui-components/button'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
+import type { AcuityTypes } from 'fizz-kidz'
+import { Checkbox } from '@ui-components/checkbox'
+import { DateTime } from 'luxon'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
     const { formStage } = useFormStage()
 
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
-
     const studio = form.watch('studio')
     const bookingType = form.watch('bookingType')
 
     const minDate = useMemo(() => Date.now(), [])
-    const [selectedDay, setSelectedDay] = useState<Date | null>(null)
 
     const {
         data: appointmentTypes,
@@ -94,59 +95,85 @@ export function CasualProgramSelector() {
         }
 
         return (
-            <>
-                <div className="my-2 flex items-center justify-between">
-                    <p className="text-md font-medium">Session Selection</p>
-                    <Button variant="ghost" onClick={() => refetch()}>
-                        <RefreshCcw className="h-4 w-4" />
-                    </Button>
-                </div>
-                <Calendar
-                    onDayClick={(day) => {
-                        setSelectedDay(day)
-                    }}
-                    modifiers={{
-                        disabled: (date) => !filteredClasses.some((klass) => isSameDay(klass.time, date)),
-                        today: new Date(),
-                        programSelected: (date) =>
-                            Object.values(selectedClasses).some((klass) => isSameDay(klass.time, date)),
-                        selected: (date) => (selectedDay ? isSameDay(date, selectedDay) : false),
-                    }}
-                    modifiersClassNames={{
-                        disabled: 'hover:bg-white text-muted-foreground opacity-50',
-                        today: 'bg-gray-100 !rounded-full',
-                        programSelected: 'bg-green-200 hover:bg-green-100 !rounded-full',
-                        selected: 'text-purple-600 !font-extrabold underline',
-                    }}
-                    styles={{
-                        caption_start: { width: '100%' },
-                        head_cell: {
-                            width: '100%',
-                        },
-                        nav_button_previous: {
-                            width: 40,
-                        },
-                        nav_button_next: {
-                            width: 40,
-                        },
-                        caption: {
-                            marginBottom: 24,
-                        },
-                        cell: { width: '100%', cursor: 'not-allowed', background: 'white' },
-                        day: { color: '!font-semibold' },
-                    }}
-                />
-
-                {selectedDay && (
-                    <>
-                        <Separator className="my-4" />
-                        <SessionSelector classes={filteredClasses} selectedDay={selectedDay} />
-                    </>
-                )}
-                {Object.keys(selectedClasses).length !== 0 && <ContinueButton />}
-            </>
+            <Tabs defaultValue="date" className="">
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="date">Browse by date</TabsTrigger>
+                    <TabsTrigger value="program">Browse by program</TabsTrigger>
+                </TabsList>
+                <TabsContent value="date">
+                    <BrowseByDate filteredClasses={filteredClasses} refetchClasses={refetch} />
+                </TabsContent>
+                <TabsContent value="program">
+                    <BrowseByProgram appointmentTypes={appointmentTypes} classes={filteredClasses} />
+                </TabsContent>
+            </Tabs>
         )
     }
+}
+
+function BrowseByDate({
+    filteredClasses,
+    refetchClasses,
+}: {
+    filteredClasses: LocalAcuityClass[]
+    refetchClasses: () => void
+}) {
+    const selectedClasses = useCartStore((store) => store.selectedClasses)
+    const [selectedDay, setSelectedDay] = useState<Date | null>(null)
+    return (
+        <>
+            <div className="my-2 flex items-center justify-between">
+                <p className="text-md font-medium">Session Selection</p>
+                <Button variant="ghost" onClick={() => refetchClasses()}>
+                    <RefreshCcw className="h-4 w-4" />
+                </Button>
+            </div>
+            <Calendar
+                className="mb-4"
+                onDayClick={(day) => {
+                    setSelectedDay(day)
+                }}
+                modifiers={{
+                    disabled: (date) => !filteredClasses.some((klass) => isSameDay(klass.time, date)),
+                    today: new Date(),
+                    programSelected: (date) =>
+                        Object.values(selectedClasses).some((klass) => isSameDay(klass.time, date)),
+                    selected: (date) => (selectedDay ? isSameDay(date, selectedDay) : false),
+                }}
+                modifiersClassNames={{
+                    disabled: 'hover:bg-white text-muted-foreground opacity-50',
+                    today: 'bg-gray-100 !rounded-full',
+                    programSelected: 'bg-green-200 hover:bg-green-100 !rounded-full',
+                    selected: 'text-purple-600 !font-extrabold underline',
+                }}
+                styles={{
+                    caption_start: { width: '100%' },
+                    head_cell: {
+                        width: '100%',
+                    },
+                    nav_button_previous: {
+                        width: 40,
+                    },
+                    nav_button_next: {
+                        width: 40,
+                    },
+                    caption: {
+                        marginBottom: 24,
+                    },
+                    cell: { width: '100%', cursor: 'not-allowed', background: 'white' },
+                    day: { color: '!font-semibold' },
+                }}
+            />
+
+            {selectedDay && (
+                <>
+                    <Separator />
+                    <SessionSelector classes={filteredClasses} selectedDay={selectedDay} />
+                </>
+            )}
+            <ContinueButton />
+        </>
+    )
 }
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
@@ -172,7 +199,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
     if (!filteredClasses.length) return null
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="my-4 flex flex-col gap-4">
             {filteredClasses.map((klass) => {
                 const { time, color } = JSON.parse(klass.description)
                 const isSelected = !!selectedClasses[klass.id]
@@ -200,7 +227,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                     'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
                                 })}
                             >
-                                {klass.time.toDateString()}
+                                {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL')}
                             </p>
                             <div className="flex w-full justify-between">
                                 <p
@@ -228,5 +255,135 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                 )
             })}
         </div>
+    )
+}
+
+function BrowseByProgram({
+    appointmentTypes,
+    classes,
+}: {
+    appointmentTypes: AcuityTypes.Api.AppointmentType[]
+    classes: LocalAcuityClass[]
+}) {
+    const form = useBookingForm()
+    const selectedClasses = useCartStore((store) => store.selectedClasses)
+    const toggleClass = useCartStore((store) => store.toggleClass)
+
+    const [selectedAppointmentTypeId, setSelectedAppointmentTypeId] = useState<number | null>(null)
+
+    const filteredClasses = useMemo(
+        () =>
+            selectedAppointmentTypeId ? classes.filter((it) => it.appointmentTypeID === selectedAppointmentTypeId) : [],
+        [selectedAppointmentTypeId, classes]
+    )
+
+    function handleCardClick(id: number) {
+        if (selectedAppointmentTypeId === id) setSelectedAppointmentTypeId(null)
+        else setSelectedAppointmentTypeId(id)
+    }
+    return (
+        <>
+            <div className="flex flex-col gap-4">
+                {appointmentTypes.map((program) => {
+                    const { day, time, ages, begins } = JSON.parse(program.description)
+
+                    if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
+
+                    return (
+                        <div
+                            key={program.id}
+                            onClick={() => handleCardClick(program.id)}
+                            className={cn('flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50', {
+                                'bg-gray-100 hover:bg-gray-100': selectedAppointmentTypeId === program.id,
+                            })}
+                        >
+                            <img
+                                src={program.image}
+                                alt={program.name}
+                                className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                            />
+
+                            <div className="ml-4 flex-1 space-y-1">
+                                <h3 className="text-lg font-semibold text-gray-900">{program.name}</h3>
+
+                                <div className="flex flex-wrap text-sm text-gray-500">
+                                    <span>{ages}</span>
+                                </div>
+
+                                <div className="text-sm text-gray-700">
+                                    {day} · {time}
+                                </div>
+
+                                <div className="text-xs text-gray-500">{begins}</div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="mb-2">
+                {selectedAppointmentTypeId && filteredClasses.length !== 0 && (
+                    <div className="mt-4 flex flex-col gap-4">
+                        {filteredClasses.map((klass) => (
+                            <div key={klass.id} className="flex items-center space-x-2">
+                                <Checkbox
+                                    id={`${klass.id}`}
+                                    disabled={klass.slotsAvailable === 0}
+                                    checked={!!selectedClasses[klass.id]}
+                                    onCheckedChange={() =>
+                                        toggleClass(
+                                            klass,
+                                            form.getValues().children.length,
+                                            form.getValues().bookingType === 'term-booking'
+                                        )
+                                    }
+                                />
+                                <label
+                                    htmlFor={`${klass.id}`}
+                                    className="flex cursor-pointer flex-col gap-1 text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    <span>
+                                        {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -
+                                        {DateTime.fromJSDate(klass.time)
+                                            .plus({ minutes: klass.duration })
+                                            .toFormat('h:mm a')}
+                                    </span>
+                                    {klass.slotsAvailable === 0 && (
+                                        <span className="font-semibold italic">[No spots left]</span>
+                                    )}
+                                    {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
+                                        <span className="font-semibold italic">
+                                            [{klass.slotsAvailable} spots left]
+                                        </span>
+                                    )}
+                                </label>
+                            </div>
+                        ))}
+                        <ReturnButton onClick={() => setSelectedAppointmentTypeId(null)} />
+                    </div>
+                )}
+                {selectedAppointmentTypeId && filteredClasses.length === 0 && (
+                    <>
+                        <Alert className="mt-4">
+                            <MessageCircleWarning className="h-4 w-4" />
+                            <AlertTitle>No sessions available</AlertTitle>
+                            <AlertDescription>
+                                This program does not have any sessions available at the moment. Try selecting another
+                                program.
+                            </AlertDescription>
+                        </Alert>
+                        <ReturnButton onClick={() => setSelectedAppointmentTypeId(null)} />
+                    </>
+                )}
+            </div>
+            <ContinueButton />
+        </>
+    )
+}
+
+function ReturnButton({ onClick }: { onClick: () => void }) {
+    return (
+        <Button variant="outline" className="mt-2 w-full" onClick={onClick}>
+            <ChevronLeft className="mr-2 h-4 w-4" /> Return to all programs
+        </Button>
     )
 }

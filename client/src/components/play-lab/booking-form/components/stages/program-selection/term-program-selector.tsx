@@ -54,9 +54,9 @@ export function TermProgramSelector() {
             return (
                 <Alert className="mt-4">
                     <MessageCircleWarning className="h-4 w-4" />
-                    <AlertTitle>No classes available</AlertTitle>
+                    <AlertTitle>No programs available</AlertTitle>
                     <AlertDescription>
-                        Unfortunately there are no classes available to book at the moment. Come back later and check
+                        Unfortunately there are no programs available to book at the moment. Come back later and check
                         again.
                     </AlertDescription>
                 </Alert>
@@ -82,6 +82,15 @@ export function TermProgramSelector() {
             </>
         )
     }
+}
+
+function ReturnButton() {
+    const form = useBookingForm()
+    return (
+        <Button variant="outline" className="my-2 w-full" onClick={() => form.setValue('appointmentTypeId', null)}>
+            <ChevronLeft className="mr-2 h-4 w-4" /> Return to all programs
+        </Button>
+    )
 }
 
 /**
@@ -116,14 +125,6 @@ function ContinueOrError() {
             setSelectedClasses(filteredClasses, numberOfKids)
         }
     }, [isSuccess, hasClasses, isFull, filteredClasses, setSelectedClasses, numberOfKids])
-
-    function ReturnButton() {
-        return (
-            <Button variant="outline" className="mt-2 w-full" onClick={() => form.setValue('appointmentTypeId', null)}>
-                <ChevronLeft className="mr-2 h-4 w-4" /> Return to all programs
-            </Button>
-        )
-    }
 
     if (!studio) return null
 
@@ -178,7 +179,7 @@ function ContinueOrError() {
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
     const appointmentTypeId = form.watch('appointmentTypeId')
-    const { day, time, description, begins, ages, color } = JSON.parse(program.description)
+    const { day, time, begins, ages } = JSON.parse(program.description)
 
     function handleCardClick() {
         if (appointmentTypeId) form.setValue('appointmentTypeId', null)
@@ -190,8 +191,7 @@ function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.A
             key={program.id}
             onClick={handleCardClick}
             className={cn('flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50', {
-                'border-blue-200 bg-blue-50': selected,
-                'border-gray-200 bg-white': !selected,
+                'bg-gray-100 hover:bg-gray-100': selected,
             })}
         >
             <img src={program.image} alt={program.name} className="h-20 w-20 flex-shrink-0 rounded-md object-cover" />

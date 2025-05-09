@@ -21,8 +21,10 @@ export function ContinueButton() {
 
     const numberOfSessions = Object.values(selectedClasses).length
 
+    if (Object.values(selectedClasses).length === 0) return null
+
     return (
-        <Button className="mt-2 w-full font-semibold" type="button" onClick={nextStage}>
+        <Button className="w-full font-semibold" type="button" onClick={nextStage}>
             Continue
             <br />
             {numberOfSessions} session
