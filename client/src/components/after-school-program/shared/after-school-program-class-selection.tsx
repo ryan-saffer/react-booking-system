@@ -41,11 +41,16 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                 : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
     })
 
-    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeIds: [selectedAppointmentType?.id || 0],
-        includeUnavailable: true,
-        minDate: nowRef.current,
-    })
+    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery(
+        {
+            appointmentTypeIds: [selectedAppointmentType!.id],
+            includeUnavailable: true,
+            minDate: nowRef.current,
+        },
+        {
+            enabled: !!selectedAppointmentType?.id,
+        }
+    )
 
     const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
         const id = e.target.value as number
