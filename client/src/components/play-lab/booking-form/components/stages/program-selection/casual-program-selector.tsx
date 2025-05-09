@@ -95,16 +95,16 @@ export function CasualProgramSelector() {
         }
 
         return (
-            <Tabs defaultValue="date" className="">
+            <Tabs defaultValue="program" className="">
                 <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="date">Browse by date</TabsTrigger>
                     <TabsTrigger value="program">Browse by program</TabsTrigger>
+                    <TabsTrigger value="date">Browse by date</TabsTrigger>
                 </TabsList>
-                <TabsContent value="date">
-                    <BrowseByDate filteredClasses={filteredClasses} refetchClasses={refetch} />
-                </TabsContent>
                 <TabsContent value="program">
                     <BrowseByProgram appointmentTypes={appointmentTypes} classes={filteredClasses} />
+                </TabsContent>
+                <TabsContent value="date">
+                    <BrowseByDate filteredClasses={filteredClasses} refetchClasses={refetch} />
                 </TabsContent>
             </Tabs>
         )
