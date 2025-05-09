@@ -3,11 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { SquareClient } from '../../square/core/square-client'
 import type { BookPlayLabProps } from './book-play-lab'
 
-export async function processPaylabPayment(
-    input: BookPlayLabProps['payment'],
-    parentPhone: string,
-    parentEmail: string
-) {
+export async function processPaylabPayment(input: BookPlayLabProps['payment'], parentEmail: string) {
     const squareClient = await SquareClient.getInstance()
     const idempotencyKey = uuidv4()
 
@@ -58,6 +54,7 @@ export async function processPaylabPayment(
             sellerKeyedIn: false,
         },
         buyerEmailAddress: parentEmail,
+        verificationToken: input.buyerVerificationToken,
     })
 
     if (paymentErrors) return { errors: paymentErrors }

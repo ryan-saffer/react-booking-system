@@ -12,6 +12,7 @@ import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
 import { getSquareLocationId } from 'fizz-kidz'
+import { toast } from 'sonner'
 
 const SQUARE_APPLICATION_ID =
     import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
@@ -39,7 +40,7 @@ export function Payment() {
         return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
     }
 
-    async function book(token: string) {
+    async function book(token: string, buyerVerificationToken: string) {
         await mutateAsync({
             classes: Object.values(selectedClasses).map((klass) => ({
                 ...klass,
@@ -56,7 +57,8 @@ export function Payment() {
             joinMailingList: form.getValues().joinMailingList,
             payment: {
                 token,
-                locationId: 'L834ATV1QTRQW',
+                buyerVerificationToken,
+                locationId: squareLocationId,
                 amount: total * 100,
                 lineItems: Object.values(selectedClasses).flatMap((klass) =>
                     children.map((child) => ({
@@ -70,7 +72,7 @@ export function Payment() {
                     ? {
                           ...discount,
                           amount: discount.amount * 100,
-                          name: `Multi session discount - ${discount.amount * 100}%`,
+                          name: discount.description,
                       }
                     : null,
             },
@@ -176,10 +178,11 @@ export function Payment() {
             <PaymentForm
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
-                cardTokenizeResponseReceived={async ({ status, token }) => {
-                    // TODO add verify buyer token
+                cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
                     if (status === 'OK' && token) {
-                        book(token)
+                        book(token, buyerVerification?.token || '')
+                    } else {
+                        toast.error('There was an error processing your payment')
                     }
                 }}
                 createVerificationDetails={() => ({

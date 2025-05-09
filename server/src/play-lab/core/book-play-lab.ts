@@ -27,6 +27,7 @@ export type BookPlayLabProps = {
     joinMailingList: boolean
     payment: {
         token: string
+        buyerVerificationToken: string
         locationId: string
         amount: number // in cents
         lineItems: {
@@ -63,7 +64,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
     // all classes have enough spots! let's continue
 
     // process payment
-    const { errors, payment } = await processPaylabPayment(input.payment, input.parentPhone, input.parentEmail)
+    const { errors, payment } = await processPaylabPayment(input.payment, input.parentEmail)
 
     if (errors) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', errors, {
