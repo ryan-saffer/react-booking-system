@@ -43,7 +43,9 @@ export function BookingTypeSelector() {
                                     }
                                 }}
                             >
-                                <p>Term 2 Enrolment</p>
+                                <p>
+                                    Term Enrolment - <span className="italic">20% discount</span>
+                                </p>
                                 <p className="text-sm text-muted-foreground">
                                     Book into the same day and time, every week over the term.
                                 </p>

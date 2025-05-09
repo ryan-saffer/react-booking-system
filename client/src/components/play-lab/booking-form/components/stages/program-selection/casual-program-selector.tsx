@@ -342,7 +342,7 @@ function BrowseByProgram({
                                     className="flex cursor-pointer flex-col gap-1 text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     <span>
-                                        {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -
+                                        {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -{' '}
                                         {DateTime.fromJSDate(klass.time)
                                             .plus({ minutes: klass.duration })
                                             .toFormat('h:mm a')}
