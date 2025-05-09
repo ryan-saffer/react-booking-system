@@ -58,11 +58,6 @@ export const formSchema = z.object({
         .min(10, 'Number must be at least 10 digits')
         .regex(phoneRegex, 'Invalid number')
         .trim(),
-    // pickupPeople: z.array(
-    //     z.object({
-    //         pickupPerson: z.string().trim().min(1, 'Pickup person cannot be empty'),
-    //     })
-    // ),
     termsAndConditions: z.boolean().refine((val) => val, 'Please accept the terms and conditions'),
     joinMailingList: z.boolean(),
 })
