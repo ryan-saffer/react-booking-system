@@ -1,11 +1,13 @@
 import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
 import { AlertCircle, ChevronLeft, MessageCircleWarning } from 'lucide-react'
+import { DateTime } from 'luxon'
 import { useEffect, useMemo, useRef } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
+import { Checkbox } from '@ui-components/checkbox'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
@@ -137,9 +139,9 @@ function ContinueOrError() {
                 <>
                     <Alert className="mt-4">
                         <MessageCircleWarning className="h-4 w-4" />
-                        <AlertTitle>No classes available</AlertTitle>
+                        <AlertTitle>No sessions available</AlertTitle>
                         <AlertDescription>
-                            Unfortunately there are no classes available to book at the moment. Come back later and
+                            Unfortunately there are no sessions available to book at the moment. Come back later and
                             check again.
                         </AlertDescription>
                     </Alert>
@@ -153,13 +155,13 @@ function ContinueOrError() {
                 <>
                     <Alert className="mt-4">
                         <MessageCircleWarning className="h-4 w-4" />
-                        <AlertTitle>One or more classes are full</AlertTitle>
+                        <AlertTitle>One or more sessions are full</AlertTitle>
                         <AlertDescription>
-                            Unfortunately one or more of the classes for the term are full, so a term booking is
+                            Unfortunately one or more of the sessions for the term are full, so a term enrolment is
                             unavailable.
                             <br />
                             <br />
-                            You are still welcome to book casual sessions by changing your selection above.
+                            You are still welcome to book casual sessions - just select 'Casual Booking' above.
                         </AlertDescription>
                     </Alert>
                     <ReturnButton />
@@ -169,7 +171,31 @@ function ContinueOrError() {
 
         return (
             <>
-                <ReturnButton />
+                <div className="mt-6 flex flex-col gap-4">
+                    {filteredClasses.map((klass) => (
+                        <div key={klass.id} className="flex items-center space-x-2">
+                            <Checkbox className="disabled:opacity-100" id={`${klass.id}`} disabled checked />
+                            <label
+                                htmlFor={`${klass.id}`}
+                                className="flex cursor-pointer flex-col gap-1 text-sm font-medium peer-disabled:cursor-not-allowed"
+                            >
+                                <span>
+                                    {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -{' '}
+                                    {DateTime.fromJSDate(klass.time)
+                                        .plus({ minutes: klass.duration })
+                                        .toFormat('h:mm a')}
+                                </span>
+                                {klass.slotsAvailable === 0 && (
+                                    <span className="font-semibold italic">[No spots left]</span>
+                                )}
+                                {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
+                                    <span className="font-semibold italic">[{klass.slotsAvailable} spots left]</span>
+                                )}
+                            </label>
+                        </div>
+                    ))}
+                    <ReturnButton />
+                </div>
                 <ContinueButton />
             </>
         )
