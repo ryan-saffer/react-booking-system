@@ -1,7 +1,7 @@
 import type { AcuityTypes } from 'fizz-kidz'
 import { create } from 'zustand'
 
-export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date }
+export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date; image?: string }
 
 interface Cart {
     // the classes curently in the cart

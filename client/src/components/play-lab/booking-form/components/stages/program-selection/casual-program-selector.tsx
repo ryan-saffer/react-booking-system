@@ -61,8 +61,16 @@ export function CasualProgramSelector() {
     )
 
     const filteredClasses = useMemo(
-        () => (isSuccessClasses ? classes.filter((it) => it.calendar.toLowerCase().includes(studio!)) : []),
-        [isSuccessClasses, classes, studio]
+        () =>
+            isSuccessClasses
+                ? classes
+                      .filter((it) => it.calendar.toLowerCase().includes(studio!))
+                      .map((it) => ({
+                          ...it,
+                          image: appointmentTypes?.find((apt) => apt.id === it.appointmentTypeID)?.image,
+                      }))
+                : [],
+        [isSuccessClasses, classes, studio, appointmentTypes]
     )
 
     if (formStage !== 'program-selection') return null
@@ -201,56 +209,49 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
     return (
         <div className="my-4 flex flex-col gap-4">
             {filteredClasses.map((klass) => {
-                const { time, color } = JSON.parse(klass.description)
+                const { time, ages } = JSON.parse(klass.description)
                 const isSelected = !!selectedClasses[klass.id]
+                const isBookedOut = klass.slotsAvailable === 0 && !selectedClasses[klass.id]
                 return (
                     <div
                         key={klass.id}
-                        className={cn('relative  cursor-pointer rounded-md border p-4 hover:bg-gray-50', {
-                            'border-green-300 bg-green-50 hover:bg-green-100': isSelected,
-                            'cursor-not-allowed bg-slate-100 hover:bg-slate-100':
-                                klass.slotsAvailable === 0 && !selectedClasses[klass.id],
-                        })}
                         onClick={() => handleSessionClick(klass)}
+                        className={cn(
+                            'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
+                            {
+                                'pointer-events-none opacity-50': isBookedOut,
+                                'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
+                                    isSelected && klass.slotsAvailable > 0,
+                            }
+                        )}
                     >
-                        <div className="w-full">
-                            <p
-                                className={cn('font-lilita text-lg', {
-                                    'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
-                                })}
-                                style={{ color }}
-                            >
-                                {klass.name}
-                            </p>
-                            <p
-                                className={cn('text-sm font-bold', {
-                                    'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
-                                })}
-                            >
-                                {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL')}
-                            </p>
-                            <div className="flex w-full justify-between">
-                                <p
-                                    className={cn('text-sm', {
-                                        'line-through': klass.slotsAvailable === 0 && !selectedClasses[klass.id],
-                                    })}
-                                >
-                                    {time}
-                                </p>
-                                {klass.slotsAvailable <= 5 && (
-                                    <p
-                                        className={cn('text-sm font-semibold italic', {
-                                            'text-slate-800': klass.slotsAvailable === 0,
-                                        })}
-                                    >
-                                        {klass.slotsAvailable === 0
-                                            ? 'No spots left'
-                                            : `${klass.slotsAvailable} spot${klass.slotsAvailable > 1 ? 's' : ''} left`}
-                                    </p>
-                                )}
+                        {klass.image && (
+                            <img
+                                src={klass.image}
+                                alt={klass.name}
+                                className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                            />
+                        )}
+                        <div className="ml-4 flex-1 space-y-1">
+                            <h3 className="text-lg font-semibold text-gray-900">{klass.name}</h3>
+                            <div className="flex flex-wrap text-sm text-gray-500">
+                                <span>{ages}</span>
                             </div>
+                            <div className="text-sm text-gray-700">{time}</div>
+                            {klass.slotsAvailable > 0 && klass.slotsAvailable <= 5 && (
+                                <span className="mt-2 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                                    Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
+                                </span>
+                            )}
                         </div>
-                        {isSelected && <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />}
+                        {klass.slotsAvailable === 0 && (
+                            <span className="absolute right-4 top-4 inline-block rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800">
+                                Full
+                            </span>
+                        )}
+                        {isSelected && klass.slotsAvailable > 0 && (
+                            <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
+                        )}
                     </div>
                 )
             })}
@@ -285,7 +286,11 @@ function BrowseByProgram({
         <>
             <div className="flex flex-col gap-4">
                 {appointmentTypes.map((program) => {
-                    const { day, time, ages, begins } = JSON.parse(program.description)
+                    const includesSelectedClass = Object.values(selectedClasses).some(
+                        (it) => it.appointmentTypeID === program.id
+                    )
+
+                    const { day, time, ages } = JSON.parse(program.description)
 
                     if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
 
@@ -293,9 +298,14 @@ function BrowseByProgram({
                         <div
                             key={program.id}
                             onClick={() => handleCardClick(program.id)}
-                            className={cn('flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50', {
-                                'bg-gray-100 hover:bg-gray-100': selectedAppointmentTypeId === program.id,
-                            })}
+                            className={cn(
+                                'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
+                                {
+                                    'bg-gray-100 hover:bg-gray-100': selectedAppointmentTypeId === program.id,
+                                    'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
+                                        includesSelectedClass && selectedAppointmentTypeId !== program.id,
+                                }
+                            )}
                         >
                             <img
                                 src={program.image}
@@ -313,14 +323,15 @@ function BrowseByProgram({
                                 <div className="text-sm text-gray-700">
                                     {day} · {time}
                                 </div>
-
-                                <div className="text-xs text-gray-500">{begins}</div>
                             </div>
+                            {includesSelectedClass && selectedAppointmentTypeId !== program.id && (
+                                <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
+                            )}
                         </div>
                     )
                 })}
             </div>
-            <div className="mb-2">
+            <div className="mb-4">
                 {selectedAppointmentTypeId && filteredClasses.length !== 0 && (
                     <div className="mt-4 flex flex-col gap-4">
                         {filteredClasses.map((klass) => (
@@ -348,11 +359,13 @@ function BrowseByProgram({
                                             .toFormat('h:mm a')}
                                     </span>
                                     {klass.slotsAvailable === 0 && (
-                                        <span className="font-semibold italic">[No spots left]</span>
+                                        <span className="inline-block w-fit rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800">
+                                            Full
+                                        </span>
                                     )}
                                     {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
-                                        <span className="font-semibold italic">
-                                            [{klass.slotsAvailable} spots left]
+                                        <span className="inline-block w-fit rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                                            Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
                                         </span>
                                     )}
                                 </label>

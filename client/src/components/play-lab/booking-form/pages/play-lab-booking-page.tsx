@@ -46,7 +46,7 @@ export function PlayLabBookingPage() {
     })
 
     return (
-        <Root logoSize="sm">
+        <Root logoSize="sm" logoHref="https://www.fizzkidz.com.au/play-lab">
             <div className="w-full">
                 <h1 className="text-center font-lilita text-2xl font-extralight">Play Lab Booking Form</h1>
                 <Separator className="my-4" />

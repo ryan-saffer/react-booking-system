@@ -1,6 +1,6 @@
 import React from 'react'
 
-import * as Logo from '@drawables/FizzKidzLogoHorizontal.png'
+import * as LogoImg from '@drawables/FizzKidzLogoHorizontal.png'
 import { Card, CardContent } from '@ui-components/card'
 import { cn } from '@utils/tailwind'
 
@@ -8,6 +8,7 @@ type Props = {
     width?: 'centered' | 'full'
     logoSize?: 'sm' | 'lg'
     useTailwindPreflight?: boolean
+    logoHref?: string
     children?: React.ReactNode
 }
 
@@ -44,17 +45,23 @@ const Root: React.FC<Props> = (_props) => {
             <Card className={cn('z-50 m-5 h-fit w-[600px] shadow-md', { 'w-full': props.width === 'full' })}>
                 <CardContent className="flex flex-col items-center">
                     <div className="my-4 flex flex-col items-center">
-                        <img
-                            style={{ maxWidth: props.logoSize === 'lg' ? 200 : 130 }}
-                            src={Logo.default}
-                            alt="Fizz Kidz Logo"
-                        />
+                        {props.logoHref ? (
+                            <a href={props.logoHref} target="_blank">
+                                <Logo logoSize={props.logoSize} />
+                            </a>
+                        ) : (
+                            <Logo logoSize={props.logoSize} />
+                        )}
                     </div>
                     {props.children}
                 </CardContent>
             </Card>
         </div>
     )
+}
+
+function Logo({ logoSize }: { logoSize: Props['logoSize'] }) {
+    return <img style={{ maxWidth: logoSize === 'lg' ? 200 : 130 }} src={LogoImg.default} alt="Fizz Kidz Logo" />
 }
 
 export default Root

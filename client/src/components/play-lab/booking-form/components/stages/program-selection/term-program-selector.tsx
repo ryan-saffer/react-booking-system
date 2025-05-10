@@ -186,10 +186,14 @@ function ContinueOrError() {
                                         .toFormat('h:mm a')}
                                 </span>
                                 {klass.slotsAvailable === 0 && (
-                                    <span className="font-semibold italic">[No spots left]</span>
+                                    <span className="inline-block w-fit rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800">
+                                        Full
+                                    </span>
                                 )}
                                 {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
-                                    <span className="font-semibold italic">[{klass.slotsAvailable} spots left]</span>
+                                    <span className="inline-block w-fit rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                                        Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
+                                    </span>
                                 )}
                             </label>
                         </div>

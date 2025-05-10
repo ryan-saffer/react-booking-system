@@ -3,19 +3,24 @@ import { cn } from '@utils/tailwind'
 
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
+import { useBookingForm, type PlayLabBookingForm } from '../../form-schema'
 import { PricingStructure } from './pricing-structure'
+import { Button } from '@ui-components/button'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()
-    const { formStage } = useFormStage()
+    const formStage = useFormStage((store) => store.formStage)
     const clearCart = useCartStore((cart) => cart.clearCart)
 
     const studio = form.watch('studio')
     const bookingType = form.watch('bookingType')
 
-    function resetFields() {
-        form.setValue('appointmentTypeId', null)
+    function handleSelection(type: PlayLabBookingForm['bookingType']) {
+        if (bookingType !== type) {
+            form.setValue('bookingType', type)
+            form.setValue('appointmentTypeId', null)
+            clearCart()
+        }
     }
 
     if (formStage !== 'program-selection') return null
@@ -27,44 +32,36 @@ export function BookingTypeSelector() {
             <FormField
                 control={form.control}
                 name="bookingType"
-                render={({ field }) => (
+                render={() => (
                     <FormItem className="mb-4 space-y-4">
                         <FormLabel className="text-md">How would you like to book?</FormLabel>
                         <div className="flex flex-col gap-2">
-                            <div
-                                className={cn('cursor-pointer rounded-md border px-3 py-2 text-sm hover:bg-gray-50', {
+                            <Button
+                                variant="outline"
+                                className={cn('flex flex-col items-start space-y-1 text-left hover:bg-gray-50', {
                                     'bg-gray-100 hover:bg-gray-100': bookingType === 'term-booking',
                                 })}
-                                onClick={() => {
-                                    if (bookingType !== 'term-booking') {
-                                        field.onChange('term-booking')
-                                        resetFields()
-                                        clearCart()
-                                    }
-                                }}
+                                onClick={() => handleSelection('term-booking')}
                             >
-                                <p>
-                                    Term Enrolment - <span className="italic">20% discount</span>
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    Book into the same day and time, every week over the term.
-                                </p>
-                            </div>
-                            <div
-                                className={cn('cursor-pointer rounded-md border px-3 py-2 text-sm hover:bg-gray-50', {
+                                <span className="text-sm">
+                                    Term Enrolment - <span className="font-normal italic">20% discount</span>
+                                </span>
+                                <span className="text-sm text-muted-foreground">
+                                    Book for a term to build skills, make friends and save!
+                                </span>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className={cn('flex flex-col items-start space-y-1 text-left hover:bg-gray-50', {
                                     'bg-gray-100 hover:bg-gray-100': bookingType === 'casual',
                                 })}
-                                onClick={() => {
-                                    if (bookingType !== 'casual') {
-                                        field.onChange('casual')
-                                        resetFields()
-                                        clearCart()
-                                    }
-                                }}
+                                onClick={() => handleSelection('casual')}
                             >
-                                <p>Casual Booking</p>
-                                <p className="text-sm text-muted-foreground">Choose only the sessions you want.</p>
-                            </div>
+                                <span className="text-sm">Casual Booking</span>
+                                <span className="text-sm text-muted-foreground">
+                                    Choose the sessions that work best for you
+                                </span>
+                            </Button>
                         </div>
                     </FormItem>
                 )}
