@@ -4,7 +4,6 @@ import type { DateTime } from 'luxon'
 import { Fragment, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 
-import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { DateCalendar } from '@mui/x-date-pickers'
 import {
@@ -31,6 +30,7 @@ import { cn } from '@utils/tailwind'
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
+import { TermsAndConditions } from './terms-and-conditions'
 
 export function CustomerDetails() {
     const form = useBookingForm()
