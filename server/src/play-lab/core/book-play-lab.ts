@@ -6,6 +6,7 @@ import { logError, throwTrpcError } from '../../utilities'
 import { processPaylabPayment } from './process-play-lab-payment'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { MailClient } from '../../sendgrid/MailClient'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export type BookPlayLabProps = {
     classes: AcuityTypes.Api.Class[]
@@ -190,6 +191,38 @@ export async function bookPlayLab(input: BookPlayLabProps) {
             ),
         receiptUrl: payment.receiptUrl,
     })
+
+    // tracking
+    try {
+        const location = AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID)
+        const mixpanel = await MixpanelClient.getInstance()
+        const uniqueProgramNames = [...new Set(input.classes.map((it) => it.name))]
+        const uniqueChildAges = [
+            ...new Set(
+                input.children.map((child) => Math.abs(DateTime.fromISO(child.dob).diffNow('years').years).toFixed(0))
+            ),
+        ]
+        await mixpanel.track('play-lab-booking', {
+            distinct_id: input.parentEmail,
+            appointmntTypeIds: uniqueAppointmentTypeIDs,
+            programNames: uniqueProgramNames,
+            location,
+            amount: input.payment.amount,
+            numberOfPrograms: input.classes.length,
+            numberOfKids: input.children.length,
+            childAges: uniqueChildAges,
+            ...(input.payment.discount && {
+                discountAmount: input.payment.discount.amount,
+                discountType: input.payment.discount.type,
+            }),
+        })
+    } catch (err) {
+        logError(
+            `unable to add mixpanel event for play lab booking for customer with email '${input.parentEmail}'`,
+            err,
+            { input }
+        )
+    }
 
     return
 }

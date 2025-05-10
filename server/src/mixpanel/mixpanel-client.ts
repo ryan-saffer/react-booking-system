@@ -142,6 +142,18 @@ export type MixpanelEvent = {
         childGrade: string
         className: string
     }
+    'play-lab-booking': {
+        distinct_id: string
+        appointmntTypeIds: number[]
+        programNames: string[]
+        location: Location | 'test'
+        amount: number
+        discountType?: 'percentage' | 'number'
+        discountAmount?: number
+        numberOfPrograms: number
+        numberOfKids: number
+        childAges: string[]
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
@@ -155,4 +167,5 @@ const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'birthday-party-form-completed': 'Birthday Party Form Completed',
     'after-school-program-enrolment': 'After School Program Enrolment',
     'after-school-program-unenrolment': 'After School Program Unenrolment',
+    'play-lab-booking': 'Play Lab Booking',
 }
