@@ -188,6 +188,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                     }
                 })
             ),
+        receiptUrl: payment.receiptUrl,
     })
 
     return

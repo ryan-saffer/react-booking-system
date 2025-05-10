@@ -25,6 +25,7 @@ export type Emails = {
         parentName: string
         location: string
         bookings: { time: string; details: string }[]
+        receiptUrl?: string
     }
 
     // AFTER SCHOOL PROGRAM

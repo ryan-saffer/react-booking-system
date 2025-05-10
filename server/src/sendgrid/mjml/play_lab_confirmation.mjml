@@ -10,7 +10,7 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+        <mj-style inline="inline"> .text-link { color: #5e6ebf } .pre-wrap { white-space: pre-wrap; } </mj-style>
         <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
@@ -45,7 +45,9 @@
                 >
                     Where
                 </mj-text>
-                <mj-text text-transform="capitalize" font-size="14px" padding-top="0"> {{location}} </mj-text>
+                <mj-text text-transform="capitalize" font-size="14px" padding-top="0" mj-class="pre-wrap">
+                    {{location}}
+                </mj-text>
             </mj-column>
             <mj-column width="100%">
                 <mj-text
@@ -88,6 +90,13 @@
                 <mj-text font-size="16px"> See you soon! </mj-text>
                 <mj-text font-size="16px"> The Fizz Kidz team </mj-text>
             </mj-column>
+            {{#receiptUrl}}
+            <mj-column width="100%"
+                ><mj-text align="center"
+                    ><a href="{{receiptUrl}}">Click here for a copy of your payment receipt</a></mj-text
+                ></mj-column
+            >
+            {{/receiptUrl}}
         </mj-section>
         <mj-wrapper full-width="full-width">
             <mj-section padding-top="0">
