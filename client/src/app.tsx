@@ -123,6 +123,11 @@ const Account = lazy(() => import('./components/settings/account.js').then((modu
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
 )
+const PlayLabBookingPage = lazy(() =>
+    import('./components/play-lab/booking-form/pages/play-lab-booking-page.js').then((module) => ({
+        default: module.PlayLabBookingPage,
+    }))
+)
 
 const router = createBrowserRouter([
     {
@@ -407,6 +412,14 @@ const router = createBrowserRouter([
                         ),
                     },
                 ],
+            },
+            {
+                path: 'play-lab-booking',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <PlayLabBookingPage />
+                    </Suspense>
+                ),
             },
             {
                 path: 'invitations',

@@ -91,10 +91,10 @@ export const HolidayProgramSelectionPage = () => {
         isLoading,
         isSuccess,
     } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeId:
+        appointmentTypeIds:
             import.meta.env.VITE_ENV === 'prod'
-                ? appointmentTypeId
-                : AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM,
+                ? [appointmentTypeId]
+                : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
         includeUnavailable: true,
         minDate: nowRef.current,
     })

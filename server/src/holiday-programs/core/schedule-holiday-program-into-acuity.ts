@@ -42,11 +42,11 @@ export async function bookHolidayProgramIntoAcuity(booking: HolidayProgramBookin
                 value: booking.emergencyContactPhone,
             },
             {
-                id: AcuityConstants.FormFields.HOLIDAY_PROGRAM_AMOUNT_CHARGED,
+                id: AcuityConstants.FormFields.AMOUNT_CHARGED,
                 value: booking.amountCharged,
             },
             {
-                id: AcuityConstants.FormFields.HOLIDAY_PROGRAM_PAYMENT_INTENT_ID,
+                id: AcuityConstants.FormFields.PAYMENT_ID,
                 value: paymentIntentId,
             },
         ],

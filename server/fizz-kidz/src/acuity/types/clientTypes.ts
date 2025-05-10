@@ -31,6 +31,8 @@ export type GetAppointmentTypesParams = {
         | 'art-malvern'
         | 'art-cheltenham'
         | 'art-kingsville'
+        | 'play-lab-test'
+        | 'play-lab'
     >
     availableToBook?: boolean
 }
@@ -65,7 +67,7 @@ export type UpdateAppointmentParams = {
 }
 
 export type ClassAvailabilityParams = {
-    appointmentTypeId: number
+    appointmentTypeIds: number[]
     includeUnavailable: boolean
     minDate?: number
 }

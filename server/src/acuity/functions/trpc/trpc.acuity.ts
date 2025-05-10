@@ -28,15 +28,15 @@ export const acuityRouter = router({
              */
             async ({ ctx, input }): Promise<AcuityTypes.Client.Class[]> => {
                 const acuityPrograms = await ctx.acuityClient.getClasses(
-                    input.appointmentTypeId,
+                    input.appointmentTypeIds,
                     input.includeUnavailable,
                     input.minDate
                 )
 
                 // for holiday programs, get the storyblok programs and merge them together
                 if (
-                    input.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM ||
-                    input.appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM
+                    input.appointmentTypeIds.includes(AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM) ||
+                    input.appointmentTypeIds.includes(AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM)
                 ) {
                     const mergedPrograms = await mergeAcuityWithStoryblok(acuityPrograms)
                     return mergedPrograms

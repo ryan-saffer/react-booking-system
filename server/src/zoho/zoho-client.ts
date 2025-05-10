@@ -19,6 +19,7 @@ type Service =
     | 'After School Program'
     | 'Activation / Event'
     | 'Incursion'
+    | 'Play Lab'
     | ''
 
 export class ZohoClient {
@@ -300,6 +301,25 @@ export class ZohoClient {
             childName,
             childBirthdayISO,
             ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
+            ...baseProps,
+        })
+    }
+
+    async addPlayLabContact(
+        props: WithBaseProps<{
+            studio: Location | 'test'
+            childName: string
+            childBirthdayISO: string // ISO string,
+        }>
+    ) {
+        const { studio, childName, childBirthdayISO, ...baseProps } = props
+
+        return this.#addParentWithChild({
+            service: 'Play Lab',
+            branch: capitalise(studio),
+            customer_type: 'B2C',
+            childName,
+            childBirthdayISO,
             ...baseProps,
         })
     }

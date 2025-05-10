@@ -3,11 +3,10 @@ import {
     AcuityTypes,
     AcuityUtilities,
     AfterSchoolEnrolment,
-    Location,
     ScheduleAfterSchoolEnrolmentParams,
     capitalise,
     getApplicationDomain,
-    getLocationAddress,
+    studioNameAndAddress,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -68,7 +67,7 @@ export default async function scheduleAfterSchoolProgram(
     // schedule into all appointments of the program, along with the document id
     let appointments: AcuityTypes.Api.Appointment[]
     try {
-        const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
+        const classes = await acuityClient.getClasses([input.appointmentTypeId], false, Date.now())
         appointments = await Promise.all(
             classes.map((it) =>
                 acuityClient.scheduleAppointment({
@@ -185,7 +184,7 @@ export default async function scheduleAfterSchoolProgram(
                     calendarName: calendar.location || 'Calendar Name',
                     price: (parseInt(appointments[0].price) * appointments.length).toString(),
                     location: input.inStudio
-                        ? getStudioLocation(AcuityUtilities.getStudioByCalendarId(input.calendarId))
+                        ? studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(input.calendarId))
                         : calendar.description,
                     numberOfWeeks: appointments.length.toString(),
                 },
@@ -230,12 +229,4 @@ export default async function scheduleAfterSchoolProgram(
         childGrade: input.child.grade,
         className: input.className,
     })
-}
-
-function getStudioLocation(studio: Location | 'test') {
-    if (studio === 'test') {
-        return 'TEST'
-    }
-
-    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
 }

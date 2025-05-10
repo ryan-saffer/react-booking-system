@@ -1,0 +1,238 @@
+import { AlertCircle, PartyPopper } from 'lucide-react'
+import { DateTime } from 'luxon'
+import { useEffect } from 'react'
+import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
+
+import Loader from '@components/Shared/Loader'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
+import { trpc } from '@utils/trpc'
+
+import { useCartStore } from '../../../zustand/cart-store'
+import { useFormStage } from '../../../zustand/form-stage'
+import { useBookingForm } from '../../form-schema'
+import { getSquareLocationId } from 'fizz-kidz'
+import { toast } from 'sonner'
+
+const SQUARE_APPLICATION_ID =
+    import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
+
+export function Payment() {
+    const form = useBookingForm()
+    const formStage = useFormStage((store) => store.formStage)
+    const nextStage = useFormStage((store) => store.nextStage)
+    const { selectedClasses, discount, subtotal, total } = useCartStore()
+
+    const children = form.watch('children')
+    const studio = form.watch('studio')
+
+    const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
+
+    useEffect(() => {
+        if (formStage !== 'payment') {
+            reset()
+        }
+    }, [formStage, reset])
+
+    const squareLocationId = studio ? getSquareLocationId(studio) : ''
+
+    function formatClassTime(date: Date) {
+        return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
+    }
+
+    async function book(token: string, buyerVerificationToken: string) {
+        await mutateAsync({
+            classes: Object.values(selectedClasses).map((klass) => ({
+                ...klass,
+                time: DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toISO(),
+            })),
+            parentFirstName: form.getValues().parentFirstName,
+            parentLastName: form.getValues().parentLastName,
+            parentPhone: form.getValues().parentPhone,
+            parentEmail: form.getValues().parentEmailAddress,
+            emergencyContactName: form.getValues().emergencyContactName,
+            emergencyContactPhone: form.getValues().emergencyContactNumber,
+            emergencyContactRelation: form.getValues().emergencyContactRelation,
+            children: form.getValues().children.map((child) => ({ ...child, dob: child.dob.toISOString() })),
+            joinMailingList: form.getValues().joinMailingList,
+            payment: {
+                token,
+                buyerVerificationToken,
+                locationId: squareLocationId,
+                amount: total * 100,
+                lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                    children.map((child) => ({
+                        name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
+                        amount: parseInt(klass.price) * 100,
+                        quantity: '1',
+                        classId: klass.id,
+                    }))
+                ),
+                discount: discount
+                    ? {
+                          ...discount,
+                          amount: discount.amount * 100,
+                          name: discount.description,
+                      }
+                    : null,
+            },
+        })
+        nextStage()
+    }
+
+    function renderError() {
+        if (isError) {
+            let errorMessage =
+                'There was an error booking in your sessions. Please try again later or contact us at bookings@fizzkidz.com.au'
+            let errorTitle = 'Something went wrong'
+
+            if (error.data?.code === 'CONFLICT') {
+                errorMessage =
+                    "One or more of your selected sessions does not have enough spots available. Please return to the 'Select Sessions' screen and review your selected sessions."
+                errorTitle = 'One or more sessions are full'
+            }
+
+            return (
+                <Alert variant="destructive" className="mt-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle className="font-semibold">{errorTitle}</AlertTitle>
+                    <AlertDescription className="font-medium">{errorMessage}</AlertDescription>
+                </Alert>
+            )
+        }
+
+        return null
+    }
+
+    if (formStage !== 'payment') return null
+
+    if (isLoading) {
+        return (
+            <>
+                <p className="mt-4 text-center">Processing payment...</p>
+                <p className="mt-2 text-center">Please do not close or refresh this window.</p>
+                <Loader className="mt-4" />
+            </>
+        )
+    }
+
+    return (
+        <>
+            <p className="mb-2 text-center text-xl font-bold">Booking Summary</p>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Program</TableHead>
+                        <TableHead>Child</TableHead>
+                        <TableHead className="text-right">Price</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {Object.values(selectedClasses)
+                        .sort((a, b) => (a.time > b.time ? 1 : -1))
+                        .map((klass) =>
+                            children.map((child, idx) => (
+                                <TableRow key={`${klass.id}-${idx}`}>
+                                    <TableCell>
+                                        <span className="font-bold">{formatClassTime(klass.time)}</span>
+                                        <br />
+                                        {klass.name}
+                                    </TableCell>
+                                    <TableCell>{child.firstName}</TableCell>
+                                    <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                </TableBody>
+                <TableFooter>
+                    {discount && (
+                        <>
+                            <TableRow>
+                                <TableCell colSpan={2} className="py-2 font-light italic">
+                                    Subtotal
+                                </TableCell>
+                                <TableCell className="py-2 text-right font-light italic">
+                                    ${subtotal.toFixed(2)}
+                                </TableCell>
+                            </TableRow>
+                            <TableRow className="bg-green-200 hover:bg-green-200/80">
+                                <TableCell colSpan={2} className="py-2 font-light italic text-green-800">
+                                    <div className="flex items-center">
+                                        <PartyPopper className="mr-2 h-5 w-5" />
+                                        {discount.description}
+                                    </div>
+                                </TableCell>
+                                <TableCell className="py-2 text-right font-light italic text-green-800">
+                                    {discount.type === 'percentage'
+                                        ? `${discount.amount * 100}% off`
+                                        : `$${discount.amount.toFixed(2)} off`}
+                                </TableCell>
+                            </TableRow>
+                        </>
+                    )}
+                    <TableRow className="border-t">
+                        <TableCell colSpan={2}>Total</TableCell>
+                        <TableCell className="pt-2 text-right">${total.toFixed(2)}</TableCell>
+                    </TableRow>
+                </TableFooter>
+            </Table>
+            <PaymentForm
+                applicationId={SQUARE_APPLICATION_ID}
+                locationId={squareLocationId}
+                cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
+                    if (status === 'OK' && token) {
+                        book(token, buyerVerification?.token || '')
+                    } else {
+                        toast.error('There was an error processing your payment')
+                    }
+                }}
+                createVerificationDetails={() => ({
+                    amount: total.toFixed(2),
+                    billingContact: {
+                        givenName: form.getValues().parentFirstName,
+                        familyName: form.getValues().parentLastName,
+                        email: form.getValues().parentEmailAddress,
+                        phone: form.getValues().parentPhone,
+                    },
+                    currencyCode: 'AUD',
+                    intent: 'CHARGE',
+                    customerInitiated: true,
+                    sellerKeyedIn: false,
+                })}
+                createPaymentRequest={() => ({
+                    countryCode: 'AU',
+                    currencyCode: 'AUD',
+                    lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                        children.map((child) => ({
+                            amount: klass.price,
+                            label: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
+                        }))
+                    ),
+                    discounts: discount
+                        ? discount.type === 'percentage'
+                            ? [{ label: 'Discount', amount: (subtotal * discount.amount).toFixed(2) }]
+                            : [{ label: 'Discount', amount: (subtotal - discount.amount).toFixed(2) }]
+                        : undefined,
+                    total: {
+                        amount: total.toFixed(2),
+                        label: 'Total',
+                    },
+                })}
+            >
+                {isError ? (
+                    renderError()
+                ) : (
+                    <div className="mt-8">
+                        <ApplePay className="mb-4" />
+                        <GooglePay className="mb-4" />
+                        <CreditCard
+                            buttonProps={{
+                                css: { backgroundColor: '#AC4390', '&:hover': { backgroundColor: '#B4589C' } },
+                            }}
+                        />
+                    </div>
+                )}
+            </PaymentForm>
+        </>
+    )
+}

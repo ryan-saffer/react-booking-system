@@ -20,6 +20,8 @@ declare global {
             ZOHO_CLIENT_ID: string
             ZOHO_CLIENT_SECRET: string
             STORYBLOK_TOKEN: string
+            SQUARE_DEV_TOKEN: string
+            SQUARE_PROD_TOKEN: string
         }
     }
 }
