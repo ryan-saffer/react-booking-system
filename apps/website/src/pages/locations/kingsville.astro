@@ -81,6 +81,7 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       ]}
     />
     <PageIntro
+      type="image"
       image={kingsville}
       imageAlt="A picture of the kingsville studio"
       subtitle="Fizz Kidz in Melbourne's West!"
@@ -248,14 +249,11 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
     <section class="grid grid-cols-1 gap-8 md:grid-cols-3">
       <a href="/birthday-parties">
         <CardWithImage
-          className="group h-full w-full cursor-pointer"
+          className="group h-full w-full cursor-pointer hover:bg-gray-50"
           image={birthday}
           imageAlt="Kids holding slime"
         >
-          <div
-            slot="content"
-            class="p-8 group-hover:cursor-pointer group-hover:bg-gray-50"
-          >
+          <div slot="content" class="p-8 group-hover:cursor-pointer">
             <p class="mb-4 font-lilita text-2xl text-[#9044E2]">
               Birthday Parties
             </p>
@@ -268,11 +266,11 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       </a>
       <a href="/holiday-programs">
         <CardWithImage
-          className="group h-full w-full cursor-pointer"
+          className="group h-full w-full cursor-pointer hover:bg-gray-50"
           image={holidayPrograms}
           imageAlt="Kids holding slime"
         >
-          <div slot="content" class="p-8 group-hover:bg-gray-50">
+          <div slot="content" class="p-8">
             <p class="mb-4 font-lilita text-2xl text-[#9044E2]">
               Holiday Programs
             </p>
@@ -286,11 +284,11 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
       </a>
       <a href="/contact-us">
         <CardWithImage
-          className="group h-full w-full cursor-pointer"
+          className="group h-full w-full cursor-pointer hover:bg-gray-50"
           image={contact}
           imageAlt="Kids holding slime"
         >
-          <div slot="content" class="p-8 group-hover:bg-gray-50">
+          <div slot="content" class="p-8">
             <p class="mb-4 font-lilita text-2xl text-[#9044E2]">Contact Us</p>
             <p class="font-gotham text-lg">
               Have questions or would like to chat? Get in touch with our
@@ -352,7 +350,7 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
     class="left-0 right-0 w-screen"
   />
   <div class="bg-[#43D4F3]">
-    <div class="m-auto block max-w-[1380px] px-5 pt-4">
+    <div class="m-auto block max-w-[1380px] px-5 py-4">
       <p class="h2 text-lg font-bold">
         THE ULTIMATE KIDS PARTY AND HOLIDAY PROGRAM VENUE IN KINGSVILLE,
         MELBOURNE VIC
@@ -430,7 +428,7 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
   <Image
     src={blueWave}
     alt="blue background wave"
-    class="left-0 right-0 w-screen rotate-180"
+    class="left-0 right-0 -mt-1 w-screen rotate-180"
   />
   <div class="m-auto block max-w-[1380px] px-5 pt-4">
     <section class="md:my-18 my-12">
