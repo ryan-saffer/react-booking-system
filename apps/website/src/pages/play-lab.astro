@@ -16,7 +16,6 @@ import allPlaysBanner from "@/assets/images/pages/play-lab/all-plays-banner.jpg"
 import FaqAccordion from "@/components/react/faq-accordion";
 import faq from "@/assets/images/pages/parties/faq.png";
 import Values from "@/components/values.astro";
-import PartyLabForm from "@/react-components/forms/party-lab-form";
 import PlayLabProgramsSection from "@/react-components/play-lab/play-lab-programs-section";
 import PlayLabDaySchedule from "@/components/play-lab-day-schedule.astro";
 import Reviews from "@/components/reviews.astro";
@@ -120,41 +119,41 @@ const allPlaysBannerOptimised = await getImage({
           programs={[
             {
               title: "All Playz",
-              ages: "1.5 - 5 years",
-              time: "9:15AM - 10:15AM",
+              ages: "Ages 1.5 - 5 years",
+              time: "9:30 AM - 10:30 AM",
               color: "#9044E2",
               image: allPlays,
             },
             {
               title: "Creative Kinders",
-              ages: "2.5 - 5 years",
+              ages: "Ages 3 - 6 years",
               time: "11:00AM - 12:00PM",
               color: "#9ECC45",
               image: creativeKinders,
             },
           ]}
         />
+        <PlayLabDaySchedule position={4} day="Thursday" programs={[]} />
         <PlayLabDaySchedule
-          position={4}
-          day="Thursday"
+          position={5}
+          day="Friday"
           programs={[
             {
               title: "Little Explorers",
-              ages: "1.5 - 3 years",
-              time: "9:15AM - 10:00AM",
+              ages: "Ages 1.5 - 3 years",
+              time: "9:15AM - 10:15AM",
               color: "#4DC5D9",
               image: littleExplorers,
             },
             {
-              title: "All Playz",
-              ages: "1.5 - 5 years",
+              title: "Creative Kinders",
+              ages: "Ages 3 - 6 years",
               time: "10:45AM - 11:45AM",
-              color: "#9044E2",
-              image: allPlays,
+              color: "#9ECC45",
+              image: creativeKinders,
             },
           ]}
         />
-        <PlayLabDaySchedule position={5} day="Friday" programs={[]} />
       </div>
     </section>
   </section>

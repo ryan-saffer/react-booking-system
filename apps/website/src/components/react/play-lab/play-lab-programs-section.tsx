@@ -81,7 +81,7 @@ const PlayLabProgramsSection = ({
           img: littleExplorersImage,
           color: "#4DC5D9",
           title: "Little Explorers",
-          subtitle: "18 months - 3 years",
+          subtitle: "Ages 18 months - 3 years",
           description:
             "Squish, splash., and sparkle! Little ones explore colourufl senesory fun, try exciting new activies and grow social confidence - all while sharing giggles and special moments with their grown-up.",
           buttons: [
@@ -113,10 +113,41 @@ const PlayLabProgramsSection = ({
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
-                <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">9:00am - 10:00am</p>
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">
+                <div className="grid grid-cols-1 gap-8 @sm:grid-cols-2">
+                  {/* SCHEDULE */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">When</p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Fridays</p>
+                        <p className="text-lg text-gray-700">
+                          9:15 AM - 10:15 AM
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PRICING */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">
+                      Pricing
+                    </p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Casual price</p>
+                        <p className="text-lg text-gray-700">$35 per session</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-extrabold">Term enrolment</p>
+                        <p className="text-lg text-gray-700">
+                          $28/week -{" "}
+                          <span className="italic">20% discount</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
@@ -179,7 +210,7 @@ const PlayLabProgramsSection = ({
           img: creativeKindersImage,
           color: "#9ECC45",
           title: "Creative Kinders",
-          subtitle: "3 - 5 years",
+          subtitle: "Ages 3 - 6 years",
           description:
             "Big imaginations. bold creations! Kids take the lead in messy-fun art, cart, and science adventures - building skills, confidence and friendships while creating projects they're proud to take home.",
           buttons: [
@@ -203,7 +234,7 @@ const PlayLabProgramsSection = ({
             Creative Kinders
           </p>
           <p className="mt-2 text-center text-2xl font-bold">
-            Ages 3 - 5 years
+            Ages 3 - 6 years
           </p>
           <p className="mt-4 text-center text-xl font-semibold">
             Big imaginations. bold creations! Kids take the lead in messy-fun
@@ -217,10 +248,47 @@ const PlayLabProgramsSection = ({
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
-                <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="text-lg">9:30am - 10:30am</p>
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">
+                <div className="grid grid-cols-1 gap-8 @sm:grid-cols-2">
+                  {/* SCHEDULE */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">When</p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Wednesdays</p>
+                        <p className="text-lg text-gray-700">
+                          11:00 AM - 12:00 PM
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-extrabold">Fridays</p>
+                        <p className="text-lg text-gray-700">
+                          10:45 am - 11:45 am
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PRICING */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">
+                      Pricing
+                    </p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Casual price</p>
+                        <p className="text-lg text-gray-700">$35 per session</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-extrabold">Term enrolment</p>
+                        <p className="text-lg text-gray-700">
+                          $28/week -{" "}
+                          <span className="italic">20% discount</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
@@ -327,13 +395,43 @@ const PlayLabProgramsSection = ({
           />
           <div className="flex flex-col gap-12 md:flex-row">
             <div className="flex w-full flex-col gap-8 md:w-1/2">
-              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
-                <p className="mb-4 font-lilita text-4xl text-[#8C52FF]">When</p>
-                <p className="text-xl font-extrabold">Wednesdays</p>
-                <p className="mb-2 text-lg">9:15am - 10:15am</p>
-                <p className="text-xl font-extrabold">Thursdays</p>
-                <p className="text-lg">10:45am - 11:45am</p>
+              <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md @container">
+                <div className="grid grid-cols-1 gap-8 @sm:grid-cols-2">
+                  {/* SCHEDULE */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">When</p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Thursdays</p>
+                        <p className="text-lg text-gray-700">
+                          10:45 am - 11:45 am
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PRICING */}
+                  <div className="space-y-2">
+                    <p className="font-lilita text-4xl text-[#8C52FF]">
+                      Pricing
+                    </p>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-xl font-extrabold">Casual price</p>
+                        <p className="text-lg text-gray-700">$35 per session</p>
+                      </div>
+                      <div>
+                        <p className="text-xl font-extrabold">Term enrolment</p>
+                        <p className="text-lg text-gray-700">
+                          $28/week -{" "}
+                          <span className="italic">20% discount</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div className="relative z-10 h-full rounded-lg bg-white p-8 shadow-md">
                 <p className="mb-4 font-lilita text-4xl text-[#42D4F3]">
                   Your child will:
