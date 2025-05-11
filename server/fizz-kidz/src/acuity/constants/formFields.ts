@@ -25,5 +25,6 @@ export const FormFields = {
     EMERGENCY_CONTACT_NUMBER_HP: 11901971,
     PAYMENT_ID: 11929615, // payment intent id for stripe, payment id for square
     AMOUNT_CHARGED: 11929616,
+    IS_TERM_ENROLMENT: 16577293, // play lab
     FIRESTORE_ID: 12065644,
 }

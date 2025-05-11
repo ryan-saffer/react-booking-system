@@ -144,6 +144,7 @@ export type MixpanelEvent = {
     }
     'play-lab-booking': {
         distinct_id: string
+        bookingType: 'term-booking' | 'casual'
         appointmntTypeIds: number[]
         programNames: string[]
         location: Location | 'test'

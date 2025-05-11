@@ -1,7 +1,9 @@
+import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, PartyPopper } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
+import { toast } from 'sonner'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -11,8 +13,6 @@ import { trpc } from '@utils/trpc'
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
-import { getSquareLocationId } from 'fizz-kidz'
-import { toast } from 'sonner'
 
 const SQUARE_APPLICATION_ID =
     import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
@@ -42,6 +42,7 @@ export function Payment() {
 
     async function book(token: string, buyerVerificationToken: string) {
         await mutateAsync({
+            bookingType: form.getValues().bookingType!,
             classes: Object.values(selectedClasses).map((klass) => ({
                 ...klass,
                 time: DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toISO(),

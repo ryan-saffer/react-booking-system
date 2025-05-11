@@ -9,6 +9,7 @@ import { MailClient } from '../../sendgrid/MailClient'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export type BookPlayLabProps = {
+    bookingType: 'term-booking' | 'casual'
     classes: AcuityTypes.Api.Class[]
     parentFirstName: string
     parentLastName: string
@@ -136,6 +137,10 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                         value: amountCharged.toFixed(2),
                     },
                     {
+                        id: AcuityConstants.FormFields.IS_TERM_ENROLMENT,
+                        value: input.bookingType === 'term-booking' ? 'yes' : '',
+                    },
+                    {
                         id: AcuityConstants.FormFields.PAYMENT_ID,
                         value: payment.id || '',
                     },
@@ -204,6 +209,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         ]
         await mixpanel.track('play-lab-booking', {
             distinct_id: input.parentEmail,
+            bookingType: input.bookingType,
             appointmntTypeIds: uniqueAppointmentTypeIDs,
             programNames: uniqueProgramNames,
             location,
