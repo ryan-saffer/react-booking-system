@@ -320,7 +320,7 @@ function BrowseByProgram({
                                     <span>{ages}</span>
                                 </div>
 
-                                <div className="text-sm text-gray-700">
+                                <div className="text-sm font-semibold text-gray-700">
                                     {day} · {time}
                                 </div>
                             </div>
