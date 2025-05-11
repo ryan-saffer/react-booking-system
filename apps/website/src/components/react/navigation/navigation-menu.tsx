@@ -89,6 +89,11 @@ export const menu = [
     title: "Holiday programs",
     path: "/holiday-programs/",
   },
+  {
+    type: "link",
+    title: "Play lab (1.5 - 5 yrs)",
+    path: "/play-lab",
+  },
   // {
   //   type: "dropdown",
   //   clickable: true,
@@ -140,7 +145,7 @@ export const menu = [
       { type: "link", path: "/locations/malvern", title: "Malvern" },
     ],
   },
-  { type: "link", title: "Careers", path: "/careers/" },
+
   // { title: "Franchising", type: "link", path: "/franchising/" },
   {
     title: "Fizz facts",
@@ -152,6 +157,7 @@ export const menu = [
         title: "Contact Us",
         path: "/contact-us/",
       },
+      { type: "link", title: "Careers", path: "/careers/" },
       { type: "link", title: "Our Team", path: "/our-team/" },
       // { type: "link", title: "Franchising", path: "/franchising" },
       { type: "link", title: "Policies", path: "/policies/" },
@@ -201,7 +207,7 @@ function NavigationMenu() {
 
   return (
     <>
-      <nav className="hidden min-[1125px]:block">
+      <nav className="hidden min-[1280px]:block">
         {menu.map((menuItem) => {
           if (menuItem.type === "link") {
             return (
@@ -225,7 +231,7 @@ function NavigationMenu() {
         })}
       </nav>
 
-      <aside className="min-[1125px]:hidden">
+      <aside className="min-[1280px]:hidden">
         <nav>
           <Button
             className="border-[#8F44E1]"
