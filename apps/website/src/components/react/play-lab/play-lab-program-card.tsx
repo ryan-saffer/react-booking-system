@@ -11,6 +11,7 @@ const PlayLabProgramCard = ({
   selected,
   queued,
   content,
+  backgroundColor,
   onClick,
   children,
 }: {
@@ -18,6 +19,7 @@ const PlayLabProgramCard = ({
   isMobile: boolean;
   selected: boolean;
   queued: boolean;
+  backgroundColor: string;
   content: {
     img: CustomImage;
     color: string;
@@ -48,6 +50,7 @@ const PlayLabProgramCard = ({
           ...(selected && {
             boxShadow: selected && `0px 0px 30px 10px ${content.color}`,
           }),
+          background: backgroundColor,
           ...(queued && {
             boxShadow: queued && `0px 0px 30px 10px ${content.color}`,
           }),
@@ -91,8 +94,9 @@ const PlayLabProgramCard = ({
             "absolute bottom-[-28px] left-0 right-0 m-auto flex h-14 w-14 transform items-center justify-center rounded-full bg-white shadow-md transition-transform duration-500",
             { "-rotate-180": selected },
           )}
+          style={{ background: content.color }}
         >
-          <ChevronDown color="#42D4F3" className="h-7 w-7" />
+          <ChevronDown color="white" className="h-7 w-7" />
         </div>
       </div>
 

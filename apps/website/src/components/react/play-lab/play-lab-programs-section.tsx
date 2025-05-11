@@ -77,13 +77,14 @@ const PlayLabProgramsSection = ({
         onClick={() => handleModuleClicked("little-explorers")}
         selected={selectedModule === "little-explorers"}
         queued={queuedModule === "little-explorers"}
+        backgroundColor="#EDF9FB"
         content={{
           img: littleExplorersImage,
           color: "#4DC5D9",
           title: "Little Explorers",
           subtitle: "Ages 18 months - 3 years",
           description:
-            "Squish, splash., and sparkle! Little ones explore colourufl senesory fun, try exciting new activies and grow social confidence - all while sharing giggles and special moments with their grown-up.",
+            "Little ones explore colourful sensory fun, try exciting new activites and grow social confidence - all while sharing giggles and special moments with their grown-up.",
           buttons: [
             {
               color: "#F6BA33",
@@ -101,10 +102,10 @@ const PlayLabProgramsSection = ({
           <p className="mt-2 text-center text-2xl font-bold">
             Ages 18 months - 3 years
           </p>
-          <p className="mt-4 text-center text-xl font-semibold">
-            Squish, splash., and sparkle! Little ones explore colourufl senesory
-            fun, try exciting new activies and grow social confidence - all
-            while sharing giggles and special moments with their grown-up.
+          <p className="mt-4 text-center font-semibold sm:text-xl">
+            Little ones explore colourful sensory fun, try exciting new
+            activities and grow social confidence - all while sharing giggles
+            and special moments with their grown-up.
           </p>
           <img
             className="my-12 h-60 w-full rounded-lg object-cover"
@@ -179,10 +180,10 @@ const PlayLabProgramsSection = ({
                     Activities include:
                   </p>
                   <ul className="mb-4 list-disc pl-4">
-                    <li>Dry Sensory Play Stations</li>
+                    <li>Dry Sensory Play Stations </li>
                     <li>Wet Sensory Play Stations</li>
                     <li>Creative Art Stations</li>
-                    <li>Magnet Gravity Play Wall</li>
+                    <li>Magnet Gravity Play Wall </li>
                     <li>Sensory Swing (yes, an actual swing!)</li>
                     <li>Weaving Peg Wall Station</li>
                     <li>
@@ -206,13 +207,14 @@ const PlayLabProgramsSection = ({
         onClick={() => handleModuleClicked("create-kinders")}
         selected={selectedModule === "create-kinders"}
         queued={queuedModule === "create-kinders"}
+        backgroundColor="#F5F9EC"
         content={{
           img: creativeKindersImage,
           color: "#9ECC45",
           title: "Creative Kinders",
-          subtitle: "Ages 3 - 6 years",
+          subtitle: "Ages 3 - 5 years",
           description:
-            "Big imaginations. bold creations! Kids take the lead in messy-fun art, cart, and science adventures - building skills, confidence and friendships while creating projects they're proud to take home.",
+            "Big imaginations, bold creations! In our hands-on art, craft, and science workshops, kids dive into playful experiments that teach real skills—fostering creativity, confidence, and teamwork while they build projects to proudly take home.",
           buttons: [
             {
               color: "#F6BA33",
@@ -234,12 +236,13 @@ const PlayLabProgramsSection = ({
             Creative Kinders
           </p>
           <p className="mt-2 text-center text-2xl font-bold">
-            Ages 3 - 6 years
+            Ages 3 - 5 years
           </p>
-          <p className="mt-4 text-center text-xl font-semibold">
-            Big imaginations. bold creations! Kids take the lead in messy-fun
-            art, cart, and science adventures - building skills, confidence and
-            friendships while creating projects they're proud to take home.
+          <p className="mt-4 text-center font-semibold sm:text-xl">
+            Big imaginations, bold creations! In our hands-on art, craft, and
+            science workshops, kids dive into playful experiments that teach
+            real skills—fostering creativity, confidence, and teamwork while
+            they build projects to proudly take home.
           </p>
           <img
             className="my-12 h-60 w-full rounded-lg object-cover"
@@ -327,12 +330,13 @@ const PlayLabProgramsSection = ({
                     Activities include:
                   </p>
                   <ul className="mb-4 list-disc pl-4">
-                    <li>Dry Sensory Play Stations</li>
-                    <li>Wet Sensory Play Stations</li>
-                    <li>Creative Art Stations</li>
-                    <li>Magnet Gravity Play Wall</li>
-                    <li>Sensory Swing (yes, an actual swing!)</li>
-                    <li>Weaving Peg Wall Station</li>
+                    <li>Dry & Wet Sensory Play</li>
+                    <li>Guided Art Projects</li>
+                    <li>Magnet Gravity Wall Challenges</li>
+                    <li>Sensory Swing & Movement Play</li>
+                    <li>Collaborative Weaving + Pattern Stations</li>
+                    <li>Engineering and Building activities </li>
+                    <li>Self Expression Stations with Take Home Projects </li>
                     <li>
                       Dancing, music games & imaginative group activities!
                     </li>
@@ -354,11 +358,12 @@ const PlayLabProgramsSection = ({
         onClick={() => handleModuleClicked("all-playz")}
         selected={selectedModule === "all-playz"}
         queued={queuedModule === "all-playz"}
+        backgroundColor="#F3ECFC"
         content={{
           img: allPlaysImage,
           color: "#9044E2",
           title: "All Playz",
-          subtitle: "18 months - 5 years",
+          subtitle: "Ages 18 months - 5 years",
           description:
             "A mixed-age facilitated adventure of sensory play, discovery, and joyful mess-making!",
           buttons: [
@@ -384,7 +389,7 @@ const PlayLabProgramsSection = ({
           <p className="mt-2 text-center text-2xl font-bold">
             Ages 18 months - 5 years
           </p>
-          <p className="mt-4 text-center text-xl font-semibold">
+          <p className="mt-4 text-center font-semibold sm:text-xl">
             A mixed-age facilitated adventure of sensory play, discovery, and
             joyful mess-making!
           </p>
@@ -402,9 +407,9 @@ const PlayLabProgramsSection = ({
                     <p className="font-lilita text-4xl text-[#8C52FF]">When</p>
                     <div className="space-y-4">
                       <div>
-                        <p className="text-xl font-extrabold">Thursdays</p>
+                        <p className="text-xl font-extrabold">Wednesdays</p>
                         <p className="text-lg text-gray-700">
-                          10:45 am - 11:45 am
+                          9:30 am - 10:30 am
                         </p>
                       </div>
                     </div>
@@ -471,12 +476,13 @@ const PlayLabProgramsSection = ({
                     Activities include:
                   </p>
                   <ul className="mb-4 list-disc pl-4">
-                    <li>Dry Sensory Play Stations</li>
+                    <li>Dry Sensory Play Stations </li>
                     <li>Wet Sensory Play Stations</li>
-                    <li>Creative Art Stations</li>
-                    <li>Magnet Gravity Play Wall</li>
-                    <li>Sensory Swing (yes, an actual swing!)</li>
-                    <li>Weaving Peg Wall Station</li>
+                    <li>Guided Art Projects</li>
+                    <li>Magnet Gravity Wall Play and Challenges</li>
+                    <li>Sensory Swing & Movement Play</li>
+                    <li>Collaborative Weaving + Pattern Stations</li>
+                    <li>Engineering and Building activities </li>
                     <li>
                       Dancing, music games & imaginative group activities!
                     </li>
