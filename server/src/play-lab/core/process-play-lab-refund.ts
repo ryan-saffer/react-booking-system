@@ -73,8 +73,17 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     }
     const amountToRefund = lineItemToRefund.totalMoney?.amount
 
+    const paymentId = order?.tenders?.[0].paymentId
+    if (!paymentId) {
+        logError('Order does not have a tendered payment id while processing play lab refund', null, {
+            webhookData: data,
+            orderId: orderId,
+        })
+    }
+
     const { errors: refundErrors } = await square.refunds.refundPayment({
         amountMoney: { amount: amountToRefund, currency: 'AUD' },
+        paymentId,
         idempotencyKey: data.id,
     })
 
