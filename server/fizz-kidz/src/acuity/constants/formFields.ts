@@ -23,7 +23,7 @@ export const FormFields = {
     CONTINUING_WITH_TERM_EMAIL_SENT: 9965760,
     EMERGENCY_CONTACT_NAME_HP: 11901970,
     EMERGENCY_CONTACT_NUMBER_HP: 11901971,
-    PAYMENT_ID: 11929615, // payment intent id for stripe, payment id for square
+    PAYMENT_ID: 11929615, // payment intent id for stripe, order id for square
     AMOUNT_CHARGED: 11929616,
     IS_TERM_ENROLMENT: 16577293, // play lab
     FIRESTORE_ID: 12065644,

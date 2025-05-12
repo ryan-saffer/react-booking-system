@@ -2,18 +2,28 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { SquareClient } from '../../square/core/square-client'
 import type { BookPlayLabProps } from './book-play-lab'
+import { env } from '../../init'
 
-export async function processPaylabPayment(input: BookPlayLabProps['payment'], parentEmail: string) {
+export async function processPaylabPayment(
+    input: BookPlayLabProps['payment'],
+    parentEmail: string,
+    customerId: string
+) {
     const squareClient = await SquareClient.getInstance()
     const idempotencyKey = uuidv4()
 
     const { order, errors: orderErrors } = await squareClient.orders.create({
         idempotencyKey,
         order: {
+            customerId,
             locationId: input.locationId,
             lineItems: input.lineItems.map((item) => ({
                 ...item,
                 basePriceMoney: { currency: 'AUD', amount: BigInt(item.amount) } as const,
+                catalogObjectId: env === 'prod' ? 'QRUKPRKXKZECIEJLJMTHXBYO' : 'X5IDJPLOXAA3EWEZELC7UVEM', // Play Lab Session
+                metadata: {
+                    classId: item.classId.toString(),
+                },
             })),
             discounts: input.discount
                 ? input.discount.type === 'percentage'
@@ -48,7 +58,7 @@ export async function processPaylabPayment(input: BookPlayLabProps['payment'], p
             amount: BigInt(input.amount),
             currency: 'AUD',
         },
-        orderId: order!.id, // if orderErrors null, order exists
+        orderId: order!.id,
         customerDetails: {
             customerInitiated: true,
             sellerKeyedIn: false,
@@ -59,5 +69,5 @@ export async function processPaylabPayment(input: BookPlayLabProps['payment'], p
 
     if (paymentErrors) return { errors: paymentErrors }
 
-    return { payment: payment! } // isPaymentErrors is null, payment exists
+    return { payment: payment!, order: order! }
 }

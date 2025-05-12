@@ -7,6 +7,7 @@ import { processPaylabPayment } from './process-play-lab-payment'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
 
 export type BookPlayLabProps = {
     bookingType: 'term-booking' | 'casual'
@@ -65,8 +66,11 @@ export async function bookPlayLab(input: BookPlayLabProps) {
 
     // all classes have enough spots! let's continue
 
+    // get or create customer in square
+    const customerId = await getOrCreateCustomer(input.parentFirstName, input.parentLastName, input.parentEmail)
+
     // process payment
-    const { errors, payment } = await processPaylabPayment(input.payment, input.parentEmail)
+    const { errors, payment, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId)
 
     if (errors) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', errors, {
@@ -74,29 +78,9 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         })
     }
 
-    const discount = input.payment.discount
-    // if it's a fixed discount, start with the total amount (in cents) to distribute
-    let remainingFixedDiscount = discount?.type === 'number' ? discount.amount : 0
-
     const schedulingPromises = input.classes.flatMap((klass) => {
-        // find the base amount for this class
-        const lineItem = input.payment.lineItems.find((it) => it.classId === klass.id)
-        const originalAmount = lineItem?.amount ?? 0
+        const lineItem = order.lineItems?.find((it) => it.metadata?.['classId'] === klass.id.toString())
         return input.children.map((child) => {
-            let amountCharged = originalAmount
-
-            if (discount) {
-                if (discount.type === 'percentage') {
-                    // subtract X% off
-                    amountCharged = (originalAmount * (1 - discount.amount / 100)) / 100
-                } else {
-                    // fixed-dollar discount: apply as much as possible here
-                    const discountApplied = Math.min(remainingFixedDiscount, originalAmount)
-                    amountCharged = originalAmount - discountApplied
-                    remainingFixedDiscount -= discountApplied
-                }
-            }
-
             return acuity.scheduleAppointment({
                 appointmentTypeID: klass.appointmentTypeID,
                 datetime: klass.time,
@@ -134,7 +118,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                     },
                     {
                         id: AcuityConstants.FormFields.AMOUNT_CHARGED,
-                        value: amountCharged.toFixed(2),
+                        value: lineItem?.totalMoney?.amount?.toString() || '',
                     },
                     {
                         id: AcuityConstants.FormFields.IS_TERM_ENROLMENT,
@@ -142,7 +126,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                     },
                     {
                         id: AcuityConstants.FormFields.PAYMENT_ID,
-                        value: payment.id || '',
+                        value: order.id || '',
                     },
                 ],
             })

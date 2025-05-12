@@ -30,7 +30,6 @@ export class SquareClient {
         const { SquareClient: Square } = await import('square')
         const token = env === 'dev' ? process.env.SQUARE_DEV_TOKEN : process.env.SQUARE_PROD_TOKEN
         const environment = env === 'dev' ? SquareEnvironment.Sandbox : SquareEnvironment.Production
-        console.log({ token })
         this.#client = new Square({ token, version: '2025-04-16', environment })
         this.#status = 'initialised'
     }
