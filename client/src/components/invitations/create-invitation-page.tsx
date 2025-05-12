@@ -28,6 +28,7 @@ import { trpc } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
+import { DateTime } from 'luxon'
 
 type TForm = {
     childName: string
@@ -49,13 +50,13 @@ export const CreateInvitationPage = () => {
         defaultValues: {
             childName: state?.childName || '',
             childAge: state?.childAge || '',
-            date: state?.date || '',
+            date: DateTime.fromISO(state?.date).toJSDate() || '',
             time: state?.time || '',
             type: state?.type || '',
             studio: state?.studio || '',
             address: state?.address || '',
             rsvpName: state?.rsvpName || '',
-            rsvpDate: state?.rsvpDate || '',
+            rsvpDate: DateTime.fromISO(state?.rsvpDate).toJSDate() || '',
             rsvpNumber: state?.rsvpNumber || '',
         },
     })
