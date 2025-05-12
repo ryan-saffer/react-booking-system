@@ -67,6 +67,7 @@ export function Payment() {
                         amount: parseInt(klass.price) * 100,
                         quantity: '1',
                         classId: klass.id,
+                        childName: child.firstName,
                     }))
                 ),
                 discount: discount

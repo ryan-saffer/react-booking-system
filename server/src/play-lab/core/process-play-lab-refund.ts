@@ -62,7 +62,16 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         return
     }
 
-    const lineItemToRefund = order?.lineItems?.find((it) => it?.metadata?.['classId'] === cancelledClass.id.toString())
+    // if searching for line items that just match classId, multiple line items could be found if multiple children booked
+    // so to be sure we are processing the refund on the correct line item, also compare against child name
+    const childName = AcuityUtilities.retrieveFormAndField(
+        appointment,
+        AcuityConstants.Forms.CHILDREN_DETAILS,
+        AcuityConstants.FormFields.CHILDREN_NAMES
+    )
+    const lineItemToRefund = order?.lineItems?.find(
+        (it) => it?.metadata?.['classId'] === cancelledClass.id.toString() && it?.metadata?.['childName'] === childName
+    )
     if (!lineItemToRefund) {
         logError(
             `Unable to find line item with matching class id for play lab booking with id: ${appointment.id}`,

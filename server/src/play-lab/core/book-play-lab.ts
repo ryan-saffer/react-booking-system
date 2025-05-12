@@ -38,6 +38,7 @@ export type BookPlayLabProps = {
             amount: number // in cents
             quantity: string
             classId: number
+            childName: string // needed to differentiate between children for refunds
         }[]
         discount: null | { type: 'number' | 'percentage'; amount: number; name: string } // percentage amount in format '7.25' for 7.25%
     }

@@ -23,6 +23,7 @@ export async function processPaylabPayment(
                 catalogObjectId: env === 'prod' ? 'QRUKPRKXKZECIEJLJMTHXBYO' : 'X5IDJPLOXAA3EWEZELC7UVEM', // Play Lab Session
                 metadata: {
                     classId: item.classId.toString(),
+                    childName: item.childName, // for differentating between kids for refunds
                 },
             })),
             discounts: input.discount
