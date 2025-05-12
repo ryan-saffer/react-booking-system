@@ -2,8 +2,10 @@ import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
+import { AcuityClient } from '../core/acuity-client'
 import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
 import { checkInToCrm } from '../../holiday-programs/core/check-in-to-crm'
+import { processPlayLabRefund } from '../../play-lab/core/process-refund'
 import { logError } from '../../utilities'
 
 export type AcuityWebhookData = {
@@ -20,6 +22,12 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
+async function isPlayLab(appointmentTypeId: string) {
+    const acuity = await AcuityClient.getInstance()
+    const appointmentTypes = await acuity.getAppointmentTypes({ category: ['play-lab', 'play-lab-test'] })
+    return appointmentTypes.some((appointmentType) => appointmentType.id.toString() === appointmentTypeId)
+}
+
 export const asWebhook = onRequest(async (req, resp) => {
     logger.log('STARTING WEBHOOK')
     logger.log(req.body)
@@ -31,6 +39,10 @@ export const asWebhook = onRequest(async (req, resp) => {
                 // ONLY HOLIDAY PROGRAMS GET REFUNDED - CURRENTLY OTHER PROGRAMS NOT SUPPORTED (ie kingsville opening)
                 if (isHolidayProgram(data.appointmentTypeID)) {
                     await cancelHolidayProgram(data)
+                    resp.status(200).send()
+                    return
+                } else if (await isPlayLab(data.appointmentTypeID)) {
+                    await processPlayLabRefund(data)
                     resp.status(200).send()
                     return
                 } else {
