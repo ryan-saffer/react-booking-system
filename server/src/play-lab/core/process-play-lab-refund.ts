@@ -31,6 +31,16 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         return
     }
 
+    // we currently have the id of the appointment, but not the id of the class which is saved into the square metadata
+    const classes = await acuity.getClasses([parseInt(data.appointmentTypeID)], false, Date.now())
+    const cancelledClass = classes.find((it) => it.id === appointment.classID)
+    if (!cancelledClass) {
+        logError(`Unable to find which class was cancelled while booking play lab appointment`, null, {
+            webhookData: data,
+        })
+        return
+    }
+
     const orderId = AcuityUtilities.retrieveFormAndField(
         appointment,
         AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
@@ -52,7 +62,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         return
     }
 
-    const lineItemToRefund = order?.lineItems?.find((it) => it?.metadata?.['classId'] === appointment.id.toString())
+    const lineItemToRefund = order?.lineItems?.find((it) => it?.metadata?.['classId'] === cancelledClass.id.toString())
     if (!lineItemToRefund) {
         logError(
             `Unable to find line item with matching class id for play lab booking with id: ${appointment.id}`,

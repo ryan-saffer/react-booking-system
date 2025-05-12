@@ -5,7 +5,7 @@ import { AcuityConstants } from 'fizz-kidz'
 import { AcuityClient } from '../core/acuity-client'
 import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
 import { checkInToCrm } from '../../holiday-programs/core/check-in-to-crm'
-import { processPlayLabRefund } from '../../play-lab/core/process-refund'
+import { processPlayLabRefund } from '../../play-lab/core/process-play-lab-refund'
 import { logError } from '../../utilities'
 
 export type AcuityWebhookData = {
