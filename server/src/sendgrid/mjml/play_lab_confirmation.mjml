@@ -57,7 +57,7 @@
                     font-weight="bold"
                     padding-bottom="0"
                 >
-                    Who / When
+                    When / Who
                 </mj-text>
                 <mj-text font-size="14px" padding-top="0">
                     {{#bookings}}

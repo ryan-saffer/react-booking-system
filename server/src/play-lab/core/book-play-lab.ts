@@ -34,11 +34,25 @@ export type BookPlayLabProps = {
         locationId: string
         amount: number // in cents
         lineItems: {
+            // in order to access lineItemIdentifier when booking into acuity, all this information must be added at the line item level
             name: string
             amount: number // in cents
             quantity: string
             classId: number
-            childName: string // needed to differentiate between children for refunds
+            lineItemIdentifier: string // line item identifier needed for refunds, to ensure the correct line item is refunded
+            appointmentTypeID: number
+            className: string
+            time: string
+            duration: number
+            calendarID: number
+            childFirstName: string
+            childLastName: string
+            childDob: string
+            childAllergies: string
+            childAdditionalInfo: string
+            emergencyContactName: string
+            emergencyContactPhone: string
+            emergencyContactRelation: string
         }[]
         discount: null | { type: 'number' | 'percentage'; amount: number; name: string } // percentage amount in format '7.25' for 7.25%
     }
@@ -71,74 +85,69 @@ export async function bookPlayLab(input: BookPlayLabProps) {
     const customerId = await getOrCreateCustomer(input.parentFirstName, input.parentLastName, input.parentEmail)
 
     // process payment
-    const { errors, payment, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId)
+    const { payment, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId).catch((err) =>
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })
+    )
 
-    if (errors) {
-        throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', errors, {
-            input,
+    const schedulingPromises = input.payment.lineItems.map((line) =>
+        acuity.scheduleAppointment({
+            appointmentTypeID: line.appointmentTypeID,
+            datetime: line.time,
+            calendarID: line.calendarID,
+            firstName: input.parentFirstName,
+            lastName: input.parentLastName,
+            email: input.parentEmail,
+            phone: input.parentPhone,
+            paid: true,
+            fields: [
+                {
+                    id: AcuityConstants.FormFields.CHILDREN_NAMES,
+                    value: `${line.childFirstName} ${line.childLastName}`,
+                },
+                {
+                    id: AcuityConstants.FormFields.CHILDREN_AGES,
+                    // convert ISO string to age
+                    value: Math.floor(DateTime.now().diff(DateTime.fromISO(line.childDob), 'years').years),
+                },
+                {
+                    id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,
+                    value: line.childAllergies,
+                },
+                {
+                    id: AcuityConstants.FormFields.CHILD_ADDITIONAL_INFO,
+                    value: line.childAdditionalInfo,
+                },
+                {
+                    id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NAME_HP,
+                    value: input.emergencyContactName,
+                },
+                {
+                    id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
+                    value: input.emergencyContactPhone,
+                },
+                {
+                    id: AcuityConstants.FormFields.EMERGENCY_CONTACT_RELATION_HP,
+                    value: input.emergencyContactRelation,
+                },
+                {
+                    id: AcuityConstants.FormFields.IS_TERM_ENROLMENT,
+                    value: input.bookingType === 'term-booking' ? 'yes' : '',
+                },
+                {
+                    id: AcuityConstants.FormFields.PAYMENT_ID,
+                    value: order.id || '',
+                },
+                {
+                    id: AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER,
+                    value: line.lineItemIdentifier,
+                },
+            ],
         })
-    }
+    )
 
-    const schedulingPromises = input.classes.flatMap((klass) => {
-        const lineItem = order.lineItems?.find((it) => it.metadata?.['classId'] === klass.id.toString())
-        return input.children.map((child) => {
-            return acuity.scheduleAppointment({
-                appointmentTypeID: klass.appointmentTypeID,
-                datetime: klass.time,
-                calendarID: klass.calendarID,
-                firstName: input.parentFirstName,
-                lastName: input.parentLastName,
-                email: input.parentEmail,
-                phone: input.parentPhone,
-                paid: true,
-                fields: [
-                    {
-                        id: AcuityConstants.FormFields.CHILDREN_NAMES,
-                        value: `${child.firstName} ${child.lastName}`,
-                    },
-                    {
-                        id: AcuityConstants.FormFields.CHILDREN_AGES,
-                        // convert ISO string to age
-                        value: Math.floor(DateTime.now().diff(DateTime.fromISO(child.dob), 'years').years),
-                    },
-                    {
-                        id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,
-                        value: child.allergies || '',
-                    },
-                    {
-                        id: AcuityConstants.FormFields.CHILD_ADDITIONAL_INFO,
-                        value: child.additionalInfo || '',
-                    },
-                    {
-                        id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NAME_HP,
-                        value: input.emergencyContactName,
-                    },
-                    {
-                        id: AcuityConstants.FormFields.EMERGENCY_CONTACT_NUMBER_HP,
-                        value: input.emergencyContactPhone,
-                    },
-                    {
-                        id: AcuityConstants.FormFields.AMOUNT_CHARGED,
-                        value: lineItem?.totalMoney?.amount?.toString() || '',
-                    },
-                    {
-                        id: AcuityConstants.FormFields.IS_TERM_ENROLMENT,
-                        value: input.bookingType === 'term-booking' ? 'yes' : '',
-                    },
-                    {
-                        id: AcuityConstants.FormFields.PAYMENT_ID,
-                        value: order.id || '',
-                    },
-                ],
-            })
-        })
-    })
-
-    try {
-        await Promise.all(schedulingPromises)
-    } catch (err) {
+    const appointments = await Promise.all(schedulingPromises).catch((err) =>
         throwTrpcError('INTERNAL_SERVER_ERROR', 'there was an error scheduling play lab into acuity', err, { input })
-    }
+    )
 
     // write to crm
     if (input.joinMailingList) {
@@ -167,18 +176,26 @@ export async function bookPlayLab(input: BookPlayLabProps) {
     await mailClient.sendEmail('playLabBookingConfirmation', input.parentEmail, {
         parentName: input.parentFirstName,
         location: studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID)),
-        bookings: input.classes
+        bookings: input.payment.lineItems
             .sort((a, b) => (DateTime.fromISO(a.time) > DateTime.fromISO(b.time) ? 1 : -1))
-            .flatMap((klass) =>
-                input.children.map((child) => {
-                    const startTime = DateTime.fromISO(klass.time, { setZone: true })
-                    const endTime = startTime.plus({ minutes: klass.duration })
-                    return {
-                        time: `${startTime.toFormat('cccc, LLL dd, t')} - ${endTime.toFormat('t')}`,
-                        details: `${child.firstName} - ${klass.name}`,
-                    }
-                })
-            ),
+            .map((line) => {
+                const startTime = DateTime.fromISO(line.time, { zone: 'Australia/Melbourne' })
+                const endTime = startTime.plus({ minutes: line.duration })
+                const appointment = appointments.find(
+                    (it) =>
+                        AcuityUtilities.retrieveFormAndField(
+                            it,
+                            AcuityConstants.Forms.PAYMENT,
+                            AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER
+                        ) === line.lineItemIdentifier
+                )
+                const confirmationPage = appointment?.confirmationPage
+                console.log({ confirmationPage })
+                return {
+                    time: `${startTime.toFormat('cccc, LLL dd, t')} - ${endTime.toFormat('t')}`,
+                    details: `${line.childFirstName} - ${line.className}`,
+                }
+            }),
         receiptUrl: payment.receiptUrl,
     })
 

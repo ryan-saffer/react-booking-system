@@ -5,6 +5,7 @@ import type { AcuityWebhookData } from '../../acuity'
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { SquareClient } from '../../square/core/square-client'
 import { logError } from '../../utilities'
+import type { Order } from 'square/api'
 
 export async function processPlayLabRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
@@ -12,7 +13,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     const isTermEnrolment =
         AcuityUtilities.retrieveFormAndField(
             appointment,
-            AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+            AcuityConstants.Forms.PAYMENT,
             AcuityConstants.FormFields.IS_TERM_ENROLMENT
         ) === 'yes'
 
@@ -43,18 +44,20 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
 
     const orderId = AcuityUtilities.retrieveFormAndField(
         appointment,
-        AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+        AcuityConstants.Forms.PAYMENT,
         AcuityConstants.FormFields.PAYMENT_ID
     ) as string
 
     const square = await SquareClient.getInstance()
+    let order: Order
 
-    const { order, errors: getOrderErrors } = await square.orders.get({ orderId })
-
-    if (getOrderErrors) {
+    try {
+        const result = await square.orders.get({ orderId })
+        order = result.order!
+    } catch (err) {
         logError(
             `Unable to find square order while processing play lab refund for session with classId: ${data.id}`,
-            getOrderErrors[0],
+            err,
             {
                 webhookData: data,
             }
@@ -62,19 +65,18 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         return
     }
 
-    // if searching for line items that just match classId, multiple line items could be found if multiple children booked
-    // so to be sure we are processing the refund on the correct line item, also compare against child name
-    const childName = AcuityUtilities.retrieveFormAndField(
-        appointment,
-        AcuityConstants.Forms.CHILDREN_DETAILS,
-        AcuityConstants.FormFields.CHILDREN_NAMES
-    )
-    const lineItemToRefund = order?.lineItems?.find(
-        (it) => it?.metadata?.['classId'] === cancelledClass.id.toString() && it?.metadata?.['childName'] === childName
-    )
+    // if searching for line items that just match classId, multiple line items could be found if multiple children booked.
+    // so to be sure we are processing the refund on the correct line item, we get the line item identifier
+    const lineItemIdentifier =
+        AcuityUtilities.retrieveFormAndField(
+            appointment,
+            AcuityConstants.Forms.PAYMENT,
+            AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER
+        ) || 'not-found'
+    const lineItemToRefund = order?.lineItems?.find((it) => it?.metadata?.['lineItemIdentifier'] === lineItemIdentifier)
     if (!lineItemToRefund) {
         logError(
-            `Unable to find line item with matching class id for play lab booking with id: ${appointment.id}`,
+            `Unable to find line item with matching class id and line item identifier for play lab booking with id: ${appointment.id}`,
             null,
             { webhookData: data }
         )
@@ -90,14 +92,15 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         })
     }
 
-    const { errors: refundErrors } = await square.refunds.refundPayment({
-        amountMoney: { amount: amountToRefund, currency: 'AUD' },
-        paymentId,
-        idempotencyKey: data.id,
-    })
-
-    if (refundErrors) {
-        logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, refundErrors[0], {
+    try {
+        await square.refunds.refundPayment({
+            amountMoney: { amount: amountToRefund, currency: 'AUD' },
+            reason: 'Cancelled more than 48 hours before program - automatic refund',
+            paymentId,
+            idempotencyKey: data.id,
+        })
+    } catch (err) {
+        logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
             webhookData: data,
             refundAmount: amountToRefund,
         })

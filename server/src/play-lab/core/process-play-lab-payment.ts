@@ -12,18 +12,19 @@ export async function processPaylabPayment(
     const squareClient = await SquareClient.getInstance()
     const idempotencyKey = uuidv4()
 
-    const { order, errors: orderErrors } = await squareClient.orders.create({
+    const { order } = await squareClient.orders.create({
         idempotencyKey,
         order: {
             customerId,
             locationId: input.locationId,
             lineItems: input.lineItems.map((item) => ({
-                ...item,
+                name: item.name,
+                quantity: item.quantity,
                 basePriceMoney: { currency: 'AUD', amount: BigInt(item.amount) } as const,
                 catalogObjectId: env === 'prod' ? 'QRUKPRKXKZECIEJLJMTHXBYO' : 'X5IDJPLOXAA3EWEZELC7UVEM', // Play Lab Session
                 metadata: {
                     classId: item.classId.toString(),
-                    childName: item.childName, // for differentating between kids for refunds
+                    lineItemIdentifier: item.lineItemIdentifier,
                 },
             })),
             discounts: input.discount
@@ -49,9 +50,7 @@ export async function processPaylabPayment(
         },
     })
 
-    if (orderErrors) return { errors: orderErrors }
-
-    const { payment, errors: paymentErrors } = await squareClient.payments.create({
+    const { payment } = await squareClient.payments.create({
         sourceId: input.token,
         idempotencyKey,
         locationId: input.locationId,
@@ -67,8 +66,6 @@ export async function processPaylabPayment(
         buyerEmailAddress: parentEmail,
         verificationToken: input.buyerVerificationToken,
     })
-
-    if (paymentErrors) return { errors: paymentErrors }
 
     return { payment: payment!, order: order! }
 }

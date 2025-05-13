@@ -14,12 +14,12 @@ export async function cancelHolidayProgram(data: AcuityWebhookData) {
         const appointment = await acuity.getAppointment(data.id)
         const paymentIntentId = AcuityUtilities.retrieveFormAndField(
             appointment,
-            AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+            AcuityConstants.Forms.PAYMENT,
             AcuityConstants.FormFields.PAYMENT_ID
         )
         const amountCharged = AcuityUtilities.retrieveFormAndField(
             appointment,
-            AcuityConstants.Forms.HOLIDAY_PROGRAM_PAYMENT_DETAILS,
+            AcuityConstants.Forms.PAYMENT,
             AcuityConstants.FormFields.AMOUNT_CHARGED
         )
 
