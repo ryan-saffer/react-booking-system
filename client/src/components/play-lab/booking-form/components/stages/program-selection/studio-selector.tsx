@@ -48,5 +48,4 @@ export function StudioSelector() {
             )}
         />
     )
-    // }
 }

@@ -131,7 +131,16 @@ function ContinueOrError() {
     if (!studio) return null
 
     if (isLoading) return <Loader className="mt-4" />
-    if (isError) return <p>Error</p>
+    if (isError)
+        return (
+            <Alert className="mt-4" variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Something went wrong</AlertTitle>
+                <AlertDescription>
+                    There was an error retrieving the available sessions. Please try again later.
+                </AlertDescription>
+            </Alert>
+        )
 
     if (isSuccess) {
         if (!hasClasses) {
