@@ -24,7 +24,8 @@ export type Emails = {
     playLabBookingConfirmation: {
         parentName: string
         location: string
-        bookings: { time: string; details: string }[]
+        bookings: { time: string; details: string; confirmationPage: string }[]
+        isTermEnrolment: boolean
         receiptUrl?: string
     }
 

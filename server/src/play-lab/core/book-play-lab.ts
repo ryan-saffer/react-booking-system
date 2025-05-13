@@ -189,13 +189,13 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                             AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER
                         ) === line.lineItemIdentifier
                 )
-                const confirmationPage = appointment?.confirmationPage
-                console.log({ confirmationPage })
                 return {
                     time: `${startTime.toFormat('cccc, LLL dd, t')} - ${endTime.toFormat('t')}`,
                     details: `${line.childFirstName} - ${line.className}`,
+                    confirmationPage: appointment?.confirmationPage || '',
                 }
             }),
+        isTermEnrolment: input.bookingType === 'term-booking',
         receiptUrl: payment.receiptUrl,
     })
 

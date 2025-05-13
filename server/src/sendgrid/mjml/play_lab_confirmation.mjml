@@ -61,7 +61,12 @@
                 </mj-text>
                 <mj-text font-size="14px" padding-top="0">
                     {{#bookings}}
+                    {{#isTermEnrolment}}
                     <p style="font-size: 14px; font-weight: 500; margin-bottom: 0; margin-top: 6px">{{time}}</p>
+                    {{/isTermEnrolment}}
+                    {{^isTermEnrolment}}
+                    <p style="font-size: 14px; font-weight: 500; margin-bottom: 0; margin-top: 6px">{{time}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
+                    {{/isTermEnrolment}}
                     <p style="margin: 0; font-size: 13px">{{details}}</p>
                     {{/bookings}}
                 </mj-text>
