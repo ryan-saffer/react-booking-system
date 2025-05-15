@@ -15,7 +15,7 @@ import { Separator } from '@ui-components/separator'
 import { Button } from '@ui-components/button'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
-import type { AcuityTypes } from 'fizz-kidz'
+import { addOrdinalSuffix, type AcuityTypes } from 'fizz-kidz'
 import { Checkbox } from '@ui-components/checkbox'
 import { DateTime } from 'luxon'
 
@@ -128,6 +128,12 @@ function BrowseByDate({
 }) {
     const selectedClasses = useCartStore((store) => store.selectedClasses)
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
+
+    function formatSelectedDay(date: Date) {
+        const datetime = DateTime.fromJSDate(date)
+        return `${datetime.toFormat('cccc')} the ${addOrdinalSuffix(datetime.get('day').toString())} of ${datetime.toFormat('LLLL')}`
+    }
+
     return (
         <>
             <div className="my-2 flex items-center justify-between">
@@ -138,6 +144,7 @@ function BrowseByDate({
             </div>
             <Calendar
                 className="mb-4"
+                showOutsideDays={false}
                 onDayClick={(day) => {
                     setSelectedDay(day)
                 }}
@@ -176,6 +183,7 @@ function BrowseByDate({
             {selectedDay && (
                 <>
                     <Separator />
+                    <p className="my-4 font-semibold">{formatSelectedDay(selectedDay)}</p>
                     <SessionSelector classes={filteredClasses} selectedDay={selectedDay} />
                 </>
             )}
