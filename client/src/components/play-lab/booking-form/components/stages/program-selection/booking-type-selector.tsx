@@ -43,10 +43,10 @@ export function BookingTypeSelector() {
                                 })}
                                 onClick={() => handleSelection('term-booking')}
                             >
-                                <span className="text-sm">
+                                <span className="text-wrap text-sm">
                                     Term Enrolment - <span className="font-normal italic">20% discount</span>
                                 </span>
-                                <span className="text-sm text-muted-foreground">
+                                <span className="text-wrap text-sm text-muted-foreground">
                                     Book for a term to build skills, make friends and save!
                                 </span>
                             </Button>
@@ -57,8 +57,8 @@ export function BookingTypeSelector() {
                                 })}
                                 onClick={() => handleSelection('casual')}
                             >
-                                <span className="text-sm">Casual Booking</span>
-                                <span className="text-sm text-muted-foreground">
+                                <span className="text-wrap text-sm">Casual Booking</span>
+                                <span className="text-wrap text-sm text-muted-foreground">
                                     Choose the sessions that work best for you
                                 </span>
                             </Button>

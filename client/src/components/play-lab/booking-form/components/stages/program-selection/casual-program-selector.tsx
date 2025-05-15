@@ -229,7 +229,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                             <img
                                 src={klass.image}
                                 alt={klass.name}
-                                className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
                             />
                         )}
                         <div className="ml-4 flex-1 space-y-1">
@@ -237,7 +237,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                             <div className="flex flex-wrap text-sm text-gray-500">
                                 <span>{ages}</span>
                             </div>
-                            <div className="text-sm text-gray-700">{time}</div>
+                            <div className="text-sm font-semibold text-gray-700">{time}</div>
                             {klass.slotsAvailable > 0 && klass.slotsAvailable <= 5 && (
                                 <span className="mt-2 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
                                     Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
@@ -310,7 +310,7 @@ function BrowseByProgram({
                             <img
                                 src={program.image}
                                 alt={program.name}
-                                className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
                             />
 
                             <div className="ml-4 flex-1 space-y-1">

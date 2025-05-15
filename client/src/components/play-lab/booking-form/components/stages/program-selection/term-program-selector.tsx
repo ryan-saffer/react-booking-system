@@ -233,7 +233,11 @@ function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.A
                 'bg-gray-100 hover:bg-gray-100': selected,
             })}
         >
-            <img src={program.image} alt={program.name} className="h-20 w-20 flex-shrink-0 rounded-md object-cover" />
+            <img
+                src={program.image}
+                alt={program.name}
+                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
+            />
 
             <div className="ml-4 flex-1 space-y-1">
                 <h3 className="text-lg font-semibold text-gray-900">{program.name}</h3>

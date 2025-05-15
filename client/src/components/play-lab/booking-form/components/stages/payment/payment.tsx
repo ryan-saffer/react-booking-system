@@ -133,7 +133,7 @@ export function Payment() {
 
     return (
         <>
-            <p className="mb-2 text-center text-xl font-bold">Booking Summary</p>
+            <p className="my-2 text-center text-xl font-bold">Booking Summary</p>
             <Table>
                 <TableHeader>
                     <TableRow>
