@@ -252,7 +252,7 @@ const lipBalm = {
     markdown: `
 ### Ingredients
 * Beeswax x1 1ml FLAT spoon
-* Cocobutter x1 circle OR x1 1ml FLAT spoon 
+* Cocobutter (x1 circle or x1 1ml FLAT spoon) OR Coconut Oil (x1 1ml FLAT spoon)
 * Scent (if requested) x2 shakes
 * Sunflower oil x1 15ml spoon
 * Pigment LIP powder x1/2 1ml spoon (added to the microwavable jug, not individually to bowls)
@@ -264,8 +264,8 @@ const lipBalm = {
 
 ### Recipe
 1. Add beeswax into bowls
-2. Add cocobutter into bowls
-> Fizz Tip: If using the circular disc pieces of cocobutter, get kids to break into smaller pieces
+2. Add cocobutter OR coconut oil into bowls
+> Fizz Tip: If using the circular disc pieces of cocobutter, get kids to break into smaller pieces/ If using coconut oil, pass the jar around and get the kids to scoop it out of the jar themselves, using a posivle stick to assist.
 3. Add sunflower into bowls and mix
 4. Add scent if requested 
 5. Add glitter if requested
@@ -703,6 +703,7 @@ const volcano = {
 ### Ingredients
 * Craft
 * Paper, tissue paper, pipecleaners, clay, popsicle sticks, straws
+* Crayons / Textas
 * Tape (ideally clear)
 * Scissors
 * Bicarbonate Soda x 1 15ml FLAT spoon of for every 2 children
@@ -720,7 +721,7 @@ _Parties with 20 or more children_:
 
 ### Recipe
 1. One tray and one cup between two/three children
-2. Craft should already be on table and start creating your volcano
+2. Craft and textas should already be on table and start creating your volcano
 > Fizz Tip: Explain what the cup is and what the tray is. Especially the younger kids, they might not know what to do, especially the visual learners - facilitators PLEASE DEMONSTRATE AND ACTUALLY MAKE WITH THE KIDS - See photos
 3. Add the bicarbonate soda and finish up decorating
 > Fizz Tip: Flag with any parents in the room, that the explosion is about to happen!
