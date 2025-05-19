@@ -31,6 +31,7 @@ import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
 import { TermsAndConditions } from './terms-and-conditions'
+import { CancellationPolicy } from './cancellation-policy'
 
 export function CustomerDetails() {
     const form = useBookingForm()
@@ -69,18 +70,10 @@ export function CustomerDetails() {
         calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
     }
 
-    // const {
-    //     fields: pickupPeople,
-    //     append: appendPickupPerson,
-    //     remove: removePickupPerson,
-    // } = useFieldArray({
-    //     control: form.control,
-    //     name: 'pickupPeople',
-    // })
-
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
     const [showTermsAndConditions, setShowTermsAndConditions] = useState(false)
+    const [showCancellationPolicy, setShowCancellationPolicy] = useState(false)
 
     if (formStage !== 'form') return null
 
@@ -365,6 +358,13 @@ export function CustomerDetails() {
                                 I have read and agreed to the{' '}
                                 <span
                                     className="text-blue-500 hover:underline"
+                                    onClick={() => setShowCancellationPolicy(true)}
+                                >
+                                    Cancellation Policy
+                                </span>
+                                {' and the '}
+                                <span
+                                    className="text-blue-500 hover:underline"
                                     onClick={() => setShowTermsAndConditions(true)}
                                 >
                                     Terms and Conditions.
@@ -402,6 +402,14 @@ export function CustomerDetails() {
                         <DialogTitle>Terms and Conditions</DialogTitle>
                     </DialogHeader>
                     <TermsAndConditions />
+                </DialogContent>
+            </Dialog>
+            <Dialog open={showCancellationPolicy} onOpenChange={() => setShowCancellationPolicy(false)}>
+                <DialogContent className="twp">
+                    <DialogHeader>
+                        <DialogTitle>Cancellation Policy</DialogTitle>
+                    </DialogHeader>
+                    <CancellationPolicy />
                 </DialogContent>
             </Dialog>
             <AlertDialog open={showNotEnoughSpotsDialog} onOpenChange={setShowNotEnoughSpotsDialog}>
