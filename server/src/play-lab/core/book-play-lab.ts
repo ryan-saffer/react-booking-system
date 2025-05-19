@@ -28,6 +28,8 @@ export type BookPlayLabProps = {
         additionalInfo?: string
     }[]
     joinMailingList: boolean
+    reference: 'google' | 'instagram' | 'word-of-mouth' | 'attended-fizz' | 'other'
+    referenceOther: string | undefined
     payment: {
         token: string
         buyerVerificationToken: string
@@ -223,6 +225,8 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                 discountAmount: input.payment.discount.amount,
                 discountType: input.payment.discount.type,
             }),
+            reference: input.reference,
+            ...(input.reference === 'other' && input.referenceOther && { referenceOther: input.referenceOther }),
         })
     } catch (err) {
         logError(

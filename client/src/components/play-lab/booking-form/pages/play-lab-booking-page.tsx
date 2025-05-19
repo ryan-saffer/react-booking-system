@@ -40,6 +40,8 @@ export function PlayLabBookingPage() {
             emergencyContactName: '',
             emergencyContactRelation: '',
             emergencyContactNumber: '',
+            reference: undefined,
+            referenceOther: undefined,
             termsAndConditions: false,
             joinMailingList: true,
         },

@@ -154,6 +154,8 @@ export type MixpanelEvent = {
         numberOfPrograms: number
         numberOfKids: number
         childAges: string[]
+        reference: string
+        referenceOther?: string
     }
 }
 

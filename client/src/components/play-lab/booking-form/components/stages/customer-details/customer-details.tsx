@@ -32,6 +32,7 @@ import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
 import { TermsAndConditions } from './terms-and-conditions'
 import { CancellationPolicy } from './cancellation-policy'
+import { RadioGroup, RadioGroupItem } from '@ui-components/radio-group'
 
 export function CustomerDetails() {
     const form = useBookingForm()
@@ -345,6 +346,72 @@ export function CustomerDetails() {
                     </FormItem>
                 )}
             />
+            <Separator />
+            <FormField
+                control={form.control}
+                name="reference"
+                render={({ field }) => (
+                    <FormItem className="space-y-3">
+                        <FormLabel>Finally, how did you hear about us?</FormLabel>
+                        <FormControl>
+                            <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="flex flex-col space-y-1"
+                            >
+                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="google" />
+                                    </FormControl>
+                                    <FormLabel className="cursor-pointer font-normal">Google</FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="instagram" />
+                                    </FormControl>
+                                    <FormLabel className="cursor-pointer font-normal">Instagram</FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="word-of-mouth" />
+                                    </FormControl>
+                                    <FormLabel className="cursor-pointer font-normal">Word of Mouth</FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="attended-fizz" />
+                                    </FormControl>
+                                    <FormLabel className="cursor-pointer font-normal">
+                                        Attended a Fizz Kidz experience
+                                    </FormLabel>
+                                </FormItem>
+                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                        <RadioGroupItem value="other" />
+                                    </FormControl>
+                                    <FormLabel className="cursor-pointer font-normal">Other</FormLabel>
+                                </FormItem>
+                            </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            {form.watch('reference') === 'other' && (
+                <FormField
+                    control={form.control}
+                    name="referenceOther"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Ooh interesting! Please share 🙏</FormLabel>
+                            <FormControl>
+                                <Textarea {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            )}
             <FormField
                 control={form.control}
                 name="termsAndConditions"

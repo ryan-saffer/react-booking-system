@@ -56,6 +56,8 @@ export function Payment() {
             emergencyContactRelation: form.getValues().emergencyContactRelation,
             children: form.getValues().children.map((child) => ({ ...child, dob: child.dob.toISOString() })),
             joinMailingList: form.getValues().joinMailingList,
+            reference: form.getValues().reference,
+            referenceOther: form.getValues().referenceOther,
             payment: {
                 token,
                 buyerVerificationToken,
