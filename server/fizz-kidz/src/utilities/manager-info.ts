@@ -52,7 +52,7 @@ export function getManager(
             }
         case Location.ESSENDON:
             return {
-                name: 'Lami',
+                name: 'Kym',
                 email: 'essendon@fizzkidz.com.au',
                 mobile: '0431 379 953',
                 subjectPronoun: 'she',
@@ -62,7 +62,7 @@ export function getManager(
         case Location.KINGSVILLE:
             return {
                 name: 'Kym',
-                email: 'kym@fizzkidz.com.au',
+                email: 'kingsville@fizzkidz.com.au',
                 mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
