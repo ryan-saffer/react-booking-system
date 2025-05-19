@@ -149,8 +149,9 @@ export type MixpanelEvent = {
         programNames: string[]
         location: Location | 'test'
         amount: number
-        discountType?: 'percentage' | 'number'
+        discountType?: 'percentage' | 'price'
         discountAmount?: number
+        discountCode?: string
         numberOfPrograms: number
         numberOfKids: number
         childAges: string[]

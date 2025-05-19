@@ -10,9 +10,9 @@ export function ContinueButton() {
     function renderDiscount() {
         if (discount) {
             if (discount.type === 'percentage') {
-                return ` - ${discount.amount * 100}% discount`
+                return ` - ${discount.amount}% discount`
             } else {
-                return ` - $${discount.amount.toFixed(2)}`
+                return ` - $${discount.amount.toFixed(2)} off`
             }
         } else {
             return null

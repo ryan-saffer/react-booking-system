@@ -1,5 +1,5 @@
 import { getSquareLocationId } from 'fizz-kidz'
-import { AlertCircle, PartyPopper } from 'lucide-react'
+import { AlertCircle, PartyPopper, XIcon } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
@@ -7,12 +7,14 @@ import { toast } from 'sonner'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
 import { useCartStore } from '../../../zustand/cart-store'
 import { useFormStage } from '../../../zustand/form-stage'
 import { useBookingForm } from '../../form-schema'
+import { DiscountInput } from './discount-input'
 
 const SQUARE_APPLICATION_ID =
     import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
@@ -21,10 +23,12 @@ export function Payment() {
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
     const nextStage = useFormStage((store) => store.nextStage)
-    const { selectedClasses, discount, subtotal, total } = useCartStore()
+    const { selectedClasses, discount, subtotal, total, removeDiscount } = useCartStore()
 
     const children = form.watch('children')
     const studio = form.watch('studio')
+
+    const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}` // force rerender the square checkout component when disconut code changes
 
     const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
 
@@ -62,7 +66,7 @@ export function Payment() {
                 token,
                 buyerVerificationToken,
                 locationId: squareLocationId,
-                amount: total * 100,
+                amount: total * 100, // cents
                 lineItems: Object.values(selectedClasses).flatMap((klass) =>
                     children.map((child) => ({
                         name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
@@ -88,7 +92,7 @@ export function Payment() {
                 discount: discount
                     ? {
                           ...discount,
-                          amount: discount.amount * 100,
+                          amount: discount.type === 'percentage' ? discount.amount : discount.amount * 100, // 'price' discounts must be in cents
                           name: discount.description,
                       }
                     : null,
@@ -177,12 +181,26 @@ export function Payment() {
                                     <div className="flex items-center">
                                         <PartyPopper className="mr-2 h-5 w-5" />
                                         {discount.description}
+                                        {!discount.isMultiSessionDiscount && (
+                                            <Button
+                                                className="ml-2 min-h-0 border border-transparent p-1 hover:border-green-800  hover:bg-green-200/80"
+                                                variant="ghost"
+                                                onClick={() =>
+                                                    removeDiscount(
+                                                        form.getValues().children.length,
+                                                        form.getValues().bookingType === 'term-booking'
+                                                    )
+                                                }
+                                            >
+                                                <XIcon className="size-4" />
+                                            </Button>
+                                        )}
                                     </div>
                                 </TableCell>
                                 <TableCell className="py-2 text-right font-light italic text-green-800">
                                     {discount.type === 'percentage'
-                                        ? `${discount.amount * 100}% off`
-                                        : `$${discount.amount.toFixed(2)} off`}
+                                        ? `${discount.amount}% off`
+                                        : `$${discount.amount} off`}
                                 </TableCell>
                             </TableRow>
                         </>
@@ -193,7 +211,9 @@ export function Payment() {
                     </TableRow>
                 </TableFooter>
             </Table>
+            <DiscountInput />
             <PaymentForm
+                key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
                 cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
@@ -227,8 +247,8 @@ export function Payment() {
                     ),
                     discounts: discount
                         ? discount.type === 'percentage'
-                            ? [{ label: 'Discount', amount: (subtotal * discount.amount).toFixed(2) }]
-                            : [{ label: 'Discount', amount: (subtotal - discount.amount).toFixed(2) }]
+                            ? [{ label: 'Discount', amount: (subtotal * (discount.amount / 100)).toFixed(2) }]
+                            : [{ label: 'Discount', amount: discount.amount.toFixed(2) }]
                         : undefined,
                     total: {
                         amount: total.toFixed(2),

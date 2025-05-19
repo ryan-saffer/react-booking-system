@@ -8,6 +8,8 @@ import { ZohoClient } from '../../zoho/zoho-client'
 import { MailClient } from '../../sendgrid/MailClient'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { FieldValue } from 'firebase-admin/firestore'
 
 export type BookPlayLabProps = {
     bookingType: 'term-booking' | 'casual'
@@ -56,7 +58,12 @@ export type BookPlayLabProps = {
             emergencyContactPhone: string
             emergencyContactRelation: string
         }[]
-        discount: null | { type: 'number' | 'percentage'; amount: number; name: string } // percentage amount in format '7.25' for 7.25%
+        discount:
+            | ({ type: 'price' | 'percentage'; amount: number; name: string } & ( // percentage amount in format '7.25' for 7.25%
+                  | { isMultiSessionDiscount: true }
+                  | { isMultiSessionDiscount: false; code: string }
+              )) // if not a multi session discount, then provide the exact discount code
+            | null
     }
 }
 
@@ -201,6 +208,21 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         receiptUrl: payment.receiptUrl,
     })
 
+    // if using a discount code, update its number of uses
+    const discount = input.payment.discount
+    if (discount && !discount.isMultiSessionDiscount) {
+        try {
+            await DatabaseClient.updateDiscountCode(discount.code, {
+                numberOfUses: FieldValue.increment(1),
+            })
+        } catch (err) {
+            logError('Error while updating discount code during play lab booking', err, {
+                code: discount.code,
+                input,
+            })
+        }
+    }
+
     // tracking
     try {
         const location = AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID)
@@ -221,10 +243,11 @@ export async function bookPlayLab(input: BookPlayLabProps) {
             numberOfPrograms: input.classes.length,
             numberOfKids: input.children.length,
             childAges: uniqueChildAges,
-            ...(input.payment.discount && {
-                discountAmount: input.payment.discount.amount,
-                discountType: input.payment.discount.type,
+            ...(discount && {
+                discountAmount: discount.amount,
+                discountType: discount.type,
             }),
+            ...(discount && !discount.isMultiSessionDiscount && { discountCode: discount.code }),
             reference: input.reference,
             ...(input.reference === 'other' && input.referenceOther && { referenceOther: input.referenceOther }),
         })
