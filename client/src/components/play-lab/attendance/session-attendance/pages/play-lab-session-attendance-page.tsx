@@ -1,3 +1,4 @@
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useState } from 'react'
@@ -113,39 +114,53 @@ export function PlayLabSessionAttendancePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {appointments.map((appointment) => {
-                                    const id = String(appointment.id)
-                                    const isOpen = openItems[id] === true
-                                    return (
-                                        <Accordion.Item value={`${appointment.id}`} key={id} asChild>
-                                            <>
-                                                <Accordion.Trigger asChild>
-                                                    <TableRow
-                                                        className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
-                                                        onPointerDown={() => {
-                                                            console.log('onPointerDown')
-                                                            setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
-                                                        }}
-                                                    >
-                                                        <ChildRow appointment={appointment} />
-                                                    </TableRow>
-                                                </Accordion.Trigger>
-                                                {isOpen && (
-                                                    <Accordion.Content
-                                                        className="overflow-hidden text-sm transition-all data-[state=open]:animate-accordion-down"
-                                                        asChild
-                                                    >
-                                                        <TableRow>
-                                                            <TableCell colSpan={5} className="p-0">
-                                                                <ChildExpandedDetails appointment={appointment} />
-                                                            </TableCell>
+                                {appointments
+                                    .sort((a, b) => {
+                                        const childA = AcuityUtilities.retrieveFormAndField(
+                                            a,
+                                            AcuityConstants.Forms.CHILDREN_DETAILS,
+                                            AcuityConstants.FormFields.CHILDREN_NAMES
+                                        )
+                                        const childB = AcuityUtilities.retrieveFormAndField(
+                                            b,
+                                            AcuityConstants.Forms.CHILDREN_DETAILS,
+                                            AcuityConstants.FormFields.CHILDREN_NAMES
+                                        )
+                                        return childA < childB ? -1 : 1
+                                    })
+                                    .map((appointment) => {
+                                        const id = String(appointment.id)
+                                        const isOpen = openItems[id] === true
+                                        return (
+                                            <Accordion.Item value={`${appointment.id}`} key={id} asChild>
+                                                <>
+                                                    <Accordion.Trigger asChild>
+                                                        <TableRow
+                                                            className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
+                                                            onPointerDown={() => {
+                                                                console.log('onPointerDown')
+                                                                setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
+                                                            }}
+                                                        >
+                                                            <ChildRow appointment={appointment} />
                                                         </TableRow>
-                                                    </Accordion.Content>
-                                                )}
-                                            </>
-                                        </Accordion.Item>
-                                    )
-                                })}
+                                                    </Accordion.Trigger>
+                                                    {isOpen && (
+                                                        <Accordion.Content
+                                                            className="overflow-hidden text-sm transition-all data-[state=open]:animate-accordion-down"
+                                                            asChild
+                                                        >
+                                                            <TableRow>
+                                                                <TableCell colSpan={5} className="p-0">
+                                                                    <ChildExpandedDetails appointment={appointment} />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        </Accordion.Content>
+                                                    )}
+                                                </>
+                                            </Accordion.Item>
+                                        )
+                                    })}
                             </TableBody>
                         </Table>
                     </Accordion.Root>
