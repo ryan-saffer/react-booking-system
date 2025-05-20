@@ -17,7 +17,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
 
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
 
     useEffect(() => {
         const fetchClients = (data: AcuityTypes.Client.FetchAppointmentsParams) => {

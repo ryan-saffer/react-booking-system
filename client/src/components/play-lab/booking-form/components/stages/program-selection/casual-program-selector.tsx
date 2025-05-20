@@ -7,9 +7,9 @@ import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore, type LocalAcuityClass } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
+import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
+import { useFormStage } from '../../../state/form-stage-store'
+import { useBookingForm } from '../../../state/form-schema'
 import { ContinueButton } from './continue-button'
 import { Separator } from '@ui-components/separator'
 import { Button } from '@ui-components/button'
@@ -126,7 +126,7 @@ function BrowseByDate({
     filteredClasses: LocalAcuityClass[]
     refetchClasses: () => void
 }) {
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
+    const selectedClasses = useCart((store) => store.selectedClasses)
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
 
     function formatSelectedDay(date: Date) {
@@ -194,8 +194,8 @@ function BrowseByDate({
 
 function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]; selectedDay: Date }) {
     const form = useBookingForm()
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
-    const toggleClass = useCartStore((cart) => cart.toggleClass)
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const toggleClass = useCart((cart) => cart.toggleClass)
 
     const numberOfKids = form.watch('children').length
     const bookingType = form.watch('bookingType')
@@ -275,8 +275,8 @@ function BrowseByProgram({
     classes: LocalAcuityClass[]
 }) {
     const form = useBookingForm()
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
-    const toggleClass = useCartStore((store) => store.toggleClass)
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const toggleClass = useCart((store) => store.toggleClass)
 
     const [selectedAppointmentTypeId, setSelectedAppointmentTypeId] = useState<number | null>(null)
 

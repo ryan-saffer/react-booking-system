@@ -14,9 +14,12 @@ export const acuityRouter = router({
     updateAppointment: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.UpdateAppointmentParams)
         .mutation(({ ctx, input }) => ctx.acuityClient.updateAppointment(input)),
-    searchForAppointments: acuityAuthenticatedProcedure
+    searchForAppointmentsMutation: acuityAuthenticatedProcedure
         .input((input: unknown) => input as AcuityTypes.Client.FetchAppointmentsParams)
         .mutation(({ ctx, input }) => ctx.acuityClient.searchForAppointments(input)),
+    searchForAppointments: acuityAuthenticatedProcedure
+        .input((input: unknown) => input as AcuityTypes.Client.FetchAppointmentsParams)
+        .query(({ ctx, input }) => ctx.acuityClient.searchForAppointments(input)),
     getAppointments: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.GetAppointmentsParams)
         .query(({ ctx, input }) => ctx.acuityClient.getAppointments(input.ids)),

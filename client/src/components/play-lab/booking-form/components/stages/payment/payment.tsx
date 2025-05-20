@@ -11,10 +11,10 @@ import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
 import { DiscountInput } from './discount-input'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 
 const SQUARE_APPLICATION_ID =
     import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
@@ -23,7 +23,7 @@ export function Payment() {
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
     const nextStage = useFormStage((store) => store.nextStage)
-    const { selectedClasses, discount, subtotal, total, removeDiscount } = useCartStore()
+    const { selectedClasses, discount, subtotal, total, removeDiscount } = useCart()
 
     const children = form.watch('children')
     const studio = form.watch('studio')

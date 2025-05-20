@@ -1,15 +1,15 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 
-import { useCartStore } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 
 export function StudioSelector() {
     const form = useBookingForm()
 
     const { formStage } = useFormStage()
-    const clearCart = useCartStore((store) => store.clearCart)
+    const clearCart = useCart((store) => store.clearCart)
 
     if (formStage !== 'program-selection') return null
 

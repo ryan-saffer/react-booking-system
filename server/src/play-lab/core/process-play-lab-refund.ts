@@ -1,11 +1,11 @@
 import { logger } from 'firebase-functions/v2'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import type { Order } from 'square/api'
 
 import type { AcuityWebhookData } from '../../acuity'
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { SquareClient } from '../../square/core/square-client'
 import { logError } from '../../utilities'
-import type { Order } from 'square/api'
 
 export async function processPlayLabRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
@@ -29,16 +29,6 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
 
     if (hoursBetweenDates < 48) {
         logger.log('Less than 48 hours before program, not performing refund.')
-        return
-    }
-
-    // we currently have the id of the appointment, but not the id of the class which is saved into the square metadata
-    const classes = await acuity.getClasses([parseInt(data.appointmentTypeID)], false, Date.now())
-    const cancelledClass = classes.find((it) => it.id === appointment.classID)
-    if (!cancelledClass) {
-        logError(`Unable to find which class was cancelled while booking play lab appointment`, null, {
-            webhookData: data,
-        })
         return
     }
 

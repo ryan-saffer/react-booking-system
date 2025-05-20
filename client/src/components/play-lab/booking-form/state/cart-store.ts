@@ -32,7 +32,7 @@ interface Cart {
     removeDiscount: (numberOfKids: number, isTermEnrolment: boolean) => void
 }
 
-export const useCartStore = create<Cart>()((set, get) => ({
+export const useCart = create<Cart>()((set, get) => ({
     selectedClasses: {},
     discount: null,
     subtotal: 0,

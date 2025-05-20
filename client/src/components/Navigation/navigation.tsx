@@ -6,7 +6,7 @@ import bodyGlitter from '@drawables/body-glitter.webp'
 import energy from '@drawables/energy.webp'
 import holidayPrograms from '@drawables/holiday-programs.webp'
 import jonah from '@drawables/jonah.webp'
-import kingsville from '@drawables/kingsville.jpg'
+import kingsville from '@drawables/kingsville.webp'
 import parties from '@drawables/parties.webp'
 
 import styles from './navigation.module.css'
@@ -25,12 +25,8 @@ export const Navigation = () => {
                         to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '11036399' : '15026605'}`}
                         imgSrc={holidayPrograms}
                     />
+                    <ListItem title="Play Lab" to={'play-lab'} imgSrc={kingsville} />
                     <ListItem title="After School Program" to="after-school-program" imgSrc={afterSchool} />
-                    <ListItem
-                        title="Kingsville Opening"
-                        to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '75381458' : '15026605'}`}
-                        imgSrc={kingsville}
-                    />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>
                 <ListItem title="Creation Instructions" to="creations" imgSrc={bodyGlitter} />
@@ -57,8 +53,6 @@ export const Navigation = () => {
                         }
                     />
                 </div>
-                {/* {(isAdmin || canAccessPayroll) && */}
-                {/* <> */}
                 {hasPermission('admin') && (
                     <>
                         <h2 className="lilita mb-3 mt-8 text-2xl">Admin</h2>
