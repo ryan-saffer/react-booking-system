@@ -1,6 +1,7 @@
 import { ArrowLeft, Loader2 } from 'lucide-react'
+import { DateTime } from 'luxon'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 import * as Accordion from '@radix-ui/react-accordion'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -14,7 +15,7 @@ import { ChildRow } from '../components/child-row'
 import { useParams } from '../hooks/use-params'
 
 export function PlayLabSessionAttendancePage() {
-    const { isValid, params } = useParams()
+    const params = useParams()
 
     const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
     const navigate = useNavigate()
@@ -27,7 +28,11 @@ export function PlayLabSessionAttendancePage() {
         isError,
         error,
         refetch,
-    } = trpc.acuity.searchForAppointments.useQuery(params!, { enabled: isValid })
+    } = trpc.acuity.searchForAppointments.useQuery(params!, { enabled: !!params })
+
+    if (!params) {
+        return <Navigate to="/dashboard/play-lab" />
+    }
 
     if (isLoading) {
         return (
@@ -76,70 +81,75 @@ export function PlayLabSessionAttendancePage() {
         )
     }
 
-    if (isSuccess) {
+    if (isSuccess && params) {
         return (
-            <div className="twp m-4 rounded-md border">
-                <Accordion.Root type="multiple">
-                    <Table className="table-auto border-collapse border-spacing-0">
-                        <colgroup>
-                            {/* 1) Icon column – fixed 2rem */}
-                            <col className="w-[2rem]" />
+            <div className="twp m-4">
+                <p className="mb-2 text-center font-gotham text-lg">
+                    {params.className} - {DateTime.fromISO(params.classTime).toFormat('cccc, dd MMMM, hh:mm a')}
+                </p>
+                <div className="rounded-md border">
+                    <Accordion.Root type="multiple">
+                        <Table className="table-auto border-collapse border-spacing-0">
+                            <colgroup>
+                                {/* 1) Icon column – fixed 2rem */}
+                                <col className="w-[2rem]" />
 
-                            <col className="w-1/4" />
-                            <col className="hidden w-1/4 sm:table-cell" />
-                            <col className="hidden w-1/4 sm:table-cell" />
+                                <col className="w-1/4" />
+                                <col className="hidden w-1/4 sm:table-cell" />
+                                <col className="hidden w-1/4 sm:table-cell" />
 
-                            {/* 5) Action column – fixed (say 12rem) */}
-                            <col className="w-[12rem]" />
-                        </colgroup>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead />
-                                <TableHead className="max-w-40 text-nowrap">Child Name</TableHead>
-                                <TableHead className="hidden w-1/4 text-nowrap sm:table-cell">Child Age</TableHead>
-                                <TableHead className="hidden w-1/4 text-nowrap text-center sm:table-cell">
-                                    Tags
-                                </TableHead>
-                                <TableHead className="text-nowrap text-center">Action</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {appointments.map((appointment) => {
-                                const id = String(appointment.id)
-                                const isOpen = openItems[id] === true
-                                return (
-                                    <Accordion.Item value={`${appointment.id}`} key={id} asChild>
-                                        <>
-                                            <Accordion.Trigger asChild>
-                                                <TableRow
-                                                    className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
-                                                    onPointerDown={() => {
-                                                        console.log('onPointerDown')
-                                                        setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
-                                                    }}
-                                                >
-                                                    <ChildRow appointment={appointment} />
-                                                </TableRow>
-                                            </Accordion.Trigger>
-                                            {isOpen && (
-                                                <Accordion.Content
-                                                    className="overflow-hidden text-sm transition-all data-[state=open]:animate-accordion-down"
-                                                    asChild
-                                                >
-                                                    <TableRow>
-                                                        <TableCell colSpan={5} className="p-0">
-                                                            <ChildExpandedDetails appointment={appointment} />
-                                                        </TableCell>
+                                {/* 5) Action column – fixed (say 12rem) */}
+                                <col className="w-[12rem]" />
+                            </colgroup>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead />
+                                    <TableHead className="max-w-40 text-nowrap">Child Name</TableHead>
+                                    <TableHead className="hidden w-1/4 text-nowrap sm:table-cell">Child Age</TableHead>
+                                    <TableHead className="hidden w-1/4 text-nowrap text-center sm:table-cell">
+                                        Tags
+                                    </TableHead>
+                                    <TableHead className="text-nowrap text-center">Action</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {appointments.map((appointment) => {
+                                    const id = String(appointment.id)
+                                    const isOpen = openItems[id] === true
+                                    return (
+                                        <Accordion.Item value={`${appointment.id}`} key={id} asChild>
+                                            <>
+                                                <Accordion.Trigger asChild>
+                                                    <TableRow
+                                                        className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
+                                                        onPointerDown={() => {
+                                                            console.log('onPointerDown')
+                                                            setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
+                                                        }}
+                                                    >
+                                                        <ChildRow appointment={appointment} />
                                                     </TableRow>
-                                                </Accordion.Content>
-                                            )}
-                                        </>
-                                    </Accordion.Item>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </Accordion.Root>
+                                                </Accordion.Trigger>
+                                                {isOpen && (
+                                                    <Accordion.Content
+                                                        className="overflow-hidden text-sm transition-all data-[state=open]:animate-accordion-down"
+                                                        asChild
+                                                    >
+                                                        <TableRow>
+                                                            <TableCell colSpan={5} className="p-0">
+                                                                <ChildExpandedDetails appointment={appointment} />
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </Accordion.Content>
+                                                )}
+                                            </>
+                                        </Accordion.Item>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </Accordion.Root>
+                </div>
             </div>
         )
     }

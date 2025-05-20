@@ -12,7 +12,7 @@ import { trpc } from '@utils/trpc'
 import { useParams } from '../hooks/use-params'
 
 export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
-    const { params } = useParams()
+    const params = useParams()
     const utils = trpc.useUtils()
 
     const { mutate: updateLabel, isLoading } = trpc.acuity.updateLabel.useMutation({

@@ -89,7 +89,7 @@ export function PlayLabSessionSelectorPage() {
     function handleSubmit() {
         const klass = classes?.find((it) => it.id === parseInt(selectedClass!))
         navigate(
-            `${selectedAppointmentType}?classId=${selectedClass}&calendarId=${selectedCalendar}&classTime=${encodeURIComponent(klass!.time)}`
+            `${selectedAppointmentType}?classId=${selectedClass}&calendarId=${selectedCalendar}&classTime=${encodeURIComponent(klass!.time)}&className=${encodeURIComponent(klass!.name)}`
         )
     }
 
