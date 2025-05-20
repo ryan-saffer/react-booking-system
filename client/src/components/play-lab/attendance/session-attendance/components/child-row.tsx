@@ -150,7 +150,7 @@ export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appoint
                         appointment,
                         AcuityConstants.Forms.PAYMENT,
                         AcuityConstants.FormFields.IS_TERM_ENROLMENT
-                    ) === 'true' ? (
+                    ) === 'yes' ? (
                         <Badge>Term Enrolment</Badge>
                     ) : (
                         <Badge variant="outline" className="bg-white">

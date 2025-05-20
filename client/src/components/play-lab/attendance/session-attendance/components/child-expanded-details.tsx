@@ -13,7 +13,7 @@ export function ChildExpandedDetails({ appointment }: { appointment: AcuityTypes
             appointment,
             AcuityConstants.Forms.PAYMENT,
             AcuityConstants.FormFields.IS_TERM_ENROLMENT
-        ) === 'true'
+        ) === 'yes'
     const allergies = AcuityUtilities.retrieveFormAndField(
         appointment,
         AcuityConstants.Forms.CHILDREN_DETAILS,
