@@ -2,7 +2,7 @@ import { CheckCircle } from 'lucide-react'
 
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 
-import { useFormStage } from '../../../zustand/form-stage'
+import { useFormStage } from '../../../state/form-stage-store'
 
 export function Success() {
     const formStage = useFormStage((store) => store.formStage)

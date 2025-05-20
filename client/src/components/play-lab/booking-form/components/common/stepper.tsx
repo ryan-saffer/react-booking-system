@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 
 import { cn } from '@utils/tailwind'
 
-import { useFormStage } from '../../zustand/form-stage'
+import { useFormStage } from '../../state/form-stage-store'
 
 const steps = [{ title: 'Select Sessions' }, { title: 'Your Details' }, { title: 'Payment' }]
 

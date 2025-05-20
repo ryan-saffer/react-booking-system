@@ -27,9 +27,9 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
-import { useCartStore } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 import { TermsAndConditions } from './terms-and-conditions'
 import { CancellationPolicy } from './cancellation-policy'
 import { RadioGroup, RadioGroupItem } from '@ui-components/radio-group'
@@ -38,8 +38,8 @@ export function CustomerDetails() {
     const form = useBookingForm()
     const { formStage, nextStage } = useFormStage()
 
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
-    const calculateTotal = useCartStore((store) => store.calculateTotal)
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const calculateTotal = useCart((store) => store.calculateTotal)
 
     const [showNotEnoughSpotsDialog, setShowNotEnoughSpotsDialog] = useState(false)
 

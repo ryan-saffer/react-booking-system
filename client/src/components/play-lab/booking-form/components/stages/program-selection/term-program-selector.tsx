@@ -11,9 +11,9 @@ import { Checkbox } from '@ui-components/checkbox'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useCartStore } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm } from '../../form-schema'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 import { ContinueButton } from './continue-button'
 
 /**
@@ -102,7 +102,7 @@ function ReturnButton() {
 function ContinueOrError() {
     const form = useBookingForm()
 
-    const setSelectedClasses = useCartStore((store) => store.setSelectedClasses)
+    const setSelectedClasses = useCart((store) => store.setSelectedClasses)
 
     const studio = form.watch('studio')
     const appointmentTypeId = form.watch('appointmentTypeId')

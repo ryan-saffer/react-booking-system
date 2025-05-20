@@ -1,10 +1,10 @@
-import { useCartStore } from '@components/play-lab/booking-form/zustand/cart-store'
-import { useFormStage } from '@components/play-lab/booking-form/zustand/form-stage'
+import { useCart } from '@components/play-lab/booking-form/state/cart-store'
+import { useFormStage } from '@components/play-lab/booking-form/state/form-stage-store'
 import { Button } from '@ui-components/button'
 
 export function ContinueButton() {
-    const selectedClasses = useCartStore((store) => store.selectedClasses)
-    const discount = useCartStore((store) => store.discount)
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const discount = useCart((store) => store.discount)
     const nextStage = useFormStage((store) => store.nextStage)
 
     function renderDiscount() {

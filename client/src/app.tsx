@@ -128,6 +128,18 @@ const PlayLabBookingPage = lazy(() =>
         default: module.PlayLabBookingPage,
     }))
 )
+const PlayLabSessionSelectorPage = lazy(() =>
+    import('./components/play-lab/attendance/session-selector/play-lab-session-selector-page.js').then((module) => ({
+        default: module.PlayLabSessionSelectorPage,
+    }))
+)
+const PlayLabSessionAttendancePage = lazy(() =>
+    import('./components/play-lab/attendance/session-attendance/pages/play-lab-session-attendance-page.js').then(
+        (module) => ({
+            default: module.PlayLabSessionAttendancePage,
+        })
+    )
+)
 
 const router = createBrowserRouter([
     {
@@ -280,6 +292,31 @@ const router = createBrowserRouter([
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="bookings:read">
                                             <ClassDetailsPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'play-lab',
+                        children: [
+                            {
+                                path: '',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PlayLabSessionSelectorPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ':appointmentTypeId',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PlayLabSessionAttendancePage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),

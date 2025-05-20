@@ -1,16 +1,16 @@
 import { FormField, FormItem, FormLabel } from '@ui-components/form'
 import { cn } from '@utils/tailwind'
 
-import { useCartStore } from '../../../zustand/cart-store'
-import { useFormStage } from '../../../zustand/form-stage'
-import { useBookingForm, type PlayLabBookingForm } from '../../form-schema'
+import { useCart } from '../../../state/cart-store'
+import { useFormStage } from '../../../state/form-stage-store'
+import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
 import { PricingStructure } from './pricing-structure'
 import { Button } from '@ui-components/button'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
-    const clearCart = useCartStore((cart) => cart.clearCart)
+    const clearCart = useCart((cart) => cart.clearCart)
 
     const studio = form.watch('studio')
     const bookingType = form.watch('bookingType')

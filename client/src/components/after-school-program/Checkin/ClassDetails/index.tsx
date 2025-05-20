@@ -71,7 +71,7 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
 
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)

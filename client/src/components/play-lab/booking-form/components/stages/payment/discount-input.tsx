@@ -2,17 +2,17 @@ import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import { useCartStore } from '@components/play-lab/booking-form/zustand/cart-store'
 import { Button } from '@ui-components/button'
 import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
 import { trpc } from '@utils/trpc'
 
-import { useBookingForm } from '../../form-schema'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
 
 export function DiscountInput() {
     const form = useBookingForm()
-    const applyDiscountCode = useCartStore((cart) => cart.applyDiscountCode)
+    const applyDiscountCode = useCart((cart) => cart.applyDiscountCode)
 
     const [discountCode, setDiscountCode] = useState('')
     const [error, setError] = useState<string | null>(null)
