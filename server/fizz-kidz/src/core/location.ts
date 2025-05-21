@@ -7,3 +7,5 @@ export enum Location {
 }
 
 export type LocationOrMaster = Location | 'master'
+
+export type LocationOrTest = Location | 'test'

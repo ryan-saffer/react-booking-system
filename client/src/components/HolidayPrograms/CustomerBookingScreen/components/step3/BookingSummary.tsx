@@ -1,34 +1,35 @@
 import { List, Tag, Typography } from 'antd'
-import type { AcuityConstants, DiscountCode } from 'fizz-kidz'
-import React, { Dispatch, SetStateAction } from 'react'
+import type { AcuityConstants } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import React from 'react'
 
-import { PRICE_MAP } from '../utilities'
-import { ItemSummary } from './Step3'
+import type { Form } from '../../pages/customer-booking-page'
+import { useCart } from '../../state/cart-store'
+import { PRICE_MAP } from '../../utilities'
 
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
-    summarisedItems: ItemSummary[]
-    total: number
-    discount: DiscountCode | undefined
-    originalTotal?: number
-    setDiscount: Dispatch<SetStateAction<DiscountCode | undefined>>
+    form: Form
+    numberOfKids: number
 }
 
-const BookingSummary: React.FC<Props> = ({
-    appointmentTypeId,
-    summarisedItems,
-    total,
-    discount,
-    originalTotal,
-    setDiscount,
-}) => {
+const BookingSummary: React.FC<Props> = ({ appointmentTypeId, form, numberOfKids }) => {
+    //#region Variables
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const subtotal = useCart((store) => store.subtotal)
+    const discount = useCart((store) => store.discount)
+    const total = useCart((store) => store.total)
+    const clearDiscount = useCart((store) => store.clearDiscount)
+    //#endregion
+
+    //#region Render
     return (
         <List
             header={<Typography.Title level={4}>Booking summary</Typography.Title>}
             footer={
                 <>
                     <Typography.Title level={4}>
-                        Total price: {originalTotal && <del>${originalTotal.toFixed(2)}</del>} ${total.toFixed(2)}
+                        Total price: {discount && <del>${subtotal.toFixed(2)}</del>} ${total.toFixed(2)}
                     </Typography.Title>
                     {discount && (
                         <Tag
@@ -38,7 +39,7 @@ const BookingSummary: React.FC<Props> = ({
                             }}
                             color="green"
                             closable
-                            onClose={() => setDiscount(undefined)}
+                            onClose={() => clearDiscount(numberOfKids)}
                         >
                             {discount.code}:{' '}
                             {discount.discountType === 'percentage'
@@ -48,7 +49,25 @@ const BookingSummary: React.FC<Props> = ({
                     )}
                 </>
             }
-            dataSource={summarisedItems}
+            dataSource={Object.values(selectedClasses)
+                .sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0))
+                .flatMap((klass) =>
+                    form['children'].map((child) => {
+                        const dateTime = DateTime.fromISO(klass.time).toLocaleString({
+                            weekday: 'short',
+                            month: 'short',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                        })
+                        return {
+                            childName: child.childName,
+                            dateTime: dateTime,
+                            discounted: false, // hardcoded for now - used to be if this class had a 'same day discount'
+                        }
+                    })
+                )}
             renderItem={(item) => {
                 const isDiscounted = discount === undefined && item.discounted
                 return (
@@ -77,6 +96,7 @@ const BookingSummary: React.FC<Props> = ({
             }}
         ></List>
     )
+    //#endregion
 }
 
 export default BookingSummary

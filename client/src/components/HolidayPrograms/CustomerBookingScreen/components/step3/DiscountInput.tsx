@@ -1,18 +1,16 @@
 import { Button, Input, Popover, Typography } from 'antd'
-import { DiscountCode } from 'fizz-kidz'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import { useState } from 'react'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { trpc } from '@utils/trpc'
 
-import { calculateDiscountedAmount } from '../utilities'
+import { useCart } from '../../state/cart-store'
+import { calculateDiscountedAmount } from '../../utilities'
 
-type Props = {
-    setDiscount: Dispatch<SetStateAction<DiscountCode | undefined>>
-    total: number
-}
+const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
+    const total = useCart((store) => store.total)
+    const applyDiscount = useCart((store) => store.applyDiscount)
 
-const DiscountInput: React.FC<Props> = ({ setDiscount, total }) => {
     const [value, setValue] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -46,7 +44,7 @@ const DiscountInput: React.FC<Props> = ({ setDiscount, total }) => {
                     )
                 } else {
                     setValue('')
-                    setDiscount(resultTransformed)
+                    applyDiscount(resultTransformed, numberOfKids)
                 }
             }
         } catch (err: any) {

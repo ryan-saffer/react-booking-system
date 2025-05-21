@@ -2,7 +2,7 @@
 export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
 export { Creation, CREATIONS } from './partyBookings/creations'
-export { Location, LocationOrMaster } from './core/location'
+export { Location, LocationOrMaster, LocationOrTest } from './core/location'
 export { Role, ROLES } from './core/role'
 export { AuthUser, StaffAuthUser, CustomerAuthUser } from './core/user'
 export { Permission, RolePermissionMap } from './core/permission'

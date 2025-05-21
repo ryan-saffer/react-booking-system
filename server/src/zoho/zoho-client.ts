@@ -1,4 +1,5 @@
 import { Booking, Location, capitalise } from 'fizz-kidz'
+import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../firebase/DatabaseClient'
@@ -263,7 +264,7 @@ export class ZohoClient {
 
     async addHolidayProgramContact(
         props: WithBaseProps<{
-            studio: Location | 'test'
+            studio: LocationOrTest
             childName: string
             childBirthdayISO: string // ISO string,
             holidayProgramDateISO: string // ISO string
@@ -307,7 +308,7 @@ export class ZohoClient {
 
     async addPlayLabContact(
         props: WithBaseProps<{
-            studio: Location | 'test'
+            studio: LocationOrTest
             childName: string
             childBirthdayISO: string // ISO string,
         }>

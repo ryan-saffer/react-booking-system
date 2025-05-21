@@ -1,14 +1,13 @@
 import { Result } from 'antd'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
 
-import Firebase, { FirebaseContext } from '../../../Firebase'
-
 export const Confirmation = () => {
-    const firebase = useContext(FirebaseContext) as Firebase
+    const firebase = useFirebase()
 
     const [searchParams] = useSearchParams()
     const paymentIntentId = searchParams.get('payment_intent') ?? undefined

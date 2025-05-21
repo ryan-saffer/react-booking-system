@@ -7,8 +7,8 @@ import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 import { trpc } from '@utils/trpc'
 
+import { Form } from '../../pages/customer-booking-page'
 import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
-import { Form } from '..'
 
 const PREFIX = 'FreeConfirmationButton'
 

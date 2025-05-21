@@ -81,14 +81,16 @@ const SelectedProgramProvider = lazy(() =>
     }))
 )
 const CustomerBookingScreen = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/index.js').then((module) => ({
-        default: module.CustomerBookingScreen,
+    import('./components/HolidayPrograms/CustomerBookingScreen/pages/customer-booking-page.js').then((module) => ({
+        default: module.CustomerBookingPage,
     }))
 )
 const Confirmation = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation.js').then((module) => ({
-        default: module.Confirmation,
-    }))
+    import('./components/HolidayPrograms/CustomerBookingScreen/components/confirmation/Confirmation.js').then(
+        (module) => ({
+            default: module.Confirmation,
+        })
+    )
 )
 const Onboarding = lazy(() =>
     import('./components/Onboarding/Onboarding.js').then((module) => ({ default: module.Onboarding }))

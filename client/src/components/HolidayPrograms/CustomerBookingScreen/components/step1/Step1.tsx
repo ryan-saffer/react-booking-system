@@ -1,42 +1,29 @@
-import { Alert, Button, Card, Checkbox, Form, Select, Tag } from 'antd'
-import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { Alert, Button, Card, Checkbox, Form, Select } from 'antd'
 import { AcuityConstants, AcuityTypes, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 
 import { capitalise } from '@utils/stringUtilities'
 
-import { PRICE_MAP, getSameDayClasses } from '../utilities'
+import { useCart } from '../../state/cart-store'
 
 const { Option } = Select
 
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
     classes: AcuityTypes.Client.Class[]
-    selectedClasses: AcuityTypes.Client.Class[]
-    selectedStore: string
-    setSelectedStore: Dispatch<SetStateAction<string>>
-    onClassSelectionChange: (e: CheckboxChangeEvent) => void
+    onClassSelectionChange: (klass: AcuityTypes.Client.Class) => void
 }
 
-const Step1: React.FC<Props> = ({
-    appointmentTypeId,
-    classes,
-    selectedStore,
-    setSelectedStore,
-    onClassSelectionChange,
-    selectedClasses,
-}) => {
-    const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Client.Class[]>()
+const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionChange }) => {
+    const selectedStudio = useCart((store) => store.selectedStudio)
+    const setSelectedStudio = useCart((store) => store.setSelectedStudio)
 
-    useEffect(() => {
-        if (selectedStore !== '') {
-            setFilteredClasses(classes?.filter((it) => it.calendar.toLowerCase().includes(selectedStore)))
+    const filteredClasses = useMemo(() => {
+        if (selectedStudio) {
+            return classes?.filter((it) => it.calendar.toLowerCase().includes(selectedStudio))
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedStore])
-
-    const discountedClasses = getSameDayClasses(selectedClasses)
+    }, [selectedStudio, classes])
 
     const getSlotsAvailable = (klass: AcuityTypes.Api.Class) => {
         if (klass.slotsAvailable === 0) {
@@ -54,7 +41,7 @@ const Step1: React.FC<Props> = ({
     return (
         <>
             <Form.Item name="store" label="Which studio do you want to book for?">
-                <Select value={selectedStore} onChange={(store) => setSelectedStore(store)}>
+                <Select value={selectedStudio} onChange={(studio) => setSelectedStudio(studio)}>
                     {(() => {
                         if (import.meta.env.VITE_ENV === 'prod') {
                             return Object.values(Location)
@@ -129,7 +116,7 @@ const Step1: React.FC<Props> = ({
                         <Checkbox
                             value={klass.id}
                             disabled={klass.slotsAvailable === 0}
-                            onChange={onClassSelectionChange}
+                            onChange={() => onClassSelectionChange(klass)}
                             style={{ marginBottom: 2 }}
                         >
                             <p style={{ marginTop: 0, marginBottom: 0, fontSize: 15, fontWeight: 500 }}>
@@ -151,11 +138,6 @@ const Step1: React.FC<Props> = ({
                                 <p style={{ marginTop: 0, marginBottom: 0, fontSize: 14 }}>
                                     [<em>{slotsAvailable}</em>]
                                 </p>
-                            )}
-                            {discountedClasses.includes(klass.id) && (
-                                <Tag color="green">
-                                    All day discount: -${PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE}.00
-                                </Tag>
                             )}
                         </Checkbox>
                     </Form.Item>

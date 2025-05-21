@@ -1,4 +1,4 @@
-import { Location } from '../core/location'
+import { Location, type LocationOrTest } from '../core/location'
 import { Booking } from '../partyBookings/booking'
 import { capitalise } from './stringUtilities'
 
@@ -137,7 +137,7 @@ export function getReviewUrl(location: Location) {
     }
 }
 
-export function studioNameAndAddress(studio: Location | 'test') {
+export function studioNameAndAddress(studio: LocationOrTest) {
     if (studio === 'test') {
         return 'TEST'
     }

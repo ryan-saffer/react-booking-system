@@ -1,21 +1,23 @@
 import { Button, Divider, Form, Input, Modal, Typography } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
 import React, { Fragment, useState } from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 
+import { useCart } from '../../state/cart-store'
 import { ChildForm } from './ChildForm'
 
 const { Text } = Typography
 
 type Props = {
     appointmentTypeId: number
-    selectedClasses: AcuityTypes.Client.Class[]
 }
 
-export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) => {
+export const Step2: React.FC<Props> = ({ appointmentTypeId }) => {
     const [showModal, setShowModal] = useState(false)
+
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const calculateTotal = useCart((store) => store.calculateTotal)
 
     return (
         <>
@@ -31,7 +33,7 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) =
                     SimpleTextRule,
                 ]}
             >
-                <Input />
+                <Input autoFocus />
             </Form.Item>
             <Form.Item
                 label="Parent Last Name"
@@ -103,7 +105,13 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) =
                                 <Fragment key={field.key}>
                                     <Divider>
                                         Child #{index + 1}
-                                        <MinusCircleOutlined style={{ marginLeft: 12 }} onClick={() => remove(index)} />
+                                        <MinusCircleOutlined
+                                            style={{ marginLeft: 12 }}
+                                            onClick={() => {
+                                                remove(index)
+                                                calculateTotal(fields.length - 1)
+                                            }}
+                                        />
                                     </Divider>
                                     <ChildForm appointmentTypeId={appointmentTypeId} childNumber={index} />
                                 </Fragment>
@@ -117,7 +125,7 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) =
                                     onClick={() => {
                                         // check if there is enough room for an additional child in every class
                                         let canAdd = true
-                                        selectedClasses.forEach((klass) => {
+                                        Object.values(selectedClasses).forEach((klass) => {
                                             // +1 for the one we are adding now
                                             if (fields.length + 1 > klass.slotsAvailable) {
                                                 setShowModal(true)
@@ -126,6 +134,7 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId, selectedClasses }) =
                                         })
                                         if (canAdd) {
                                             add()
+                                            calculateTotal(fields.length + 1)
                                         }
                                     }}
                                 >

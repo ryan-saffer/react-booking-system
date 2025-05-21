@@ -10,6 +10,7 @@ import type {
     Form,
     ReferenceOption,
 } from '../website/core/website-form-types'
+import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 
 export class MixpanelClient {
     private static instance: MixpanelClient
@@ -147,7 +148,7 @@ export type MixpanelEvent = {
         bookingType: 'term-booking' | 'casual'
         appointmntTypeIds: number[]
         programNames: string[]
-        location: Location | 'test'
+        location:LocationOrTest
         amount: number
         discountType?: 'percentage' | 'price'
         discountAmount?: number

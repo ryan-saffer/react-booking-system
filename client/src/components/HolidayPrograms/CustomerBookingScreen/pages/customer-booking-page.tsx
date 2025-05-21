@@ -1,5 +1,4 @@
 import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
-import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import dayjs from 'dayjs'
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
@@ -10,14 +9,14 @@ import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
 import { trpc } from '@utils/trpc'
 
-import Step1 from './step1/Step1'
-import { Step2 } from './step2/Step2'
-import Step3 from './step3/Step3'
+import Step1 from '../components/step1/Step1'
+import { Step2 } from '../components/step2/Step2'
+import Step3 from '../components/step3/Step3'
+import { useCart } from '../state/cart-store'
 
 const { Step } = Steps
 
 export type Form = {
-    store: string
     parentFirstName: string
     parentLastName: string
     parentEmail: string
@@ -33,7 +32,7 @@ export type Form = {
     }[]
 }
 
-export const CustomerBookingScreen = () => {
+export const CustomerBookingPage = () => {
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
 
@@ -44,13 +43,13 @@ export const CustomerBookingScreen = () => {
 
     const continueButtonRef = useRef<HTMLButtonElement>(null)
 
-    const [selectedStore, setSelectedStore] = useState('')
-    const [selectedClasses, setSelectedClasses] = useState<AcuityTypes.Client.Class[]>([])
+    const selectedClasses = useCart((store) => store.selectedClasses)
+    const clearCart = useCart((store) => store.clearCart)
+    const toggleClass = useCart((store) => store.toggleClass)
+    const selectedStudio = useCart((store) => store.selectedStudio)
+
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
-
-    // just for kingsville opening
-    const [tooManyClassesChosen, setTooManyClassesChosen] = useState(false)
 
     const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery({
         appointmentTypeIds:
@@ -66,46 +65,19 @@ export const CustomerBookingScreen = () => {
         data?.forEach((klass) => {
             form.resetFields([`${klass.id}-checkbox`])
         })
-        setSelectedClasses([])
+        clearCart()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedStore])
+    }, [selectedStudio])
 
-    const handleClassSelectionChange = (e: CheckboxChangeEvent) => {
-        if (isSuccess) {
-            const selectedClass = data.filter((it) => it.id === e.target.value)[0]
-            const classAlreadySelected = selectedClasses.filter((it) => it.id === e.target.value).length === 1
+    const handleClassSelectionChange = (klass: AcuityTypes.Client.Class) => {
+        toggleClass(klass, formValues?.children?.length || 0)
 
-            if (e.target.checked) {
-                if (!classAlreadySelected) {
-                    setSelectedClasses([...selectedClasses, selectedClass])
-
-                    // for kingsville, when checking from 1 to 2, enable the error
-                    if (
-                        selectedClasses.length === 1 &&
-                        appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING
-                    ) {
-                        setTooManyClassesChosen(true)
-                    }
-                }
-            } else {
-                setSelectedClasses(selectedClasses.filter((it) => it.id !== e.target.value))
-
-                // for kingsville opening, when unchecking from 2 to 1, disable the error
-                if (
-                    selectedClasses.length === 2 &&
-                    appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING
-                ) {
-                    setTooManyClassesChosen(false)
-                }
-            }
-
-            // Clear the list of children, to fix bug where you can add many children,
-            // 'go back' and then select a class without enough spots, and continue.
-            // Do it here (instead of when the hit the 'go back' button), because if they go back and
-            // don't change their selection, no need to clear the children.
-            setFormValues({ ...formValues, children: [] })
-            form.resetFields(['children'])
-        }
+        // Clear the list of children, to fix bug where you can add many children,
+        // 'go back' and then select a class without enough spots, and continue.
+        // Do it here (instead of when the hit the 'go back' button), because if they go back and
+        // don't change their selection, no need to clear the children.
+        setFormValues({ ...formValues, children: [] })
+        form.resetFields(['children'])
     }
 
     const renderStep = () => {
@@ -116,23 +88,13 @@ export const CustomerBookingScreen = () => {
                         <Step1
                             appointmentTypeId={appointmentTypeId}
                             classes={data}
-                            selectedClasses={selectedClasses}
-                            selectedStore={selectedStore}
-                            setSelectedStore={setSelectedStore}
                             onClassSelectionChange={handleClassSelectionChange}
                         />
                     )
                 case 2:
-                    return <Step2 appointmentTypeId={appointmentTypeId} selectedClasses={selectedClasses} />
+                    return <Step2 appointmentTypeId={appointmentTypeId} />
                 case 3:
-                    return (
-                        <Step3
-                            appointmentTypeId={appointmentTypeId}
-                            form={formValues as Form}
-                            selectedClasses={selectedClasses}
-                            selectedStore={selectedStore}
-                        />
-                    )
+                    return <Step3 appointmentTypeId={appointmentTypeId} form={formValues as Form} />
             }
         }
     }
@@ -195,7 +157,7 @@ export const CustomerBookingScreen = () => {
                         borderColor: 'white',
                     }}
                     className="font-bold shadow-none disabled:text-white"
-                    disabled={selectedClasses.length === 0 || tooManyClassesChosen}
+                    disabled={Object.values(selectedClasses).length === 0}
                     onClick={async () => {
                         setTimeout(() => continueButtonRef.current?.blur())
                         try {
@@ -246,9 +208,6 @@ export const CustomerBookingScreen = () => {
                         </Button>
                     )}
                     {renderForm()}
-                    {tooManyClassesChosen && (
-                        <p style={{ color: 'red', margin: 0 }}>You can only register into one class at a time.</p>
-                    )}
                     <>
                         {renderForwardButton()}
                         {renderBackButton()}
