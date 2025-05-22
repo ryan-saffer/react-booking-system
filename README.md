@@ -1,13 +1,17 @@
-# Fizz Kidz Management Platform
+# Fizz Kidz Portal
 
-This project is the backend and frontend for the Fizz Kidz management platform. It appears to be a comprehensive system for managing various aspects of the Fizz Kidz business, including:
+The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz operations. It integrates third-party services and uses Firebase for backend functionality, including role-based authentication via Firebase Auth.
 
-*   Party bookings
-*   Holiday programs
-*   After-school programs
-*   Event management
-*   Invoicing and Payroll
-*   Customer and staff management
+**Key Integrations:**
+
+*   **Scheduling:** Acuity Scheduling (for holiday programs, after-school programs, play lab)
+*   **Payments:** Square
+*   **Analytics:** Mixpanel
+*   **Email:** SendGrid (using MJML for templating)
+*   **CRM:** Zoho
+*   **CMS:** Storyblok
+*   **Payroll:** Xero
+*   **Rostering:** Sling
 
 ## Table of Contents
 
@@ -17,126 +21,86 @@ This project is the backend and frontend for the Fizz Kidz management platform. 
 
 ## Client
 
-The client-side application is responsible for the user interface and interaction.
+The client-side application handles the user interface and interaction.
 
-*   **Framework:** Built with [React](https://react.dev/).
-*   **Build Tool:** Uses [Vite](https://vitejs.dev/) for fast development and optimized builds (as indicated by `client/vite.config.ts`).
-*   **Routing:** Implements client-side routing using [React Router DOM](https://reactrouter.com/) (`client/src/app.tsx`).
-*   **API Consumption:** Communicates with the server using [tRPC](https://trpc.io/).
-    *   The tRPC client is initialized in `client/src/utilities/trpc.ts`.
-    *   This setup allows for type-safe API calls from React components to the server, as seen in various parts of `client/src/app.tsx` and its sub-components.
+*   **Framework:** [React](https://react.dev/).
+*   **Build Tool:** [Vite](https://vitejs.dev/) for fast development and optimized builds (see `client/vite.config.ts`).
+*   **Routing:** [React Router DOM](https://reactrouter.com/) for client-side routing (see `client/src/app.tsx`).
+*   **API Consumption:** Uses [tRPC](https://trpc.io/) to communicate with the server.
+    *   tRPC client initialized in `client/src/utilities/trpc.ts`.
+    *   Enables type-safe API calls from React components (see `client/src/app.tsx` and its children).
 
 ## Server
 
-The server-side application handles business logic, data processing, and API provision.
+The server-side application handles business logic, data processing, and API provision using [Node.js](https://nodejs.org/) and [TypeScript](https://www.typescriptlang.org/).
 
-*   **Environment:** Built with [Node.js](https://nodejs.org/) and written in [TypeScript](https://www.typescriptlang.org/).
-*   **Structure:**
-    *   The main entry point for the server functions is `server/src/index.ts`, which exports various modules corresponding to different features of the application (e.g., acuity, events, party bookings).
-    *   A significant portion of the core business logic, including types, constants, and utility functions, is organized within the `server/fizz-kidz/src/index.ts` module.
+*   **Main Entry:** `server/src/index.ts` exports modules for various application features (e.g., acuity, events, party bookings).
+*   **Core Logic:** Shared business logic, types, and utilities reside in `server/fizz-kidz/src/index.ts`.
 *   **API with tRPC:**
-    *   The server exposes a tRPC API to be consumed by the client.
-    *   The API is structured into multiple feature-specific routers (like `partiesRouter`, `eventsRouter`, `holidayProgramsRouter`, etc.).
-    *   These individual routers are consolidated into a single `appRouter` located in `server/src/trpc/trpc.app-router.ts`. This `appRouter` serves as the complete definition of the API.
-    *   The `server/src/trpc/trpc.adapter.ts` file contains an adapter function `onRequestTrpc`. This function takes the `appRouter` and makes it available as an HTTP-based API endpoint, specifically tailored for deployment on [Firebase Functions](https://firebase.google.com/docs/functions). It handles incoming HTTP requests and directs them to the appropriate tRPC procedures.
+    *   Exposes a tRPC API for client consumption.
+    *   Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API.
+    *   `server/src/trpc/trpc.adapter.ts`'s `onRequestTrpc` function exposes each tRPC router (e.g., `partiesRouter`) as an individual [Firebase Function](https://firebase.google.com/docs/functions). Each main route group in `trpc.app-router.ts` maps to a separate serverless function.
 
 ## tRPC Interaction
 
-[tRPC](https://trpc.io/) is a key technology used in this project to enable seamless and type-safe communication between the client and the server.
-
-*   **Type Safety:** The most significant advantage of using tRPC here is end-to-end type safety. The server's API router (`AppRouter` defined in `server/src/trpc/trpc.app-router.ts`) exports its type definition. The client then imports this type (`client/src/utilities/trpc.ts`), allowing TypeScript to understand the API's shape, including procedure names, inputs, and outputs.
-*   **Direct Function Calls:** This setup allows the client to call server-side procedures as if they were local functions. For example, if the server has a procedure `getUser`, the client can call `trpc.user.getUser.useQuery()` (or `.mutate()` for actions) with full type checking for parameters and return values.
-*   **No Code Generation or Manual Synchronization:** Unlike traditional REST or GraphQL APIs that might require code generation or careful manual synchronization of schemas, tRPC's approach, by sharing types directly, largely automates this process and reduces the chances of client-server mismatches.
-*   **Developer Experience:** This results in a significantly improved developer experience, with autocompletion for API routes and a clear understanding of data structures across the client and server.
-
-The client initializes its tRPC client in `client/src/utilities/trpc.ts` and uses it to make queries and mutations to the server, which are defined in the various routers within `server/src/trpc/` and consolidated in `server/src/trpc/trpc.app-router.ts`.
+[tRPC](https://trpc.io/) enables type-safe client-server communication. By sharing TypeScript types directly (via `AppRouter` from `server/src/trpc/trpc.app-router.ts` imported into `client/src/utilities/trpc.ts`), the client calls server procedures with full type-checking and autocompletion. This boosts developer experience and cuts integration errors, eliminating manual schema sync or code generation.
 
 ## Project Structure
 
-This project can be considered a monorepo, with the client and server codebases co-located. Key aspects:
+A monorepo co-locating client and server:
 
-*   **`client/`**: Contains the React frontend application.
-*   **`server/`**: Contains the Node.js backend, including tRPC API definitions and Firebase functions.
-*   **`server/fizz-kidz/`**: This is a crucial shared module containing core business logic, types, and utilities. It's built separately and used as a local dependency by both the main server code and potentially the client (or its build process).
+*   **`client/`**: React frontend.
+*   **`server/`**: Node.js backend (tRPC API definitions, Firebase Functions).
+*   **`server/fizz-kidz/`**: Shared core logic, types, and utilities. Located in `server/` for Firebase Functions compatibility, ensuring it's packaged as a local dependency for server deployment. Built separately, used by server and client build processes.
 
 ## Setup and Installation
 
-1.  **Clone the repository.**
-2.  **Install Server Dependencies:**
-    ```bash
-    cd server
-    npm install
-    cd ..
-    ```
-3.  **Install Client Dependencies:**
-    ```bash
-    cd client
-    npm install
-    cd ..
-    ```
-    *Note: The client `package.json` references `../server/fizz-kidz` for builds, so ensure server dependencies (especially for `fizz-kidz`) are installed or buildable.*
+1.  **Clone repo.**
+2.  **Install server dependencies:** `cd server && npm install && cd ..`
+3.  **Install client dependencies:** `cd client && npm install && cd ..`
+    *Note: Client builds depend on `../server/fizz-kidz`. Ensure its dependencies are installed.*
 
 ## Development
 
 **Client:**
 
-To start the client development server (usually with hot reloading):
+Start the client dev server (hot reloading): `cd client && npm start`
+*   This builds `server/fizz-kidz` (watch), runs TS checker (watch), and starts Vite dev server (e.g., `localhost:5173`).
 
-```bash
-cd client
-npm start
-```
-
-This command typically:
-*   Builds the `server/fizz-kidz` module in watch mode.
-*   Runs the TypeScript checker in watch mode.
-*   Starts the Vite development server (likely on a port like `localhost:5173`).
-
-Other useful client scripts (from `client/package.json`):
-*   `npm run build:dev`: Creates a development build.
-*   `npm run build:prod`: Creates a production build (outputs to `client/dist`).
-*   `npm run lint`: Lints the client codebase.
-*   `npm run ts:check`: Runs the TypeScript compiler to check for type errors.
+Other client scripts (`client/package.json`):
+*   `build:dev`: Development build.
+*   `build:prod`: Production build (to `client/dist`).
+*   `lint`: Lint client code.
+*   `ts:check`: Check types with TypeScript compiler.
 
 **Server:**
 
-To run the server locally using Firebase emulators:
+Run server locally with Firebase emulators: `cd server && npm run serve`
+*   This builds server code (incl. `fizz-kidz`) (watch) and starts Firebase emulators (Functions, Pub/Sub) for local testing.
 
-```bash
-cd server
-npm run serve
-```
-
-This command typically:
-*   Builds the server code (including the `fizz-kidz` module) in watch mode.
-*   Starts the Firebase emulators for Functions and Pub/Sub. This allows local testing of serverless functions.
-
-Other useful server scripts (from `server/package.json`):
-*   `npm run build`: Creates a production build of the server functions (outputs to `server/lib`).
-*   `npm run lint`: Lints the server codebase.
-*   `npm run logs`: Fetches Firebase functions logs.
-*   `npm test`: Runs server-side tests (requires the `fizz-kidz` module to be built).
+Other server scripts (`server/package.json`):
+*   `build`: Production build of server functions (to `server/lib`).
+*   `lint`: Lint server code.
+*   `logs`: Fetch Firebase functions logs.
+*   `test`: Run server-side tests (requires `fizz-kidz` build).
 
 ## Deployment
 
-This project is configured for deployment using Firebase.
+Deployed using Firebase.
 
-*   **Client (Hosting):**
-    *   The client application is built into static assets (in `client/dist/`).
-    *   Firebase Hosting serves these static assets.
-    *   The `firebase.json` file defines hosting configurations, including URL rewrites (e.g., for single-page application routing) and a `predeploy` script (`sh ./client/predeploy.sh`).
-*   **Server (Functions):**
-    *   The server-side logic (including the tRPC API) is deployed as Firebase Functions.
-    *   The `firebase.json` file specifies that the functions source is the `server/` directory.
-    *   A `predeploy` script within the `functions` section of `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) ensures the server code is built before deployment.
-    *   Deployment is typically done via the Firebase CLI:
+*   **Client (Firebase Hosting):**
+    *   Client app built to static assets (`client/dist/`).
+    *   Served by Firebase Hosting.
+    *   `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
+*   **Server (Firebase Functions):**
+    *   tRPC API deployed as multiple Firebase Functions. Each router in `server/src/trpc/trpc.app-router.ts` (e.g., `partiesRouter`) is a distinct function.
+    *   Client dynamically routes tRPC requests to the correct Firebase Function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+    *   `firebase.json` specifies `server/` as functions source.
+    *   `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
+    *   Deploy via Firebase CLI:
         ```bash
-        # From the server directory
-        cd server
-        npm run deploy
-        # Or using the Firebase CLI directly from the root (if configured)
-        # firebase deploy --only functions
-        # firebase deploy --only hosting
+        cd server && npm run deploy
+        # Or from root: firebase deploy --only functions
         ```
 
-Refer to `firebase.json`, `client/package.json`, and `server/package.json` for more detailed scripts and configurations.
+See `firebase.json`, `client/package.json`, `server/package.json` for detailed configurations.
