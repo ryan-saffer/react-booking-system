@@ -1,70 +1,69 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Fizz Kidz Portal - Client Application
 
-## Available Scripts
+This directory contains the frontend React application for the Fizz Kidz Portal.
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Key Technologies](#key-technologies)
+- [Project Structure](#project-structure)
+- [Routing](#routing)
+- [UI Components](#ui-components)
+- [State Management](#state-management)
+- [API Communication](#api-communication)
+- [Development](#development)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Key Technologies
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+- **Framework:** React
+- **Build Tool:** Vite
+- **Routing:** React Router DOM
+- **UI:** shadcn/ui (with Tailwind CSS & Radix UI). Material UI (MUI) and Ant Design are present but are being phased out.
+- **State Management:** Zustand (preferred), React Context
+- **API:** tRPC client
 
-### `npm test`
+## Project Structure
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The client-side code is organized within `client/src/`:
 
-### `npm run build`
+-   **`app.tsx`**: Entry point for routing configuration.
+-   **`components/`**: Contains all React components, further organized by feature (e.g., `Bookings/`, `HolidayPrograms/`) or shared functionality (e.g., `Shared/`, `Session/`).
+    -   **`components/root/root.tsx`**: The root component of the application. It wraps all page content and is responsible for setting up global context providers, including the tRPC client, authentication, theming, and more.
+-   **`ui-components/`**: Likely contains `shadcn/ui` components.
+-   **`utilities/`**: Helper functions and utilities.
+-   **`hooks/`**: Custom React hooks.
+-   **`assets/` or `drawables/`**: Static assets like images and fonts.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Routing
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+-   **React Router DOM:** Routing is handled using `react-router-dom`, with routes defined in `client/src/app.tsx` using `createBrowserRouter`.
+-   **Root Layout:** The `client/src/components/root/root.tsx` component serves as the primary layout shell, providing essential contexts (like tRPC, Auth, Theming) to all routes via the `<Outlet />` mechanism.
+-   **Dashboard vs. Public Routes:** The application has a clear distinction between:
+    -   **Dashboard Routes:** Primarily under the `/dashboard` path, often utilizing `DashboardLayout` and `ProtectedRoute` for authenticated staff access.
+    -   **Public Routes:** Accessible to all users, such as sign-in/sign-up pages, program enrolment forms (e.g., `/after-school-program-enrolment-form`), customer booking screens, and invitation views.
+-   **Lazy Loading:** All page components are lazy-loaded in `app.tsx` (using `React.lazy` and `Suspense`). This is a key optimization strategy for this Single Page Application (SPA), ensuring that users only download the code necessary for the parts of the portal they are interacting with, improving initial load times.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## UI Components
 
-### `npm run eject`
+-   **`shadcn/ui`:** This is the current preferred UI component library, built upon Tailwind CSS and Radix UI. Components are typically added to the `ui-components/ui/` directory.
+-   **Legacy Libraries:** Material UI (MUI) and Ant Design components are also present in the codebase but are being progressively phased out in favor of `shadcn/ui`.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## State Management
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+-   **Zustand:** Zustand is the preferred global state management solution for more complex state needs.
+-   **React Context:** React's built-in Context API is also utilized, particularly for managing global concerns like authentication state (`components/Session/auth-provider.tsx`) and organization selection (`components/Session/org-provider.tsx`), often within the `Root` component's providers.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## API Communication
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-   The client communicates with the backend server via tRPC.
+-   The tRPC client is configured in `client/src/components/root/root.tsx` and made available to the component tree through a React Context provider. This setup enables type-safe API calls from anywhere in the application.
+-   The client-side tRPC setup includes logic to dynamically route requests to the correct individual Firebase Function on the server based on the tRPC procedure path.
 
-## Learn More
+## Development
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To run the client application in development mode:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm start
+```
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-© Ryan Saffer 2019
+This command (as defined in `client/package.json`) typically builds the shared `fizz-kidz` module (from `../server/fizz-kidz`), runs the TypeScript checker, and starts the Vite development server with hot reloading.
