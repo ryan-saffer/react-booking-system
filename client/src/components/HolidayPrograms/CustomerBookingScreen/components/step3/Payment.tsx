@@ -1,5 +1,5 @@
 import { Checkbox } from 'antd'
-import { AcuityConstants, getSquareLocationId } from 'fizz-kidz'
+import { AcuityConstants, getSquareLocationId, type DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles'
 import { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
 import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
+import { trpc } from '@utils/trpc'
 
 const PREFIX = 'Payment'
 
@@ -44,15 +45,69 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form }) => {
 
     const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}` // force rerender the square checkout component when disconut code changes
 
+    const { mutateAsync: book } = trpc.holidayPrograms.bookHolidayProgram.useMutation()
+
+    function formatClassTime(date: string) {
+        return DateTime.fromISO(date).toFormat('EEEE MMMM d, h:mm a')
+    }
+
+    function discountDescription(discount: DiscountCode) {
+        if (discount.discountType === 'percentage') {
+            return `Discount code '${discount.code}' - ${discount.discountAmount}% off`
+        } else {
+            return `Discount code '${discount.code}' - $${discount.discountAmount} off`
+        }
+    }
+
     return (
         <Root>
             <PaymentForm
                 key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
-                cardTokenizeResponseReceived={({ status, token }) => {
+                cardTokenizeResponseReceived={({ status, token }, buyerVerification) => {
                     if (status === 'OK' && token) {
-                        // TODO - book holiday program
+                        book({
+                            parentFirstName: form.parentFirstName,
+                            parentLastName: form.parentLastName,
+                            parentEmail: form.parentEmail,
+                            parentPhone: form.phone,
+                            emergencyContactName: form.emergencyContact,
+                            emergencyContactPhone: form.emergencyPhone,
+                            joinMailingList: true, // TODO
+                            payment: {
+                                token: token,
+                                buyerVerificationToken: buyerVerification?.token || '',
+                                amount: total * 100, // cents
+                                locationId: squareLocationId,
+                                lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                                    form.children.map((child) => ({
+                                        name: `${child.childName} - ${formatClassTime(klass.time)}`,
+                                        amount: parseInt(klass.price) * 100, // cents
+                                        quantity: '1',
+                                        classId: klass.id,
+                                        lineItemIdentifier: crypto.randomUUID(),
+                                        appointmentTypeId: klass.appointmentTypeID,
+                                        time: klass.time,
+                                        calendarId: klass.calendarID,
+                                        childName: child.childName,
+                                        childDob: child.childAge.toISOString(),
+                                        childAllergies: child.allergies || '',
+                                        childAdditionalInfo: child.additionalInfo || '',
+                                    }))
+                                ),
+                                discount: discount
+                                    ? {
+                                          ...discount,
+                                          discountAmount:
+                                              discount.discountType === 'percentage'
+                                                  ? discount.discountAmount
+                                                  : discount.discountAmount * 100, // price discounts must be in cents
+                                          description: discountDescription(discount),
+                                      }
+                                    : null,
+                            },
+                        })
                     } else {
                         // TODO - show error processing payment
                     }
@@ -74,7 +129,7 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form }) => {
                     lineItems: Object.values(selectedClasses).flatMap((klass) =>
                         form.children.map((child) => ({
                             amount: klass.price,
-                            label: `${child.childName} - ${DateTime.fromISO(klass.time).toFormat('EEEE MMMM d, h:mm a')}`,
+                            label: `${child.childName} - ${formatClassTime(klass.time)}`,
                         }))
                     ),
                     discounts: discount

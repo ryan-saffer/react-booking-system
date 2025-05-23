@@ -9,6 +9,7 @@ import {
     createDiscountCodeFromInvitation,
 } from '../../core/discount-codes/create-discount-code-from-invitation'
 import { bookHolidayPrograms } from '../../core/schedule-holiday-programs'
+import { bookHolidayProgramNew, type HolidayProgramBookingProps } from '../../core/book-holiday-program-new'
 
 export const holidayProgramsRouter = router({
     scheduleFreeHolidayPrograms: publicProcedure
@@ -19,6 +20,9 @@ export const holidayProgramsRouter = router({
                 programs: input,
             })
         ),
+    bookHolidayProgram: publicProcedure
+        .input((input) => input as HolidayProgramBookingProps)
+        .mutation(({ input }) => bookHolidayProgramNew(input)),
     createDiscountCode: authenticatedProcedure
         .input((input: unknown) => input as CreateDiscountCode)
         .mutation(({ input }) => createDiscountCode(input)),

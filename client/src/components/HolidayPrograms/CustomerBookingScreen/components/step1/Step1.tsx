@@ -66,7 +66,8 @@ const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionCh
                     })()}
                 </Select>
             </Form.Item>
-            {appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM &&
+            {(appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM ||
+                appointmentTypeId === AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM) &&
                 filteredClasses &&
                 filteredClasses.length !== 0 && (
                     <>
@@ -91,22 +92,6 @@ const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionCh
                             }
                         />
                     </>
-                )}
-            {appointmentTypeId === AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING &&
-                filteredClasses &&
-                filteredClasses.length !== 0 && (
-                    <Alert
-                        type="info"
-                        message={
-                            <p style={{ margin: 0 }}>
-                                The <strong>10am</strong> session is for kids <strong>18 months - 5 years old.</strong>
-                                <br />
-                                The <strong>11:30am and 1:00pm</strong> sessions are for kids{' '}
-                                <strong>4 - 12 years old.</strong>
-                            </p>
-                        }
-                        style={{ marginBottom: 8 }}
-                    />
                 )}
             {filteredClasses?.map((klass) => {
                 const name = `${klass.id}-checkbox`
