@@ -30,6 +30,8 @@ export type Form = {
         allergies?: string
         additionalInfo: string
     }[]
+    joinMailingList: boolean
+    termsAndConditions: boolean
 }
 
 export const CustomerBookingPage = () => {
@@ -92,7 +94,7 @@ export const CustomerBookingPage = () => {
                         />
                     )
                 case 2:
-                    return <Step2 appointmentTypeId={appointmentTypeId} />
+                    return <Step2 form={form} appointmentTypeId={appointmentTypeId} />
                 case 3:
                     return <Step3 appointmentTypeId={appointmentTypeId} form={formValues as Form} />
             }
@@ -116,7 +118,7 @@ export const CustomerBookingPage = () => {
         return (
             <AntdForm
                 form={form}
-                initialValues={{ prefix: '61' }}
+                initialValues={{ prefix: '61', joinMailingList: true }}
                 onValuesChange={(_, values) => {
                     // filter out any removed children with undefined values
                     const children = values.children

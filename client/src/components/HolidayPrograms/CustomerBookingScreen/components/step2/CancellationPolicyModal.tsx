@@ -12,11 +12,11 @@ const CancellationPolicyModal: React.FC<Props> = ({ open, onClose }) => {
             title="Cancellation Policy"
             open={open}
             onCancel={() => onClose()}
-            footer={[
+            footer={
                 <Button type="primary" onClick={() => onClose()}>
                     OK
-                </Button>,
-            ]}
+                </Button>
+            }
         >
             <p>
                 A full refund will be automatically issued for cancellations made more than 48 hours before the program.

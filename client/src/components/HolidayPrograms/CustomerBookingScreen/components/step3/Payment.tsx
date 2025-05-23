@@ -1,7 +1,6 @@
-import { Checkbox } from 'antd'
-import { AcuityConstants, getSquareLocationId, type DiscountCode } from 'fizz-kidz'
+import { getSquareLocationId, type DiscountCode } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 
 import { SQUARE_APPLICATION_ID } from '@constants/square'
@@ -9,7 +8,6 @@ import { styled } from '@mui/material/styles'
 
 import { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
-import { TermsCheckbox, TermsCheckboxHandle } from './TermsCheckbox'
 import { trpc } from '@utils/trpc'
 
 const PREFIX = 'Payment'
@@ -26,20 +24,15 @@ const Root = styled('div')({
 })
 
 type Props = {
-    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
 }
 
-const Payment: React.FC<Props> = ({ appointmentTypeId, form }) => {
+const Payment: React.FC<Props> = ({ form }) => {
     const selectedClasses = useCart((store) => store.selectedClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
     const total = useCart((store) => store.total)
     const subtotal = useCart((store) => store.subtotal)
     const discount = useCart((store) => store.discount)
-
-    const termsRef = useRef<TermsCheckboxHandle>(null)
-
-    const [joinMailingList, setJoinMailingList] = useState(true)
 
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
@@ -143,23 +136,16 @@ const Payment: React.FC<Props> = ({ appointmentTypeId, form }) => {
                     },
                 })}
             >
-                <Checkbox
-                    className="mt-4"
-                    onChange={(e) => setJoinMailingList(e.target.checked)}
-                    checked={joinMailingList}
-                >
-                    Keep me informed about the latest Fizz Kidz programs and offers.
-                </Checkbox>
-                <TermsCheckbox
-                    ref={termsRef}
-                    showCancellationPolicy={appointmentTypeId !== AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING}
-                />
                 {/* TODO - render error here instead of payment buttons */}
-                <ApplePay />
-                <GooglePay />
+                <ApplePay style={{ marginTop: 32, marginBottom: 8 }} />
+                <GooglePay style={{ marginTop: 32, marginBottom: 8 }} />
                 <CreditCard
                     buttonProps={{
-                        css: { backgroundColor: '#AC4390', '&:hover': { backgroundColor: '#B4589C' } },
+                        css: {
+                            backgroundColor: '#AC4390',
+                            '&:hover': { backgroundColor: '#B4589C' },
+                            marginBottom: 24,
+                        },
                     }}
                 />
             </PaymentForm>

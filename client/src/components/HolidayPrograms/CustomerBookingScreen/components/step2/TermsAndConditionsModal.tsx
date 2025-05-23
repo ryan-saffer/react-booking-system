@@ -20,11 +20,11 @@ const TermsAndConditionsModal: React.FC<Props> = ({ open, onClose }) => {
                 },
             }}
             onCancel={() => onClose()}
-            footer={[
+            footer={
                 <Button type="primary" onClick={() => onClose()}>
                     OK
-                </Button>,
-            ]}
+                </Button>
+            }
         >
             <p>
                 These terms and conditions apply to the school holiday program provided by Fizz Kidz Australia Pty Ltd

@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Modal, Typography } from 'antd'
+import { Button, Checkbox, Divider, Form, Input, Modal, Typography, type FormInstance } from 'antd'
 import React, { Fragment, useState } from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
@@ -6,18 +6,34 @@ import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 
 import { useCart } from '../../state/cart-store'
 import { ChildForm } from './ChildForm'
+import CancellationPolicyModal from './CancellationPolicyModal'
+import TermsAndConditionsModal from './TermsAndConditionsModal'
+import type { Form as TForm } from '../../pages/customer-booking-page'
 
 const { Text } = Typography
 
 type Props = {
+    form: FormInstance<TForm>
     appointmentTypeId: number
 }
 
-export const Step2: React.FC<Props> = ({ appointmentTypeId }) => {
-    const [showModal, setShowModal] = useState(false)
+export const Step2: React.FC<Props> = ({ form, appointmentTypeId }) => {
+    const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
+    const [showCancellationPolicyModal, setShowCancellationPolicyModal] = useState(false)
+    const [showTermsModal, setShowTermsModal] = useState(false)
 
     const selectedClasses = useCart((store) => store.selectedClasses)
     const calculateTotal = useCart((store) => store.calculateTotal)
+
+    function showModal(e: React.MouseEvent<HTMLElement, MouseEvent>, modal: 'cancellation' | 'terms') {
+        e.stopPropagation()
+        if (modal === 'cancellation') {
+            setShowCancellationPolicyModal(true)
+        }
+        if (modal === 'terms') {
+            setShowTermsModal(true)
+        }
+    }
 
     return (
         <>
@@ -128,7 +144,7 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId }) => {
                                         Object.values(selectedClasses).forEach((klass) => {
                                             // +1 for the one we are adding now
                                             if (fields.length + 1 > klass.slotsAvailable) {
-                                                setShowModal(true)
+                                                setShowNoChildrenModal(true)
                                                 canAdd = false
                                             }
                                         })
@@ -145,18 +161,79 @@ export const Step2: React.FC<Props> = ({ appointmentTypeId }) => {
                     )
                 }}
             </Form.List>
+            <Form.Item name="joinMailingList" valuePropName="checked" style={{ marginBottom: 4, marginTop: 12 }}>
+                <Checkbox>Keep me informed about the latest Fizz Kidz programs and offers.</Checkbox>
+            </Form.Item>
+            <div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <Form.Item
+                        rules={[
+                            {
+                                validator: (_, value) =>
+                                    value
+                                        ? Promise.resolve()
+                                        : Promise.reject(new Error('Please accept the terms and conditions')),
+                            },
+                        ]}
+                        name="termsAndConditions"
+                        valuePropName="checked"
+                        required
+                        noStyle
+                    >
+                        <Checkbox />
+                    </Form.Item>
+                    <div
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                            const currentValue = form.getFieldValue('termsAndConditions')
+                            form.setFieldValue('termsAndConditions', !currentValue)
+                            form.validateFields()
+                        }}
+                    >
+                        I have read and agreed to the{' '}
+                        <Typography.Link
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                showModal(e, 'cancellation')
+                            }}
+                        >
+                            Cancellation Policy
+                        </Typography.Link>{' '}
+                        and the{' '}
+                        <Typography.Link
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                showModal(e, 'terms')
+                            }}
+                        >
+                            Terms & Conditions
+                        </Typography.Link>
+                    </div>
+                </div>
+                <Form.Item noStyle shouldUpdate>
+                    {() => {
+                        const errors = form.getFieldError('termsAndConditions')
+                        return errors.length ? <div style={{ color: 'red' }}>{errors[0]}</div> : null
+                    }}
+                </Form.Item>
+            </div>
             <Modal
                 title="Not enough spots"
-                open={showModal}
-                footer={[
-                    <Button key="ok" type="primary" onClick={() => setShowModal(false)}>
+                open={showNoChildrenModal}
+                footer={
+                    <Button key="ok" type="primary" onClick={() => setShowNoChildrenModal(false)}>
                         OK
-                    </Button>,
-                ]}
+                    </Button>
+                }
             >
                 <p>It looks like one of the programs you selected does not have enough spots for another child.</p>
                 <p>You can always go back and select a class with more spots.</p>
             </Modal>
+            <CancellationPolicyModal
+                open={showCancellationPolicyModal}
+                onClose={() => setShowCancellationPolicyModal(false)}
+            />
+            <TermsAndConditionsModal open={showTermsModal} onClose={() => setShowTermsModal(false)} />
         </>
     )
 }
