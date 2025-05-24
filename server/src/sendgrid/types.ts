@@ -8,6 +8,13 @@ export type Emails = {
         receiptUrl: string | undefined
     }
 
+    holidayProgramCancellation: {
+        parentName: string
+        location: string
+        booking: string
+        receiptUrl: string | undefined
+    }
+
     kingsvilleOpeningConfirmation: {
         parentName: string
         location: string
@@ -27,6 +34,13 @@ export type Emails = {
         location: string
         bookings: { time: string; details: string; confirmationPage: string }[]
         isTermEnrolment: boolean
+        receiptUrl: string | undefined
+    }
+
+    playLabCancellation: {
+        parentName: string
+        location: string
+        booking: string
         receiptUrl: string | undefined
     }
 

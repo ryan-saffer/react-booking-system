@@ -110,7 +110,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                                 parentPhone: form.phone,
                                 emergencyContactName: form.emergencyContact,
                                 emergencyContactPhone: form.emergencyPhone,
-                                joinMailingList: true, // TODO
+                                joinMailingList: form.joinMailingList,
                                 payment: {
                                     token: token,
                                     buyerVerificationToken: buyerVerification?.token || '',

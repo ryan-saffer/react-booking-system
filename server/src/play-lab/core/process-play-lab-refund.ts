@@ -2,6 +2,8 @@ import { logger } from 'firebase-functions/v2'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import type { Order } from 'square/api'
 
+import { MailClient } from '@/sendgrid/MailClient'
+
 import type { AcuityWebhookData } from '../../acuity'
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { SquareClient } from '../../square/core/square-client'
@@ -20,17 +22,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     // do not process refunds on term enrolments automatically
     if (isTermEnrolment) return
 
-    const appointmentDate = new Date(appointment.datetime)
-    const now = new Date()
-    const msBetweenDates = Math.abs(appointmentDate.getTime() - now.getTime())
-
-    // convert ms to hours
-    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
-
-    if (hoursBetweenDates < 48) {
-        logger.log('Less than 48 hours before program, not performing refund.')
-        return
-    }
+    const mailClient = await MailClient.getInstance()
 
     const orderId = AcuityUtilities.retrieveFormAndField(
         appointment,
@@ -72,35 +64,76 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         )
         return
     }
+
+    const appointmentDate = new Date(appointment.datetime)
+    const now = new Date()
+    const msBetweenDates = Math.abs(appointmentDate.getTime() - now.getTime())
+
+    // convert ms to hours
+    const hoursBetweenDates = msBetweenDates / (60 * 60 * 1000)
+
+    if (hoursBetweenDates < 48) {
+        logger.log('Less than 48 hours before program, not performing refund.')
+        await mailClient.sendEmail('playLabCancellation', appointment.email, {
+            booking: lineItemToRefund.name!,
+            location: `Fizz Kidz ${appointment.calendar}`,
+            parentName: appointment.firstName,
+            receiptUrl: '',
+        })
+        return
+    }
+
     const amountToRefund = lineItemToRefund.totalMoney?.amount
 
-    if (amountToRefund === BigInt(0)) return // dont process refunds on free bookings
+    if (amountToRefund === BigInt(0)) {
+        // dont process refunds on free bookings
+        await mailClient.sendEmail('playLabCancellation', appointment.email, {
+            booking: lineItemToRefund.name!,
+            location: `Fizz Kidz ${appointment.calendar}`,
+            parentName: appointment.firstName,
+            receiptUrl: '',
+        })
+        return
+    }
 
+    let receiptUrl = ''
     const paymentId = order?.tenders?.[0].paymentId
     if (!paymentId) {
         logError('Order does not have a tendered payment id while processing play lab refund', null, {
             webhookData: data,
             orderId: orderId,
         })
-        return
+    } else {
+        try {
+            await square.refunds.refundPayment({
+                amountMoney: { amount: amountToRefund, currency: 'AUD' },
+                reason: 'Cancelled more than 48 hours before program - automatic refund',
+                paymentId,
+                idempotencyKey: data.id,
+            })
+        } catch (err) {
+            logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
+                webhookData: data,
+                refundAmount: amountToRefund,
+            })
+        }
+
+        try {
+            const { payment } = await square.payments.get({ paymentId })
+            receiptUrl = payment?.receiptUrl || ''
+        } catch (error) {
+            logError('Error getting payment receipt while processing play lab refund', error, {
+                data,
+                paymentId,
+                appointment,
+            })
+        }
     }
 
-    try {
-        await square.refunds.refundPayment({
-            amountMoney: { amount: amountToRefund, currency: 'AUD' },
-            reason: 'Cancelled more than 48 hours before program - automatic refund',
-            paymentId,
-            idempotencyKey: data.id,
-        })
-    } catch (err) {
-        logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
-            webhookData: data,
-            refundAmount: amountToRefund,
-        })
-        return
-    }
-
-    // TODO send cancellation confirmation here instead of using acuity so as to include refund reciept
-
-    return
+    await mailClient.sendEmail('playLabCancellation', appointment.email, {
+        booking: lineItemToRefund.name!,
+        location: `Fizz Kidz ${appointment.calendar}`,
+        parentName: appointment.firstName,
+        receiptUrl,
+    })
 }
