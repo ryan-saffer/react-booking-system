@@ -1,7 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https'
 import { logger } from 'firebase-functions/v2'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { Employee, OnboardingForm, PaperFormResponse, WWCC, getQuestionValue } from 'fizz-kidz'
+import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
+import { getQuestionValue } from 'fizz-kidz'
 import { publishToPubSub } from '../../../utilities'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 

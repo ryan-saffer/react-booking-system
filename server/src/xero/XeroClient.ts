@@ -1,6 +1,7 @@
 import type { XeroClient as TXeroClient } from 'xero-node'
+
 import { env } from '../init'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
 
 export class XeroClient {
     private static instance: XeroClient

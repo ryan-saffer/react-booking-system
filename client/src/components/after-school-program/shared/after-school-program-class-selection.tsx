@@ -1,9 +1,11 @@
-import { AcuityTypes, Location } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material'
+import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
 import { Label } from '@ui-components/label'
 import { Switch } from '@ui-components/switch'
 import { trpc } from '@utils/trpc'

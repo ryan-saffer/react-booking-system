@@ -1,4 +1,5 @@
-import { IncursionEvent, IncursionForm, PaperFormResponse, getQuestionValue } from 'fizz-kidz'
+import type { IncursionEvent, IncursionForm, PaperFormResponse } from 'fizz-kidz'
+import { getQuestionValue } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'

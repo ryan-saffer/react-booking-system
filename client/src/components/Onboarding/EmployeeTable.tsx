@@ -1,6 +1,6 @@
 import { Button, Descriptions, Table, Tag } from 'antd'
-import { ColumnsType } from 'antd/es/table'
-import { Employee } from 'fizz-kidz'
+import type { ColumnsType } from 'antd/es/table'
+import type { Employee } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'

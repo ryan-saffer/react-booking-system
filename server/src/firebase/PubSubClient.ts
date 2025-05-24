@@ -1,6 +1,7 @@
 import type { PubSub as TPubSub } from '@google-cloud/pubsub'
-import { ClientStatus } from '../utilities/types'
+
 import { projectId } from '../init'
+import type { ClientStatus } from '../utilities/types'
 
 export class PubSubClient {
     private static instance: PubSubClient

@@ -1,8 +1,8 @@
 import { Alert, Button, Card, Collapse, DatePicker, Divider, Layout, Typography, theme } from 'antd'
-import { RangePickerProps } from 'antd/es/date-picker'
+import type { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
-import { GenerateTimesheetsResponse, Service } from 'fizz-kidz'
+import type { GenerateTimesheetsResponse, Service } from 'fizz-kidz'
 import { useState } from 'react'
 
 import { DownloadOutlined } from '@ant-design/icons'

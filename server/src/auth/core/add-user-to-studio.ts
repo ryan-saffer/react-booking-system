@@ -1,5 +1,6 @@
 import { getAuth } from 'firebase-admin/auth'
-import { LocationOrMaster, ObjectKeys, Role, StaffAuthUser } from 'fizz-kidz'
+import type { LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import { ObjectKeys } from 'fizz-kidz'
 
 import { TRPCError } from '@trpc/server'
 

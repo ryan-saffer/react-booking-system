@@ -1,4 +1,5 @@
-import { ADDITIONS, Addition, BaseBooking, Booking, CREATIONS } from 'fizz-kidz'
+import type { Addition, BaseBooking, Booking } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 export function getBookingCreations(booking: BaseBooking) {

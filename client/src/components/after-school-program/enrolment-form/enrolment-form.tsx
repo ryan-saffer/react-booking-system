@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
-import { DateTime } from 'luxon'
+import type { DateTime } from 'luxon'
 import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 

@@ -1,9 +1,10 @@
 import { logger } from 'firebase-functions/v2'
-import { InvitationOption, type Location } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
+import { type Location } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
 
 import { env } from '../init'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
 import type {
     ContactFormLocationOption,
     ContactFormServiceOption,
@@ -148,7 +149,7 @@ export type MixpanelEvent = {
         bookingType: 'term-booking' | 'casual'
         appointmntTypeIds: number[]
         programNames: string[]
-        location:LocationOrTest
+        location: LocationOrTest
         amount: number
         discountType?: 'percentage' | 'price'
         discountAmount?: number

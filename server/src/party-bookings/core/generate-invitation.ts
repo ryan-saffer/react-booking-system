@@ -1,11 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 
-import { GenerateInvitation, InvitationOption, addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
+import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
+import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
-import puppeteer, { Browser } from 'puppeteer'
+import type { Browser } from 'puppeteer'
+import puppeteer from 'puppeteer'
 
 import chromium from '@sparticuz/chromium'
 

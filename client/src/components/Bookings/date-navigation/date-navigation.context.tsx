@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import type { DateTime } from 'luxon'
 import { createContext } from 'react'
 
 export const DateNavigationContext = createContext<{

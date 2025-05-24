@@ -1,4 +1,4 @@
-import { UpdateAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import type { UpdateAfterSchoolEnrolmentParams } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'

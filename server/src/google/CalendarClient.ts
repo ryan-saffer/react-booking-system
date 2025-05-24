@@ -4,7 +4,7 @@ import type { calendar_v3 } from 'googleapis'
 import googleCredentials from '../../credentials/google-credentials.json'
 import { env } from '../init'
 import { withExponentialBackoff } from '../utilities'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
 
 type Event = {
     title: string

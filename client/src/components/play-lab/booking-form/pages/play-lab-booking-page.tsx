@@ -14,7 +14,8 @@ import { CasualProgramSelector } from '../components/stages/program-selection/ca
 import { StudioSelector } from '../components/stages/program-selection/studio-selector'
 import { TermProgramSelector } from '../components/stages/program-selection/term-program-selector'
 import { Success } from '../components/stages/success/sucess'
-import { PlayLabBookingForm, formSchema } from '../state/form-schema'
+import type { PlayLabBookingForm } from '../state/form-schema'
+import { formSchema } from '../state/form-schema'
 
 export function PlayLabBookingPage() {
     const form = useForm<PlayLabBookingForm>({

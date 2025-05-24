@@ -1,7 +1,7 @@
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
-import { ClientStatus } from '../../utilities/types'
+import type { ClientStatus } from '../../utilities/types'
 
 import UpdateAppointmentParams = AcuityTypes.Client.UpdateAppointmentParams
 import FetchAppointmentsParams = AcuityTypes.Client.FetchAppointmentsParams

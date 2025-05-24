@@ -1,11 +1,12 @@
 import { DateTime } from 'luxon'
-import React, { ReactElement, Ref, useState } from 'react'
+import type { ReactElement, Ref } from 'react'
+import React, { useState } from 'react'
 
 import { Close as CloseIcon } from '@mui/icons-material'
 import { AppBar, CssBaseline, Dialog, IconButton, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
-import { TransitionProps } from '@mui/material/transitions'
+import type { TransitionProps } from '@mui/material/transitions'
 
 import { useDateNavigation } from './date-navigation/date-navigation.hooks'
 import { NewEventForm } from './events/forms/new-event-form'

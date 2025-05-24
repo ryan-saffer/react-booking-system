@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import Root from '@components/Shared/Root'
 import { zodResolver } from '@hookform/resolvers/zod'

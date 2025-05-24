@@ -1,4 +1,5 @@
-import { Permission, Role, RolePermissionMap } from 'fizz-kidz'
+import type { Permission, Role } from 'fizz-kidz'
+import { RolePermissionMap } from 'fizz-kidz'
 
 export function checkRoleForPermission(role: Role | null, permission: Permission) {
     if (!role) {

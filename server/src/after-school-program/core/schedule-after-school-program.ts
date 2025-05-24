@@ -1,13 +1,5 @@
-import {
-    AcuityConstants,
-    AcuityTypes,
-    AcuityUtilities,
-    AfterSchoolEnrolment,
-    ScheduleAfterSchoolEnrolmentParams,
-    capitalise,
-    getApplicationDomain,
-    studioNameAndAddress,
-} from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, capitalise, getApplicationDomain, studioNameAndAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'

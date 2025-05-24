@@ -1,4 +1,4 @@
-import { Mixpanel } from 'mixpanel-browser'
+import type { Mixpanel } from 'mixpanel-browser'
 import { useContext } from 'react'
 
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'

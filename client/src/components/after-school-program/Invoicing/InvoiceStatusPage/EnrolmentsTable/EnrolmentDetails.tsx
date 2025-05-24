@@ -1,5 +1,5 @@
 import { Button, Descriptions } from 'antd'
-import { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
 import React from 'react'
 
 import { styled } from '@mui/material/styles'

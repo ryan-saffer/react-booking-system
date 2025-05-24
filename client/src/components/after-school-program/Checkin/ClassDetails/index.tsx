@@ -1,5 +1,5 @@
 import { Card, Result } from 'antd'
-import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'

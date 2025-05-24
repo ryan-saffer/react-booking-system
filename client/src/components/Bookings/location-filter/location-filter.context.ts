@@ -1,5 +1,5 @@
+import type { Location } from 'fizz-kidz'
 import { createContext } from 'react'
-import { Location } from 'fizz-kidz'
 
 export type LocationFilter = Location | 'all'
 

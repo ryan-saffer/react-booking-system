@@ -1,4 +1,4 @@
-import { DiscountCode, WithoutId } from 'fizz-kidz'
+import type { DiscountCode, WithoutId } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { throwTrpcError } from '../../../utilities'

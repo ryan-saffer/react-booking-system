@@ -1,4 +1,4 @@
-import { AfterSchoolEnrolment, InvoiceStatusMap, SendInvoiceParams } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, InvoiceStatusMap, SendInvoiceParams } from 'fizz-kidz'
 
 import * as StripeConfig from '../../../config/stripe'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'

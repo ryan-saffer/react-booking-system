@@ -2,7 +2,8 @@ import { onRequest } from 'firebase-functions/v2/https'
 
 import { logError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
-import { ContactFormLocationMap, Form, PartyFormLocationMap } from '../contact-form-7-types'
+import type { Form } from '../contact-form-7-types'
+import { ContactFormLocationMap, PartyFormLocationMap } from '../contact-form-7-types'
 
 export const contactForm7Webhook = onRequest(async (req, res) => {
     const formId = req.query.formId as keyof Form

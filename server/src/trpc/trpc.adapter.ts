@@ -1,7 +1,9 @@
-import { MemoryOption, logger } from 'firebase-functions/v2'
+import type { MemoryOption } from 'firebase-functions/v2'
+import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { AnyRouter, type TRPCError } from '@trpc/server'
+import type { AnyRouter } from '@trpc/server'
+import { type TRPCError } from '@trpc/server'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 
 import { createContext } from './trpc'

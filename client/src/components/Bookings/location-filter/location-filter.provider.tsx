@@ -1,5 +1,8 @@
-import { ReactNode, useEffect, useState } from 'react'
-import { LocationFilter, FilterContext } from './location-filter.context'
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+
+import type { LocationFilter } from './location-filter.context'
+import { FilterContext } from './location-filter.context'
 
 export function FilterContextProvider({ children }: { children: ReactNode }) {
     const [selectedLocation, setSelectedLocation] = useState<LocationFilter>('all')

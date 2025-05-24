@@ -1,4 +1,4 @@
-import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import CheckCircleTwoTone from '@mui/icons-material/CheckCircleTwoTone'

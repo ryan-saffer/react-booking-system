@@ -1,4 +1,5 @@
-import { ROLES, Role } from 'fizz-kidz'
+import type { Role } from 'fizz-kidz'
+import { ROLES } from 'fizz-kidz'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'

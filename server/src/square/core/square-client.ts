@@ -1,7 +1,7 @@
 import { SquareEnvironment, type SquareClient as TSquare } from 'square'
 
 import { env } from '../../init'
-import { ClientStatus } from '../../utilities/types'
+import type { ClientStatus } from '../../utilities/types'
 
 export class SquareClient {
     private static instance: SquareClient

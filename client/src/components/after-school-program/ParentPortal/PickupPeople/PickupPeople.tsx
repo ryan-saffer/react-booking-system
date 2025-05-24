@@ -1,5 +1,5 @@
 import { Button, Card, Form, Input, Row, Tooltip, Typography, message } from 'antd'
-import { AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { useState } from 'react'
 
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'

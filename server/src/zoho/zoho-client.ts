@@ -1,4 +1,5 @@
-import { Booking, Location, capitalise } from 'fizz-kidz'
+import type { Booking, Location } from 'fizz-kidz'
+import { capitalise } from 'fizz-kidz'
 import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 import { DateTime } from 'luxon'
 

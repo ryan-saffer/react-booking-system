@@ -1,9 +1,10 @@
-import { CreateEvent, createEvent } from '../../core/create-event'
-import { authenticatedProcedure, router } from '../../../trpc/trpc'
+import type { Event } from 'fizz-kidz'
 
-import { Event } from 'fizz-kidz'
-import { deleteEvent } from '../../core/delete-event'
+import { authenticatedProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
+import type { CreateEvent } from '../../core/create-event'
+import { createEvent } from '../../core/create-event'
+import { deleteEvent } from '../../core/delete-event'
 import { updateEvent } from '../../core/update-event'
 
 export const eventsRouter = router({

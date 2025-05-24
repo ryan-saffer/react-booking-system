@@ -1,8 +1,9 @@
-import { DiscountCode, WithoutId } from 'fizz-kidz'
+import type { DiscountCode, WithoutId } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { MixpanelClient, MixpanelEvent } from '../../../mixpanel/mixpanel-client'
+import type { MixpanelEvent } from '../../../mixpanel/mixpanel-client'
+import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 import { MailClient } from '../../../sendgrid/MailClient'
 import { logError } from '../../../utilities'
 import { ZohoClient } from '../../../zoho/zoho-client'

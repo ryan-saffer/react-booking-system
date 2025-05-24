@@ -1,5 +1,7 @@
-import { LocationOrMaster, ObjectKeys, Permission, Role } from 'fizz-kidz'
-import { ReactNode, createContext, useCallback, useEffect, useState } from 'react'
+import type { LocationOrMaster, Permission, Role } from 'fizz-kidz'
+import { ObjectKeys } from 'fizz-kidz'
+import type { ReactNode } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { checkRoleForPermission } from '@constants/permissions'

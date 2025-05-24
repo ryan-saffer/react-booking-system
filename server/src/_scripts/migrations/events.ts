@@ -1,4 +1,4 @@
-import { IncursionEvent, Location } from 'fizz-kidz'
+import type { IncursionEvent, Location } from 'fizz-kidz'
 import fs from 'fs/promises'
 
 import { eventsRouter } from '../../events/functions/trpc/trpc.events'

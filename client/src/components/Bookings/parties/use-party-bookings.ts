@@ -1,4 +1,5 @@
-import { FirestoreBooking, Location, Service, WithId } from 'fizz-kidz'
+import type { FirestoreBooking, Service, WithId } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useRef, useState } from 'react'
 

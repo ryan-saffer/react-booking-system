@@ -1,8 +1,10 @@
 import 'react-social-icons/whatsapp'
 
 import { format } from 'date-fns'
-import { InvitationOption, Location, capitalise, getApplicationDomain } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
+import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
+import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { Img } from 'react-image'
@@ -28,7 +30,6 @@ import { trpc } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
-import { DateTime } from 'luxon'
 
 type TForm = {
     childName: string

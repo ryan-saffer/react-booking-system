@@ -1,9 +1,10 @@
 import dateFormat from 'dateformat'
-import { Event } from 'fizz-kidz'
+import type { Event } from 'fizz-kidz'
 import React from 'react'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
+
 import { ExistingEventForm } from './forms/existing-event-form'
 
 type Props = {

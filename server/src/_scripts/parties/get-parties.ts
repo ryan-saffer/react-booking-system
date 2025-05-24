@@ -1,4 +1,5 @@
-import { Booking, Creation, Location } from 'fizz-kidz'
+import type { Booking, Creation } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { FirestoreClient } from '../../firebase/FirestoreClient'

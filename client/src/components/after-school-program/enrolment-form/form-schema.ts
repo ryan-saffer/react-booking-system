@@ -1,4 +1,4 @@
-import { Location } from 'fizz-kidz'
+import type { Location } from 'fizz-kidz'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 

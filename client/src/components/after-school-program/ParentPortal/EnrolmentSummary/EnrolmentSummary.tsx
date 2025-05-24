@@ -1,5 +1,5 @@
 import { Card, Col, Row } from 'antd'
-import { AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'

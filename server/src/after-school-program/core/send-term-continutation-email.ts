@@ -1,9 +1,10 @@
-import { AfterSchoolEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, SendTermContinuationEmailsParams } from 'fizz-kidz'
+import { getApplicationDomain } from 'fizz-kidz'
 
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export async function sendTermContinutationEmails(input: SendTermContinuationEmailsParams) {
     const results = await Promise.allSettled(

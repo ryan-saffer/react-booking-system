@@ -1,4 +1,5 @@
-import { Event, IncursionEvent, Location, Service, StandardEvent } from 'fizz-kidz'
+import type { Event, IncursionEvent, Service, StandardEvent } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'

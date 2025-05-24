@@ -1,7 +1,6 @@
 import { Timestamp } from 'firebase-admin/firestore'
+import type { Booking, FirestoreBooking } from 'fizz-kidz'
 import {
-    Booking,
-    FirestoreBooking,
     Location,
     capitalise,
     getApplicationDomain,

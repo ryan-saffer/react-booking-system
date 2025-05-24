@@ -1,5 +1,5 @@
 import { List, Result, Row, Typography } from 'antd'
-import { AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import useErrorDialog from '@components/Hooks/UseErrorDialog'

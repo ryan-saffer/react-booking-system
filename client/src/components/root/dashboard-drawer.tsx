@@ -9,7 +9,7 @@ import {
     TicketPercent,
     Users,
 } from 'lucide-react'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import { useOrg } from '@components/Session/use-org'
