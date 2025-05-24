@@ -6,6 +6,10 @@ type Class = AcuityTypes.Client.Class
 type Cart = {
     selectedStudio: LocationOrTest | null
     selectedClasses: Record<number, Class>
+    /**
+     * Array of classIds that are in the cart and are an 'all day' class
+     */
+    sameDayClasses: number[]
     subtotal: number
     total: number
     discount: DiscountCode | null // only for discount codes, not multi session discounts
@@ -14,12 +18,14 @@ type Cart = {
     applyDiscount: (discount: DiscountCode, numberOfKids: number) => void
     clearDiscount: (numberOfKids: number) => void
     toggleClass: (klass: Class, numberOfKids: number) => void
+    updateSameDayClasses: () => void
     calculateTotal: (numberOfKids: number) => void
 }
 
 export const useCart = create<Cart>()((set, get) => ({
     selectedStudio: null,
     selectedClasses: {},
+    sameDayClasses: [],
     subtotal: 0,
     total: 0,
     discount: null,
@@ -27,7 +33,7 @@ export const useCart = create<Cart>()((set, get) => ({
         set({ selectedStudio: location })
     },
     clearCart: () => {
-        set({ selectedClasses: {} })
+        set({ selectedClasses: {}, sameDayClasses: [] })
     },
     clearDiscount: (numberOfKids) => {
         set({ discount: null })
@@ -49,7 +55,24 @@ export const useCart = create<Cart>()((set, get) => ({
             set({ selectedClasses: { ...copiedClasses, [klass.id]: klass } })
         }
 
+        get().updateSameDayClasses()
         get().calculateTotal(numberOfKids)
+    },
+    updateSameDayClasses: () => {
+        const classes = Object.values(get().selectedClasses)
+        const sameDayClasses: number[] = []
+        for (let i = 0; i < classes.length; i++) {
+            for (let j = i + 1; j < classes.length; j++) {
+                const date1 = new Date(classes[i].time)
+                const date2 = new Date(classes[j].time)
+                if (date1.getDate() === date2.getDate()) {
+                    sameDayClasses.push(classes[i].id)
+                    sameDayClasses.push(classes[j].id)
+                }
+            }
+        }
+
+        set({ sameDayClasses })
     },
     calculateTotal: (numberOfKids) => {
         const selectedClasses = get().selectedClasses

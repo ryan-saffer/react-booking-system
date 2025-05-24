@@ -1,4 +1,4 @@
-import type { AcuityConstants, DiscountCode } from 'fizz-kidz'
+import type { DiscountCode } from 'fizz-kidz'
 import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
 import { DateTime } from 'luxon'
@@ -18,7 +18,6 @@ import BookingSummary from './booking-summary'
 import DiscountInput from './discount-input'
 
 type Props = {
-    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
     handleBookingSuccess: () => void
 }
@@ -36,8 +35,9 @@ const Root = styled('div')({
     },
 })
 
-const Step3: React.FC<Props> = ({ appointmentTypeId, form, handleBookingSuccess }) => {
+const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const selectedClasses = useCart((store) => store.selectedClasses)
+    const sameDayClasses = useCart((store) => store.sameDayClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
     const total = useCart((store) => store.total)
     const subtotal = useCart((store) => store.subtotal)
@@ -94,7 +94,7 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, handleBookingSuccess 
 
     return (
         <>
-            <BookingSummary appointmentTypeId={appointmentTypeId} form={form} numberOfKids={form.children.length} />
+            <BookingSummary form={form} numberOfKids={form.children.length} />
             <DiscountInput numberOfKids={form.children.length} />
             <Root>
                 <PaymentForm
@@ -130,6 +130,7 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, handleBookingSuccess 
                                             childDob: child.childAge.toISOString(),
                                             childAllergies: child.allergies || '',
                                             childAdditionalInfo: child.additionalInfo || '',
+                                            isAllDayClass: sameDayClasses.includes(klass.id),
                                             title: klass.title,
                                             creations: klass.creations,
                                         }))

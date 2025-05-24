@@ -109,13 +109,7 @@ export const CustomerBookingPage = () => {
                 case 2:
                     return <Step2 form={form} appointmentTypeId={appointmentTypeId} />
                 case 3:
-                    return (
-                        <Step3
-                            appointmentTypeId={appointmentTypeId}
-                            form={formValues as Form}
-                            handleBookingSuccess={onBookingSuccess}
-                        />
-                    )
+                    return <Step3 form={formValues as Form} handleBookingSuccess={onBookingSuccess} />
             }
         }
     }

@@ -1,19 +1,16 @@
 import { List, Tag, Typography } from 'antd'
-import type { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React from 'react'
 
 import type { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
-import { PRICE_MAP } from '../../utilities'
 
 type Props = {
-    appointmentTypeId: AcuityConstants.AppointmentTypeValue
     form: Form
     numberOfKids: number
 }
 
-const BookingSummary: React.FC<Props> = ({ appointmentTypeId, form, numberOfKids }) => {
+const BookingSummary: React.FC<Props> = ({ form, numberOfKids }) => {
     //#region Variables
     const selectedClasses = useCart((store) => store.selectedClasses)
     const subtotal = useCart((store) => store.subtotal)
@@ -64,33 +61,19 @@ const BookingSummary: React.FC<Props> = ({ appointmentTypeId, form, numberOfKids
                         return {
                             childName: child.childName,
                             dateTime: dateTime,
-                            discounted: false, // hardcoded for now - used to be if this class had a 'same day discount'
+                            price: klass.price,
                         }
                     })
                 )}
             renderItem={(item) => {
-                const isDiscounted = discount === undefined && item.discounted
                 return (
                     <List.Item style={{ display: 'flex', flexDirection: 'column', alignItems: 'baseline' }}>
                         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                             <Typography.Text style={{ textAlign: 'start' }}>
                                 {item.childName} - {item.dateTime}
                             </Typography.Text>
-                            <Typography.Text style={{ textAlign: 'end' }}>
-                                $
-                                {(isDiscounted
-                                    ? PRICE_MAP[appointmentTypeId].PROGRAM_PRICE -
-                                      PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE
-                                    : PRICE_MAP[appointmentTypeId].PROGRAM_PRICE
-                                ).toFixed(2)}{' '}
-                                {isDiscounted && <del>(${PRICE_MAP[appointmentTypeId].PROGRAM_PRICE.toFixed(2)})</del>}
-                            </Typography.Text>
+                            <Typography.Text style={{ textAlign: 'end' }}>${item.price}</Typography.Text>
                         </div>
-                        {isDiscounted && (
-                            <Tag color="green" style={{ marginTop: 4 }}>
-                                All day discount: -${PRICE_MAP[appointmentTypeId].DISCOUNT_PRICE.toFixed(2)}
-                            </Tag>
-                        )}
                     </List.Item>
                 )
             }}

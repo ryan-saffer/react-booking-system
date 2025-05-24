@@ -42,6 +42,7 @@ export type HolidayProgramBookingProps = {
             childDob: string // ISO
             childAllergies: string
             childAdditionalInfo: string
+            isAllDayClass: boolean
             title?: string // eg. 'Swifty Spectacular'. For mixpanel.
             creations?: string[] // for mixpanel
         }[]
@@ -146,7 +147,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                 lastName: input.parentLastName,
                 email: input.parentEmail,
                 phone: input.parentPhone,
-                // certificate: booking.discountCode === 'allday' ? 'allday' : undefined, // TODO mark all days
+                certificate: item.isAllDayClass ? 'allday' : undefined,
                 paid: true,
                 fields: [
                     {
