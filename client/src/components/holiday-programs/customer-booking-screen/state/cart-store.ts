@@ -101,7 +101,5 @@ export const useCart = create<Cart>()((set, get) => ({
         }
 
         set({ subtotal, total })
-        console.log({ selectedClasses: get().selectedClasses })
-        console.log({ total: get().total, subtotal: get().subtotal })
     },
 }))
