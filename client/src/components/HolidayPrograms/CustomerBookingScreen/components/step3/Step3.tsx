@@ -1,19 +1,21 @@
-import { getSquareLocationId, type AcuityConstants, type DiscountCode } from 'fizz-kidz'
+import type { AcuityConstants, DiscountCode } from 'fizz-kidz'
+import { getSquareLocationId } from 'fizz-kidz'
+import { AlertCircle, CheckCircle } from 'lucide-react'
+import { DateTime } from 'luxon'
 import React, { useEffect } from 'react'
+import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
+import { toast } from 'sonner'
 
-import { Form } from '../../pages/customer-booking-page'
+import Loader from '@components/Shared/Loader'
+import { SQUARE_APPLICATION_ID } from '@constants/square'
+import { styled } from '@mui/material/styles'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { trpc } from '@utils/trpc'
+
+import type { Form } from '../../pages/customer-booking-page'
+import { useCart } from '../../state/cart-store'
 import BookingSummary from './BookingSummary'
 import DiscountInput from './DiscountInput'
-import { useCart } from '../../state/cart-store'
-import { styled } from '@mui/material/styles'
-import { trpc } from '@utils/trpc'
-import { DateTime } from 'luxon'
-import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
-import { SQUARE_APPLICATION_ID } from '@constants/square'
-import Loader from '@components/Shared/Loader'
-import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
-import { AlertCircle, CheckCircle } from 'lucide-react'
-import { toast } from 'sonner'
 
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
@@ -35,10 +37,6 @@ const Root = styled('div')({
 })
 
 const Step3: React.FC<Props> = ({ appointmentTypeId, form, handleBookingSuccess }) => {
-    // const total = useCart((store) => store.total)
-
-    // const isFree = total === 0
-
     const selectedClasses = useCart((store) => store.selectedClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
     const total = useCart((store) => store.total)
@@ -132,6 +130,8 @@ const Step3: React.FC<Props> = ({ appointmentTypeId, form, handleBookingSuccess 
                                             childDob: child.childAge.toISOString(),
                                             childAllergies: child.allergies || '',
                                             childAdditionalInfo: child.additionalInfo || '',
+                                            title: klass.title,
+                                            creations: klass.creations,
                                         }))
                                     ),
                                     discount: discount

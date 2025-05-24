@@ -1,7 +1,8 @@
 import { logger } from 'firebase-functions/v2'
-import { AcuityConstants, AcuityUtilities, Metadata } from 'fizz-kidz'
+import type { Metadata } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 
-import { AcuityWebhookData } from '../../acuity'
+import type { AcuityWebhookData } from '../../acuity'
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError } from '../../utilities'

@@ -1,16 +1,19 @@
-import { v4 as uuidv4 } from 'uuid'
-import { SquareClient } from '../../square/core/square-client'
-import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
-import { env } from '../../init'
-import { logError, throwTrpcError } from '../../utilities'
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { AcuityConstants, AcuityUtilities, type DiscountCode } from 'fizz-kidz'
-import { DateTime } from 'luxon'
-import { ZohoClient } from '../../zoho/zoho-client'
-import { SheetsClient } from '../../google/SheetsClient'
-import { sendConfirmationEmail } from './send-confirmation-email'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FieldValue } from 'firebase-admin/firestore'
+import type { DiscountCode } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import { DateTime } from 'luxon'
+import { v4 as uuidv4 } from 'uuid'
+
+import { AcuityClient } from '../../acuity/core/acuity-client'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { SheetsClient } from '../../google/SheetsClient'
+import { env } from '../../init'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
+import { SquareClient } from '../../square/core/square-client'
+import { logError, throwTrpcError } from '../../utilities'
+import { ZohoClient } from '../../zoho/zoho-client'
+import { sendConfirmationEmail } from './send-confirmation-email'
 
 export type HolidayProgramBookingProps = {
     parentFirstName: string
@@ -38,12 +41,14 @@ export type HolidayProgramBookingProps = {
             childDob: string // ISO
             childAllergies: string
             childAdditionalInfo: string
+            title?: string // eg. 'Swifty Spectacular'. For mixpanel.
+            creations?: string[] // for mixpanel
         }[]
         discount: (DiscountCode & { description: string }) | null
     }
 }
 
-export async function bookHolidayProgramNew(input: HolidayProgramBookingProps) {
+export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
     // TODO verify there are enough spots
 
     // get or create customer in square
@@ -242,5 +247,41 @@ export async function bookHolidayProgramNew(input: HolidayProgramBookingProps) {
         }
     }
 
-    // TODO mixpanel
+    // tracking
+    const location = AcuityUtilities.getStudioByCalendarId(firstProgram.calendarId)
+    // not currently tracking other programs (ie kingsville opening)
+    if (location !== 'test' && firstProgram.appointmentTypeId === AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM) {
+        const mixpanel = await MixpanelClient.getInstance()
+
+        const uniqueChildNamesCount = new Set(input.payment.lineItems.map((b) => b.childName)).size
+
+        const childAgesSet = new Set(
+            input.payment.lineItems.map((item) =>
+                Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0)
+            )
+        )
+        const titlesSet = new Set(input.payment.lineItems.map((item) => item.title).filter((it) => it !== undefined))
+        const creationsSet = new Set(
+            input.payment.lineItems.reduce(
+                (acc, item) => [...acc, ...(item.creations ? item.creations : [])],
+                [] as string[]
+            )
+        )
+
+        const childAges = [...childAgesSet]
+        const titles = [...titlesSet]
+        const creations = [...creationsSet]
+
+        await mixpanel.track('holiday-program-booking', {
+            distinct_id: input.parentEmail,
+            location,
+            amount: input.payment.amount / 100,
+            numberOfSlots: input.payment.lineItems.length,
+            numberOfKids: uniqueChildNamesCount,
+            childAges,
+            ...(code && { discountCode: code }),
+            ...(titles.length && { titles }),
+            ...(creations.length && { creations }),
+        })
+    }
 }

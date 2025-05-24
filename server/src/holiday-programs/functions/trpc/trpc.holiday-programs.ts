@@ -1,28 +1,16 @@
-import { FreeHolidayProgramBooking } from 'fizz-kidz'
-
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { checkDiscountCode } from '../../core/discount-codes/check-discount-code'
-import { CreateDiscountCode, createDiscountCode } from '../../core/discount-codes/create-discount-code'
-import {
-    CreateDiscountCodeFromInvitation,
-    createDiscountCodeFromInvitation,
-} from '../../core/discount-codes/create-discount-code-from-invitation'
-import { bookHolidayPrograms } from '../../core/schedule-holiday-programs'
-import { bookHolidayProgramNew, type HolidayProgramBookingProps } from '../../core/book-holiday-program-new'
+import type { CreateDiscountCode } from '../../core/discount-codes/create-discount-code'
+import { createDiscountCode } from '../../core/discount-codes/create-discount-code'
+import type { CreateDiscountCodeFromInvitation } from '../../core/discount-codes/create-discount-code-from-invitation'
+import { createDiscountCodeFromInvitation } from '../../core/discount-codes/create-discount-code-from-invitation'
+import { bookHolidayProgram, type HolidayProgramBookingProps } from '../../core/book-holiday-program'
 
 export const holidayProgramsRouter = router({
-    scheduleFreeHolidayPrograms: publicProcedure
-        .input((input: unknown) => input as FreeHolidayProgramBooking[])
-        .mutation(async ({ input }) =>
-            bookHolidayPrograms({
-                free: true,
-                programs: input,
-            })
-        ),
     bookHolidayProgram: publicProcedure
         .input((input) => input as HolidayProgramBookingProps)
-        .mutation(({ input }) => bookHolidayProgramNew(input)),
+        .mutation(({ input }) => bookHolidayProgram(input)),
     createDiscountCode: authenticatedProcedure
         .input((input: unknown) => input as CreateDiscountCode)
         .mutation(({ input }) => createDiscountCode(input)),
