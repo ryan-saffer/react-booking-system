@@ -2,23 +2,14 @@ import { logger } from 'firebase-functions/v2'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import type { Order } from 'square/api'
 
-import type { AcuityWebhookData } from '../../acuity'
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { SquareClient } from '../../square/core/square-client'
-import { logError } from '../../utilities'
+import type { AcuityWebhookData } from '@/acuity'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import { SquareClient } from '@/square/core/square-client'
+import { logError } from '@/utilities'
 
-export async function processPlayLabRefund(data: AcuityWebhookData) {
+export async function processHolidayProgramRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
     const appointment = await acuity.getAppointment(data.id)
-    const isTermEnrolment =
-        AcuityUtilities.retrieveFormAndField(
-            appointment,
-            AcuityConstants.Forms.PAYMENT,
-            AcuityConstants.FormFields.IS_TERM_ENROLMENT
-        ) === 'yes'
-
-    // do not process refunds on term enrolments automatically
-    if (isTermEnrolment) return
 
     const appointmentDate = new Date(appointment.datetime)
     const now = new Date()
@@ -46,7 +37,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         order = result.order!
     } catch (err) {
         logError(
-            `Unable to find square order while processing play lab refund for session with classId: ${data.id}`,
+            `Unable to find square order while processing holiday program refund for session with classId: ${data.id}`,
             err,
             {
                 webhookData: data,
@@ -54,7 +45,6 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         )
         return
     }
-
     // if searching for line items that just match classId, multiple line items could be found if multiple children booked.
     // so to be sure we are processing the refund on the correct line item, we get the line item identifier
     const lineItemIdentifier =
@@ -66,7 +56,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     const lineItemToRefund = order?.lineItems?.find((it) => it?.metadata?.['lineItemIdentifier'] === lineItemIdentifier)
     if (!lineItemToRefund) {
         logError(
-            `Unable to find line item with matching class id and line item identifier for play lab booking with id: ${appointment.id}`,
+            `Unable to find line item with matching class id and line item identifier for holiday program booking with id: ${appointment.id}`,
             null,
             { webhookData: data }
         )
@@ -78,7 +68,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
 
     const paymentId = order?.tenders?.[0].paymentId
     if (!paymentId) {
-        logError('Order does not have a tendered payment id while processing play lab refund', null, {
+        logError('Order does not have a tendered payment id while processing holiday program refund', null, {
             webhookData: data,
             orderId: orderId,
         })
@@ -93,7 +83,7 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
             idempotencyKey: data.id,
         })
     } catch (err) {
-        logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
+        logError(`Unable to process square refund for holiday program booking with id: ${appointment.id}`, err, {
             webhookData: data,
             refundAmount: amountToRefund,
         })

@@ -4,15 +4,16 @@ import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { v4 as uuidv4 } from 'uuid'
 
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { SheetsClient } from '../../google/SheetsClient'
-import { env } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
-import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
-import { SquareClient } from '../../square/core/square-client'
-import { logError, throwTrpcError } from '../../utilities'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { SheetsClient } from '@/google/SheetsClient'
+import { env } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
+import { SquareClient } from '@/square/core/square-client'
+import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
+
 import { sendConfirmationEmail } from './send-confirmation-email'
 
 export type HolidayProgramBookingProps = {
@@ -174,7 +175,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                         value: input.emergencyContactPhone,
                     },
                     {
-                        id: AcuityConstants.FormFields.PAYMENT_ID,
+                        id: AcuityConstants.FormFields.ORDER_ID,
                         value: order!.id || '',
                     },
                 ],

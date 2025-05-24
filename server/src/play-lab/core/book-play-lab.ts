@@ -143,7 +143,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                     value: input.bookingType === 'term-booking' ? 'yes' : '',
                 },
                 {
-                    id: AcuityConstants.FormFields.PAYMENT_ID,
+                    id: AcuityConstants.FormFields.ORDER_ID,
                     value: order.id || '',
                 },
                 {

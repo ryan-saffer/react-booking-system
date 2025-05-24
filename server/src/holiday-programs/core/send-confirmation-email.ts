@@ -2,8 +2,8 @@ import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { MailClient } from '../../sendgrid/MailClient'
-import type { Emails } from '../../sendgrid/types'
+import { MailClient } from '@/sendgrid/MailClient'
+import type { Emails } from '@/sendgrid/types'
 
 export async function sendConfirmationEmail(
     appointments: AcuityTypes.Api.Appointment[],
