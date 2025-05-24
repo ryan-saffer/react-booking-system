@@ -13,6 +13,8 @@ import Step1 from '../components/step1/Step1'
 import { Step2 } from '../components/step2/Step2'
 import Step3 from '../components/step3/Step3'
 import { useCart } from '../state/cart-store'
+import { useIsMutating } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
 
 const { Step } = Steps
 
@@ -43,6 +45,8 @@ export const CustomerBookingPage = () => {
     const [formValues, setFormValues] = useState<Partial<Form>>({})
     const [form] = AntdForm.useForm()
 
+    const [bookingComplete, setBookingComplete] = useState(false)
+
     const continueButtonRef = useRef<HTMLButtonElement>(null)
 
     const selectedClasses = useCart((store) => store.selectedClasses)
@@ -60,6 +64,10 @@ export const CustomerBookingPage = () => {
                 : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
         includeUnavailable: true,
         minDate: nowRef.current,
+    })
+
+    const isMutating = useIsMutating({
+        mutationKey: getQueryKey(trpc.holidayPrograms.bookHolidayProgram),
     })
 
     useEffect(() => {
@@ -82,6 +90,10 @@ export const CustomerBookingPage = () => {
         form.resetFields(['children'])
     }
 
+    function onBookingSuccess() {
+        setBookingComplete(true)
+    }
+
     const renderStep = () => {
         if (isSuccess) {
             switch (step) {
@@ -96,7 +108,13 @@ export const CustomerBookingPage = () => {
                 case 2:
                     return <Step2 form={form} appointmentTypeId={appointmentTypeId} />
                 case 3:
-                    return <Step3 appointmentTypeId={appointmentTypeId} form={formValues as Form} />
+                    return (
+                        <Step3
+                            appointmentTypeId={appointmentTypeId}
+                            form={formValues as Form}
+                            handleBookingSuccess={onBookingSuccess}
+                        />
+                    )
             }
         }
     }
@@ -135,7 +153,7 @@ export const CustomerBookingPage = () => {
     }
 
     const renderBackButton = () => {
-        if (step > 1) {
+        if (step > 1 && !isMutating && !bookingComplete) {
             return (
                 <Button block type="default" size="large" onClick={() => setStep(step - 1)}>
                     Go back
@@ -200,7 +218,7 @@ export const CustomerBookingPage = () => {
             </Steps>
             <div style={{ width: '100%', maxWidth: 500 }}>
                 <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    {step > 1 && (
+                    {step > 1 && !isMutating && !bookingComplete && (
                         <Button
                             style={{ width: 'fit-content' }}
                             icon={<LeftOutlined />}

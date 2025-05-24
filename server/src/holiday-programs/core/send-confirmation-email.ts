@@ -4,7 +4,10 @@ import { DateTime } from 'luxon'
 import { MailClient } from '../../sendgrid/MailClient'
 import { Emails } from '../../sendgrid/types'
 
-export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appointment[]) {
+export async function sendConfirmationEmail(
+    appointments: AcuityTypes.Api.Appointment[],
+    receiptUrl: string | undefined
+) {
     const sortedAppointments = appointments.sort((a, b) => {
         const child1Name = AcuityUtilities.retrieveFormAndField(
             a,
@@ -42,6 +45,7 @@ export async function sendConfirmationEmail(appointments: AcuityTypes.Api.Appoin
                 location: `Fizz Kidz ${appointments[0].calendar}`,
                 address: appointments[0].location,
                 bookings,
+                receiptUrl,
             })
             break
         case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:

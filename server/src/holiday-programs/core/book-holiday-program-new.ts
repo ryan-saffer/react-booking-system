@@ -100,28 +100,34 @@ export async function bookHolidayProgramNew(input: HolidayProgramBookingProps) {
             })
         )
 
-    const { payment } = await square.payments
-        .create({
-            sourceId: input.payment.token,
-            idempotencyKey,
-            locationId: input.payment.locationId,
-            amountMoney: {
-                currency: 'AUD',
-                amount: BigInt(input.payment.amount),
-            },
-            orderId: order!.id,
-            customerDetails: {
-                customerInitiated: true,
-                sellerKeyedIn: false,
-            },
-            buyerEmailAddress: input.parentEmail,
-            verificationToken: input.payment.buyerVerificationToken,
-        })
-        .catch((error) =>
-            throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', error, { input })
-        )
-
-    console.log(payment)
+    let recieptUrl: string | undefined = undefined
+    if (order?.totalMoney?.amount === BigInt(0)) {
+        await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey })
+    } else {
+        const { payment } = await square.payments
+            .create({
+                sourceId: input.payment.token,
+                idempotencyKey,
+                locationId: input.payment.locationId,
+                amountMoney: {
+                    currency: 'AUD',
+                    amount: BigInt(input.payment.amount),
+                },
+                orderId: order!.id,
+                customerDetails: {
+                    customerInitiated: true,
+                    sellerKeyedIn: false,
+                },
+                buyerEmailAddress: input.parentEmail,
+                verificationToken: input.payment.buyerVerificationToken,
+            })
+            .catch((error) =>
+                throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', error, {
+                    input,
+                })
+            )
+        recieptUrl = payment!.receiptUrl
+    }
 
     const acuity = await AcuityClient.getInstance()
     const appointments = await Promise.all(
@@ -224,8 +230,7 @@ export async function bookHolidayProgramNew(input: HolidayProgramBookingProps) {
     }
 
     // confirmation email
-    // TODO: add receipt URL
-    await sendConfirmationEmail(appointments)
+    await sendConfirmationEmail(appointments, recieptUrl)
 
     // if using a discount code, update its number of uses
     const code = input.payment.discount?.code
@@ -236,4 +241,6 @@ export async function bookHolidayProgramNew(input: HolidayProgramBookingProps) {
             logError('Error while updating discount code during holiday program registration', err, { code })
         }
     }
+
+    // TODO mixpanel
 }
