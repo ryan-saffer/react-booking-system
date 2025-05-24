@@ -1,5 +1,6 @@
 import { Card, Collapse, Empty } from 'antd'
-import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'

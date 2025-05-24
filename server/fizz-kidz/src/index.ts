@@ -35,7 +35,7 @@ export * from './stripe'
 
 export * from './after-school-program'
 
-export * from './holidayPrograms'
+export * from './discount-codes'
 
 export * from './timesheets'
 

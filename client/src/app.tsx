@@ -85,13 +85,6 @@ const CustomerBookingScreen = lazy(() =>
         default: module.CustomerBookingPage,
     }))
 )
-const Confirmation = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/components/confirmation/Confirmation.js').then(
-        (module) => ({
-            default: module.Confirmation,
-        })
-    )
-)
 const Onboarding = lazy(() =>
     import('./components/Onboarding/Onboarding.js').then((module) => ({ default: module.Onboarding }))
 )
@@ -439,14 +432,6 @@ const router = createBrowserRouter([
                             <Suspense>
                                 {/* fallback looks awkward on this screen */}
                                 <CustomerBookingScreen />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'confirmation',
-                        Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <Confirmation />
                             </Suspense>
                         ),
                     },

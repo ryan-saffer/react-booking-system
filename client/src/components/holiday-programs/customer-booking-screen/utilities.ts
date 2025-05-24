@@ -1,4 +1,5 @@
-import { AcuityConstants, AcuityTypes, DiscountCode } from 'fizz-kidz'
+import type { AcuityTypes, DiscountCode } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 
 export const PRICE_MAP: Record<
     AcuityConstants.AppointmentTypeValue,

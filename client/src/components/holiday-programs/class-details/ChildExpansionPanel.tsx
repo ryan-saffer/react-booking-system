@@ -1,5 +1,6 @@
 import { Button as AntButton, Collapse, List, Tag } from 'antd'
-import { AcuityConstants, AcuityTypes, AcuityUtilities } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import React, { useState } from 'react'
 
 import { ExclamationCircleOutlined } from '@ant-design/icons'

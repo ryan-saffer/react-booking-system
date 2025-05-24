@@ -1,20 +1,21 @@
 import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
-import dayjs from 'dayjs'
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import type dayjs from 'dayjs'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { LeftOutlined } from '@ant-design/icons'
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
-import { trpc } from '@utils/trpc'
-
-import Step1 from '../components/step1/Step1'
-import { Step2 } from '../components/step2/Step2'
-import Step3 from '../components/step3/Step3'
-import { useCart } from '../state/cart-store'
 import { useIsMutating } from '@tanstack/react-query'
 import { getQueryKey } from '@trpc/react-query'
+import { trpc } from '@utils/trpc'
+
+import Step1 from '../components/step-1/step-1'
+import { Step2 } from '../components/step-2/step-2'
+import Step3 from '../components/step-3/step-3'
+import { useCart } from '../state/cart-store'
 
 const { Step } = Steps
 

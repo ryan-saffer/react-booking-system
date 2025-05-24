@@ -1,5 +1,6 @@
 import { Alert, Button, Card, Checkbox, Form, Select } from 'antd'
-import { AcuityConstants, AcuityTypes, Location } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useMemo } from 'react'
 

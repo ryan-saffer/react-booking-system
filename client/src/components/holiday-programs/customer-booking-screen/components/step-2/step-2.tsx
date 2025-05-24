@@ -1,14 +1,15 @@
-import { Button, Checkbox, Divider, Form, Input, Modal, Typography, type FormInstance } from 'antd'
+import type { FormInstance } from 'antd'
+import { Button, Checkbox, Divider, Form, Input, Modal, Typography } from 'antd'
 import React, { Fragment, useState } from 'react'
 
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { PhoneRule, SimpleTextRule } from '@utils/formUtils'
 
-import { useCart } from '../../state/cart-store'
-import { ChildForm } from './ChildForm'
-import CancellationPolicyModal from './CancellationPolicyModal'
-import TermsAndConditionsModal from './TermsAndConditionsModal'
 import type { Form as TForm } from '../../pages/customer-booking-page'
+import { useCart } from '../../state/cart-store'
+import CancellationPolicyModal from './cancellation-policy-modal'
+import { ChildForm } from './child-form'
+import TermsAndConditionsModal from './terms-and-conditions-modal'
 
 const { Text } = Typography
 

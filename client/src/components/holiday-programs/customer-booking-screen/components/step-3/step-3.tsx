@@ -14,8 +14,8 @@ import { trpc } from '@utils/trpc'
 
 import type { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
-import BookingSummary from './BookingSummary'
-import DiscountInput from './DiscountInput'
+import BookingSummary from './booking-summary'
+import DiscountInput from './discount-input'
 
 type Props = {
     appointmentTypeId: AcuityConstants.AppointmentTypeValue
