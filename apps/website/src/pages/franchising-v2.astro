@@ -1,0 +1,520 @@
+---
+import Layout from "@/layout/Layout.astro";
+import { Image } from "astro:assets";
+import purpleWave from "@/assets/images/pages/franchising/v2/purple-wave.png";
+import blueWave from "@/assets/images/pages/franchising/v2/blue-wave.png";
+import hero from "@/assets/images/pages/franchising/hero.png";
+import FranchisingHero from "@/components/image-clips/franchising-hero.astro";
+import { Button } from "@/components/react/ui/button";
+import pinkCircle from "@/assets/images/pages/franchising/v2/pink-circle.png";
+import yellowCircle from "@/assets/images/pages/franchising/v2/yellow-circle.png";
+import greenCircle from "@/assets/images/pages/franchising/v2/green-circle.png";
+import purpleCurve from "@/assets/images/pages/franchising/v2/purple-curve.png";
+import team from "@/assets/images/pages/franchising/v2/all-staff.jpg";
+import clouds from "@/assets/images/pages/franchising/v2/clouds.png";
+import check from "@/assets/images/pages/franchising/v2/check.png";
+import yellowWaveTop from "@/assets/images/pages/franchising/v2/yellow-wave-top.png";
+import yellowWaveBottom from "@/assets/images/pages/franchising/v2/yellow-wave-bottom.png";
+import studio1 from "@/assets/images/pages/franchising/v2/studio-1.png";
+import studio2 from "@/assets/images/pages/franchising/v2/studio-2.png";
+import studio3 from "@/assets/images/pages/franchising/v2/studio-3.png";
+import FaqAccordion from "@/components/react/faq-accordion";
+import faq from "@/assets/images/pages/parties/faq.png";
+---
+
+<Layout
+  title="Kids Party & Event Franchise Opportunities in Melbourne"
+  description="Run your own Fizz Kidz studio, and become a part of the Fizz Family!"
+>
+  <!-- your content here -->
+  <div class="bg-[#45D3F3]">
+    <div class="m-auto flex max-w-[1400px] gap-12 px-8 py-24">
+      <div class="flex flex-col justify-center gap-4">
+        <p class="font-lilita text-5xl uppercase text-white md:text-7xl">
+          <span>Lead with fun</span><br /><span>Become a</span><br /><span
+            class="text-6xl md:text-8xl">Fizz owner</span
+          >
+        </p>
+        <Button
+          className="mt-8 w-fit bg-[#8F44E1] p-8 font-lilita text-xl uppercase tracking-wider hover:bg-[#F6BA33]"
+          >Enquire Today</Button
+        >
+      </div>
+      <div class="hidden w-full md:block md:w-1/2">
+        <FranchisingHero img={hero} alt="two staff smiling" />
+      </div>
+    </div>
+  </div>
+  <div class="relative overflow-hidden">
+    <Image src={purpleWave} alt="" class="" />
+    <Image src={blueWave} alt="" class="absolute -top-0.5" />
+  </div>
+  <section class="m-auto block max-w-[1380px] px-5 pt-4">
+    <div class="flex items-center gap-24 py-16">
+      <div class="hidden w-1/2 md:block">
+        <Image
+          src={hero}
+          alt="TODO"
+          class="w-full rounded-3xl object-contain"
+        />
+      </div>
+      <div class="w-full md:w-1/2">
+        <p class="mb-6 font-lilita text-3xl uppercase md:text-5xl">
+          Fizz Kidz <span class="text-[#F24DA2]">Franchise</span>
+        </p>
+        <p class="mb-4 font-lilita text-2xl text-[#8F44E1] md:text-4xl">
+          A proven successful business model with a team that works with you
+        </p>
+        <p class="font-gotham text-lg leading-8 md:text-xl">
+          A Fizz Kidz franchise is an exciting powerful opportunity to combine
+          your love of working with children and your entrepreneurial spirit.
+          Build a business that brings smiles, sparkles, and unforgettable
+          memories to <span class="font-bold"
+            >your local community, with you!</span
+          >
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-24 py-16">
+      <div class="w-full md:w-1/2">
+        <p class="mb-6 font-lilita text-3xl uppercase md:text-5xl">
+          <span class="text-[#4FE16D]">Meet Talia</span> - Founder & CEO of Fizz
+          Kidz
+        </p>
+        <p class="text-lg: mdtext-xl font-gotham leading-8">
+          What began 7 years ago as one tiny small studio has grown into the
+          thriving values-driven company we see today. We just get it. We get
+          kids, we get our customers. We get FUN! This franchising model is
+          built to empower others do to the same, and share the joy and power of
+          spreading fun acorss Australia. I'm deeply involved in every part of
+          the business and work closely with each franchisee to support their
+          journey. As a parent and a business owner, I know how important
+          flexibility, purpose and community are - and that's exactly what
+          owning a Fizz Kidz studio offers. If you're ready to own your own
+          thriving kids studio and build something truly powerful — I'd love to
+          help you get there.
+        </p>
+      </div>
+      <div class="hidden w-1/2 md:block">
+        <Image
+          src={hero}
+          alt="TODO"
+          class="w-full rounded-3xl object-contain"
+        />
+      </div>
+    </div>
+  </section>
+  <section class="bg-gradient-to-t from-[#EAD6F0] to-white py-24">
+    <div class="m-auto block max-w-[1380px] px-5 pt-4">
+      <p class="text-center font-lilita text-3xl uppercase md:text-5xl">
+        What <span class="text-[#8F44E1]">we do?</span>
+      </p>
+      <div class="my-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+        {
+          [
+            {
+              content: (
+                <Fragment>
+                  Birthday
+                  <>
+                    <br />
+                    <span class="text-[#45D3F3]">Parties</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+            {
+              content: (
+                <Fragment>
+                  Play Lab
+                  <>
+                    <br />
+                    <span class="text-[#F6BA34]">(1 - 5 yrs)</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+            {
+              content: (
+                <Fragment>
+                  Holiday
+                  <>
+                    <br />
+                    <span class="text-[#F24DA2]">Programs</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+            {
+              content: (
+                <Fragment>
+                  After
+                  <>
+                    <br />
+                    <span class="text-[#4FE16D]">School</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+            {
+              content: (
+                <Fragment>
+                  Activations &
+                  <>
+                    <br />
+                    <span class="text-[#8F44E1]">Events</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+            {
+              content: (
+                <Fragment>
+                  School &
+                  <>
+                    <br />
+                    <span class="text-[#45D3F3]">Kindergarten</span>
+                  </>
+                </Fragment>
+              ),
+              image: hero,
+            },
+          ].map((item) => (
+            <div class="rounded-lg bg-white p-4 shadow-lg">
+              <Image src={item.image} alt="" class="rounded-lg" />
+              <p class="mt-4 text-center font-lilita text-xl uppercase tracking-wide">
+                {item.content}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <section class="m-auto my-24 block max-w-[1380px] px-5">
+    <p
+      class="m-auto mb-16 max-w-[550px] text-center font-lilita text-3xl uppercase leading-9 tracking-wide md:text-5xl md:leading-[3.5rem]"
+    >
+      And the <span class="text-[#45D3F3]">numbers</span> just go up and up!
+    </p>
+    <div class="grid grid-cols-1 justify-items-center md:grid-cols-3">
+      {
+        [
+          {
+            heading: <span class="text-[#F24DA2]">5000+</span>,
+            content: "Birthday parties",
+            image: pinkCircle,
+          },
+          {
+            heading: <span class="text-[#4EE16D]">1205+</span>,
+            content: "Children attended Fizz Kidz studio",
+            image: greenCircle,
+          },
+          {
+            heading: <span class="text-[#F6BA33]">568+</span>,
+            content: "5 Star Reviews",
+            image: yellowCircle,
+          },
+        ].map((item) => (
+          <div
+            class="flex min-h-80 min-w-80 flex-col items-center justify-center gap-2 bg-contain bg-no-repeat"
+            style={`background-image: url('${item.image.src}')`}
+          >
+            <p class="text-center font-lilita text-4xl">{item.heading}</p>
+            <p class="max-w-48 text-center">{item.content}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <Image src={purpleCurve} alt="" />
+  <div class="bg-[#8F44E1]">
+    <div class="m-auto block max-w-[1380px] px-5">
+      <p
+        class="text-center font-lilita text-3xl uppercase leading-9 text-white md:text-5xl md:leading-[3.5rem]"
+      >
+        Why <span class="text-[#F6BA34]">Fizz</span> Kidz ?<br />
+        <span class="text-[#F6BA34]">Because we're fizzing fantastic</span>
+      </p>
+
+      <div class="flex py-12 md:py-24">
+        <div class="flex w-full flex-col gap-4 md:w-1/2">
+          {
+            [
+              "Proven and clear track record of roaring success",
+              "Low capital investment",
+              "Large opportunity for further growth",
+              "Support office manages all customer enquiries",
+              "We are whole heartedly committed to your success",
+              "No full time staff required",
+              "A model that can offer flexible work-life balance",
+              "Custom-built in-house technology that makes running your studio seamless",
+            ].map((item) => (
+              <div class="rounded-xl bg-[#B17CEA] px-12 py-4 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
+                <p class="font-gotham font-medium text-white">{item}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="relative">
+    <Image src={purpleCurve} alt="" class="absolute rotate-180" />
+    <Image
+      src={team}
+      alt=""
+      class="z-0 max-h-[800px] w-full object-cover object-top"
+    />
+    <Image src={clouds} alt="" class="absolute bottom-0" />
+  </div>
+  <div class="m-auto block max-w-[1380px] px-5">
+    <p
+      class="mt-12 text-center font-lilita text-3xl uppercase tracking-wide md:text-5xl"
+    >
+      Together we are <span class="text-[#45D3F3]">stronger</span>
+    </p>
+    <div class="my-12 flex flex-col gap-6 md:my-24 md:flex-row">
+      <div
+        class="flex w-full flex-col gap-2 rounded-xl bg-[#45D3F3] p-8 md:w-1/2"
+      >
+        {
+          [
+            "Trained sales & marketing team working for you",
+            "We provide you with booked jobs, not just leads you have to chase",
+            "We teach you everything you need to know about all our services and how to train your staff",
+            "Skip the start up pain with high-ranking website over 1200 reviews across google and facebook",
+          ].map((item) => (
+            <div class="flex items-center gap-4">
+              <Image src={check} alt="check" class="w-10 md:w-16" />
+              <p class="font-gotham font-medium text-white">{item}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div
+        class="flex w-full flex-col gap-2 rounded-xl bg-[#8F44E1] p-8 md:w-1/2"
+      >
+        {
+          [
+            "Recognisable brand, with a database of customers ready to market to. You are never alone.",
+            "Custom built infrastructure that manages everything from bookings, attendance management, invoicing and payroll.",
+            "Full time operational support dedicated to support your recruitment and training support studio leasing guidance and support.",
+          ].map((item) => (
+            <div class="flex items-center gap-4">
+              <Image src={check} alt="check" class="w-10 md:w-16" />
+              <p class="font-gotham font-medium text-white">{item}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <section>
+    <Image src={yellowWaveTop} alt="" />
+    <div class="bg-[#F6BA33]">
+      <div class="m-auto block max-w-[1380px] px-5 py-24">
+        <p
+          class="m-auto max-w-[600px] text-center font-lilita text-3xl uppercase md:text-5xl"
+        >
+          Fizz Kidz studios - the heart of <span class="text-[#8F44E1]"
+            >Fizz Kidz</span
+          >
+        </p>
+        <div
+          class="grid grid-cols-1 items-center justify-items-center md:grid-cols-3"
+        >
+          <Image src={studio1} alt="" class="hidden md:block" />
+          <Image src={studio2} alt="" class="md:max-w-[300px]" />
+          <Image src={studio3} alt="" class="hidden md:block" />
+        </div>
+      </div>
+    </div>
+    <Image src={yellowWaveBottom} alt="" />
+  </section>
+  <section class="bg-gradient-to-t from-[#DAF1D7] to-white">
+    <div class="m-auto block max-w-[1380px] px-5 py-24">
+      <p
+        class="m-auto mb-12 max-w-[800px] text-center font-lilita text-3xl uppercase leading-9 md:text-5xl md:leading-[3.5rem]"
+      >
+        Fizz Kidz franchisee <span class="text-[#4FE16D]">onboarding</span> journey
+      </p>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+        {
+          [
+            {
+              number: "01",
+              title: <>Enquiry</>,
+              content: "Fill in the form below",
+              image: hero,
+              color: "#8F44E1",
+            },
+            {
+              number: "02",
+              title: (
+                <>
+                  Phone <span class="text-[#45D3F3]">interview</span>
+                </>
+              ),
+              content: "We will contact you by phone for an initial chat",
+              image: hero,
+              color: "#45D3F3",
+            },
+            {
+              number: "03",
+              title: (
+                <>
+                  Application <span class="text-[#8F44E1]">form</span>
+                </>
+              ),
+              content:
+                "Complete our franchise application form and non-disclosure agreement.",
+              image: hero,
+              color: "#8F44E1",
+            },
+            {
+              number: "04",
+              title: (
+                <>
+                  Let's get to know{" "}
+                  <span class="text-[#F6BA34]">each other</span>
+                </>
+              ),
+              content:
+                "Meet either online or in a Fizz Kidz studio with our CEO and COO.",
+              image: hero,
+              color: "#F6BA34",
+            },
+            {
+              number: "05",
+              title: (
+                <>
+                  Discover the Fizz
+                  <span class="text-[#F24DA2]">Kidz way</span>
+                </>
+              ),
+              content:
+                "Spend a day in a Fizz Kidz studio and see what we are all about!",
+              image: hero,
+              color: "#F24DA2",
+            },
+            {
+              number: "06",
+              title: (
+                <>
+                  Application on
+                  <span class="text-[#4FE16D]">approval</span>
+                </>
+              ),
+              content: "Gain final approval to become a Fizz Kidz franchisee",
+              image: hero,
+              color: "#4FE16D",
+            },
+            {
+              number: "04",
+              title: (
+                <>
+                  Site selection and
+                  <span class="text-[#8F44E1]">training</span>
+                </>
+              ),
+              content:
+                "Together we will find an appropriate site and get you up and running!",
+              image: hero,
+              color: "#8F44E1",
+            },
+            {
+              number: "04",
+              title: (
+                <>
+                  Your ready to
+                  <span class="text-[#45D3F3]">open</span>
+                </>
+              ),
+              content:
+                "Together we will find an appropriate site and get you up and running!",
+              image: hero,
+              color: "#45D3F3",
+            },
+          ].map((item) => (
+            <div class="rounded-xl bg-white shadow-md">
+              <Image src={item.image} alt="" class="rounded-t-xl" />
+              <div class="relative">
+                <div
+                  class="absolute -top-6 left-1/2 flex h-12 w-12 -translate-x-1/2 transform items-center justify-center rounded-full border-2 bg-white"
+                  style={{ borderColor: item.color }}
+                >
+                  <span class="font-lilita">{item.number}</span>
+                </div>
+                <div class="p-8">
+                  <p class="mb-2 text-center font-lilita text-xl uppercase">
+                    {item.title}
+                  </p>
+                  <p class="text-center font-gotham">{item.content}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <div class="m-auto block max-w-[1380px] px-5">
+    <section class="mt-12 md:mt-20">
+      <div class="flex w-full flex-col items-center gap-8 md:flex-row">
+        <Image
+          class="hidden w-2/5 md:block"
+          src={faq}
+          alt="Three girls smiling"
+        />
+        <div class="w-full md:w-3/5">
+          <p
+            class="mb-12 font-lilita text-5xl uppercase leading-9 md:leading-[3.5rem]"
+          >
+            Frequently Asked <span class="text-[#F24DA2]">Questions</span>
+          </p>
+          <FaqAccordion
+            client:idle
+            items={[
+              {
+                question: "How do I book a session?",
+                answer:
+                  "You can book online through our website, or contact us directly and we'll help you find a time that works best for you and your child.",
+              },
+              {
+                question: "What age group is Play Lab for?",
+                answer:
+                  "Play Lab is designed for children aged 1 to 5 years old. Activities are thoughtfully adapted to suit each developmental stage, so everyone can enjoy and benefit from the session — from curious toddlers to creative preschoolers.",
+              },
+              {
+                question: "Do I stay with my child during the session?",
+                answer:
+                  "If your child is under 4 years old, yes. For this age group Play Lab is a caregiver-and-child program. You'll share in the fun, support their exploration, and make special memories together - without the clean-up! Children aged 4-5 years old are very welcome to attend independently, our team provides gentle guidance and lots of support throughout the session.",
+              },
+              {
+                question: "What types of activities do you run?",
+                answer:
+                  "Each session includes a mix of art, science, sensory, and craft-based activities. For younger children, the focus is on exploration and play. For older children, we introduce elements of creative thinking, self-expression, and take-home projects.",
+              },
+              {
+                question: "How long is each session?",
+                answer: "Each Play Lab session runs for 60 minutes.",
+              },
+              {
+                question:
+                  "My child has special needs. Is this program appropriate?",
+                answer:
+                  "Absolutely. We welcome all children and are passionate about creating an inclusive, supportive environment for every child. We encourage you to call us as we'd love to chat about how we can best support your child in the Play Lab space.",
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
