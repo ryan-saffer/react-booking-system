@@ -68,7 +68,7 @@ export const CustomerBookingPage = () => {
     })
 
     const isMutating = useIsMutating({
-        mutationKey: getQueryKey(trpc.holidayPrograms.bookHolidayProgram),
+        mutationKey: getQueryKey(trpc.holidayPrograms.book),
     })
 
     useEffect(() => {

@@ -8,7 +8,7 @@ import { createDiscountCodeFromInvitation } from '../../core/discount-codes/crea
 import { bookHolidayProgram, type HolidayProgramBookingProps } from '../../core/book-holiday-program'
 
 export const holidayProgramsRouter = router({
-    bookHolidayProgram: publicProcedure
+    book: publicProcedure
         .input((input) => input as HolidayProgramBookingProps)
         .mutation(({ input }) => bookHolidayProgram(input)),
     createDiscountCode: authenticatedProcedure
