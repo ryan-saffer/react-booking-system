@@ -36,6 +36,7 @@ const Root = styled('div')({
 })
 
 const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
+    // MARK: variables
     const selectedClasses = useCart((store) => store.selectedClasses)
     const sameDayClasses = useCart((store) => store.sameDayClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
@@ -47,8 +48,22 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
 
     const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}` // force rerender the square checkout component when disconut code changes
 
-    const { mutateAsync: book, isLoading, isSuccess, isError } = trpc.holidayPrograms.bookHolidayProgram.useMutation()
+    // MARK: hooks
+    const {
+        mutateAsync: book,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+    } = trpc.holidayPrograms.bookHolidayProgram.useMutation()
 
+    useEffect(() => {
+        if (isSuccess) {
+            handleBookingSuccess()
+        }
+    }, [isSuccess, handleBookingSuccess])
+
+    // MARK: functions
     function formatClassTime(date: string) {
         return DateTime.fromISO(date).toFormat('EEEE MMMM d, h:mm a')
     }
@@ -61,12 +76,31 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
         }
     }
 
-    useEffect(() => {
-        if (isSuccess) {
-            handleBookingSuccess()
-        }
-    }, [isSuccess, handleBookingSuccess])
+    function renderError() {
+        if (isError) {
+            let errorMessage =
+                'There was an error booking in your sessions. Please try again later or contact us at bookings@fizzkidz.com.au'
+            let errorTitle = 'Something went wrong'
 
+            if (error.data?.code === 'CONFLICT') {
+                errorMessage =
+                    "One or more of your selected sessions does not have enough spots available. Please return to the 'Select Sessions' step and review your selected sessions."
+                errorTitle = 'One or more sessions are full'
+            }
+
+            return (
+                <Alert variant="destructive" className="mt-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle className="font-semibold">{errorTitle}</AlertTitle>
+                    <AlertDescription className="font-medium">{errorMessage}</AlertDescription>
+                </Alert>
+            )
+        }
+
+        return null
+    }
+
+    // MARK: rendering
     if (isSuccess) {
         return (
             <Alert variant="success" className="twp">
@@ -111,6 +145,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                                 emergencyContactName: form.emergencyContact,
                                 emergencyContactPhone: form.emergencyPhone,
                                 joinMailingList: form.joinMailingList,
+                                numberOfKids: form.children.length,
                                 payment: {
                                     token: token,
                                     buyerVerificationToken: buyerVerification?.token || '',
@@ -188,18 +223,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                     })}
                 >
                     {isError ? (
-                        <Alert variant="destructive" className="twp my-4">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertTitle className="font-semibold">Something went wrong</AlertTitle>
-                            <AlertDescription className="font-medium">
-                                {' '}
-                                There was an error booking in your sessions. Please try again later or contact us at{' '}
-                                <a href="mailto:bookings@fizzkidz.com.au" style={{ color: 'blue' }}>
-                                    bookings@fizzkidz.com.au
-                                </a>
-                                .
-                            </AlertDescription>
-                        </Alert>
+                        renderError()
                     ) : (
                         <>
                             <ApplePay style={{ marginTop: 32, marginBottom: 8 }} />

@@ -91,7 +91,7 @@ export type MixpanelEvent = {
     }
     'holiday-program-booking': {
         distinct_id: string
-        location: Location
+        location: LocationOrTest
         amount: number
         numberOfSlots: number
         numberOfKids: number

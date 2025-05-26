@@ -82,13 +82,6 @@ export const CustomerBookingPage = () => {
 
     const handleClassSelectionChange = (klass: AcuityTypes.Client.Class) => {
         toggleClass(klass, formValues?.children?.length || 0)
-
-        // Clear the list of children, to fix bug where you can add many children,
-        // 'go back' and then select a class without enough spots, and continue.
-        // Do it here (instead of when the hit the 'go back' button), because if they go back and
-        // don't change their selection, no need to clear the children.
-        setFormValues({ ...formValues, children: [] })
-        form.resetFields(['children'])
     }
 
     function onBookingSuccess() {
@@ -181,10 +174,6 @@ export const CustomerBookingPage = () => {
                             return new Error()
                         }
                         if (step === 2) {
-                            // check if any children added
-                            // (removing a child makes their values undefined.. so filter those out to be sure)
-                            // let children = (formValues as Form).children.filter(child => child.childName !== undefined)
-
                             if (formValues.children && formValues.children.length !== 0) {
                                 setStep(step + 1)
                             } else {
@@ -207,7 +196,7 @@ export const CustomerBookingPage = () => {
                 Booking Form
             </Typography.Title>
             <Steps current={step - 1} style={{ marginBottom: 24 }}>
-                <Step title="Select classes" />
+                <Step title="Select sessions" />
                 <Step title="Your information" />
                 <Step title="Payment" />
             </Steps>
