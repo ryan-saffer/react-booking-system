@@ -1,7 +1,7 @@
-import { Location } from '../core/location'
+import { Location, type LocationOrTest } from '../core/location'
 import { assertNever } from '../utilities/assert-never'
 
-export function getSquareLocationId(studio: Location | 'test') {
+export function getSquareLocationId(studio: LocationOrTest) {
     switch (studio) {
         case 'test':
             return 'L834ATV1QTRQW'
@@ -17,7 +17,7 @@ export function getSquareLocationId(studio: Location | 'test') {
             return '6P5FX9MG3SBJ6'
         default: {
             assertNever(studio)
-            throw new Error(`Unhandled location in getLocaitonId(): '${studio}'`)
+            throw new Error(`Unhandled location in getSquareLocationId(): '${studio}'`)
         }
     }
 }

@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { DiscountCode, WithoutId } from 'fizz-kidz'
+import type { DiscountCode, WithoutId } from 'fizz-kidz'
 import { CalendarIcon, DollarSign, Loader2, Percent } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

@@ -1,4 +1,4 @@
-import { CollectionGroup } from 'firebase-admin/firestore'
+import type { CollectionGroup } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
     AuthUser,
@@ -7,9 +7,7 @@ import type {
     Employee,
     Event,
     FirestoreBooking,
-    HolidayProgramBooking,
     Invitation,
-    PaidHolidayProgramBooking,
     ZohoAccessToken,
 } from 'fizz-kidz'
 
@@ -25,27 +23,6 @@ export class FirestoreRefs {
 
     static async partyBooking(id: string) {
         return (await FirestoreClient.getInstance()).collection('bookings').doc(id) as Document<Booking>
-    }
-
-    /**
-     * Not used just for holiday programs, but other acuity programs as well, such as studio opening sessions.
-     * Since it's essentially the exact same thing but just with a different appointmentTypeId, reusing
-     * holiday programs is much simpler, and renaming it was too much hastle.
-     */
-    static async holidayProgramBooking(paymentIntentId: string) {
-        return (await FirestoreClient.getInstance())
-            .collection('holidayProgramBookings')
-            .doc(paymentIntentId) as Document<HolidayProgramBooking>
-    }
-
-    static async holidayPrograms(paymentIntentId: string) {
-        return (await this.holidayProgramBooking(paymentIntentId)).collection(
-            'programs'
-        ) as Collection<PaidHolidayProgramBooking>
-    }
-
-    static async holidayProgram(paymentIntentId: string, documentId: string) {
-        return (await this.holidayPrograms(paymentIntentId)).doc(documentId)
     }
 
     static async afterSchoolEnrolments() {

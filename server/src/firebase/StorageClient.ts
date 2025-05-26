@@ -1,5 +1,6 @@
 import type { Storage } from 'firebase-admin/storage'
-import { ClientStatus } from '../utilities/types'
+
+import type { ClientStatus } from '../utilities/types'
 
 export class StorageClient {
     private static instance: StorageClient

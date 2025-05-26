@@ -1,14 +1,12 @@
 import { format } from 'date-fns'
-import { DiscountCode, Service } from 'fizz-kidz'
+import type { DiscountCode, Service } from 'fizz-kidz'
 import { ArrowUpDown, CalendarIcon, MoreHorizontal } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import type { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,

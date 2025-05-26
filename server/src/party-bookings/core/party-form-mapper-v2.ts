@@ -1,12 +1,11 @@
+import type { Booking, PaperFormResponse } from 'fizz-kidz'
 import {
     ADDITIONS,
-    Booking,
     CREATIONS,
     getKeyByValue,
     getQuestionValue,
     Location,
     ObjectEntries,
-    PaperFormResponse,
     type PartyFormV2,
 } from 'fizz-kidz'
 import { logger } from 'firebase-functions/v2'

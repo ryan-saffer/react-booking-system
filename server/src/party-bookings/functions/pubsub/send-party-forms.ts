@@ -1,6 +1,7 @@
 import { logger } from 'firebase-functions/v2'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { Booking, capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import type { Booking } from 'fizz-kidz'
+import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'

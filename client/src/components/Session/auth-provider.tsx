@@ -1,10 +1,11 @@
-import { ReactNode, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
 import AuthUserContext from './auth-user-context'
 import { trpc } from '@utils/trpc'
-import { AuthUser } from 'fizz-kidz'
+import type { AuthUser } from 'fizz-kidz'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const firebase = useFirebase()

@@ -7,7 +7,7 @@ import Mustache from 'mustache'
 import type { MailService } from '@sendgrid/mail'
 
 import { env } from '../init'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
 import type { Emails } from './types'
 
 type Options = {
@@ -124,6 +124,20 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'holiday_program_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'holidayProgramCancellation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Holiday Program Cancelled',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'holiday_program_cancellation.mjml',
                     useMjml: true,
                 }
             case 'kingsvilleOpeningConfirmation':
@@ -692,6 +706,20 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'play_lab_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'playLabCancellation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Play Lab Session Cancelled',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'play_lab_cancellation.mjml',
                     useMjml: true,
                 }
             default: {

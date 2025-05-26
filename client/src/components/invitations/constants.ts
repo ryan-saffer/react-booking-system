@@ -1,4 +1,4 @@
-import { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
 
 export const InvitationTemplates: Record<InvitationOption, { invitation: string; envelope: string }> = {
     Freckles: { invitation: '/invitations/Invitation-Freckles.png', envelope: '/invitations/Envelope-Freckles.png' },

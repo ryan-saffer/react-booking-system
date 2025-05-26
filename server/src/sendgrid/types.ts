@@ -5,6 +5,14 @@ export type Emails = {
         location: string
         address: string
         bookings: { datetime: string; confirmationPage: string }[]
+        receiptUrl: string | undefined
+    }
+
+    holidayProgramCancellation: {
+        parentName: string
+        location: string
+        booking: string
+        receiptUrl: string | undefined
     }
 
     kingsvilleOpeningConfirmation: {
@@ -26,7 +34,14 @@ export type Emails = {
         location: string
         bookings: { time: string; details: string; confirmationPage: string }[]
         isTermEnrolment: boolean
-        receiptUrl?: string
+        receiptUrl: string | undefined
+    }
+
+    playLabCancellation: {
+        parentName: string
+        location: string
+        booking: string
+        receiptUrl: string | undefined
     }
 
     // AFTER SCHOOL PROGRAM

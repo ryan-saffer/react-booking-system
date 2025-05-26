@@ -52,12 +52,12 @@ const AfterSchoolProgramInvoicing = lazy(() =>
     }))
 )
 const HolidayProgramSelectionPage = lazy(() =>
-    import('./components/HolidayPrograms/holiday-program-class-selection-page.js').then((module) => ({
+    import('./components/holiday-programs/holiday-program-class-selection-page.js').then((module) => ({
         default: module.HolidayProgramSelectionPage,
     }))
 )
 const ClassDetailsPage = lazy(() =>
-    import('./components/HolidayPrograms/ClassDetails/index.js').then((module) => ({
+    import('./components/holiday-programs/class-details/index.js').then((module) => ({
         default: module.ClassDetailsPage,
     }))
 )
@@ -81,13 +81,8 @@ const SelectedProgramProvider = lazy(() =>
     }))
 )
 const CustomerBookingScreen = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/index.js').then((module) => ({
-        default: module.CustomerBookingScreen,
-    }))
-)
-const Confirmation = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation.js').then((module) => ({
-        default: module.Confirmation,
+    import('./components/holiday-programs/customer-booking-screen/pages/customer-booking-page.js').then((module) => ({
+        default: module.CustomerBookingPage,
     }))
 )
 const Onboarding = lazy(() =>
@@ -437,14 +432,6 @@ const router = createBrowserRouter([
                             <Suspense>
                                 {/* fallback looks awkward on this screen */}
                                 <CustomerBookingScreen />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'confirmation',
-                        Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <Confirmation />
                             </Suspense>
                         ),
                     },

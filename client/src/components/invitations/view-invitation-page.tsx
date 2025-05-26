@@ -1,4 +1,4 @@
-import { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
 import { ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'

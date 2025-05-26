@@ -1,7 +1,8 @@
-import * as StripeConfig from '../../config/stripe'
 import type { Stripe as TStripe } from 'stripe'
+
+import * as StripeConfig from '../../config/stripe'
 import { env } from '../../init'
-import { ClientStatus } from '../../utilities/types'
+import type { ClientStatus } from '../../utilities/types'
 
 export class StripeClient {
     private static instance: StripeClient

@@ -2,11 +2,12 @@ import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
+import { checkInToCrm } from '@/holiday-programs/core/check-in-to-crm'
+import { processHolidayProgramRefund } from '@/holiday-programs/core/process-holiday-program-refund'
+import { processPlayLabRefund } from '@/play-lab/core/process-play-lab-refund'
+import { logError } from '@/utilities'
+
 import { AcuityClient } from '../core/acuity-client'
-import { cancelHolidayProgram } from '../../holiday-programs/core/cancel-holiday-program'
-import { checkInToCrm } from '../../holiday-programs/core/check-in-to-crm'
-import { processPlayLabRefund } from '../../play-lab/core/process-play-lab-refund'
-import { logError } from '../../utilities'
 
 export type AcuityWebhookData = {
     action: 'scheduled' | 'rescheduled' | 'canceled' | 'changed' | 'order.completed'
@@ -38,7 +39,7 @@ export const asWebhook = onRequest(async (req, resp) => {
             case 'canceled':
                 // ONLY HOLIDAY PROGRAMS GET REFUNDED - CURRENTLY OTHER PROGRAMS NOT SUPPORTED (ie kingsville opening)
                 if (isHolidayProgram(data.appointmentTypeID)) {
-                    await cancelHolidayProgram(data)
+                    await processHolidayProgramRefund(data)
                     resp.status(200).send()
                     return
                 } else if (await isPlayLab(data.appointmentTypeID)) {

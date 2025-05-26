@@ -1,6 +1,7 @@
 import { logger } from 'firebase-functions/v2'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { Booking, getManager } from 'fizz-kidz'
+import type { Booking } from 'fizz-kidz'
+import { getManager } from 'fizz-kidz'
 
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { MailClient } from '../../../sendgrid/MailClient'

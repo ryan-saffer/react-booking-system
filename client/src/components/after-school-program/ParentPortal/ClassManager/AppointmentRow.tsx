@@ -1,9 +1,10 @@
 import { Switch, Typography } from 'antd'
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 
-import { WithErrorModal } from '@components/Hooks/UseErrorDialog'
+import type { WithErrorModal } from '@components/Hooks/UseErrorDialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'

@@ -1,6 +1,7 @@
-import { Booking, PaperFormResponse, PartyForm, capitalise, getLocationAddress, getManager } from 'fizz-kidz'
+import type { Booking, PaperFormResponse, PartyForm } from 'fizz-kidz'
+import { capitalise, getLocationAddress, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import Stripe from 'stripe'
+import type Stripe from 'stripe'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'

@@ -6,20 +6,19 @@ import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-p
 import { toast } from 'sonner'
 
 import Loader from '@components/Shared/Loader'
+import { SQUARE_APPLICATION_ID } from '@constants/square'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
-import { DiscountInput } from './discount-input'
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
-
-const SQUARE_APPLICATION_ID =
-    import.meta.env.VITE_ENV === 'prod' ? 'sq0idp-1FI3gXZ6oCYdX8c5qW7Z5A' : 'sandbox-sq0idb-oH6HHICkDPQgWYXPlJQO4g'
+import { DiscountInput } from './discount-input'
 
 export function Payment() {
+    //#region Variables
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
     const nextStage = useFormStage((store) => store.nextStage)
@@ -28,18 +27,22 @@ export function Payment() {
     const children = form.watch('children')
     const studio = form.watch('studio')
 
+    const squareLocationId = studio ? getSquareLocationId(studio) : ''
+
     const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}` // force rerender the square checkout component when disconut code changes
 
     const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
+    //#endregion
 
+    //#region Effects
     useEffect(() => {
         if (formStage !== 'payment') {
             reset()
         }
     }, [formStage, reset])
+    //#endregion
 
-    const squareLocationId = studio ? getSquareLocationId(studio) : ''
-
+    //#region Methods
     function formatClassTime(date: Date) {
         return DateTime.fromJSDate(date).toFormat('EEEE MMMM d, h:mm a')
     }
@@ -124,7 +127,9 @@ export function Payment() {
 
         return null
     }
+    //#endregion
 
+    //#region Rendering
     if (formStage !== 'payment') return null
 
     if (isLoading) {
@@ -216,7 +221,7 @@ export function Payment() {
                 key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
-                cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
+                cardTokenizeResponseReceived={({ status, token }, buyerVerification) => {
                     if (status === 'OK' && token) {
                         book(token, buyerVerification?.token || '')
                     } else {
@@ -233,8 +238,6 @@ export function Payment() {
                     },
                     currencyCode: 'AUD',
                     intent: 'CHARGE',
-                    customerInitiated: true,
-                    sellerKeyedIn: false,
                 })}
                 createPaymentRequest={() => ({
                     countryCode: 'AU',
@@ -272,4 +275,5 @@ export function Payment() {
             </PaymentForm>
         </>
     )
+    //#endregion
 }

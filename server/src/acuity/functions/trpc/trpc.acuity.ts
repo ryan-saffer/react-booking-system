@@ -1,4 +1,5 @@
-import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 
 import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'

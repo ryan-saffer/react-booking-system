@@ -1,18 +1,10 @@
 import 'typeface-roboto'
 
-import {
-    CREATIONS,
-    FirestoreBooking,
-    FormBooking,
-    FormBookingFields,
-    Location,
-    ObjectKeys,
-    PROD_ADDITIONS,
-    Utilities,
-    WithId,
-} from 'fizz-kidz'
+import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
+import { CREATIONS, FormBookingFields, Location, ObjectKeys, PROD_ADDITIONS, Utilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import type { ChangeEvent } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
@@ -32,13 +24,15 @@ import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { trpc } from '@utils/trpc'
 
 import { capitalise } from '../../../../../utilities/stringUtilities'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
-import WithErrorDialog, { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
+import type { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '../../../../Dialogs/ConfirmationDialog'
+import type { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
+import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
 import { useDateNavigation } from '../../../date-navigation/date-navigation.hooks'
 import EditFormButtons from '../../../shared/edit-form-buttons'
 import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
-import { ExistingBookingFormFields } from './types'
+import type { ExistingBookingFormFields } from './types'
 
 const PREFIX = 'index'
 

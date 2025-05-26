@@ -1,6 +1,5 @@
 import type {
     AfterSchoolEnrolment,
-    PaidHolidayProgramBooking,
     Booking,
     Employee,
     FirestoreBooking,
@@ -13,10 +12,12 @@ import type {
     LocationOrMaster,
     AuthUser,
 } from 'fizz-kidz'
-import { FirestoreRefs, Document } from './FirestoreRefs'
-import { Timestamp, type DocumentReference, Query, FieldValue } from 'firebase-admin/firestore'
-import { CreateEvent } from '../events/core/create-event'
-import { DateTime } from 'luxon'
+import type { Document } from './FirestoreRefs'
+import { FirestoreRefs } from './FirestoreRefs'
+import type { Query } from 'firebase-admin/firestore'
+import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
+import type { CreateEvent } from '../events/core/create-event'
+import type { DateTime } from 'luxon'
 import { midnight } from '../utilities'
 
 type CreateDocOptions<T> = {
@@ -93,18 +94,6 @@ class Client {
 
     async deletePartyBooking(bookingId: string) {
         return (await FirestoreRefs.partyBooking(bookingId)).delete()
-    }
-
-    updateHolidayProgramBooking(paymentIntentId: string, data: { booked: boolean }) {
-        return this.#updateDocument(FirestoreRefs.holidayProgramBooking(paymentIntentId), data)
-    }
-
-    async getHolidayPrograms(paymentIntentId: string) {
-        return (await FirestoreRefs.holidayPrograms(paymentIntentId)).get()
-    }
-
-    updateHolidayProgram(paymentIntentId: string, documentId: string, data: Partial<PaidHolidayProgramBooking>) {
-        return this.#updateDocument(FirestoreRefs.holidayProgram(paymentIntentId, documentId), data)
     }
 
     getAfterSchoolEnrolment(appointmentId: string) {

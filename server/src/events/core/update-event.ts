@@ -1,6 +1,7 @@
-import { CalendarClient } from '../../google/CalendarClient'
+import type { Event } from 'fizz-kidz'
+
 import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { Event } from 'fizz-kidz'
+import { CalendarClient } from '../../google/CalendarClient'
 import { throwTrpcError } from '../../utilities'
 
 export async function updateEvent(event: Event) {

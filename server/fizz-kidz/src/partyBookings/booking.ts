@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
-import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
+import type { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 
-import { Location } from '../core/location'
-import { CakeFlavours } from './CakeFlavours'
-import { Addition } from './additions'
+import type { Location } from '../core/location'
+import type { CakeFlavours } from './CakeFlavours'
+import type { Addition } from './additions'
 import type { Creation } from './creations'
 
 type AdditionKeyValues = Record<Addition, boolean>

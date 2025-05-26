@@ -1,5 +1,5 @@
 import { Tag } from 'antd'
-import { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
 import React from 'react'
 
 import Loader from '../../../../Shared/Loader'

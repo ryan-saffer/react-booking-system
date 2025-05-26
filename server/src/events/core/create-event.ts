@@ -1,4 +1,5 @@
-import { DistributiveOmit, Event, ModuleIncursionMap, ModuleNameMap, WithoutId } from 'fizz-kidz'
+import type { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
+import { ModuleIncursionMap, ModuleNameMap } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'

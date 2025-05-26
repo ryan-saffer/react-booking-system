@@ -1,16 +1,9 @@
-import {
-    CreatePaymentIntentParams,
-    RetrieveInvoiceStatusesParams,
-    SendInvoiceParams,
-    UpdatePaymentIntentParams,
-} from 'fizz-kidz'
+import type { RetrieveInvoiceStatusesParams, SendInvoiceParams } from 'fizz-kidz'
 
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
 import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { retrieveInvoiceStatuses } from '../../core/invoicing/retrieve-invoice-statuses'
 import { sendInvoices } from '../../core/invoicing/send-invoices'
-import { createPaymentIntent } from '../../core/payment-intents/create-payment-intent'
-import { updatePaymentIntent } from '../../core/payment-intents/update-payment-intent'
 
 export const stripeRouter = router({
     retrieveInvoiceStatuses: publicProcedure
@@ -19,12 +12,6 @@ export const stripeRouter = router({
     sendInvoices: authenticatedProcedure
         .input((input) => input as SendInvoiceParams[])
         .mutation(({ input }) => sendInvoices(input)),
-    createPaymentIntent: publicProcedure
-        .input((input) => input as CreatePaymentIntentParams)
-        .mutation(({ input }) => createPaymentIntent(input)),
-    updatePaymentIntent: publicProcedure
-        .input((input) => input as UpdatePaymentIntentParams)
-        .mutation(({ input }) => updatePaymentIntent(input)),
 })
 
 export const stripe = onRequestTrpc(stripeRouter)

@@ -1,6 +1,7 @@
 import { Button, Modal, Typography } from 'antd'
-import { Employee } from 'fizz-kidz'
-import React, { MouseEvent, useState } from 'react'
+import type { Employee } from 'fizz-kidz'
+import type { MouseEvent } from 'react'
+import React, { useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 

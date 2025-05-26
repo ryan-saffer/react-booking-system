@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'

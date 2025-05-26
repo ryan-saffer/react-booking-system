@@ -50,22 +50,27 @@ export async function processPaylabPayment(
         },
     })
 
-    const { payment } = await squareClient.payments.create({
-        sourceId: input.token,
-        idempotencyKey,
-        locationId: input.locationId,
-        amountMoney: {
-            amount: BigInt(input.amount),
-            currency: 'AUD',
-        },
-        orderId: order!.id,
-        customerDetails: {
-            customerInitiated: true,
-            sellerKeyedIn: false,
-        },
-        buyerEmailAddress: parentEmail,
-        verificationToken: input.buyerVerificationToken,
-    })
-
-    return { payment: payment!, order: order! }
+    let receiptUrl: string | undefined = undefined
+    if (order?.totalMoney?.amount === BigInt(0)) {
+        await squareClient.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey })
+    } else {
+        const { payment } = await squareClient.payments.create({
+            sourceId: input.token,
+            idempotencyKey,
+            locationId: input.locationId,
+            amountMoney: {
+                amount: BigInt(input.amount),
+                currency: 'AUD',
+            },
+            orderId: order!.id,
+            customerDetails: {
+                customerInitiated: true,
+                sellerKeyedIn: false,
+            },
+            buyerEmailAddress: parentEmail,
+            verificationToken: input.buyerVerificationToken,
+        })
+        receiptUrl = payment!.receiptUrl
+    }
+    return { paymentReceipt: receiptUrl, order: order! }
 }

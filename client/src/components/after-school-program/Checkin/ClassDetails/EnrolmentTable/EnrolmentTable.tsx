@@ -1,6 +1,7 @@
 import { Table, Tag, Typography } from 'antd'
-import { ColumnsType } from 'antd/es/table'
-import { AcuityConstants, AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import type { ColumnsType } from 'antd/es/table'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 import React, { useMemo, useState } from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
@@ -10,7 +11,7 @@ import { getEnrolment } from '../ClassDetails.utils'
 import ActionButton from './ActionButton'
 import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
-import { EnrolmentsMap } from '..'
+import type { EnrolmentsMap } from '..'
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540

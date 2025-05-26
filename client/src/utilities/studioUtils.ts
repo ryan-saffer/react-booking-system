@@ -1,4 +1,5 @@
-import { LocationOrMaster, capitalise } from 'fizz-kidz'
+import type { LocationOrMaster } from 'fizz-kidz'
+import { capitalise } from 'fizz-kidz'
 
 export function getOrgName(org: LocationOrMaster) {
     if (org === 'master') {

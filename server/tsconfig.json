@@ -12,7 +12,8 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "paths": {
-            "fizz-kidz": ["./fizz-kidz/src"]
+            "fizz-kidz": ["./fizz-kidz/src"],
+            "@/*": ["./src/*"]
         },
         "composite": true,
         "noErrorTruncation": true

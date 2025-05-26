@@ -1,5 +1,5 @@
 import { Button, DatePicker, Divider, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
-import { Dayjs } from 'dayjs'
+import type { Dayjs } from 'dayjs'
 import { Location } from 'fizz-kidz'
 import React, { useState } from 'react'
 

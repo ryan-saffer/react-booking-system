@@ -11,7 +11,17 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-extra-semi": "off",
-        "no-duplicate-imports": ["error"],
-        "@typescript-eslint/no-shadow": ["error"]
+        "@typescript-eslint/no-shadow": ["error"],
+        // turn off the built-in duplicate check
+        "no-duplicate-imports": "off",
+        "import/no-duplicates": "off",
+        // auto-separate value imports from type imports
+        "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports",
+                "fixStyle": "separate-type-imports"
+            }
+        ]
     }
 }

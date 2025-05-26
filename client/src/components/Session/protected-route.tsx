@@ -1,5 +1,5 @@
-import { Permission } from 'fizz-kidz'
-import { ReactNode } from 'react'
+import type { Permission } from 'fizz-kidz'
+import type { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import { useAuth } from '@components/Hooks/context/useAuth'

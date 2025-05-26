@@ -1,4 +1,5 @@
-import { Employee, InitiateEmployeeProps, getLocationAddress } from 'fizz-kidz'
+import type { Employee, InitiateEmployeeProps } from 'fizz-kidz'
+import { getLocationAddress } from 'fizz-kidz'
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { ESignatureClient } from '../../../esignatures.io/core/ESignaturesClient'
 import { throwTrpcError } from '../../../utilities'

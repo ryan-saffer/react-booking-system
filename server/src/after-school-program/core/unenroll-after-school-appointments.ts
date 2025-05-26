@@ -1,4 +1,4 @@
-import { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
 import { DatabaseClient } from '../../firebase/DatabaseClient'

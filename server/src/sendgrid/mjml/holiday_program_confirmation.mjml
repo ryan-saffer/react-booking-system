@@ -4,25 +4,14 @@
       <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
       <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
     </mj-attributes>
-    <mj-style inline="inline">
-      .text-link {
-        color: #5e6ebf
-      }
-    </mj-style>
-    <mj-style inline="inline">
-      .footer-link {
-        color: #888888
-      }
-    </mj-style>
-
+    <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+    <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
   </mj-head>
   <mj-body background-color="#E7E7E7" width="600px">
-    <mj-section background-color="#eec73b" padding-bottom='0px'>
+    <mj-section background-color="#eec73b" padding-bottom="0px">
       <mj-column width="100%">
         <mj-spacer height="30px" />
-        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-          Holiday program booking confirmation
-        </mj-text>
+        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px"> Holiday program booking confirmation </mj-text>
       </mj-column>
     </mj-section>
     <mj-section background-color="#ffffff" padding-top="0">
@@ -32,20 +21,12 @@
     </mj-section>
     <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
       <mj-column width="100%">
-        <mj-text color="#637381" font-size="16px">
-          Hi
-          {{parentName}},
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          We're delighted to confirm your booking into the Fizz Kidz holiday program! Below are the details of what you
-          have booked:
-        </mj-text>
+        <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
+        <mj-text color="#637381" font-size="16px"> We're delighted to confirm your booking into the Fizz Kidz holiday program! Below are the details of what you have booked: </mj-text>
       </mj-column>
 
       <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Where
-        </mj-text>
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0"> Where </mj-text>
         <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
           {{location}}
           <br />
@@ -53,49 +34,41 @@
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Who / When
-        </mj-text>
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0"> Who / When </mj-text>
         <mj-text color="#637381" font-size="14px" padding-top="0">
           {{#bookings}}
-            <p>{{datetime}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
+          <p>{{datetime}} - <a href="{{confirmationPage}}">Change / Cancel</a></p>
           {{/bookings}}
         </mj-text>
       </mj-column>
 
       <mj-column width="100%">
         <mj-text color="#637381" font-size="16px">
-          On the day we will make three fabulous creations, play games and enjoy a morning snack. The morning snack will
-          include a range of fruit, cornchips and popcorn. You are welcome to bring your own snacks as well, however
-          please ensure they are nut free. Please also bear in mind that all children who come to Fizz Kidz must be at least 4 years old and be completely toilet trained 😊.
+          On the day we will make three fabulous creations, play games and enjoy a morning snack. The morning snack will include a range of fruit, cornchips and popcorn. You are welcome to bring your own snacks as well, however please
+          ensure they are nut free. Please also bear in mind that all children who come to Fizz Kidz must be at least 4 years old and be completely toilet trained 😊.
         </mj-text>
+        <mj-text color="#637381" font-size="16px"> If your child is booked in for the day, <strong>please make sure they bring a packed lunch with them.</strong> </mj-text>
         <mj-text color="#637381" font-size="16px">
-          If your child is booked in for the day, <strong>please make sure they bring a packed lunch with them.</strong>
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          To see what we will be making on the day, you can have a <a href="https://www.fizzkidz.com.au/holiday-programs/">look here</a> - just look for the date and time you
-          have selected!
+          To see what we will be making on the day, you can have a <a href="https://www.fizzkidz.com.au/holiday-programs/">look here</a> - just look for the date and time you have selected!
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Cancellation Policy
-        </mj-text>
+        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0"> Cancellation Policy </mj-text>
         <mj-text color="#637381" font-size="16px">
-          A full refund will be automatically issued for cancellations made more than 48 hours before the program. Cancellations made less than 48 hours before the program will not be refunded. This policy can change at any time at our discretion.
+          A full refund will be automatically issued for cancellations made more than 48 hours before the program. Cancellations made less than 48 hours before the program will not be refunded. This policy can change at any time at our
+          discretion.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text color="#637381" font-size="16px">
-          If you have any questions, please feel free to contact us on <a href="tel:0390598144">(03) 9059 8144</a>.
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          See you soon!
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          The Fizz Kidz team
-        </mj-text>
+        <mj-text color="#637381" font-size="16px"> If you have any questions, please feel free to contact us on <a href="tel:0390598144">(03) 9059 8144</a>. </mj-text>
+        <mj-text color="#637381" font-size="16px"> See you soon! </mj-text>
+        <mj-text color="#637381" font-size="16px"> The Fizz Kidz team </mj-text>
       </mj-column>
+      {{#receiptUrl}}
+      <mj-column width="100%"
+        ><mj-text align="center"><a href="{{receiptUrl}}">Click here for a copy of your payment receipt</a></mj-text></mj-column
+      >
+      {{/receiptUrl}}
     </mj-section>
     <mj-wrapper full-width="full-width">
       <mj-section padding-top="0">

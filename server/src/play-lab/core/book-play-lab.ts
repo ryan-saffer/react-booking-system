@@ -94,8 +94,8 @@ export async function bookPlayLab(input: BookPlayLabProps) {
     const customerId = await getOrCreateCustomer(input.parentFirstName, input.parentLastName, input.parentEmail)
 
     // process payment
-    const { payment, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId).catch((err) =>
-        throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })
+    const { paymentReceipt, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId).catch(
+        (err) => throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })
     )
 
     const schedulingPromises = input.payment.lineItems.map((line) =>
@@ -143,7 +143,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                     value: input.bookingType === 'term-booking' ? 'yes' : '',
                 },
                 {
-                    id: AcuityConstants.FormFields.PAYMENT_ID,
+                    id: AcuityConstants.FormFields.ORDER_ID,
                     value: order.id || '',
                 },
                 {
@@ -205,7 +205,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
                 }
             }),
         isTermEnrolment: input.bookingType === 'term-booking',
-        receiptUrl: payment.receiptUrl,
+        receiptUrl: paymentReceipt,
     })
 
     // if using a discount code, update its number of uses

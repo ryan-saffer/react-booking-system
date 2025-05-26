@@ -1,5 +1,6 @@
-import { InvitationOption } from 'fizz-kidz'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import type { InvitationOption } from 'fizz-kidz'
+import type { RefObject } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
 import frame from '@drawables/frame.webp'

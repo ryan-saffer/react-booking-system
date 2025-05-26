@@ -1,7 +1,7 @@
-import { InvoiceStatusMap, RetrieveInvoiceStatusesParams } from 'fizz-kidz'
+import type { InvoiceStatusMap, RetrieveInvoiceStatusesParams } from 'fizz-kidz'
 
-import { retrieveInvoiceStatus } from './retrieve-invoice-status'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { retrieveInvoiceStatus } from './retrieve-invoice-status'
 
 export async function retrieveInvoiceStatuses(input: RetrieveInvoiceStatusesParams) {
     const invoiceStatuses: InvoiceStatusMap = {}

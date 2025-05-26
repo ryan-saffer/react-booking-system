@@ -1,9 +1,9 @@
 import { strictEqual } from 'assert'
 
 import { DateTime } from 'luxon'
-import { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
-import { Timesheet } from '../timesheets.types'
+import type { Timesheet } from '../timesheets.types'
 import { Location, Position, TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../timesheets.utils'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })

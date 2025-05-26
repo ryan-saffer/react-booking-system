@@ -1,12 +1,14 @@
-import type { drive_v3 } from 'googleapis'
-import googleCredentials from '../../credentials/google-credentials.json'
 import fs from 'fs'
-import path from 'path'
 import os from 'os'
+import path from 'path'
 import { Readable } from 'stream'
+
+import type { drive_v3 } from 'googleapis'
 import { finished } from 'stream/promises'
-import { ReadableStream } from 'stream/web'
-import { ClientStatus } from '../utilities/types'
+import type { ReadableStream } from 'stream/web'
+
+import googleCredentials from '../../credentials/google-credentials.json'
+import type { ClientStatus } from '../utilities/types'
 
 export class DriveClient {
     private static instance: DriveClient

@@ -5,9 +5,9 @@ import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
 import { MailClient } from '../../../sendgrid/MailClient'
 import { logError } from '../../../utilities'
 import { ZohoClient } from '../../../zoho/zoho-client'
+import type { Form } from '../../core/website-form-types'
 import {
     ContactFormLocationMap,
-    Form,
     FranchisingInterestDisplayValueMap,
     LocationDisplayValueMap,
     ModuleDisplayValueMap,

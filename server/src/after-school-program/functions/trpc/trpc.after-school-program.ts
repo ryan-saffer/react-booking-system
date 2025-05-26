@@ -1,4 +1,4 @@
-import {
+import type {
     ScheduleAfterSchoolEnrolmentParams,
     SendTermContinuationEmailsParams,
     UnenrollAfterSchoolParams,

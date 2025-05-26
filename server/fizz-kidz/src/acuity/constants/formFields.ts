@@ -24,7 +24,7 @@ export const FormFields = {
     EMERGENCY_CONTACT_NAME_HP: 11901970,
     EMERGENCY_CONTACT_NUMBER_HP: 11901971,
     EMERGENCY_CONTACT_RELATION_HP: 16585474,
-    PAYMENT_ID: 11929615, // payment intent id for stripe, order id for square
+    ORDER_ID: 11929615, // square order id
     AMOUNT_CHARGED: 11929616,
     IS_TERM_ENROLMENT: 16577293, // play lab
     LINE_ITEM_IDENTIFIER: 16585337, // to link to square order line item in metadata

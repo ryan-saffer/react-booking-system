@@ -1,5 +1,5 @@
 import dateFormat from 'dateformat'
-import { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
+import type { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Grid } from '@mui/material'

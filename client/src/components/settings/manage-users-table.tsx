@@ -1,4 +1,5 @@
-import { ROLES, Role, StaffAuthUser } from 'fizz-kidz'
+import type { Role, StaffAuthUser } from 'fizz-kidz'
+import { ROLES } from 'fizz-kidz'
 import { ArrowUpDown, Loader2, MoreHorizontal } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -7,9 +8,8 @@ import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confir
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { useOrg } from '@components/Session/use-org'
 import { getRoleDisplayValue } from '@constants/roles'
+import type { Row, SortingState } from '@tanstack/react-table'
 import {
-    Row,
-    SortingState,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
