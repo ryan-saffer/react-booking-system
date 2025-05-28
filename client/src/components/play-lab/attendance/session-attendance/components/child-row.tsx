@@ -39,7 +39,6 @@ export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appoint
                         e.stopPropagation()
                         updateLabel({ appointmentId: appointment.id, label: 'checked-in' })
                     }}
-                    onPointerDown={(e) => e.stopPropagation()}
                 >
                     <LogIn className="size-4 sm:hidden" />
                     <span className="hidden sm:block">Sign in</span>
@@ -57,7 +56,6 @@ export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appoint
                         e.stopPropagation()
                         updateLabel({ appointmentId: appointment.id, label: 'checked-out' })
                     }}
-                    onPointerDown={(e) => e.stopPropagation()}
                 >
                     <LogOut className="size-4 sm:hidden" />
                     <span className="hidden sm:block">Sign out</span>

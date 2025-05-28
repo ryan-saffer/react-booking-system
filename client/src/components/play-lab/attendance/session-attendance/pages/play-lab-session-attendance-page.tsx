@@ -137,10 +137,9 @@ export function PlayLabSessionAttendancePage() {
                                                     <Accordion.Trigger asChild>
                                                         <TableRow
                                                             className="h-16 hover:cursor-pointer [&[data-state=open]>td#arrow>svg]:rotate-90 [&_td]:px-4"
-                                                            onPointerDown={() => {
-                                                                console.log('onPointerDown')
+                                                            onClick={() =>
                                                                 setOpenItems((prev) => ({ ...prev, [id]: !prev[id] }))
-                                                            }}
+                                                            }
                                                         >
                                                             <ChildRow appointment={appointment} />
                                                         </TableRow>
