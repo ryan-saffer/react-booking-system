@@ -2,7 +2,7 @@ import { FieldValue } from 'firebase-admin/firestore'
 import type { DiscountCode } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { v4 as uuidv4 } from 'uuid'
+import { Status } from 'google-gax'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -17,6 +17,7 @@ import { ZohoClient } from '@/zoho/zoho-client'
 import { sendConfirmationEmail } from './send-confirmation-email'
 
 export type HolidayProgramBookingProps = {
+    idempotencyKey: string
     parentFirstName: string
     parentLastName: string
     parentEmail: string
@@ -52,6 +53,20 @@ export type HolidayProgramBookingProps = {
 }
 
 export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
+    // MARK: Verify idempotency key
+    try {
+        await DatabaseClient.createPaymentIdempotencyKey(input.idempotencyKey)
+    } catch (e: any) {
+        if (e.code === Status.ALREADY_EXISTS) {
+            // already run this function for this payment. perhaps a double click.. (has happened before)
+            // end early.
+            return
+        }
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'unable to create payment idempotency key for holiday program', e, {
+            input,
+        })
+    }
+
     // MARK: Verify enough spots
     const acuity = await AcuityClient.getInstance()
     const uniqueAppointmentTypeIds = [...new Set(input.payment.lineItems.map((it) => it.appointmentTypeId))]
@@ -77,11 +92,10 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
     // MARK: Process payment
     const square = await SquareClient.getInstance()
-    const idempotencyKey = uuidv4()
 
     const { order } = await square.orders
         .create({
-            idempotencyKey,
+            idempotencyKey: input.idempotencyKey,
             order: {
                 customerId,
                 locationId: input.payment.locationId,
@@ -128,12 +142,12 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
     let recieptUrl: string | undefined = undefined
     if (order?.totalMoney?.amount === BigInt(0)) {
-        await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey })
+        await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey: input.idempotencyKey })
     } else {
         const { payment } = await square.payments
             .create({
                 sourceId: input.payment.token,
-                idempotencyKey,
+                idempotencyKey: input.idempotencyKey,
                 locationId: input.payment.locationId,
                 amountMoney: {
                     currency: 'AUD',
@@ -304,4 +318,6 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         ...(titles.length && { titles }),
         ...(creations.length && { creations }),
     })
+
+    return
 }

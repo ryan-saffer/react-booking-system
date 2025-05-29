@@ -2,7 +2,7 @@ import type { DiscountCode } from 'fizz-kidz'
 import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
 import { DateTime } from 'luxon'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
 
@@ -46,6 +46,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
 
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
+    const idempotencyKey = useRef(crypto.randomUUID())
     const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}` // force rerender the square checkout component when disconut code changes
 
     // MARK: hooks
@@ -132,6 +133,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                     cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
                         if (status === 'OK' && token) {
                             await book({
+                                idempotencyKey: idempotencyKey.current,
                                 parentFirstName: form.parentFirstName,
                                 parentLastName: form.parentLastName,
                                 parentEmail: form.parentEmail,

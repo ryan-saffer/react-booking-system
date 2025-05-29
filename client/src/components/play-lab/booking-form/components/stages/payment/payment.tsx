@@ -1,7 +1,7 @@
 import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, PartyPopper, XIcon } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
 
@@ -31,6 +31,8 @@ export function Payment() {
 
     const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}` // force rerender the square checkout component when disconut code changes
 
+    const idempotencyKey = useRef(crypto.randomUUID())
+
     const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
     //#endregion
 
@@ -49,6 +51,7 @@ export function Payment() {
 
     async function book(token: string, buyerVerificationToken: string) {
         await mutateAsync({
+            idempotencyKey: idempotencyKey.current,
             bookingType: form.getValues().bookingType!,
             classes: Object.values(selectedClasses).map((klass) => ({
                 ...klass,

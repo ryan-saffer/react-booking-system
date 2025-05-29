@@ -1,4 +1,4 @@
-import type { CollectionGroup } from 'firebase-admin/firestore'
+import type { FieldValue, CollectionGroup } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
     AuthUser,
@@ -100,5 +100,15 @@ export class FirestoreRefs {
 
     static async zohoAccessToken() {
         return (await FirestoreClient.getInstance()).doc('accessTokens/zoho') as Document<ZohoAccessToken>
+    }
+
+    static async paymentIdempotencyKeys() {
+        return (await FirestoreClient.getInstance()).collection('paymentIdempotencyKeys') as Collection<{
+            createdAt: FieldValue
+        }>
+    }
+
+    static async paymentIdempotencyKey(key: string) {
+        return (await this.paymentIdempotencyKeys()).doc(key)
     }
 }

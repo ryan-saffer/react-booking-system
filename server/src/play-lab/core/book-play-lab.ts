@@ -10,8 +10,10 @@ import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FieldValue } from 'firebase-admin/firestore'
+import { Status } from 'google-gax'
 
 export type BookPlayLabProps = {
+    idempotencyKey: string
     bookingType: 'term-booking' | 'casual'
     classes: AcuityTypes.Api.Class[]
     parentFirstName: string
@@ -68,7 +70,21 @@ export type BookPlayLabProps = {
 }
 
 export async function bookPlayLab(input: BookPlayLabProps) {
-    // first, verify that every class has enough spots
+    // MARK: Verify idempotency key
+    try {
+        await DatabaseClient.createPaymentIdempotencyKey(input.idempotencyKey)
+    } catch (e: any) {
+        if (e.code === Status.ALREADY_EXISTS) {
+            // already run this function for this payment. perhaps a double click.. (has happened before)
+            // end early.
+            return
+        }
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'unable to create payment idempotency key for holiday program', e, {
+            input,
+        })
+    }
+
+    // MARK: Verify enough spots
     const acuity = await AcuityClient.getInstance()
 
     const uniqueAppointmentTypeIDs = [...new Set(input.classes.map((c) => c.appointmentTypeID))]
@@ -90,14 +106,17 @@ export async function bookPlayLab(input: BookPlayLabProps) {
 
     // all classes have enough spots! let's continue
 
-    // get or create customer in square
+    // MARK: Process payment
     const customerId = await getOrCreateCustomer(input.parentFirstName, input.parentLastName, input.parentEmail)
 
-    // process payment
-    const { paymentReceipt, order } = await processPaylabPayment(input.payment, input.parentEmail, customerId).catch(
-        (err) => throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })
-    )
+    const { paymentReceipt, order } = await processPaylabPayment(
+        input.idempotencyKey,
+        input.payment,
+        input.parentEmail,
+        customerId
+    ).catch((err) => throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input }))
 
+    // MARK: Schedule into acuity
     const schedulingPromises = input.payment.lineItems.map((line) =>
         acuity.scheduleAppointment({
             appointmentTypeID: line.appointmentTypeID,
@@ -158,7 +177,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         throwTrpcError('INTERNAL_SERVER_ERROR', 'there was an error scheduling play lab into acuity', err, { input })
     )
 
-    // write to crm
+    // MARK: CRM
     if (input.joinMailingList) {
         const zohoClient = new ZohoClient()
         try {
@@ -180,7 +199,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         }
     }
 
-    // confirmation email
+    // MARK: Confirmation email
     const mailClient = await MailClient.getInstance()
     await mailClient.sendEmail('playLabBookingConfirmation', input.parentEmail, {
         parentName: input.parentFirstName,
@@ -208,7 +227,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         receiptUrl: paymentReceipt,
     })
 
-    // if using a discount code, update its number of uses
+    // MARK: Update discount code
     const discount = input.payment.discount
     if (discount && !discount.isMultiSessionDiscount) {
         try {
@@ -223,7 +242,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         }
     }
 
-    // tracking
+    // MARK: Tracking
     try {
         const location = AcuityUtilities.getStudioByCalendarId(input.classes[0].calendarID)
         const mixpanel = await MixpanelClient.getInstance()

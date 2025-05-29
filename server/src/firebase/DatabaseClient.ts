@@ -314,6 +314,11 @@ class Client {
     setZohoAccessToken(accessToken: string) {
         return this.#updateDocument(FirestoreRefs.zohoAccessToken(), { accessToken, isRefreshing: false })
     }
+
+    async createPaymentIdempotencyKey(key: string) {
+        const ref = await FirestoreRefs.paymentIdempotencyKey(key)
+        return ref.create({ createdAt: FieldValue.serverTimestamp() })
+    }
 }
 
 const DatabaseClient = new Client()

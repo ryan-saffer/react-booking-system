@@ -1,16 +1,14 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import { SquareClient } from '../../square/core/square-client'
 import type { BookPlayLabProps } from './book-play-lab'
 import { env } from '../../init'
 
 export async function processPaylabPayment(
+    idempotencyKey: string,
     input: BookPlayLabProps['payment'],
     parentEmail: string,
     customerId: string
 ) {
     const squareClient = await SquareClient.getInstance()
-    const idempotencyKey = uuidv4()
 
     const { order } = await squareClient.orders.create({
         idempotencyKey,
