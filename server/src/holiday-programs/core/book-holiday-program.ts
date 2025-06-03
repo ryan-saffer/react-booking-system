@@ -1,8 +1,8 @@
 import { FieldValue } from 'firebase-admin/firestore'
 import type { DiscountCode } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 import { Status } from 'google-gax'
+import { DateTime } from 'luxon'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -211,6 +211,10 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                     {
                         id: AcuityConstants.FormFields.ORDER_ID,
                         value: order!.id || '',
+                    },
+                    {
+                        id: AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER,
+                        value: item.lineItemIdentifier,
                     },
                 ],
             })

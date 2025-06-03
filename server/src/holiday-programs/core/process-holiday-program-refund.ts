@@ -47,7 +47,7 @@ export async function processHolidayProgramRefund(data: AcuityWebhookData) {
         logError(
             `Unable to find line item with matching class id and line item identifier for holiday program booking with id: ${appointment.id}`,
             null,
-            { webhookData: data }
+            { webhookData: data, lineItemIdentifier, orderId }
         )
         return
     }
