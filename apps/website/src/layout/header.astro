@@ -11,16 +11,24 @@ import { Button } from "@/components/react/ui/button";
   <div
     class="flex w-full flex-row-reverse items-center justify-end gap-4 min-[1280px]:flex-row min-[1280px]:justify-between"
   >
-    <a
-      class="absolute right-2 min-[1280px]:right-8 min-[1280px]:hidden"
-      href="/contact-us/#contact"
+    <div
+      class="absolute right-2 flex gap-2 min-[1280px]:right-8 min-[1280px]:hidden"
     >
-      <Button
-        className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
-      >
-        Get in touch
-      </Button>
-    </a>
+      <a href="/franchising">
+        <Button
+          className="bg-[#9044E2] p-2 font-lilita text-sm uppercase hover:bg-[#F6BA33] sm:p-6 sm:text-lg"
+        >
+          Own a studio
+        </Button>
+      </a>
+      <a href="/contact-us/#contact">
+        <Button
+          className="bg-[#9044E2] p-2 font-lilita text-sm uppercase hover:bg-[#F6BA33] sm:p-6 sm:text-lg"
+        >
+          Get in touch
+        </Button>
+      </a>
+    </div>
     <a href="/">
       <Image
         src={logoHorizontal}
@@ -33,13 +41,22 @@ import { Button } from "@/components/react/ui/button";
     </a>
     <div class="flex items-center">
       <NavigationMenu client:load />
-      <a class="hidden min-[1440px]:inline-flex" href="/contact-us/#contact">
-        <Button
-          className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
-        >
-          Get in touch
-        </Button>
-      </a>
+      <div class="flex gap-2">
+        <a class="hidden min-[1440px]:inline-flex" href="/franchising">
+          <Button
+            className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+          >
+            Own a studio
+          </Button>
+        </a>
+        <a class="hidden min-[1440px]:inline-flex" href="/contact-us/#contact">
+          <Button
+            className="bg-[#9044E2] p-6 font-lilita text-lg uppercase hover:bg-[#F6BA33]"
+          >
+            Get in touch
+          </Button>
+        </a>
+      </div>
     </div>
   </div>
 </header>
