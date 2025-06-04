@@ -127,7 +127,7 @@ export async function createPartyBooking(_booking: Booking) {
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
-                    canOrderCake: booking.type === 'studio' && booking.location === Location.MALVERN,
+                    canOrderCake: booking.type === 'studio' && booking.location !== Location.CHELTENHAM,
                 },
                 { replyTo: manager.email }
             )
