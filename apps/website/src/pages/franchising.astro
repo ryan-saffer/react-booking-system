@@ -50,6 +50,7 @@ import studio1 from "@/assets/images/pages/franchising/studio-1.jpg";
 import studio2 from "@/assets/images/pages/franchising/studio-2.jpg";
 import studio3 from "@/assets/images/pages/franchising/studio-3.jpg";
 import studio4 from "@/assets/images/pages/franchising/studio-4.jpg";
+import studio5 from "@/assets/images/pages/franchising/studio-5.png";
 import whiteSlime from "@/assets/images/pages/franchising/white-slime.svg";
 
 import Layout from "@/layout/Layout.astro";
@@ -126,7 +127,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
           >
         </a>
       </div>
-      <div class="hidden w-full md:block md:w-1/2">
+      <div class="hidden w-full lg:block lg:w-1/2">
         <FranchisingHero img={staff} alt="two staff smiling" />
       </div>
     </div>
@@ -182,15 +183,16 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             Fizz Kidz <span class="text-[#F24DA2]">Franchise</span>
           </p>
           <p class="mb-4 font-lilita text-2xl text-[#8F44E1] md:text-4xl">
-            A proven successful business model with a team that works with you
+            A proven successful business model with a team that works <u
+              >with you!</u
+            >
           </p>
           <p class="font-gotham text-lg leading-8 md:text-xl">
-            A Fizz Kidz franchise is an exciting powerful opportunity to combine
-            your love of working with children and your entrepreneurial spirit.
-            Build a business that brings smiles, sparkles, and unforgettable
-            memories to <span class="font-bold"
-              >your local community, with you!</span
-            >
+            A Fizz Kidz franchise is an <span class="font-bold"
+              >exciting powerful opportunity</span
+            > to combine your love of working with children and your entrepreneurial
+            spirit. Build a business that brings smiles, joy, and unforgettable memories
+            to your local community.
           </p>
         </div>
       </div>
@@ -207,17 +209,19 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             Kidz
           </p>
           <p class="font-gotham text-lg leading-8 md:text-xl">
-            What began 7 years ago as one tiny small studio has grown into the
-            thriving values-driven company we see today. We just get it. We get
-            kids, we get our customers. We get FUN! This franchising model is
-            built to empower others do to the same, and share the joy and power
-            of spreading fun acorss Australia. I'm deeply involved in every part
-            of the business and work closely with each franchisee to support
-            their journey. As a parent and a business owner, I know how
-            important flexibility, purpose and community are - and that's
-            exactly what owning a Fizz Kidz studio offers. If you're ready to
-            own your own thriving kids studio and build something truly powerful
-            — I'd love to help you get there.
+            What began 7 years ago as one tiny studio has grown into the
+            thriving values-driven company we see today.
+            <br /><br />
+            We just get it. We get kids, we get our customers. We get FUN! This franchising
+            model is built to empower others do to the same, and share the joy and
+            power of spreading fun acorss Australia. I'm deeply involved in every
+            part of the business and work closely with each franchisee to support
+            their journey. <span class="font-bold">
+              As a parent and a business owner, I know how important
+              flexibility, purpose and community are - and that's exactly what
+              owning a Fizz Kidz studio offers.
+            </span> If you're ready to own your own thriving kids studio and build
+            something truly powerful — I'd love to help you get there.
           </p>
         </div>
         <div class="w-full lg:w-1/2">
@@ -297,10 +301,10 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               {
                 content: (
                   <Fragment>
-                    After
+                    After School
                     <>
                       <br />
-                      <span class="text-[#4FE16D]">School</span>
+                      <span class="text-[#4FE16D]">Programs</span>
                     </>
                   </Fragment>
                 ),
@@ -323,10 +327,10 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               {
                 content: (
                   <Fragment>
-                    School &
+                    School & Kindergarten
                     <>
                       <br />
-                      <span class="text-[#45D3F3]">Kindergarten</span>
+                      <span class="text-[#45D3F3]">Incursions</span>
                     </>
                   </Fragment>
                 ),
@@ -372,7 +376,9 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
       >
         And the <span class="text-[#45D3F3]">numbers</span> just go up and up!
       </p>
-      <div class="grid grid-cols-1 justify-items-center md:grid-cols-3">
+      <div
+        class="grid grid-cols-1 justify-items-center overflow-clip md:grid-cols-3"
+      >
         {
           [
             {
@@ -382,17 +388,17 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             },
             {
               heading: <span class="text-[#4EE16D]">120,000+</span>,
-              content: "Children attended Fizz Kidz studio",
+              content: "Children attended Fizz Kidz studios",
               image: greenCircle,
             },
             {
               heading: <span class="text-[#F6BA33]">850+</span>,
-              content: "5 Star Reviews",
+              content: "5 Star reviews",
               image: yellowCircle,
             },
           ].map((item) => (
             <div
-              class="flex min-h-80 min-w-80 flex-col items-center justify-center gap-2 bg-contain bg-no-repeat"
+              class="flex min-h-80 min-w-80 flex-col items-center justify-center gap-2 overflow-hidden bg-contain bg-no-repeat"
               style={`background-image: url('${item.image.src}')`}
             >
               <p class="text-center font-lilita text-4xl">{item.heading}</p>
@@ -442,11 +448,11 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                 "Proven and clear track record of roaring success",
                 "Low capital investment",
                 "Large opportunity for further growth",
-                "Support office manages all customer enquiries",
-                "We are whole heartedly committed to your success",
+                "Support office manages customer enquiries",
                 "No full time staff required",
                 "A model that can offer flexible work-life balance",
                 "Custom-built in-house technology that makes running your studio seamless",
+                "We are wholeheartedly committed to your success",
               ].map((item) => (
                 <div class="rounded-xl bg-[#B17CEA] px-12 py-4 shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
                   <p class="font-gotham font-medium text-white">{item}</p>
@@ -539,10 +545,10 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
         >
           {
             [
-              "Trained sales & marketing team working for you",
-              "We provide you with booked jobs, not just leads you have to chase",
+              "Proven sales and marketing strategies supported by ready to use assets that drive results",
+              "In house team manages enquiries and secures bookings on your behalf, handing over confirmed parties and programs ready to deliver",
               "We teach you everything you need to know about all our services and how to train your staff",
-              "Skip the start up pain with high-ranking website over 1200 reviews across google and facebook",
+              "Skip the start up pain with our high-ranking website and over 850 Google reviews",
             ].map((item) => (
               <div class="flex items-center gap-4">
                 <Image
@@ -561,9 +567,10 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
         >
           {
             [
-              "Recognisable brand, with a database of customers ready to market to. You are never alone.",
-              "Custom built infrastructure that manages everything from bookings, attendance management, invoicing and payroll.",
-              "Full time operational support dedicated to support your recruitment and training support studio leasing guidance and support.",
+              "A recognised brand with a ready-to-reach customer database — you're never on your own!",
+              "The Fizz Kidz Portal. Custom-built platform that streamlines bookings, attendance, invoicing, and payroll — all in one seamless system.",
+              "Full-time operational support to guide you through every aspect of running your business — from recruitment and training to day-to-day operations and studio setup.",
+              "A dedicated, caring team, passionate about your success.",
             ].map((item) => (
               <div class="flex items-center gap-4">
                 <Image
@@ -591,15 +598,16 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             >Fizz Kidz</span
           >
         </p>
-        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
           {
             [
               { image: studio1, alt: "A Fizz kids studio from the street" },
               { image: studio3, alt: "The inside of a Fizz Kids studio" },
               { image: studio2, alt: "Looking into a Fizz Kidz studio" },
               { image: studio4, alt: "The wall of a Fizz Kidz studio" },
+              { image: studio5, alt: "The wall of a Fizz Kidz studio" },
             ].map((item) => (
-              <div class="h-64 w-full overflow-hidden rounded-xl">
+              <div class="col-span-1 h-64 w-full overflow-hidden rounded-xl last:md:col-span-2">
                 <Image
                   src={item.image}
                   alt={item.alt}
@@ -639,7 +647,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                   Phone <span class="text-[#45D3F3]">interview</span>
                 </>
               ),
-              content: "We will contact you by phone for an initial chat",
+              content: "We will contact you for an initial chat",
               image: step2,
               alt: "Bath bombs being made in a bowl",
               color: "#45D3F3",
@@ -654,7 +662,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               content:
                 "Complete our franchise application form and non-disclosure agreement.",
               image: step3,
-              alt: "Two Fizz Kids staff smiling while working",
+              alt: "Rainbow slime in messy hands",
               color: "#8F44E1",
             },
             {
@@ -709,7 +717,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               content:
                 "Together we will find an appropriate site and get you up and running!",
               image: step7,
-              alt: "A child laughing with a bath bomb",
+              alt: "Two Fizz kids staff smiling",
               color: "#8F44E1",
             },
             {
@@ -720,8 +728,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                   <span class="text-[#45D3F3]">open</span>
                 </>
               ),
-              content:
-                "Together we will find an appropriate site and get you up and running!",
+              content: "Doors open - let the fun begin!",
               image: step8,
               alt: "Two girls with beads laughing",
               color: "#45D3F3",
@@ -782,29 +789,35 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             client:idle
             items={[
               {
-                question: "Who is Fizz Kidz?",
+                question: "Can I find and suggest my own Franchise location?",
                 answer:
-                  "Fizz Kidz is an innovative and vibrant company that is wholeheartedly dedicated to providing high-energy, interactive and fun entertainment and educational experiences for children. Fizz Kidz energy is vibrant, joyful, and engaging, fostering a sense of wonder and creating a world of curious excitement for children.",
+                  "Yes, want your business to work for you and your community and you know your community best! To support the decision making, Fizz Kidz will provide demographic intelligence around each location.",
               },
               {
                 question: "What support will I receive?",
                 answer:
-                  "We are with you every step of the way. From the moment you join our family, our team is there to support you with thorough training sessions, site selection, hiring your team and setting up your studio - essentially everything required to set you up for success. Once you’re up and running, our head office will act as a centralised booking centre, taking all your customer bookings for you. This takes you out of the day-to-day and allows you to actually work on your thriving business.",
+                  "We’re with you every step of the way. From the moment you join the Fizz tribe, you’ll receive comprehensive support – from in-depth training and site selection to hiring your team and setting up your fabulous studio. Once you're operational, our head office becomes your centralised bookings team, handling customer bookings so you can focus on building and growing your business!",
               },
               {
-                question: "Can I see financial information?",
+                question:
+                  "Can I see financial information? How much can I expect to make?",
                 answer:
-                  "Yes, of course. Once an NDA is signed, we will share this with you.",
-              },
-              {
-                question: "What are the Fizz Kidz ongoing fees?",
-                answer:
-                  "Fizz Kidz have a 10% royalty fee, and this covers the growth and support of the Fizz Kidz brand as well as your head office support. Fizz Kidz have a 2% marketing fund which is specifically allocated to support the brands success.",
+                  "Yes of course, once an NDA is signed, we will share current financial documentation with you. The success of your Fizz Kidz studio is shaped by the energy and heart you put in – from running fun-filled sessions to building connections in your local community and delivering quality experiences.",
               },
               {
                 question: "How much does it cost to open a Fizz Kidz Studio?",
                 answer:
-                  "The total initial investment can range between $110,000 - $180,000 depending on site selection. This includes the franchise fees, training, studio fit-out, equipment, opening stock etc. to ensure you are set up to succeed.",
+                  "The total initial investment can range between $200,000 – $250,000 depending on site selection. This includes the franchise fees, training, entire studio fit-out, equipment, opening stock etc. to ensure you are set up to succeed!",
+              },
+              {
+                question: "What are the Fizz Kidz ongoing fees?",
+                answer:
+                  "Fizz Kidz have an on-going 12% royalty fee, and this covers the growth and support of the Fizz Kidz brand as well as your head office support. No marketing fee is payable, we are committed to your success!",
+              },
+              {
+                question: "Who will I be able to contact on a daily basis?",
+                answer:
+                  "Fizz Kidz have a dedicated team to support and guide you through the start-up and ongoing daily operations of your business. We got your back!",
               },
             ]}
           />
