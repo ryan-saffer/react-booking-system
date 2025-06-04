@@ -98,10 +98,7 @@ function FranchisingForm() {
         <CircleCheckBig className="mt-1 h-4 w-4" />
         <div>
           <p className="font-semibold">Enquiry recieved!</p>
-          <p>
-            We will be in touch soon to discuss things further! Your info pack
-            download should begin shortly. 😄
-          </p>
+          <p>We will be in touch soon to discuss things further!</p>
         </div>
       </div>,
       {
@@ -317,7 +314,7 @@ function FranchisingForm() {
           {loading ? (
             <LoaderCircle className="h-4 w-4 animate-spin" />
           ) : (
-            "DOWNLOAD INFO PACK"
+            "Submit"
           )}
         </Button>
       </form>
