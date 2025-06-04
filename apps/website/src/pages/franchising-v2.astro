@@ -1,13 +1,13 @@
 ---
 import Layout from "@/layout/Layout.astro";
 import { Image } from "astro:assets";
-// import purpleWave from "@/assets/images/pages/franchising/v2/purple-wave.png";
-// import blueWave from "@/assets/images/pages/franchising/v2/blue-wave.png";
+import purpleWave from "@/assets/images/pages/franchising/v2/purple-wave.png";
+import blueWave from "@/assets/images/pages/franchising/v2/blue-wave.png";
 import hero from "@/assets/images/pages/franchising/hero.png";
-// import FranchisingHero from "@/components/image-clips/franchising-hero.astro";
+import FranchisingHero from "@/components/image-clips/franchising-hero.astro";
 import franchiseChild from "@/assets/images/pages/franchising/v2/franchise-child.jpg";
 import talia from "@/assets/images/pages/franchising/v2/talia.jpg";
-// import { Button } from "@/components/react/ui/button";
+import { Button } from "@/components/react/ui/button";
 import pinkCircle from "@/assets/images/pages/franchising/v2/pink-circle.png";
 import yellowCircle from "@/assets/images/pages/franchising/v2/yellow-circle.png";
 import greenCircle from "@/assets/images/pages/franchising/v2/green-circle.png";
@@ -17,9 +17,6 @@ import clouds from "@/assets/images/pages/franchising/v2/clouds.png";
 import check from "@/assets/images/pages/franchising/v2/check.png";
 import yellowWaveTop from "@/assets/images/pages/franchising/v2/yellow-wave-top.png";
 import yellowWaveBottom from "@/assets/images/pages/franchising/v2/yellow-wave-bottom.png";
-import studio1 from "@/assets/images/pages/franchising/v2/studio-1.png";
-import studio2 from "@/assets/images/pages/franchising/v2/studio-2.png";
-import studio3 from "@/assets/images/pages/franchising/v2/studio-3.png";
 import FaqAccordion from "@/components/react/faq-accordion";
 import StackedBubbles from "@/components/image-clips/stacked-bubbles.astro";
 import faq from "@/assets/images/pages/parties/faq.png";
@@ -36,14 +33,78 @@ import graphic10 from "@/assets/images/pages/franchising/v2/graphics/graphic10.p
 import graphic11 from "@/assets/images/pages/franchising/v2/graphics/graphic11.png";
 import graphic12 from "@/assets/images/pages/franchising/v2/graphics/graphic12.png";
 import graphic13 from "@/assets/images/pages/franchising/v2/graphics/graphic13.png";
+import graphic14 from "@/assets/images/pages/franchising/v2/graphics/graphic14.png";
+import graphic15 from "@/assets/images/pages/franchising/v2/graphics/graphic15.png";
+import birthdayParties from "@/assets/images/pages/franchising/v2/birthday-parties.jpg";
+import holidayPrograms from "@/assets/images/pages/franchising/v2/holiday-programs.jpg";
+import playLab from "@/assets/images/pages/franchising/v2/play-lab.jpg";
+import afterSchool from "@/assets/images/pages/franchising/v2/after-school.jpg";
+import activations from "@/assets/images/pages/franchising/v2/activations.jpg";
+import schools from "@/assets/images/pages/franchising/v2/schools.jpg";
+import topBubble from "@/assets/images/pages/franchising/v2/top-bubble.jpg";
+import step1 from "@/assets/images/pages/franchising/v2/step-1.jpg";
+import step2 from "@/assets/images/pages/franchising/v2/step-2.jpg";
+import step3 from "@/assets/images/pages/franchising/v2/step-3.jpg";
+import step4 from "@/assets/images/pages/franchising/v2/step-4.jpg";
+import step5 from "@/assets/images/pages/franchising/v2/step-5.jpg";
+import step6 from "@/assets/images/pages/franchising/v2/step-6.jpg";
+import step7 from "@/assets/images/pages/franchising/v2/step-7.jpg";
+import step8 from "@/assets/images/pages/franchising/v2/step-8.jpg";
+import studio1 from "@/assets/images/pages/franchising/v2/studio-1.jpg";
+import studio2 from "@/assets/images/pages/franchising/v2/studio-2.jpg";
+import studio3 from "@/assets/images/pages/franchising/v2/studio-3.jpg";
+import studio4 from "@/assets/images/pages/franchising/v2/studio-4.jpg";
+import whiteSlime from "@/assets/images/pages/franchising/v2/white-slime.svg";
 import FranchisingForm from "@/components/react/forms/franchising-form";
 ---
+
+<style lang="css">
+  /* Disable the header box shadow so the slime works */
+  :global(header) {
+    box-shadow: none !important;
+  }
+</style>
 
 <Layout
   title="Kids Party & Event Franchise Opportunities in Melbourne"
   description="Run your own Fizz Kidz studio, and become a part of the Fizz Family!"
 >
-  <!-- <div class="bg-[#45D3F3]">
+  <div class="relative bg-[#45D3F3]">
+    <Image
+      class="absolute w-full"
+      src={whiteSlime}
+      alt=""
+      width={80}
+      aria-hidden
+    />
+    <Image
+      class="absolute left-[7%] top-[20%] hidden min-[1700px]:block"
+      src={graphic12}
+      alt=""
+      width={80}
+      aria-hidden
+    />
+    <Image
+      class="absolute right-[7%] top-[20%] hidden min-[1700px]:block"
+      src={graphic14}
+      alt=""
+      width={80}
+      aria-hidden
+    />
+    <Image
+      class="absolute bottom-[20%] right-[22%] hidden min-[1700px]:block"
+      src={graphic11}
+      alt=""
+      width={100}
+      aria-hidden
+    />
+    <Image
+      class="absolute bottom-0 right-[50%] hidden min-[1700px]:block"
+      src={graphic15}
+      alt=""
+      width={100}
+      aria-hidden
+    />
     <div class="m-auto flex max-w-[1400px] gap-12 px-8 py-24">
       <div class="flex flex-col justify-center gap-4">
         <p class="font-lilita text-5xl uppercase text-white md:text-7xl">
@@ -51,10 +112,12 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             class="text-6xl md:text-8xl">Fizz owner</span
           >
         </p>
-        <Button
-          className="mt-8 w-fit bg-[#8F44E1] p-8 font-lilita text-xl uppercase tracking-wider hover:bg-[#F6BA33]"
-          >Enquire Today</Button
-        >
+        <a href="#contact">
+          <Button
+            className="mt-8 w-fit bg-[#8F44E1] p-8 font-lilita text-xl uppercase tracking-wider hover:bg-[#F6BA33]"
+            >Enquire Today</Button
+          >
+        </a>
       </div>
       <div class="hidden w-full md:block md:w-1/2">
         <FranchisingHero img={hero} alt="two staff smiling" />
@@ -64,7 +127,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
   <div class="relative overflow-hidden">
     <Image src={purpleWave} alt="" class="" />
     <Image src={blueWave} alt="" class="absolute -top-0.5" />
-  </div> -->
+  </div>
   <div class="relative">
     <div class="m-auto block max-w-[1380px] px-5">
       <Image
@@ -177,7 +240,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: birthdayParties,
+                alt: "Kids smiling around a birthday cake",
               },
               {
                 content: (
@@ -189,7 +253,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: playLab,
+                alt: "A toddler with messy hands lost in wonderment",
               },
               {
                 content: (
@@ -201,7 +266,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: holidayPrograms,
+                alt: "Kids arm in arm smiling",
               },
               {
                 content: (
@@ -213,7 +279,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: afterSchool,
+                alt: "A child in school pouring into a volcano and smiling",
               },
               {
                 content: (
@@ -225,7 +292,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: activations,
+                alt: "Kids in a shopping mall smiling with a Fizz Kidz staff member",
               },
               {
                 content: (
@@ -237,11 +305,17 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                     </>
                   </Fragment>
                 ),
-                image: hero,
+                image: schools,
+                alt: "Two kids in aprons showing off their messy hands",
               },
             ].map((item) => (
-              <div class="rounded-lg bg-white p-4 shadow-lg">
-                <Image src={item.image} alt="" class="rounded-lg" />
+              <div class="flex flex-col rounded-lg bg-white p-4 shadow-lg">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  class="max-h-[350px] flex-grow rounded-lg object-cover"
+                  width={700}
+                />
                 <p class="mt-4 text-center font-lilita text-xl uppercase tracking-wide">
                   {item.content}
                 </p>
@@ -277,17 +351,17 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
         {
           [
             {
-              heading: <span class="text-[#F24DA2]">5000+</span>,
+              heading: <span class="text-[#F24DA2]">5,000+</span>,
               content: "Birthday parties",
               image: pinkCircle,
             },
             {
-              heading: <span class="text-[#4EE16D]">1205+</span>,
+              heading: <span class="text-[#4EE16D]">120,000+</span>,
               content: "Children attended Fizz Kidz studio",
               image: greenCircle,
             },
             {
-              heading: <span class="text-[#F6BA33]">568+</span>,
+              heading: <span class="text-[#F6BA33]">850+</span>,
               content: "5 Star Reviews",
               image: yellowCircle,
             },
@@ -393,7 +467,7 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                 aria-hidden
               />
               <StackedBubbles
-                imgTop={hero}
+                imgTop={topBubble}
                 altTop="TODO"
                 imgBottom={hero}
                 altBottom="TODO"
@@ -482,12 +556,24 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
             >Fizz Kidz</span
           >
         </p>
-        <div
-          class="grid grid-cols-1 items-center justify-items-center md:grid-cols-3"
-        >
-          <Image src={studio1} alt="" class="hidden md:block" />
-          <Image src={studio2} alt="" class="md:max-w-[300px]" />
-          <Image src={studio3} alt="" class="hidden md:block" />
+        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {
+            [
+              { image: studio1, alt: "A Fizz kids studio from the street" },
+              { image: studio3, alt: "The inside of a Fizz Kids studio" },
+              { image: studio2, alt: "Looking into a Fizz Kidz studio" },
+              { image: studio4, alt: "The wall of a Fizz Kidz studio" },
+            ].map((item) => (
+              <div class="h-64 w-full overflow-hidden rounded-xl">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  width={800}
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
@@ -507,7 +593,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               number: "01",
               title: <>Enquiry</>,
               content: "Fill in the form below",
-              image: hero,
+              image: step1,
+              alt: "Lip balms in a bowl of bath crystals",
               color: "#8F44E1",
             },
             {
@@ -518,7 +605,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                 </>
               ),
               content: "We will contact you by phone for an initial chat",
-              image: hero,
+              image: step2,
+              alt: "Bath bombs being made in a bowl",
               color: "#45D3F3",
             },
             {
@@ -530,7 +618,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               ),
               content:
                 "Complete our franchise application form and non-disclosure agreement.",
-              image: hero,
+              image: step3,
+              alt: "Two Fizz Kids staff smiling while working",
               color: "#8F44E1",
             },
             {
@@ -543,20 +632,22 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               ),
               content:
                 "Meet either online or in a Fizz Kidz studio with our CEO and COO.",
-              image: hero,
+              image: step4,
+              alt: "Kids making bubbling volcanos",
               color: "#F6BA34",
             },
             {
               number: "05",
               title: (
                 <>
-                  Discover the Fizz
-                  <span class="text-[#F24DA2]">Kidz way</span>
+                  Discover the
+                  <span class="text-[#F24DA2]">Fizz Kidz way</span>
                 </>
               ),
               content:
                 "Spend a day in a Fizz Kidz studio and see what we are all about!",
-              image: hero,
+              image: step5,
+              alt: "A frog in a bath bomb",
               color: "#F24DA2",
             },
             {
@@ -568,7 +659,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
                 </>
               ),
               content: "Gain final approval to become a Fizz Kidz franchisee",
-              image: hero,
+              image: step6,
+              alt: "Unicorn soaps",
               color: "#4FE16D",
             },
             {
@@ -581,7 +673,8 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               ),
               content:
                 "Together we will find an appropriate site and get you up and running!",
-              image: hero,
+              image: step7,
+              alt: "A child laughing with a bath bomb",
               color: "#8F44E1",
             },
             {
@@ -594,12 +687,20 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
               ),
               content:
                 "Together we will find an appropriate site and get you up and running!",
-              image: hero,
+              image: step8,
+              alt: "Two girls with beads laughing",
               color: "#45D3F3",
             },
           ].map((item) => (
-            <div class="rounded-xl bg-white shadow-md">
-              <Image src={item.image} alt="" class="rounded-t-xl" />
+            <div class="flex flex-col rounded-xl bg-white shadow-md">
+              <div class="h-60 w-full overflow-hidden rounded-t-xl">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  width={500}
+                  class="h-full w-full object-cover"
+                />
+              </div>
               <div class="relative">
                 <div
                   class="absolute -top-6 left-1/2 flex h-12 w-12 -translate-x-1/2 transform items-center justify-center rounded-full border-2 bg-white"
@@ -676,11 +777,12 @@ import FranchisingForm from "@/components/react/forms/franchising-form";
       </div>
     </section>
     <section class="py-12 md:py-24">
+      <div id="contact" class="scroll-mt-24"></div>
       <p
         class="mb-12 text-center font-lilita text-3xl leading-9 md:text-5xl md:leading-[3.5rem]"
       >
-        Fill in the form to register your interest, and download a <span
-          class="text-[#8F44E1]">Franchise Info Pack</span
+        Fill in the form to register your interest,<br /><span
+          class="text-[#8F44E1]">and we will be in touch!</span
         >
       </p>
       <FranchisingForm client:idle />

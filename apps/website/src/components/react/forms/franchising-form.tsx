@@ -317,7 +317,7 @@ function FranchisingForm() {
           {loading ? (
             <LoaderCircle className="h-4 w-4 animate-spin" />
           ) : (
-            "DOWNLOAD INFO PACK"
+            "Submit"
           )}
         </Button>
       </form>
