@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
 import { addOrdinalSuffix, type AcuityTypes } from 'fizz-kidz'
 import { Checkbox } from '@ui-components/checkbox'
 import { DateTime } from 'luxon'
+import { PricingStructure } from './pricing-structure'
 
 export function CasualProgramSelector() {
     const form = useBookingForm()
@@ -73,6 +74,7 @@ export function CasualProgramSelector() {
         [isSuccessClasses, classes, studio, appointmentTypes]
     )
 
+    if (!studio) return null
     if (formStage !== 'program-selection') return null
     if (!bookingType || bookingType !== 'casual') return null
 
@@ -103,18 +105,21 @@ export function CasualProgramSelector() {
         }
 
         return (
-            <Tabs defaultValue="program" className="">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="program">Browse by program</TabsTrigger>
-                    <TabsTrigger value="date">Browse by date</TabsTrigger>
-                </TabsList>
-                <TabsContent value="program">
-                    <BrowseByProgram appointmentTypes={appointmentTypes} classes={filteredClasses} />
-                </TabsContent>
-                <TabsContent value="date">
-                    <BrowseByDate filteredClasses={filteredClasses} refetchClasses={refetch} />
-                </TabsContent>
-            </Tabs>
+            <>
+                <PricingStructure /> {/* Temporarily placed here while hiding booking type selector  */}
+                <Tabs defaultValue="program" className="">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="program">Browse by program</TabsTrigger>
+                        <TabsTrigger value="date">Browse by date</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="program">
+                        <BrowseByProgram appointmentTypes={appointmentTypes} classes={filteredClasses} />
+                    </TabsContent>
+                    <TabsContent value="date">
+                        <BrowseByDate filteredClasses={filteredClasses} refetchClasses={refetch} />
+                    </TabsContent>
+                </Tabs>
+            </>
         )
     }
 }
