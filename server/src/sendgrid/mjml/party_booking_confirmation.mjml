@@ -110,10 +110,12 @@
                     {{ managerName }} will email you a personalised online party form, where you can tell us the number
                     of guests attending as well as pick your creations and order additional food. {{#canOrderCake}}<br /><br />This
                     form will also include an option to
-                    <b style="color: #212b35">order and ice-cream cake directly through us!</b> If you choose to do
-                    this, the cake will be ready for you at the party when you arrive.{{/canOrderCake}}
-                    <!-- When adding party packs back, mention them here -->
+                    <b style="color: #212b35">order an ice-cream cake and lolly/gift bags directly through us!</b> If
+                    you choose to do this, the cake will be ready for you at the party when you arrive.{{/canOrderCake}}
                 </mj-text>
+                {{#canOrderCake}}
+                <mj-image src="https://www.fizzkidz.com.au/emails/party-perks.jpg" />
+                {{/canOrderCake}}
             </mj-column>
 
             {{^isMobile}}
