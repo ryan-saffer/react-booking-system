@@ -8,6 +8,7 @@ import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 import PartyReviews from "@/components/party-reviews.astro";
 import PartyFaq from "@/components/party-faq.astro";
 import Values from "@/components/values.astro";
+import PartyPerks from "@/components/party-perks.astro";
 
 type Props = {
   partyPackage: string;
@@ -39,6 +40,7 @@ const { partyPackage } = Astro.props;
   <div class="m-auto block max-w-[1380px] px-5 pt-4">
     <Pricing />
     <PartyInformation partyPackage={partyPackage} />
+    <PartyPerks />
     <PartyFaq />
     <!-- <PartyPacks /> -->
     <PartyReviews />

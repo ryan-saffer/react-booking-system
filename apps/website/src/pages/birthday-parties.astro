@@ -20,6 +20,7 @@ import MixAndMatchParties from "@/components/mix-and-match-parties.astro";
 import PartyThemes from "@/components/party-themes.astro";
 import PartyFaq from "@/components/party-faq.astro";
 import Values from "@/components/values.astro";
+import PartyPerks from "@/components/party-perks.astro";
 
 const { default: greenClock } = await import(
   `@/assets/images/pages/parties/green-clock.svg?raw`
@@ -184,7 +185,7 @@ const { default: purpleDrop } = await import(
                   "Choose your favourite creations to make",
                   "Flexible & allergy aware party food",
                   "Personalised online invitations [NEW!]",
-                  "You can bring your own birthday cake",
+                  "You can bring your own birthday cake <strong>or order one through us!</strong>",
                   "Let us know the approx. number of children & which creations your child would like to make a week before the party",
                 ]}
               />
@@ -201,6 +202,7 @@ const { default: purpleDrop } = await import(
       <MixAndMatchParties />
       <Pricing />
       <PartyInformation partyPackage="Birthday" />
+      <PartyPerks />
       <PartyFaq />
       <!-- <PartyPacks /> -->
     </div>

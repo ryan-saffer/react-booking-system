@@ -20,7 +20,7 @@ const { content, className } = Astro.props;
         <div class="h-4 w-4 min-w-4">
           <Fragment set:html={starSvg} />
         </div>
-        {it}
+        <span set:html={it} />
       </li>
     ))
   }
