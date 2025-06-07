@@ -45,7 +45,7 @@ function NavigationMenuDropdown({
         >
           <span
             className={cn(
-              "text-base decoration-[#B34696] decoration-2 underline-offset-4 group-hover:underline",
+              "text-sm decoration-[#B34696] decoration-2 underline-offset-4 group-hover:underline",
               { "text-xs min-[350px]:text-sm": isBreadcrumb },
             )}
           >
@@ -59,7 +59,7 @@ function NavigationMenuDropdown({
           <Button
             variant="link"
             className={cn(
-              "text-md group justify-start border border-[#9044E2] bg-[#9044E2] text-start font-gotham text-white hover:bg-[#9044E2]/70 hover:no-underline",
+              "group justify-start border border-[#9044E2] bg-[#9044E2] text-start font-gotham text-sm text-white hover:bg-[#9044E2]/70 hover:no-underline",
             )}
           >
             <a
@@ -78,7 +78,7 @@ function NavigationMenuDropdown({
                 path={menu.path}
                 title={menu.title}
                 key={idx}
-                className={isBreadcrumb ? "text-sm sm:text-base" : ""}
+                className={isBreadcrumb ? "text-sm" : ""}
               />
             );
           }

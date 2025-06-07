@@ -15,7 +15,7 @@ function NavigationMenuItemDesktop({
     <Button
       variant="link"
       className={cn(
-        "text-md group justify-start p-0 font-gotham hover:no-underline",
+        "group justify-start p-0 font-gotham text-sm hover:no-underline",
         className,
       )}
     >
