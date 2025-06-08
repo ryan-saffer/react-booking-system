@@ -1,5 +1,5 @@
 import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { MailClient } from '@/sendgrid/MailClient'
@@ -40,15 +40,18 @@ export async function sendConfirmationEmail(
     const appointmentTypeId = sortedAppointments[0].appointmentTypeID as AcuityConstants.AppointmentTypeValue
     switch (appointmentTypeId) {
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
-        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM:
+        case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM: {
+            const location = AcuityUtilities.getStudioByCalendarId(appointments[0].calendarID)
             await mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
                 parentName: appointments[0].firstName,
                 location: `Fizz Kidz ${appointments[0].calendar}`,
                 address: appointments[0].location,
                 bookings,
                 receiptUrl,
+                showCrunch: location === Location.BALWYN || location === Location.MALVERN,
             })
             break
+        }
         case AcuityConstants.AppointmentTypes.KINGSVILLE_OPENING:
             await mailClient.sendEmail('kingsvilleOpeningConfirmation', appointments[0].email, {
                 parentName: appointments[0].firstName,

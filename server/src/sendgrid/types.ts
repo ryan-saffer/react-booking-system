@@ -6,6 +6,7 @@ export type Emails = {
         address: string
         bookings: { datetime: string; confirmationPage: string }[]
         receiptUrl: string | undefined
+        showCrunch: boolean
     }
 
     holidayProgramCancellation: {

@@ -86,6 +86,7 @@
                     time you have selected!
                 </mj-text>
             </mj-column>
+            {{#showCrunch}}
             <mj-column width="100%">
                 <mj-text
                     color="#212b35"
@@ -102,6 +103,7 @@
                 >
                 <mj-image src="https://www.fizzkidz.com.au/emails/crunch.jpg"></mj-image>
             </mj-column>
+            {{/showCrunch}}
             <mj-column width="100%">
                 <mj-text
                     color="#212b35"

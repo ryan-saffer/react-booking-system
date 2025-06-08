@@ -11,6 +11,7 @@ export interface Appointment {
     labels?: Label[]
     forms: Form[]
     notes: string
+    calendarID: number
     calendar: string
     paid: 'yes' | 'no'
     location: string
