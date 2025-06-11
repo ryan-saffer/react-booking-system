@@ -8,6 +8,7 @@ const handler = createRouteHandler({
   router: ourFileRouter,
   config: {
     token: import.meta.env.UPLOADTHING_TOKEN,
+    logLevel: "Debug",
   },
 });
 
