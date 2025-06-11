@@ -297,7 +297,7 @@ function CareersForm() {
             onClientUploadComplete={(res) => {
               // Do something with the response
               setUploadError({ isError: false, message: "" });
-              setFile({ name: res[0].name, url: res[0].ufsUrl });
+              setFile({ name: res[0].name, url: res[0].url });
             }}
             onUploadError={(error: Error) => {
               // Do something with the error.
