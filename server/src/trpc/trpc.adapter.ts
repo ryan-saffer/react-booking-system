@@ -3,12 +3,12 @@ import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
 import type { AnyRouter } from '@trpc/server'
-import { type TRPCError } from '@trpc/server'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 
 import { createContext } from './trpc'
+import type { AppErrorCode } from './trpc.errors'
 
-const ERRORS_TO_IGNORE: TRPCError['code'][] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CONFLICT']
+const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL']
 
 export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory?: MemoryOption) {
     return onRequest(

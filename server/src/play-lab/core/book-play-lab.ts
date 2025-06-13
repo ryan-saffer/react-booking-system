@@ -11,6 +11,8 @@ import { getOrCreateCustomer } from '../../square/core/get-or-create-customer'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FieldValue } from 'firebase-admin/firestore'
 import { Status } from 'google-gax'
+import { SquareError } from 'square'
+import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 
 export type BookPlayLabProps = {
     idempotencyKey: string
@@ -100,7 +102,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
             )
         }
         if (matchingClass.slotsAvailable < input.children.length) {
-            throwTrpcError('CONFLICT', 'One of the selected play lab classes does not have enough spots')
+            throw new ClassFullError("One of the selected play lab classes does not have enough spots'")
         }
     })
 
@@ -114,7 +116,15 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         input.payment,
         input.parentEmail,
         customerId
-    ).catch((err) => throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input }))
+    ).catch((err) => {
+        if (err instanceof SquareError) {
+            const error = err.errors[0]
+            if (error.category === 'PAYMENT_METHOD_ERROR') {
+                throw new PaymentMethodInvalidError()
+            }
+        }
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })
+    })
 
     // MARK: Schedule into acuity
     const schedulingPromises = input.payment.lineItems.map((line) =>

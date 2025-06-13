@@ -15,6 +15,8 @@ import { logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { sendConfirmationEmail } from './send-confirmation-email'
+import { SquareError } from 'square'
+import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 
 export type HolidayProgramBookingProps = {
     idempotencyKey: string
@@ -81,7 +83,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
             )
         }
         if (matchingClass.slotsAvailable < input.numberOfKids) {
-            throwTrpcError('CONFLICT', 'one of the selected holiday program classes does not have enought spots')
+            throw new ClassFullError('One of the selected holiday program classes does not have enought spots')
         }
     }
 
@@ -161,11 +163,17 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                 buyerEmailAddress: input.parentEmail,
                 verificationToken: input.payment.buyerVerificationToken,
             })
-            .catch((error) =>
-                throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', error, {
+            .catch((err) => {
+                if (err instanceof SquareError) {
+                    const error = err.errors[0]
+                    if (error.category === 'PAYMENT_METHOD_ERROR') {
+                        throw new PaymentMethodInvalidError()
+                    }
+                }
+                throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', err, {
                     input,
                 })
-            )
+            })
         recieptUrl = payment!.receiptUrl
     }
 

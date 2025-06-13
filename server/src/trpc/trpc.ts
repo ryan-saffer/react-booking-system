@@ -7,9 +7,20 @@ import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/
 
 import { AcuityClient } from '../acuity/core/acuity-client'
 import { throwTrpcError } from '../utilities'
+import { getErrorCode } from './trpc.errors'
 
 // INITIALISATION
-const t = initTRPC.context<typeof createContext>().create()
+const t = initTRPC.context<typeof createContext>().create({
+    errorFormatter({ shape, error }) {
+        return {
+            ...shape,
+            data: {
+                ...shape.data,
+                code: getErrorCode(error.cause ?? error, error.code),
+            },
+        }
+    },
+})
 export const router = t.router
 export const middleware = t.middleware
 

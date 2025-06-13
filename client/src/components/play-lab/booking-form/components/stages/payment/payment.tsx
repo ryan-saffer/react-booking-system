@@ -113,10 +113,16 @@ export function Payment() {
                 'There was an error booking in your sessions. Please try again later or contact us at bookings@fizzkidz.com.au'
             let errorTitle = 'Something went wrong'
 
-            if (error.data?.code === 'CONFLICT') {
+            if (error.data?.code === 'CLASS_FULL') {
                 errorMessage =
                     "One or more of your selected sessions does not have enough spots available. Please return to the 'Select Sessions' screen and review your selected sessions."
                 errorTitle = 'One or more sessions are full'
+            }
+
+            if (error.data?.code === 'PAYMENT_METHOD_INVALID') {
+                errorTitle = 'Payment Failed'
+                errorMessage =
+                    'Unfortunately we were unable to process your payment. Please check your payment method and try again.'
             }
 
             return (
