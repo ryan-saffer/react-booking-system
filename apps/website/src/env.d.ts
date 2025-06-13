@@ -1,7 +1,7 @@
 /// <reference path="../.astro/types.d.ts" />
 interface ImportMetaEnv {
   STORYBLOK_TOKEN: string;
-  UPLOADTHING_TOKEN: string;
+  PUBLIC_UPLOADTHING_TOKEN: string;
   NETLIFY_TOKEN: string;
 }
 
