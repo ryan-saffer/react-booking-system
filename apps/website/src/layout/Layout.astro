@@ -2,7 +2,7 @@
 import "@/styles/globals.css";
 import Header from "@/layout/header.astro";
 import Footer from "@/layout/footer.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import LoadingIndicator from "astro-loading-indicator/component";
 // import { HolidayProgramDiscountDialog } from "@/components/react/holiday-program-discount-dialog";
 // import { getImage } from "astro:assets";
@@ -87,7 +87,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonicalUrl} />
   </head>
 
-  <ViewTransitions />
+  <ClientRouter />
   <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
   <!-- <HolidayProgramDiscountDialog
     client:idle
