@@ -39,9 +39,6 @@ const formSchema = z.object({
     .enum(["ACT", "NSW", "NT", "QLD", "TAS", "VIC", "WA"])
     .optional()
     .refine((it) => !!it, "Please select a state"),
-  experience: z
-    .string()
-    .min(1, "Please let us know your experience working with kids"),
   interest: z
     .enum(["browsing", "3", "6", "12", "12+"])
     .optional()
@@ -60,7 +57,6 @@ function FranchisingForm() {
       contactNumber: "",
       suburb: "",
       state: undefined,
-      experience: undefined,
       interest: undefined,
       enquiry: "",
       reference: "",
@@ -89,7 +85,6 @@ function FranchisingForm() {
     }
 
     form.reset({
-      experience: undefined,
       interest: undefined,
       state: undefined,
     });
@@ -105,12 +100,6 @@ function FranchisingForm() {
         duration: 15_000,
       },
     );
-    setTimeout(() => {
-      window.open(
-        `https://www.fizzkidz.com.au/fizz-kidz-franchising-brochure.pdf`,
-        "_blank",
-      );
-    }, 2000);
   }
 
   return (
@@ -189,10 +178,6 @@ function FranchisingForm() {
               <FormLabel>
                 Which suburb do you want to open a studio in? *
               </FormLabel>
-              <p className="text-sm">
-                Additionally, our thriving Balwyn and Cheltenham studios are
-                available to purchase!
-              </p>
               <FormControl>
                 <Input
                   className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
@@ -231,25 +216,6 @@ function FranchisingForm() {
         />
         <FormField
           control={form.control}
-          name="experience"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Do you have any experience working with kids? *
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  className="rounded-xl border-violet-500 focus-visible:outline-purple-700"
-                  rows={3}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="interest"
           render={({ field }) => (
             <FormItem>
@@ -261,11 +227,11 @@ function FranchisingForm() {
               >
                 <SelectValue />
                 <SelectContent>
-                  <SelectItem value="browsing">Just browsing</SelectItem>
                   <SelectItem value="3">Get started in 3 months</SelectItem>
                   <SelectItem value="6">Get started in 3-6 months</SelectItem>
                   <SelectItem value="12">Get started in 6-12 months</SelectItem>
                   <SelectItem value="12+">Get started in 12+ months</SelectItem>
+                  <SelectItem value="browsing">Just browsing</SelectItem>
                 </SelectContent>
               </SelectForm>
               <FormMessage />
@@ -278,7 +244,8 @@ function FranchisingForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                What interests you about Fizz Kidz? Tell us about you.
+                What interests you about owning a Fizz Kidz studio? Tell us
+                about you!
               </FormLabel>
               <FormControl>
                 <Textarea
