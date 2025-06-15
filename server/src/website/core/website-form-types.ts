@@ -68,7 +68,6 @@ export type Form = {
         contactNumber: string
         suburb: string
         state: 'ACT' | 'NSW' | 'NT' | 'QLD' | 'TAS' | 'VIC' | 'WA'
-        experience: string
         interest: FranchisingInterestOption
         enquiry: string
         reference: string

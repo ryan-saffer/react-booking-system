@@ -431,7 +431,6 @@ export type Emails = {
         contactNumber: string
         suburb: string
         state: string
-        experience: string
         interest: string
         enquiry: string
         reference: string
@@ -444,7 +443,6 @@ export type Emails = {
         contactNumber: string
         suburb: string
         state: string
-        experience: string
         interest: string
         enquiry: string
         reference: string
