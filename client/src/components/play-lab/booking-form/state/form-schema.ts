@@ -2,6 +2,7 @@ import type { Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
+import { useCart } from './cart-store'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 
@@ -13,8 +14,9 @@ const childSchema = z
         lastName: z.string().trim().min(1, 'Child last name is required'),
         dob: z.date({ required_error: 'Date of birth is required', invalid_type_error: 'Invalid date' }).refine(
             (date) => {
-                const now = DateTime.now()
-                const ageInMonths = now.diff(DateTime.fromJSDate(date), 'months').months
+                const earliestClass = useCart.getState().getEarliestClassDate()
+                const earliestDate = DateTime.fromJSDate(earliestClass)
+                const ageInMonths = earliestDate.diff(DateTime.fromJSDate(date), 'months').months
                 return ageInMonths >= 18 && ageInMonths <= 84
             },
             {

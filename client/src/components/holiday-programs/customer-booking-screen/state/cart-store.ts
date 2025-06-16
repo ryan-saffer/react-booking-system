@@ -20,6 +20,12 @@ type Cart = {
     toggleClass: (klass: Class, numberOfKids: number) => void
     updateSameDayClasses: () => void
     calculateTotal: (numberOfKids: number) => void
+    /**
+     * Of all the classes in the cart, return the date of the earliest program. If nothing in the cart, it will return today.
+     *
+     * This is useful for calculating if the child is old enough to attend, since we can calculate based on their age at the time of the program.
+     */
+    getEarliestClass(): Date
 }
 
 export const useCart = create<Cart>()((set, get) => ({
@@ -101,5 +107,14 @@ export const useCart = create<Cart>()((set, get) => ({
         }
 
         set({ subtotal, total })
+    },
+    getEarliestClass: () => {
+        const sorted = Object.values(get().selectedClasses).sort(
+            (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+        )
+        if (sorted.length > 0) {
+            return new Date(sorted[0].time)
+        }
+        return new Date()
     },
 }))

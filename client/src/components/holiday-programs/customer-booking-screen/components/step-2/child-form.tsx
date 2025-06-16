@@ -4,6 +4,7 @@ import { AcuityConstants } from 'fizz-kidz'
 import React, { useState } from 'react'
 
 import { SimpleTextRule } from '@utils/formUtils'
+import { useCart } from '../../state/cart-store'
 
 const { TextArea } = Input
 
@@ -13,6 +14,7 @@ type Props = {
 }
 
 export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) => {
+    const getEarliestClass = useCart((cart) => cart.getEarliestClass)
     const [hasAllergies, setHasAllergies] = useState(false)
 
     return (
@@ -43,8 +45,9 @@ export const ChildForm: React.FC<Props> = ({ appointmentTypeId, childNumber }) =
                                 return Promise.resolve()
                             }
 
-                            const fourYearsAgo = dayjs().subtract(4, 'years')
-                            const thirteenYearsAgo = dayjs().subtract(13, 'years')
+                            const earliestClass = getEarliestClass()
+                            const fourYearsAgo = dayjs(earliestClass).subtract(4, 'years').add(1, 'days')
+                            const thirteenYearsAgo = dayjs(earliestClass).subtract(13, 'years').add(1, 'days')
 
                             if (value.isAfter(fourYearsAgo)) {
                                 // younger than 4

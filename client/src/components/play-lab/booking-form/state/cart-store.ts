@@ -30,6 +30,12 @@ interface Cart {
         error: string | null
     }
     removeDiscount: (numberOfKids: number, isTermEnrolment: boolean) => void
+    /**
+     * Gets the date of the earliest class in the cart. Returns todays date if nothing in the cart.
+     *
+     * Useful for validating the child age against the actual program date.
+     */
+    getEarliestClassDate(): Date
 }
 
 export const useCart = create<Cart>()((set, get) => ({
@@ -144,5 +150,15 @@ export const useCart = create<Cart>()((set, get) => ({
     removeDiscount: (numberOfKids, isTermEnrolment) => {
         set({ discount: null })
         get().calculateTotal(numberOfKids, isTermEnrolment)
+    },
+    getEarliestClassDate: () => {
+        const sorted = Object.values(get().selectedClasses).sort(
+            (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+        )
+        if (sorted.length > 0) {
+            return new Date(sorted[0].time)
+        }
+
+        return new Date()
     },
 }))
