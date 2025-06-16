@@ -110,6 +110,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
                 endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
                 invoiceUrl: values.invoiceUrl,
+                ...(event.$type === 'incursion' && { module: values.module || event.module }),
                 ...(event.$type === 'incursion' &&
                     event.$incursionFormCompleted && {
                         numberOfChildren: values.numberOfChildren,
