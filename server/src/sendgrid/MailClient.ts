@@ -23,6 +23,7 @@ type Options = {
     }
     subject?: string
     replyTo?: string
+    bcc?: string[]
 }
 
 export class MailClient {
@@ -58,7 +59,7 @@ export class MailClient {
     }
 
     async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], _options: Options = {}) {
-        const defaultOptions = { bccBookings: true }
+        const defaultOptions = { bccBookings: true, bcc: [] } satisfies Options
         let options = { ...defaultOptions, ..._options }
 
         // if the email is being sent to bookings@fizz, and `bccBookings` is set to true, it will fail.
@@ -69,9 +70,17 @@ export class MailClient {
 
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
-        if (env === 'prod' && options.bccBookings) {
-            emailInfo.bcc = [...(emailInfo.bcc || []), 'bookings@fizzkidz.com.au']
+
+        // no need to bcc people in dev environment.
+        // this only ignores those dynamically bcc'd and bookings@fizz. Those hardcoded in _getInfo() will still be sent.
+        if (env === 'prod') {
+            emailInfo.bcc = [
+                ...(emailInfo.bcc || []),
+                ...options.bcc,
+                ...(options.bccBookings ? ['bookings@fizzkidz.com.au'] : []),
+            ]
         }
+
         await this.#sgMail.send({ ...emailInfo, html })
     }
 
@@ -218,7 +227,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
+                        bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -233,7 +242,7 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
+                        bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },

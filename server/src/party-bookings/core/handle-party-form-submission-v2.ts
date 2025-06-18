@@ -307,6 +307,9 @@ export async function handlePartyFormSubmissionV2(
                     cakeServed: booking.cake.served,
                     cakeCandles: booking.cake.candles,
                     cakeMessage: booking.cake.message,
+                },
+                {
+                    bcc: [manager.email],
                 }
             )
         } catch (err) {
