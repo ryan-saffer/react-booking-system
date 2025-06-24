@@ -8,7 +8,7 @@ import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 import { createContext } from './trpc'
 import type { AppErrorCode } from './trpc.errors'
 
-const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL']
+const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL', 'PAYMENT_METHOD_INVALID']
 
 export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory?: MemoryOption) {
     return onRequest(
