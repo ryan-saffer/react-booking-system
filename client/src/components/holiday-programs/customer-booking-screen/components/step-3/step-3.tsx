@@ -60,7 +60,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
 
     // MARK: functions
     function formatClassTime(date: string) {
-        return DateTime.fromISO(date).toFormat('EEEE MMMM d, h:mm a')
+        return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toFormat('EEEE MMMM d, h:mm a')
     }
 
     function discountDescription(discount: DiscountCode) {
