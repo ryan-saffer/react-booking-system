@@ -22,6 +22,9 @@ export default defineConfig({
     }),
   ],
   redirects: {
+    // TEMPORARY WHILE WE NO LONGER OFFER IN STUDIO SCIENCE
+    "after-school-programs": "/in-schools/after-school-programs",
+    // FROM OLD WEBSITE
     "in-store-parties": "/birthday-parties/",
     "glam-parties": "/birthday-parties/glam-parties/",
     scienceparties: "/birthday-parties/science-parties/",
