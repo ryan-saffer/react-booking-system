@@ -72,11 +72,11 @@ export function Payment() {
                 token,
                 buyerVerificationToken,
                 locationId: squareLocationId,
-                amount: total * 100, // cents
+                amount: Math.round(total * 100), // cents
                 lineItems: Object.values(selectedClasses).flatMap((klass) =>
                     children.map((child) => ({
                         name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
-                        amount: parseInt(klass.price) * 100,
+                        amount: Math.round(parseInt(klass.price) * 100),
                         quantity: '1',
                         classId: klass.id,
                         lineItemIdentifier: crypto.randomUUID(),

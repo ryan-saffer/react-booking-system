@@ -151,12 +151,12 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                                 payment: {
                                     token: token,
                                     buyerVerificationToken: buyerVerification?.token || '',
-                                    amount: total * 100, // cents
+                                    amount: Math.round(total * 100), // cents
                                     locationId: squareLocationId,
                                     lineItems: Object.values(selectedClasses).flatMap((klass) =>
                                         form.children.map((child) => ({
                                             name: `${child.childName} - ${formatClassTime(klass.time)}`,
-                                            amount: parseInt(klass.price) * 100, // cents
+                                            amount: Math.round(parseInt(klass.price) * 100), // cents
                                             quantity: '1',
                                             classId: klass.id,
                                             lineItemIdentifier: crypto.randomUUID(),
