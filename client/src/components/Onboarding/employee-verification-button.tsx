@@ -7,7 +7,7 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 
 type Props = { employee: Employee }
 
-const VerificationButton: React.FC<Props> = ({ employee }) => {
+const EmployeeVerificationButton: React.FC<Props> = ({ employee }) => {
     const firebase = useFirebase()
     const [showModal, setShowModal] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -90,4 +90,4 @@ const VerificationButton: React.FC<Props> = ({ employee }) => {
     )
 }
 
-export default VerificationButton
+export default EmployeeVerificationButton

@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
-export const WWCCButton = ({ employee }: { employee: Employee }) => {
+export const EmployeeWWCCButton = ({ employee }: { employee: Employee }) => {
     const firebase = useFirebase()
     const [showModal, setShowModal] = useState(false)
     const [loading, setLoading] = useState(false)

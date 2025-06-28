@@ -15,7 +15,7 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
     const existingEmployee = await DatabaseClient.getEmployee(employeeId)
 
     if (existingEmployee.status !== 'form-sent') {
-        logger.log(
+        logger.warn(
             `employee form already submitted for ${existingEmployee.firstName} ${existingEmployee.lastName} - exiting`
         )
         return

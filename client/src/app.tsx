@@ -86,7 +86,7 @@ const CustomerBookingScreen = lazy(() =>
     }))
 )
 const Onboarding = lazy(() =>
-    import('./components/Onboarding/Onboarding.js').then((module) => ({ default: module.Onboarding }))
+    import('./components/Onboarding/employee-onboarding.js').then((module) => ({ default: module.EmployeeOnboarding }))
 )
 const CreationsPage = lazy(() =>
     import('./components/Creations/Creations.js').then((module) => ({ default: module.CreationsPage }))

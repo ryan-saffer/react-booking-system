@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 
-import EmployeeTable from './EmployeeTable'
-import NewEmployeeForm from './NewEmployeeForm'
+import EmployeeTable from './employee-table'
+import NewEmployeeForm from './new-employee-form'
 
 const PREFIX = 'Onboarding'
 
@@ -39,7 +39,7 @@ const StyledLayout = styled(Layout)({
 const { Content } = Layout
 const { Title } = Typography
 
-export const Onboarding = () => {
+export const EmployeeOnboarding = () => {
     const [showNewEmployeeModal, setShowNewEmployeeModal] = useState(false)
 
     return (

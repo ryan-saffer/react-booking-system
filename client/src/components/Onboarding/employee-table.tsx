@@ -7,8 +7,9 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 
-import VerificationButton from './VerificationButton'
-import { WWCCButton } from './wwcc-button'
+import EmployeeVerificationButton from './employee-verification-button'
+import { EmployeeWWCCButton } from './employee-wwcc-button'
+import { DeleteEmployeeButton } from './delete-employee-button'
 
 const PREFIX = 'EmployeeTable'
 
@@ -116,10 +117,11 @@ const EmployeeTable = () => {
                 title: 'Actions',
                 render: (employee: Employee) => (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        {employee.status === 'verification' && <VerificationButton employee={employee} />}
+                        <DeleteEmployeeButton employee={employee} />
+                        {employee.status === 'verification' && <EmployeeVerificationButton employee={employee} />}
                         {employee.status !== 'form-sent' &&
                             employee.wwcc.status === 'I have applied for a WWCC and have an application number' && (
-                                <WWCCButton employee={employee} />
+                                <EmployeeWWCCButton employee={employee} />
                             )}
                     </div>
                 ),
