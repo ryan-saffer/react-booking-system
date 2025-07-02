@@ -22,4 +22,4 @@ export const holidayProgramsRouter = router({
         .mutation(({ input }) => checkDiscountCode(input.code)),
 })
 
-export const holidayPrograms = onRequestTrpc(holidayProgramsRouter)
+export const holidayPrograms = onRequestTrpc(holidayProgramsRouter, '512MiB')
