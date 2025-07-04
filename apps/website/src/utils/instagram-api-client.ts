@@ -51,7 +51,14 @@ class InstagramClient {
 
     if (result.status === 200) {
       const posts = await result.json();
-      return posts.data as ({
+      return posts.data.filter(
+        (it: any) =>
+          // its possible instagram doesnt return media_url if content is marked as copyright violated.
+          // so just filter out bad data here to be safe.
+          (it.media_type === "VIDEO" && !!it.thumbnail_url) ||
+          (it.media_type === "IMAGE" && !!it.media_url) ||
+          (it.media_type === "CAROUSEL_ALBUM" && !!it.media_url),
+      ) as ({
         media_url: string;
         permalink: string;
         caption: string;
