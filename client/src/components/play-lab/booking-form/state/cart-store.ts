@@ -21,7 +21,7 @@ interface Cart {
         | null
     subtotal: number
     total: number
-    calculateTotal: (numberOfKids: number, isTermEnrolment: boolean) => void
+    calculateTotal: (numberOfKids: number) => void
     applyDiscountCode: (
         discount: { discountType: 'percentage' | 'price'; discountAmount: number; code: string },
         numberOfKids: number,
@@ -43,7 +43,7 @@ export const useCart = create<Cart>()((set, get) => ({
     discount: null,
     subtotal: 0,
     total: 0,
-    toggleClass: (klass, numberOfKids, isTermEnrolment) => {
+    toggleClass: (klass, numberOfKids) => {
         const current = get().selectedClasses
         let next: Record<number, LocalAcuityClass>
         if (current[klass.id]) {
@@ -53,16 +53,16 @@ export const useCart = create<Cart>()((set, get) => ({
             next = { ...current, [klass.id]: klass }
         }
         set({ selectedClasses: next })
-        get().calculateTotal(numberOfKids, isTermEnrolment)
+        get().calculateTotal(numberOfKids)
     },
     setSelectedClasses: (classes, numberOfKids) => {
         set({ selectedClasses: classes.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {}) })
-        get().calculateTotal(numberOfKids, true) // true since only set all classes at once for a term selection
+        get().calculateTotal(numberOfKids)
     },
     clearCart: () => {
         set({ selectedClasses: {} })
     },
-    calculateTotal: (numberOfKids, isTermEnrolment) => {
+    calculateTotal: (numberOfKids) => {
         const classes = Object.values(get().selectedClasses)
 
         const subtotal = classes.reduce((acc, curr) => acc + parseFloat(curr.price), 0) * numberOfKids
@@ -82,17 +82,13 @@ export const useCart = create<Cart>()((set, get) => ({
         let discountPercent = 0
         let description = ''
         if (classes.length > 0) discountPercent = 0
-        if (classes.length >= 2) {
-            discountPercent = 5
-            description = 'Multi session discount - 2 or more sessions'
-        }
         if (classes.length >= 4) {
             discountPercent = 10
             description = 'Multi session discount - 4 or more sessions'
         }
-        if (classes.length >= 6 && isTermEnrolment) {
+        if (classes.length >= 8) {
             discountPercent = 20
-            description = 'Term enrolment discount'
+            description = 'Term enrolment - 8 session discount'
         }
 
         const multiSessionDiscountTotal = subtotal - subtotal * (discountPercent / 100)
@@ -108,7 +104,7 @@ export const useCart = create<Cart>()((set, get) => ({
             set({ discount: multiSessionDiscount, subtotal, total: multiSessionDiscountTotal })
         }
     },
-    applyDiscountCode: (discount, numberOfKids, isTermEnrolment) => {
+    applyDiscountCode: (discount, numberOfKids) => {
         const subtotal = get().subtotal
         let newTotal = get().total
         if (discount.discountType === 'percentage') {
@@ -143,13 +139,13 @@ export const useCart = create<Cart>()((set, get) => ({
                 code: discount.code,
             },
         })
-        get().calculateTotal(numberOfKids, isTermEnrolment)
+        get().calculateTotal(numberOfKids)
 
         return { error: null }
     },
-    removeDiscount: (numberOfKids, isTermEnrolment) => {
+    removeDiscount: (numberOfKids) => {
         set({ discount: null })
-        get().calculateTotal(numberOfKids, isTermEnrolment)
+        get().calculateTotal(numberOfKids)
     },
     getEarliestClassDate: () => {
         const sorted = Object.values(get().selectedClasses).sort(

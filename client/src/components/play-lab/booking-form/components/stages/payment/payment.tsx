@@ -53,10 +53,14 @@ export function Payment() {
         await mutateAsync({
             idempotencyKey: idempotencyKey.current,
             bookingType: form.getValues().bookingType!,
-            classes: Object.values(selectedClasses).map((klass) => ({
-                ...klass,
-                time: DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toISO(),
-            })),
+            classes: Object.values(selectedClasses).map((klass) => {
+                const { name } = JSON.parse(klass.description)
+                return {
+                    ...klass,
+                    name,
+                    time: DateTime.fromJSDate(klass.time, { zone: 'Australia/Melbourne' }).toISO(),
+                }
+            }),
             parentFirstName: form.getValues().parentFirstName,
             parentLastName: form.getValues().parentLastName,
             parentPhone: form.getValues().parentPhone,
@@ -73,15 +77,16 @@ export function Payment() {
                 buyerVerificationToken,
                 locationId: squareLocationId,
                 amount: Math.round(total * 100), // cents
-                lineItems: Object.values(selectedClasses).flatMap((klass) =>
-                    children.map((child) => ({
-                        name: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
+                lineItems: Object.values(selectedClasses).flatMap((klass) => {
+                    const { name } = JSON.parse(klass.description)
+                    return children.map((child) => ({
+                        name: `${child.firstName} - ${name} - ${formatClassTime(klass.time)}`,
                         amount: Math.round(parseInt(klass.price) * 100),
                         quantity: '1',
                         classId: klass.id,
                         lineItemIdentifier: crypto.randomUUID(),
                         appointmentTypeID: klass.appointmentTypeID,
-                        className: klass.name,
+                        className: name,
                         time: klass.time.toISOString(),
                         duration: klass.duration,
                         calendarID: klass.calendarID,
@@ -94,7 +99,7 @@ export function Payment() {
                         emergencyContactPhone: form.getValues().emergencyContactNumber,
                         emergencyContactRelation: form.getValues().emergencyContactRelation,
                     }))
-                ),
+                }),
                 discount: discount
                     ? {
                           ...discount,
@@ -165,19 +170,20 @@ export function Payment() {
                 <TableBody>
                     {Object.values(selectedClasses)
                         .sort((a, b) => (a.time > b.time ? 1 : -1))
-                        .map((klass) =>
-                            children.map((child, idx) => (
+                        .map((klass) => {
+                            const { name } = JSON.parse(klass.description)
+                            return children.map((child, idx) => (
                                 <TableRow key={`${klass.id}-${idx}`}>
                                     <TableCell>
                                         <span className="font-bold">{formatClassTime(klass.time)}</span>
                                         <br />
-                                        {klass.name}
+                                        {name}
                                     </TableCell>
                                     <TableCell>{child.firstName}</TableCell>
                                     <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
                                 </TableRow>
                             ))
-                        )}
+                        })}
                 </TableBody>
                 <TableFooter>
                     {discount && (
@@ -251,12 +257,13 @@ export function Payment() {
                 createPaymentRequest={() => ({
                     countryCode: 'AU',
                     currencyCode: 'AUD',
-                    lineItems: Object.values(selectedClasses).flatMap((klass) =>
-                        children.map((child) => ({
+                    lineItems: Object.values(selectedClasses).flatMap((klass) => {
+                        const { name } = JSON.parse(klass.description)
+                        return children.map((child) => ({
                             amount: klass.price,
-                            label: `${child.firstName} - ${klass.name} - ${formatClassTime(klass.time)}`,
+                            label: `${child.firstName} - ${name} - ${formatClassTime(klass.time)}`,
                         }))
-                    ),
+                    }),
                     discounts: discount
                         ? discount.type === 'percentage'
                             ? [{ label: 'Discount', amount: (subtotal * (discount.amount / 100)).toFixed(2) }]

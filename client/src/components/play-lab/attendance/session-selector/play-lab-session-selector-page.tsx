@@ -88,8 +88,10 @@ export function PlayLabSessionSelectorPage() {
 
     function handleSubmit() {
         const klass = classes?.find((it) => it.id === parseInt(selectedClass!))
+        if (!klass) return
+        const { name } = JSON.parse(klass.description)
         navigate(
-            `${selectedAppointmentType}?classId=${selectedClass}&calendarId=${selectedCalendar}&classTime=${encodeURIComponent(klass!.time)}&className=${encodeURIComponent(klass!.name)}`
+            `${selectedAppointmentType}?classId=${selectedClass}&calendarId=${selectedCalendar}&classTime=${encodeURIComponent(klass!.time)}&className=${encodeURIComponent(name)}`
         )
     }
 
@@ -157,14 +159,14 @@ export function PlayLabSessionSelectorPage() {
                     </SelectTrigger>
                     <SelectContent>
                         {appointmentTypes.map((appointmentType) => {
-                            const { day, time } = JSON.parse(appointmentType.description)
+                            const { name, day, time } = JSON.parse(appointmentType.description)
                             return (
                                 <SelectItem
                                     key={appointmentType.id}
                                     value={appointmentType.id.toString()}
                                     className="overflow-visible text-wrap"
                                 >
-                                    {appointmentType.name} - {day} - {time}
+                                    {name} - {day} - {time}
                                 </SelectItem>
                             )
                         })}

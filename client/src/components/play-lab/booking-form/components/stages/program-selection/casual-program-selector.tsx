@@ -1,6 +1,6 @@
 import { isSameDay, parseISO } from 'date-fns'
-import { AlertCircle, CheckCircleIcon, ChevronLeft, MessageCircleWarning, RefreshCcw } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { AlertCircle, ArrowRight, CheckCircleIcon, ChevronLeft, MessageCircleWarning, RefreshCcw } from 'lucide-react'
+import { useMemo, useRef, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Calendar } from '@ui-components/calendar'
@@ -27,7 +27,7 @@ export function CasualProgramSelector() {
     const studio = form.watch('studio')
     const bookingType = form.watch('bookingType')
 
-    const minDate = useMemo(() => Date.now(), [])
+    const minDate = useRef(Date.now())
 
     const {
         data: appointmentTypes,
@@ -53,7 +53,7 @@ export function CasualProgramSelector() {
         {
             appointmentTypeIds: appointmentTypes?.map((type) => type.id) || [],
             includeUnavailable: true,
-            minDate,
+            minDate: minDate.current,
         },
         {
             enabled: !!appointmentTypes && formStage === 'program-selection',
@@ -222,7 +222,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
     return (
         <div className="my-4 flex flex-col gap-4">
             {filteredClasses.map((klass) => {
-                const { time, ages } = JSON.parse(klass.description)
+                const { name, time, ages } = JSON.parse(klass.description)
                 const isSelected = !!selectedClasses[klass.id]
                 const isBookedOut = klass.slotsAvailable === 0 && !selectedClasses[klass.id]
                 return (
@@ -241,12 +241,12 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                         {klass.image && (
                             <img
                                 src={klass.image}
-                                alt={klass.name}
+                                alt={name}
                                 className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
                             />
                         )}
                         <div className="ml-4 flex-1 space-y-1">
-                            <h3 className="text-lg font-semibold text-gray-900">{klass.name}</h3>
+                            <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
                             <div className="flex flex-wrap text-sm text-gray-500">
                                 <span>{ages}</span>
                             </div>
@@ -282,6 +282,7 @@ function BrowseByProgram({
     const form = useBookingForm()
     const selectedClasses = useCart((store) => store.selectedClasses)
     const toggleClass = useCart((store) => store.toggleClass)
+    const setSelectedClasses = useCart((store) => store.setSelectedClasses)
 
     const [selectedAppointmentTypeId, setSelectedAppointmentTypeId] = useState<number | null>(null)
 
@@ -295,6 +296,11 @@ function BrowseByProgram({
         if (selectedAppointmentTypeId === id) setSelectedAppointmentTypeId(null)
         else setSelectedAppointmentTypeId(id)
     }
+
+    function selectAllClasses() {
+        setSelectedClasses(filteredClasses, form.getValues().children.length)
+    }
+
     return (
         <>
             <div className="flex flex-col gap-4">
@@ -303,7 +309,7 @@ function BrowseByProgram({
                         (it) => it.appointmentTypeID === program.id
                     )
 
-                    const { day, time, ages } = JSON.parse(program.description)
+                    const { name, day, time, ages } = JSON.parse(program.description)
 
                     if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
 
@@ -322,12 +328,12 @@ function BrowseByProgram({
                         >
                             <img
                                 src={program.image}
-                                alt={program.name}
+                                alt={name}
                                 className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
                             />
 
                             <div className="ml-4 flex-1 space-y-1">
-                                <h3 className="text-lg font-semibold text-gray-900">{program.name}</h3>
+                                <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
 
                                 <div className="flex flex-wrap text-sm text-gray-500">
                                     <span>{ages}</span>
@@ -346,46 +352,60 @@ function BrowseByProgram({
             </div>
             <div className="mb-4">
                 {selectedAppointmentTypeId && filteredClasses.length !== 0 && (
-                    <div className="mt-4 flex flex-col gap-4">
-                        {filteredClasses.map((klass) => (
-                            <div key={klass.id} className="flex items-center space-x-2">
-                                <Checkbox
-                                    id={`${klass.id}`}
-                                    disabled={klass.slotsAvailable === 0}
-                                    checked={!!selectedClasses[klass.id]}
-                                    onCheckedChange={() =>
-                                        toggleClass(
-                                            klass,
-                                            form.getValues().children.length,
-                                            form.getValues().bookingType === 'term-booking'
-                                        )
-                                    }
-                                />
-                                <label
-                                    htmlFor={`${klass.id}`}
-                                    className="flex cursor-pointer flex-col gap-1 text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                >
-                                    <span>
-                                        {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -{' '}
-                                        {DateTime.fromJSDate(klass.time)
-                                            .plus({ minutes: klass.duration })
-                                            .toFormat('h:mm a')}
-                                    </span>
-                                    {klass.slotsAvailable === 0 && (
-                                        <span className="inline-block w-fit rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800">
-                                            Full
+                    <>
+                        <Button
+                            className="mt-6 w-full border-2 border-[#4BC5D9]"
+                            variant="outline"
+                            onClick={selectAllClasses}
+                        >
+                            Enrol into the entire term
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                            <span className="ml-4 rounded-md bg-amber-400 px-2 py-0.5 text-xs font-bold text-slate-900">
+                                20% OFF
+                            </span>
+                        </Button>
+                        <div className="mt-4 flex flex-col gap-4">
+                            {filteredClasses.map((klass) => (
+                                <div key={klass.id} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`${klass.id}`}
+                                        disabled={klass.slotsAvailable === 0}
+                                        checked={!!selectedClasses[klass.id]}
+                                        onCheckedChange={() =>
+                                            toggleClass(
+                                                klass,
+                                                form.getValues().children.length,
+                                                form.getValues().bookingType === 'term-booking'
+                                            )
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={`${klass.id}`}
+                                        className="flex cursor-pointer flex-col gap-1 text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        <span>
+                                            {DateTime.fromJSDate(klass.time).toFormat('cccc d LLLL, h:mm a')} -{' '}
+                                            {DateTime.fromJSDate(klass.time)
+                                                .plus({ minutes: klass.duration })
+                                                .toFormat('h:mm a')}
                                         </span>
-                                    )}
-                                    {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
-                                        <span className="inline-block w-fit rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                                            Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
-                                        </span>
-                                    )}
-                                </label>
-                            </div>
-                        ))}
-                        <ReturnButton onClick={() => setSelectedAppointmentTypeId(null)} />
-                    </div>
+                                        {klass.slotsAvailable === 0 && (
+                                            <span className="inline-block w-fit rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800">
+                                                Full
+                                            </span>
+                                        )}
+                                        {klass.slotsAvailable <= 5 && klass.slotsAvailable > 0 && (
+                                            <span className="inline-block w-fit rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                                                Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''}{' '}
+                                                left
+                                            </span>
+                                        )}
+                                    </label>
+                                </div>
+                            ))}
+                            <ReturnButton onClick={() => setSelectedAppointmentTypeId(null)} />
+                        </div>
+                    </>
                 )}
                 {selectedAppointmentTypeId && filteredClasses.length === 0 && (
                     <>

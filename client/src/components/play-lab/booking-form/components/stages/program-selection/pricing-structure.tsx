@@ -4,10 +4,9 @@ import { cn } from '@utils/tailwind'
 
 export function PricingStructure() {
     const tiers = [
-        { label: '1 session', value: '$35' },
-        { label: '2-3 sessions', value: '5% discount' },
-        { label: '4+ sessions', value: '10% discount' },
-        { label: 'Term enrolment', value: '20% discount', featured: true },
+        { label: '1-3 sessions', value: '$35' },
+        { label: '4-7 sessions', value: '10% discount' },
+        { label: '8 sessions (term enrolment)', value: '20% discount', featured: true },
     ]
 
     return (

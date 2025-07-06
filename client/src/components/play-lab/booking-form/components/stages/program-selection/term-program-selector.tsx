@@ -218,7 +218,7 @@ function ContinueOrError() {
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
     const appointmentTypeId = form.watch('appointmentTypeId')
-    const { day, time, begins, ages } = JSON.parse(program.description)
+    const { name, day, time, begins, ages } = JSON.parse(program.description)
 
     function handleCardClick() {
         if (appointmentTypeId) form.setValue('appointmentTypeId', null)
@@ -235,12 +235,12 @@ function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.A
         >
             <img
                 src={program.image}
-                alt={program.name}
+                alt={name}
                 className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
             />
 
             <div className="ml-4 flex-1 space-y-1">
-                <h3 className="text-lg font-semibold text-gray-900">{program.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
 
                 <div className="flex flex-wrap text-sm text-gray-500">
                     <span>{ages}</span>

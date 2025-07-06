@@ -3,6 +3,7 @@ import type { DiscountCode } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
+import { SquareError } from 'square'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -11,12 +12,11 @@ import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
+import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 import { logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { sendConfirmationEmail } from './send-confirmation-email'
-import { SquareError } from 'square'
-import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 
 export type HolidayProgramBookingProps = {
     idempotencyKey: string
@@ -265,7 +265,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
     if (additionaNeedsLineItems.length > 0) {
         const sheetsClient = await SheetsClient.getInstance()
-        sheetsClient.addRowToSheet(
+        await sheetsClient.addRowToSheet(
             'holidayProgramAdditionalNeeds',
             additionaNeedsLineItems.map((item) => [
                 appointments[0].calendar,

@@ -21,6 +21,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui-components
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
+import { RadioGroup, RadioGroupItem } from '@ui-components/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
@@ -30,9 +31,8 @@ import { cn } from '@utils/tailwind'
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
-import { TermsAndConditions } from './terms-and-conditions'
 import { CancellationPolicy } from './cancellation-policy'
-import { RadioGroup, RadioGroupItem } from '@ui-components/radio-group'
+import { TermsAndConditions } from './terms-and-conditions'
 
 export function CustomerDetails() {
     const form = useBookingForm()
@@ -62,13 +62,13 @@ export function CustomerDetails() {
             setShowNotEnoughSpotsDialog(true)
         } else {
             append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
-            calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
+            calculateTotal(form.getValues().children.length)
         }
     }
 
     function removeChild(idx: number) {
         remove(idx)
-        calculateTotal(form.getValues().children.length, form.getValues().bookingType === 'term-booking')
+        calculateTotal(form.getValues().children.length)
     }
 
     // needed to close date picker when date is chosen
