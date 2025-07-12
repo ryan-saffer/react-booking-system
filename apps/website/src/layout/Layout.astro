@@ -88,6 +88,21 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   </head>
 
   <ClientRouter />
+  <!-- it seems analytics is broken since v5 upgrade. this is an attempt to fix. -->
+  <script is:inline>
+    /* re-send a GA4 page_view after Astro swaps the DOM */
+    document.addEventListener("astro:after-swap", () => {
+      /* Because Partytown is forwarding dataLayer.push, push there,
+       not directly on gtag() which lives inside the worker       */
+      window.dataLayer?.push({
+        event: "page_view",
+        page_title: document.title,
+        page_location: location.href,
+        page_path: location.pathname,
+      });
+    });
+  </script>
+
   <LoadingIndicator color="#9044E2" height="3px" threshold={400} />
   <!-- <HolidayProgramDiscountDialog
     client:idle
