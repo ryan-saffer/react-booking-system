@@ -1,9 +1,14 @@
 import type {
+    RetrieveInvoiceStatusesParams,
     ScheduleAfterSchoolEnrolmentParams,
+    SendInvoiceParams,
     SendTermContinuationEmailsParams,
     UnenrollAfterSchoolParams,
     UpdateAfterSchoolEnrolmentParams,
 } from 'fizz-kidz'
+
+import { retrieveInvoiceStatuses } from '@/after-school-program/core/retrieve-invoice-statuses'
+import { sendInvoices } from '@/after-school-program/core/send-invoices'
 
 import { SheetsClient } from '../../../google/SheetsClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
@@ -43,6 +48,12 @@ export const afterSchoolProgramRouter = router({
                 [input.program, input.parentName, input.parentEmail, input.parentMobile, input.childName],
             ])
         }),
+    sendInvoices: authenticatedProcedure
+        .input((input) => input as SendInvoiceParams[])
+        .mutation(({ input }) => sendInvoices(input)),
+    retrieveInvoiceStatuses: publicProcedure
+        .input((input) => input as RetrieveInvoiceStatusesParams)
+        .query(({ input }) => retrieveInvoiceStatuses(input)),
 })
 
 export const afterSchoolProgram = onRequestTrpc(afterSchoolProgramRouter)

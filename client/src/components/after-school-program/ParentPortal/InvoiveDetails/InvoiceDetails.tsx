@@ -26,7 +26,7 @@ type Props = {
 }
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
-    const { data, isLoading, isSuccess, isError } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
+    const { data, isLoading, isSuccess, isError } = trpc.afterSchoolProgram.retrieveInvoiceStatuses.useQuery(
         { appointmentIds: [appointment.id] },
         {
             enabled: appointment.invoiceId !== '',

@@ -96,13 +96,13 @@ const _EnrolmentsTable: React.FC<Props> = ({
         data: invoiceStatusMap,
         isLoading: isLoadingInvoices,
         isSuccess,
-    } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
+    } = trpc.afterSchoolProgram.retrieveInvoiceStatuses.useQuery(
         {
             appointmentIds: enrolments.map((it) => it.id),
         },
         { initialData: {} }
     )
-    const sendInvoicesMutation = trpc.stripe.sendInvoices.useMutation()
+    const sendInvoicesMutation = trpc.afterSchoolProgram.sendInvoices.useMutation()
     const sendContinuationEmailsMutation = trpc.afterSchoolProgram.sendTermContinuationEmails.useMutation()
     const unenrollMutation = trpc.afterSchoolProgram.unenrollFromAfterSchoolProgram.useMutation()
     const trpcUtils = trpc.useUtils()
@@ -195,7 +195,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
             const result = await sendInvoicesMutation.mutateAsync(
                 selectedRowKeys.map((it) => ({ id: it.toString(), numberOfWeeks }))
             )
-            trpcUtils.stripe.retrieveInvoiceStatuses.setData(
+            trpcUtils.afterSchoolProgram.retrieveInvoiceStatuses.setData(
                 { appointmentIds: enrolments.map((it) => it.id) },
                 (invoiceStatusMap) => ({ ...invoiceStatusMap, ...result })
             )

@@ -1,12 +1,12 @@
 import type { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
+import type { InvoiceStatus } from 'square/api'
 
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
-import { MailClient } from '../../sendgrid/MailClient'
-import { retrieveLatestInvoice } from '../../stripe/core/invoicing/retrieve-latest-invoice'
-import { StripeClient } from '../../stripe/core/stripe-client'
-import { throwTrpcError } from '../../utilities'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { SquareClient } from '@/square/core/square-client'
+import { throwTrpcError } from '@/utilities'
 
 export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchoolParams) {
     await Promise.all(
@@ -30,10 +30,30 @@ export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchool
 
             // 3. void invoice if needed
             if (enrolment.invoiceId) {
-                const invoice = await retrieveLatestInvoice(enrolment.invoiceId)
-                if (invoice.status === 'open') {
-                    const stripe = await StripeClient.getInstance()
-                    await stripe.invoices.voidInvoice(invoice.id!)
+                const square = await SquareClient.getInstance()
+                const { invoice: existingInvoice } = await square.invoices.get({
+                    invoiceId: enrolment.invoiceId,
+                })
+
+                if (
+                    !existingInvoice ||
+                    !existingInvoice.status ||
+                    !existingInvoice.id ||
+                    !(typeof existingInvoice.version === 'number')
+                )
+                    throwTrpcError(
+                        'INTERNAL_SERVER_ERROR',
+                        'unable to find existing invoice in square despite enrolment having an invoice id during unenrolment',
+                        null,
+                        { input }
+                    )
+
+                const UNCANCELLABLE_STATUSES: InvoiceStatus[] = ['DRAFT', 'PAID', 'REFUNDED', 'CANCELED', 'FAILED']
+                if (!UNCANCELLABLE_STATUSES.includes(existingInvoice.status)) {
+                    await square.invoices.cancel({
+                        invoiceId: existingInvoice.id,
+                        version: existingInvoice.version,
+                    })
                 }
             }
 

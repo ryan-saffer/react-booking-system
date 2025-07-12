@@ -63,7 +63,6 @@ export type Emails = {
         childName: string
         className: string
         appointmentTimes: string[]
-        calendarName: string
         price: string
         location: string
         numberOfWeeks: string

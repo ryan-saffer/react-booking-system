@@ -1,3 +1,5 @@
+import type { LocationOrTest } from '../core/location'
+
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,
     | 'type'
@@ -34,6 +36,7 @@ export type AfterSchoolEnrolment = {
     status: 'active' | 'inactive'
     appointmentTypeId: number
     calendarId: number
+    location: LocationOrTest
     appointments: number[]
     parent: {
         firstName: string

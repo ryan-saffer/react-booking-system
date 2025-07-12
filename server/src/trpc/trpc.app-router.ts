@@ -6,7 +6,6 @@ import { holidayProgramsRouter } from '../holiday-programs/functions/trpc/trpc.h
 import { partiesRouter } from '../party-bookings/functions/trpc/trpc.parties'
 import { playLabRouter } from '../play-lab/functions/trpc/trpc.play-lab'
 import { staffRouter } from '../staff/functions/trpc/trpc.staffRouter'
-import { stripeRouter } from '../stripe/functions/trpc/trpc.stripe'
 import { router } from './trpc'
 
 const appRouter = router({
@@ -14,7 +13,6 @@ const appRouter = router({
     events: eventsRouter,
     acuity: acuityRouter,
     holidayPrograms: holidayProgramsRouter,
-    stripe: stripeRouter,
     afterSchoolProgram: afterSchoolProgramRouter,
     staff: staffRouter,
     auth: authRouter,

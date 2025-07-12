@@ -1,16 +1,16 @@
-import type { AcuityTypes, AfterSchoolEnrolment, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment, Location, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities, capitalise, getApplicationDomain, studioNameAndAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { StorageClient } from '../../firebase/StorageClient'
-import { SheetsClient } from '../../google/SheetsClient'
-import { projectId } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
-import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwTrpcError } from '../../utilities'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { StorageClient } from '@/firebase/StorageClient'
+import { SheetsClient } from '@/google/SheetsClient'
+import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -86,6 +86,7 @@ export default async function scheduleAfterSchoolProgram(
         appointments: appointments.map((it) => it.id),
         price: appointments[0].price,
         status: 'active',
+        location: calendar.location as Location,
         continuingWithTerm: '',
         invoiceId: '',
         notes: '',
@@ -173,7 +174,6 @@ export default async function scheduleAfterSchoolProgram(
                                 })
                                 .toFormat('hh:mm a')}`
                     ),
-                    calendarName: calendar.location || 'Calendar Name',
                     price: (parseInt(appointments[0].price) * appointments.length).toString(),
                     location: input.inStudio
                         ? studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(input.calendarId))
