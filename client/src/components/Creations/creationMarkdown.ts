@@ -17,11 +17,10 @@ const bathbombs = {
 > Fizz Tip: adding colour here keeps the kids engaged, especially younger ones
 4. Add oil and mix, getting right to bottom and making sure no white in their bowls
 5. Add scent (if requested) and mix
-6. Add glitter (if requested) and mix
 > Fizz Tip: can be added at the end on top of bath bombs! Or in the middle for a glitter bomb effect
-7. Each child receives one bath bomb container and presses all their mixture into their container as hard as they can with thumbs and heel of hands
+6. Each child receives one bath bomb container and presses all their mixture into their container as hard as they can with thumbs and heel of hands
 > Fizz Tip: explain that it's like a sandcastle, the more they press down the better it will be
-8. Put RIGHT SIDE UP, still in container into bags after facilitator checks they are all pressed down
+7. Put RIGHT SIDE UP, still in container into bags after facilitator checks they are all pressed down
 
 ### Fizz Tipz and Trickz
 * Add more oil if too dry (bath bombs should be sticking together as though it was a cake mixture)
