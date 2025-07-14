@@ -50,11 +50,12 @@ export class SheetsClient {
         throw new Error('Sheets client not initialised')
     }
 
-    addRowToSheet(sheet: keyof typeof SHEETS, values: string[][]) {
+    addRowToSheet(sheet: keyof typeof SHEETS, values: string[][], sheetName: string = '') {
+        const range = sheetName ? `${sheetName}!A1` : 'A1'
         return this.#sheets.spreadsheets.values.append(
             {
                 spreadsheetId: SHEETS[sheet],
-                range: 'A1',
+                range,
                 insertDataOption: 'INSERT_ROWS',
                 valueInputOption: 'RAW',
                 requestBody: { values },

@@ -278,7 +278,8 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                 Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0),
                 item.childAllergies,
                 item.childAdditionalInfo,
-            ])
+            ]),
+            'Additional Needs'
         )
     }
 
