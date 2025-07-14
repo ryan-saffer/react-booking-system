@@ -17,6 +17,14 @@ export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory
             router,
             createContext,
             onError: ({ error, input, path }) => {
+                // temporary while debugging 500 error
+                console.error(`tRPC error at ${path}`, {
+                    code: error.code,
+                    message: error.message,
+                    cause: error.cause,
+                    input,
+                })
+
                 const errorCode = getErrorCode(error.cause ?? error, error.code)
                 if (ERRORS_TO_IGNORE.includes(errorCode)) {
                     // not an error worth logging
