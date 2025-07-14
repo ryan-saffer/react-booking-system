@@ -18,6 +18,7 @@ export const onOnboardingSubmit = onRequest(async (req, res) => {
         logger.warn(
             `employee form already submitted for ${existingEmployee.firstName} ${existingEmployee.lastName} - exiting`
         )
+        res.sendStatus(200)
         return
     }
 
