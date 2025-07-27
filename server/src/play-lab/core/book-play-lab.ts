@@ -2,7 +2,7 @@ import { AcuityConstants, AcuityUtilities, studioNameAndAddress, type AcuityType
 import { DateTime } from 'luxon'
 
 import { AcuityClient } from '../../acuity/core/acuity-client'
-import { logError, throwTrpcError } from '../../utilities'
+import { logError, throwCustomTrpcError, throwTrpcError } from '../../utilities'
 import { processPaylabPayment } from './process-play-lab-payment'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -102,7 +102,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
             )
         }
         if (matchingClass.slotsAvailable < input.children.length) {
-            throw new ClassFullError("One of the selected play lab classes does not have enough spots'")
+            throwCustomTrpcError(new ClassFullError("One of the selected play lab classes does not have enough spots'"))
         }
     })
 
@@ -120,7 +120,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         if (err instanceof SquareError) {
             const error = err.errors[0]
             if (error.category === 'PAYMENT_METHOD_ERROR') {
-                throw new PaymentMethodInvalidError()
+                throwCustomTrpcError(new PaymentMethodInvalidError())
             }
         }
         throwTrpcError('INTERNAL_SERVER_ERROR', 'error processing play lab transaction', err, { input })

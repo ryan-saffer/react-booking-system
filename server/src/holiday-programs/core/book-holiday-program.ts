@@ -13,7 +13,7 @@ import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
-import { logError, throwTrpcError } from '@/utilities'
+import { logError, throwCustomTrpcError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { sendConfirmationEmail } from './send-confirmation-email'
@@ -86,7 +86,9 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                 )
             }
             if (matchingClass.slotsAvailable < input.numberOfKids) {
-                throw new ClassFullError('One of the selected holiday program classes does not have enought spots')
+                throwCustomTrpcError(
+                    new ClassFullError('One of the selected holiday program classes does not have enought spots')
+                )
             }
         }
 
@@ -170,7 +172,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                     if (err instanceof SquareError) {
                         const error = err.errors[0]
                         if (error.category === 'PAYMENT_METHOD_ERROR') {
-                            throw new PaymentMethodInvalidError()
+                            throwCustomTrpcError(new PaymentMethodInvalidError())
                         }
                     }
                     throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', err, {

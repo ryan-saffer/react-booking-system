@@ -6,6 +6,7 @@ import { PubSubClient } from '../firebase/PubSubClient'
 import { TRPCError } from '@trpc/server'
 import type { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
 import type { DateTime } from 'luxon'
+import type { CustomTrpcError } from '@/trpc/trpc.errors'
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
     return fireOnMessagePublished({ topic, region: 'australia-southeast1' }, (event) => fn(event.data.message.json))
@@ -132,6 +133,16 @@ export function throwTrpcError(
             error: error instanceof Error ? { message: error.message, stack: error.stack, name: error.name } : error,
             additionalInfo,
         },
+    })
+}
+
+/**
+ * For when you want to throw an error with a custom error code, so that client can handle that particular scenario.
+ */
+export function throwCustomTrpcError(error: CustomTrpcError): never {
+    throw new TRPCError({
+        code: 'BAD_REQUEST',
+        cause: error,
     })
 }
 
