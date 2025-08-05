@@ -29,30 +29,38 @@ import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const formSchema = z.object({
-  name: z.string().min(1, "Contact name is required"),
-  email: z.string().min(1, "Email address is required").email(),
-  contactNumber: z
-    .string()
-    .min(10, "Contact number must be at least 10 digits long"),
-  role: z
-    .enum(["manager", "supervisor", "facilitator", "other"])
-    .optional()
-    .refine((it) => !!it, {
-      message: "Please select which role you are applying for",
-    }),
-  location: z.enum([
-    "balwyn",
-    "cheltenham",
-    "essendon",
-    "kingsville",
-    "malvern",
-  ]),
-  wwcc: z.enum(["yes", "no"]),
-  driversLicense: z.enum(["yes", "no"]),
-  application: z.string().min(1, "Please answer"),
-  reference: z.string().min(1, "Please answer"),
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, "Contact name is required"),
+    email: z.string().min(1, "Email address is required").email(),
+    contactNumber: z
+      .string()
+      .min(10, "Contact number must be at least 10 digits long"),
+    role: z
+      .enum(["people", "manager", "supervisor", "facilitator", "other"])
+      .optional()
+      .refine((it) => !!it, {
+        message: "Please select which role you are applying for",
+      }),
+    location: z
+      .enum(["balwyn", "cheltenham", "essendon", "kingsville", "malvern"])
+      .optional(),
+    wwcc: z.enum(["yes", "no"]),
+    driversLicense: z.enum(["yes", "no"]),
+    application: z.string().min(1, "Please answer"),
+    reference: z.string().min(1, "Please answer"),
+  })
+  .superRefine((val, ctx) => {
+    if (val.role !== "people") {
+      if (!val.location) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please select location",
+          path: ["location"],
+        });
+      }
+    }
+  });
 
 function CareersForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -190,6 +198,7 @@ function CareersForm() {
               >
                 <SelectValue placeholder="Select role" />
                 <SelectContent>
+                  <SelectItem value="people">People & Culture Lead</SelectItem>
                   <SelectItem value="manager">Studio Manager</SelectItem>
                   <SelectItem value="supervisor">Studio Supervisor</SelectItem>
                   <SelectItem value="facilitator">
@@ -202,30 +211,32 @@ function CareersForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <SelectForm
-                label="Which location do you want to work at? *"
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectValue placeholder="Select location" />
-                <SelectContent>
-                  <SelectItem value="balwyn">Balwyn</SelectItem>
-                  <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                  <SelectItem value="essendon">Essendon</SelectItem>
-                  <SelectItem value="kingsville">Kingsville</SelectItem>
-                  <SelectItem value="malvern">Malvern</SelectItem>
-                </SelectContent>
-              </SelectForm>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {form.watch("role") !== "people" && (
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which location do you want to work at? *"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue placeholder="Select location" />
+                  <SelectContent>
+                    <SelectItem value="balwyn">Balwyn</SelectItem>
+                    <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                    <SelectItem value="essendon">Essendon</SelectItem>
+                    <SelectItem value="kingsville">Kingsville</SelectItem>
+                    <SelectItem value="malvern">Malvern</SelectItem>
+                  </SelectContent>
+                </SelectForm>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="wwcc"
