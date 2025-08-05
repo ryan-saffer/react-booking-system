@@ -70,10 +70,12 @@
                             <td>{{role}}</td>
                         </tr>
 
+                        {{#location}}
                         <tr>
                             <td><strong>Location:</strong></td>
                             <td>{{location}}</td>
                         </tr>
+                        {{/location}}
 
                         <tr>
                             <td>

@@ -46,7 +46,7 @@ export type Form = {
         email: string
         contactNumber: string
         role: CareersFormRoleOption
-        location: Location
+        location: Location | ''
         wwcc: string
         driversLicense: string
         application: string
@@ -93,7 +93,7 @@ type IncursionFormModuleOption =
     | 'earthWeatherSustainability'
     | 'notSure'
 
-type CareersFormRoleOption = 'manager' | 'supervisor' | 'facilitator' | 'other'
+type CareersFormRoleOption = 'people' | 'manager' | 'supervisor' | 'facilitator' | 'other'
 
 type FranchisingInterestOption = 'browsing' | '3' | '6' | '12' | '12+'
 
@@ -157,6 +157,7 @@ export const RoleDisplayValueMap: Record<CareersFormRoleOption, string> = {
     manager: 'Studio Manager',
     supervisor: 'Studio Supervisor',
     facilitator: 'Studio Facilitator',
+    people: 'People & Culture Lead',
 }
 
 export const FranchisingInterestDisplayValueMap: Record<FranchisingInterestOption, string> = {
