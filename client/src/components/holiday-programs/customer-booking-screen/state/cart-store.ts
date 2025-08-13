@@ -84,7 +84,7 @@ export const useCart = create<Cart>()((set, get) => ({
         const selectedClasses = get().selectedClasses
 
         const subtotal = Object.values(selectedClasses).reduce(
-            (acc, curr) => acc + parseInt(curr.price) * numberOfKids,
+            (acc, curr) => acc + parseFloat(curr.price) * numberOfKids,
             0
         )
 

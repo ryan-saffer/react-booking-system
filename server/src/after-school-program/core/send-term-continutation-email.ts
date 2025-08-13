@@ -25,7 +25,7 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
                 await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
                     parentName: appointment.parent.firstName,
                     className: appointment.className,
-                    price: (parseInt(appointment.price) * appointment.appointments.length).toString(),
+                    price: (parseFloat(appointment.price) * appointment.appointments.length).toFixed(2),
                     childName: appointment.child.firstName,
                     continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                     unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,

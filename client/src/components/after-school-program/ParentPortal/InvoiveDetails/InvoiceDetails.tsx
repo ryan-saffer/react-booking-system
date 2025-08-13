@@ -58,7 +58,7 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                                     <p>Invoice not yet sent.</p>
                                     <p>
                                         The price for {appointment.appointments.length} weeks is $
-                                        {parseInt(appointment.price) * appointment.appointments.length}
+                                        {(parseFloat(appointment.price) * appointment.appointments.length).toFixed(2)}
                                     </p>
                                 </>
                             )

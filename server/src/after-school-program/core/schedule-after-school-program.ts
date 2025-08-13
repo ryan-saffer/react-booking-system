@@ -174,7 +174,7 @@ export default async function scheduleAfterSchoolProgram(
                                 })
                                 .toFormat('hh:mm a')}`
                     ),
-                    price: (parseInt(appointments[0].price) * appointments.length).toString(),
+                    price: (parseFloat(appointments[0].price) * appointments.length).toFixed(2),
                     location: input.inStudio
                         ? studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(input.calendarId))
                         : calendar.description,
