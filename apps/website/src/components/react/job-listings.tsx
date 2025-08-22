@@ -95,6 +95,93 @@ function JobListings() {
       </AccordionItem>
       <AccordionItem value="2" className="px-4">
         <AccordionTrigger className="font-bold">
+          Social Media Talent
+        </AccordionTrigger>
+        <AccordionContent className="text-base">
+          <strong>About the role:</strong>
+          <br />
+          Fizz Kidz is on the lookout for an enthusiastic and creative Social
+          Media Talent to bring our brand to life online! You'll be the driving
+          force behind our Instagram, Facebook, and TikTok presence, capturing
+          the magic of Fizz Kidz through fun, engaging, and trend-driven
+          content. This role is perfect for someone who lives and breathes
+          social media, loves being on camera, and is quick to jump on the
+          latest trends to create content that grabs attention.
+          <br />
+          <br />
+          <strong>Responsibilities and Duties:</strong>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Content Creation: Film, edit, and post fun, fast-paced and
+              on-trend Reels, Stories, and posts that showcase the energy of
+              Fizz Kidz and the Business Marketing goals
+            </li>
+            <li>
+              Onsite Content Capture: Confidently record kids, parents, and
+              events in action (with consent) to share authentic and exciting
+              moments
+            </li>
+            <li>
+              Be a Fizz Kidz Face/Personality: Appear on camera yourself,
+              sharing updates, trending content, and bringing personality to our
+              brand
+            </li>
+            <li>
+              Creative Direction: Set up eye-catching scenes and backdrops that
+              grab attention and stop the scroll
+            </li>
+            <li>
+              Trend Spotting: Stay on top of the latest social media trends and
+              respond quickly with fresh, relevant content
+            </li>
+            <li>
+              Editing & Design: Use your video editing skills to polish content
+              and design graphics when/if needed
+            </li>
+            <li>
+              Strategy & Scheduling: Plan content themes, maintain a consistent
+              posting schedule, and align content with Fizz Kidz's brand
+            </li>
+            <li>
+              Audience Engagement: Build community by responding to comments,
+              messages, and engaging with followers
+            </li>
+          </ul>
+          <strong>Requirements:</strong>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Proven experience creating engaging social media content (Reels,
+              Stories, TikToks, posts)
+            </li>
+            <li>
+              Confidence in filming kids and parents and Fizz Kidz staff (with
+              consent) and making them feel comfortable and excited to be on
+              camera
+            </li>
+            <li>
+              Comfortable and confident appearing on camera as a brand
+              personality
+            </li>
+            <li>
+              Strong video editing and photography skills; ability to move
+              quickly from filming to posting
+            </li>
+            <li>
+              Creative eye for setting up fun, vibrant, and scroll-stopping
+              scenes
+            </li>
+            <li>Proficiency with editing tools for graphics and design</li>
+            <li>Excellent written communication for captions and updates</li>
+            <li>Passion for trends, social media culture, and storytelling</li>
+            <li>
+              Ability to work independently, manage time effectively, and move
+              fast
+            </li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="3" className="px-4">
+        <AccordionTrigger className="font-bold">
           Studio Manager
         </AccordionTrigger>
         <AccordionContent className="text-base">
@@ -122,7 +209,7 @@ function JobListings() {
           </ul>
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="3" className="px-4">
+      <AccordionItem value="4" className="px-4">
         <AccordionTrigger className="font-bold">
           Cheltenham Studio Supervisor
         </AccordionTrigger>
@@ -156,7 +243,7 @@ function JobListings() {
           </ul>
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="4" className="px-4">
+      <AccordionItem value="5" className="px-4">
         <AccordionTrigger className="font-bold">
           Malvern Studio Supervisor
         </AccordionTrigger>
@@ -190,7 +277,7 @@ function JobListings() {
           </ul>
         </AccordionContent>
       </AccordionItem>
-      <AccordionItem value="5" className="px-4">
+      <AccordionItem value="6" className="px-4">
         <AccordionTrigger className="font-bold">
           Party Facilitator
         </AccordionTrigger>

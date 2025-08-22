@@ -37,7 +37,14 @@ const formSchema = z
       .string()
       .min(10, "Contact number must be at least 10 digits long"),
     role: z
-      .enum(["people", "manager", "supervisor", "facilitator", "other"])
+      .enum([
+        "people",
+        "social-media",
+        "manager",
+        "supervisor",
+        "facilitator",
+        "other",
+      ])
       .optional()
       .refine((it) => !!it, {
         message: "Please select which role you are applying for",
@@ -51,7 +58,7 @@ const formSchema = z
     reference: z.string().min(1, "Please answer"),
   })
   .superRefine((val, ctx) => {
-    if (val.role !== "people") {
+    if (val.role !== "people" && val.role !== "social-media") {
       if (!val.location) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -199,6 +206,9 @@ function CareersForm() {
                 <SelectValue placeholder="Select role" />
                 <SelectContent>
                   <SelectItem value="people">People & Culture Lead</SelectItem>
+                  <SelectItem value="social-media">
+                    Social Media Talent
+                  </SelectItem>
                   <SelectItem value="manager">Studio Manager</SelectItem>
                   <SelectItem value="supervisor">Studio Supervisor</SelectItem>
                   <SelectItem value="facilitator">
@@ -211,32 +221,33 @@ function CareersForm() {
             </FormItem>
           )}
         />
-        {form.watch("role") !== "people" && (
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <SelectForm
-                  label="Which location do you want to work at? *"
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
-                  <SelectValue placeholder="Select location" />
-                  <SelectContent>
-                    <SelectItem value="balwyn">Balwyn</SelectItem>
-                    <SelectItem value="cheltenham">Cheltenham</SelectItem>
-                    <SelectItem value="essendon">Essendon</SelectItem>
-                    <SelectItem value="kingsville">Kingsville</SelectItem>
-                    <SelectItem value="malvern">Malvern</SelectItem>
-                  </SelectContent>
-                </SelectForm>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        {form.watch("role") !== "people" &&
+          form.watch("role") !== "social-media" && (
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <SelectForm
+                    label="Which location do you want to work at? *"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <SelectValue placeholder="Select location" />
+                    <SelectContent>
+                      <SelectItem value="balwyn">Balwyn</SelectItem>
+                      <SelectItem value="cheltenham">Cheltenham</SelectItem>
+                      <SelectItem value="essendon">Essendon</SelectItem>
+                      <SelectItem value="kingsville">Kingsville</SelectItem>
+                      <SelectItem value="malvern">Malvern</SelectItem>
+                    </SelectContent>
+                  </SelectForm>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         <FormField
           control={form.control}
           name="wwcc"
