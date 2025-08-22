@@ -93,7 +93,7 @@ type IncursionFormModuleOption =
     | 'earthWeatherSustainability'
     | 'notSure'
 
-type CareersFormRoleOption = 'people' | 'manager' | 'supervisor' | 'facilitator' | 'other'
+type CareersFormRoleOption = 'people' | 'manager' | 'supervisor' | 'facilitator' | 'social-media' | 'other'
 
 type FranchisingInterestOption = 'browsing' | '3' | '6' | '12' | '12+'
 
@@ -158,6 +158,7 @@ export const RoleDisplayValueMap: Record<CareersFormRoleOption, string> = {
     supervisor: 'Studio Supervisor',
     facilitator: 'Studio Facilitator',
     people: 'People & Culture Lead',
+    'social-media': 'Social Media Talent',
 }
 
 export const FranchisingInterestDisplayValueMap: Record<FranchisingInterestOption, string> = {
