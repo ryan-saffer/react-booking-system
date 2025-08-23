@@ -333,7 +333,7 @@ function BrowseByProgram({
     return (
         <>
             <div className="flex flex-col gap-6">
-                {Object.entries(groupedPrograms).map(([term, programs]) => {
+                {Object.entries(groupedPrograms).sort(([a], [b]) => a.localeCompare(b)).map(([term, programs]) => {
                     // Check if any programs in this term group should be shown
                     const hasVisiblePrograms = programs.some((program) => 
                         !selectedAppointmentTypeId || selectedAppointmentTypeId === program.id
