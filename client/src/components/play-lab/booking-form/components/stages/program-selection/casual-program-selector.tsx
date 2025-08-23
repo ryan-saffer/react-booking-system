@@ -222,7 +222,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
     return (
         <div className="my-4 flex flex-col gap-4">
             {filteredClasses.map((klass) => {
-                const { name, time, ages } = JSON.parse(klass.description)
+                const { name, time, ages, term } = JSON.parse(klass.description)
                 const isSelected = !!selectedClasses[klass.id]
                 const isBookedOut = klass.slotsAvailable === 0 && !selectedClasses[klass.id]
                 return (
@@ -251,6 +251,11 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                 <span>{ages}</span>
                             </div>
                             <div className="text-sm font-semibold text-gray-700">{time}</div>
+                            {term && (
+                                <div className="text-xs text-gray-400">
+                                    {term}
+                                </div>
+                            )}
                             {klass.slotsAvailable > 0 && klass.slotsAvailable <= 5 && (
                                 <span className="mt-2 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
                                     Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
@@ -292,6 +297,30 @@ function BrowseByProgram({
         [selectedAppointmentTypeId, classes]
     )
 
+    const groupedPrograms = useMemo(() => {
+        const groups: Record<string, AcuityTypes.Api.AppointmentType[]> = {}
+
+        appointmentTypes.forEach((program) => {
+            try {
+                const description = JSON.parse(program.description)
+                const term = description.term || 'Other Programs'
+
+                if (!groups[term]) {
+                    groups[term] = []
+                }
+                groups[term].push(program)
+            } catch (error) {
+                // If JSON parsing fails, group under "Other Programs"
+                if (!groups['Other Programs']) {
+                    groups['Other Programs'] = []
+                }
+                groups['Other Programs'].push(program)
+            }
+        })
+
+        return groups
+    }, [appointmentTypes])
+
     function handleCardClick(id: number) {
         if (selectedAppointmentTypeId === id) setSelectedAppointmentTypeId(null)
         else setSelectedAppointmentTypeId(id)
@@ -303,49 +332,66 @@ function BrowseByProgram({
 
     return (
         <>
-            <div className="flex flex-col gap-4">
-                {appointmentTypes.map((program) => {
-                    const includesSelectedClass = Object.values(selectedClasses).some(
-                        (it) => it.appointmentTypeID === program.id
+            <div className="flex flex-col gap-6">
+                {Object.entries(groupedPrograms).map(([term, programs]) => {
+                    // Check if any programs in this term group should be shown
+                    const hasVisiblePrograms = programs.some((program) => 
+                        !selectedAppointmentTypeId || selectedAppointmentTypeId === program.id
                     )
-
-                    const { name, day, time, ages } = JSON.parse(program.description)
-
-                    if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
+                    
+                    if (!hasVisiblePrograms) return null
 
                     return (
-                        <div
-                            key={program.id}
-                            onClick={() => handleCardClick(program.id)}
-                            className={cn(
-                                'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
-                                {
-                                    'bg-gray-100 hover:bg-gray-100': selectedAppointmentTypeId === program.id,
-                                    'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
-                                        includesSelectedClass && selectedAppointmentTypeId !== program.id,
-                                }
-                            )}
-                        >
-                            <img
-                                src={program.image}
-                                alt={name}
-                                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
-                            />
+                        <div key={term}>
+                            <h3 className="mb-3 mt-2 text-lg font-semibold text-gray-800">{term}</h3>
+                            <div className="flex flex-col gap-4">
+                                {programs.map((program) => {
+                                    const includesSelectedClass = Object.values(selectedClasses).some(
+                                        (it) => it.appointmentTypeID === program.id
+                                    )
 
-                            <div className="ml-4 flex-1 space-y-1">
-                                <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                                    const { name, day, time, ages } = JSON.parse(program.description)
 
-                                <div className="flex flex-wrap text-sm text-gray-500">
-                                    <span>{ages}</span>
-                                </div>
+                                    if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
 
-                                <div className="text-sm font-semibold text-gray-700">
-                                    {day} · {time}
-                                </div>
+                                    return (
+                                        <div
+                                            key={program.id}
+                                            onClick={() => handleCardClick(program.id)}
+                                            className={cn(
+                                                'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
+                                                {
+                                                    'bg-gray-100 hover:bg-gray-100':
+                                                        selectedAppointmentTypeId === program.id,
+                                                    'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
+                                                        includesSelectedClass && selectedAppointmentTypeId !== program.id,
+                                                }
+                                            )}
+                                        >
+                                            <img
+                                                src={program.image}
+                                                alt={name}
+                                                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
+                                            />
+
+                                            <div className="ml-4 flex-1 space-y-1">
+                                                <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+
+                                                <div className="flex flex-wrap text-sm text-gray-500">
+                                                    <span>{ages}</span>
+                                                </div>
+
+                                                <div className="text-sm font-semibold text-gray-700">
+                                                    {day} · {time}
+                                                </div>
+                                            </div>
+                                            {includesSelectedClass && selectedAppointmentTypeId !== program.id && (
+                                                <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
-                            {includesSelectedClass && selectedAppointmentTypeId !== program.id && (
-                                <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
-                            )}
                         </div>
                     )
                 })}
@@ -353,17 +399,19 @@ function BrowseByProgram({
             <div className="mb-4">
                 {selectedAppointmentTypeId && filteredClasses.length !== 0 && (
                     <>
-                        <Button
-                            className="mt-6 w-full border-2 border-[#4BC5D9]"
-                            variant="outline"
-                            onClick={selectAllClasses}
-                        >
-                            Enrol into the entire term
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                            <span className="ml-4 rounded-md bg-amber-400 px-2 py-0.5 text-xs font-bold text-slate-900">
-                                20% OFF
-                            </span>
-                        </Button>
+                        {filteredClasses.length === 8 && (
+                            <Button
+                                className="mt-6 w-full border-2 border-[#4BC5D9]"
+                                variant="outline"
+                                onClick={selectAllClasses}
+                            >
+                                Enrol into the entire term
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                                <span className="ml-4 rounded-md bg-amber-400 px-2 py-0.5 text-xs font-bold text-slate-900">
+                                    20% OFF
+                                </span>
+                            </Button>
+                        )}
                         <div className="mt-4 flex flex-col gap-4">
                             {filteredClasses.map((klass) => (
                                 <div key={klass.id} className="flex items-center space-x-2">
