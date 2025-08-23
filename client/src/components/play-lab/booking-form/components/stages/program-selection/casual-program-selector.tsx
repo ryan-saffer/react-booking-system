@@ -301,6 +301,10 @@ function BrowseByProgram({
         const groups: Record<string, AcuityTypes.Api.AppointmentType[]> = {}
 
         appointmentTypes.forEach((program) => {
+            // Only include programs that have available classes
+            const hasAvailableClasses = classes.some((klass) => klass.appointmentTypeID === program.id)
+            if (!hasAvailableClasses) return
+
             try {
                 const description = JSON.parse(program.description)
                 const term = description.term || 'Other Programs'
@@ -319,7 +323,7 @@ function BrowseByProgram({
         })
 
         return groups
-    }, [appointmentTypes])
+    }, [appointmentTypes, classes])
 
     function handleCardClick(id: number) {
         if (selectedAppointmentTypeId === id) setSelectedAppointmentTypeId(null)
