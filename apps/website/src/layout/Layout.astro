@@ -12,9 +12,10 @@ import LoadingIndicator from "astro-loading-indicator/component";
 type Props = {
   title: string;
   description: string;
+  noIndex?: boolean;
 };
 
-const { title, description } = Astro.props;
+const { title, description, noIndex = false } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
@@ -76,6 +77,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:title" content={title} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/open-graph/home.jpg" />
