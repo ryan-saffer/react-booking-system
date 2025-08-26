@@ -1,0 +1,183 @@
+import express from 'express'
+import { onRequest } from 'firebase-functions/v2/https'
+import {
+    getCloudFunctionsDomain,
+    getFunctionEmulatorDomain,
+    getSquareLocationId,
+    mapCakeSizeToSquareVariation,
+    mapCandleToSquareVariation,
+    mapServingMethodToSquareVariation,
+    type PartyFormV3,
+} from 'fizz-kidz'
+
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { env } from '@/init'
+import { PaperformClient, type PaperformSubmission } from '@/paperforms/core/paperform-client'
+import { handlePartyFormSubmissionV3 } from '@/party-bookings/core/handle-party-form-submission-v3'
+import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
+import { SquareClient } from '@/square/core/square-client'
+import { logError } from '@/utilities'
+
+const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
+const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
+
+const app = express()
+
+app.use(express.json())
+
+// Route used conditionally in Paperform if the customer selected a product.
+app.get('/payment-link', async (req, res) => {
+    const submissionId = req.query.submissionId
+    if (!submissionId || typeof submissionId !== 'string') {
+        logError('party form submitted for checkout but there was no submissionId', undefined, { requestUrl: req.url })
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+
+    const paperformClient = new PaperformClient()
+
+    let responses: PaperformSubmission<PartyFormV3>
+    try {
+        responses = await paperformClient.getPartyFormSubmissionV3(submissionId)
+    } catch (err) {
+        logError(
+            `party form submitted for checkout but there was an error fetching paperform submission with id: ${submissionId}`,
+            err
+        )
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+
+    const booking = await DatabaseClient.getPartyBooking(responses.getFieldValue('id'))
+
+    const cake = responses.getFieldValue('cake')
+    const cakeSize = responses.getFieldValue('cake_size')
+    const cakeServing = responses.getFieldValue('cake_served')
+    const cakeCandles = responses.getFieldValue('cake_candles')
+
+    const takeHomeBags = responses.getFieldValue('take_home_bags')
+    const products = responses.getFieldValue('products')
+
+    const host =
+        process.env.FUNCTIONS_EMULATOR === 'true' ? getFunctionEmulatorDomain(env, false) : getCloudFunctionsDomain(env)
+
+    const orderedCake = cake !== 'I will bring my own cake'
+
+    if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
+        // should not be in checkout flow. redirect to form-complete.
+        res.redirect(
+            303,
+            `https://${req.get('host')}/${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`
+        )
+        return
+    }
+
+    try {
+        const square = await SquareClient.getInstance()
+        const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
+
+        const customerId = await getOrCreateCustomer(
+            responses.getFieldValue('parent_first_name'),
+            responses.getFieldValue('parent_last_name'),
+            booking.parentEmail
+        )
+
+        // Create payment link using checkout API
+        const { paymentLink } = await square.checkout.paymentLinks.create({
+            idempotencyKey: crypto.randomUUID(),
+            description: 'Test Payment Link',
+            checkoutOptions: {
+                allowTipping: false,
+                askForShippingAddress: false,
+                merchantSupportEmail: 'bookings@fizzkidz.com.au',
+                redirectUrl: `https://${req.get(
+                    'host'
+                )}/${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`,
+            },
+            prePopulatedData: {
+                buyerEmail: 'ryansaffer@gmail.com',
+                buyerPhoneNumber: '+61413892120',
+            },
+            order: {
+                locationId,
+                customerId,
+                source: {
+                    name: 'Party Form',
+                },
+                lineItems: [
+                    ...(orderedCake
+                        ? [
+                              {
+                                  quantity: '1',
+                                  name: cake,
+                                  catalogObjectId: mapCakeSizeToSquareVariation(env, cakeSize),
+                                  modifiers: [
+                                      {
+                                          catalogObjectId: mapServingMethodToSquareVariation(env, cakeServing),
+                                          quantity: '1',
+                                      },
+                                      {
+                                          catalogObjectId: mapCandleToSquareVariation(env, cakeCandles),
+                                          quantity: '1',
+                                      },
+                                  ],
+                              },
+                          ]
+                        : []),
+                    ...takeHomeBags.map((item) => ({
+                        quantity: item.quantity.toString(),
+                        catalogObjectId: env === 'prod' ? item.SKU : 'HT4WSYFMNZEDDCTPU735633C', // lolly bags for dev env
+                    })),
+                    ...products.map((item) => ({
+                        quantity: item.quantity.toString(),
+                        catalogObjectId: env === 'prod' ? item.SKU : 'ZEFTLTUDWL3YU6M6HBM3KT6Y', // bath bomb kit for dev env
+                    })),
+                ],
+            },
+        })
+
+        res.redirect(303, paymentLink?.url || '')
+        return
+    } catch (error) {
+        logError(`Error creating payment link for party form with submissionId: ${submissionId}`, error)
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+})
+
+// Route for handling post-checkout redirect
+app.get('/form-complete', async (req, res) => {
+    const submissionId = req.query.submissionId
+    if (!submissionId || typeof submissionId !== 'string') {
+        logError('party form submitted for completion but there was no submissionId', undefined, {
+            requestUrl: req.url,
+        })
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+
+    const paperformClient = new PaperformClient()
+
+    let responses: PaperformSubmission<PartyFormV3>
+    try {
+        responses = await paperformClient.getPartyFormSubmissionV3(submissionId)
+    } catch (err) {
+        logError(
+            `party form submitted for completion but there was an error fetching paperform submission with id: ${submissionId}`,
+            err
+        )
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+
+    // Handle the complete form submission (mapping, database updates, emails, etc.)
+    try {
+        await handlePartyFormSubmissionV3(responses)
+        res.redirect(303, SUCCESS_REDIRECT)
+    } catch {
+        res.redirect(303, ERROR_REDIRECT)
+    }
+    return
+})
+
+export const partyFormRedirect = onRequest(app)

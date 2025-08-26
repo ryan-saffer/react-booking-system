@@ -45,19 +45,26 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
     const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
 
     const mailClient = await MailClient.getInstance()
-    await mailClient.sendEmail('incursionFormCompleted', firstSlot.contactEmail, {
-        contactName: firstSlot.contactName,
-        slots: slots.map(
-            (slot) =>
-                `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
-                    'cccc, LLL dd, t'
-                )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
-        ),
-        numberOfChildren,
-        location,
-        parking,
-        expectedLearning,
-        teacherInformation,
-        additionalInformation,
-    })
+    await mailClient.sendEmail(
+        'incursionFormCompleted',
+        firstSlot.contactEmail,
+        {
+            contactName: firstSlot.contactName,
+            slots: slots.map(
+                (slot) =>
+                    `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+                        'cccc, LLL dd, t'
+                    )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
+            ),
+            numberOfChildren,
+            location,
+            parking,
+            expectedLearning,
+            teacherInformation,
+            additionalInformation,
+        },
+        {
+            bcc: ['programs@fizzkidz.com.au'],
+        }
+    )
 }
