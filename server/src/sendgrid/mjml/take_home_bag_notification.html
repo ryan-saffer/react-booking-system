@@ -40,7 +40,7 @@
 <body>
     <div class="email-container">
         <div class="email-header">
-            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">🎂 Birthday Cake Ordered</h1>
+            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">🎒 Take Home Bags Ordered</h1>
         </div>
         <div class="email-content">
 
@@ -82,49 +82,61 @@
 
             <h3
                 style="color: #2c3e50; font-size: 18px; margin-bottom: 16px; border-bottom: 2px solid #667eea; padding-bottom: 8px;">
-                🎂 Cake Details</h3>
+                🎒 New Take Home Bags Ordered</h3>
+            <table
+                style="border-collapse: collapse; width: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 24px;">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <th
+                            style="padding: 16px 12px; font-weight: 600; color: white; text-align: left; font-size: 14px;">
+                            Item</th>
+                        <th
+                            style="padding: 16px 12px; font-weight: 600; color: white; text-align: left; font-size: 14px;">
+                            Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#newTakeHomeBags}}
+                    <tr style="background-color: #f8f9fa;">
+                        <td style="padding: 16px 12px; color: #2c3e50; border-bottom: 1px solid #e9ecef;">{{ name }}
+                        </td>
+                        <td
+                            style="padding: 16px 12px; color: #2c3e50; border-bottom: 1px solid #e9ecef; font-weight: 600;">
+                            {{ quantity }}</td>
+                    </tr>
+                    {{/newTakeHomeBags}}
+                </tbody>
+            </table>
+
+            {{#oldTakeHomeBags}}
+            <h3
+                style="color: #6c757d; font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid #dee2e6; padding-bottom: 8px;">
+                📝 Previously Purchased (for reference)</h3>
             <table
                 style="border-collapse: collapse; width: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
-                <tr style="background-color: #f8f9fa;">
-                    <td
-                        style="padding: 16px 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #e9ecef; width: 30%;">
-                        🧁 Cake</td>
-                    <td style="padding: 16px 20px; border-bottom: 1px solid #e9ecef; color: #2c3e50;">{{ cakeSelection
-                        }}</td>
-                </tr>
-                <tr style="background-color: #ffffff;">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #e9ecef;">
-                        📏 Size</td>
-                    <td style="padding: 16px 20px; border-bottom: 1px solid #e9ecef; color: #2c3e50;">{{ cakeSize }}
-                    </td>
-                </tr>
-                <tr style="background-color: #f8f9fa;">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #e9ecef;">
-                        🍰 Flavours</td>
-                    <td style="padding: 16px 20px; border-bottom: 1px solid #e9ecef; color: #2c3e50;">{{ cakeFlavours }}
-                    </td>
-                </tr>
-                <tr style="background-color: #ffffff;">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #e9ecef;">
-                        🍽️ How to serve</td>
-                    <td style="padding: 16px 20px; border-bottom: 1px solid #e9ecef; color: #2c3e50;">{{ cakeServed }}
-                    </td>
-                </tr>
-                <tr style="background-color: #f8f9fa;">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #e9ecef;">
-                        🕯️ Candles</td>
-                    <td style="padding: 16px 20px; color: #2c3e50; border-bottom: 1px solid #e9ecef;">{{ cakeCandles }}
-                    </td>
-                </tr>
-                {{ #cakeMessage }}
-                <tr style="background-color: #ffffff;">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #495057;">💬 Message</td>
-                    <td
-                        style="padding: 16px 20px; color: #2c3e50; background-color: #f1f3f4; font-style: italic; border-radius: 4px;">
-                        "{{ cakeMessage }}"</td>
-                </tr>
-                {{ /cakeMessage }}
+                <thead>
+                    <tr style="background-color: #6c757d;">
+                        <th
+                            style="padding: 16px 12px; font-weight: 600; color: white; text-align: left; font-size: 14px;">
+                            Item</th>
+                        <th
+                            style="padding: 16px 12px; font-weight: 600; color: white; text-align: left; font-size: 14px;">
+                            Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#oldTakeHomeBags}}
+                    <tr style="background-color: #f8f9fa;">
+                        <td style="padding: 16px 12px; color: #6c757d; border-bottom: 1px solid #e9ecef;">{{ name }}
+                        </td>
+                        <td
+                            style="padding: 16px 12px; color: #6c757d; border-bottom: 1px solid #e9ecef; font-weight: 600;">
+                            {{ quantity }}</td>
+                    </tr>
+                    {{/oldTakeHomeBags}}
+                </tbody>
             </table>
+            {{/oldTakeHomeBags}}
 
         </div>
     </div>

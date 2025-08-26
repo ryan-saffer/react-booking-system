@@ -6,8 +6,12 @@ import {
     getSquareLocationId,
     mapCakeSizeToSquareVariation,
     mapCandleToSquareVariation,
+    mapProductToSquareVariation,
     mapServingMethodToSquareVariation,
+    mapTakeHomeBagToSquareVariation,
     type PartyFormV3,
+    type ProductType,
+    type TakeHomeBagType,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -126,11 +130,11 @@ app.get('/payment-link', async (req, res) => {
                         : []),
                     ...takeHomeBags.map((item) => ({
                         quantity: item.quantity.toString(),
-                        catalogObjectId: env === 'prod' ? item.SKU : 'HT4WSYFMNZEDDCTPU735633C', // lolly bags for dev env
+                        catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
                     })),
                     ...products.map((item) => ({
                         quantity: item.quantity.toString(),
-                        catalogObjectId: env === 'prod' ? item.SKU : 'ZEFTLTUDWL3YU6M6HBM3KT6Y', // bath bomb kit for dev env
+                        catalogObjectId: mapProductToSquareVariation(env, item.SKU as ProductType),
                     })),
                 ],
             },

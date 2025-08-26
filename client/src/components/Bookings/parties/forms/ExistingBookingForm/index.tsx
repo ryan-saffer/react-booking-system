@@ -1,14 +1,25 @@
 import 'typeface-roboto'
 
 import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
-import { CREATIONS, FormBookingFields, Location, ObjectKeys, PROD_ADDITIONS, Utilities } from 'fizz-kidz'
+import {
+    CREATIONS,
+    FormBookingFields,
+    Location,
+    ObjectKeys,
+    PRODUCTS,
+    PROD_ADDITIONS,
+    TAKE_HOME_BAGS,
+    Utilities,
+} from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { ChangeEvent } from 'react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
+    Box,
     Checkbox,
+    Chip,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -159,7 +170,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         ]
     }, [])
 
-    function updateFormValues<K extends keyof FormBooking>(field: K, value: string | Date | boolean | null) {
+    function updateFormValues<K extends keyof FormBooking>(field: K, value: FormBooking[K]) {
         if (value !== null) {
             let formCopy = { ...formValues }
             const prop = formCopy[field]
@@ -635,7 +646,23 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 {displayAdditions && (
                     <>
                         <Grid item xs={12}>
-                            <Typography variant="h6">Additions</Typography>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Additions</Typography>
+                                <Chip
+                                    label="NOT PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#e05353',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
                         </Grid>
                         {ObjectKeys(PROD_ADDITIONS).map((addition) => (
                             <Grid item xs={6} sm={3} key={addition}>
@@ -661,7 +688,23 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 {displayCake && (
                     <>
                         <Grid item xs={12}>
-                            <Typography variant="h6">Cake</Typography>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Cake</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
@@ -743,6 +786,101 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 />
                             </Grid>
                         )}
+                    </>
+                )}
+                {/* Take Home Bags Section */}
+                {booking.takeHomeBags && (
+                    <>
+                        <Grid item xs={12}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Take Home Bags</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                        {ObjectKeys(TAKE_HOME_BAGS).map((bagType) => {
+                            const value = booking.takeHomeBags?.[bagType]
+                            if (!value) return null
+
+                            return (
+                                <Grid item xs={6} key={bagType}>
+                                    <TextField
+                                        id={createUniqueId(`takeHomeBags.${bagType}`, booking.id)}
+                                        name={`takeHomeBags.${bagType}`}
+                                        label={TAKE_HOME_BAGS[bagType].label}
+                                        fullWidth
+                                        size="small"
+                                        variant="outlined"
+                                        disabled
+                                        classes={{ root: classes.disabled }}
+                                        value={value}
+                                        helperText={TAKE_HOME_BAGS[bagType].helperText}
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                borderLeft: '4px solid #28a745',
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                            )
+                        })}
+                    </>
+                )}
+                {/* Products Section */}
+                {booking.products && (
+                    <>
+                        <Grid item xs={12}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Products</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                        {ObjectKeys(PRODUCTS).map((productType) => {
+                            const value = booking.products?.[productType]
+                            if (!value) return null
+
+                            return (
+                                <Grid item xs={6} key={productType}>
+                                    <TextField
+                                        id={createUniqueId(`products.${productType}`, booking.id)}
+                                        name={`products.${productType}`}
+                                        label={PRODUCTS[productType].label}
+                                        fullWidth
+                                        size="small"
+                                        variant="outlined"
+                                        disabled
+                                        classes={{ root: classes.disabled }}
+                                        value={value}
+                                        helperText={PRODUCTS[productType].helperText}
+                                    />
+                                </Grid>
+                            )
+                        })}
                     </>
                 )}
                 {displayQuestionsCommentsFunFactsHeading && (

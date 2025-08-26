@@ -320,6 +320,21 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: 'Food package is required',
         },
+        cake: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        takeHomeBags: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        products: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
     }
 }
 
@@ -371,5 +386,8 @@ function getEmptyDomainBooking(): FormBooking {
         sendConfirmationEmail: true,
         oldPrices: false,
         includesFood: false,
+        cake: undefined,
+        takeHomeBags: undefined,
+        products: undefined,
     }
 }

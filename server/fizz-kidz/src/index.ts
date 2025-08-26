@@ -2,6 +2,8 @@
 export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
 export { Creation, CREATIONS } from './partyBookings/creations'
+export { TAKE_HOME_BAGS, TakeHomeBagType } from './partyBookings/take-home-bags'
+export { PRODUCTS, ProductType } from './partyBookings/products'
 export { Location, LocationOrMaster, LocationOrTest } from './core/location'
 export { Role, ROLES } from './core/role'
 export { AuthUser, StaffAuthUser, CustomerAuthUser } from './core/user'

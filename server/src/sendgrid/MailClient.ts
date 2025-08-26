@@ -696,6 +696,20 @@ export class MailClient {
                     template: 'cake_notification.html',
                     useMjml: false,
                 }
+            case 'takeHomeBagNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Take Home Bags Ordered',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'take_home_bag_notification.html',
+                    useMjml: false,
+                }
             case 'playLabBookingConfirmation':
                 return {
                     emailInfo: {

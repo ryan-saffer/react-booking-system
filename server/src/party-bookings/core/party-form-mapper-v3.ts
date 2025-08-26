@@ -129,6 +129,12 @@ export class PartyFormMapperV3 {
             creation3: creations.length > 2 ? creations[2] : undefined,
             funFacts: this.responses.getFieldValue('fun_facts'),
             questions: this.responses.getFieldValue('questions'),
+            takeHomeBags: this.responses
+                .getFieldValue('take_home_bags')
+                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
+            products: this.responses
+                .getFieldValue('products')
+                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
         }
 
         return booking

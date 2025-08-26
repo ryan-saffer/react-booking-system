@@ -1,5 +1,13 @@
 import type { Booking } from 'fizz-kidz'
-import { capitalise, getLocationAddress, getManager, type PartyFormV3 } from 'fizz-kidz'
+import {
+    capitalise,
+    getLocationAddress,
+    getManager,
+    ObjectKeys,
+    PRODUCTS,
+    TAKE_HOME_BAGS,
+    type PartyFormV3,
+} from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
@@ -15,10 +23,10 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
     const formMapper = new PartyFormMapperV3(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
-    let booking: Partial<Booking> = {}
+    let mappedBooking: Partial<Booking> = {}
     try {
-        booking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
-        booking.partyFormFilledIn = true
+        mappedBooking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
+        mappedBooking.partyFormFilledIn = true
     } catch (err) {
         logError('error handling party form submission', err, { responses })
         return
@@ -32,12 +40,12 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         try {
             await mailClient.sendEmail(
                 'partyFormFilledInAgain',
-                getManager(booking.location!, env).email,
+                getManager(mappedBooking.location!, env).email,
                 {
-                    parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
+                    parentName: `${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
                     parentMobile: existingBooking.parentMobile,
-                    childName: booking.childName!,
+                    childName: mappedBooking.childName!,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString({
@@ -51,11 +59,11 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                     oldNumberOfKids: existingBooking.numberOfChildren,
                     oldCreations: getBookingCreations(existingBooking),
                     oldAdditions: getBookingAdditions(existingBooking),
-                    newNumberOfKids: booking.numberOfChildren!,
+                    newNumberOfKids: mappedBooking.numberOfChildren!,
                     newCreations: formMapper.getCreationDisplayValues(existingBooking.type),
                     newAdditions: formMapper.getAdditionDisplayValues(false),
                     oldIncludesFood: existingBooking.includesFood,
-                    newIncludesFood: booking.includesFood!,
+                    newIncludesFood: mappedBooking.includesFood!,
                     isMobile: existingBooking.type === 'mobile',
                     ...(existingBooking.cake && {
                         oldCake: {
@@ -67,19 +75,31 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                             message: existingBooking.cake.message,
                         },
                     }),
-                    ...(booking.cake && {
+                    ...(mappedBooking.cake && {
                         newCake: {
-                            selection: booking.cake.selection,
-                            size: booking.cake.size,
-                            flavours: booking.cake.flavours.join(', '),
-                            served: booking.cake.served,
-                            candles: booking.cake.candles,
-                            message: booking.cake.message,
+                            selection: mappedBooking.cake.selection,
+                            size: mappedBooking.cake.size,
+                            flavours: mappedBooking.cake.flavours.join(', '),
+                            served: mappedBooking.cake.served,
+                            candles: mappedBooking.cake.candles,
+                            message: mappedBooking.cake.message,
                         },
+                    }),
+                    ...(existingBooking.takeHomeBags && {
+                        oldTakeHomeBags: ObjectKeys(existingBooking.takeHomeBags || {}).map((key) => ({
+                            name: TAKE_HOME_BAGS[key].displayValue,
+                            quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
+                        })),
+                    }),
+                    ...(mappedBooking.takeHomeBags && {
+                        newTakeHomeBags: ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
+                            name: TAKE_HOME_BAGS[key].displayValue,
+                            quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+                        })),
                     }),
                 },
                 {
-                    subject: `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`,
+                    subject: `Party form filled in again for ${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                 }
             )
         } catch (err) {
@@ -92,16 +112,16 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
 
     // this checks if they have changed their selected food package. if so, alert the manager.
     // this is different to the 'form filled in again' email, since this can trigger even on the first submission.
-    if (existingBooking.type === 'studio' && existingBooking.includesFood !== booking.includesFood) {
+    if (existingBooking.type === 'studio' && existingBooking.includesFood !== mappedBooking.includesFood) {
         try {
             await mailClient.sendEmail(
                 'partyFormFoodPackageChanged',
-                getManager(booking.location!, env).email,
+                getManager(mappedBooking.location!, env).email,
                 {
-                    parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
+                    parentName: `${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
                     parentMobile: existingBooking.parentMobile,
-                    childName: booking.childName!,
+                    childName: mappedBooking.childName!,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString({
@@ -113,10 +133,10 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                         hour12: true,
                     }),
                     oldIncludesFood: existingBooking.includesFood,
-                    newIncludesFood: booking.includesFood!,
+                    newIncludesFood: mappedBooking.includesFood!,
                 },
                 {
-                    subject: `Food package has changed for ${booking.parentFirstName} ${booking.parentLastName}`,
+                    subject: `Food package has changed for ${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
                 }
             )
         } catch (err) {
@@ -127,12 +147,19 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         }
     }
 
-    // write to firestore
+    // MARK: Write to firestore
+
+    // first increment take home bags and products, since we don't want to overwrite previously purchased amounts.
+    const mergedBooking = {
+        ...mappedBooking,
+        takeHomeBags: mergeRecord(ObjectKeys(TAKE_HOME_BAGS), existingBooking.takeHomeBags, mappedBooking.takeHomeBags),
+        products: mergeRecord(ObjectKeys(PRODUCTS), existingBooking.products, mappedBooking.products),
+    }
     try {
-        await DatabaseClient.updatePartyBooking(formMapper.bookingId, booking)
+        await DatabaseClient.updatePartyBooking(formMapper.bookingId, mergedBooking)
     } catch (err) {
-        logError('error updating party booking', err, booking)
-        throwFunctionsError('internal', 'error updating party booking', err, booking)
+        logError('error updating party booking', err, mappedBooking)
+        throwFunctionsError('internal', 'error updating party booking', err, mappedBooking)
     }
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
@@ -251,7 +278,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
     }
 
     // email the cake company if a cake was chosen
-    if (booking.cake) {
+    if (mappedBooking.cake) {
         try {
             await mailClient.sendEmail(
                 'cakeNotification',
@@ -271,12 +298,12 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                     studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
-                    cakeSelection: booking.cake.selection,
-                    cakeSize: booking.cake.size,
-                    cakeFlavours: booking.cake.flavours.join(', '),
-                    cakeServed: booking.cake.served,
-                    cakeCandles: booking.cake.candles,
-                    cakeMessage: booking.cake.message,
+                    cakeSelection: mappedBooking.cake.selection,
+                    cakeSize: mappedBooking.cake.size,
+                    cakeFlavours: mappedBooking.cake.flavours.join(', '),
+                    cakeServed: mappedBooking.cake.served,
+                    cakeCandles: mappedBooking.cake.candles,
+                    cakeMessage: mappedBooking.cake.message,
                 },
                 {
                     bcc: [manager.email, 'talia@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
@@ -284,8 +311,55 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
             )
         } catch (err) {
             logError(`error sending cake notification email for booking with id: ${formMapper.bookingId}`, err, {
-                booking,
+                booking: mappedBooking,
             })
+        }
+    }
+
+    // email sugarbliss if new take home bags were ordered
+    if (mappedBooking.takeHomeBags && ObjectKeys(mappedBooking.takeHomeBags).length > 0) {
+        try {
+            await mailClient.sendEmail(
+                'takeHomeBagNotification',
+                env === 'prod' ? 'sugarbliss.operations@gmail.com' : 'ryansaffer@gmail.com',
+                {
+                    parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
+                    mobile: fullBooking.parentMobile,
+                    email: fullBooking.parentEmail,
+                    newTakeHomeBags: ObjectKeys(mappedBooking.takeHomeBags).map((key) => ({
+                        name: TAKE_HOME_BAGS[key].displayValue,
+                        quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+                    })),
+                    ...(existingBooking.takeHomeBags && {
+                        oldTakeHomeBags: ObjectKeys(existingBooking.takeHomeBags).map((key) => ({
+                            name: TAKE_HOME_BAGS[key].displayValue,
+                            quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
+                        })),
+                    }),
+                },
+                {
+                    bcc: ['talia@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
+                }
+            )
+        } catch (err) {
+            logError(
+                `error sending take home bag notification email for booking with id: ${formMapper.bookingId}`,
+                err,
+                {
+                    booking: mappedBooking,
+                }
+            )
         }
     }
 
@@ -340,8 +414,8 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         additions: additionsWithoutPartyPacks,
         orderedPartyPack: partyPacks.length !== 0,
         ...(partyPacks.length > 0 && { partyPack: partyPacks[0] }), // form does not allow multiple selection so only ever one.
-        cakeOrdered: !!booking.cake,
-        ...(!!booking.cake && {
+        cakeOrdered: !!mappedBooking.cake,
+        ...(!!mappedBooking.cake && {
             cakeSelection: fullBooking.cake?.selection,
             cakeFlavours: fullBooking.cake?.flavours,
             cakeServed: fullBooking.cake?.served,
@@ -349,4 +423,28 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
             cakeCandles: fullBooking.cake?.candles,
         }),
     })
+}
+
+/**
+ * Utilitiy function to merge the count of products/take home bags from existing booking to the mapped booking
+ */
+function mergeRecord<T extends string>(
+    keys: readonly T[],
+    existing: Partial<Record<T, number>> | undefined,
+    incoming: Partial<Record<T, number>> | undefined
+): Partial<Record<T, number>> {
+    const merged: Partial<Record<T, number>> = { ...existing }
+
+    keys.forEach((key) => {
+        const currentCount = existing?.[key] ?? 0
+        const newCount = incoming?.[key] ?? 0
+
+        if (newCount > 0) {
+            merged[key] = currentCount + newCount
+        } else if (merged[key] === undefined && currentCount > 0) {
+            merged[key] = currentCount
+        }
+    })
+
+    return merged
 }

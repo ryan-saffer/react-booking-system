@@ -1,4 +1,6 @@
 import type { PartyFormV2 } from '../paperform'
+import type { ProductType } from '../partyBookings/products'
+import type { TakeHomeBagType } from '../partyBookings/take-home-bags'
 import { assertNever } from '../utilities/assert-never'
 
 export function mapCakeSizeToSquareVariation(env: 'prod' | 'dev', size: PartyFormV2['cake_size']) {
@@ -85,4 +87,41 @@ export function mapCandleToSquareVariation(env: 'prod' | 'dev', candles: PartyFo
             throw new Error(`Unable to get cake candles variation for candles: ${candles}`)
         }
     }
+}
+
+export function mapTakeHomeBagToSquareVariation(env: 'prod' | 'dev', variation: TakeHomeBagType) {
+    if (env === 'prod') {
+        switch (variation) {
+            case 'lollyBags':
+                return 'RFPAE4HT6XGDC2TA33BHELLI'
+            case 'toyBags':
+                return 'ZKQ6DLXI3PSJL3TA2TL7DGLB'
+            default: {
+                assertNever(variation)
+                throw new Error(`Unable to get take home bag variation for: ${variation}`)
+            }
+        }
+    }
+
+    return 'HT4WSYFMNZEDDCTPU735633C' // lolly bag in dev always - cbf setting up others
+}
+export function mapProductToSquareVariation(env: 'prod' | 'dev', variation: ProductType) {
+    if (env === 'prod') {
+        switch (variation) {
+            case 'bathBombKit':
+                return 'VKV2DKJKYHBSD4NHJKGKGGIQ'
+            case 'soapMakingKit':
+                return 'KEEJ75BGAUW75WFYUND7RN2E'
+            case 'stringSlimeKit':
+                return 'GJLAMKQXRXPHWLU2PSFAVSCU'
+            case 'superSlimeKit':
+                return 'H5CGI4PV6TF3YPKT547BZGX3'
+            default: {
+                assertNever(variation)
+                throw new Error(`Unable to get product variation for: ${variation}`)
+            }
+        }
+    }
+
+    return 'ZEFTLTUDWL3YU6M6HBM3KT6Y' // bath bomb kit in dev always - cbf setting up others
 }
