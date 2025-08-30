@@ -277,6 +277,51 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         }
     }
 
+    const orderedTakeHomeBags = Object.keys(mappedBooking.takeHomeBags || {}).length > 0
+    const orderedProducts = Object.keys(mappedBooking.products || {}).length > 0
+
+    if (orderedTakeHomeBags || orderedProducts) {
+        try {
+            const takeHomeBags = ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
+                name: TAKE_HOME_BAGS[key].displayValue,
+                quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+            }))
+
+            const products = ObjectKeys(mappedBooking.products || {}).map((key) => ({
+                name: PRODUCTS[key].displayValue,
+                quantity: mappedBooking.products?.[key]?.toString() || '0',
+            }))
+
+            await mailClient.sendEmail(
+                'takeHomeNotification',
+                manager.email,
+                {
+                    parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    location: capitalise(fullBooking.location),
+                    mobile: fullBooking.parentMobile,
+                    email: fullBooking.parentEmail,
+                    ...(takeHomeBags.length > 0 && { takeHomeBags }),
+                    ...(products.length > 0 && { products }),
+                },
+                {
+                    replyTo: fullBooking.parentEmail,
+                }
+            )
+        } catch (err) {
+            logError(`error sending take home notification for booking with id: '${formMapper.bookingId}'`, err)
+        }
+    }
+
     // email the cake company if a cake was chosen
     if (mappedBooking.cake) {
         try {

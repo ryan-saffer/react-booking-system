@@ -360,6 +360,20 @@ export class MailClient {
                     template: 'party_pack_notification.html',
                     useMjml: false,
                 }
+            case 'takeHomeNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Take-home items ordered!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'take_home_notification.html',
+                    useMjml: false,
+                }
             case 'partyFormConfirmation':
                 return {
                     emailInfo: {

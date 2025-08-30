@@ -209,6 +209,16 @@ export type Emails = {
         partyPacks: string[]
     }
 
+    takeHomeNotification: {
+        parentName: string
+        dateTime: string
+        location: string
+        mobile: string
+        email: string
+        takeHomeBags?: { name: string; quantity: string }[]
+        products?: { name: string; quantity: string }[]
+    }
+
     partyFormConfirmation: {
         parentName: string
         numberOfChildren: string
