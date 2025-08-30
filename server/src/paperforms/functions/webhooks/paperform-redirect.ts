@@ -63,16 +63,15 @@ app.get('/payment-link', async (req, res) => {
     const products = responses.getFieldValue('products')
 
     const host =
-        process.env.FUNCTIONS_EMULATOR === 'true' ? getFunctionEmulatorDomain(env, false) : getCloudFunctionsDomain(env)
+        process.env.FUNCTIONS_EMULATOR === 'true'
+            ? `https://${req.get('host')}/${getFunctionEmulatorDomain(env, false)}`
+            : getCloudFunctionsDomain(env)
 
     const orderedCake = cake !== 'I will bring my own cake'
 
     if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
         // should not be in checkout flow. redirect to form-complete.
-        res.redirect(
-            303,
-            `https://${req.get('host')}/${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`
-        )
+        res.redirect(303, `${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`)
         return
     }
 
@@ -94,9 +93,7 @@ app.get('/payment-link', async (req, res) => {
                 allowTipping: false,
                 askForShippingAddress: false,
                 merchantSupportEmail: 'bookings@fizzkidz.com.au',
-                redirectUrl: `https://${req.get(
-                    'host'
-                )}/${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`,
+                redirectUrl: `${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`,
             },
             prePopulatedData: {
                 buyerEmail: 'ryansaffer@gmail.com',
