@@ -1,6 +1,5 @@
 ---
 import Layout from "@/layout/Layout.astro";
-import PrimaryButton from "@/components/primary-button.astro";
 import { Button } from "@/components/react/ui/button";
 ---
 
@@ -60,8 +59,8 @@ import { Button } from "@/components/react/ui/button";
         id="message"
         class="mb-8 whitespace-pre-line font-gotham text-lg text-gray-700 md:text-xl"
       >
-        We have received your submission, and you should have a confirmation
-        email with the next steps.
+        We have received your submission, and we can't wait to party with you
+        soon!
       </p>
 
       <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -97,7 +96,7 @@ import { Button } from "@/components/react/ui/button";
       successIcon.classList.add("flex");
       title.textContent = "Thank you!";
       message.textContent =
-        "We have received your submission, and you should have a confirmation email with the next steps.";
+        "We have received your submission, and we can't wait to party with you soon!";
     } else {
       // Show error state
       errorIcon.classList.remove("hidden");
