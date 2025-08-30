@@ -176,6 +176,10 @@ export type Emails = {
             candles: string
             message?: string
         }
+        oldTakeHomeBags?: { name: string; quantity: string }[]
+        newTakeHomeBags?: { name: string; quantity: string }[]
+        oldProducts?: { name: string; quantity: string }[]
+        newProducts?: { name: string; quantity: string }[]
     }
 
     tooManyCreationsChosen: {
@@ -203,6 +207,16 @@ export type Emails = {
         mobile: string
         email: string
         partyPacks: string[]
+    }
+
+    takeHomeNotification: {
+        parentName: string
+        dateTime: string
+        location: string
+        mobile: string
+        email: string
+        takeHomeBags?: { name: string; quantity: string }[]
+        products?: { name: string; quantity: string }[]
     }
 
     partyFormConfirmation: {
@@ -249,6 +263,16 @@ export type Emails = {
         cakeServed: string
         cakeCandles: string
         cakeMessage?: string
+    }
+
+    takeHomeBagNotification: {
+        parentName: string
+        dateTime: string
+        studio: string
+        mobile: string
+        email: string
+        newTakeHomeBags: { name: string; quantity: string }[]
+        oldTakeHomeBags?: { name: string; quantity: string }[]
     }
 
     // EVENTS

@@ -1,5 +1,5 @@
 import { Location, type LocationOrTest } from '../core/location'
-import { Booking } from '../partyBookings/booking'
+import type { Booking } from '../partyBookings/booking'
 import { capitalise } from './stringUtilities'
 
 export function getLocationAddress(location: Location) {
@@ -63,10 +63,10 @@ export function getCloudFunctionsDomain(env: 'prod' | 'dev') {
         : 'https://australia-southeast1-booking-system-6435d.cloudfunctions.net'
 }
 
-export function getFunctionEmulatorDomain(env: 'prod' | 'dev') {
+export function getFunctionEmulatorDomain(env: 'prod' | 'dev', includeHost: boolean = true) {
     return env === 'prod'
-        ? 'http://127.0.0.1:5001/bookings-prod/australia-southeast1'
-        : 'http://127.0.0.1:5001/booking-system-6435d/australia-southeast1'
+        ? `${includeHost ? 'http://127.0.0.1:5001/' : ''}bookings-prod/australia-southeast1`
+        : `${includeHost ? 'http://127.0.0.1:5001/' : ''}booking-system-6435d/australia-southeast1`
 }
 
 export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {

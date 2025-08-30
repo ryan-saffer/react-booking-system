@@ -22,6 +22,7 @@ declare global {
             STORYBLOK_TOKEN: string
             SQUARE_DEV_TOKEN: string
             SQUARE_PROD_TOKEN: string
+            PAPERFORM_API_TOKEN: string
         }
     }
 }

@@ -227,7 +227,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -242,7 +241,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -257,7 +255,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'program@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Science incursion is coming up!',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -272,7 +269,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'programs@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Submission Recieved',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -364,6 +360,20 @@ export class MailClient {
                     template: 'party_pack_notification.html',
                     useMjml: false,
                 }
+            case 'takeHomeNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Take-home items ordered!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'take_home_notification.html',
+                    useMjml: false,
+                }
             case 'partyFormConfirmation':
                 return {
                     emailInfo: {
@@ -396,7 +406,6 @@ export class MailClient {
                 return {
                     emailInfo: {
                         to,
-                        bcc: ['people@fizzkidz.com.au'],
                         from: {
                             name: 'Fizz Kidz',
                             email: 'people@fizzkidz.com.au',
@@ -473,7 +482,6 @@ export class MailClient {
                         },
                         subject: subject || 'Not Continuing With Term Notification',
                         replyTo: replyTo || 'no-reply@fizzkidz.com.au',
-                        bcc: ['kym@fizzkidz.com.au'],
                     },
                     template: 'not_continuing_after_school_notification.html',
                     useMjml: false,
@@ -698,9 +706,22 @@ export class MailClient {
                         },
                         subject: subject || 'Fizz Kidz Cake Ordered',
                         replyTo: replyTo || 'no-reply@fizzkidz.com.au',
-                        bcc: ['talia@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
                     },
                     template: 'cake_notification.html',
+                    useMjml: false,
+                }
+            case 'takeHomeBagNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Take Home Bags Ordered',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'take_home_bag_notification.html',
                     useMjml: false,
                 }
             case 'playLabBookingConfirmation':

@@ -5,6 +5,8 @@ import type { Location } from '../core/location'
 import type { CakeFlavours } from './CakeFlavours'
 import type { Addition } from './additions'
 import type { Creation } from './creations'
+import type { ProductType } from './products'
+import type { TakeHomeBagType } from './take-home-bags'
 
 type AdditionKeyValues = Record<Addition, boolean>
 
@@ -41,6 +43,8 @@ export interface BaseBooking extends AdditionKeyValues {
         candles: string
         message?: string
     }
+    takeHomeBags?: Partial<Record<TakeHomeBagType, number>>
+    products?: Partial<Record<ProductType, number>>
 }
 
 // separates date and time into separate values, for better use in forms
@@ -109,6 +113,8 @@ export const FormBookingFields: FormBookingKeys = {
     includesFood: 'includesFood',
     dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
     unicornFizzPartyPack: 'unicornFizzPartyPack',
+    takeHomeBags: 'takeHomeBags',
+    products: 'products',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -160,4 +166,6 @@ export const BookingFields: BookingKeys = {
     includesFood: 'includesFood',
     dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
     unicornFizzPartyPack: 'unicornFizzPartyPack',
+    takeHomeBags: 'takeHomeBags',
+    products: 'products',
 }
