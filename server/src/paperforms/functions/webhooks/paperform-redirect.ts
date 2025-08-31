@@ -68,7 +68,7 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
 
     if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
         // should not be in checkout flow. redirect to form-complete.
-        res.redirect(303, `${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`)
+        res.redirect(303, `${host}/api/api/webhooks/party-form/form-complete?submissionId=${submissionId}`)
         return
     }
 
