@@ -6,6 +6,7 @@ import * as trpcExpress from '@trpc/server/adapters/express'
 
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
+import { env } from './init'
 import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
 import { createContext } from './trpc/trpc'
@@ -53,11 +54,19 @@ webhooks.use((req, _, next) => {
     next()
 })
 
+// Mount all webhooks under /webhooks
 webhooks.use('/webhooks', [acuityWebhook, esignaturesWebhook, paperformWebhook, partyFormRedirect, websiteFormsWebhook])
-
 apiRouter.use(webhooks)
 
 // Mount all API routes under /api
 app.use('/api', apiRouter)
 
-export const api = onRequest({ region: 'australia-southeast1', cors: true, memory: '2GiB' }, app)
+export const api = onRequest(
+    {
+        region: 'australia-southeast1',
+        cors: true,
+        memory: '2GiB',
+        minInstances: env === 'prod' ? 1 : 0,
+    },
+    app
+)
