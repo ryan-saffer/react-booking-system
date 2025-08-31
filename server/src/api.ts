@@ -5,12 +5,12 @@ import { onRequest } from 'firebase-functions/v2/https'
 import * as trpcExpress from '@trpc/server/adapters/express'
 
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
-import { contactForm7Webhook } from './contact-form-7/webhook/contact-form-7.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
+import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
-import { stripeWebhook } from './stripe/functions/stripe.webhook'
 import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
+import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
 
 const app = express()
 
@@ -52,7 +52,7 @@ webhooks.use((req, _, next) => {
     next()
 })
 
-webhooks.use('/', [acuityWebhook, contactForm7Webhook, esignaturesWebhook, paperformWebhook, stripeWebhook])
+webhooks.use('/webhooks', [acuityWebhook, esignaturesWebhook, paperformWebhook, partyFormRedirect, websiteFormsWebhook])
 
 app.use(webhooks)
 

@@ -4,7 +4,7 @@ import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export const esignaturesWebhook = express.Router()
 
-esignaturesWebhook.post('/esignaturesWebhook', async (req, res) => {
+esignaturesWebhook.post('/esignatures', async (req, res) => {
     // verify webhook is from esignatures
     const authToken = req.headers.authorization
     if (!authToken) {

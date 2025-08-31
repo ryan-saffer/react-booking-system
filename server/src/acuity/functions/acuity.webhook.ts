@@ -31,7 +31,7 @@ async function isPlayLab(appointmentTypeId: string) {
     return appointmentTypes.some((appointmentType) => appointmentType.id.toString() === appointmentTypeId)
 }
 
-acuityWebhook.post('/acuityWebhook', async (req, resp) => {
+acuityWebhook.post('/acuity', async (req, resp) => {
     logger.log('STARTING WEBHOOK')
     logger.log(req.body)
     const data = req.body as AcuityWebhookData

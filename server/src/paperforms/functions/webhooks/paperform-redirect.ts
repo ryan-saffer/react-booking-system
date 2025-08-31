@@ -1,5 +1,4 @@
 import express from 'express'
-import { onRequest } from 'firebase-functions/v2/https'
 import {
     getCloudFunctionsDomain,
     getFunctionEmulatorDomain,
@@ -25,12 +24,10 @@ import { logError } from '@/utilities'
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
 
-const app = express()
-
-app.use(express.json())
+export const partyFormRedirect = express.Router()
 
 // Route used conditionally in Paperform if the customer selected a product.
-app.get('/payment-link', async (req, res) => {
+partyFormRedirect.get('/payment-link', async (req, res) => {
     const submissionId = req.query.submissionId
     if (!submissionId || typeof submissionId !== 'string') {
         logError('party form submitted for checkout but there was no submissionId', undefined, { requestUrl: req.url })
@@ -147,7 +144,7 @@ app.get('/payment-link', async (req, res) => {
 })
 
 // Route for handling post-checkout redirect
-app.get('/form-complete', async (req, res) => {
+partyFormRedirect.get('/form-complete', async (req, res) => {
     const submissionId = req.query.submissionId
     if (!submissionId || typeof submissionId !== 'string') {
         logError('party form submitted for completion but there was no submissionId', undefined, {
@@ -180,5 +177,3 @@ app.get('/form-complete', async (req, res) => {
     }
     return
 })
-
-export const partyFormRedirect = onRequest(app)

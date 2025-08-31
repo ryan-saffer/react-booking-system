@@ -1,23 +1,24 @@
-import { onRequest } from 'firebase-functions/v2/https'
-
-import { generateDiscountCode } from '../../../holiday-programs/core/discount-codes/generate-discount-code'
-import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { logError } from '../../../utilities'
-import { ZohoClient } from '../../../zoho/zoho-client'
-import type { Form } from '../../core/website-form-types'
+import express from 'express'
+import { generateDiscountCode } from '@/holiday-programs/core/discount-codes/generate-discount-code'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { logError } from '@/utilities'
 import {
-    ContactFormLocationMap,
-    FranchisingInterestDisplayValueMap,
+    type Form,
     LocationDisplayValueMap,
-    ModuleDisplayValueMap,
-    PartyFormLocationMap,
     ReferenceDisplayValueMap,
-    RoleDisplayValueMap,
+    PartyFormLocationMap,
     ServiceDisplayValueMap,
-} from '../../core/website-form-types'
+    ContactFormLocationMap,
+    ModuleDisplayValueMap,
+    RoleDisplayValueMap,
+    FranchisingInterestDisplayValueMap,
+} from '@/website/core/website-form-types'
+import { ZohoClient } from '@/zoho/zoho-client'
 
-export const websiteFormsWebhook = onRequest(async (req, res) => {
+export const websiteFormsWebhook = express.Router()
+
+websiteFormsWebhook.post('/website', async (req, res) => {
     const formId = req.query.formId as keyof Form
 
     const zohoClient = new ZohoClient()

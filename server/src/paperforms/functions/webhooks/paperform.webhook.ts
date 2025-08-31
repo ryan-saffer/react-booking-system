@@ -5,7 +5,7 @@ import { publishToPubSub } from '../../../utilities'
 
 export const paperformWebhook = express.Router()
 
-paperformWebhook.post('/paperformWebhook', async (req, res) => {
+paperformWebhook.post('/paperform', async (req, res) => {
     logger.log(`${req.query.form} form submission received with submission id:`, req.body.submission_id)
     if (req.query.form === 'incursion') {
         await publishToPubSub('paperformSubmission', { form: 'incursion', data: req.body.data })
