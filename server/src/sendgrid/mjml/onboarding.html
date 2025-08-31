@@ -15,6 +15,11 @@
             color: #888888
             }
         </mj-style>
+        <mj-style>
+            .btn-block a {
+            display: block !important;
+            }
+        </mj-style>
 
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
@@ -44,9 +49,9 @@
                     To onboard you into our system, and roster you on for your first shift, we need some details from
                     you. Please click on the link below to get started. The form will include a link to your contract.
                 </mj-text>
-                <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px"
-                    font-weight="bold" href="{{ formUrl }}" width='100%' css-class="btn-block"
-                    border="1px #9ecc47 solid">
+                <mj-button css-class="btn-block" background-color="#9ecc47" padding="20px" align="center"
+                    color="#ffffff" font-size="17px" font-weight="bold" href="{{ formUrl }}" width='100%'
+                    css-class="btn-block" border="1px #9ecc47 solid">
                     Onboarding Form ↗️
                 </mj-button>
             </mj-column>

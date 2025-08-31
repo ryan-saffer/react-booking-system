@@ -1,24 +1,25 @@
 import 'typeface-roboto'
 
+import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
 import {
-    Additions,
-    AdditionsDisplayValuesMap,
-    CakeFlavours,
-    CreationDisplayValuesMap,
-    FirestoreBooking,
-    FormBooking,
+    CREATIONS,
     FormBookingFields,
     Location,
     ObjectKeys,
+    PRODUCTS,
+    PROD_ADDITIONS,
+    TAKE_HOME_BAGS,
     Utilities,
-    WithId,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import type { ChangeEvent } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
+    Box,
     Checkbox,
+    Chip,
     FormControl,
     FormControlLabel,
     FormHelperText,
@@ -34,13 +35,15 @@ import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { trpc } from '@utils/trpc'
 
 import { capitalise } from '../../../../../utilities/stringUtilities'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
-import WithErrorDialog, { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
+import type { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '../../../../Dialogs/ConfirmationDialog'
+import type { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
+import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
 import { useDateNavigation } from '../../../date-navigation/date-navigation.hooks'
 import EditFormButtons from '../../../shared/edit-form-buttons'
 import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
-import { ExistingBookingFormFields } from './types'
+import type { ExistingBookingFormFields } from './types'
 
 const PREFIX = 'index'
 
@@ -90,12 +93,12 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const displayCreation3 = formValues.creation3.value || editing
     const displayCreationHeading = displayCreation1 || displayCreation2 || displayCreation3
     // const displayMenu = formValues.menu?.value || editing
-    const displayCake = formValues.cake.value || editing
+    const displayCake = !!booking.cake
     const displayQuestions = formValues.questions.value || editing
     const displayFunFacts = formValues.funFacts.value || editing
     const displayQuestionsCommentsFunFactsHeading = displayQuestions || displayFunFacts
     let additionSelected = false
-    for (const addition of Object.values(Additions)) {
+    for (const addition of ObjectKeys(PROD_ADDITIONS)) {
         if (formValues[addition].value) {
             additionSelected = true
         }
@@ -133,16 +136,13 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
     const getCreationMenuItems = useCallback(() => {
         // Sort the creation by their display value
-        // this is particularly difficult, so first invert the CreationDisplayValues object
+        // this is particularly difficult, so first invert the CREATIONS object
         // see https://stackoverflow.com/a/23013726/7870403
-        const invertedCreationDisplayValues = Object.entries(CreationDisplayValuesMap).reduce(
-            (ret: { [key: string]: any }, entry) => {
-                const [key, value] = entry
-                ret[value] = key
-                return ret
-            },
-            {}
-        )
+        const invertedCreationDisplayValues = Object.entries(CREATIONS).reduce<Record<string, string>>((acc, curr) => {
+            const [key, value] = curr
+            acc[value] = key
+            return acc
+        }, {})
 
         // then sort it by key
         const creationDisplayValues = Object.keys(invertedCreationDisplayValues)
@@ -170,7 +170,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         ]
     }, [])
 
-    function updateFormValues<K extends keyof FormBooking>(field: K, value: string | Date | boolean | null) {
+    function updateFormValues<K extends keyof FormBooking>(field: K, value: FormBooking[K]) {
         if (value !== null) {
             let formCopy = { ...formValues }
             const prop = formCopy[field]
@@ -578,11 +578,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 id={createUniqueId(FormBookingFields.creation3, booking.id)}
                                 label="third creation"
                                 value={formValues[FormBookingFields.creation3].value || ''}
-                                disabled={
-                                    !editing || booking.type === 'studio'
-                                        ? booking.partyLength !== '2'
-                                        : booking.partyLength !== '1.5'
-                                }
+                                disabled={!editing}
                                 error={formValues[FormBookingFields.creation3].error}
                                 onChange={handleFormChange}
                             >
@@ -650,9 +646,25 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 {displayAdditions && (
                     <>
                         <Grid item xs={12}>
-                            <Typography variant="h6">Additions</Typography>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Additions</Typography>
+                                <Chip
+                                    label="NOT PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#e05353',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
                         </Grid>
-                        {ObjectKeys(Additions).map((addition) => (
+                        {ObjectKeys(PROD_ADDITIONS).map((addition) => (
                             <Grid item xs={6} sm={3} key={addition}>
                                 <FormControlLabel
                                     control={
@@ -666,7 +678,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                             onChange={handleFormCheckboxChange}
                                         />
                                     }
-                                    label={AdditionsDisplayValuesMap[addition]}
+                                    label={PROD_ADDITIONS[addition].displayValue}
                                     classes={{ root: classes.disabled }}
                                 />
                             </Grid>
@@ -676,48 +688,199 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 {displayCake && (
                     <>
                         <Grid item xs={12}>
-                            <Typography variant="h6">Cake</Typography>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Cake</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id={createUniqueId(FormBookingFields.cake, booking.id)}
-                                name={FormBookingFields.cake}
+                                id={createUniqueId('cake', booking.id)}
+                                name={'cake'}
                                 label="Cake"
                                 fullWidth
                                 size="small"
-                                variant={editing || formValues[FormBookingFields.cake].value ? 'outlined' : 'filled'}
-                                disabled={!editing}
+                                variant="filled"
+                                disabled={true}
                                 classes={{ root: classes.disabled }}
-                                value={formValues[FormBookingFields.cake].value}
-                                error={formValues[FormBookingFields.cake].error}
-                                onChange={handleFormChange}
+                                value={booking.cake?.selection}
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControl
+                            <TextField
+                                id={createUniqueId('cakeSize', booking.id)}
+                                name={'cakeSize'}
+                                label="Cake Size"
                                 fullWidth
                                 size="small"
-                                variant={formValues[FormBookingFields.cakeFlavour].value ? 'standard' : 'filled'}
+                                variant="filled"
+                                disabled={true}
                                 classes={{ root: classes.disabled }}
-                            >
-                                <InputLabel>Cake flavour</InputLabel>
-                                <Select
-                                    name={FormBookingFields.cakeFlavour}
-                                    id={FormBookingFields.cakeFlavour}
-                                    label="cake flavour"
-                                    value={formValues[FormBookingFields.cakeFlavour].value || ''}
-                                    disabled={!editing}
-                                    error={formValues[FormBookingFields.cakeFlavour].error}
-                                    onChange={(e) => handleFormChange(e)}
-                                >
-                                    {Object.values(CakeFlavours).map((flavour) => (
-                                        <MenuItem key={flavour} value={flavour}>
-                                            {capitalise(flavour)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                value={booking.cake?.size}
+                            />
                         </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeFlavours', booking.id)}
+                                name={'cakeFlavours'}
+                                label="Cake Flavours"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.flavours.join(', ')}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeServed', booking.id)}
+                                name={'cakeServed'}
+                                label="How to serve"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.served}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id={createUniqueId('cakeCandles', booking.id)}
+                                name={'cakeCandles'}
+                                label="Candles"
+                                fullWidth
+                                size="small"
+                                variant="filled"
+                                disabled={true}
+                                classes={{ root: classes.disabled }}
+                                value={booking.cake?.candles}
+                            />
+                        </Grid>
+                        {booking.cake?.message && (
+                            <Grid item xs={6}>
+                                <TextField
+                                    id={createUniqueId('cakeMessage', booking.id)}
+                                    name="cakeMessage"
+                                    label="Cake Message"
+                                    fullWidth
+                                    size="small"
+                                    variant="filled"
+                                    disabled={true}
+                                    classes={{ root: classes.disabled }}
+                                    value={booking.cake.message}
+                                />
+                            </Grid>
+                        )}
+                    </>
+                )}
+                {/* Take Home Bags Section */}
+                {booking.takeHomeBags && (
+                    <>
+                        <Grid item xs={12}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Take Home Bags</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                        {ObjectKeys(TAKE_HOME_BAGS).map((bagType) => {
+                            const value = booking.takeHomeBags?.[bagType]
+                            if (!value) return null
+
+                            return (
+                                <Grid item xs={6} key={bagType}>
+                                    <TextField
+                                        id={createUniqueId(`takeHomeBags.${bagType}`, booking.id)}
+                                        name={`takeHomeBags.${bagType}`}
+                                        label={TAKE_HOME_BAGS[bagType].label}
+                                        fullWidth
+                                        size="small"
+                                        variant="outlined"
+                                        disabled
+                                        classes={{ root: classes.disabled }}
+                                        value={value}
+                                        helperText={TAKE_HOME_BAGS[bagType].helperText}
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                borderLeft: '4px solid #28a745',
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                            )
+                        })}
+                    </>
+                )}
+                {/* Products Section */}
+                {booking.products && (
+                    <>
+                        <Grid item xs={12}>
+                            <Box display="flex" alignItems="center" gap={2}>
+                                <Typography variant="h6">Products</Typography>
+                                <Chip
+                                    label="PAID"
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: '#28a745',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.75rem',
+                                        border: 'none',
+                                        '& .MuiChip-label': {
+                                            px: 1.5,
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Grid>
+                        {ObjectKeys(PRODUCTS).map((productType) => {
+                            const value = booking.products?.[productType]
+                            if (!value) return null
+
+                            return (
+                                <Grid item xs={6} key={productType}>
+                                    <TextField
+                                        id={createUniqueId(`products.${productType}`, booking.id)}
+                                        name={`products.${productType}`}
+                                        label={PRODUCTS[productType].label}
+                                        fullWidth
+                                        size="small"
+                                        variant="outlined"
+                                        disabled
+                                        classes={{ root: classes.disabled }}
+                                        value={value}
+                                        helperText={PRODUCTS[productType].helperText}
+                                    />
+                                </Grid>
+                            )
+                        })}
                     </>
                 )}
                 {displayQuestionsCommentsFunFactsHeading && (

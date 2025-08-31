@@ -1,10 +1,14 @@
-import { MemoryOption, logger } from 'firebase-functions/v2'
+import type { MemoryOption } from 'firebase-functions/v2'
+import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-import { AnyRouter } from '@trpc/server'
+import type { AnyRouter } from '@trpc/server'
 import { createHTTPHandler } from '@trpc/server/adapters/standalone'
 
 import { createContext } from './trpc'
+import { getErrorCode, type AppErrorCode } from './trpc.errors'
+
+const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL', 'PAYMENT_METHOD_INVALID']
 
 export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory?: MemoryOption) {
     return onRequest(
@@ -13,14 +17,23 @@ export function onRequestTrpc<TRouter extends AnyRouter>(router: TRouter, memory
             router,
             createContext,
             onError: ({ error, input, path }) => {
-                if (error.code === 'PRECONDITION_FAILED') {
+                // temporary while debugging 500 error
+                console.error(`tRPC error at ${path}`, {
+                    code: error.code,
+                    message: error.message,
+                    cause: error.cause,
+                    input,
+                })
+
+                const errorCode = getErrorCode(error.cause ?? error, error.code)
+                if (ERRORS_TO_IGNORE.includes(errorCode)) {
                     // not an error worth logging
                     return
                 }
                 logger.error(error.message, {
                     path,
                     input,
-                    errorCode: error.code,
+                    errorCode,
                     cause: error.cause,
                 })
             },

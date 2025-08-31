@@ -1,4 +1,5 @@
-import { IncursionEvent, IncursionForm, PaperFormResponse, getQuestionValue } from 'fizz-kidz'
+import type { IncursionEvent, IncursionForm, PaperFormResponse } from 'fizz-kidz'
+import { getQuestionValue } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -44,19 +45,26 @@ export async function handleIncursionFormSubmission(response: PaperFormResponse<
     const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
 
     const mailClient = await MailClient.getInstance()
-    await mailClient.sendEmail('incursionFormCompleted', firstSlot.contactEmail, {
-        contactName: firstSlot.contactName,
-        slots: slots.map(
-            (slot) =>
-                `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
-                    'cccc, LLL dd, t'
-                )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
-        ),
-        numberOfChildren,
-        location,
-        parking,
-        expectedLearning,
-        teacherInformation,
-        additionalInformation,
-    })
+    await mailClient.sendEmail(
+        'incursionFormCompleted',
+        firstSlot.contactEmail,
+        {
+            contactName: firstSlot.contactName,
+            slots: slots.map(
+                (slot) =>
+                    `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+                        'cccc, LLL dd, t'
+                    )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
+            ),
+            numberOfChildren,
+            location,
+            parking,
+            expectedLearning,
+            teacherInformation,
+            additionalInformation,
+        },
+        {
+            bcc: ['programs@fizzkidz.com.au'],
+        }
+    )
 }

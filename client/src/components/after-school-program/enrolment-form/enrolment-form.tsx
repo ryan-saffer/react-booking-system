@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
-import { DateTime } from 'luxon'
+import type { DateTime } from 'luxon'
 import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray } from 'react-hook-form'
 
@@ -60,9 +60,13 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         isError,
         data: classes,
     } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeId: selectedProgram!.id,
+        appointmentTypeIds: [selectedProgram!.id],
         includeUnavailable: true,
     })
+
+    function formatCurrency(amount: number) {
+        return amount % 1 === 0 ? `$${amount}` : `$${amount.toFixed(2)}`
+    }
 
     /**
      * Sync the required 'main' or 'waitingList' section with if the class is full.
@@ -122,12 +126,18 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
         return (
             <>
                 <h3 className="my-2 text-center text-xl font-semibold">
-                    ${parseInt(selectedProgram.price) * numClasses} for {numClasses === 8 ? 'an' : 'a'} {numClasses}{' '}
-                    week term
+                    {formatCurrency(parseFloat(selectedProgram.price) * numClasses)} for {numClasses === 8 ? 'an' : 'a'}{' '}
+                    {numClasses} week term
                 </h3>
                 <p className="text-center italic">No credit card details are required to enrol.</p>
                 <p className="mb-4 text-center italic">
                     We will only invoice you after your free trial, if you choose to continue.
+                </p>
+                <p className="text-sm">
+                    Our free trial is designed for families genuinely interested in enrolling in our After School
+                    Program. Please only book if you're available to attend and have no other time commitments. We
+                    kindly ask that you only register if you're considering joining the full-term program, as spaces are
+                    limited. Thank you! 😊
                 </p>
                 <SectionBreak title="Parent Details" />
                 <FormField
@@ -525,7 +535,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     variant="outline"
                     onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
                 >
-                    Enrol Another Child
+                    {form.getValues('main.children').length === 0 ? 'Add Child' : 'Enrol Another Child'}
                     <Plus className="ml-2 h-4 w-4" />
                 </Button>
                 <SectionBreak title="Emergency Contact" />
@@ -655,6 +665,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                         </FormItem>
                     )}
                 />
+
                 <Button
                     type="submit"
                     disabled={submitting}

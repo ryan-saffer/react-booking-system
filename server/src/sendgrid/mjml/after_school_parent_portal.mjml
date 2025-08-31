@@ -2,28 +2,20 @@
     <mj-head>
         <mj-attributes>
             <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
-            <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px"
-                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+            <mj-text
+                font-weight="400"
+                font-size="16px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline">
-            .text-link {
-            color: #5e6ebf
-            }
-        </mj-style>
-        <mj-style inline="inline">
-            .footer-link {
-            color: #888888
-            }
-        </mj-style>
-        <mj-style>
-            .btn-block a {
-            display: block !important;
-            }
-        </mj-style>
-
+        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style> .btn-block a { display: block !important; } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
-        <mj-section background-color="#4bc5d9" padding-bottom='0px'>
+        <mj-section background-color="#4bc5d9" padding-bottom="0px">
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
@@ -39,23 +31,29 @@
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
                 <mj-column width="100%">
-                    <mj-text color="#637381" font-size="16px">
-                        Hi
-                        {{ parentName }},
-                    </mj-text>
+                    <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
                         In order to manage {{ childName }}'s enrolment in the term, you can use your new Parent Portal.
                     </mj-text>
-                    <mj-button background-color="#9ecc47" padding="20px" align="center" color="#ffffff" font-size="17px"
-                        font-weight="bold" href="{{ portalUrl }}" width='100%' css-class="btn-block"
-                        border="1px #9ecc47 solid">
+                    <mj-button
+                        background-color="#9ecc47"
+                        padding="20px"
+                        align="center"
+                        color="#ffffff"
+                        font-size="17px"
+                        font-weight="bold"
+                        href="{{ portalUrl }}"
+                        width="100%"
+                        css-class="btn-block"
+                        border="1px #9ecc47 solid"
+                    >
                         Parent Portal ↗️
                     </mj-button>
                     <mj-text color="#637381" font-size="16px">
                         You can use this portal to:
-                        <ul style="margin-bottom:0px; padding-left:24px">
+                        <ul style="margin-bottom: 0px; padding-left: 24px">
                             <li>View information about your enrolment</li>
                             <li>Let us know if {{ childName }} cannot attend on any given week</li>
                             <li>Add or remove people who can pick {{ childName }} up from the program</li>
@@ -66,9 +64,7 @@
                     <mj-text color="#637381" font-size="16px">
                         We look forward to seeing {{ childName }} at the start of term!
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px">
-                        The Fizz Kidz team 🌟
-                    </mj-text>
+                    <mj-text color="#637381" font-size="16px"> The Fizz Kidz team 🌟 </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>
@@ -77,9 +73,12 @@
                 <mj-group>
                     <mj-column width="100%" padding-right="0">
                         <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-                            <a class="footer-link"
-                                href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
-                                class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
+                            <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
                         </mj-text>
                     </mj-column>
                 </mj-group>

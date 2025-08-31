@@ -1,7 +1,8 @@
 import { Location, capitalise } from 'fizz-kidz'
 import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { FC, PropsWithChildren, useState } from 'react'
+import type { FC, PropsWithChildren } from 'react'
+import { useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'
 import { useStickyNavbar } from '@components/root/use-sticky-navbar'
@@ -25,7 +26,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
 import { Button as MyButton } from '@ui-components/button'
 
-import { LocationFilter } from '../location-filter/location-filter.context'
+import type { LocationFilter } from '../location-filter/location-filter.context'
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 import { DateNavigationContext } from './date-navigation.context'
 

@@ -1,11 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 
-import { GenerateInvitation, InvitationOption, getLocationAddress } from 'fizz-kidz'
+import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
+import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
-import puppeteer, { Browser } from 'puppeteer'
+import type { Browser } from 'puppeteer'
+import puppeteer from 'puppeteer'
 
 import chromium from '@sparticuz/chromium'
 
@@ -29,7 +31,7 @@ export async function generateInvitation(input: GenerateInvitation) {
             defaultViewport: chromium.defaultViewport,
             executablePath: await chromium.executablePath(),
             headless: true,
-            ignoreHTTPSErrors: true,
+            acceptInsecureCerts: true,
         })
     }
     const [page] = await browser.pages()
@@ -38,6 +40,7 @@ export async function generateInvitation(input: GenerateInvitation) {
     const html = await fsPromise.readFile(path.resolve(__dirname, `./party-bookings/invitations/${htmlFile}`), 'utf8')
     const output = Mustache.render(html, {
         ...input,
+        childAge: addOrdinalSuffix(input.childAge),
         date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
         address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,

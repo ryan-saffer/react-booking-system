@@ -1,7 +1,9 @@
-import { Event, Location, ModuleNameMap, ObjectKeys, ScienceModule } from 'fizz-kidz'
-import { DateTime } from 'luxon'
+import type { Event, ScienceModule } from 'fizz-kidz'
+import { Location, ModuleNameMap, ObjectKeys } from 'fizz-kidz'
+import type { DateTime } from 'luxon'
 import React from 'react'
-import { Control, Controller, UseFieldArrayReturn, useFormContext } from 'react-hook-form'
+import type { Control, UseFieldArrayReturn } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 import AddIcon from '@mui/icons-material/Add'
 import LaunchIcon from '@mui/icons-material/Launch'
@@ -246,8 +248,8 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     errors.contactEmail && errors.contactEmail.type === 'pattern'
                                         ? 'Email is not valid'
                                         : errors.contactEmail?.type === 'required'
-                                        ? 'Contact email is required'
-                                        : ''
+                                          ? 'Contact email is required'
+                                          : ''
                                 }
                                 label="Contact email"
                                 fullWidth
@@ -376,8 +378,12 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                         time: errors.slots?.[idx]?.endTime ? true : false,
                                     }}
                                     helperText={{
-                                        date: errors.slots?.[idx]?.endDate ? 'End date is required' : '',
-                                        time: errors.slots?.[idx]?.endTime ? 'End time is required' : '',
+                                        date: errors.slots?.[idx]?.endDate
+                                            ? errors.slots?.[idx]?.endDate?.message || 'End date is required'
+                                            : '',
+                                        time: errors.slots?.[idx]?.endTime
+                                            ? errors.slots?.[idx]?.endTime?.message || 'End time is required'
+                                            : '',
                                     }}
                                     disabled={disabled}
                                 />

@@ -1,7 +1,8 @@
-import { Booking, getLocationAddress, getPartyEndDate } from 'fizz-kidz'
+import type { Booking } from 'fizz-kidz'
+import { getLocationAddress, getPartyEndDate } from 'fizz-kidz'
 
-import { CalendarClient } from '../../google/CalendarClient'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { CalendarClient } from '../../google/CalendarClient'
 import { throwTrpcError } from '../../utilities'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {

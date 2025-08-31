@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase-admin/firestore'
+import type { Booking, FirestoreBooking } from 'fizz-kidz'
 import {
-    Booking,
-    FirestoreBooking,
+    Location,
     capitalise,
     getApplicationDomain,
     getLocationAddress,
@@ -18,6 +18,7 @@ import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
+import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
@@ -120,10 +121,13 @@ export async function createPartyBooking(_booking: Booking) {
                     managerName: manager.name,
                     managerEmail: manager.email,
                     managerMobile: manager.mobile,
+                    managerObjectPronoun: manager.objectPronoun,
+                    managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
+                    canOrderCake: booking.type === 'studio' && booking.location !== Location.CHELTENHAM,
                 },
                 { replyTo: manager.email }
             )
@@ -135,4 +139,16 @@ export async function createPartyBooking(_booking: Booking) {
             )
         }
     }
+
+    // analytics
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('birthday-party-booking', {
+        distinct_id: booking.parentEmail,
+        location: booking.location,
+        length: booking.partyLength,
+        includesFood: booking.includesFood,
+        type: booking.type,
+        childAge: booking.childAge,
+        date: booking.dateTime.toDate().toISOString(),
+    })
 }

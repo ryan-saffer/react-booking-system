@@ -1,5 +1,5 @@
 import { Result } from 'antd'
-import { AfterSchoolEnrolment, Service } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 

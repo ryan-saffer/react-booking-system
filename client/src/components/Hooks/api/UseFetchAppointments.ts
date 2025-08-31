@@ -1,5 +1,6 @@
-import { AcuityTypes } from 'fizz-kidz'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import type { AcuityTypes } from 'fizz-kidz'
+import type { Dispatch, SetStateAction } from 'react'
+import { useEffect, useState } from 'react'
 
 import { trpc } from '@utils/trpc'
 
@@ -17,7 +18,7 @@ const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
 
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
 
     useEffect(() => {
         const fetchClients = (data: AcuityTypes.Client.FetchAppointmentsParams) => {

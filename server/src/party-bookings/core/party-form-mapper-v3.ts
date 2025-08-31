@@ -1,26 +1,15 @@
-import {
-    Additions,
-    AdditionsDisplayValuesMap,
-    AdditionsDisplayValuesMapPrices,
-    Booking,
-    CreationDisplayValuesMap,
-    Creations,
-    getQuestionValue,
-    Location,
-    PaperFormResponse,
-    PartyFormV3,
-    PFProduct,
-} from 'fizz-kidz'
-import { AdditionsFormMap } from './utils.party'
+import type { Booking } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, getKeyByValue, Location, ObjectEntries, type PartyFormV3 } from 'fizz-kidz'
 import { logger } from 'firebase-functions/v2'
+import type { PaperformSubmission } from '@/paperforms/core/paperform-client'
 
 export class PartyFormMapperV3 {
-    responses: PaperFormResponse<PartyFormV3>
+    responses: PaperformSubmission<PartyFormV3>
     bookingId: string
 
-    constructor(responses: PaperFormResponse<PartyFormV3>) {
+    constructor(responses: PaperformSubmission<PartyFormV3>) {
         this.responses = responses
-        this.bookingId = getQuestionValue(this.responses, 'id')
+        this.bookingId = this.responses.getFieldValue('id')
     }
 
     mapToBooking(type: Booking['type'], location: Location) {
@@ -30,78 +19,96 @@ export class PartyFormMapperV3 {
         // in-store parties use a multiple choice, while mobile use a dropdown
         booking['numberOfChildren'] =
             type === 'mobile'
-                ? getQuestionValue(this.responses, 'number_of_children_mobile')
-                : getQuestionValue(this.responses, 'number_of_children_in_store')
+                ? this.responses.getFieldValue('number_of_children_mobile')
+                : this.responses.getFieldValue('number_of_children_in_store')
 
-        // additions and menu are only asked to in-store parties
+        // additions are only asked to in-store parties
         if (type !== 'mobile') {
             booking = {
                 ...booking,
-                menu: getQuestionValue(this.responses, 'menu'),
-                ...this.getAdditions(),
+                ...this.getFoodPackage(),
+                ...this.#getAdditionsAsPartialBooking(),
+                cake: this.getCake(),
             }
         }
 
         return booking
     }
 
-    getCreationDisplayValues() {
-        const creationKeys = this.getCreations()
+    getCreationDisplayValues(type: Booking['type']) {
+        const creationKeys = this.getCreations(type)
         const creations: string[] = []
         creationKeys.forEach((creation) => {
-            creations.push(CreationDisplayValuesMap[creation])
+            creations.push(CREATIONS[creation])
         })
         return creations
     }
 
     getAdditionDisplayValues(showPrices: boolean) {
-        const additionKeys = getQuestionValue(this.responses, 'additions')
+        const additions = this.#mapAdditionFormValuesToAdditionKeys()
         const displayValues: string[] = []
-        additionKeys.forEach((addition) => {
-            if (this.isValidAddition(addition)) {
-                if (showPrices) {
-                    displayValues.push(AdditionsDisplayValuesMapPrices[addition])
-                } else {
-                    displayValues.push(AdditionsDisplayValuesMap[addition])
-                }
-            }
-        })
+        for (const addition of additions) {
+            displayValues.push(
+                showPrices ? ADDITIONS[addition].displayValueWithPrice : ADDITIONS[addition].displayValue
+            )
+        }
 
-        const partyPackKeys = this.mapProductsToSku(getQuestionValue(this.responses, 'party_packs'))
-        partyPackKeys.forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                displayValues.push(AdditionsDisplayValuesMapPrices[pack])
-            }
-        })
         return displayValues
     }
 
     /**
      * Returns an array of SKUs for all selected creations.
      */
-    private getCreations() {
-        const creationSkus = [
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'glam_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'science_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'slime_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'safari_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'unicorn_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'tie_dye_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'taylor_swift_creations')),
-            ...this.mapProductsToSku(getQuestionValue(this.responses, 'expert_creations')),
-        ]
+    private getCreations(type: Booking['type']) {
+        /**
+         * Currently creations are separated in PaperForms. This is for the case that a creation
+         * is offered only in-studio. To remove it as an option, just remove it from the '_mobile' version in Paperform and done.
+         * It means maintaining PaperForm is a bit more effort... but worth it for these cases.
+         */
+        const creationKeys =
+            type === 'studio'
+                ? ([
+                      'glam_creations',
+                      'science_creations',
+                      'slime_creations',
+                      'fairy_creations',
+                      'fluid_bear_creations',
+                      'safari_creations',
+                      'unicorn_creations',
+                      'tie_dye_creations',
+                      'taylor_swift_creations',
+                  ] as const)
+                : ([
+                      'glam_creations_mobile',
+                      'science_creations_mobile',
+                      'slime_creations_mobile',
+                      'fairy_creations_mobile',
+                      'fluid_bear_creations_mobile',
+                      'safari_creations_mobile',
+                      'unicorn_creations_mobile',
+                      'tie_dye_creations_mobile',
+                      'taylor_swift_creations_mobile',
+                  ] as const)
 
-        // filter out any duplicate creation selections
-        const filteredSkus = [...new Set(creationSkus)]
+        const creations = creationKeys.reduce(
+            (acc, curr) => [...acc, ...this.responses.getFieldValue(curr)],
+            [] as string[]
+        )
 
-        return filteredSkus.map((creation) => {
-            if (this.isValidCreation(creation)) {
-                return creation
+        const creationSkus = creations.map((creation) => {
+            const creationSku = getKeyByValue(CREATIONS, creation)
+            if (creationSku) {
+                return creationSku
             } else {
-                logger.log(`invalid creation SKU found: ${creation}`)
-                throw new Error(`invalid creation SKU found: ${creation}`)
+                logger.log(`Invalid creation form value found: '${creation}'`)
+                throw new Error(`Invalid creation form value found: '${creation}'`)
             }
         })
+
+        // filter out any duplicate creation selections
+        const uniqueSkus = [...new Set(creationSkus)]
+
+        return uniqueSkus
     }
 
     /**
@@ -109,20 +116,25 @@ export class PartyFormMapperV3 {
      * shared across both in-store and mobile
      */
     private getSharedQuestions(type: Booking['type'], location: Location) {
-        const creations = this.getCreations()
+        const creations = this.getCreations(type)
 
         const booking: Partial<Booking> = {
-            location: type === 'studio' ? this.mapLocation(getQuestionValue(this.responses, 'location')) : location, // mobile party forms have 'location=mobile', so this fixes it
-            parentFirstName: getQuestionValue(this.responses, 'parent_first_name'),
-            parentLastName: getQuestionValue(this.responses, 'parent_last_name'),
-            childName: getQuestionValue(this.responses, 'child_name'),
-            childAge: getQuestionValue(this.responses, 'child_age'),
+            location: type === 'studio' ? this.mapLocation(this.responses.getFieldValue('location')) : location, // mobile party forms have 'location=mobile', so this fixes it
+            parentFirstName: this.responses.getFieldValue('parent_first_name'),
+            parentLastName: this.responses.getFieldValue('parent_last_name'),
+            childName: this.responses.getFieldValue('child_name'),
+            childAge: this.responses.getFieldValue('child_age'),
             creation1: creations.length > 0 ? creations[0] : undefined,
             creation2: creations.length > 1 ? creations[1] : undefined,
             creation3: creations.length > 2 ? creations[2] : undefined,
-            funFacts: getQuestionValue(this.responses, 'fun_facts'),
-            questions: getQuestionValue(this.responses, 'questions'),
-            ...this.getPartyPacks(),
+            funFacts: this.responses.getFieldValue('fun_facts'),
+            questions: this.responses.getFieldValue('questions'),
+            takeHomeBags: this.responses
+                .getFieldValue('take_home_bags')
+                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
+            products: this.responses
+                .getFieldValue('products')
+                .reduce((acc, { SKU, quantity }) => ({ ...acc, [SKU]: quantity }), {}),
         }
 
         return booking
@@ -141,37 +153,111 @@ export class PartyFormMapperV3 {
         return (<any>Object).values(Location).includes(location)
     }
 
-    private mapProductsToSku = (products: PFProduct[]) =>
-        products.map((it) => (it.SKU.includes('_') ? it.SKU.substring(0, it.SKU.indexOf('_')) : it.SKU))
+    private getFoodPackage() {
+        // paperform limits this question to only one option allowed, and questions is required,
+        // so just get the first item.
+        const value = this.responses.getFieldValue('food_package')
+        if (value === 'Include the food package') {
+            return { includesFood: true }
+        }
+        if (value === 'I will self-cater the party') {
+            return { includesFood: false }
+        }
 
-    private isValidCreation(creation: string): creation is Creations {
-        return Object.keys(Creations).includes(creation)
+        throw new Error(`Invalid response found for food package question: '${value}'`)
     }
 
-    private getAdditions() {
-        const additions = getQuestionValue(this.responses, 'additions')
-        additions.forEach((addition, index, array) => (array[index] = AdditionsFormMap[addition]))
-        const booking: Partial<Booking> = {}
-        additions.forEach((addition) => {
-            if (this.isValidAddition(addition)) {
-                booking[addition] = true
+    /**
+     * Paperform just returns the additional food options as string matching their display value on the form.
+     * This will lookup each addition and return the key, or throw an error if it can't find one.
+     */
+    #mapAdditionFormValuesToAdditionKeys() {
+        const formValues = this.responses.getFieldValue('additions')
+        const additions = formValues.map((formValue) => {
+            const addition = ObjectEntries(ADDITIONS).find(
+                ([, additionKey]) => formValue === additionKey.displayValueWithPrice
+            )?.[0]
+            if (!addition) {
+                throw new Error(`Could not find addition that matches chosen form value of '${formValue}'`)
             }
+            return addition
+        })
+
+        return additions
+    }
+
+    #getAdditionsAsPartialBooking() {
+        const booking: Partial<Booking> = {}
+        this.#mapAdditionFormValuesToAdditionKeys().forEach((addition) => {
+            booking[addition] = true
         })
 
         return booking
     }
 
-    private isValidAddition(addition: string): addition is Additions {
-        return Object.keys(Additions).includes(addition)
+    getCake(): Booking['cake'] {
+        const cake = this.responses.getFieldValue('cake')
+        if (cake !== 'I will bring my own cake') {
+            const cakeFlavours = this.responses.getFieldValue('cake_flavours')
+            const cakeMessage = this.responses.getFieldValue('cake_message')
+
+            return {
+                selection: cake,
+                flavours: cakeFlavours,
+                served: this.getCakeServed(),
+                candles: this.getCakeCandles(),
+                size: this.getCakeSize(),
+                ...(cakeMessage && { message: cakeMessage }),
+            }
+        } else {
+            return
+        }
     }
 
-    private getPartyPacks() {
-        const booking: Partial<Booking> = {}
-        this.mapProductsToSku(getQuestionValue(this.responses, 'party_packs')).forEach((pack) => {
-            if (this.isValidAddition(pack)) {
-                booking[pack] = true
+    // using this function assumes they have selected a cake
+    private getCakeSize() {
+        const size = this.responses.getFieldValue('cake_size')
+        switch (size) {
+            case 'small_cake':
+                return 'Small (12-15 serves)'
+            case 'medium_cake':
+                return 'Medium (20-25 serves)'
+            case 'large_cake':
+                return 'Large (30-35 serves)'
+            default: {
+                const exhaustiveCheck: never = size
+                throw new Error(`Unhandled cake size in getCakeSize(): '${exhaustiveCheck}'`)
             }
-        })
-        return booking
+        }
+    }
+
+    private getCakeServed() {
+        const served = this.responses.getFieldValue('cake_served')
+        switch (served) {
+            case 'cup':
+                return 'Ice-cream cup with spoon'
+            case 'waffle_cones':
+                return 'Waffle Cones'
+            case 'bring_own_bowls':
+                return 'Bring my own serving of bowls/cones'
+            default: {
+                const exhaustiveCheck: never = served
+                throw new Error(`Unhandled cake served in getCakeServed(): '${exhaustiveCheck}'`)
+            }
+        }
+    }
+
+    private getCakeCandles() {
+        const cakeCandles = this.responses.getFieldValue('cake_candles')
+        switch (cakeCandles) {
+            case 'include_candles':
+                return 'Include candles'
+            case 'bring_own_candles':
+                return 'Bring my own candles'
+            default: {
+                const exhaustiveCheck: never = cakeCandles
+                throw new Error(`Unhandled cake candles in getCakeCandles(): '${exhaustiveCheck}'`)
+            }
+        }
     }
 }

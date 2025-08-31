@@ -1,17 +1,55 @@
 import type { CreateUser, Timesheet, User } from '../staff/core/timesheets/timesheets.types'
 
 export class SlingClient {
-    async #request(path: string, method: 'GET' | 'POST', data?: any) {
-        const fetchResult = await fetch(`https://api.getsling.com/v1/${path}`, {
+    #authToken: string = ''
+
+    async #getAuthToken() {
+        const response = await fetch(`https://api.getsling.com/account/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: 'talia@fizzkidz.com.au',
+                password: process.env.SLING_PASSWORD ?? '',
+                captchaResponse: null,
+                snsToken: null,
+                snsPlatform: null,
+            }),
+        })
+
+        const auth = response.headers.get('authorization')
+        if (!auth) {
+            throw new Error('Unable to find auth header in sling login response')
+        }
+
+        this.#authToken = auth
+    }
+
+    async #request(path: string, method: 'GET' | 'POST', data?: any, retryCount = 0): Promise<any> {
+        if (!this.#authToken) {
+            await this.#getAuthToken()
+        }
+        const response = await fetch(`https://api.getsling.com/v1/${path}`, {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: process.env.SLING_API_KEY ?? '',
+                Authorization: this.#authToken,
             },
             ...(method === 'POST' && { body: JSON.stringify(data) }),
         })
-        const result = await fetchResult.json()
-        return result
+
+        if (response.status === 401 && retryCount === 0) {
+            await this.#getAuthToken()
+            return this.#request(path, method, data, retryCount++)
+        }
+
+        if (response.ok) {
+            const result = await response.json()
+            return result
+        } else {
+            throw new Error(`Error calling sling api: '${response.statusText}'`)
+        }
     }
 
     #get(path: string) {

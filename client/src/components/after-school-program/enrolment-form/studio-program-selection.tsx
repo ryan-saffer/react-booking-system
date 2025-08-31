@@ -1,4 +1,5 @@
-import { AcuityTypes, Location, capitalise } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { Location, capitalise } from 'fizz-kidz'
 import { MessageCircleWarning } from 'lucide-react'
 
 import Loader from '@components/Shared/Loader'

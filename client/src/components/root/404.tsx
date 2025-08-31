@@ -11,5 +11,5 @@ export function _404() {
         }
     }
 
-    return <ErrorScreen label="Something went wrong" text="Sorry, something broke..." />
+    return <ErrorScreen showRefresh label="Something went wrong" text="Sorry, something broke. Try refreshing the page." />
 }

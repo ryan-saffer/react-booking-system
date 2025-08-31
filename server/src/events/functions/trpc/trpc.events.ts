@@ -1,9 +1,8 @@
-import { Event } from 'fizz-kidz'
-
-import { authenticatedProcedure, router } from '../../../trpc/trpc'
-import { CreateEvent, createEvent } from '../../core/create-event'
-import { deleteEvent } from '../../core/delete-event'
-import { updateEvent } from '../../core/update-event'
+import type { Event } from 'fizz-kidz'
+import { authenticatedProcedure, router } from '@/trpc/trpc'
+import { createEvent, type CreateEvent } from '@/events/core/create-event'
+import { updateEvent } from '@/events/core/update-event'
+import { deleteEvent } from '@/events/core/delete-event'
 
 export const eventsRouter = router({
     createEvent: authenticatedProcedure

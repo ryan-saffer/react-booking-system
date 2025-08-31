@@ -1,13 +1,14 @@
 /// <reference lib="dom" />
-import { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
+import type { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
 
-import { Location } from '../core/location'
-import { Additions } from './Additions'
-import { CakeFlavours } from './CakeFlavours'
-import { Creations } from './Creations'
+import type { Location } from '../core/location'
+import type { CakeFlavours } from './CakeFlavours'
+import type { Addition } from './additions'
+import type { Creation } from './creations'
+import type { ProductType } from './products'
+import type { TakeHomeBagType } from './take-home-bags'
 
-type AdditionKeys = keyof typeof Additions
-type AdditionKeyValues = { [key in AdditionKeys]: boolean }
+type AdditionKeyValues = Record<Addition, boolean>
 
 export interface BaseBooking extends AdditionKeyValues {
     eventId?: string
@@ -23,11 +24,10 @@ export interface BaseBooking extends AdditionKeyValues {
     address: string
     numberOfChildren: string
     notes: string
-    creation1: Creations | undefined
-    creation2: Creations | undefined
-    creation3: Creations | undefined
+    creation1: Creation | undefined
+    creation2: Creation | undefined
+    creation3: Creation | undefined
     menu: 'standard' | 'glutenFree' | 'vegan' | undefined
-    cake: string
     cakeFlavour: CakeFlavours | undefined
     questions: string
     funFacts: string
@@ -35,6 +35,16 @@ export interface BaseBooking extends AdditionKeyValues {
     sendConfirmationEmail: boolean
     oldPrices: boolean
     includesFood: boolean
+    cake?: {
+        selection: string
+        flavours: string[]
+        size: string
+        served: string // bowls + spoon, waffle cones, bring their own
+        candles: string
+        message?: string
+    }
+    takeHomeBags?: Partial<Record<TakeHomeBagType, number>>
+    products?: Partial<Record<ProductType, number>>
 }
 
 // separates date and time into separate values, for better use in forms
@@ -101,6 +111,10 @@ export const FormBookingFields: FormBookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
+    unicornFizzPartyPack: 'unicornFizzPartyPack',
+    takeHomeBags: 'takeHomeBags',
+    products: 'products',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -150,4 +164,8 @@ export const BookingFields: BookingKeys = {
     sendConfirmationEmail: 'sendConfirmationEmail',
     oldPrices: 'oldPrices',
     includesFood: 'includesFood',
+    dinosaurFizzPartyPack: 'dinosaurFizzPartyPack',
+    unicornFizzPartyPack: 'unicornFizzPartyPack',
+    takeHomeBags: 'takeHomeBags',
+    products: 'products',
 }

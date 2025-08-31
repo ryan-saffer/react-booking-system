@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
 
 import styles from './Creations.module.css'
-import { creations, taylorSwift } from './creationMarkdown'
+import { creations, slimeActivator, taylorSwift } from './creationMarkdown'
 
 export const CreationsPage = () => {
     return (
@@ -16,6 +16,14 @@ export const CreationsPage = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Markdown className={styles.markdown}>{taylorSwift}</Markdown>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion TransitionProps={{ unmountOnExit: true }} className="mb-8">
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography fontWeight={600}>{slimeActivator.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Markdown className={styles.markdown}>{slimeActivator.markdown}</Markdown>
                 </AccordionDetails>
             </Accordion>
             {creations.map((creation, idx) => (

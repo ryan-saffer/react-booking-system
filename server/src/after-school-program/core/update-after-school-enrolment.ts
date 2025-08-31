@@ -1,4 +1,4 @@
-import { UpdateAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import type { UpdateAfterSchoolEnrolmentParams } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
@@ -12,13 +12,20 @@ export async function updateAfterSchoolEnrolment(input: UpdateAfterSchoolEnrolme
         const existingEnrolment = await DatabaseClient.getAfterSchoolEnrolment(id)
         if (existingEnrolment.continuingWithTerm !== 'no') {
             const mailClient = await MailClient.getInstance()
-            await mailClient.sendEmail('notContinuingNotification', 'bonnie.c@fizzkidz.com.au', {
-                parentName: `${existingEnrolment.parent.firstName} ${existingEnrolment.parent.lastName}`,
-                parentEmail: existingEnrolment.parent.email,
-                parentMobile: existingEnrolment.parent.phone,
-                childName: existingEnrolment.child.firstName,
-                program: existingEnrolment.className,
-            })
+            await mailClient.sendEmail(
+                'notContinuingNotification',
+                'bonnie@fizzkidz.com.au',
+                {
+                    parentName: `${existingEnrolment.parent.firstName} ${existingEnrolment.parent.lastName}`,
+                    parentEmail: existingEnrolment.parent.email,
+                    parentMobile: existingEnrolment.parent.phone,
+                    childName: existingEnrolment.child.firstName,
+                    program: existingEnrolment.className,
+                },
+                {
+                    bcc: ['kym@fizzkidz.com.au'],
+                }
+            )
         }
     }
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table>
+        <colgroup>
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 75%;">
+        </colgroup>
+
+        <tr>
+            <td><strong>First name:</strong></td>
+            <td>{{firstName}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Last name:</strong></td>
+            <td>{{lastName}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Email:</strong></td>
+            <td>{{email}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Phone number:</strong></td>
+            <td>{{contactNumber}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Which suburb do you want to open a studio in? :</strong></td>
+            <td>{{suburb}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>State:</strong></td>
+            <td>{{state}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>Interest level:</strong></td>
+            <td>{{interest}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>What interests you about Fizz Kidz? Tell us about you.</strong></td>
+            <td>{{enquiry}}</td>
+        </tr>
+
+        <tr>
+            <td><strong>How did you hear about us:</strong></td>
+            <td>{{reference}}</td>
+        </tr>
+
+    </table>
+</body>
+
+</html>

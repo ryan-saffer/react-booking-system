@@ -1,5 +1,6 @@
-import { Location } from '../core/location'
-import { Booking } from '../partyBookings/booking'
+import { Location, type LocationOrTest } from '../core/location'
+import type { Booking } from '../partyBookings/booking'
+import { capitalise } from './stringUtilities'
 
 export function getLocationAddress(location: Location) {
     switch (location) {
@@ -9,6 +10,8 @@ export function getLocationAddress(location: Location) {
             return '273 Bay Rd, Cheltenham VIC 3192'
         case Location.ESSENDON:
             return '75 Raleigh St, Essendon VIC 3040'
+        case Location.KINGSVILLE:
+            return '238 Somerville Rd, Kingsville, VIC 3012'
         case Location.MALVERN:
             return '20 Glenferrie Rd, Malvern VIC 3144'
         default: {
@@ -60,10 +63,10 @@ export function getCloudFunctionsDomain(env: 'prod' | 'dev') {
         : 'https://australia-southeast1-booking-system-6435d.cloudfunctions.net'
 }
 
-export function getFunctionEmulatorDomain(env: 'prod' | 'dev') {
+export function getFunctionEmulatorDomain(env: 'prod' | 'dev', includeHost: boolean = true) {
     return env === 'prod'
-        ? 'http://127.0.0.1:5001/bookings-prod/australia-southeast1'
-        : 'http://127.0.0.1:5001/booking-system-6435d/australia-southeast1'
+        ? `${includeHost ? 'http://127.0.0.1:5001/' : ''}bookings-prod/australia-southeast1`
+        : `${includeHost ? 'http://127.0.0.1:5001/' : ''}booking-system-6435d/australia-southeast1`
 }
 
 export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {
@@ -104,6 +107,8 @@ export function getPictureOfStudioUrl(location: Location) {
             return 'https://drive.google.com/file/d/1PLiZZEqr2yGBd-ipLixzfLkh5FkrO1oG/view?usp=sharing'
         case Location.ESSENDON:
             return 'https://drive.google.com/file/d/1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g/view?usp=sharing'
+        case Location.KINGSVILLE:
+            return 'https://drive.google.com/file/d/1aP9aFANjEhiaal8l7rjouWZhdUPfv5ts/view?usp=sharing'
         case Location.MALVERN:
             return 'https://drive.google.com/file/d/1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh/view?usp=sharing'
         default: {
@@ -121,6 +126,8 @@ export function getReviewUrl(location: Location) {
             return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo'
         case Location.ESSENDON:
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
+        case Location.KINGSVILLE:
+            return 'https://g.page/r/CRQItX8-YnBFEBM/review'
         case Location.MALVERN:
             return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
         default: {
@@ -128,4 +135,12 @@ export function getReviewUrl(location: Location) {
             throw new Error(`Unhandled location in getReviewUrl: '${exhaustiveCheck}'`)
         }
     }
+}
+
+export function studioNameAndAddress(studio: LocationOrTest) {
+    if (studio === 'test') {
+        return 'TEST'
+    }
+
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
 }

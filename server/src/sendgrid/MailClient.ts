@@ -7,16 +7,23 @@ import Mustache from 'mustache'
 import type { MailService } from '@sendgrid/mail'
 
 import { env } from '../init'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
 import type { Emails } from './types'
 
 type Options = {
+    /**
+     * Should a copy of this email be sent to 'bookings@fizzkidz.com.au'?
+     *
+     * @default true
+     */
+    bccBookings?: boolean
     from?: {
         name: string
         email: string
     }
     subject?: string
     replyTo?: string
+    bcc?: string[]
 }
 
 export class MailClient {
@@ -51,21 +58,38 @@ export class MailClient {
         throw new Error('Mail client not initialised')
     }
 
-    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], options: Options = {}) {
+    async sendEmail<T extends keyof Emails>(email: T, to: string, values: Emails[T], _options: Options = {}) {
+        const defaultOptions = { bccBookings: true, bcc: [] } satisfies Options
+        let options = { ...defaultOptions, ..._options }
+
+        // if the email is being sent to bookings@fizz, and `bccBookings` is set to true, it will fail.
+        // fix this here in case.
+        if (options.bccBookings && to === 'bookings@fizzkidz.com.au') {
+            options = { ...options, bccBookings: false }
+        }
+
         const { emailInfo, template, useMjml } = this._getInfo(email, to, options)
         const html = await this._generateHtml(template, values, useMjml)
+
+        // no need to bcc people in dev environment.
+        // this only ignores those dynamically bcc'd and bookings@fizz. Those hardcoded in _getInfo() will still be sent.
         if (env === 'prod') {
-            emailInfo.bcc = [...(emailInfo.bcc || []), 'bookings@fizzkidz.com.au']
+            emailInfo.bcc = [
+                ...(emailInfo.bcc || []),
+                ...options.bcc,
+                ...(options.bccBookings ? ['bookings@fizzkidz.com.au'] : []),
+            ]
         }
+
         await this.#sgMail.send({ ...emailInfo, html })
     }
 
-    private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean): Promise<string> {
+    private async _generateHtml(template: string, values: Record<string, unknown>, useMjml: boolean) {
         const mjml = fs.readFileSync(path.resolve(__dirname, `sendgrid/mjml/${template}`), 'utf-8')
         const output = Mustache.render(mjml, values)
         if (useMjml) {
             const mjml2html = await import('mjml')
-            const mjmlOutput = mjml2html.default(output)
+            const mjmlOutput = mjml2html.default(output, { keepComments: false })
             if (mjmlOutput.errors.length > 0) {
                 mjmlOutput.errors.forEach((error) => {
                     logger.log(error.formattedMessage)
@@ -109,6 +133,34 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'holiday_program_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'holidayProgramCancellation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Holiday Program Cancelled',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'holiday_program_cancellation.mjml',
+                    useMjml: true,
+                }
+            case 'kingsvilleOpeningConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Kingsville open day booking confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'kingsville_opening_confirmation.mjml',
                     useMjml: true,
                 }
             case 'afterSchoolEnrolmentConfirmation':
@@ -175,7 +227,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -190,7 +241,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'bookings@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au', 'bonnie.c@fizzkidz.com.au'],
                         subject: subject || 'Fizz Kidz Booking Confirmation',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -205,7 +255,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'program@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Science incursion is coming up!',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -220,7 +269,6 @@ export class MailClient {
                             name: 'Fizz Kidz',
                             email: 'programs@fizzkidz.com.au',
                         },
-                        bcc: ['programs@fizzkidz.com.au'],
                         subject: subject || 'Submission Recieved',
                         replyTo: replyTo || 'programs@fizzkidz.com.au',
                     },
@@ -270,34 +318,6 @@ export class MailClient {
                     template: 'party_form_filled_in_again.html',
                     useMjml: false,
                 }
-            case 'partyFormFilledInAgainV2':
-                return {
-                    emailInfo: {
-                        to,
-                        from: {
-                            name: 'Fizz Kidz',
-                            email: 'info@fizzkidz.com.au',
-                        },
-                        subject: subject || 'Party form filled in again!',
-                        replyTo: replyTo || 'info@fizzkidz.com.au',
-                    },
-                    template: 'party_form_filled_in_again_v2.html',
-                    useMjml: false,
-                }
-            case 'partyFormFilledInAgainV3':
-                return {
-                    emailInfo: {
-                        to,
-                        from: {
-                            name: 'Fizz Kidz',
-                            email: 'info@fizzkidz.com.au',
-                        },
-                        subject: subject || 'Party form filled in again!',
-                        replyTo: replyTo || 'info@fizzkidz.com.au',
-                    },
-                    template: 'party_form_filled_in_again_v3.html',
-                    useMjml: false,
-                }
             case 'tooManyCreationsChosen':
                 return {
                     emailInfo: {
@@ -340,6 +360,20 @@ export class MailClient {
                     template: 'party_pack_notification.html',
                     useMjml: false,
                 }
+            case 'takeHomeNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Take-home items ordered!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'take_home_notification.html',
+                    useMjml: false,
+                }
             case 'partyFormConfirmation':
                 return {
                     emailInfo: {
@@ -352,34 +386,6 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'party_form_completed.mjml',
-                    useMjml: true,
-                }
-            case 'partyFormConfirmationV2':
-                return {
-                    emailInfo: {
-                        to,
-                        from: from || {
-                            name: 'Fizz Kidz',
-                            email: 'bookings@fizzkidz.com.au',
-                        },
-                        subject: subject || 'Your Party Details',
-                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
-                    },
-                    template: 'party_form_completed_v2.mjml',
-                    useMjml: true,
-                }
-            case 'partyFormConfirmationV3':
-                return {
-                    emailInfo: {
-                        to,
-                        from: from || {
-                            name: 'Fizz Kidz',
-                            email: 'bookings@fizzkidz.com.au',
-                        },
-                        subject: subject || 'Your Party Details',
-                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
-                    },
-                    template: 'party_form_completed_v3.mjml',
                     useMjml: true,
                 }
             case 'partyFeedback':
@@ -400,7 +406,6 @@ export class MailClient {
                 return {
                     emailInfo: {
                         to,
-                        bcc: ['people@fizzkidz.com.au'],
                         from: {
                             name: 'Fizz Kidz',
                             email: 'people@fizzkidz.com.au',
@@ -507,6 +512,244 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'party_form_reminder.mjml',
+                    useMjml: true,
+                }
+            case 'accountInvite':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Portal Invitation',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'account_invite.mjml',
+                    useMjml: true,
+                }
+            case 'websiteContactFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_contact_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteContactFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Contact Form Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Contact Form Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_contact_form_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'websiteEventFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_activations_and_events_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteEventFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Event Form Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Event Form Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_activations_and_events_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'websiteIncurionFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_incursion_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteIncurionFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Incursion Form Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Incursion Form Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_incursion_form_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'websiteCareersFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Application Recieved!',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'website_careers_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteCareersFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Job Application',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Job Application',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_careers_form_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'websitePartyFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_party_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websitePartyFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Party Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Party Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_party_form_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'websiteFranchisingFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'info@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'info@fizzkidz.com.au',
+                    },
+                    template: 'website_franchising_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteFranchisingFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Franchising Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Franchsing Enquiry Recieved',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_franchising_form_to_fizz.html',
+                    useMjml: false,
+                }
+            case 'cakeNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Cake Ordered',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'cake_notification.html',
+                    useMjml: false,
+                }
+            case 'takeHomeBagNotification':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'no-reply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Fizz Kidz Take Home Bags Ordered',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'take_home_bag_notification.html',
+                    useMjml: false,
+                }
+            case 'playLabBookingConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Play Lab Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'play_lab_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'playLabCancellation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Play Lab Session Cancelled',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'play_lab_cancellation.mjml',
                     useMjml: true,
                 }
             default: {

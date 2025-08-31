@@ -1,9 +1,7 @@
-import { ReactNode } from "react";
+import type { ReactNode } from 'react'
 
-import Firebase, { FirebaseContext } from ".";
+import Firebase, { FirebaseContext } from '.'
 
-export function FirebaseProvider({children}:{children: ReactNode}) {
-    return <FirebaseContext.Provider value={new Firebase()}>
-        {children}
-    </FirebaseContext.Provider>
+export function FirebaseProvider({ children }: { children: ReactNode }) {
+    return <FirebaseContext.Provider value={new Firebase()}>{children}</FirebaseContext.Provider>
 }

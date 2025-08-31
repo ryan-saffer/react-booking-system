@@ -19,7 +19,7 @@ const Unauthorised: React.FC<Props> = () => {
                             Sorry, you are not authorised to access this page.
                             <br />
                             <br />
-                            If you think this is a mistake, be sure you have selected a studio on the top right.
+                            If you think this is a mistake, make sure you have selected a studio on the top right.
                         </p>
                     }
                 />

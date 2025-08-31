@@ -8,9 +8,10 @@ export interface Appointment {
     classID: number
     type: string
     price: string
-    labels: Label[]
+    labels?: Label[]
     forms: Form[]
     notes: string
+    calendarID: number
     calendar: string
     paid: 'yes' | 'no'
     location: string
@@ -71,6 +72,10 @@ export type Class = {
     slotsAvailable: number
     time: string
     appointmentTypeID: number
+    name: string
+    description: string
+    price: string
+    duration: number
 }
 
 export type Calendar = {

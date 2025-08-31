@@ -1,4 +1,4 @@
-import { Booking, GenerateInvitation, Location } from 'fizz-kidz'
+import type { Booking, GenerateInvitation, Location } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'

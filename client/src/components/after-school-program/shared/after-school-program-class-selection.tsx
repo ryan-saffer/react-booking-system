@@ -1,12 +1,18 @@
-import { AcuityTypes, Location } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+import { Location } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, FormControl, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Typography } from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material'
+import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
+import { Label } from '@ui-components/label'
+import { Switch } from '@ui-components/switch'
 import { trpc } from '@utils/trpc'
 
 import styles from './after-school-program-class-selection.module.css'
+
+const PREV_CLASSES_CACHE_KEY = 'show-previous-classes'
 
 type Props = {
     classRoute: string
@@ -16,7 +22,10 @@ type Props = {
 export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
     const navigate = useNavigate()
 
-    const nowRef = useRef(Date.now())
+    const [showPreviousClasses, setShowPreviousClasses] = useState(
+        (localStorage.getItem(PREV_CLASSES_CACHE_KEY) ?? 'false') === 'true'
+    )
+    const nowRef = useRef(showPreviousClasses ? 1704027600000 : Date.now())
 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<
         AcuityTypes.Api.AppointmentType | undefined
@@ -33,11 +42,17 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                   ]
                 : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
     })
-    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeId: selectedAppointmentType?.id || 0,
-        includeUnavailable: true,
-        minDate: nowRef.current,
-    })
+
+    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery(
+        {
+            appointmentTypeIds: selectedAppointmentType?.id ? [selectedAppointmentType.id] : [],
+            includeUnavailable: true,
+            minDate: nowRef.current,
+        },
+        {
+            enabled: !!selectedAppointmentType?.id,
+        }
+    )
 
     const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
         const id = e.target.value as number
@@ -117,6 +132,26 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                     </>
                 )}
                 {classRequired && selectedAppointmentType && loadingClasses && <Skeleton height={80} />}
+                {classRequired && selectedAppointmentType && (
+                    <div className="twp flex items-center space-x-2 self-end">
+                        <Switch
+                            id="past-classes"
+                            checked={showPreviousClasses}
+                            onCheckedChange={(checked) => {
+                                if (checked) {
+                                    nowRef.current = 1704027600000 // 01/01/24
+                                    setShowPreviousClasses(true)
+                                    localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'true')
+                                } else {
+                                    nowRef.current = Date.now()
+                                    setShowPreviousClasses(false)
+                                    localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'false')
+                                }
+                            }}
+                        />
+                        <Label htmlFor="past-classes">Show past classes</Label>
+                    </div>
+                )}
                 {(!classRequired || appointmentTypes?.length !== 0) && (
                     <Button
                         className={styles.submitButton}

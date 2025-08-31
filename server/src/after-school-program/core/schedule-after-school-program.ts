@@ -1,24 +1,16 @@
-import {
-    AcuityConstants,
-    AcuityTypes,
-    AcuityUtilities,
-    AfterSchoolEnrolment,
-    Location,
-    ScheduleAfterSchoolEnrolmentParams,
-    capitalise,
-    getApplicationDomain,
-    getLocationAddress,
-} from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment, Location, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, capitalise, getApplicationDomain, studioNameAndAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { StorageClient } from '../../firebase/StorageClient'
-import { SheetsClient } from '../../google/SheetsClient'
-import { projectId } from '../../init'
-import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwTrpcError } from '../../utilities'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { StorageClient } from '@/firebase/StorageClient'
+import { SheetsClient } from '@/google/SheetsClient'
+import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 const env = projectId === 'bookings-prod' ? 'prod' : 'dev'
 
@@ -67,7 +59,7 @@ export default async function scheduleAfterSchoolProgram(
     // schedule into all appointments of the program, along with the document id
     let appointments: AcuityTypes.Api.Appointment[]
     try {
-        const classes = await acuityClient.getClasses(input.appointmentTypeId, false, Date.now())
+        const classes = await acuityClient.getClasses([input.appointmentTypeId], false, Date.now())
         appointments = await Promise.all(
             classes.map((it) =>
                 acuityClient.scheduleAppointment({
@@ -94,6 +86,7 @@ export default async function scheduleAfterSchoolProgram(
         appointments: appointments.map((it) => it.id),
         price: appointments[0].price,
         status: 'active',
+        location: calendar.location as Location,
         continuingWithTerm: '',
         invoiceId: '',
         notes: '',
@@ -181,10 +174,9 @@ export default async function scheduleAfterSchoolProgram(
                                 })
                                 .toFormat('hh:mm a')}`
                     ),
-                    calendarName: calendar.location || 'Calendar Name',
-                    price: (parseInt(appointments[0].price) * appointments.length).toString(),
+                    price: (parseFloat(appointments[0].price) * appointments.length).toFixed(2),
                     location: input.inStudio
-                        ? getStudioLocation(AcuityUtilities.getStudioByCalendarId(input.calendarId))
+                        ? studioNameAndAddress(AcuityUtilities.getStudioByCalendarId(input.calendarId))
                         : calendar.description,
                     numberOfWeeks: appointments.length.toString(),
                 },
@@ -216,12 +208,17 @@ export default async function scheduleAfterSchoolProgram(
             logError(`unable to send parent portal email for enrolment with id: '${appointment.id}'`, err)
         }
     }
-}
 
-function getStudioLocation(studio: Location | 'test') {
-    if (studio === 'test') {
-        return 'TEST'
-    }
-
-    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
+    // analytics
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('after-school-program-enrolment', {
+        distinct_id: input.parent.email,
+        type: input.type,
+        inStudio: input.inStudio,
+        appointmentTypeId: input.appointmentTypeId,
+        calendarId: input.calendarId,
+        childAge: input.child.age,
+        childGrade: input.child.grade,
+        className: input.className,
+    })
 }

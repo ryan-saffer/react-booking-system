@@ -1,4 +1,5 @@
-import { FirestoreBooking, ObjectKeys, StandardEvent, WithId, capitalise } from 'fizz-kidz'
+import type { FirestoreBooking, StandardEvent, WithId } from 'fizz-kidz'
+import { ObjectKeys, capitalise } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 

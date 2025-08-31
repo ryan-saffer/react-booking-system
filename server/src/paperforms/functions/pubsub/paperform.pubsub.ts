@@ -1,24 +1,18 @@
-import { logger } from 'firebase-functions/v2'
-
-import { handleIncursionFormSubmission } from '../../../events/core/handle-incursion-form-submission'
-import { handlePartyFormSubmission } from '../../../party-bookings/core/handle-party-form-submission'
-import { handlePartyFormSubmissionV2 } from '../../../party-bookings/core/handle-party-form-submission-v2'
-import { handlePartyFormSubmissionV3 } from '../../../party-bookings/core/handle-party-form-submission-v3'
-import { handleOnboardingFormSubmission } from '../../../staff/core/onboarding/handle-onboarding-form-submission'
-import { onMessagePublished } from '../../../utilities'
+import { handleIncursionFormSubmission } from '@/events/core/handle-incursion-form-submission'
+import { handlePartyFormSubmission } from '@/party-bookings/core/handle-party-form-submission'
+import { handlePartyFormSubmissionV2 } from '@/party-bookings/core/handle-party-form-submission-v2'
+import { handleOnboardingFormSubmission } from '@/staff/core/onboarding/handle-onboarding-form-submission'
+import { logError, onMessagePublished } from '@/utilities'
 
 export const paperformPubSub = onMessagePublished('paperformSubmission', async (input) => {
     const { form, data } = input
 
     switch (form) {
         case 'party':
-            await handlePartyFormSubmission(data)
+            await handlePartyFormSubmission(data, input.charge)
             break
         case 'party-v2':
-            await handlePartyFormSubmissionV2(data)
-            break
-        case 'party-v3':
-            await handlePartyFormSubmissionV3(data)
+            await handlePartyFormSubmissionV2(data, input.charge)
             break
         case 'incursion':
             await handleIncursionFormSubmission(data)
@@ -28,7 +22,7 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
             break
         default: {
             const exhaustiveCheck: never = form
-            logger.error(`unrecognised form type: '${exhaustiveCheck}'`)
+            logError(`unrecognised form type: '${exhaustiveCheck}'`)
         }
     }
 })

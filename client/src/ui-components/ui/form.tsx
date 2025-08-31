@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider } from 'react-hook-form'
+import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form'
+import { Controller, FormProvider } from 'react-hook-form'
 
-import * as LabelPrimitive from '@radix-ui/react-label'
+import type * as LabelPrimitive from '@radix-ui/react-label'
 import { Slot } from '@radix-ui/react-slot'
 import { Label } from '@ui-components/label'
 import { cn } from '@utils/tailwind'
@@ -31,8 +32,6 @@ const FormField = <
         </FormFieldContext.Provider>
     )
 }
-
-
 
 type FormItemContextValue = {
     id: string

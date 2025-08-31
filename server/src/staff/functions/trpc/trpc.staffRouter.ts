@@ -1,4 +1,4 @@
-import { GenerateTimesheetsParams, InitiateEmployeeProps } from 'fizz-kidz'
+import type { GenerateTimesheetsParams, InitiateEmployeeProps } from 'fizz-kidz'
 
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
 import { initiateOnboarding } from '../../core/onboarding/initiate-onboarding'

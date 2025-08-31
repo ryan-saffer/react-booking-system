@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { useForm, FormProvider, Controller } from 'react-hook-form'
 import { DateTime } from 'luxon'
-import { Event } from 'fizz-kidz'
+import type { Event } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
-import WithConfirmationDialog, { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
-import WithErrorDialog, { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
 import { combineDateAndTime } from '@utils/dateUtils'
 
-import BaseEventForm, { Form } from './base-event-form'
+import type { Form } from './base-event-form'
+import BaseEventForm from './base-event-form'
 import { trpc } from '@utils/trpc'
 import { Grid, TextField, Typography, styled } from '@mui/material'
 import { toast } from 'sonner'
@@ -107,6 +110,7 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
                 endTime: combineDateAndTime(values.slots[0].endDate!, values.slots[0].endTime!),
                 notes: values.notes,
                 invoiceUrl: values.invoiceUrl,
+                ...(event.$type === 'incursion' && { module: values.module || event.module }),
                 ...(event.$type === 'incursion' &&
                     event.$incursionFormCompleted && {
                         numberOfChildren: values.numberOfChildren,

@@ -1,4 +1,4 @@
-import { Role } from 'fizz-kidz'
+import type { Role } from 'fizz-kidz'
 
 export function getRoleDisplayValue(role: Role) {
     switch (role) {

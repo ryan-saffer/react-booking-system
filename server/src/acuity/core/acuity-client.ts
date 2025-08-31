@@ -1,7 +1,7 @@
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
 import acuityCredentials from '../../../credentials/acuity_credentials.json'
-import { ClientStatus } from '../../utilities/types'
+import type { ClientStatus } from '../../utilities/types'
 
 import UpdateAppointmentParams = AcuityTypes.Client.UpdateAppointmentParams
 import FetchAppointmentsParams = AcuityTypes.Client.FetchAppointmentsParams
@@ -122,7 +122,15 @@ export class AcuityClient {
         })
     }
 
-    getClasses(appointmentTypeId: number, includeUnavailable: boolean, minDate?: number) {
+    async getClasses(appointmentTypeIds: number[], includeUnavailable: boolean, minDate?: number) {
+        const result = await Promise.all(
+            appointmentTypeIds.map((id) => this.#getClasses(id, includeUnavailable, minDate))
+        )
+
+        return result.flat()
+    }
+
+    #getClasses(appointmentTypeId: number, includeUnavailable: boolean, minDate?: number) {
         let path = `/availability/classes?appointmentTypeID=${appointmentTypeId}`
         if (minDate) {
             path += `&minDate=${encodeURIComponent(new Date(minDate).toISOString())}`

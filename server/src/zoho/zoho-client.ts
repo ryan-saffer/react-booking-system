@@ -1,5 +1,9 @@
-import { Booking, Location, capitalise } from 'fizz-kidz'
+import type { Booking, Location } from 'fizz-kidz'
+import { capitalise } from 'fizz-kidz'
+import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 import { DateTime } from 'luxon'
+
+import { DatabaseClient } from '../firebase/DatabaseClient'
 
 type BaseProps = {
     firstName: string
@@ -17,27 +21,62 @@ type Service =
     | 'After School Program'
     | 'Activation / Event'
     | 'Incursion'
+    | 'Play Lab'
     | ''
 
 export class ZohoClient {
-    #accessToken = null
+    // Current valid access token
+    #accessToken: string | null = null
 
+    /**
+     * Get the access token from firestore. If its currently being refreshed, wait for that to finish.
+     *
+     * This mechanism is in place due to many concurrent requests leading to race conditions.
+     * Particularly an issue during holiday program sign in where the acuity webhook fires many events all at once.
+     */
+    async #getAccessToken() {
+        let waitingForRefresh = true
+        while (waitingForRefresh) {
+            const { accessToken, isRefreshing } = await DatabaseClient.getZohoAccessToken()
+            waitingForRefresh = isRefreshing
+            this.#accessToken = accessToken
+            if (isRefreshing) {
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 200)
+                })
+            }
+        }
+    }
+
+    /**
+     * Refresh the access token, and store in firestore that a refresh is in progress.
+     */
     async #refreshAccessToken() {
+        await DatabaseClient.startRefreshingZohoAccessToken()
         const result = await fetch(
             `https://accounts.zoho.com.au/oauth/v2/token?refresh_token=${process.env.ZOHO_REFRESH_TOKEN}&client_id=${process.env.ZOHO_CLIENT_ID}&client_secret=${process.env.ZOHO_CLIENT_SECRET}&grant_type=refresh_token`,
             { method: 'POST' }
         )
         if (result.ok) {
             const body = await result.json()
+            await DatabaseClient.setZohoAccessToken(body.access_token)
             this.#accessToken = body.access_token
+        } else {
+            await DatabaseClient.setZohoAccessToken('error')
+            throw new Error('Error refreshing zoho access token')
         }
     }
 
+    /**
+     * Generic request method that will:
+     * 1) Try with the current token.
+     * 2) If 401, refresh token (synchronously if needed) and retry once.
+     */
     async #request(
         props: { endpoint: string; method: 'GET' } | { endpoint: string; method: 'POST'; data: Record<string, any>[] },
         retryCount = 1
     ): Promise<any> {
-        const request = () =>
+        const doFetch = () =>
             fetch(`https://www.zohoapis.com.au/crm/v6/${props.endpoint}`, {
                 headers: {
                     Authorization: `Zoho-oauthtoken ${this.#accessToken}`,
@@ -48,23 +87,29 @@ export class ZohoClient {
                 }),
             })
 
-        // try request first, and see if it works.
-        // if not refresh the access token and try again.
-        const result = await request()
+        if (!this.#accessToken) {
+            await this.#getAccessToken()
+        }
+
+        const result = await doFetch()
+
         if (result.ok) {
             if (result.status === 204) {
                 // no content
                 return null
             }
             return result.json()
-        } else if (result.status === 401 && retryCount === 1) {
-            // invalid oauth token, refresh the token and try again
+        }
+
+        if (result.status === 401 && retryCount === 1) {
+            // refresh token (waiting if another request is already refreshing it)
             await this.#refreshAccessToken()
             return this.#request(props, retryCount - 1)
-        } else {
-            const error = await result.json()
-            throw error
         }
+
+        // Otherwise, throw the error body
+        const errorBody = await result.json().catch(() => ({}))
+        throw errorBody
     }
 
     /**
@@ -81,6 +126,7 @@ export class ZohoClient {
             Party_Type?: 'Studio' | 'Mobile' | ''
             Party_Date?: string
             Company?: string
+            Holiday_Program_Date?: string
         }>
     ) {
         const { childName, childBirthdayISO, ...rest } = values
@@ -165,6 +211,9 @@ export class ZohoClient {
             Child_Birthday_4?: string // !! ISO date string
             Child_Name_5?: string
             Child_Birthday_5?: string // !! ISO date string
+            Recently_Booked_Party?: boolean
+            Holiday_Program_Date?: string // !! ISO date string
+            Holiday_Program_Checked_In?: boolean
         }>
     ) {
         const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
@@ -200,6 +249,8 @@ export class ZohoClient {
             customer_type: 'B2C',
             branch: capitalise(studio),
             Party_Date: DateTime.fromJSDate(partyDate).toISODate(),
+            // resets after 180 days in zoho campaigns automation
+            Recently_Booked_Party: true,
             ...baseProps,
         })
     }
@@ -212,22 +263,96 @@ export class ZohoClient {
         })
     }
 
-    addHolidayProgramContact(
+    async addHolidayProgramContact(
         props: WithBaseProps<{
-            studio: Location | 'test'
+            studio: LocationOrTest
             childName: string
-            childBirthdayISO: string // ISO string
+            childBirthdayISO: string // ISO string,
+            holidayProgramDateISO: string // ISO string
         }>
     ) {
-        const { studio, childName, childBirthdayISO, ...baseProps } = props
+        const { studio, childName, childBirthdayISO, holidayProgramDateISO, ...baseProps } = props
+
+        // need to check if this parent already has a holiday program date.
+        // if not, add the date in, otherwise don't include it.
+        const searchResult = await this.#request({
+            endpoint: `Contacts/search?email=${encodeURIComponent(baseProps.email)})`,
+            method: 'GET',
+        })
+
+        if (!searchResult) {
+            // customer does not exist in zoho, so add them as new with the child
+            return this.#addParentWithChild({
+                service: 'Holiday Program',
+                branch: capitalise(studio),
+                customer_type: 'B2C',
+                childName,
+                childBirthdayISO,
+                Holiday_Program_Date: holidayProgramDateISO,
+                ...baseProps,
+            })
+        }
+
+        const existingContact = searchResult.data[0]
+        const existingDate = existingContact['Holiday_Program_Date']
+
         return this.#addParentWithChild({
             service: 'Holiday Program',
             branch: capitalise(studio),
             customer_type: 'B2C',
             childName,
             childBirthdayISO,
+            ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
             ...baseProps,
         })
+    }
+
+    async addPlayLabContact(
+        props: WithBaseProps<{
+            studio: LocationOrTest
+            childName: string
+            childBirthdayISO: string // ISO string,
+        }>
+    ) {
+        const { studio, childName, childBirthdayISO, ...baseProps } = props
+
+        return this.#addParentWithChild({
+            service: 'Play Lab',
+            branch: capitalise(studio),
+            customer_type: 'B2C',
+            childName,
+            childBirthdayISO,
+            ...baseProps,
+        })
+    }
+
+    /**
+     * Check if the provided program date matches the holiday program date in zoho.
+     * If so, mark the customer as checked in.
+     */
+    async holidayProgramCheckin({ email, programDate }: { email: string; programDate: string }) {
+        const searchResult = await this.#request({
+            endpoint: `Contacts/search?email=${encodeURIComponent(email)})`,
+            method: 'GET',
+        })
+
+        if (!searchResult) {
+            // weird that they have a holiday program booking but not found in Zoho...
+            return
+        }
+
+        const existingContact = searchResult.data[0]
+        const existingDate = existingContact['Holiday_Program_Date']
+
+        if (existingDate === programDate) {
+            await this.#upsertContact({
+                firstName: existingContact.First_Name,
+                service: 'Holiday Program',
+                email: email,
+                customer_type: 'B2C',
+                Holiday_Program_Checked_In: true,
+            })
+        }
     }
 
     addAfterSchoolProgramContact(props: WithBaseProps<{ childName: string; childBirthdayISO: string }>) {
@@ -258,7 +383,6 @@ export class ZohoClient {
                 Company: company || '',
                 ...baseProps,
             }),
-            // TODO  - If its an actiation or an event it should be assigned to lami, not melissa
             this.createLead({
                 company: company || '',
                 source: 'Website Form',
@@ -278,7 +402,7 @@ export class ZohoClient {
                     Email: props.email,
                     Phone: props.mobile || '',
                     Company: props.company,
-                    Owner: '76392000000284519', // melissa
+                    Owner: '76392000000333090', // Lami
                     Lead_Source: props.source,
                     Lead_Status: 'New Lead',
                 },

@@ -1,5 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import type { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'

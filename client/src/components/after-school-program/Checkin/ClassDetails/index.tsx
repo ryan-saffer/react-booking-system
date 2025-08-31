@@ -1,5 +1,5 @@
 import { Card, Result } from 'antd'
-import { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
@@ -71,7 +71,7 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointments.useMutation()
+    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
 
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)

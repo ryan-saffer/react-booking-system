@@ -1,7 +1,8 @@
-import { Booking, FirestoreBooking, FormBooking, Location, Utilities } from 'fizz-kidz'
+import type { Booking, FirestoreBooking, FormBooking } from 'fizz-kidz'
+import { Location, Utilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { ExistingBookingFormFields } from './ExistingBookingForm/types'
+import type { ExistingBookingFormFields } from './ExistingBookingForm/types'
 
 /**
  * Strips out the error and errorText fields, leaving only the field and value
@@ -274,8 +275,13 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
-        cake: {
-            value: '',
+        dinosaurFizzPartyPack: {
+            value: false,
+            error: false,
+            errorText: '',
+        },
+        unicornFizzPartyPack: {
+            value: false,
             error: false,
             errorText: '',
         },
@@ -314,6 +320,21 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: 'Food package is required',
         },
+        cake: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        takeHomeBags: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        products: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
     }
 }
 
@@ -337,7 +358,6 @@ function getEmptyDomainBooking(): FormBooking {
         creation1: undefined,
         creation2: undefined,
         creation3: undefined,
-        cake: '',
         cakeFlavour: undefined,
         funFacts: '',
         questions: '',
@@ -360,9 +380,14 @@ function getEmptyDomainBooking(): FormBooking {
         lipBalmPartyPack: false,
         dinosaurBathBombPartyPack: false,
         slimePartyPack: false,
+        dinosaurFizzPartyPack: false,
+        unicornFizzPartyPack: false,
         partyFormFilledIn: false,
         sendConfirmationEmail: true,
         oldPrices: false,
         includesFood: false,
+        cake: undefined,
+        takeHomeBags: undefined,
+        products: undefined,
     }
 }

@@ -1,4 +1,4 @@
-import { Booking, WWCC } from '..'
+import type { WWCC } from '..'
 
 export type PFProduct = { SKU: string; quantity: number }
 export type PFFile = { url: string; name: string; type: string }
@@ -12,15 +12,32 @@ export type PartyForm = {
     child_age: string
     number_of_children_in_store: string
     number_of_children_mobile: string
-    glam_creations: PFProduct[]
-    science_creations: PFProduct[]
-    slime_creations: PFProduct[]
-    safari_creations: PFProduct[]
-    unicorn_creations: PFProduct[]
-    tie_dye_creations: PFProduct[]
-    taylor_swift_creations: PFProduct[]
-    expert_creations: PFProduct[]
+    glam_creations: string[]
+    science_creations: string[]
+    slime_creations: string[]
+    fairy_creations: string[]
+    fluid_bear_creations: string[]
+    safari_creations: string[]
+    unicorn_creations: string[]
+    tie_dye_creations: string[]
+    taylor_swift_creations: string[]
+    glam_creations_mobile: string[]
+    science_creations_mobile: string[]
+    slime_creations_mobile: string[]
+    fairy_creations_mobile: string[]
+    fluid_bear_creations_mobile: string[]
+    safari_creations_mobile: string[]
+    unicorn_creations_mobile: string[]
+    tie_dye_creations_mobile: string[]
+    taylor_swift_creations_mobile: string[]
+    food_package: string
     additions: string[]
+    cake: string
+    cake_size: 'small_cake' | 'medium_cake' | 'large_cake'
+    cake_flavours: string[]
+    cake_served: 'cup' | 'waffle_cones' | 'bring_own_bowls'
+    cake_candles: 'include_candles' | 'bring_own_candles'
+    cake_message: string
     party_packs: PFProduct[]
     fun_facts: string
     questions: string
@@ -35,17 +52,33 @@ export type PartyFormV2 = {
     child_age: string
     number_of_children_in_store: string
     number_of_children_mobile: string
-    glam_creations: PFProduct[]
-    science_creations: PFProduct[]
-    slime_creations: PFProduct[]
-    safari_creations: PFProduct[]
-    unicorn_creations: PFProduct[]
-    tie_dye_creations: PFProduct[]
-    taylor_swift_creations: PFProduct[]
-    expert_creations: PFProduct[]
+    glam_creations: string[]
+    science_creations: string[]
+    slime_creations: string[]
+    fairy_creations: string[]
+    fluid_bear_creations: string[]
+    safari_creations: string[]
+    unicorn_creations: string[]
+    tie_dye_creations: string[]
+    taylor_swift_creations: string[]
+    glam_creations_mobile: string[]
+    science_creations_mobile: string[]
+    slime_creations_mobile: string[]
+    fairy_creations_mobile: string[]
+    fluid_bear_creations_mobile: string[]
+    safari_creations_mobile: string[]
+    unicorn_creations_mobile: string[]
+    tie_dye_creations_mobile: string[]
+    taylor_swift_creations_mobile: string[]
     food_package: string
     additions: string[]
-    party_packs: PFProduct[]
+    cake: string
+    cake_size: 'small_cake' | 'medium_cake' | 'large_cake'
+    cake_flavours: string[]
+    cake_served: 'cup' | 'waffle_cones' | 'bring_own_bowls'
+    cake_candles: 'include_candles' | 'bring_own_candles'
+    cake_message: string
+    party_packs: string | undefined // not array because do not allow multiple selection
     fun_facts: string
     questions: string
 }
@@ -59,17 +92,34 @@ export type PartyFormV3 = {
     child_age: string
     number_of_children_in_store: string
     number_of_children_mobile: string
-    glam_creations: PFProduct[]
-    science_creations: PFProduct[]
-    slime_creations: PFProduct[]
-    safari_creations: PFProduct[]
-    unicorn_creations: PFProduct[]
-    tie_dye_creations: PFProduct[]
-    taylor_swift_creations: PFProduct[]
-    expert_creations: PFProduct[]
-    menu: Booking['menu']
+    glam_creations: string[]
+    science_creations: string[]
+    slime_creations: string[]
+    fairy_creations: string[]
+    fluid_bear_creations: string[]
+    safari_creations: string[]
+    unicorn_creations: string[]
+    tie_dye_creations: string[]
+    taylor_swift_creations: string[]
+    glam_creations_mobile: string[]
+    science_creations_mobile: string[]
+    slime_creations_mobile: string[]
+    fairy_creations_mobile: string[]
+    fluid_bear_creations_mobile: string[]
+    safari_creations_mobile: string[]
+    unicorn_creations_mobile: string[]
+    tie_dye_creations_mobile: string[]
+    taylor_swift_creations_mobile: string[]
+    food_package: string
     additions: string[]
-    party_packs: PFProduct[]
+    cake: string
+    cake_size: 'small_cake' | 'medium_cake' | 'large_cake'
+    cake_flavours: string[]
+    cake_served: 'cup' | 'waffle_cones' | 'bring_own_bowls'
+    cake_candles: 'include_candles' | 'bring_own_candles'
+    cake_message: string
+    take_home_bags: { SKU: string; quantity: number }[]
+    products: { SKU: string; quantity: number }[]
     fun_facts: string
     questions: string
 }

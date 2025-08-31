@@ -3,7 +3,7 @@ import os from 'os'
 import path from 'path'
 
 import { logger } from 'firebase-functions/v2'
-import { GenerateTimesheetsParams } from 'fizz-kidz'
+import type { GenerateTimesheetsParams } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
@@ -12,8 +12,9 @@ import { projectId } from '../../../init'
 import { SlingClient } from '../../../sling/sling-client'
 import { throwTrpcError } from '../../../utilities'
 import { XeroClient } from '../../../xero/XeroClient'
-import { Rate } from './timesheets.types'
-import { TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from './timesheets.utils'
+import type { Rate } from './timesheets.types'
+import type { TimesheetRow } from './timesheets.utils'
+import { createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from './timesheets.utils'
 
 const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38

@@ -11,6 +11,13 @@ export function ObjectKeys<T extends object>(object: T) {
     return Object.keys(object) as (keyof T)[]
 }
 
+// Fixes the typing of `Object.entries()`
+export function ObjectEntries<T extends object>(object: T) {
+    return Object.entries(object) as {
+        [K in keyof T]: [K, T[K]]
+    }[keyof T][]
+}
+
 export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>
 }
@@ -26,6 +33,14 @@ export type PartialRecord<K extends keyof any, T> = {
     [P in K]?: T
 }
 
+/**
+ * Given the value of an object, find the key of this value.
+ * Only works for string records.
+ */
+export function getKeyByValue<T extends Record<string, string>>(obj: T, value: string) {
+    return Object.entries(obj).find(([, v]) => v === value)?.[0] as keyof T | undefined
+}
+
 export * from './businessLogic'
-export * from './managerInfo'
+export * from './manager-info'
 export * from './stringUtilities'

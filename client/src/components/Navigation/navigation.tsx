@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom'
 
 import { useOrg } from '@components/Session/use-org'
+import afterSchool from '@drawables/after-school.webp'
+import bodyGlitter from '@drawables/body-glitter.webp'
+import energy from '@drawables/energy.webp'
+import holidayPrograms from '@drawables/holiday-programs.webp'
+import jonah from '@drawables/jonah.webp'
+import kingsville from '@drawables/kingsville.webp'
+import parties from '@drawables/parties.webp'
 
 import styles from './navigation.module.css'
 
@@ -12,41 +19,40 @@ export const Navigation = () => {
             <div className="flex w-full max-w-lg flex-col">
                 <h2 className="lilita mb-3 mt-8 text-2xl">Programs</h2>
                 <div className="flex flex-col gap-3">
-                    <ListItem
-                        title="Parties, Events & Incursions"
-                        to="bookings"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-76-scaled-e1645523582564-pkvrc29l4f5in86v327lhv2aavc71eult9zjc8i5cw.jpeg"
-                    />
+                    <ListItem title="Parties, Events & Incursions" to="bookings" imgSrc={parties} />
                     <ListItem
                         title="Holiday Programs"
-                        to="holiday-program"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/2022/03/FizzKidz-Summerhill-31-e1646805910671.jpeg"
+                        to={`holiday-program?id=${import.meta.env.VITE_ENV === 'prod' ? '11036399' : '15026605'}`}
+                        imgSrc={holidayPrograms}
                     />
-                    <ListItem
-                        title="After School Program"
-                        to="after-school-program"
-                        imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Layer-8-p1e4mkgqstj3hgrx8atpwyesp9t7itb3hckcjgopls.jpg"
-                    />
+                    <ListItem title="Play Lab" to={'play-lab'} imgSrc={kingsville} />
+                    <ListItem title="After School Program" to="after-school-program" imgSrc={afterSchool} />
                 </div>
                 <h2 className="lilita mb-3 mt-8 text-2xl">Creations</h2>
-                <ListItem
-                    title="Creation Instructions"
-                    to="creations"
-                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/Sparkling-Lipbalm-1-p29wcmsmucie25b40xgtewic1carr2pe9ubfd1yvew.png"
-                />
+                <ListItem title="Creation Instructions" to="creations" imgSrc={bodyGlitter} />
                 <h2 className="lilita mb-3 mt-8 text-2xl">Useful Links</h2>
-                <ListItem
-                    imgSrc="https://fizzkidz.com.au/wp-content/uploads/elementor/thumbs/FizzKidz-Summerhill-65-pw3n3aq1pb8clofid1rqavdu8dtp2qs8c4dle4xllk.jpeg"
-                    title="Incident Reporting"
-                    onClick={() =>
-                        window.open(
-                            'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                            '_blank'
-                        )
-                    }
-                />
-                {/* {(isAdmin || canAccessPayroll) && */}
-                {/* <> */}
+                <div className="flex flex-col gap-3">
+                    <ListItem
+                        imgSrc={energy}
+                        title="Incident Reporting"
+                        onClick={() =>
+                            window.open(
+                                'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
+                                '_blank'
+                            )
+                        }
+                    />
+                    <ListItem
+                        imgSrc={jonah}
+                        title="Behaviour Management Plan"
+                        onClick={() =>
+                            window.open(
+                                'https://www.fizzkidz.com.au/holiday-programs-behaviour-management-plan.pdf',
+                                '_blank'
+                            )
+                        }
+                    />
+                </div>
                 {hasPermission('admin') && (
                     <>
                         <h2 className="lilita mb-3 mt-8 text-2xl">Admin</h2>
@@ -93,7 +99,7 @@ function ListItem({
     return (
         <Link to={to || ''} className={styles.listItem} onClick={onClick}>
             <img src={imgSrc} width={80} alt={`${title} icon`} />
-            <h4 className="gotham font-bold">{title}</h4>
+            <h4 className="font-light">{title}</h4>
         </Link>
     )
 }

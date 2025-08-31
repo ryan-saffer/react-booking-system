@@ -1,9 +1,10 @@
-import { AfterSchoolEnrolment, SendTermContinuationEmailsParams, getApplicationDomain } from 'fizz-kidz'
+import type { AfterSchoolEnrolment, SendTermContinuationEmailsParams } from 'fizz-kidz'
+import { getApplicationDomain } from 'fizz-kidz'
 
+import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
 import { throwTrpcError } from '../../utilities'
-import { DatabaseClient } from '../../firebase/DatabaseClient'
 
 export async function sendTermContinutationEmails(input: SendTermContinuationEmailsParams) {
     const results = await Promise.allSettled(
@@ -24,7 +25,7 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
                 await mailClient.sendEmail('termContinuationEmail', appointment.parent.email, {
                     parentName: appointment.parent.firstName,
                     className: appointment.className,
-                    price: (parseInt(appointment.price) * appointment.appointments.length).toString(),
+                    price: (parseFloat(appointment.price) * appointment.appointments.length).toFixed(2),
                     childName: appointment.child.firstName,
                     continueUrl: `${baseUrl}?${encodedContinueQueryParams}`,
                     unenrollUrl: `${baseUrl}?${encodedUnenrollQueryParams}`,

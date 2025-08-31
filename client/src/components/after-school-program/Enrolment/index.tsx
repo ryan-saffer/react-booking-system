@@ -1,4 +1,4 @@
-import { AcuityTypes } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
 import { useEffect } from 'react'
 
 import useMixpanel from '@components/Hooks/context/UseMixpanel'

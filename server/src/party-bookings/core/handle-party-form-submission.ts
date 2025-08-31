@@ -1,14 +1,20 @@
-import { logger } from 'firebase-functions/v2'
-import { Booking, PaperFormResponse, PartyForm, capitalise, getManager } from 'fizz-kidz'
+import type { Booking, PaperFormResponse, PartyForm } from 'fizz-kidz'
+import { capitalise, getLocationAddress, getManager } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+import type Stripe from 'stripe'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { env } from '../../init'
 import { MailClient } from '../../sendgrid/MailClient'
+import { StripeClient } from '../../stripe/core/stripe-client'
 import { logError, throwFunctionsError } from '../../utilities'
 import { PartyFormMapper } from './party-form-mapper'
 import { getBookingAdditions, getBookingCreations } from './utils.party'
 
-export async function handlePartyFormSubmission(responses: PaperFormResponse<PartyForm>) {
+export async function handlePartyFormSubmission(
+    responses: PaperFormResponse<PartyForm>,
+    charge: Stripe.Charge | undefined
+) {
     const formMapper = new PartyFormMapper(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
@@ -16,9 +22,8 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
     try {
         booking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
         booking.partyFormFilledIn = true
-        logger.log(booking)
     } catch (err) {
-        logError('error handling party form submission', err)
+        logError('error handling party form submission', err, { responses })
         return
     }
 
@@ -30,7 +35,7 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
         try {
             await mailClient.sendEmail(
                 'partyFormFilledInAgain',
-                getManager(booking.location!).email,
+                getManager(booking.location!, env).email,
                 {
                     parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
                     parentEmail: existingBooking.parentEmail,
@@ -38,13 +43,43 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
                     childName: booking.childName!,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATETIME_SHORT),
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
                     oldNumberOfKids: existingBooking.numberOfChildren,
                     oldCreations: getBookingCreations(existingBooking),
                     oldAdditions: getBookingAdditions(existingBooking),
                     newNumberOfKids: booking.numberOfChildren!,
-                    newCreations: formMapper.getCreationDisplayValues(),
+                    newCreations: formMapper.getCreationDisplayValues(existingBooking.type),
                     newAdditions: formMapper.getAdditionDisplayValues(false),
+                    oldIncludesFood: existingBooking.includesFood,
+                    newIncludesFood: booking.includesFood!,
+                    isMobile: existingBooking.type === 'mobile',
+                    ...(existingBooking.cake && {
+                        oldCake: {
+                            selection: existingBooking.cake.selection,
+                            size: existingBooking.cake.size,
+                            flavours: existingBooking.cake.flavours.join(', '),
+                            served: existingBooking.cake.served,
+                            candles: existingBooking.cake.candles,
+                            message: existingBooking.cake.message,
+                        },
+                    }),
+                    ...(booking.cake && {
+                        newCake: {
+                            selection: booking.cake.selection,
+                            size: booking.cake.size,
+                            flavours: booking.cake.flavours.join(', '),
+                            served: booking.cake.served,
+                            candles: booking.cake.candles,
+                            message: booking.cake.message,
+                        },
+                    }),
                 },
                 {
                     subject: `Party form filled in again for ${booking.parentFirstName} ${booking.parentLastName}`,
@@ -53,6 +88,43 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
         } catch (err) {
             logError(
                 `error sending party form filled in again notificaiton for booking with id: '${formMapper.bookingId}'`,
+                err
+            )
+        }
+    }
+
+    // this checks if they have changed their selected food package. if so, alert the manager.
+    // this is different to the 'form filled in again' email, since this can trigger even on the first submission.
+    if (existingBooking.type === 'studio' && existingBooking.includesFood !== booking.includesFood) {
+        try {
+            await mailClient.sendEmail(
+                'partyFormFoodPackageChanged',
+                getManager(booking.location!, env).email,
+                {
+                    parentName: `${booking.parentFirstName} ${booking.parentLastName}`,
+                    parentEmail: existingBooking.parentEmail,
+                    parentMobile: existingBooking.parentMobile,
+                    childName: booking.childName!,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    oldIncludesFood: existingBooking.includesFood,
+                    newIncludesFood: booking.includesFood!,
+                },
+                {
+                    subject: `Food package has changed for ${booking.parentFirstName} ${booking.parentLastName}`,
+                }
+            )
+        } catch (err) {
+            logError(
+                `error sending food package changed notificaiton for booking with id: '${formMapper.bookingId}'`,
                 err
             )
         }
@@ -68,25 +140,59 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
 
     const fullBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
-    // if its a two creation party, but they picked three or more creations, notify manager
-    const choseThreeCreations = booking.creation3 !== undefined
+    // if they paid for a cake, update the description and send a receipt
+    if (charge) {
+        try {
+            const stripe = await StripeClient.getInstance()
+            const cake = formMapper.getCake()
+            // update the payment description
+            const description = `${capitalise(existingBooking.location)} Studio Cake. ${cake?.selection} - ${
+                cake?.size
+            }. ${cake?.flavours.join(', ')}. ${cake?.served}. ${cake?.candles}.`
+            await stripe.paymentIntents.update(charge.payment_intent as string, {
+                description,
+                metadata: {
+                    bookingId: formMapper.bookingId,
+                },
+            })
+            // update charge description and send the receipt
+            await stripe.charges.update(charge.id, {
+                description,
+                receipt_email: fullBooking.parentEmail,
+            })
+        } catch (err) {
+            logError(`error updating stripe charge for birthday cake`, err, { responses, charge })
+        }
+    }
+
+    // if its a two creation party, but they picked three or more creations, notify manager (or if they picked more than 3 creations)
+    const creations = formMapper.getCreationDisplayValues(existingBooking.type)
+    const choseThreeCreations = creations.length === 3
     const requiresTwoCreations =
         (fullBooking.type === 'mobile' && fullBooking.partyLength === '1') ||
         (fullBooking.type !== 'mobile' && fullBooking.partyLength === '1.5')
-    if (choseThreeCreations && requiresTwoCreations) {
+
+    if ((choseThreeCreations && requiresTwoCreations) || creations.length > 3) {
         try {
             await mailClient.sendEmail(
                 'tooManyCreationsChosen',
-                getManager(fullBooking.location).email,
+                getManager(fullBooking.location, env).email,
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     parentEmail: fullBooking.parentEmail,
                     parentMobile: fullBooking.parentMobile,
                     childName: fullBooking.childName,
-                    dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATE_HUGE),
-                    chosenCreations: formMapper.getCreationDisplayValues(),
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    chosenCreations: formMapper.getCreationDisplayValues(existingBooking.type),
                 },
                 {
                     replyTo: fullBooking.parentEmail,
@@ -100,7 +206,7 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
         }
     }
 
-    const manager = getManager(fullBooking.location)
+    const manager = getManager(fullBooking.location, env)
 
     if (fullBooking.questions) {
         try {
@@ -108,9 +214,16 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
                 'partyFormQuestions',
                 manager.email,
                 {
-                    dateTime: DateTime.fromJSDate(fullBooking.dateTime, { zone: 'Australia/Melbourne' }).toLocaleString(
-                        DateTime.DATE_HUGE
-                    ),
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
                     location: capitalise(fullBooking.location),
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     childName: fullBooking.childName,
@@ -132,7 +245,6 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
     // Grazing platter email not migrated from apps script - need to do if we ever bring them back
 
     const additions = formMapper.getAdditionDisplayValues(true)
-    const creations = formMapper.getCreationDisplayValues()
 
     const partyPacks = additions.filter((addition) => addition.includes('Party Pack'))
     if (partyPacks.length !== 0) {
@@ -142,9 +254,16 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
                 manager.email,
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
-                    dateTime: DateTime.fromJSDate(fullBooking.dateTime, {
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
                         zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATE_HUGE),
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
                     location: capitalise(fullBooking.location),
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
@@ -156,6 +275,42 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
             )
         } catch (err) {
             logError(`error sending party pack notification for booking with id: '${formMapper.bookingId}'`, err)
+        }
+    }
+
+    // email the cake company if a cake was chosen
+    if (booking.cake) {
+        try {
+            await mailClient.sendEmail(
+                'cakeNotification',
+                env === 'prod' ? 'orders@birthdaycakeshop.com.au' : 'ryansaffer@gmail.com',
+                {
+                    parentName: fullBooking.parentFirstName,
+                    dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString({
+                        weekday: 'short',
+                        month: 'short',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    }),
+                    studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
+                    mobile: fullBooking.parentMobile,
+                    email: fullBooking.parentEmail,
+                    cakeSelection: booking.cake.selection,
+                    cakeSize: booking.cake.size,
+                    cakeFlavours: booking.cake.flavours.join(', '),
+                    cakeServed: booking.cake.served,
+                    cakeCandles: booking.cake.candles,
+                    cakeMessage: booking.cake.message,
+                }
+            )
+        } catch (err) {
+            logError(`error sending cake notification email for booking with id: ${formMapper.bookingId}`, err, {
+                booking,
+            })
         }
     }
 
@@ -174,6 +329,17 @@ export async function handlePartyFormSubmission(responses: PaperFormResponse<Par
                 hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
                 managerName: manager.name,
                 managerMobile: manager.mobile,
+                includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
+                ...(fullBooking.cake && {
+                    cake: {
+                        selection: fullBooking.cake.selection,
+                        size: fullBooking.cake.size,
+                        flavours: fullBooking.cake.flavours.join(', '),
+                        served: fullBooking.cake.served,
+                        candles: fullBooking.cake.candles,
+                        message: fullBooking.cake.message,
+                    },
+                }),
             },
             {
                 from: {

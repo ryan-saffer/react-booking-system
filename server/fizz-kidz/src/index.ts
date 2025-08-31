@@ -1,11 +1,10 @@
 //#region Bookings
-export { Additions } from './partyBookings/Additions'
+export { ADDITIONS, PROD_ADDITIONS, Addition } from './partyBookings/additions'
 export { CakeFlavours } from './partyBookings/CakeFlavours'
-export { Creations } from './partyBookings/Creations'
-export { CreationDisplayValuesMap } from './partyBookings/CreationDisplayValuesMap'
-export { AdditionsDisplayValuesMapPrices } from './partyBookings/AdditionsDisplayValuesMapPrices'
-export { AdditionsDisplayValuesMap } from './partyBookings/AdditionsDisplayValuesMap'
-export { Location, LocationOrMaster } from './core/location'
+export { Creation, CREATIONS } from './partyBookings/creations'
+export { TAKE_HOME_BAGS, TakeHomeBagType } from './partyBookings/take-home-bags'
+export { PRODUCTS, ProductType } from './partyBookings/products'
+export { Location, LocationOrMaster, LocationOrTest } from './core/location'
 export { Role, ROLES } from './core/role'
 export { AuthUser, StaffAuthUser, CustomerAuthUser } from './core/user'
 export { Permission, RolePermissionMap } from './core/permission'
@@ -38,7 +37,7 @@ export * from './stripe'
 
 export * from './after-school-program'
 
-export * from './holidayPrograms'
+export * from './discount-codes'
 
 export * from './timesheets'
 
@@ -50,3 +49,6 @@ export * from './paperform'
 
 export * from './events/Event'
 export * from './events/incursion-module-map'
+
+export * from './zoho/zoho.types'
+export * from './square'

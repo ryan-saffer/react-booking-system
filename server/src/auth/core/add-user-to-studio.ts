@@ -1,9 +1,11 @@
 import { getAuth } from 'firebase-admin/auth'
-import { LocationOrMaster, ObjectKeys, Role, StaffAuthUser } from 'fizz-kidz'
+import type { LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import { ObjectKeys } from 'fizz-kidz'
 
 import { TRPCError } from '@trpc/server'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function addUserToStudio({
     firstname,
@@ -71,6 +73,14 @@ export async function addUserToStudio({
                     [studio]: role,
                 },
                 uid: newUser.uid,
+            })
+
+            // send them a welcome to the platform and a password reset link
+            const resetLink = await auth.generatePasswordResetLink(email)
+            const mailClient = await MailClient.getInstance()
+            await mailClient.sendEmail('accountInvite', email, {
+                firstname,
+                resetLink,
             })
         } else {
             throw err

@@ -1,4 +1,4 @@
-import { Location, ScienceModule } from '..'
+import type { Location, ScienceModule } from '..'
 
 type BaseEvent = {
     id: string

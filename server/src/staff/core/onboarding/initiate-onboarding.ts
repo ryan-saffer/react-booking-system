@@ -1,4 +1,5 @@
-import { Employee, InitiateEmployeeProps, getLocationAddress } from 'fizz-kidz'
+import type { Employee, InitiateEmployeeProps } from 'fizz-kidz'
+import { getLocationAddress } from 'fizz-kidz'
 import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
 import { ESignatureClient } from '../../../esignatures.io/core/ESignaturesClient'
 import { throwTrpcError } from '../../../utilities'
@@ -66,9 +67,16 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
     }&email=${employee.email}&mobile=${employee.mobile}&contract=${encodeURIComponent(contractSignUrl)}`
 
     const mailClient = await MailClient.getInstance()
-    await mailClient.sendEmail('onboarding', employee.email, {
-        employeeName: employee.firstName,
-        formUrl,
-        senderName: employee.senderName,
-    })
+    await mailClient.sendEmail(
+        'onboarding',
+        employee.email,
+        {
+            employeeName: employee.firstName,
+            formUrl,
+            senderName: employee.senderName,
+        },
+        {
+            bcc: ['people@fizzkidz.com.au'],
+        }
+    )
 }

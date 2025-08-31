@@ -1,5 +1,5 @@
 import { Card, Typography } from 'antd'
-import { AfterSchoolEnrolment } from 'fizz-kidz'
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import { styled } from '@mui/material/styles'
@@ -26,7 +26,7 @@ type Props = {
 }
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
-    const { data, isLoading, isSuccess, isError } = trpc.stripe.retrieveInvoiceStatuses.useQuery(
+    const { data, isLoading, isSuccess, isError } = trpc.afterSchoolProgram.retrieveInvoiceStatuses.useQuery(
         { appointmentIds: [appointment.id] },
         {
             enabled: appointment.invoiceId !== '',
@@ -58,7 +58,7 @@ const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
                                     <p>Invoice not yet sent.</p>
                                     <p>
                                         The price for {appointment.appointments.length} weeks is $
-                                        {parseInt(appointment.price) * appointment.appointments.length}
+                                        {(parseFloat(appointment.price) * appointment.appointments.length).toFixed(2)}
                                     </p>
                                 </>
                             )

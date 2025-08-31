@@ -1,7 +1,9 @@
-import { InvitationOption } from 'fizz-kidz'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import type { InvitationOption } from 'fizz-kidz'
+import type { RefObject } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
+import frame from '@drawables/frame.webp'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
@@ -67,10 +69,7 @@ export const ChooseInvitationPage = () => {
                         </p>
                     </div>
                     <div className="box ml-4 mr-4 hidden min-w-[400px] max-w-[400px] items-center justify-center self-center rounded-3xl shadow-purple sm:ml-0 sm:mr-0 sm:max-w-[600px] md:flex min-[900px]:min-w-[450px]">
-                        <img
-                            src="https://fizzkidz.com.au/wp-content/uploads/2021/01/party.jpg"
-                            className="object-fill"
-                        ></img>
+                        <img src={frame} className="object-fill"></img>
                     </div>
                 </section>
                 <Separator className="mb-3 mt-12 w-screen sm:mb-8" />

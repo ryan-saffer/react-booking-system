@@ -1,9 +1,17 @@
 import { logger } from 'firebase-functions/v2'
-import { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
+import { type Location } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
 
 import { env } from '../init'
-import { ClientStatus } from '../utilities/types'
+import type { ClientStatus } from '../utilities/types'
+import type {
+    ContactFormLocationOption,
+    ContactFormServiceOption,
+    Form,
+    ReferenceOption,
+} from '../website/core/website-form-types'
+import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 
 export class MixpanelClient {
     private static instance: MixpanelClient
@@ -51,8 +59,13 @@ export class MixpanelClient {
 }
 
 export type MixpanelEvent = {
-    'invitation-generated': { invitationId: string; partyDate: Date; invitation: InvitationOption }
+    'invitation-generated': {
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationOption
+    }
     'invitation-coupon-signup': {
+        distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
         | 'sidebar'
@@ -61,9 +74,104 @@ export type MixpanelEvent = {
             // used the section just sitting under the invite on mobile (no drawer)
             | 'scroll'
     }
+    'holiday-program-website-discount': {
+        distinct_id: string
+        name: string
+    }
+    'website-enquiry': {
+        distinct_id: string
+        form: keyof Form
+        service?: ContactFormServiceOption
+        location?: ContactFormLocationOption
+        reference?: ReferenceOption
+        referenceOther?: string
+    }
+    'holiday-program-checkout-reached': {
+        distinct_id: string
+    }
+    'holiday-program-booking': {
+        distinct_id: string
+        location: LocationOrTest
+        amount: number
+        numberOfSlots: number
+        numberOfKids: number
+        discountCode?: string
+        childAges: string[]
+        titles?: string[]
+        creations?: string[]
+    }
+    'birthday-party-booking': {
+        distinct_id: string
+        location: Location
+        length: '1' | '1.5' | '2'
+        includesFood: boolean
+        type: 'studio' | 'mobile'
+        childAge: string
+        date: string // ISO
+    }
+    'birthday-party-form-completed': {
+        distinct_id: string
+        type: 'mobile' | 'studio'
+        location: Location
+        creations: string[]
+        additions: string[]
+        orderedPartyPack: boolean
+        partyPack?: string
+        cakeOrdered: boolean
+        cakeSelection?: string
+        cakeFlavours?: string[]
+        cakeSize?: string
+        cakeServed?: string
+        cakeCandles?: string
+    }
+    'after-school-program-enrolment': {
+        distinct_id: string
+        type: 'science' | 'art'
+        inStudio: boolean
+        appointmentTypeId: number
+        calendarId: number
+        childAge: string
+        childGrade: string
+        className: string
+    }
+    'after-school-program-unenrolment': {
+        distinct_id: string
+        type: 'science' | 'art'
+        inStudio: boolean
+        appointmentTypeId: number
+        calendarId: number
+        childAge: string
+        childGrade: string
+        className: string
+    }
+    'play-lab-booking': {
+        distinct_id: string
+        bookingType: 'term-booking' | 'casual'
+        appointmntTypeIds: number[]
+        programNames: string[]
+        location: LocationOrTest
+        amount: number
+        discountType?: 'percentage' | 'price'
+        discountAmount?: number
+        discountCode?: string
+        numberOfPrograms: number
+        numberOfKids: number
+        childAges: string[]
+        reference: string
+        referenceOther?: string
+    }
 }
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
+    'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
+    'website-enquiry': 'Website Enquiry',
+    'holiday-program-checkout-reached': 'Holiday Program Checkout Reached',
+    'holiday-program-booking': 'Holiday Program Booking',
+    'birthday-party-booking': 'Birthday Party Booking',
+    'birthday-party-form-completed': 'Birthday Party Form Completed',
+    'after-school-program-enrolment': 'After School Program Enrolment',
+    'after-school-program-unenrolment': 'After School Program Unenrolment',
+    'play-lab-booking': 'Play Lab Booking',
 }

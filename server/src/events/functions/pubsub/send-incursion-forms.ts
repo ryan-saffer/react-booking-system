@@ -1,6 +1,7 @@
 import { logger } from 'firebase-functions/v2'
 import { onSchedule } from 'firebase-functions/v2/scheduler'
-import { IncursionEvent, ModuleNameMap } from 'fizz-kidz'
+import type { IncursionEvent } from 'fizz-kidz'
+import { ModuleNameMap } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
@@ -45,18 +46,25 @@ export const sendIncursionForms = onSchedule(
             const slots = await DatabaseClient.getEventSlots<'incursion'>(eventId)
             // we can just use the first slot for all the details
             const firstSlot = slots[0]
-            await mailClient.sendEmail('incursionForm', firstSlot.contactEmail, {
-                contactName: firstSlot.contactName,
-                incursionName: ModuleNameMap[firstSlot.module],
-                organisation: firstSlot.organisation,
-                slots: slots.map(
-                    (slot) =>
-                        `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
-                            'cccc, LLL dd, t'
-                        )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
-                ),
-                formUrl: generateFormUrl(eventId, firstSlot.organisation, firstSlot.address),
-            })
+            await mailClient.sendEmail(
+                'incursionForm',
+                firstSlot.contactEmail,
+                {
+                    contactName: firstSlot.contactName,
+                    incursionName: ModuleNameMap[firstSlot.module],
+                    organisation: firstSlot.organisation,
+                    slots: slots.map(
+                        (slot) =>
+                            `${DateTime.fromJSDate(slot.startTime, { zone: 'Australia/Melbourne' }).toFormat(
+                                'cccc, LLL dd, t'
+                            )} - ${DateTime.fromJSDate(slot.endTime, { zone: 'Australia/Melbourne' }).toFormat('t')}`
+                    ),
+                    formUrl: generateFormUrl(eventId, firstSlot.organisation, firstSlot.address),
+                },
+                {
+                    bcc: ['programs@fizzkidz.com.au'],
+                }
+            )
 
             // mark all slots as having the form sent
             await DatabaseClient.updateEventBooking(eventId, firstSlot.id, {

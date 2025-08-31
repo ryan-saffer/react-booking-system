@@ -8,7 +8,7 @@ declare global {
             ACUITY_API_KEY: string
             STRIPE_WEBHOOK_SECRET_PROD: string
             STRIPE_WEBHOOK_SECRET_DEV: string
-            SLING_API_KEY: string
+            SLING_PASSWORD: string
             DEV_XERO_CLIENT_ID: string
             DEV_XERO_CLIENT_SECRET: string
             XERO_CLIENT_ID: string
@@ -19,6 +19,10 @@ declare global {
             ZOHO_REFRESH_TOKEN: string
             ZOHO_CLIENT_ID: string
             ZOHO_CLIENT_SECRET: string
+            STORYBLOK_TOKEN: string
+            SQUARE_DEV_TOKEN: string
+            SQUARE_PROD_TOKEN: string
+            PAPERFORM_API_TOKEN: string
         }
     }
 }

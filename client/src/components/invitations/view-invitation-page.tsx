@@ -1,4 +1,4 @@
-import { InvitationOption } from 'fizz-kidz'
+import type { InvitationOption } from 'fizz-kidz'
 import { ExternalLink, Loader2, Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -7,6 +7,7 @@ import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import * as Logo from '@drawables/fizz-logo.png'
+import science from '@drawables/science.webp'
 import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -204,18 +205,12 @@ function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' 
                 <div className="mb-8 flex flex-col p-4">
                     <h2 className="font-lilita text-lg md:text-xl">Welcome to the world of Fizz Kidz</h2>
                     <div className="mb-4 mt-4 h-[0.5px] w-full bg-gray-500"></div>
-                    <p className="font-gotham">
-                        You can download and save your invitation to your phone by choosing 'Download invitation' from
-                        the menu.
-                    </p>
+                    <p className="font-gotham">We can't wait to celebrate with you!</p>
                 </div>
                 <Card className="mx-3 border-8 border-cyan-400">
                     <Form {...form}>
                         <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-                            <img
-                                src="https://fizzkidz.com.au/wp-content/uploads/2024/02/science.jpg"
-                                className="h-28 w-full object-cover"
-                            />
+                            <img src={science} className="h-28 w-full object-cover object-center" />
                             <CardHeader className="space-y-1 py-0">
                                 <h2 className="font-lilita text-xl">Hello friend!</h2>
                                 <CardDescription>

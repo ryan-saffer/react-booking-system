@@ -52,12 +52,12 @@ const AfterSchoolProgramInvoicing = lazy(() =>
     }))
 )
 const HolidayProgramSelectionPage = lazy(() =>
-    import('./components/HolidayPrograms/holiday-program-class-selection-page.js').then((module) => ({
+    import('./components/holiday-programs/holiday-program-class-selection-page.js').then((module) => ({
         default: module.HolidayProgramSelectionPage,
     }))
 )
 const ClassDetailsPage = lazy(() =>
-    import('./components/HolidayPrograms/ClassDetails/index.js').then((module) => ({
+    import('./components/holiday-programs/class-details/index.js').then((module) => ({
         default: module.ClassDetailsPage,
     }))
 )
@@ -81,17 +81,12 @@ const SelectedProgramProvider = lazy(() =>
     }))
 )
 const CustomerBookingScreen = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/index.js').then((module) => ({
-        default: module.CustomerBookingScreen,
-    }))
-)
-const Confirmation = lazy(() =>
-    import('./components/HolidayPrograms/CustomerBookingScreen/confirmation/Confirmation.js').then((module) => ({
-        default: module.Confirmation,
+    import('./components/holiday-programs/customer-booking-screen/pages/customer-booking-page.js').then((module) => ({
+        default: module.CustomerBookingPage,
     }))
 )
 const Onboarding = lazy(() =>
-    import('./components/Onboarding/Onboarding.js').then((module) => ({ default: module.Onboarding }))
+    import('./components/Onboarding/employee-onboarding.js').then((module) => ({ default: module.EmployeeOnboarding }))
 )
 const CreationsPage = lazy(() =>
     import('./components/Creations/Creations.js').then((module) => ({ default: module.CreationsPage }))
@@ -122,6 +117,23 @@ const SettingsPage = lazy(() =>
 const Account = lazy(() => import('./components/settings/account.js').then((module) => ({ default: module.Account })))
 const ManageUsersTable = lazy(() =>
     import('./components/settings/manage-users-table.js').then((module) => ({ default: module.ManageUsersTable }))
+)
+const PlayLabBookingPage = lazy(() =>
+    import('./components/play-lab/booking-form/pages/play-lab-booking-page.js').then((module) => ({
+        default: module.PlayLabBookingPage,
+    }))
+)
+const PlayLabSessionSelectorPage = lazy(() =>
+    import('./components/play-lab/attendance/session-selector/play-lab-session-selector-page.js').then((module) => ({
+        default: module.PlayLabSessionSelectorPage,
+    }))
+)
+const PlayLabSessionAttendancePage = lazy(() =>
+    import('./components/play-lab/attendance/session-attendance/pages/play-lab-session-attendance-page.js').then(
+        (module) => ({
+            default: module.PlayLabSessionAttendancePage,
+        })
+    )
 )
 
 const router = createBrowserRouter([
@@ -213,7 +225,7 @@ const router = createBrowserRouter([
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="bookings:read">
+                                        <ProtectedRoute permission="after-school-programs:read">
                                             <SelectClassPage />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -223,7 +235,7 @@ const router = createBrowserRouter([
                                 path: 'class',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
-                                        <ProtectedRoute permission="bookings:read">
+                                        <ProtectedRoute permission="after-school-programs:read">
                                             <AfterSchoolProgramCheckinClassDetails />
                                         </ProtectedRoute>
                                     </Suspense>
@@ -275,6 +287,31 @@ const router = createBrowserRouter([
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="bookings:read">
                                             <ClassDetailsPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'play-lab',
+                        children: [
+                            {
+                                path: '',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PlayLabSessionSelectorPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ':appointmentTypeId',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PlayLabSessionAttendancePage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
@@ -387,7 +424,7 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'holiday-programs',
+                path: 'programs',
                 children: [
                     {
                         index: true,
@@ -398,15 +435,15 @@ const router = createBrowserRouter([
                             </Suspense>
                         ),
                     },
-                    {
-                        path: 'confirmation',
-                        Component: () => (
-                            <Suspense fallback={<Loader fullScreen />}>
-                                <Confirmation />
-                            </Suspense>
-                        ),
-                    },
                 ],
+            },
+            {
+                path: 'play-lab-booking',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <PlayLabBookingPage />
+                    </Suspense>
+                ),
             },
             {
                 path: 'invitations',

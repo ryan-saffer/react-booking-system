@@ -1,186 +1,245 @@
 <mjml>
-  <mj-head>
-    <mj-attributes>
-      <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
-      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
-    </mj-attributes>
-    <mj-style inline="inline">
-      .text-link {
-        color: #5e6ebf
-      }
-    </mj-style>
-    <mj-style inline="inline">
-      .footer-link {
-        color: #888888
-      }
-    </mj-style>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text
+                font-weight="400"
+                font-size="16px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
+        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
+        <mj-style> .btn-block a { display: block !important; } </mj-style>
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#eec73b" padding-bottom="0px">
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    {{ childName }}'s party is booked in!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+            <mj-column width="100%">
+                <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
+                <mj-text color="#637381" font-size="16px">
+                    We're delighted to confirm {{ childName }}'s {{ childAge }}th Birthday Party at Fizz Kidz! We're so
+                    excited.
+                </mj-text>
+            </mj-column>
 
-  </mj-head>
-  <mj-body background-color="#E7E7E7" width="600px">
-    <mj-section background-color="#eec73b" padding-bottom='0px'>
-      <mj-column width="100%">
-        <mj-spacer height="30px" />
-        <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-          {{ childName }}'s party is booked in!
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding-top="0">
-      <mj-column>
-        <mj-image src="https://i.imgur.com/5DI7BbY.png" width="600px" alt="" padding="0" />
-      </mj-column>
-    </mj-section>
-    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
-      <mj-column width="100%">
-        <mj-text color="#637381" font-size="16px">
-          Hi
-          {{ parentName }},
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          We're delighted to confirm
-          {{ childName }}'s
-          {{ childAge }}th Birthday Party at Fizz Kidz! We're so excited.
-        </mj-text>
-      </mj-column>
+            <mj-column width="50%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Where
+                </mj-text>
+                <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+                    {{^isMobile}} Fizz Kidz {{ location }}
+                    <br />
+                    {{/isMobile}} {{ address }}
+                </mj-text>
+            </mj-column>
+            <mj-column width="50%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    When
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    {{ startDate }}
+                    <br />
+                    {{ startTime }} - {{ endTime }}
+                </mj-text>
+            </mj-column>
+            {{^isMobile}}
+            <mj-column width="100%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Food package
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    {{#includesFood}} Food included {{/includesFood}} {{^includesFood}} Self-catered {{/includesFood}}
+                </mj-text>
+            </mj-column>
+            {{/isMobile}}
+            <mj-column width="100%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Contact
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    Going forward, your best point of contact is our wonderful {{#isMobile}}mobile
+                    party{{/isMobile}}{{^isMobile}}{{ location }} studio{{/isMobile}} manager, {{ managerName }}. {{
+                    managerSubjectPronoun }} will oversee the planning and running of {{ childName }}'s fabulous party!
+                    You can contact {{ managerName }} on {{ managerMobile }} or email {{ managerObjectPronoun }} at {{
+                    managerEmail }}. You can also just reply to this email directly :)
+                </mj-text>
+            </mj-column>
 
-      <mj-column width="50%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Where
-        </mj-text>
-        <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-          {{^isMobile}}
-            Fizz Kidz {{ location }}
-            <br />
-          {{/isMobile}}
-          {{ address }}
-        </mj-text>
-      </mj-column>
-      <mj-column width="50%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          When
-        </mj-text>
-        <mj-text color="#637381" font-size="14px" padding-top="0">
-          {{ startDate }}
-          <br />
-          {{ startTime }} - {{ endTime }}
-        </mj-text>
-      </mj-column>
-      {{^isMobile}}
-        <mj-column width="100%">
-          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-            Food package
-          </mj-text>
-          <mj-text color="#637381" font-size="14px" padding-top="0">
-            {{#includesFood}}
-              Food included
-            {{/includesFood}}
-            {{^includesFood}}
-              Self-catered
-            {{/includesFood}}
-          </mj-text>
-        </mj-column>
-      {{/isMobile}}
-      <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Contact
-        </mj-text>
-        <mj-text color="#637381" font-size="14px" padding-top="0">
-          Going forward, your best point of contact is our wonderful {{#isMobile}}mobile party{{/isMobile}}{{^isMobile}}{{ location }} store{{/isMobile}} manager, {{ managerName }}.
-          She will oversee the planning and running of {{ childName }}'s fabulous party!
-          You can contact {{ managerName }} on {{ managerMobile }} or email her at {{ managerEmail }}.
-          You can also just reply to this email directly :)
-        </mj-text>
-      </mj-column>
+            <mj-column width="100%">
+                <mj-text color="#637381" font-size="14px">
+                    <b style="color: #212b35">A week before the party</b>
+                    {{ managerName }} will email you a personalised online party form, where you can tell us the number
+                    of guests attending as well as pick your creations and order additional food. {{#canOrderCake}}<br /><br />This
+                    form will also include an option to
+                    <b style="color: #212b35">order an ice-cream cake and lolly/gift bags directly through us!</b> If
+                    you choose to do this, the cake will be ready for you at the party when you arrive.{{/canOrderCake}}
+                </mj-text>
+                {{#canOrderCake}}
+                <mj-image src="https://www.fizzkidz.com.au/emails/party-perks.jpg" />
+                {{/canOrderCake}}
+            </mj-column>
 
-      <mj-column width="100%">
-        <mj-text color="#637381" font-size="14px">
-          <b style="color:#212b35">A week before the party</b>
-          {{ managerName }} will email you a personalised online party form, where you can tell us the
-          number
-          of guests attending as well as pick your creations, additional food and party packs.
-        </mj-text>
-      </mj-column>
-
-      {{^isMobile}}
-        <mj-column width="100%">
-          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-            Things to keep in mind
-          </mj-text>
-          <mj-text color="#637381" font-size="14px">
-            <ul style="margin-bottom:0px;margin-top:0px">
-              <li>
-                Maximum numbers of kids
-                <ul>
-                  {{#numberOfKidsAllowed}}
-                    <li>{{.}}</li>
-                  {{/numberOfKidsAllowed}}
-                </ul>
-              </li>
-              <li>You're welcome to bring your own nut free cake, however please just remember to bring
-                along
-                some paper plates and spoons too!</li>
-            </ul>
-          </mj-text>
-        </mj-column>
-      {{/isMobile}}
-      <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Cancellation Policy
-        </mj-text>
-        <mj-text color="#637381" font-size="14px" padding-top="0">
-          While we would much prefer to not charge for a service that has not been received, please
-          understand that a cancelled or rescheduled party would have otherwise been taken by another
-          customer.
-          <br /><br />
-          A cancelled or rescheduled event may incur the following fees:
-          <ul>
-            <li>$150.00 if cancelled or rescheduled within 3 weeks of the event.</li>
-            <li>$300.00 if cancelled or rescheduled within 2 weeks of the event.</li>
-            <li>$450.00 if cancelled or rescheduled within 1 week of the event.</li>
-          </ul>
-        </mj-text>
-      </mj-column>
-      <mj-column width="100%">
-        <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-          Invitations
-        </mj-text>
-        <mj-text color="#637381" font-size="14px">Fizz Kidz parties are special, and your guests should know that too! Use our invitation generator to create a personalised invitation to share with {{childName}}'s friends!</mj-text>
-        <mj-button background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
-          Create my personalised invitation ↗️
-        </mj-button>
-      </mj-column>
-      <mj-column width="100%">
-        {{^isMobile}}
-          <mj-text color="#212b35" font-size="12px" text-transform="uppercase" font-weight="bold" padding-bottom="0">
-            Useful Links
-          </mj-text>
-          <mj-text color="#637381" font-size="14px" padding-top="0">
-            <ul>
-              <li><a href="https://drive.google.com/file/d/123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD/view?usp=sharing">Here
-                  is a document of FAQs.</a> We highly recommend giving this a read over :)
-              </li>
-              <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
-            </ul>
-          </mj-text>
-        {{/isMobile}}
-        <mj-text color="#637381" font-size="16px">
-          We can't wait to PARTY with you soon,
-        </mj-text>
-        <mj-text color="#637381" font-size="16px">
-          Lami and the Fizz Kidz team
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-wrapper full-width="full-width">
-      <mj-section padding-top="0">
-        <mj-group>
-          <mj-column width="100%" padding-right="0">
-            <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-              <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a class="footer-link" href="https://www.fizzkidz.com.au">www.fizzkidz.com.au</a>
-            </mj-text>
-          </mj-column>
-        </mj-group>
-      </mj-section>
-    </mj-wrapper>
-  </mj-body>
+            {{^isMobile}}
+            <mj-column width="100%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Things to keep in mind
+                </mj-text>
+                <mj-text color="#637381" font-size="14px">
+                    <ul style="margin-bottom: 0px; margin-top: 0px">
+                        <li>
+                            Maximum numbers of kids
+                            <ul>
+                                {{#numberOfKidsAllowed}}
+                                <li>{{.}}</li>
+                                {{/numberOfKidsAllowed}}
+                            </ul>
+                        </li>
+                        <li>
+                            You're welcome to bring your own nut free cake, however please just remember to bring along
+                            some paper plates and spoons too!
+                        </li>
+                    </ul>
+                </mj-text>
+            </mj-column>
+            {{/isMobile}}
+            <mj-column width="100%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Cancellation Policy
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    While we would much prefer to not charge for a service that has not been received, please understand
+                    that a cancelled or rescheduled party would have otherwise been taken by another customer.
+                    <br /><br />
+                    A cancelled or rescheduled event may incur the following fees:
+                    <ul>
+                        <li>$150.00 if cancelled or rescheduled within 3 weeks of the event.</li>
+                        <li>$300.00 if cancelled or rescheduled within 2 weeks of the event.</li>
+                        <li>$450.00 if cancelled or rescheduled within 1 week of the event.</li>
+                    </ul>
+                </mj-text>
+            </mj-column>
+            <mj-column width="100%">
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Invitations
+                </mj-text>
+                <mj-text color="#637381" font-size="14px"
+                    >Fizz Kidz parties are special, and your guests should know that too! Use our invitation generator
+                    to create a personalised invitation to share with {{childName}}'s friends!</mj-text
+                >
+                <mj-button
+                    css-class="btn-block"
+                    background-color="#4BC5D9"
+                    padding="20px"
+                    align="center"
+                    color="#ffffff"
+                    font-size="17px"
+                    font-weight="bold"
+                    href="{{ invitationsUrl }}"
+                    css-class="btn-block"
+                    border="1px #4BC5D9 solid"
+                >
+                    Create my personalised invitation ↗️
+                </mj-button>
+            </mj-column>
+            <mj-column width="100%">
+                {{^isMobile}}
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                >
+                    Useful Links
+                </mj-text>
+                <mj-text color="#637381" font-size="14px" padding-top="0">
+                    <ul>
+                        <li>
+                            <a href="https://drive.google.com/file/d/123UmCTpRpVUhOzybZJ_95Ap2Vqo5ySXD/view?usp=sharing"
+                                >Here is a document of FAQs.</a
+                            >
+                            We highly recommend giving this a read over :)
+                        </li>
+                        <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
+                    </ul>
+                </mj-text>
+                {{/isMobile}}
+                <mj-text color="#637381" font-size="16px"> We can't wait to PARTY with you soon, </mj-text>
+                <mj-text color="#637381" font-size="16px"> Lami and the Fizz Kidz team </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
 </mjml>

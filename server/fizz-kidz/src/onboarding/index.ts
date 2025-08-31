@@ -1,4 +1,4 @@
-import { Location } from '../core/location'
+import type { Location } from '../core/location'
 
 interface BaseEmployee {
     id: string
@@ -49,7 +49,6 @@ export type Employee =
     | (EmployeeAdditionalInfo & {
           status: 'verification' | 'complete'
           driveFolderId: string
-          // xeroUserId: string;
       })
 
 export type InitiateEmployeeProps = {
