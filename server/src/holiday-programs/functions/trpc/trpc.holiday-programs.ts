@@ -1,11 +1,14 @@
-import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
-import { checkDiscountCode } from '../../core/discount-codes/check-discount-code'
-import type { CreateDiscountCode } from '../../core/discount-codes/create-discount-code'
-import { createDiscountCode } from '../../core/discount-codes/create-discount-code'
-import type { CreateDiscountCodeFromInvitation } from '../../core/discount-codes/create-discount-code-from-invitation'
-import { createDiscountCodeFromInvitation } from '../../core/discount-codes/create-discount-code-from-invitation'
-import { bookHolidayProgram, type HolidayProgramBookingProps } from '../../core/book-holiday-program'
+import { type HolidayProgramBookingProps, bookHolidayProgram } from '@/holiday-programs/core/book-holiday-program'
+import { checkDiscountCode } from '@/holiday-programs/core/discount-codes/check-discount-code'
+import {
+    type CreateDiscountCode,
+    createDiscountCode,
+} from '@/holiday-programs/core/discount-codes/create-discount-code'
+import {
+    type CreateDiscountCodeFromInvitation,
+    createDiscountCodeFromInvitation,
+} from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
+import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({
     book: publicProcedure
@@ -21,5 +24,3 @@ export const holidayProgramsRouter = router({
         .input((input: unknown) => input as { code: string })
         .mutation(({ input }) => checkDiscountCode(input.code)),
 })
-
-export const holidayPrograms = onRequestTrpc(holidayProgramsRouter, '512MiB')

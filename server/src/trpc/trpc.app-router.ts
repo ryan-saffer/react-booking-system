@@ -8,7 +8,7 @@ import { playLabRouter } from '../play-lab/functions/trpc/trpc.play-lab'
 import { staffRouter } from '../staff/functions/trpc/trpc.staffRouter'
 import { router } from './trpc'
 
-const appRouter = router({
+export const appRouter = router({
     parties: partiesRouter,
     events: eventsRouter,
     acuity: acuityRouter,

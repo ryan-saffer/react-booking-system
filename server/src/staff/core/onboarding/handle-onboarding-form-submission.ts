@@ -1,7 +1,11 @@
+import { logger } from 'firebase-functions/v2'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { DriveClient } from '../../../google/DriveClient'
-import { logError, onMessagePublished } from '../../../utilities'
-import { MailClient } from '../../../sendgrid/MailClient'
+import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
+import { getQuestionValue } from 'fizz-kidz'
+import { State } from 'xero-node/dist/gen/model/payroll-au/state'
+import { DriveClient } from '@/google/DriveClient'
+import { logError } from '@/utilities'
+import { MailClient } from '@/sendgrid/MailClient'
 
 const CURRENT_STAFF_FOLDER_ID = '19pzxRIbp3jzM7HJAUMg6Bau5B_y5xjwt'
 // const STAFF_ORDINARY_HOURS_RATE_ID =
@@ -9,13 +13,73 @@ const CURRENT_STAFF_FOLDER_ID = '19pzxRIbp3jzM7HJAUMg6Bau5B_y5xjwt'
 // const PAYROLL_CALENDAR_ID =
 //     env === 'prod' ? '76728c47-3451-42e7-93cc-d99fad85d4c2' : 'c44ebff9-c5ec-41de-9e13-0e55f6e11b2d'
 
-export const createEmployee = onMessagePublished('createEmployee', async (data) => {
-    const employee = await DatabaseClient.getEmployee(data.employeeId)
+export async function handleOnboardingFormSubmission(data: PaperFormResponse<OnboardingForm>, pdfUrl: string) {
+    const employeeId = getQuestionValue(data, 'id')
+    const existingEmployee = await DatabaseClient.getEmployee(employeeId)
 
-    if (employee.status !== 'generating-accounts') {
-        logError(`employee creation began despite status not being 'generating-accounts'. Employee id: ${employee.id}`)
+    if (existingEmployee.status !== 'form-sent') {
+        logger.log(
+            `employee form already submitted for ${existingEmployee.firstName} ${existingEmployee.lastName} - exiting`
+        )
         return
     }
+
+    const wwccStatus = getQuestionValue(data, 'wwccStatus')
+    let wwcc: WWCC
+
+    if (wwccStatus === 'I have a WWCC') {
+        const photo = getQuestionValue(data, 'wwccPhoto')
+        wwcc = {
+            status: wwccStatus,
+            photo: {
+                url: photo.url,
+                filename: photo.name,
+                mimeType: photo.type,
+            },
+            cardNumber: getQuestionValue(data, 'wwccCardNumber'),
+        }
+    } else {
+        wwcc = {
+            status: wwccStatus,
+            applicationNumber: getQuestionValue(data, 'wwccApplicationNumber'),
+        }
+    }
+
+    const employee = {
+        ...existingEmployee,
+        firstName: getQuestionValue(data, 'firstName'),
+        lastName: getQuestionValue(data, 'lastName'),
+        pronouns: getQuestionValue(data, 'pronouns'),
+        dob: getQuestionValue(data, 'dob'),
+        email: getQuestionValue(data, 'email'),
+        mobile: getQuestionValue(data, 'mobile'),
+        address: {
+            full: getQuestionValue(data, 'address', 'type'),
+            addressLine1: getQuestionValue(data, 'address_street', 'type'),
+            city: getQuestionValue(data, 'address_suburb', 'type'),
+            region: getState(getQuestionValue(data, 'address_state', 'type'))!,
+            postalCode: getQuestionValue(data, 'address_postcode', 'type'),
+        },
+        health: getQuestionValue(data, 'health'),
+        tfnForm: {
+            url: getQuestionValue(data, 'tfnForm').url,
+            filename: getQuestionValue(data, 'tfnForm').name,
+            mimeType: getQuestionValue(data, 'tfnForm').type,
+        },
+        bankAccountName: getQuestionValue(data, 'bankAccountName'),
+        bsb: getQuestionValue(data, 'bsb'),
+        accountNumber: getQuestionValue(data, 'accountNumber'),
+        wwcc,
+        emergencyContact: {
+            name: getQuestionValue(data, 'emergencyContactName'),
+            mobile: getQuestionValue(data, 'emergencyContactMobile'),
+            relation: getQuestionValue(data, 'emergencyContactRelation'),
+        },
+        pdfSummary: pdfUrl,
+        status: 'generating-accounts',
+    } satisfies Employee
+
+    await DatabaseClient.updateEmployee(employee.id, employee)
 
     // create google drive folder
     const driveClient = await DriveClient.getInstance()
@@ -177,7 +241,19 @@ export const createEmployee = onMessagePublished('createEmployee', async (data) 
     })
 
     return
-})
+}
+
+function getState(state: string) {
+    const lowercaseState = state.toLowerCase()
+    if (lowercaseState.includes('vic')) return State.VIC
+    if (lowercaseState.includes('new') || lowercaseState.includes('nsw')) return State.NSW
+    if (lowercaseState.includes('tas')) return State.TAS
+    if (lowercaseState.includes('queen') || lowercaseState.includes('qld')) return State.QLD
+    if (lowercaseState.includes('act') || lowercaseState.includes('australian')) return State.ACT
+    if (lowercaseState === 'nt' || lowercaseState.includes('northern')) return State.NT
+    if (lowercaseState === 'sa' || lowercaseState.includes('south')) return State.SA
+    if (lowercaseState.includes('western') || lowercaseState === 'wa') return State.WA
+}
 
 // function getGenderEnum(pronouns: string) {
 //     if (pronouns === 'He/Him') {

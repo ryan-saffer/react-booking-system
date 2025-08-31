@@ -2,7 +2,6 @@ import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityConstants } from 'fizz-kidz'
 
 import { acuityAuthenticatedProcedure, acuityPublicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import { mergeAcuityWithStoryblok } from '../../core/merge-storyblok-with-acuity'
 
 export const acuityRouter = router({
@@ -50,5 +49,3 @@ export const acuityRouter = router({
             }
         ),
 })
-
-export const acuity = onRequestTrpc(acuityRouter)

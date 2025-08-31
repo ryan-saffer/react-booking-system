@@ -1,8 +1,10 @@
-import { onRequest } from 'firebase-functions/v2/https'
+import express from 'express'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 
-export const esignaturesWebhook = onRequest(async (req, res) => {
+export const esignaturesWebhook = express.Router()
+
+esignaturesWebhook.post('/esignatures', async (req, res) => {
     // verify webhook is from esignatures
     const authToken = req.headers.authorization
     if (!authToken) {

@@ -1,5 +1,5 @@
+import express from 'express'
 import { logger } from 'firebase-functions/v2'
-import { onRequest } from 'firebase-functions/v2/https'
 import { AcuityConstants } from 'fizz-kidz'
 
 import { checkInToCrm } from '@/holiday-programs/core/check-in-to-crm'
@@ -23,13 +23,15 @@ function isHolidayProgram(appointmentTypeId: string) {
     )
 }
 
+export const acuityWebhook = express.Router()
+
 async function isPlayLab(appointmentTypeId: string) {
     const acuity = await AcuityClient.getInstance()
     const appointmentTypes = await acuity.getAppointmentTypes({ category: ['play-lab', 'play-lab-test'] })
     return appointmentTypes.some((appointmentType) => appointmentType.id.toString() === appointmentTypeId)
 }
 
-export const asWebhook = onRequest(async (req, resp) => {
+acuityWebhook.post('/acuity', async (req, resp) => {
     logger.log('STARTING WEBHOOK')
     logger.log(req.body)
     const data = req.body as AcuityWebhookData

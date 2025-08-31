@@ -1,8 +1,8 @@
 import { AcuityConstants } from 'fizz-kidz'
 
-import type { AcuityWebhookData } from '../../acuity'
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import type { AcuityWebhookData } from '@/acuity/functions/acuity.webhook'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 /**
  * In Zoho Campaigns, there is an automation to send an email on the evening of their program asking how it was.

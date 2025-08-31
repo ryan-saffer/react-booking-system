@@ -1,4 +1,4 @@
-import type { IncursionForm, PaperFormResponse, PartyForm } from '../paperform'
+import type { IncursionForm, OnboardingForm, PaperFormResponse, PartyForm } from '../paperform'
 import { type PartyFormV2 } from '../paperform'
 
 export interface PubSubFunctions {
@@ -17,5 +17,9 @@ export interface PubSubFunctions {
         | {
               form: 'incursion'
               data: PaperFormResponse<IncursionForm>
+          }
+        | {
+              form: 'onboarding'
+              data: { formData: PaperFormResponse<OnboardingForm>; pdfUrl: string }
           }
 }

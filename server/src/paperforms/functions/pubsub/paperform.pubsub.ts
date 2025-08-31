@@ -1,9 +1,8 @@
-import { logger } from 'firebase-functions/v2'
-
-import { handleIncursionFormSubmission } from '../../../events/core/handle-incursion-form-submission'
-import { handlePartyFormSubmission } from '../../../party-bookings/core/handle-party-form-submission'
-import { handlePartyFormSubmissionV2 } from '../../../party-bookings/core/handle-party-form-submission-v2'
-import { onMessagePublished } from '../../../utilities'
+import { handleIncursionFormSubmission } from '@/events/core/handle-incursion-form-submission'
+import { handlePartyFormSubmission } from '@/party-bookings/core/handle-party-form-submission'
+import { handlePartyFormSubmissionV2 } from '@/party-bookings/core/handle-party-form-submission-v2'
+import { handleOnboardingFormSubmission } from '@/staff/core/onboarding/handle-onboarding-form-submission'
+import { logError, onMessagePublished } from '@/utilities'
 
 export const paperformPubSub = onMessagePublished('paperformSubmission', async (input) => {
     const { form, data } = input
@@ -18,9 +17,12 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
         case 'incursion':
             await handleIncursionFormSubmission(data)
             break
+        case 'onboarding':
+            await handleOnboardingFormSubmission(data.formData, data.pdfUrl)
+            break
         default: {
             const exhaustiveCheck: never = form
-            logger.error(`unrecognised form type: '${exhaustiveCheck}'`)
+            logError(`unrecognised form type: '${exhaustiveCheck}'`)
         }
     }
 })

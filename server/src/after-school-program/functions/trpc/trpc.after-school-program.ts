@@ -12,7 +12,6 @@ import { sendInvoices } from '@/after-school-program/core/send-invoices'
 
 import { SheetsClient } from '../../../google/SheetsClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
 import scheduleAfterSchoolProgram from '../../core/schedule-after-school-program'
 import { sendTermContinutationEmails } from '../../core/send-term-continutation-email'
 import { unenrollAfterSchoolAppointments } from '../../core/unenroll-after-school-appointments'
@@ -55,5 +54,3 @@ export const afterSchoolProgramRouter = router({
         .input((input) => input as RetrieveInvoiceStatusesParams)
         .query(({ input }) => retrieveInvoiceStatuses(input)),
 })
-
-export const afterSchoolProgram = onRequestTrpc(afterSchoolProgramRouter)

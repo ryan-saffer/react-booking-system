@@ -1,9 +1,11 @@
+import express from 'express'
 import { logger } from 'firebase-functions/v2'
-import { onRequest } from 'firebase-functions/v2/https'
 
 import { publishToPubSub } from '../../../utilities'
 
-export const paperformWebhook = onRequest(async (req, res) => {
+export const paperformWebhook = express.Router()
+
+paperformWebhook.post('/paperform', async (req, res) => {
     logger.log(`${req.query.form} form submission received with submission id:`, req.body.submission_id)
     if (req.query.form === 'incursion') {
         await publishToPubSub('paperformSubmission', { form: 'incursion', data: req.body.data })

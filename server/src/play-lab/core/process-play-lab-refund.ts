@@ -2,12 +2,11 @@ import { logger } from 'firebase-functions/v2'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import type { Order } from 'square/api'
 
+import { AcuityClient } from '@/acuity/core/acuity-client'
+import type { AcuityWebhookData } from '@/acuity/functions/acuity.webhook'
 import { MailClient } from '@/sendgrid/MailClient'
-
-import type { AcuityWebhookData } from '../../acuity'
-import { AcuityClient } from '../../acuity/core/acuity-client'
-import { SquareClient } from '../../square/core/square-client'
-import { logError } from '../../utilities'
+import { SquareClient } from '@/square/core/square-client'
+import { logError } from '@/utilities'
 
 export async function processPlayLabRefund(data: AcuityWebhookData) {
     const acuity = await AcuityClient.getInstance()
