@@ -66,7 +66,7 @@ function _Root() {
         trpc.createClient({
             links: [
                 httpBatchLink({
-                    url: `${domain}/api/trpc`,
+                    url: `${domain}/api/api/trpc`, // double '/api' since not using hosting redirect
                     async headers() {
                         // first try refresh the users token - this means when returning to the app
                         // after a while, it will refresh the token and work nicely.
