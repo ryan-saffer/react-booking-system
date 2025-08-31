@@ -44,3 +44,4 @@ export function getKeyByValue<T extends Record<string, string>>(obj: T, value: s
 export * from './businessLogic'
 export * from './manager-info'
 export * from './stringUtilities'
+export * from './assert-never'
