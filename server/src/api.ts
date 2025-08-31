@@ -13,9 +13,10 @@ import { appRouter } from './trpc/trpc.app-router'
 import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
 
 const app = express()
+const apiRouter = express.Router()
 
 // TRPC
-app.use(
+apiRouter.use(
     '/trpc',
     trpcExpress.createExpressMiddleware({
         router: appRouter,
@@ -54,6 +55,9 @@ webhooks.use((req, _, next) => {
 
 webhooks.use('/webhooks', [acuityWebhook, esignaturesWebhook, paperformWebhook, partyFormRedirect, websiteFormsWebhook])
 
-app.use(webhooks)
+apiRouter.use(webhooks)
+
+// Mount all API routes under /api
+app.use('/api', apiRouter)
 
 export const api = onRequest({ region: 'australia-southeast1', cors: true, memory: '2GiB' }, app)

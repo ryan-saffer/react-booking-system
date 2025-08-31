@@ -18,7 +18,7 @@ import { ZohoClient } from '@/zoho/zoho-client'
 
 export const websiteFormsWebhook = express.Router()
 
-websiteFormsWebhook.post('/website', async (req, res) => {
+websiteFormsWebhook.post('/website-forms', async (req, res) => {
     const formId = req.query.formId as keyof Form
 
     const zohoClient = new ZohoClient()

@@ -27,7 +27,7 @@ const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
 export const partyFormRedirect = express.Router()
 
 // Route used conditionally in Paperform if the customer selected a product.
-partyFormRedirect.get('/payment-link', async (req, res) => {
+partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     const submissionId = req.query.submissionId
     if (!submissionId || typeof submissionId !== 'string') {
         logError('party form submitted for checkout but there was no submissionId', undefined, { requestUrl: req.url })
@@ -146,7 +146,7 @@ partyFormRedirect.get('/payment-link', async (req, res) => {
 })
 
 // Route for handling post-checkout redirect
-partyFormRedirect.get('/form-complete', async (req, res) => {
+partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     const submissionId = req.query.submissionId
     if (!submissionId || typeof submissionId !== 'string') {
         logError('party form submitted for completion but there was no submissionId', undefined, {
