@@ -105,6 +105,9 @@ app.get('/payment-link', async (req, res) => {
                 source: {
                     name: 'Party Form',
                 },
+                pricingOptions: {
+                    autoApplyDiscounts: true,
+                },
                 lineItems: [
                     ...(orderedCake
                         ? [
