@@ -1,10 +1,11 @@
 import { logger } from 'firebase-functions/v2'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { Employee, OnboardingForm, PaperFormResponse, WWCC, getQuestionValue } from 'fizz-kidz'
+import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
+import { getQuestionValue } from 'fizz-kidz'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
-import { DriveClient } from '../../../google/DriveClient'
-import { logError } from '../../../utilities'
-import { MailClient } from '../../../sendgrid/MailClient'
+import { DriveClient } from '@/google/DriveClient'
+import { logError } from '@/utilities'
+import { MailClient } from '@/sendgrid/MailClient'
 
 const CURRENT_STAFF_FOLDER_ID = '19pzxRIbp3jzM7HJAUMg6Bau5B_y5xjwt'
 // const STAFF_ORDINARY_HOURS_RATE_ID =
