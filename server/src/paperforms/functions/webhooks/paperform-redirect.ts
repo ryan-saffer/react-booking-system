@@ -85,7 +85,7 @@ partyFormRedirect.get('/payment-link', async (req, res) => {
         // Create payment link using checkout API
         const { paymentLink } = await square.checkout.paymentLinks.create({
             idempotencyKey: crypto.randomUUID(),
-            description: 'Test Payment Link',
+            description: 'Party Form Checkout',
             checkoutOptions: {
                 allowTipping: false,
                 askForShippingAddress: false,
@@ -93,14 +93,16 @@ partyFormRedirect.get('/payment-link', async (req, res) => {
                 redirectUrl: `${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`,
             },
             prePopulatedData: {
-                buyerEmail: 'ryansaffer@gmail.com',
-                buyerPhoneNumber: '+61413892120',
+                buyerEmail: booking.parentEmail,
             },
             order: {
                 locationId,
                 customerId,
                 source: {
                     name: 'Party Form',
+                },
+                pricingOptions: {
+                    autoApplyDiscounts: true,
                 },
                 lineItems: [
                     ...(orderedCake
