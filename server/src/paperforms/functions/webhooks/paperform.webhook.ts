@@ -1,7 +1,9 @@
 import express from 'express'
 import { logger } from 'firebase-functions/v2'
 
-import { publishToPubSub } from '../../../utilities'
+import { publishToPubSub } from '@/utilities'
+
+const PDF_KEY = '7843d2a'
 
 export const paperformWebhook = express.Router()
 
@@ -20,6 +22,14 @@ paperformWebhook.post('/paperform', async (req, res) => {
             form: 'party-v2',
             data: req.body.data,
             charge: req.body.charge?.charge,
+        })
+    } else if (req.query.form === 'onboarding') {
+        await publishToPubSub('paperformSubmission', {
+            form: 'onboarding',
+            data: {
+                formData: req.body.data,
+                pdfUrl: req.body.pdfs[PDF_KEY].url,
+            },
         })
     } else {
         logger.error(`unrecognised form sent to webhook: ${req.query.form}`)
