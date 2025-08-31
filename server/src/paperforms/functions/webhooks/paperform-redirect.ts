@@ -136,7 +136,12 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
             },
         })
 
-        res.redirect(303, paymentLink?.url || '')
+        if (paymentLink?.url) {
+            res.redirect(303, paymentLink.url)
+        } else {
+            logError(`Payment link is empty for party form with submissionId: ${submissionId}`)
+            res.redirect(303, ERROR_REDIRECT)
+        }
         return
     } catch (error) {
         logError(`Error creating payment link for party form with submissionId: ${submissionId}`, error)

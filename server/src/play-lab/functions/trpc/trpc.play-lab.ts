@@ -1,9 +1,6 @@
-import { publicProcedure, router } from '../../../trpc/trpc'
-import { onRequestTrpc } from '../../../trpc/trpc.adapter'
-import { bookPlayLab, type BookPlayLabProps } from '../../core/book-play-lab'
+import { type BookPlayLabProps, bookPlayLab } from '@/play-lab/core/book-play-lab'
+import { publicProcedure, router } from '@/trpc/trpc'
 
 export const playLabRouter = router({
     book: publicProcedure.input((input) => input as BookPlayLabProps).mutation(({ input }) => bookPlayLab(input)),
 })
-
-export const playLab = onRequestTrpc(playLabRouter)

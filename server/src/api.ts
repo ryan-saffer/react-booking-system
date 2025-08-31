@@ -11,10 +11,13 @@ import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-red
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
 import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
+import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
 import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
 
 const app = express()
 const apiRouter = express.Router()
+
+const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL', 'PAYMENT_METHOD_INVALID']
 
 // TRPC
 apiRouter.use(
@@ -23,14 +26,15 @@ apiRouter.use(
         router: appRouter,
         createContext,
         onError: ({ error, input, path }) => {
-            if (error.code === 'PRECONDITION_FAILED') {
+            const errorCode = getErrorCode(error.cause ?? error, error.code)
+            if (ERRORS_TO_IGNORE.includes(errorCode)) {
                 // not an error worth logging
                 return
             }
             logger.error(error.message, {
                 path,
                 input,
-                errorCode: error.code,
+                errorCode,
                 cause: error.cause,
             })
         },
