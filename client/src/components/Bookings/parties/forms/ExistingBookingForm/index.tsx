@@ -104,6 +104,8 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         }
     }
     const displayAdditions = additionSelected || editing
+    const displayTakeHomeBags = ObjectKeys(booking.takeHomeBags || {}).length > 0
+    const displayProducts = ObjectKeys(booking.products || {}).length > 0
 
     const handleEdit = () => {
         setEditing(true)
@@ -789,7 +791,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                     </>
                 )}
                 {/* Take Home Bags Section */}
-                {booking.takeHomeBags && (
+                {displayTakeHomeBags && (
                     <>
                         <Grid item xs={12}>
                             <Box display="flex" alignItems="center" gap={2}>
@@ -839,7 +841,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                     </>
                 )}
                 {/* Products Section */}
-                {booking.products && (
+                {displayProducts && (
                     <>
                         <Grid item xs={12}>
                             <Box display="flex" alignItems="center" gap={2}>
