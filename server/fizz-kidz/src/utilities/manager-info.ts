@@ -54,7 +54,7 @@ export function getManager(
             return {
                 name: 'Kym',
                 email: 'essendon@fizzkidz.com.au',
-                mobile: '0431 379 953',
+                mobile: '0411 549 756',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
@@ -63,7 +63,7 @@ export function getManager(
             return {
                 name: 'Kym',
                 email: 'kingsville@fizzkidz.com.au',
-                mobile: '0431 379 953',
+                mobile: '0411 549 756',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
