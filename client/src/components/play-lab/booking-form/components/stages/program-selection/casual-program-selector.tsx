@@ -7,7 +7,7 @@ import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
 import { trpc } from '@utils/trpc'
 
-import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
+import { TERM_LENGTH, useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useFormStage } from '../../../state/form-stage-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { ContinueButton } from './continue-button'
@@ -251,11 +251,7 @@ function SessionSelector({ classes, selectedDay }: { classes: LocalAcuityClass[]
                                 <span>{ages}</span>
                             </div>
                             <div className="text-sm font-semibold text-gray-700">{time}</div>
-                            {term && (
-                                <div className="text-xs text-gray-400">
-                                    {term}
-                                </div>
-                            )}
+                            {term && <div className="text-xs text-gray-400">{term}</div>}
                             {klass.slotsAvailable > 0 && klass.slotsAvailable <= 5 && (
                                 <span className="mt-2 inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
                                     Only {klass.slotsAvailable} spot{klass.slotsAvailable > 1 ? 's' : ''} left
@@ -337,73 +333,77 @@ function BrowseByProgram({
     return (
         <>
             <div className="flex flex-col gap-6">
-                {Object.entries(groupedPrograms).sort(([a], [b]) => a.localeCompare(b)).map(([term, programs]) => {
-                    // Check if any programs in this term group should be shown
-                    const hasVisiblePrograms = programs.some((program) => 
-                        !selectedAppointmentTypeId || selectedAppointmentTypeId === program.id
-                    )
-                    
-                    if (!hasVisiblePrograms) return null
+                {Object.entries(groupedPrograms)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([term, programs]) => {
+                        // Check if any programs in this term group should be shown
+                        const hasVisiblePrograms = programs.some(
+                            (program) => !selectedAppointmentTypeId || selectedAppointmentTypeId === program.id
+                        )
 
-                    return (
-                        <div key={term}>
-                            <h3 className="mb-3 mt-2 text-lg font-semibold text-gray-800">{term}</h3>
-                            <div className="flex flex-col gap-4">
-                                {programs.map((program) => {
-                                    const includesSelectedClass = Object.values(selectedClasses).some(
-                                        (it) => it.appointmentTypeID === program.id
-                                    )
+                        if (!hasVisiblePrograms) return null
 
-                                    const { name, day, time, ages } = JSON.parse(program.description)
+                        return (
+                            <div key={term}>
+                                <h3 className="mb-3 mt-2 text-lg font-semibold text-gray-800">{term}</h3>
+                                <div className="flex flex-col gap-4">
+                                    {programs.map((program) => {
+                                        const includesSelectedClass = Object.values(selectedClasses).some(
+                                            (it) => it.appointmentTypeID === program.id
+                                        )
 
-                                    if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id) return null
+                                        const { name, day, time, ages } = JSON.parse(program.description)
 
-                                    return (
-                                        <div
-                                            key={program.id}
-                                            onClick={() => handleCardClick(program.id)}
-                                            className={cn(
-                                                'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
-                                                {
-                                                    'bg-gray-100 hover:bg-gray-100':
-                                                        selectedAppointmentTypeId === program.id,
-                                                    'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
-                                                        includesSelectedClass && selectedAppointmentTypeId !== program.id,
-                                                }
-                                            )}
-                                        >
-                                            <img
-                                                src={program.image}
-                                                alt={name}
-                                                className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
-                                            />
+                                        if (selectedAppointmentTypeId && selectedAppointmentTypeId !== program.id)
+                                            return null
 
-                                            <div className="ml-4 flex-1 space-y-1">
-                                                <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+                                        return (
+                                            <div
+                                                key={program.id}
+                                                onClick={() => handleCardClick(program.id)}
+                                                className={cn(
+                                                    'relative flex cursor-pointer items-center rounded-lg border p-4 hover:bg-gray-50',
+                                                    {
+                                                        'bg-gray-100 hover:bg-gray-100':
+                                                            selectedAppointmentTypeId === program.id,
+                                                        'border-white ring-2 ring-green-400 ring-offset-2 ring-offset-white':
+                                                            includesSelectedClass &&
+                                                            selectedAppointmentTypeId !== program.id,
+                                                    }
+                                                )}
+                                            >
+                                                <img
+                                                    src={program.image}
+                                                    alt={name}
+                                                    className="hidden h-20 w-20 flex-shrink-0 rounded-md object-cover min-[460px]:block"
+                                                />
 
-                                                <div className="flex flex-wrap text-sm text-gray-500">
-                                                    <span>{ages}</span>
+                                                <div className="ml-4 flex-1 space-y-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+
+                                                    <div className="flex flex-wrap text-sm text-gray-500">
+                                                        <span>{ages}</span>
+                                                    </div>
+
+                                                    <div className="text-sm font-semibold text-gray-700">
+                                                        {day} · {time}
+                                                    </div>
                                                 </div>
-
-                                                <div className="text-sm font-semibold text-gray-700">
-                                                    {day} · {time}
-                                                </div>
+                                                {includesSelectedClass && selectedAppointmentTypeId !== program.id && (
+                                                    <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
+                                                )}
                                             </div>
-                                            {includesSelectedClass && selectedAppointmentTypeId !== program.id && (
-                                                <CheckCircleIcon className="absolute right-4 top-4 h-6 w-6 text-green-500" />
-                                            )}
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
             </div>
             <div className="mb-4">
                 {selectedAppointmentTypeId && filteredClasses.length !== 0 && (
                     <>
-                        {filteredClasses.length === 8 && (
+                        {filteredClasses.length === TERM_LENGTH && (
                             <Button
                                 className="mt-6 w-full border-2 border-[#4BC5D9]"
                                 variant="outline"

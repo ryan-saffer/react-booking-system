@@ -3,6 +3,8 @@ import { create } from 'zustand'
 
 export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date; image?: string }
 
+export const TERM_LENGTH = 10
+
 interface Cart {
     // the classes curently in the cart
     selectedClasses: Record<number, LocalAcuityClass>
@@ -86,9 +88,9 @@ export const useCart = create<Cart>()((set, get) => ({
             discountPercent = 10
             description = 'Multi session discount - 4 or more sessions'
         }
-        if (classes.length >= 8) {
+        if (classes.length >= TERM_LENGTH) {
             discountPercent = 20
-            description = 'Term enrolment - 8 session discount'
+            description = 'Term enrolment - 10 session discount'
         }
 
         const multiSessionDiscountTotal = subtotal - subtotal * (discountPercent / 100)
