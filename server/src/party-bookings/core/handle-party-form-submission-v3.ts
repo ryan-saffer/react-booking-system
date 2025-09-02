@@ -315,6 +315,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                 },
                 {
                     replyTo: fullBooking.parentEmail,
+                    bcc: ['talia@fizzkidz.com.au'],
                 }
             )
         } catch (err) {
