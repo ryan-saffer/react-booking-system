@@ -226,6 +226,9 @@ export type Emails = {
         isTyeDyeParty: boolean
         hasAdditions: boolean
         additions: string[]
+        // for parent confirmation, merge take home bags and products
+        hasTakeHomeBags: boolean
+        takeHomeBags: { name: string; quantity: string }[]
         isMobile: boolean
         hasQuestions: boolean
         managerName: string

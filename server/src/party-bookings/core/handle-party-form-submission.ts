@@ -330,6 +330,8 @@ export async function handlePartyFormSubmission(
                 managerName: manager.name,
                 managerMobile: manager.mobile,
                 includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
+                hasTakeHomeBags: false,
+                takeHomeBags: [],
                 ...(fullBooking.cake && {
                     cake: {
                         selection: fullBooking.cake.selection,

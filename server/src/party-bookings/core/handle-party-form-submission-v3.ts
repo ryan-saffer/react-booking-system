@@ -424,6 +424,19 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                 managerName: manager.name,
                 managerMobile: manager.mobile,
                 includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
+                hasTakeHomeBags:
+                    ObjectKeys(mappedBooking.takeHomeBags || {}).length > 0 ||
+                    ObjectKeys(mappedBooking.products || {}).length > 0,
+                takeHomeBags: [
+                    ...ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
+                        name: TAKE_HOME_BAGS[key].displayValue,
+                        quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+                    })),
+                    ...ObjectKeys(mappedBooking.products || {}).map((key) => ({
+                        name: PRODUCTS[key].displayValue,
+                        quantity: mappedBooking.products?.[key]?.toString() || '0',
+                    })),
+                ],
                 ...(fullBooking.cake && {
                     cake: {
                         selection: fullBooking.cake.selection,
