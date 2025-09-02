@@ -90,7 +90,7 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
                 allowTipping: false,
                 askForShippingAddress: false,
                 merchantSupportEmail: 'bookings@fizzkidz.com.au',
-                redirectUrl: `${host}/partyFormRedirect/form-complete?submissionId=${submissionId}`,
+                redirectUrl: `${host}/api/api/webhooks/party-form/form-complete?submissionId=${submissionId}`,
             },
             prePopulatedData: {
                 buyerEmail: booking.parentEmail,
