@@ -34,6 +34,16 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
 
     const mailClient = await MailClient.getInstance()
 
+    const takeHomeBags = ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
+        name: TAKE_HOME_BAGS[key].displayValue,
+        quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+    }))
+
+    const products = ObjectKeys(mappedBooking.products || {}).map((key) => ({
+        name: PRODUCTS[key].displayValue,
+        quantity: mappedBooking.products?.[key]?.toString() || '0',
+    }))
+
     // first check if the booking form has been filled in previously
     if (existingBooking.partyFormFilledIn) {
         // form has been filled in before, notify manager of the change
@@ -91,12 +101,14 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                             quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
                         })),
                     }),
-                    ...(mappedBooking.takeHomeBags && {
-                        newTakeHomeBags: ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
-                            name: TAKE_HOME_BAGS[key].displayValue,
-                            quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
+                    ...(mappedBooking.takeHomeBags && takeHomeBags),
+                    ...(existingBooking.products && {
+                        oldProducts: ObjectKeys(existingBooking.products || {}).map((key) => ({
+                            name: PRODUCTS[key].displayValue,
+                            quantity: existingBooking.products?.[key]?.toString() || '0',
                         })),
                     }),
+                    ...(mappedBooking.products && products),
                 },
                 {
                     subject: `Party form filled in again for ${mappedBooking.parentFirstName} ${mappedBooking.parentLastName}`,
@@ -282,16 +294,6 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
 
     if (orderedTakeHomeBags || orderedProducts) {
         try {
-            const takeHomeBags = ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
-                name: TAKE_HOME_BAGS[key].displayValue,
-                quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
-            }))
-
-            const products = ObjectKeys(mappedBooking.products || {}).map((key) => ({
-                name: PRODUCTS[key].displayValue,
-                quantity: mappedBooking.products?.[key]?.toString() || '0',
-            }))
-
             await mailClient.sendEmail(
                 'takeHomeNotification',
                 manager.email,
@@ -383,16 +385,13 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                     studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
-                    newTakeHomeBags: ObjectKeys(mappedBooking.takeHomeBags).map((key) => ({
-                        name: TAKE_HOME_BAGS[key].displayValue,
-                        quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
-                    })),
                     ...(existingBooking.takeHomeBags && {
                         oldTakeHomeBags: ObjectKeys(existingBooking.takeHomeBags).map((key) => ({
                             name: TAKE_HOME_BAGS[key].displayValue,
                             quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
                         })),
                     }),
+                    newTakeHomeBags: takeHomeBags,
                 },
                 {
                     bcc: ['talia@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
@@ -425,19 +424,8 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                 managerName: manager.name,
                 managerMobile: manager.mobile,
                 includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
-                hasTakeHomeBags:
-                    ObjectKeys(mappedBooking.takeHomeBags || {}).length > 0 ||
-                    ObjectKeys(mappedBooking.products || {}).length > 0,
-                takeHomeBags: [
-                    ...ObjectKeys(mappedBooking.takeHomeBags || {}).map((key) => ({
-                        name: TAKE_HOME_BAGS[key].displayValue,
-                        quantity: mappedBooking.takeHomeBags?.[key]?.toString() || '0',
-                    })),
-                    ...ObjectKeys(mappedBooking.products || {}).map((key) => ({
-                        name: PRODUCTS[key].displayValue,
-                        quantity: mappedBooking.products?.[key]?.toString() || '0',
-                    })),
-                ],
+                hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
+                takeHomeBags: [...takeHomeBags, ...products],
                 ...(fullBooking.cake && {
                     cake: {
                         selection: fullBooking.cake.selection,
@@ -481,6 +469,8 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
             cakeSize: fullBooking.cake?.size,
             cakeCandles: fullBooking.cake?.candles,
         }),
+        takeHomeOrdered: orderedTakeHomeBags || orderedProducts,
+        takeHomeItems: [...takeHomeBags, ...products],
     })
 }
 

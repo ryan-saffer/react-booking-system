@@ -123,6 +123,8 @@ export type MixpanelEvent = {
         cakeSize?: string
         cakeServed?: string
         cakeCandles?: string
+        takeHomeOrdered: boolean
+        takeHomeItems: { name: string; quantity: string }[]
     }
     'after-school-program-enrolment': {
         distinct_id: string

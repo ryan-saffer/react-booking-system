@@ -380,5 +380,7 @@ export async function handlePartyFormSubmissionV2(
             cakeSize: fullBooking.cake?.size,
             cakeCandles: fullBooking.cake?.candles,
         }),
+        takeHomeOrdered: false,
+        takeHomeItems: [],
     })
 }
