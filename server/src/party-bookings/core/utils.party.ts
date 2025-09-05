@@ -1,5 +1,5 @@
 import type { Addition, BaseBooking, Booking } from 'fizz-kidz'
-import { ADDITIONS, CREATIONS } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, ObjectKeys, PRODUCTS, TAKE_HOME_BAGS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 export function getBookingCreations(booking: BaseBooking) {
@@ -33,9 +33,31 @@ export function isAddition(key: string): key is Addition {
 }
 
 export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://pdf4im1b.paperform.co/?location=${
+    let url = `https://26y8h6uc.paperform.co/?location=${
         booking.type === 'studio' ? booking.location : 'mobile'
     }&id=${bookingId}`
+
+    const cake = booking.cake ? `${booking.cake.selection}\n${booking.cake.size} ` : ''
+
+    const takeHomeBags = ObjectKeys(booking.takeHomeBags || {})
+        .map((key) => {
+            const amount = booking.takeHomeBags?.[key]
+            if (amount) return `${amount} ${TAKE_HOME_BAGS[key].displayValue}`
+        })
+        .join('\n')
+
+    const products = ObjectKeys(booking.products || {})
+        .map((key) => {
+            const amount = booking.products?.[key]
+            if (amount) return `${amount} ${PRODUCTS[key].displayValue}s`
+        })
+        .join('\n')
+
+    console.log({ takeHomeBags, products })
+    // const lollyBags = booking.takeHomeBags?.lollyBags
+    // const toyBags = booking.takeHomeBags?.toyBags
+    // const products = booking.products?.bathBombKit
+
     const encodedParams: { [key: string]: string } = {
         parent_first_name: encodeURIComponent(booking.parentFirstName),
         parent_last_name: encodeURIComponent(booking.parentLastName),
@@ -44,6 +66,8 @@ export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
         food_package: booking.includesFood
             ? encodeURIComponent('Include the food package')
             : encodeURIComponent('I will self-cater the party'),
+        cake_purchased: encodeURIComponent(cake),
+        take_home_bags_purchased: encodeURIComponent([takeHomeBags, products].join('\n')),
     }
 
     Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))
