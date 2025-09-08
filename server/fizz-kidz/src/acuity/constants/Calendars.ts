@@ -1,5 +1,5 @@
-import { ValuesAsKeys } from '../../utilities'
-import { Location } from '../..'
+import type { ValuesAsKeys } from '../../utilities'
+import type { Location } from '../..'
 
 export const StoreCalendars: ValuesAsKeys<typeof Location, number> = {
     balwyn: 3163510,
