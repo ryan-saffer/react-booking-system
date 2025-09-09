@@ -3,9 +3,12 @@ import type { AcuityTypes } from '../..'
 // For querying acuity, ie all appointments from a certain type and calendar
 export type FetchAppointmentsParams = {
     appointmentTypeId: number
-    calendarId: number
+    calendarId?: number
     classId?: number
     classTime?: string
+    minDate?: string
+    maxDate?: string
+    maxResults?: number
 }
 
 // For getting specific appointments by ids

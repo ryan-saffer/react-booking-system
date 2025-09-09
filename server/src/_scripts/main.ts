@@ -12,16 +12,22 @@ import {
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { generatePartyFormUrl } from './parties/generate-form'
-import { getParties } from './parties/get-parties'
+import { getParties } from './reports/get-parties'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
 import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices'
-
+import { getEvents } from './reports/get-events'
+import { getHolidayPrograms } from './reports/get-holiday-programs'
+import { getPlayLabPrograms } from './reports/get-play-lab'
 ;(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Run report on bookings',
+                value: 'runBookingsReport',
+            },
             {
                 title: 'Get party bookings',
                 value: 'getParties',
@@ -198,5 +204,37 @@ import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices
     }
     if (script === 'updatePartiesToOldPrices') {
         await updatePartiesToOldPrices()
+    }
+    if (script === 'runBookingsReport') {
+        const { startDate, endDate, studio } = await prompts([
+            { type: 'date', name: 'startDate', message: 'Enter a start date', initial: new Date() },
+            {
+                type: 'date',
+                name: 'endDate',
+                message: 'Enter an end date',
+                initial: (prev) => DateTime.fromJSDate(prev).plus({ years: 10 }).toJSDate(),
+            },
+            {
+                type: 'select',
+                name: 'studio',
+                message: 'Select the studio',
+                choices: ObjectKeys(Location).map((it) => ({
+                    value: Location[it],
+                    title: it,
+                })),
+            },
+        ])
+
+        const parties = await getParties({ from: startDate, to: endDate, studio })
+        const events = await getEvents({ from: startDate, to: endDate, studio })
+        const holidayPrograms = await getHolidayPrograms({ from: startDate, to: endDate, studio })
+        const playLab = await getPlayLabPrograms({ from: startDate, to: endDate, studio })
+
+        console.table({
+            Parties: parties.length,
+            Events: events.length,
+            'Holiday bookings': holidayPrograms.length,
+            'Play Lab bookings': playLab.length,
+        })
     }
 })()

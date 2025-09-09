@@ -89,10 +89,19 @@ export class AcuityClient {
     }
 
     async searchForAppointments(params: FetchAppointmentsParams) {
-        let path = `/appointments?calendarID=${params.calendarId}&appointmenTypeID=${params.appointmentTypeId}`
+        let path = `/appointments?appointmenTypeID=${params.appointmentTypeId}`
+        if (params.calendarId) {
+            path += `&calendarID=${params.calendarId}`
+        }
         if (params.classTime) {
             const date = params.classTime.split('T')[0]
             path += `&minDate=${date}&maxDate=${date}`
+        }
+        if (!params.classTime && params.minDate && params.maxDate) {
+            path += `&minDate=${params.minDate}&maxDate=${params.maxDate}`
+        }
+        if (params.maxResults) {
+            path += `&max=${params.maxResults}`
         }
         let result = await this._request<AcuityTypes.Api.Appointment[]>(path)
         if (params.classId) {

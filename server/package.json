@@ -17,8 +17,8 @@
         "start": "npm run shell",
         "test": "npm --prefix fizz-kidz run build && mocha",
         "test:coverage": "nyc --reporter=lcov mocha",
-        "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"booking-system-6435d\" }' ts-node --transpile-only ./src/_scripts/main.ts",
-        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' ts-node --transpile-only ./src/_scripts/main.ts"
+        "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"booking-system-6435d\" }' node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/_scripts/main.ts",
+        "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/_scripts/main.ts"
     },
     "dependencies": {
         "@google-cloud/pubsub": "^3.7.1",
@@ -67,7 +67,8 @@
         "prompts": "^2.4.2",
         "ts-node": "^10.9.1",
         "tslint": "^6.1.2",
-        "typescript": "^5.5.2"
+        "typescript": "^5.5.2",
+        "tsconfig-paths": "^4.2.0"
     },
     "engines": {
         "node": "22"
