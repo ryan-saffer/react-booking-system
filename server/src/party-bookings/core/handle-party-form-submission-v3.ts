@@ -364,12 +364,12 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         }
     }
 
-    // email sugarbliss if new take home bags were ordered
+    // email birthday cake shop if new take home bags were ordered
     if (mappedBooking.takeHomeBags && ObjectKeys(mappedBooking.takeHomeBags).length > 0) {
         try {
             await mailClient.sendEmail(
                 'takeHomeBagNotification',
-                env === 'prod' ? 'sugarbliss.operations@gmail.com' : 'ryansaffer@gmail.com',
+                env === 'prod' ? 'orders@birthdaycakeshop.com.au' : 'ryansaffer@gmail.com',
                 {
                     parentName: `${fullBooking.parentFirstName} ${fullBooking.parentLastName}`,
                     dateTime: DateTime.fromJSDate(existingBooking.dateTime, {
