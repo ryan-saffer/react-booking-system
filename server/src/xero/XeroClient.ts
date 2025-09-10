@@ -8,6 +8,7 @@ export class XeroClient {
     #status: ClientStatus = 'not-initialised'
 
     #client: TXeroClient | null = null
+    #refreshing = false
 
     private constructor() {}
 
@@ -22,6 +23,8 @@ export class XeroClient {
         if (!XeroClient.instance.#client) {
             throw new Error('Xero client not initialised')
         }
+        // Ensure we have a valid token before returning the client
+        await XeroClient.instance.#ensureValidToken()
         return XeroClient.instance.#client
     }
 
@@ -41,5 +44,47 @@ export class XeroClient {
             throw { message: 'error initialising xero api', error: err }
         }
         this.#status = 'initialised'
+    }
+
+    async #ensureValidToken() {
+        if (!this.#client) return
+        if (this.#refreshing) {
+            // If another call is already refreshing, wait briefly
+            // to let it complete to avoid duplicate requests.
+            let attempts = 0
+            while (this.#refreshing && attempts < 50) {
+                await new Promise((r) => setTimeout(r, 20))
+                attempts++
+            }
+            return
+        }
+
+        try {
+            const tokenSet = this.#client.readTokenSet()
+            const nowS = Math.floor(Date.now() / 1000)
+            const expS = tokenSet.expires_at
+            // Refresh a little early to avoid edge races
+            const earlyRefreshBufferS = 60
+            const isAboutToExpire = expS ? nowS >= expS - earlyRefreshBufferS : false
+
+            if (isAboutToExpire || tokenSet.expired()) {
+                this.#refreshing = true
+                try {
+                    const newTokenSet = await this.#client.getClientCredentialsToken()
+                    this.#client.setTokenSet(newTokenSet)
+                } finally {
+                    this.#refreshing = false
+                }
+            }
+        } catch (_err) {
+            // If reading token failed for any reason, try to fetch a fresh one
+            this.#refreshing = true
+            try {
+                const newTokenSet = await this.#client.getClientCredentialsToken()
+                this.#client.setTokenSet(newTokenSet)
+            } finally {
+                this.#refreshing = false
+            }
+        }
     }
 }
