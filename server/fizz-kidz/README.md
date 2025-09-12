@@ -17,6 +17,8 @@ The `fizz-kidz` module serves as the central hub for common functionalities and 
 -   **Constants & Enums:** Centralizes platform-wide constants, like service locations, roles, permissions, and specific configurations for third-party services.
 -   **Utilities:** Offers helper functions for common tasks like date manipulation, string formatting, or interacting with third-party APIs in a standardized way.
 
+Payment processing in the platform uses Square for all consumer payments; B2B invoices are issued via Xero.
+
 **Location within `server/`:**
 This module is located within the main `server/` directory (as `server/fizz-kidz/`) primarily due to Firebase Functions' deployment model. Firebase requires local dependencies to be packaged within the function's root directory. Placing `fizz-kidz` here ensures it's correctly included when deploying the serverless functions.
 

@@ -150,7 +150,13 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     }
 })
 
-// Route for handling post-checkout redirect
+/**
+ * Route for handling post-checkout redirect
+ *
+ * TODO:
+ * It's important that this route is idempotent, since it could get triggered at any point with the same query params.
+ * To achieve this, ensure that this submissionId has not been processed before.
+ */
 partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     const submissionId = req.query.submissionId
     if (!submissionId || typeof submissionId !== 'string') {

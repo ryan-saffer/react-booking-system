@@ -1,0 +1,76 @@
+name: Deploy (develop)
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "client/**"
+      - "server/**"
+      - "firebase.json"
+      - ".firebaserc"
+      - "client/predeploy.sh"
+
+concurrency:
+  group: deploy-develop
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    env:
+      PROJECT_ID: booking-system-6435d
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
+            server/fizz-kidz/package-lock.json
+
+      # Ensure local package builds have their toolchains
+      - name: Install dependencies (fizz-kidz)
+        run: npm ci
+        working-directory: server/fizz-kidz
+
+      - name: Install dependencies (server)
+        run: npm ci
+        working-directory: server
+
+      - name: Install dependencies (client)
+        run: npm ci
+        working-directory: client
+
+      # Provide tsc for fizz-kidz type-check invoked during predeploy
+      - name: Install TypeScript (global)
+        run: npm i -g typescript
+
+      - name: Authenticate to Google Cloud (OIDC)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/218703114555/locations/global/workloadIdentityPools/github-oidc/providers/github-actions-provider
+          service_account: github-deployer@booking-system-6435d.iam.gserviceaccount.com
+          export_default_credentials: true
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools
+
+      - name: Deploy Functions and Hosting (develop)
+        env:
+          GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
+        run: |
+          firebase deploy \
+            --only functions,hosting \
+            --project "$PROJECT_ID" \
+            --non-interactive \
+            --force
