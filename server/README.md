@@ -27,6 +27,7 @@ The server provides the API for the client application and handles background ta
 - **API:** tRPC
 - **Database:** Firebase Firestore (implicitly, via `fizz-kidz` module and Firebase Admin SDK usage)
 - **Messaging:** Google Cloud Pub/Sub
+- **Payments:** Square for all consumer payments (orders, payments, refunds). B2B invoices are issued via Xero.
 
 ## Project Structure
 
@@ -35,7 +36,7 @@ Key directories within `server/src/`:
 -   **`index.ts`**: Main entry point that exports all deployable Firebase Functions.
 -   **`fizz-kidz/`**: A crucial local module containing shared core business logic, types, and utilities. (See `server/fizz-kidz/README.md` for more details).
 -   **`trpc/`**: Contains tRPC configuration, the main `appRouter` (primarily for type generation), and the `trpc.adapter.ts` used to wrap tRPC routers into Firebase Functions.
--   **Feature-Specific Directories (e.g., `acuity/`, `party-bookings/`, `stripe/`, `staff/`):** Each directory typically encapsulates logic related to a specific domain or feature.
+-   **Feature-Specific Directories (e.g., `acuity/`, `party-bookings/`, `square/`, `staff/`):** Each directory typically encapsulates logic related to a specific domain or feature.
     -   `core/`: Often contains the main business logic.
     -   `functions/`: Contains the actual Firebase Function handlers (tRPC, webhooks, Pub/Sub).
     -   `index.ts` (within each feature directory): Exports the functions to be included in the main `server/src/index.ts`.
@@ -55,12 +56,11 @@ All functions exported from `server/src/index.ts` are deployed as individual Fir
 
 ### Webhook Handlers
 
--   These are standard HTTPS Firebase Functions (using `onRequest`) designed to receive and process webhook calls from various third-party services.
+-   These are standard HTTPS Firebase Functions (using `onRequest`) designed to receive and process webhook calls from third-party services.
 -   **Key Webhook Integrations:**
-    -   **Stripe (`stripe/functions/webhook.ts`):** Handles events like `payment_intent.succeeded` to trigger post-payment fulfillment logic (e.g., booking holiday programs).
-    -   **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations, to keep the portal's data in sync.
+    -   **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations. Notably, holiday program cancellations trigger Square refunds for the corresponding order line items.
     -   **Paperform (`paperforms/functions/webhooks/paperform.webhook.ts`):** Ingests new form submissions from Paperform.
-    -   **Contact Form 7 (`contact-form-7/webhook/contact-form-7-webhook.ts`):** Receives submissions from Contact Form 7, likely used on an external website.
+    -   **Contact Form 7 (`contact-form-7/webhook/contact-form-7-webhook.ts`):** Receives submissions from Contact Form 7.
 
 ### Pub/Sub Functions
 
@@ -73,11 +73,11 @@ All functions exported from `server/src/index.ts` are deployed as individual Fir
 
 ### Lazy Instantiation of SDK Clients
 
--   To optimize for cold starts in the serverless Firebase Functions environment, heavy third-party SDK clients (e.g., for Stripe, Xero, Acuity) are instantiated lazily.
+-   To optimize for cold starts in the serverless Firebase Functions environment, heavy third-party SDK clients (e.g., for Square, Xero, Acuity) are instantiated lazily.
 -   This pattern typically involves:
-    -   Using a singleton approach for client instances (e.g., `StripeClient.getInstance()`).
+    -   Using a singleton approach for client instances (e.g., `SquareClient.getInstance()`).
     -   Dynamically importing the SDK (`await import('some-sdk')`) only when the client is first requested.
-    -   This ensures that a function invocation doesn't pay the performance penalty of importing and parsing large SDKs unless that specific SDK is actually needed for the current operation. An example can be seen in `server/src/stripe/core/stripe-client.ts`.
+    -   This ensures that a function invocation doesn't pay the performance penalty of importing and parsing large SDKs unless that specific SDK is actually needed for the current operation. An example can be seen in `server/src/square/core/square-client.ts`.
 
 ## Development
 

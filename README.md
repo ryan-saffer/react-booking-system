@@ -5,7 +5,7 @@ The Fizz Kidz Portal is an internal management system streamlining Fizz Kidz ope
 **Key Integrations:**
 
 *   **Scheduling:** Acuity Scheduling (for holiday programs, after-school programs, play lab)
-*   **Payments:** Square
+*   **Payments:** Square (all payments; B2B invoices via Xero)
 *   **Analytics:** Mixpanel
 *   **Email:** SendGrid (using MJML for templating)
 *   **CRM:** Zoho

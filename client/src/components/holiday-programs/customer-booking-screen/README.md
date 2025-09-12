@@ -8,7 +8,8 @@ Provides ability to select multiple programs at once, individually add each chil
 
 All program information, including times, slots and available coupons are stored inside [Acuity Scheduling](https://acuityscheduling.com/) and accesed through the [developer API](https://developers.acuityscheduling.com/reference).
 
-Payments are made through [Stripe](https://stripe.com/docs/api).
+Payments are processed via [Square](https://developer.squareup.com/reference/square) for all consumer payments.
+Note: B2B invoices are sent directly through Xero (outside this flow).
 
 ## Flow
 
@@ -20,39 +21,34 @@ When adding children to the form, you can only add as many as the spots availabl
 
 ### Payment Screen
 
-As soon as the customer navigates to the payment screen, a [PaymentIntent](https://stripe.com/docs/api/payment_intents) is created in Stripe. This payment intent will include a [Metadata](https://stripe.com/docs/api/metadata) field `programType: holiday_program` to help identify it.
+On checkout, the client collects a Square card token and buyer verification token (3DS) and sends them to the server.
+The server creates a Square Order (line items per child/session, including an optional order-level discount) and then charges the payment using the submitted token.
+Orders include metadata for `classId` and a `lineItemIdentifier` to support accurate refunds.
 
 ### Processing Payment
 
-When the customer presses 'Confirm and pay', all their program details are stored into firestore under their `paymentIntent.id`, and the program is marked as `booked: false`.
-
-> This is done due to asynchronous and complicated nature of payment flows. In order to ensure that the program is only booked into once payment succeeds, the booking is performed inside a webhook, which is listening for successful payment events. Once a successful event occurs where the paymentIntent's `programType === holiday_program`, check firestore if `booked === false`, and proceed to book the programs in.
+When the customer presses 'Confirm and pay', the server:
+- Creates/updates a Square Order with line items and any discount.
+- Charges the payment via Square using the provided token and buyer verification token.
+- Immediately books the programs into Acuity with `paid: true`, attaching the Square `orderId` and the `lineItemIdentifier` on the appointment for traceability.
 
 ## Discount Codes
 
-Only one discount code can be applied to a booking in acuity at a time. Therefore if the customer enters a discount code, the 'same day discount' is removed from their booking.
+Only one discount code can be applied to a booking in Acuity at a time. Therefore if the customer enters a discount code, the 'same day discount' is removed from their pricing.
 
-Whenever a discount code is applied or removed, the `paymentIntent` is updated to reflect the new price. Additionally, a key value pair for each program for each child is added into the `metadata`, along with a `discount` key with a value `Certificate | null`. The reason for this is explained below.
+With Square, discounts are applied at the Order level as either a fixed percentage or fixed amount. Line items capture the final price (after discount), and metadata is used for reconciliation and refunds.
 
 ### ⚠️ **Note about discount codes** ⚠️
 
-While discount codes are used to calculate to the total cost of the payment, **they are not actually applied inside acuity**.
+Discounts affect payment totals (in Square) but are not applied within Acuity.
+All-day identification still uses the Acuity certificate (`allday`).
+Order/line-item amounts in Square reflect discounts and are used for refunds and reconciliation.
 
-This is because of the way customers attending the entire day can be identified in acuity. So if a 10% discount is applied, while their same day discount of $5 off (to eligible programs) will not be applied to the price, it will still be applied to the acuity booking.
+## Booking into Acuity & Refunds
 
-**But then how are payments tracked, for use in refunds etc?**
+Bookings are scheduled into Acuity immediately after successful payment (no payment webhook required). Each appointment stores the Square `orderId` and `lineItemIdentifier`.
 
-For this reason, the `metadata` in the `paymentIntent` will track the price charged for each individual program, along with any discounts on the entire booking. Additionally a `programCount` field will keep track of the number of programs booked. This will help to calculate refunds, and leave a trail for Fizz Kidz to understand how the total charge was calculated.
-
-## Booking into Acuity (Stripe Webhook)
-
-Booking into acuity is performed inside a stripe webhook, once the payment is completed.
-
-Each program is booked in individually, along with the `paymentIntent.id` and the `amount` charged for that program. These are included to easily issue automatic refunds when an appointment is cancelled, by looking at the `amount` field in acuity, and the `discount` field in the `paymentIntent.metadata` to calculate how much should be refunded.
-
-> For example: A cancelled program that was booked without any discount codes, but on the same day as another program, will be refunded $40. However another person in the same situation, but booked using a 20% discount code, will be refunded $45 - 20%. Also important to note is 'amount' discounts (as opposed to percentage discounts) are only applied to the last program in a booking. This is where the `metadata.programCount` field comes in handy.
-
-Finally, a confirmation email is sent to the customer by Fizz Kidz with a link to cancel each individual program. Stripe will additionally send a separate receipt.
+If a customer cancels via Acuity, the Acuity webhook triggers server logic to identify the correct Square Order line item and calculate the refund amount based on the charged price (after discounts). Refunds are issued via Square, and a confirmation email is sent to the customer with the Square receipt URL when available.
 
 ## Known Limitations
 
