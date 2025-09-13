@@ -1,6 +1,5 @@
 import { AcuityConstants, AcuityTypes } from 'fizz-kidz'
 
-import acuityCredentials from '../../../credentials/acuity_credentials.json'
 import type { ClientStatus } from '../../utilities/types'
 
 import UpdateAppointmentParams = AcuityTypes.Client.UpdateAppointmentParams
@@ -53,8 +52,8 @@ export class AcuityClient {
         this.#status = 'initialising'
         const acuity = await import('acuityscheduling')
         this.#client = acuity.basic({
-            userId: acuityCredentials.user_id,
-            apiKey: acuityCredentials.api_key,
+            userId: process.env.ACUITY_USER_ID,
+            apiKey: process.env.ACUITY_API_KEY,
         })
         this.#status = 'initialised'
     }
