@@ -44,7 +44,7 @@ jobs:
             server/package-lock.json
             server/fizz-kidz/package-lock.json
 
-      - name: Create server .env from ENV_FILE
+      - name: Create server .env from SERVER_ENV_FILE
         run: |
           printf '%s' "${{ secrets.SERVER_ENV_FILE }}" > server/.env
           echo "Wrote server/.env"
