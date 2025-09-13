@@ -2,7 +2,7 @@ name: Deploy (develop & pipelines)
 
 on:
   push:
-    branches: [ develop, pipelines ]
+    branches: [develop, pipelines]
     paths:
       - "client/**"
       - "server/**"
@@ -21,6 +21,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Use GitHub Environments so env-scoped secrets/approvals apply
+    environment: "dev"
     permissions:
       contents: read
 
