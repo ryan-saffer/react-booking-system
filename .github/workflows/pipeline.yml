@@ -9,7 +9,7 @@ on:
       - "firebase.json"
       - ".firebaserc"
       - "client/predeploy.sh"
-      - ".github/workflows/deploy-develop.yml"
+      - ".github/workflows/pipeline.yml"
 
   # Manual trigger from the Actions tab
   workflow_dispatch:
