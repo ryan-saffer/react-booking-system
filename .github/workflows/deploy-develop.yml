@@ -56,10 +56,6 @@ jobs:
         run: npm ci
         working-directory: client
 
-      # Provide tsc for fizz-kidz type-check invoked during predeploy
-      - name: Install TypeScript (global)
-        run: npm i -g typescript
-
       - name: Install Firebase CLI
         run: npm i -g firebase-tools
 
