@@ -43,6 +43,11 @@ jobs:
             server/package-lock.json
             server/fizz-kidz/package-lock.json
 
+      - name: Create server .env from ENV_FILE
+        run: |
+          printf '%s' "${{ secrets.ENV_FILE }}" > server/.env
+          echo "Wrote server/.env"
+
       # Ensure local package builds have their toolchains
       - name: Install dependencies (fizz-kidz)
         run: npm ci
