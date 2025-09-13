@@ -47,20 +47,20 @@ jobs:
       - name: Create server .env from SERVER_ENV_FILE
         run: |
           if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "${{ env.SERVER_ENV_FILE }}" > server/.env.prod
+            printf '%s' "${{ vars.SERVER_ENV_FILE }}" > server/.env.prod
             echo "Wrote server/.env.prod"
           else
-            printf '%s' "${{ env.SERVER_ENV_FILE }}" > server/.env
+            printf '%s' "${{ vars.SERVER_ENV_FILE }}" > server/.env
             echo "Wrote server/.env"
           fi
 
       - name: Create client .env from CLIENT_ENV_FILE
         run: |
           if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "${{ env.CLIENT_ENV_FILE }}" > client/.env
+            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env
             echo "Wrote client/.env (prod)"
           else
-            printf '%s' "${{ env.CLIENT_ENV_FILE }}" > client/.env
+            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env
             echo "Wrote client/.env (dev)"
           fi
 
