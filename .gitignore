@@ -7,7 +7,7 @@
 
 .idea/
 
-*/.env
+.env*
 *credentials.*
 *service-key.*
 .vscode/*

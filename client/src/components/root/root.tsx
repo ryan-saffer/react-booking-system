@@ -20,12 +20,7 @@ import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialo
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox-provider'
 
-mixpanel.init(
-    import.meta.env.VITE_ENV === 'prod'
-        ? import.meta.env.VITE_MIXPANEL_API_KEY_PROD
-        : import.meta.env.VITE_MIXPANEL_API_KEY_DEV,
-    { debug: import.meta.env.VITE_ENV === 'dev' }
-)
+mixpanel.init(import.meta.env.VITE_MIXPANEL_API_KEY, { debug: import.meta.env.VITE_ENV === 'dev' })
 
 const theme = createTheme({
     palette: {
