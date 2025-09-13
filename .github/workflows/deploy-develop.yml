@@ -2,7 +2,7 @@ name: Deploy (develop)
 
 on:
   push:
-    branches: [develop]
+    branches: [pipelines]
     paths:
       - "client/**"
       - "server/**"
@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
 
     env:
       PROJECT_ID: booking-system-6435d
@@ -55,22 +54,17 @@ jobs:
       - name: Install TypeScript (global)
         run: npm i -g typescript
 
-      - name: Authenticate to Google Cloud (OIDC)
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: projects/218703114555/locations/global/workloadIdentityPools/github-oidc/providers/github-actions-provider
-          service_account: github-deployer@booking-system-6435d.iam.gserviceaccount.com
-          export_default_credentials: true
-
       - name: Install Firebase CLI
         run: npm i -g firebase-tools
 
       - name: Deploy Functions and Hosting (develop)
         env:
           GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           firebase deploy \
             --only functions,hosting \
             --project "$PROJECT_ID" \
+            --token "$FIREBASE_TOKEN" \
             --non-interactive \
             --force
