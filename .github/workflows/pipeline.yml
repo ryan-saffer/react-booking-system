@@ -57,11 +57,11 @@ jobs:
       - name: Create client .env from CLIENT_ENV_FILE
         run: |
           if [ "${{ github.ref_name }}" = 'main' ]; then
-            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env
-            echo "Wrote client/.env (prod)"
+            printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env.prod
+            echo "Wrote client/.env.prod"
           else
             printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env
-            echo "Wrote client/.env (dev)"
+            echo "Wrote client/.env"
           fi
 
       # Ensure local package builds have their toolchains
