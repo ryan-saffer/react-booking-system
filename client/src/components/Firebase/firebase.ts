@@ -5,8 +5,6 @@ import 'firebase/compat/storage'
 
 import firebase from 'firebase/compat/app'
 
-import * as config from '../../config'
-
 export const useEmulators = false
 
 class Firebase {
@@ -17,7 +15,16 @@ class Firebase {
     storage: firebase.storage.Storage
 
     constructor() {
-        const app = firebase.initializeApp(import.meta.env.VITE_ENV === 'prod' ? config.prodConfig : config.devConfig)
+        const app = firebase.initializeApp({
+            apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+            authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+            databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+            storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+            appId: import.meta.env.VITE_FIREBASE_APP_ID,
+            measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+        })
 
         this.auth = app.auth()
         this.db = app.firestore()

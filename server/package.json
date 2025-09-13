@@ -26,6 +26,7 @@
         "@sparticuz/chromium": "^121.0.0",
         "@trpc/server": "^10.43.3",
         "acuityscheduling": "^0.1.9",
+        "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "firebase-admin": "^11.11.0",
         "firebase-functions": "^4.4.1",

@@ -22,8 +22,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # Use GitHub Environments so env-scoped secrets/approvals apply
-    # Since env files currently include both prod and dev values, a single dev_and_prod is setup on Github
-    environment: dev_and_prod
+    # Map branches to environments
+    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     permissions:
       contents: read
 
@@ -46,13 +46,23 @@ jobs:
 
       - name: Create server .env from SERVER_ENV_FILE
         run: |
-          printf '%s' "${{ secrets.SERVER_ENV_FILE }}" > server/.env
-          echo "Wrote server/.env"
+          if [ "${{ github.ref_name }}" = 'main' ]; then
+            printf '%s' "${{ env.SERVER_ENV_FILE }}" > server/.env.prod
+            echo "Wrote server/.env.prod"
+          else
+            printf '%s' "${{ env.SERVER_ENV_FILE }}" > server/.env
+            echo "Wrote server/.env"
+          fi
 
       - name: Create client .env from CLIENT_ENV_FILE
         run: |
-          printf '%s' "${{ secrets.CLIENT_ENV_FILE }}" > client/.env
-          echo "Wrote client/.env"
+          if [ "${{ github.ref_name }}" = 'main' ]; then
+            printf '%s' "${{ env.CLIENT_ENV_FILE }}" > client/.env
+            echo "Wrote client/.env (prod)"
+          else
+            printf '%s' "${{ env.CLIENT_ENV_FILE }}" > client/.env
+            echo "Wrote client/.env (dev)"
+          fi
 
       # Ensure local package builds have their toolchains
       - name: Install dependencies (fizz-kidz)
@@ -66,6 +76,10 @@ jobs:
       - name: Install dependencies (client)
         run: npm ci
         working-directory: client
+
+      - name: Run server tests
+        run: npm test
+        working-directory: server
 
       - name: Install Firebase CLI
         run: npm i -g firebase-tools
