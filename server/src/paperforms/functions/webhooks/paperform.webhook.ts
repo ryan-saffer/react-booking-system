@@ -16,22 +16,7 @@ paperformWebhook.post('/paperform', async (req, res) => {
             await publishToPubSub('paperformSubmission', { form: 'incursion', data: req.body.data })
             break
         }
-        case 'party': {
-            await publishToPubSub('paperformSubmission', {
-                form: 'party',
-                data: req.body.data,
-                charge: req.body.charge?.charge,
-            })
-            break
-        }
-        case 'party-v2': {
-            await publishToPubSub('paperformSubmission', {
-                form: 'party-v2',
-                data: req.body.data,
-                charge: req.body.charge?.charge,
-            })
-            break
-        }
+
         case 'onboarding': {
             await publishToPubSub('paperformSubmission', {
                 form: 'onboarding',
