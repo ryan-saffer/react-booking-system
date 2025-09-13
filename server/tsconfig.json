@@ -19,15 +19,6 @@
         "noErrorTruncation": true
     },
     "compileOnSave": true,
-    "include": [
-        "src",
-        "src/environment.d.ts",
-        "declarations/index.d.ts",
-        "credentials/acuity_credentials.json",
-        "credentials/google-credentials.json",
-        "credentials/dev_service_account_credentials.json",
-        "credentials/prod_service_account_credentials.json",
-        "credentials/stripe_credentials.ts"
-    ],
+    "include": ["src", "src/environment.d.ts", "declarations/index.d.ts"],
     "references": [{ "path": "fizz-kidz" }]
 }

@@ -23,6 +23,10 @@ declare global {
             SQUARE_DEV_TOKEN: string
             SQUARE_PROD_TOKEN: string
             PAPERFORM_API_TOKEN: string
+            GOOGLE_OAUTH_CLIENT_ID: string
+            GOOGLE_OAUTH_CLIENT_SECRET: string
+            GOOGLE_OAUTH_REFRESH_TOKEN: string
+            GOOGLE_OAUTH_REDIRECT_URI: string
         }
     }
 }
