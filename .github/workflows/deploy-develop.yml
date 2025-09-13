@@ -45,8 +45,13 @@ jobs:
 
       - name: Create server .env from ENV_FILE
         run: |
-          printf '%s' "${{ secrets.ENV_FILE }}" > server/.env
+          printf '%s' "${{ secrets.SERVER_ENV_FILE }}" > server/.env
           echo "Wrote server/.env"
+
+      - name: Create client .env from CLIENT_ENV_FILE
+        run: |
+          printf '%s' "${{ secrets.CLIENT_ENV_FILE }}" > client/.env
+          echo "Wrote client/.env"
 
       # Ensure local package builds have their toolchains
       - name: Install dependencies (fizz-kidz)
