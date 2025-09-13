@@ -1,8 +1,8 @@
-name: Deploy (develop & pipelines)
+name: Deploy
 
 on:
   push:
-    branches: [develop, pipelines]
+    branches: [develop, main]
     paths:
       - "client/**"
       - "server/**"
@@ -15,19 +15,20 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-develop
+  group: deploy-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     # Use GitHub Environments so env-scoped secrets/approvals apply
-    environment: "dev"
+    # Since env files currently include both prod and dev values, a single dev_and_prod is setup on Github
+    environment: dev_and_prod
     permissions:
       contents: read
 
     env:
-      PROJECT_ID: booking-system-6435d
+      PROJECT_ID: ${{ github.ref_name == 'main' && 'bookings-prod' || 'booking-system-6435d' }}
 
     steps:
       - name: Checkout
@@ -69,7 +70,7 @@ jobs:
       - name: Install Firebase CLI
         run: npm i -g firebase-tools
 
-      - name: Deploy Functions and Hosting (develop)
+      - name: Deploy Functions and Hosting
         env:
           GCLOUD_PROJECT: ${{ env.PROJECT_ID }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
