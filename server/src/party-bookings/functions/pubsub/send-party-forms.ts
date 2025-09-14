@@ -1,5 +1,4 @@
 import { logger } from 'firebase-functions/v2'
-import { onSchedule } from 'firebase-functions/v2/scheduler'
 import type { Booking } from 'fizz-kidz'
 import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
@@ -9,43 +8,37 @@ import { MailClient } from '../../../sendgrid/MailClient'
 import { logError } from '../../../utilities'
 import { getPrefilledFormUrl, getUpcoming } from '../../core/utils.party'
 
-export const sendPartyForms = onSchedule(
-    {
-        timeZone: 'Australia/Melbourne',
-        schedule: '30 8 * * 2', // 8:30am every Tuesday
-    },
-    async () => {
-        // since this runs on a Tuesday, it will get Tuesday in one week from today.
-        const startDate = getUpcoming('Tuesday')
-        const endDate = new Date(startDate)
-        endDate.setDate(startDate.getDate() + 7)
+export async function sendPartyForms() {
+    // since this runs on a Tuesday, it will get Tuesday in one week from today.
+    const startDate = getUpcoming('Tuesday')
+    const endDate = new Date(startDate)
+    endDate.setDate(startDate.getDate() + 7)
 
-        logger.log({ startDate })
-        logger.log({ endDate })
+    logger.log({ startDate })
+    logger.log({ endDate })
 
-        const bookingsRef = await FirestoreRefs.partyBookings()
-        const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
+    const bookingsRef = await FirestoreRefs.partyBookings()
+    const querySnapshot = await bookingsRef.where('dateTime', '>', startDate).where('dateTime', '<', endDate).get()
 
-        const result = await Promise.allSettled(
-            querySnapshot.docs.map((documentSnapshot) => {
-                const bookingId = documentSnapshot.id
-                const firestoreBooking = documentSnapshot.data()
-                const booking = {
-                    ...firestoreBooking,
-                    dateTime: firestoreBooking.dateTime.toDate(),
-                } satisfies Booking
+    const result = await Promise.allSettled(
+        querySnapshot.docs.map((documentSnapshot) => {
+            const bookingId = documentSnapshot.id
+            const firestoreBooking = documentSnapshot.data()
+            const booking = {
+                ...firestoreBooking,
+                dateTime: firestoreBooking.dateTime.toDate(),
+            } satisfies Booking
 
-                return sendForm(bookingId, booking)
-            })
-        )
-
-        result.map((it, idx) => {
-            if (it.status === 'rejected') {
-                logError(`error sending party form for booking with id: '${querySnapshot.docs[idx].id}'`)
-            }
+            return sendForm(bookingId, booking)
         })
-    }
-)
+    )
+
+    result.map((it, idx) => {
+        if (it.status === 'rejected') {
+            logError(`error sending party form for booking with id: '${querySnapshot.docs[idx].id}'`)
+        }
+    })
+}
 
 async function sendForm(bookingId: string, booking: Booking) {
     const mailClient = await MailClient.getInstance()

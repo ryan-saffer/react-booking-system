@@ -1,13 +1,16 @@
 import type { IncursionForm, OnboardingForm, PaperFormResponse } from '../paperform'
 
 export interface PubSubFunctions {
-    createEmployee: { employeeId: string }
-    paperformSubmission:
+    background:
+        | { name: 'sendIncursionForms' }
+        | { name: 'sendGuestsEmail' }
+        | { name: 'sendPartyFormReminderEmails' }
+        | { name: 'sendPartyForms' }
+        | { name: 'sendPartyFeedbackEmails' }
+        | { name: 'remindAboutWwcc' }
+        | { name: 'paperformSubmission'; form: 'incursion'; data: PaperFormResponse<IncursionForm> }
         | {
-              form: 'incursion'
-              data: PaperFormResponse<IncursionForm>
-          }
-        | {
+              name: 'paperformSubmission'
               form: 'onboarding'
               data: { formData: PaperFormResponse<OnboardingForm>; pdfUrl: string }
           }

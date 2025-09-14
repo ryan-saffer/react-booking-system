@@ -1,8 +1,11 @@
+import type { PubSubFunctions } from 'fizz-kidz'
 import { handleIncursionFormSubmission } from '@/events/core/handle-incursion-form-submission'
 import { handleOnboardingFormSubmission } from '@/staff/core/onboarding/handle-onboarding-form-submission'
-import { logError, onMessagePublished } from '@/utilities'
+import { logError } from '@/utilities'
 
-export const paperformPubSub = onMessagePublished('paperformSubmission', async (input) => {
+type PaperformMessage = Extract<PubSubFunctions['background'], { name: 'paperformSubmission' }>
+
+export async function handlePaperformSubmission(input: PaperformMessage) {
     const { form, data } = input
 
     switch (form) {
@@ -17,4 +20,4 @@ export const paperformPubSub = onMessagePublished('paperformSubmission', async (
             logError(`unrecognised form type: '${exhaustiveCheck}'`)
         }
     }
-})
+}
