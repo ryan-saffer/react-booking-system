@@ -3,9 +3,9 @@ import type { Booking } from 'fizz-kidz'
 import { getReviewUrl } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { logError, midnight } from '../../../utilities'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { MailClient } from '../../sendgrid/MailClient'
+import { logError, midnight } from '../../utilities'
 
 export async function sendPartyFeedbackEmails() {
     const today = midnight(DateTime.now().setZone('Australia/Melbourne'))

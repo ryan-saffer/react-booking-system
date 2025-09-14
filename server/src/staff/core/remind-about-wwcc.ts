@@ -1,5 +1,5 @@
-import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { MailClient } from '../../../sendgrid/MailClient'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function remindAboutWwcc() {
     const employeesRef = await FirestoreRefs.employees()

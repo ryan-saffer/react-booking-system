@@ -66,7 +66,7 @@ All functions exported from `server/src/index.ts` are deployed as individual Fir
 
 -   These functions are triggered by messages published to Google Cloud Pub/Sub topics, enabling asynchronous background processing.
 -   **Key Pub/Sub Tasks:**
-    -   **Party Bookings (`party-bookings/functions/pubsub/...`):** Handles tasks like sending party confirmation forms, feedback emails, guest list emails, and reminder emails.
+    -   **Party Bookings (`party-bookings/core/...`):** Handles tasks like sending party confirmation forms, feedback emails, guest list emails, and reminder emails.
     -   **Paperform (`paperforms/functions/pubsub/paperform.pubsub.ts`):** Used for further processing of Paperform submissions after initial webhook ingestion (e.g., data transformation, notifications).
 
 ## Key Design Patterns

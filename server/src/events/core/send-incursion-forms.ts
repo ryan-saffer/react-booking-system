@@ -3,8 +3,8 @@ import type { IncursionEvent } from 'fizz-kidz'
 import { ModuleNameMap } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { MailClient } from '../../../sendgrid/MailClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function sendIncursionForms() {
     // get all incursion slots within the next 3 weeks

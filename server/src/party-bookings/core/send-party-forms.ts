@@ -3,10 +3,10 @@ import type { Booking } from 'fizz-kidz'
 import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { logError } from '../../../utilities'
-import { getPrefilledFormUrl, getUpcoming } from '../../core/utils.party'
+import { FirestoreRefs } from '../../firebase/FirestoreRefs'
+import { MailClient } from '../../sendgrid/MailClient'
+import { logError } from '../../utilities'
+import { getPrefilledFormUrl, getUpcoming } from './utils.party'
 
 export async function sendPartyForms() {
     // since this runs on a Tuesday, it will get Tuesday in one week from today.

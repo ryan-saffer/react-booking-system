@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { MailClient } from '../../../sendgrid/MailClient'
+import { DatabaseClient } from '../../firebase/DatabaseClient'
+import { MailClient } from '../../sendgrid/MailClient'
 
 export async function sendGuestsEmail() {
     const yesterdayInvitations = await DatabaseClient.getInvitationGuestsOnDay(DateTime.now().minus({ days: 2 }))
