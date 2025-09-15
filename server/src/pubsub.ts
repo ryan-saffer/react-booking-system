@@ -6,33 +6,41 @@ import { sendPartyForms } from './party-bookings/core/send-party-forms'
 import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedback-emails'
 import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
 import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
-import type { PubSubFunctions } from 'fizz-kidz'
+import { assertNever, type PubSubFunctions } from 'fizz-kidz'
 
 export const pubsub = onMessagePublished('background', async (input: PubSubFunctions['background']) => {
-    switch (input.name) {
+    const { name } = input
+    switch (name) {
         case 'sendIncursionForms':
+            // daily at 8:30am
             await sendIncursionForms()
             break
         case 'sendGuestsEmail':
+            // daily at 12pm
             await sendGuestsEmail()
             break
         case 'sendPartyFormReminderEmails':
+            // 8:30am every Monday
             await sendPartyFormReminderEmails()
             break
         case 'sendPartyForms':
+            // 8:30am every Tuesday
             await sendPartyForms()
             break
         case 'sendPartyFeedbackEmails':
+            // daily at 8:30am
             await sendPartyFeedbackEmails()
             break
         case 'remindAboutWwcc':
+            // 1st and 15th of every month at 8:30am
             await remindAboutWwcc()
             break
         case 'paperformSubmission':
+            // triggered by paperform webhook
             await handlePaperformSubmission(input)
             break
         default:
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            logError(`unrecognised pubsub task: '${(input as any).name}'`)
+            assertNever(name)
+            logError(`unrecognised pubsub task: '${name}'`)
     }
 })
