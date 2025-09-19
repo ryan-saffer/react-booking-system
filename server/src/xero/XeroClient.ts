@@ -1,6 +1,4 @@
 import type { XeroClient as TXeroClient } from 'xero-node'
-
-import { env } from '../init'
 import type { ClientStatus } from '../utilities/types'
 
 export class XeroClient {
@@ -33,8 +31,8 @@ export class XeroClient {
         try {
             const { XeroClient: _XeroClient } = await import('xero-node')
             this.#client = new _XeroClient({
-                clientId: env === 'prod' ? process.env.XERO_CLIENT_ID : process.env.DEV_XERO_CLIENT_ID,
-                clientSecret: env === 'prod' ? process.env.XERO_CLIENT_SECRET : process.env.DEV_XERO_CLIENT_SECRET,
+                clientId: process.env.XERO_CLIENT_ID,
+                clientSecret: process.env.XERO_CLIENT_SECRET,
                 grantType: 'client_credentials',
             })
 

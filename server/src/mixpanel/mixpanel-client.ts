@@ -2,8 +2,6 @@ import { logger } from 'firebase-functions/v2'
 import type { InvitationOption } from 'fizz-kidz'
 import { type Location } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
-
-import { env } from '../init'
 import type { ClientStatus } from '../utilities/types'
 import type {
     ContactFormLocationOption,
@@ -40,9 +38,7 @@ export class MixpanelClient {
     async #initialise() {
         this.#status = 'initialising'
         const Mixpanel = await import('mixpanel')
-        this.#mixpanelClient = Mixpanel.init(
-            env === 'dev' ? process.env.MIXPANEL_API_KEY_DEV : process.env.MIXPANEL_API_KEY_PROD
-        )
+        this.#mixpanelClient = Mixpanel.init(process.env.MIXPANEL_API_KEY)
         this.#status = 'initialised'
     }
 
