@@ -38,8 +38,9 @@ The server-side application handles business logic, data processing, and API pro
 - **Core Logic:** Shared business logic, types, and utilities reside in `server/fizz-kidz/src/index.ts`.
 - **API with tRPC:**
   - Exposes a tRPC API for client consumption.
-  - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API.
-  - `server/src/trpc/trpc.adapter.ts`'s `onRequestTrpc` function exposes each tRPC router (e.g., `partiesRouter`) as an individual [Firebase Function](https://firebase.google.com/docs/functions). Each main route group in `trpc.app-router.ts` maps to a separate serverless function.
+  - Comprises multiple feature-specific routers (e.g., `partiesRouter`, `eventsRouter`) consolidated into `appRouter` (`server/src/trpc/trpc.app-router.ts`), which defines the full API surface.
+  - The entire router is mounted on a single Express app inside `server/src/api.ts`, which serves the `/api/trpc` endpoint from one [Firebase Function](https://firebase.google.com/docs/functions) alongside related HTTPS webhooks.
+- **Background Jobs:** Scheduled/background tasks share one Pub/Sub topic (`background`) and are dispatched from `server/src/pubsub.ts` based on message name.
 
 ## tRPC Interaction
 
@@ -103,8 +104,9 @@ Deployed using Firebase.
   - Served by Firebase Hosting.
   - `firebase.json` defines hosting config (URL rewrites, `predeploy` script: `sh ./client/predeploy.sh`).
 - **Server (Firebase Functions):**
-  - tRPC API deployed as multiple Firebase Functions. Each router in `server/src/trpc/trpc.app-router.ts` (e.g., `partiesRouter`) is a distinct function.
-  - Client dynamically routes tRPC requests to the correct Firebase Function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+  - The Express-based `api` Firebase Function exposes `/api/trpc` for tRPC along with `/api/webhooks/*` endpoints.
+  - The client sends all tRPC requests to this single function URL (see `client/src/components/root/root.tsx` for tRPC client `fetch` logic).
+  - Background jobs use the `background` Pub/Sub topic, handled centrally by `server/src/pubsub.ts`.
   - `firebase.json` specifies `server/` as functions source.
   - `functions` `predeploy` script in `firebase.json` (`npm --prefix "$RESOURCE_DIR" run build`) builds server code.
   - Deploy via Firebase CLI:

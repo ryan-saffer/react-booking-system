@@ -41,13 +41,13 @@ This guide orients you to the codebase and points to the authoritative README fi
 ## Conventions & Patterns
 - UI: Prefer `shadcn/ui` (Tailwind + Radix). Legacy MUI/Ant exists and is being phased out.
 - State: Prefer Zustand; Context for auth/org providers.
-- API: tRPC with shared `AppRouter` types; client fetch adapts to per-router Firebase Function endpoints.
+- API: tRPC with shared `AppRouter` types, served via the single Express Firebase Function (`api`) at `/api/trpc`.
 - Shared types/logic: add to `server/fizz-kidz` and export via its `src/index.ts`.
 - Server SDKs: instantiate lazily (e.g., Square/Acuity/Xero) to reduce cold starts.
 
 ## Common Tasks
-- Add a new API surface: create a feature folder in `server/src/<feature>/`, define a tRPC router, wrap with `onRequestTrpc`, export from `server/src/index.ts`.
-- Webhooks/PubSub: place under `server/src/<feature>/functions/` per existing patterns.
+- Add a new API surface: create a feature folder in `server/src/<feature>/`, define or extend a tRPC router, and register it with `appRouter` so it flows through the `api` function.
+- Webhooks/PubSub: place routers/handlers under `server/src/<feature>/functions/`; webhooks are mounted from `server/src/api.ts`, while Pub/Sub tasks publish/listen on the shared `background` topic via `server/src/pubsub.ts`.
 - Scripts: check `scripts/` and its README for required env (e.g., `GOOGLE_APPLICATION_CREDENTIALS`).
 
 ## Troubleshooting Pointers
