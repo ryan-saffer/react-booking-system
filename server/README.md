@@ -35,28 +35,28 @@ Key directories within `server/src/`:
 
 -   **`index.ts`**: Main entry point that exports all deployable Firebase Functions.
 -   **`fizz-kidz/`**: A crucial local module containing shared core business logic, types, and utilities. (See `server/fizz-kidz/README.md` for more details).
--   **`trpc/`**: Contains tRPC configuration, the main `appRouter` (primarily for type generation), and the `trpc.adapter.ts` used to wrap tRPC routers into Firebase Functions.
+-   **`trpc/`**: Contains tRPC configuration and the main `appRouter`, which aggregates all feature routers for the Express API.
 -   **Feature-Specific Directories (e.g., `acuity/`, `party-bookings/`, `square/`, `staff/`):** Each directory typically encapsulates logic related to a specific domain or feature.
     -   `core/`: Often contains the main business logic.
-    -   `functions/`: Contains the actual Firebase Function handlers (tRPC, webhooks, Pub/Sub).
+    -   `functions/`: Houses Express routers and background handlers that are mounted within `server/src/api.ts` or invoked by `server/src/pubsub.ts`.
     -   `index.ts` (within each feature directory): Exports the functions to be included in the main `server/src/index.ts`.
 -   **`firebase/`**: Utilities for interacting with Firebase services (Firestore, Pub/Sub, Storage).
 -   **`utilities/`**: General helper functions.
 
 ## Function Types
 
-All functions exported from `server/src/index.ts` are deployed as individual Firebase Functions. They primarily fall into these categories:
+Functions exported from `server/src/index.ts` are deployed via Firebase. The current exports are the HTTPS `api` function and the Pub/Sub `pubsub` dispatcher, which align with the following categories:
 
 ### tRPC Routers
 
 -   Most of the API is built using tRPC.
--   Each feature-specific tRPC router (e.g., `partiesRouter` in `party-bookings/`, `authRouter` in `auth/`) is defined in its respective module.
--   These routers are then wrapped by the `onRequestTrpc` adapter function (from `server/src/trpc/trpc.adapter.ts`) and exported as individual HTTPS Firebase Functions. For example, the `partiesRouter` becomes the `parties` Firebase Function.
--   The main `appRouter` defined in `server/src/trpc/trpc.app-router.ts` consolidates all these individual routers. Its primary purpose is to generate the `AppRouter` TypeScript definition, which is shared with the client for end-to-end type safety, rather than being deployed as a single, monolithic API endpoint.
+-   Each feature-specific tRPC router (e.g., `partiesRouter` in `party-bookings/`, `authRouter` in `auth/`) is defined in its respective module and combined via `appRouter` (`server/src/trpc/trpc.app-router.ts`).
+-   The combined router is mounted once inside the Express app defined in `server/src/api.ts`, which serves the `/api/trpc` endpoint through the single `api` Firebase Function.
+-   The shared `AppRouter` type is still used by the client for end-to-end type safety.
 
 ### Webhook Handlers
 
--   These are standard HTTPS Firebase Functions (using `onRequest`) designed to receive and process webhook calls from third-party services.
+-   HTTPS webhook handlers are implemented as Express routers and mounted within `server/src/api.ts` under `/api/webhooks/*`.
 -   **Key Webhook Integrations:**
     -   **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations. Notably, holiday program cancellations trigger Square refunds for the corresponding order line items.
     -   **Paperform (`paperforms/functions/webhooks/paperform.webhook.ts`):** Ingests new form submissions from Paperform.
@@ -64,7 +64,7 @@ All functions exported from `server/src/index.ts` are deployed as individual Fir
 
 ### Pub/Sub Functions
 
--   These functions are triggered by messages published to Google Cloud Pub/Sub topics, enabling asynchronous background processing.
+-   The `pubsub` export listens to the single `background` Pub/Sub topic and dispatches work based on the message `name` field (`server/src/pubsub.ts`).
 -   **Key Pub/Sub Tasks:**
     -   **Party Bookings (`party-bookings/core/...`):** Handles tasks like sending party confirmation forms, feedback emails, guest list emails, and reminder emails.
     -   **Paperform (`paperforms/functions/pubsub/paperform.pubsub.ts`):** Used for further processing of Paperform submissions after initial webhook ingestion (e.g., data transformation, notifications).

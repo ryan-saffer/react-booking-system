@@ -56,7 +56,7 @@ The client-side code is organized within `client/src/`:
 
 -   The client communicates with the backend server via tRPC.
 -   The tRPC client is configured in `client/src/components/root/root.tsx` and made available to the component tree through a React Context provider. This setup enables type-safe API calls from anywhere in the application.
--   The client-side tRPC setup includes logic to dynamically route requests to the correct individual Firebase Function on the server based on the tRPC procedure path.
+-   The client-side tRPC setup targets the single Express Firebase Function exposed at `/api/trpc` (implemented in `server/src/api.ts`), batching requests through one endpoint.
 
 ## Development
 
