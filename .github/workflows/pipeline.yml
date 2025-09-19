@@ -32,14 +32,14 @@ jobs:
     runs-on: ubuntu-latest
     # Use GitHub Environments so env-scoped secrets/approvals apply
     # Map branches to environments
-    environment: ${{ (github.event_name == 'push' && github.ref_name == 'main') && 'prod' || 'dev' }}
+    environment: ${{ github.ref_name == 'main' && 'prod' || 'dev' }}
     permissions:
       contents: read
 
     env:
       # Only deploy to prod on pushes to main. All other contexts (PRs, manual PR runs,
       # pushes to develop, manual branch refs) deploy to dev.
-      PROJECT_ID: ${{ (github.event_name == 'push' && github.ref_name == 'main') && 'bookings-prod' || 'booking-system-6435d' }}
+      PROJECT_ID: ${{ github.ref_name == 'main' && 'bookings-prod' || 'booking-system-6435d' }}
 
     steps:
       # Checkout logic:
@@ -76,7 +76,7 @@ jobs:
 
       - name: Create server .env from SERVER_ENV_FILE
         run: |
-          if [ "${{ github.event_name }}" = 'push' ] && [ "${{ github.ref_name }}" = 'main' ]; then
+          if [ "${{ github.ref_name }}" = 'main' ]; then
             printf '%s' "${{ vars.SERVER_ENV_FILE }}" > server/.env.prod
             echo "Wrote server/.env.prod"
           else
@@ -86,7 +86,7 @@ jobs:
 
       - name: Create client .env from CLIENT_ENV_FILE
         run: |
-          if [ "${{ github.event_name }}" = 'push' ] && [ "${{ github.ref_name }}" = 'main' ]; then
+          if [ "${{ github.ref_name }}" = 'main' ]; then
             printf '%s' "${{ vars.CLIENT_ENV_FILE }}" > client/.env.prod
             echo "Wrote client/.env.prod"
           else
