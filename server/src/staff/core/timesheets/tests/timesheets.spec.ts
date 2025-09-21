@@ -1,4 +1,4 @@
-import { strictEqual } from 'assert'
+import { strictEqual, throws } from 'assert'
 
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
@@ -1139,7 +1139,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1156,7 +1156,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1173,7 +1173,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1190,7 +1190,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1207,7 +1207,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
         })
 
         it('should map party faciliator for all locations mon-sat - under 18', () => {
@@ -1226,7 +1226,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1243,7 +1243,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1260,7 +1260,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1277,7 +1277,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1294,7 +1294,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
         })
 
         it('should map party faciliator for all locations sunday - over 18', () => {
@@ -1313,7 +1313,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1330,7 +1330,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1347,7 +1347,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1364,7 +1364,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1381,7 +1381,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map party faciliator for all locations sunday - under 18', () => {
@@ -1400,7 +1400,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1417,7 +1417,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1434,7 +1434,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1451,7 +1451,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1468,7 +1468,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -1487,7 +1487,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1504,7 +1504,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1521,7 +1521,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1538,7 +1538,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1555,7 +1555,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - under 18', () => {
@@ -1574,7 +1574,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1591,7 +1591,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1608,7 +1608,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1625,7 +1625,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1642,7 +1642,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
         })
 
         it('should map holiday program facilitator for all locations sunday - over 18', () => {
@@ -1661,7 +1661,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1678,7 +1678,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1695,7 +1695,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1712,7 +1712,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1729,7 +1729,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map holiday program facilitator for all locations sunday - under 18', () => {
@@ -1748,7 +1748,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1765,7 +1765,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1782,7 +1782,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1799,7 +1799,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1816,7 +1816,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map science club facilitator for all locations mon-sat - over 18', () => {
@@ -1835,7 +1835,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1852,7 +1852,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1869,7 +1869,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1886,7 +1886,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1903,7 +1903,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
         })
 
         it('should map science club facilitator for all locations mon-sat - under 18', () => {
@@ -1922,7 +1922,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -1939,7 +1939,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -1956,7 +1956,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -1973,7 +1973,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -1990,7 +1990,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
         })
 
         it('should map science club facilitator for all locations sunday - over 18', () => {
@@ -2009,7 +2009,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2026,7 +2026,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2043,7 +2043,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2060,7 +2060,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2077,7 +2077,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map science club facilitator for all locations sunday - under 18', () => {
@@ -2096,7 +2096,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2113,7 +2113,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2130,7 +2130,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2147,7 +2147,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2164,7 +2164,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
         })
 
         it('should map miscellaneous for all locations mon-sat - over 18', () => {
@@ -2183,7 +2183,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2200,7 +2200,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2217,7 +2217,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2234,7 +2234,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2251,7 +2251,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Mobile')
         })
 
         it('should map miscellaneous for all locations mon-sat - under 18', () => {
@@ -2270,7 +2270,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2287,7 +2287,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2304,7 +2304,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2321,7 +2321,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2338,7 +2338,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Mobile')
         })
 
         it('should map miscellaneous for all locations sunday - over 18', () => {
@@ -2357,7 +2357,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2374,7 +2374,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2391,7 +2391,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2408,7 +2408,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2425,7 +2425,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Mobile')
         })
 
         it('should map miscellaneous for all locations sunday - under 18', () => {
@@ -2444,7 +2444,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2461,7 +2461,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Chelt')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2478,7 +2478,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Essendon')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2495,7 +2495,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Malvern')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2512,7 +2512,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Mobile')
         })
 
         it('should map non casual staff to ordinary hours mon-sat', () => {
@@ -2705,7 +2705,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2722,7 +2722,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2739,7 +2739,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Essen')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2756,7 +2756,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2773,7 +2773,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Mobile')
         })
 
         it('should map overtime first three hours - sunday', () => {
@@ -2792,7 +2792,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Sunday - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2809,7 +2809,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Sunday - Cheltenham')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2826,7 +2826,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Sunday - Essendon')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2843,7 +2843,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Sunday - Malvern')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2860,7 +2860,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Overtime Hours - First 3 Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Mobile')
         })
 
         it('should map overtime after three hours', () => {
@@ -2879,7 +2879,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2896,7 +2896,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Cheltenham')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2913,7 +2913,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Essendon')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -2930,7 +2930,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Malvern')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -2947,7 +2947,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'Overtime Hours - After 3 Hrs - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Mobile')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
@@ -2966,7 +2966,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -2983,7 +2983,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -3000,7 +3000,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Essendon')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -3017,7 +3017,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Malvern')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -3034,7 +3034,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'Casual Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Mobile')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate under $18 on mon-sat to under 18 mon-sat', () => {
@@ -3053,7 +3053,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Balw')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             // cheltenham
             row = new TimesheetRow({
@@ -3070,7 +3070,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Chelt')
+            strictEqual(row.payItem, 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -3087,7 +3087,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Esse')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Essendon')
 
             // malvern
             row = new TimesheetRow({
@@ -3104,7 +3104,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Malv')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Malvern')
 
             // mobile
             row = new TimesheetRow({
@@ -3121,7 +3121,429 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, '16&17yo Casual Ordinary Hours - Mon to Sat - Mobil')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Mobile')
+        })
+
+        it('should choose CGS for COGS shifts and NON-CGS for non-COGS shifts', () => {
+            const baseArgs = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                hours: 4,
+                rate: 'not required' as const,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false } as const,
+            }
+
+            const cogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+            })
+            strictEqual(cogsRow.payItem, 'CGS 16&17yo COH - Mon to Sat - Balwyn')
+
+            const nonCogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+            })
+            strictEqual(nonCogsRow.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn')
+        })
+
+        it('should choose CGS vs NON-CGS for overtime first three hours', () => {
+            const baseArgs = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 6, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                hours: 2,
+                rate: 'not required' as const,
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false } as const,
+            }
+
+            const cogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+            })
+            strictEqual(cogsRow.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
+
+            const nonCogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+            })
+            strictEqual(nonCogsRow.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
+        })
+
+        it('should choose CGS vs NON-CGS for overtime after three hours', () => {
+            const baseArgs = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 6, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                hours: 2,
+                rate: 'not required' as const,
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: true } as const,
+            }
+
+            const cogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+            })
+            strictEqual(cogsRow.payItem, 'CGS OT - After 3 Hrs - Balwyn')
+
+            const nonCogsRow = new TimesheetRow({
+                ...baseArgs,
+                position: Position.MISCELLANEOUS,
+                location: Location.BALWYN,
+            })
+            strictEqual(nonCogsRow.payItem, 'NON-CGS OT - After 3 Hrs - Balwyn')
+        })
+
+        it('should map kingsville ordinary and pt/ft pay items', () => {
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CGS COH - Sunday - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: false,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 4,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Kingsville')
+        })
+
+        it('should map kingsville on call and called in pay items', () => {
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.ON_CALL,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: youngerThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.CALLED_IN_PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 3,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville')
+        })
+
+        it('should map kingsville overtime pay items', () => {
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            let row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'CGS OT - First 3 Hrs - Sunday - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: sunday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'CGS OT - After 3 Hrs - Kingsville')
+
+            row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: monday,
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.MISCELLANEOUS,
+                location: Location.KINGSVILLE,
+                hours: 2,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            })
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Kingsville')
         })
 
         it('should map on call for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
@@ -3299,6 +3721,320 @@ describe('Timesheet suite', () => {
         })
     })
 
+    describe('Guard clauses', () => {
+        it('should throw on unrecognised position while determining COGS shift', () => {
+            const invalidPosition = 'INVALID_POSITION' as Position
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: invalidPosition,
+                        location: Location.BALWYN,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unhandled position while determining COGS shift/
+            )
+        })
+
+        it('should throw on unrecognised location for ordinary pay items', () => {
+            const invalidLocation = 'INVALID_LOCATION' as Location
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: youngerThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.MISCELLANEOUS,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.MISCELLANEOUS,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: false,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: false,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+        })
+
+        it('should throw on unrecognised location for on call pay items', () => {
+            const invalidLocation = 'INVALID_LOCATION' as Location
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: youngerThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.ON_CALL,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.ON_CALL,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.ON_CALL,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+        })
+
+        it('should throw on unrecognised location for called in pay items', () => {
+            const invalidLocation = 'INVALID_LOCATION' as Location
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: youngerThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+        })
+
+        it('should throw on unrecognised location for overtime pay items', () => {
+            const invalidLocation = 'INVALID_LOCATION' as Location
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+
+            throws(
+                () =>
+                    new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.PARTY_FACILITATOR,
+                        location: invalidLocation,
+                        hours: 1,
+                        rate: 'not required',
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    }),
+                /Unrecognised location processing payroll/
+            )
+        })
+    })
+
     describe('Creating timesheet rows', () => {
         const xeroUser: Employee = {
             firstName: 'Ryan',
@@ -3446,13 +4182,13 @@ describe('Timesheet suite', () => {
             strictEqual(rows[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 2)
 
-            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 3)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[5].hours, 2)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[6].hours, 5)
         })
 
@@ -3539,13 +4275,13 @@ describe('Timesheet suite', () => {
             strictEqual(rows[3].payItem, 'PT/FT Ordinary Hours - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 2)
 
-            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 2)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[5].hours, 1)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[6].hours, 4)
         })
 
@@ -3606,16 +4342,16 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 4)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 10)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 8)
         })
 
@@ -3700,28 +4436,28 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 8)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 10)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 6)
 
-            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 2)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[5].hours, 3)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[6].hours, 2)
 
-            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[7].hours, 5)
         })
 
@@ -3806,28 +4542,28 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 8)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 10)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 6)
 
-            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 2)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[5].hours, 2)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[6].hours, 1)
 
-            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[7].hours, 4)
         })
 
@@ -3862,10 +4598,10 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 2)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 3)
         })
 
@@ -3900,13 +4636,13 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 3)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 3)
 
-            strictEqual(rows[2].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[2].hours, 5)
         })
 
@@ -3981,25 +4717,25 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 7)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 10)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 3)
 
-            strictEqual(rows[4].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 5)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[5].hours, 3)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[6].hours, 4)
         })
 
@@ -4074,28 +4810,28 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 8)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 4)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 10)
 
-            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 3)
 
-            strictEqual(rows[5].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[5].hours, 1)
 
-            strictEqual(rows[6].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[6].hours, 3)
 
-            strictEqual(rows[7].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[7].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[7].hours, 1)
         })
 
@@ -4170,31 +4906,31 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 9)
 
-            strictEqual(rows[0].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[0].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[0].hours, 10)
 
-            strictEqual(rows[1].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[1].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[1].hours, 10)
 
-            strictEqual(rows[2].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[2].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[2].hours, 3)
 
-            strictEqual(rows[3].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[3].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[3].hours, 10)
 
-            strictEqual(rows[4].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[4].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[4].hours, 3)
 
-            strictEqual(rows[5].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[5].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[5].hours, 1)
 
-            strictEqual(rows[6].payItem, 'Casual Ordinary Hours - Mon to Sat - Balwyn')
+            strictEqual(rows[6].payItem, 'CGS COH - Mon to Sat - Balwyn')
             strictEqual(rows[6].hours, 1)
 
-            strictEqual(rows[7].payItem, 'Overtime Hours - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(rows[7].payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
             strictEqual(rows[7].hours, 3)
 
-            strictEqual(rows[8].payItem, 'Overtime Hours - After 3 Hrs - Balwyn')
+            strictEqual(rows[8].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[8].hours, 1)
         })
     })
