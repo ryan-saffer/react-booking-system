@@ -4,7 +4,15 @@ import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 import type { Timesheet } from '../timesheets.types'
-import { Location, Position, TimesheetRow, createTimesheetRows, getWeeks, hasBirthdayDuring } from '../timesheets.utils'
+import {
+    Location,
+    Position,
+    TimesheetRow,
+    createTimesheetRows,
+    getWeeks,
+    hasBirthdayDuring,
+    isCalledInShift,
+} from '../timesheets.utils'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
 const youngerThan18 = DateTime.fromObject({ year: 2015, day: 1, month: 1 })
@@ -3740,7 +3748,39 @@ describe('Timesheet suite', () => {
                         summary: '',
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     }),
+                /Unrecognised position when asking/
+            )
+        })
+
+        it('should throw on unhandled position while checking if a shift is COGS', () => {
+            const row = new TimesheetRow({
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
+                hasBirthdayDuringPayrun: false,
+                isCasual: true,
+                position: Position.PARTY_FACILITATOR,
+                location: Location.BALWYN,
+                hours: 1,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: false },
+            })
+
+            ;(row as any).position = 'INVALID_POSITION'
+
+            throws(
+                () => (row as any)._isCOGSShift(),
                 /Unhandled position while determining COGS shift/
+            )
+        })
+
+        it('should throw on unrecognised position when asking isCalledInShift', () => {
+            const invalidPosition = 'INVALID_POSITION' as Position
+            throws(
+                () => isCalledInShift(invalidPosition),
+                /Unrecognised position when asking isCalledInShift/
             )
         })
 

@@ -395,13 +395,8 @@ export class TimesheetRow {
     private getPayItem(position: Position, location: Location): PayItem {
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
         if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
-        if (position === Position.ON_CALL) return this._getOnCallPayItem(location)
-        if (
-            position === Position.CALLED_IN_PARTY_FACILITATOR ||
-            position === Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR ||
-            position === Position.CALLED_IN_PLAY_LAB_FACILITATOR
-        )
-            return this._getCalledInPayItem(location)
+        if (isOnCallShift(position)) return this._getOnCallPayItem(location)
+        if (isCalledInShift(position)) return this._getCalledInPayItem(location)
 
         return this._getOrdinaryPayItem(location)
     }
@@ -862,6 +857,126 @@ export function hasBirthdayDuring(dob: DateTime, start: DateTime, end: DateTime)
     }
 
     return false
+}
+
+export function isOnCallShift(position: Position) {
+    switch (position) {
+        case Position.ON_CALL_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.ON_CALL_INCURSIONS:
+        case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.ON_CALL:
+            return true
+        case Position.MISCELLANEOUS:
+        case Position.SUNDAY_MISCELLANEOUS:
+        case Position.TRAINING:
+        case Position.SUNDAY_TRAINING:
+        case Position.SUPERVISOR:
+        case Position.SUNDAY_SUPERVISOR:
+        case Position.PARTY_FACILITATOR:
+        case Position.SUNDAY_PARTY_FACILITATOR:
+        case Position.CALLED_IN_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case Position.MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
+        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.INCURSIONS:
+        case Position.SUNDAY_INCURSIONS:
+        case Position.CALLED_IN_INCURSIONS:
+        case Position.SUNDAY_CALLED_IN_INCURSIONS:
+            return false
+        default: {
+            assertNever(position)
+            throw new Error(`Unrecognised position when asking isOnCallShift: '${position}'`)
+        }
+    }
+}
+
+export function isCalledInShift(position: Position) {
+    switch (position) {
+        case Position.CALLED_IN_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.CALLED_IN_INCURSIONS:
+        case Position.SUNDAY_CALLED_IN_INCURSIONS:
+            return true
+        case Position.MISCELLANEOUS:
+        case Position.SUNDAY_MISCELLANEOUS:
+        case Position.TRAINING:
+        case Position.SUNDAY_TRAINING:
+        case Position.SUPERVISOR:
+        case Position.SUNDAY_SUPERVISOR:
+        case Position.PARTY_FACILITATOR:
+        case Position.SUNDAY_PARTY_FACILITATOR:
+        case Position.ON_CALL_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case Position.MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
+        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.INCURSIONS:
+        case Position.SUNDAY_INCURSIONS:
+        case Position.ON_CALL_INCURSIONS:
+        case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.ON_CALL:
+            return false
+        default: {
+            assertNever(position)
+            throw new Error(`Unrecognised position when asking isCalledInShift: '${position}'`)
+        }
+    }
 }
 
 export enum Location {
