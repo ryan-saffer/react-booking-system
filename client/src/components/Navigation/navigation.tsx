@@ -77,6 +77,11 @@ export const Navigation = () => {
                                 to="discount-codes"
                                 imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=ticketPerforated&scale=70&backgroundColor=B14594"
                             />
+                            <ListItem
+                                title="School Zone Map"
+                                to="after-school-program-map"
+                                imgSrc="https://api.dicebear.com/7.x/icons/svg?icon=map&scale=70&backgroundColor=F6BA34"
+                            />
                         </div>
                     </>
                 )}

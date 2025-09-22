@@ -136,6 +136,12 @@ const PlayLabSessionAttendancePage = lazy(() =>
     )
 )
 
+const SchoolToStudioMapPage = lazy(() =>
+    import('./components/after-school-program/school-to-studio-map/school-to-studio-map-page.js').then((module) => ({
+        default: module.SchoolToStudioMapPage,
+    }))
+)
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -262,6 +268,21 @@ const router = createBrowserRouter([
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="admin">
                                             <AfterSchoolProgramInvoicing />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'after-school-program-map',
+                        children: [
+                            {
+                                index: true,
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="admin">
+                                            <SchoolToStudioMapPage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),

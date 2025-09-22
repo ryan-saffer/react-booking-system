@@ -5,6 +5,7 @@ import {
     Flag,
     GraduationCap,
     HandCoins,
+    Map,
     PartyPopper,
     TicketPercent,
     Users,
@@ -117,6 +118,12 @@ export function DashboardDrawer({
                                     onClick={closeDrawer}
                                     to="discount-codes"
                                     icon={<TicketPercent className="mr-2 h-4 w-4" />}
+                                />
+                                <NavItem
+                                    label="School Zone Map"
+                                    onClick={closeDrawer}
+                                    to="after-school-program-map"
+                                    icon={<Map className="mr-2 h-4 w-4" />}
                                 />
                             </>
                         )}
