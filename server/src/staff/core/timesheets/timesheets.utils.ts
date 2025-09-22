@@ -502,7 +502,7 @@ export class TimesheetRow {
                             return this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
-                        case Location.MOBILE:
+                        case Location.HEAD_OFFICE:
                             return this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Head Office'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
@@ -533,7 +533,7 @@ export class TimesheetRow {
                             return this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Malvern'
                                 : 'NON-CGS COH - Mon to Sat - Malvern'
-                        case Location.MOBILE:
+                        case Location.HEAD_OFFICE:
                             return this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Head Office'
                                 : 'NON-CGS COH - Mon to Sat - Head Office'
@@ -559,7 +559,7 @@ export class TimesheetRow {
                             : 'NON-CGS COH - Sunday - Kingsville'
                     case Location.MALVERN:
                         return this._isCOGSShift() ? 'CGS COH - Sunday - Malvern' : 'NON-CGS COH - Sunday - Malvern'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return this._isCOGSShift()
                             ? 'CGS COH - Sunday - Head Office'
                             : 'NON-CGS COH - Sunday - Head Office'
@@ -583,7 +583,7 @@ export class TimesheetRow {
                         return 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
                     case Location.MALVERN:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -602,7 +602,7 @@ export class TimesheetRow {
                         return 'PT/FT Ordinary Hours - Sunday - Kingsville'
                     case Location.MALVERN:
                         return 'PT/FT Ordinary Hours - Sunday - Malvern'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'PT/FT Ordinary Hours - Sunday - Head Office'
                     default: {
                         assertNever(location)
@@ -628,7 +628,7 @@ export class TimesheetRow {
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
                     case Location.MALVERN:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -647,7 +647,7 @@ export class TimesheetRow {
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
                     case Location.MALVERN:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -667,7 +667,7 @@ export class TimesheetRow {
                     return 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
                 case Location.MALVERN:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
-                case Location.MOBILE:
+                case Location.HEAD_OFFICE:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
@@ -692,7 +692,7 @@ export class TimesheetRow {
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
                     case Location.MALVERN:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -711,7 +711,7 @@ export class TimesheetRow {
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
                     case Location.MALVERN:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
-                    case Location.MOBILE:
+                    case Location.HEAD_OFFICE:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -731,7 +731,7 @@ export class TimesheetRow {
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
                 case Location.MALVERN:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
-                case Location.MOBILE:
+                case Location.HEAD_OFFICE:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
                 default: {
                     assertNever(location)
@@ -764,7 +764,7 @@ export class TimesheetRow {
                     return this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-                case Location.MOBILE:
+                case Location.HEAD_OFFICE:
                     return this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
@@ -795,7 +795,7 @@ export class TimesheetRow {
                     return this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
-                case Location.MOBILE:
+                case Location.HEAD_OFFICE:
                     return this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Head Office'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
@@ -823,7 +823,7 @@ export class TimesheetRow {
                     : 'NON-CGS OT - After 3 Hrs - Kingsville'
             case Location.MALVERN:
                 return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Malvern' : 'NON-CGS OT - After 3 Hrs - Malvern'
-            case Location.MOBILE:
+            case Location.HEAD_OFFICE:
                 return this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Head Office'
                     : 'NON-CGS OT - After 3 Hrs - Head Office'
@@ -985,7 +985,7 @@ export enum Location {
     ESSENDON = 'ESSENDON',
     KINGSVILLE = 'KINGSVILLE',
     MALVERN = 'MALVERN',
-    MOBILE = 'MOBILE', // deprecated. Remove once location in sling not being used anymore.
+    HEAD_OFFICE = 'HEAD_OFFICE',
 }
 
 export enum Position {
@@ -1102,7 +1102,7 @@ const LocationToId: Record<Location, number> = {
     [Location.ESSENDON]: 4895739,
     [Location.KINGSVILLE]: 22982854,
     [Location.MALVERN]: 4809537,
-    [Location.MOBILE]: 5557282,
+    [Location.HEAD_OFFICE]: 5557282,
 }
 
 const LocationsMap: Record<number, Location> = Object.fromEntries(
