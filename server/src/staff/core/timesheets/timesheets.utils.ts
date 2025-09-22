@@ -344,6 +344,7 @@ export class TimesheetRow {
     rate: Rate
     summary: string
     position: Position
+    activity: XeroTrackingActivity
 
     constructor({
         firstName,
@@ -386,6 +387,9 @@ export class TimesheetRow {
 
         // calculate pay item
         this.payItem = this.getPayItem(position, location)
+
+        // map to activity
+        this.activity = PositionToActivityMap[position]
     }
 
     private getPayItem(position: Position, location: Location): PayItem {
@@ -423,6 +427,8 @@ export class TimesheetRow {
             case Position.SUNDAY_MISCELLANEOUS:
             case Position.TRAINING:
             case Position.SUNDAY_TRAINING:
+            case Position.SUPERVISOR:
+            case Position.SUNDAY_SUPERVISOR:
                 return false
             case Position.PARTY_FACILITATOR:
             case Position.SUNDAY_PARTY_FACILITATOR:
@@ -442,12 +448,12 @@ export class TimesheetRow {
             case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
             case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
             case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.SCIENCE_CLUB_FACILITATOR:
-            case Position.SUNDAY_SCIENCE_CLUB_FACILITATOR:
-            case Position.ON_CALL_SCIENCE_CLUB_FACILITATOR:
-            case Position.CALLED_IN_SCIENCE_CLUB_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_SCIENCE_CLUB_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_SCIENCE_CLUB_FACILITATOR:
+            case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+            case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
             case Position.PLAY_LAB_FACILITATOR:
             case Position.SUNDAY_PLAY_LAB_FACILITATOR:
             case Position.ON_CALL_PLAY_LAB_FACILITATOR:
@@ -460,6 +466,12 @@ export class TimesheetRow {
             case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
             case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
             case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+            case Position.INCURSIONS:
+            case Position.SUNDAY_INCURSIONS:
+            case Position.ON_CALL_INCURSIONS:
+            case Position.CALLED_IN_INCURSIONS:
+            case Position.SUNDAY_ON_CALL_INCURSIONS:
+            case Position.SUNDAY_CALLED_IN_INCURSIONS:
             case Position.ON_CALL:
                 return true
             default: {
@@ -482,7 +494,7 @@ export class TimesheetRow {
                         case Location.CHELTENHAM:
                             return this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
-                                : 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham'
+                                : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
                         case Location.ESSENDON:
                             return this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
@@ -497,8 +509,8 @@ export class TimesheetRow {
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
                         case Location.MOBILE:
                             return this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Mobile'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Mobile'
+                                ? 'CGS 16&17yo COH - Mon to Sat - Head Office'
+                                : 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
                         default: {
                             assertNever(location)
                             throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -528,8 +540,8 @@ export class TimesheetRow {
                                 : 'NON-CGS COH - Mon to Sat - Malvern'
                         case Location.MOBILE:
                             return this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Mobile'
-                                : 'NON-CGS COH - Mon to Sat - Mobile'
+                                ? 'CGS COH - Mon to Sat - Head Office'
+                                : 'NON-CGS COH - Mon to Sat - Head Office'
                         default: {
                             assertNever(location)
                             throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -553,7 +565,9 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return this._isCOGSShift() ? 'CGS COH - Sunday - Malvern' : 'NON-CGS COH - Sunday - Malvern'
                     case Location.MOBILE:
-                        return this._isCOGSShift() ? 'CGS COH - Sunday - Mobile' : 'NON-CGS COH - Sunday - Mobile'
+                        return this._isCOGSShift()
+                            ? 'CGS COH - Sunday - Head Office'
+                            : 'NON-CGS COH - Sunday - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -575,7 +589,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
                     case Location.MOBILE:
-                        return 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+                        return 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -594,7 +608,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'PT/FT Ordinary Hours - Sunday - Malvern'
                     case Location.MOBILE:
-                        return 'PT/FT Ordinary Hours - Sunday - Mobile'
+                        return 'PT/FT Ordinary Hours - Sunday - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -620,7 +634,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
                     case Location.MOBILE:
-                        return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+                        return 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -639,7 +653,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
                     case Location.MOBILE:
-                        return 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
+                        return 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -659,7 +673,7 @@ export class TimesheetRow {
                 case Location.MALVERN:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
                 case Location.MOBILE:
-                    return 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
+                    return 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -684,7 +698,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
                     case Location.MOBILE:
-                        return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+                        return 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -703,7 +717,7 @@ export class TimesheetRow {
                     case Location.MALVERN:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
                     case Location.MOBILE:
-                        return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
+                        return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -723,7 +737,7 @@ export class TimesheetRow {
                 case Location.MALVERN:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
                 case Location.MOBILE:
-                    return 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
+                    return 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -757,8 +771,8 @@ export class TimesheetRow {
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                 case Location.MOBILE:
                     return this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Mobile'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Mobile'
+                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
+                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -788,8 +802,8 @@ export class TimesheetRow {
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
                 case Location.MOBILE:
                     return this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Mobile'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Mobile'
+                        ? 'CGS OT - First 3 Hrs - Sunday - Head Office'
+                        : 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -815,7 +829,9 @@ export class TimesheetRow {
             case Location.MALVERN:
                 return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Malvern' : 'NON-CGS OT - After 3 Hrs - Malvern'
             case Location.MOBILE:
-                return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Mobile' : 'NON-CGS OT - After 3 Hrs - Mobile'
+                return this._isCOGSShift()
+                    ? 'CGS OT - After 3 Hrs - Head Office'
+                    : 'NON-CGS OT - After 3 Hrs - Head Office'
         }
     }
 }
@@ -860,88 +876,104 @@ export enum Location {
 export enum Position {
     PARTY_FACILITATOR = 'PARTY_FACILITATOR',
     MOBILE_PARTY_FACILITATOR = 'MOBILE_PARTY_FACILITATOR',
-    SCIENCE_CLUB_FACILITATOR = 'SCIENCE_CLUB_FACILITATOR',
+    AFTER_SCHOOL_PROGRAM_FACILITATOR = 'AFTER_SCHOOL_PROGRAM_FACILITATOR',
     HOLIDAY_PROGRAM_FACILITATOR = 'HOLIDAY_PROGRAM_FACILITATOR',
     PLAY_LAB_FACILITATOR = 'PLAY_LAB_FACILITATOR',
     EVENTS_AND_ACTIVATIONS = 'EVENTS_AND_ACTIVATIONS',
+    INCURSIONS = 'INCURSIONS',
     ON_CALL_PARTY_FACILITATOR = 'ON_CALL_PARTY_FACILITATOR',
     ON_CALL_MOBILE_PARTY_FACILITATOR = 'ON_CALL_MOBILE_PARTY_FACILITATOR',
-    ON_CALL_SCIENCE_CLUB_FACILITATOR = 'ON_CALL_SCIENCE_CLUB_FACILITATOR',
+    ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR',
     ON_CALL_HOLIDAY_PROGRAM_FACILITATOR = 'ON_CALL_HOLIDAY_PROGRAM_FACILITATOR',
     ON_CALL_PLAY_LAB_FACILITATOR = 'ON_CALL_PLAY_LAB_FACILITATOR',
     ON_CALL_EVENTS_AND_ACTIVATIONS = 'ON_CALL_EVENTS_AND_ACTIVATIONS',
+    ON_CALL_INCURSIONS = 'ON_CALL_INCURSIONS',
     CALLED_IN_PARTY_FACILITATOR = 'CALLED_IN_PARTY_FACILITATOR',
     CALLED_IN_MOBILE_PARTY_FACILITATOR = 'CALLED_IN_MOBILE_PARTY_FACILITATOR',
-    CALLED_IN_SCIENCE_CLUB_FACILITATOR = 'CALLED_IN_SCIENCE_CLUB_FACILITATOR',
+    CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR',
     CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR = 'CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR',
     CALLED_IN_PLAY_LAB_FACILITATOR = 'CALLED_IN_PLAY_LAB_FACILITATOR',
     CALLED_IN_EVENTS_AND_ACTIVATIONS = 'CALLED_IN_EVENTS_AND_ACTIVATIONS',
+    CALLED_IN_INCURSIONS = 'CALLED_IN_INCURSIONS',
     SUNDAY_PARTY_FACILITATOR = 'SUNDAY_PARTY_FACILITATOR',
     SUNDAY_MOBILE_PARTY_FACILITATOR = 'SUNDAY_MOBILE_PARTY_FACILITATOR',
-    SUNDAY_SCIENCE_CLUB_FACILITATOR = 'SUNDAY_SCIENCE_CLUB_FACILITATOR',
+    SUNDAY_AFTER_SCHOOL_FACILITATOR = 'SUNDAY_AFTER_SCHOOL_FACILITATOR',
     SUNDAY_HOLIDAY_PROGRAM_FACILITATOR = 'SUNDAY_HOLIDAY_PROGRAM_FACILITATOR',
     SUNDAY_PLAY_LAB_FACILITATOR = 'SUNDAY_PLAY_LAB_FACILITATOR',
     SUNDAY_EVENTS_AND_ACTIVATIONS = 'SUNDAY_EVENTS_AND_ACTIVATIONS',
+    SUNDAY_INCURSIONS = 'SUNDAY_INCURSIONS',
     SUNDAY_ON_CALL_PARTY_FACILITATOR = 'SUNDAY_ON_CALL_PARTY_FACILITATOR',
     SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR = 'SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR',
-    SUNDAY_ON_CALL_SCIENCE_CLUB_FACILITATOR = 'SUNDAY_ON_CALL_SCIENCE_CLUB_FACILITATOR',
+    SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR',
     SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR = 'SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR',
     SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR = 'SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR',
     SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS = 'SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS',
+    SUNDAY_ON_CALL_INCURSIONS = 'SUNDAY_ON_CALL_INCURSIONS',
     SUNDAY_CALLED_IN_PARTY_FACILITATOR = 'SUNDAY_CALLED_IN_PARTY_FACILITATOR',
     SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR = 'SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR',
-    SUNDAY_CALLED_IN_SCIENCE_CLUB_FACILITATOR = 'SUNDAY_CALLED_IN_SCIENCE_CLUB_FACILITATOR',
+    SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR',
     SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR = 'SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR',
     SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR = 'SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR',
     SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS = 'SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS',
+    SUNDAY_CALLED_IN_INCURSIONS = 'SUNDAY_CALLED_IN_INCURSIONS',
     TRAINING = 'TRAINING', // NOT COGS
     MISCELLANEOUS = 'MISCELLANEOUS', //  manager duties etc NOT COGS
     SUNDAY_TRAINING = 'SUNDAY_TRAINING',
     SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
+    SUPERVISOR = 'SUPERVISOR',
+    SUNDAY_SUPERVISOR = 'SUNDAY_SUPERVISOR',
     ON_CALL = 'ON_CALL', // deprecated
 }
 
 const PositionToId: Record<Position, number> = {
     [Position.PARTY_FACILITATOR]: 4809533,
     [Position.MOBILE_PARTY_FACILITATOR]: 25261610,
-    [Position.SCIENCE_CLUB_FACILITATOR]: 5206290,
+    [Position.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 5206290,
     [Position.HOLIDAY_PROGRAM_FACILITATOR]: 5557194,
     [Position.PLAY_LAB_FACILITATOR]: 23638376,
     [Position.EVENTS_AND_ACTIVATIONS]: 22914259,
+    [Position.INCURSIONS]: 25288121,
     [Position.ON_CALL_PARTY_FACILITATOR]: 25262039,
     [Position.ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262063,
-    [Position.ON_CALL_SCIENCE_CLUB_FACILITATOR]: 25262076,
+    [Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262076,
     [Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262047,
     [Position.ON_CALL_PLAY_LAB_FACILITATOR]: 25262094,
     [Position.ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262054,
+    [Position.ON_CALL_INCURSIONS]: 25288122,
     [Position.CALLED_IN_PARTY_FACILITATOR]: 13464921,
     [Position.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25261978,
-    [Position.CALLED_IN_SCIENCE_CLUB_FACILITATOR]: 25261965,
+    [Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25261965,
     [Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 13464944,
     [Position.CALLED_IN_PLAY_LAB_FACILITATOR]: 23638377,
     [Position.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25261991,
+    [Position.CALLED_IN_INCURSIONS]: 25288124,
     [Position.SUNDAY_PARTY_FACILITATOR]: 25262618,
     [Position.SUNDAY_MOBILE_PARTY_FACILITATOR]: 25262619,
-    [Position.SUNDAY_SCIENCE_CLUB_FACILITATOR]: 25262621,
+    [Position.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 25262621,
     [Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 25262620,
     [Position.SUNDAY_PLAY_LAB_FACILITATOR]: 25262624,
     [Position.SUNDAY_EVENTS_AND_ACTIVATIONS]: 25262622,
+    [Position.SUNDAY_INCURSIONS]: 25288126,
     [Position.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 25262141,
     [Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262128,
-    [Position.SUNDAY_ON_CALL_SCIENCE_CLUB_FACILITATOR]: 25262142,
+    [Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262142,
     [Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262136,
     [Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 25262140,
     [Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262132,
+    [Position.SUNDAY_ON_CALL_INCURSIONS]: 25288131,
     [Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 25262145,
     [Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25262146,
-    [Position.SUNDAY_CALLED_IN_SCIENCE_CLUB_FACILITATOR]: 25262149,
+    [Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262149,
     [Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 25262147,
     [Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 25262148,
     [Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25262144,
+    [Position.SUNDAY_CALLED_IN_INCURSIONS]: 25288128,
     [Position.TRAINING]: 22914258,
     [Position.MISCELLANEOUS]: 6161155,
     [Position.SUNDAY_TRAINING]: 25267532,
     [Position.SUNDAY_MISCELLANEOUS]: 25267526,
+    [Position.SUPERVISOR]: 25291330,
+    [Position.SUNDAY_SUPERVISOR]: 25291331,
     [Position.ON_CALL]: 13464907,
 }
 
@@ -962,13 +994,79 @@ const LocationsMap: Record<number, Location> = Object.fromEntries(
     ObjectKeys(LocationToId).map((key) => [LocationToId[key], key])
 )
 
+type XeroTrackingActivity =
+    | 'Events & Activations'
+    | 'After School Programs'
+    | 'Holiday Programs'
+    | 'Incursions'
+    | 'Mobile Parties'
+    | 'No Activity'
+    | 'Parties'
+    | 'Play Lab'
+    | 'Products'
+    | 'Science Programs in-store'
+    | 'Supervisor'
+    | 'Training'
+
+const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
+    [Position.PARTY_FACILITATOR]: 'Parties',
+    [Position.MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [Position.HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.INCURSIONS]: 'Incursions',
+    [Position.ON_CALL_PARTY_FACILITATOR]: 'Parties',
+    [Position.ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.ON_CALL_INCURSIONS]: 'Incursions',
+    [Position.CALLED_IN_PARTY_FACILITATOR]: 'Parties',
+    [Position.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.CALLED_IN_INCURSIONS]: 'Incursions',
+    [Position.SUNDAY_PARTY_FACILITATOR]: 'Parties',
+    [Position.SUNDAY_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 'After School Programs',
+    [Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.SUNDAY_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.SUNDAY_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.SUNDAY_INCURSIONS]: 'Incursions',
+    [Position.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 'Parties',
+    [Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.SUNDAY_ON_CALL_INCURSIONS]: 'Incursions',
+    [Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 'Parties',
+    [Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.SUNDAY_CALLED_IN_INCURSIONS]: 'Incursions',
+    [Position.TRAINING]: 'Training',
+    [Position.SUNDAY_TRAINING]: 'Training',
+    [Position.SUPERVISOR]: 'Supervisor',
+    [Position.SUNDAY_SUPERVISOR]: 'Supervisor',
+    [Position.MISCELLANEOUS]: 'No Activity',
+    [Position.SUNDAY_MISCELLANEOUS]: 'No Activity',
+    [Position.ON_CALL]: 'No Activity',
+}
+
 type COGSCasualOrdinaryMonSat =
     | 'CGS COH - Mon to Sat - Balwyn'
     | 'CGS COH - Mon to Sat - Cheltenham'
     | 'CGS COH - Mon to Sat - Essendon'
     | 'CGS COH - Mon to Sat - Kingsville'
     | 'CGS COH - Mon to Sat - Malvern'
-    | 'CGS COH - Mon to Sat - Mobile'
+    | 'CGS COH - Mon to Sat - Head Office'
 
 type NonCOGSCasualOrdinaryMonSat =
     | 'NON-CGS COH - Mon to Sat - Balwyn'
@@ -976,7 +1074,7 @@ type NonCOGSCasualOrdinaryMonSat =
     | 'NON-CGS COH - Mon to Sat - Essendon'
     | 'NON-CGS COH - Mon to Sat - Kingsville'
     | 'NON-CGS COH - Mon to Sat - Malvern'
-    | 'NON-CGS COH - Mon to Sat - Mobile'
+    | 'NON-CGS COH - Mon to Sat - Head Office'
 
 type COGSCasualOrdinarySunday =
     | 'CGS COH - Sunday - Balwyn'
@@ -984,7 +1082,7 @@ type COGSCasualOrdinarySunday =
     | 'CGS COH - Sunday - Essendon'
     | 'CGS COH - Sunday - Kingsville'
     | 'CGS COH - Sunday - Malvern'
-    | 'CGS COH - Sunday - Mobile'
+    | 'CGS COH - Sunday - Head Office'
 
 type NonCOGSCasualOrdinarySunday =
     | 'NON-CGS COH - Sunday - Balwyn'
@@ -992,7 +1090,7 @@ type NonCOGSCasualOrdinarySunday =
     | 'NON-CGS COH - Sunday - Essendon'
     | 'NON-CGS COH - Sunday - Kingsville'
     | 'NON-CGS COH - Sunday - Malvern'
-    | 'NON-CGS COH - Sunday - Mobile'
+    | 'NON-CGS COH - Sunday - Head Office'
 
 type PTFTOrdinaryMonSat =
     | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
@@ -1000,7 +1098,7 @@ type PTFTOrdinaryMonSat =
     | 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
     | 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
     | 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
-    | 'PT/FT Ordinary Hours - Mon to Sat - Mobile'
+    | 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
 
 type PTFTOrdinaryHoursSunday =
     | 'PT/FT Ordinary Hours - Sunday - Balwyn'
@@ -1008,7 +1106,7 @@ type PTFTOrdinaryHoursSunday =
     | 'PT/FT Ordinary Hours - Sunday - Essendon'
     | 'PT/FT Ordinary Hours - Sunday - Kingsville'
     | 'PT/FT Ordinary Hours - Sunday - Malvern'
-    | 'PT/FT Ordinary Hours - Sunday - Mobile'
+    | 'PT/FT Ordinary Hours - Sunday - Head Office'
 
 type OnCallCasualOrdinaryMonSat =
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
@@ -1016,7 +1114,7 @@ type OnCallCasualOrdinaryMonSat =
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
-    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile'
+    | 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
 
 type OnCallCasualOrdinarySunday =
     | 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
@@ -1024,7 +1122,7 @@ type OnCallCasualOrdinarySunday =
     | 'ON CALL - Cas Ord Hrs - Sunday - Essend'
     | 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
     | 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
-    | 'ON CALL - Cas Ord Hrs - Sunday - Mobile'
+    | 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
 
 type CalledInCasualOrdinaryMonSat =
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
@@ -1032,7 +1130,7 @@ type CalledInCasualOrdinaryMonSat =
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
-    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile'
+    | 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
 
 type CalledInCasualOrdinarySunday =
     | 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
@@ -1040,7 +1138,7 @@ type CalledInCasualOrdinarySunday =
     | 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
-    | 'CALLEDIN - Cas Ord Hrs - Sun - Mobile'
+    | 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
 
 type COGSUnder18CasualOrdinaryHoursMonSat =
     | 'CGS 16&17yo COH - Mon to Sat - Balwyn'
@@ -1048,15 +1146,15 @@ type COGSUnder18CasualOrdinaryHoursMonSat =
     | 'CGS 16&17yo COH - Mon to Sat - Essendon'
     | 'CGS 16&17yo COH - Mon to Sat - Kingsville'
     | 'CGS 16&17yo COH - Mon to Sat - Malvern'
-    | 'CGS 16&17yo COH - Mon to Sat - Mobile'
+    | 'CGS 16&17yo COH - Mon to Sat - Head Office'
 
 type NonCOGSUnder18CasualOrdinaryHoursMonSat =
     | 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
-    | 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham'
+    | 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
-    | 'NON-CGS 16&17yo COH - Mon to Sat - Mobile'
+    | 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
 
 type Under18OnCallOrdinaryHoursMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
@@ -1064,7 +1162,7 @@ type Under18OnCallOrdinaryHoursMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile'
+    | 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
 
 type Under18CalledInOrdinaryHoursMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
@@ -1072,7 +1170,7 @@ type Under18CalledInOrdinaryHoursMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
-    | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile'
+    | 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
 
 type COGSOvertimeFirstThreeHoursMonSat =
     | 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
@@ -1080,7 +1178,7 @@ type COGSOvertimeFirstThreeHoursMonSat =
     | 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
     | 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-    | 'CGS OT - First 3 Hrs - Mon to Sat - Mobile'
+    | 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
 
 type NonCOGSOvertimeFirstThreeHoursMonSat =
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
@@ -1088,7 +1186,7 @@ type NonCOGSOvertimeFirstThreeHoursMonSat =
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-    | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Mobile'
+    | 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
 
 type COGSOvertimeAfterThreeHours =
     | 'CGS OT - After 3 Hrs - Balwyn'
@@ -1096,7 +1194,7 @@ type COGSOvertimeAfterThreeHours =
     | 'CGS OT - After 3 Hrs - Essendon'
     | 'CGS OT - After 3 Hrs - Kingsville'
     | 'CGS OT - After 3 Hrs - Malvern'
-    | 'CGS OT - After 3 Hrs - Mobile'
+    | 'CGS OT - After 3 Hrs - Head Office'
 
 type NonCOGSOvertimeAfterThreeHours =
     | 'NON-CGS OT - After 3 Hrs - Balwyn'
@@ -1104,7 +1202,7 @@ type NonCOGSOvertimeAfterThreeHours =
     | 'NON-CGS OT - After 3 Hrs - Essendon'
     | 'NON-CGS OT - After 3 Hrs - Kingsville'
     | 'NON-CGS OT - After 3 Hrs - Malvern'
-    | 'NON-CGS OT - After 3 Hrs - Mobile'
+    | 'NON-CGS OT - After 3 Hrs - Head Office'
 
 type COGSOvertimeFirstThreeHoursSunday =
     | 'CGS OT - First 3 Hrs - Sunday - Balwyn'
@@ -1112,7 +1210,7 @@ type COGSOvertimeFirstThreeHoursSunday =
     | 'CGS OT - First 3 Hrs - Sunday - Essendon'
     | 'CGS OT - First 3 Hrs - Sunday - Kingsville'
     | 'CGS OT - First 3 Hrs - Sunday - Malvern'
-    | 'CGS OT - First 3 Hrs - Sunday - Mobile'
+    | 'CGS OT - First 3 Hrs - Sunday - Head Office'
 
 type NonCOGSOvertimeFirstThreeHoursSunday =
     | 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
@@ -1120,7 +1218,7 @@ type NonCOGSOvertimeFirstThreeHoursSunday =
     | 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
-    | 'NON-CGS OT - First 3 Hrs - Sunday - Mobile'
+    | 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
 
 type OnCallPayItem = OnCallCasualOrdinaryMonSat | OnCallCasualOrdinarySunday | Under18OnCallOrdinaryHoursMonSat
 

@@ -163,7 +163,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office')
         })
 
         it('should map on call for all locations mon-sat - younger than 18', () => {
@@ -250,7 +250,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO')
         })
 
         it('should map on call for all locations on sunday - over 18', () => {
@@ -337,7 +337,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
         })
 
         it('should map on call for all locations on sunday - under 18', () => {
@@ -424,7 +424,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
         })
 
         it('should map called in party facilitator for all locations mon-sat - over 18', () => {
@@ -511,7 +511,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office')
         })
 
         it('should map called in party facilitator for all locations mon-sat - under 18', () => {
@@ -598,7 +598,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 COH - Mon to Sat - HO')
         })
 
         it('should map called in holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -685,7 +685,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office')
         })
 
         it('should map called in holiday program facilitator for all locations mon-sat - under 18', () => {
@@ -772,7 +772,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - 16&17 COH - Mon to Sat - HO')
         })
 
         it('should map called in party facilitator for all locations sunday - over 18', () => {
@@ -859,7 +859,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
         it('should map called in party facilitator for all locations sunday - under 18', () => {
@@ -946,7 +946,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
         it('should map called in holiday program facilitator for all locations sunday - over 18', () => {
@@ -1033,7 +1033,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
         it('should map called in holiday program facilitator for all locations sunday - under 18', () => {
@@ -1120,7 +1120,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Mobile')
+            strictEqual(row.payItem, 'CALLEDIN - Cas Ord Hrs - Sun - Head Office')
         })
 
         it('should map party faciliator for all locations mon-sat - over 18', () => {
@@ -1207,7 +1207,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Head Office')
         })
 
         it('should map party faciliator for all locations mon-sat - under 18', () => {
@@ -1294,7 +1294,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
         it('should map party faciliator for all locations sunday - over 18', () => {
@@ -1381,7 +1381,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map party faciliator for all locations sunday - under 18', () => {
@@ -1468,7 +1468,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - over 18', () => {
@@ -1555,7 +1555,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Head Office')
         })
 
         it('should map holiday program facilitator for all locations mon-sat - under 18', () => {
@@ -1642,7 +1642,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
         it('should map holiday program facilitator for all locations sunday - over 18', () => {
@@ -1729,7 +1729,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map holiday program facilitator for all locations sunday - under 18', () => {
@@ -1816,7 +1816,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map science club facilitator for all locations mon-sat - over 18', () => {
@@ -1828,7 +1828,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -1845,7 +1845,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -1862,7 +1862,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -1879,7 +1879,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -1896,14 +1896,14 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Mon to Sat - Head Office')
         })
 
         it('should map science club facilitator for all locations mon-sat - under 18', () => {
@@ -1915,7 +1915,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -1932,7 +1932,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -1949,7 +1949,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -1966,7 +1966,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -1983,14 +1983,14 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
         it('should map science club facilitator for all locations sunday - over 18', () => {
@@ -2002,7 +2002,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -2019,7 +2019,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -2036,7 +2036,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -2053,7 +2053,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -2070,14 +2070,14 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map science club facilitator for all locations sunday - under 18', () => {
@@ -2089,7 +2089,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -2106,7 +2106,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -2123,7 +2123,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -2140,7 +2140,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -2157,14 +2157,14 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.SCIENCE_CLUB_FACILITATOR,
+                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MOBILE,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'CGS COH - Sunday - Head Office')
         })
 
         it('should map miscellaneous for all locations mon-sat - over 18', () => {
@@ -2251,7 +2251,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Head Office')
         })
 
         it('should map miscellaneous for all locations mon-sat - under 18', () => {
@@ -2287,7 +2287,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -2338,7 +2338,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
         it('should map miscellaneous for all locations sunday - over 18', () => {
@@ -2425,7 +2425,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Head Office')
         })
 
         it('should map miscellaneous for all locations sunday - under 18', () => {
@@ -2512,7 +2512,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Sunday - Head Office')
         })
 
         it('should map non casual staff to ordinary hours mon-sat', () => {
@@ -2599,7 +2599,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Mon to Sat - Head Office')
         })
 
         it('should map non casual staff to ordinary hours sunday', () => {
@@ -2686,7 +2686,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Mobile')
+            strictEqual(row.payItem, 'PT/FT Ordinary Hours - Sunday - Head Office')
         })
 
         it('should map overtime first three hours - mon to sat', () => {
@@ -2773,7 +2773,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO')
         })
 
         it('should map overtime first three hours - sunday', () => {
@@ -2860,7 +2860,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: true, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Head Office')
         })
 
         it('should map overtime after three hours', () => {
@@ -2947,7 +2947,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
-            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Mobile')
+            strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Head Office')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
@@ -3034,7 +3034,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS COH - Mon to Sat - Head Office')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate under $18 on mon-sat to under 18 mon-sat', () => {
@@ -3070,7 +3070,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS 16&170yo COH - Mon to Sat - Cheltenham')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham')
 
             // essendon
             row = new TimesheetRow({
@@ -3121,7 +3121,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Head Office')
         })
 
         it('should choose CGS for COGS shifts and NON-CGS for non-COGS shifts', () => {
@@ -3630,7 +3630,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office')
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate under $18 on mon-sat to under 18 mon-sat', () => {
@@ -3717,7 +3717,7 @@ describe('Timesheet suite', () => {
                 summary: '',
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
-            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - Mobile')
+            strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO')
         })
     })
 
