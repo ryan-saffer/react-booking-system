@@ -13,15 +13,6 @@ on:
 
   # Manual trigger from the Actions tab
   workflow_dispatch:
-    inputs:
-      pr_number:
-        description: "Pull Request number to deploy (deploys PR merge ref)"
-        required: false
-        type: string
-      ref:
-        description: "Git ref/branch/tag to deploy (overrides default checkout)"
-        required: false
-        type: string
 
 concurrency:
   group: deploy-${{ github.ref_name }}
@@ -42,27 +33,10 @@ jobs:
       PROJECT_ID: ${{ github.ref_name == 'main' && 'bookings-prod' || 'booking-system-6435d' }}
 
     steps:
-      # Checkout logic:
-      # - If a PR number is provided via manual dispatch, checkout its merge ref
-      # - Else if a ref is provided via manual dispatch, checkout that ref
-      # - Else, default checkout (event ref)
-      - name: Checkout (PR merge ref)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number != '' }}
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: refs/pull/${{ inputs.pr_number }}/merge
           fetch-depth: 0
-
-      - name: Checkout (explicit ref)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number == '' && inputs.ref != '' }}
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
-          fetch-depth: 0
-
-      - name: Checkout (default)
-        if: ${{ !(github.event_name == 'workflow_dispatch' && (inputs.pr_number != '' || inputs.ref != '')) }}
-        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
