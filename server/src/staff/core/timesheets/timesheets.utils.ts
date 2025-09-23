@@ -424,6 +424,8 @@ export class TimesheetRow {
             case Position.SUNDAY_TRAINING:
             case Position.SUPERVISOR:
             case Position.SUNDAY_SUPERVISOR:
+            case Position.PIC:
+            case Position.SUNDAY_PIC:
                 return false
             case Position.PARTY_FACILITATOR:
             case Position.SUNDAY_PARTY_FACILITATOR:
@@ -875,6 +877,8 @@ export function isOnCallShift(position: Position) {
         case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
         case Position.ON_CALL_INCURSIONS:
         case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.PIC:
+        case Position.SUNDAY_PIC:
         case Position.ON_CALL:
             return true
         case Position.MISCELLANEOUS:
@@ -970,6 +974,8 @@ export function isCalledInShift(position: Position) {
         case Position.SUNDAY_INCURSIONS:
         case Position.ON_CALL_INCURSIONS:
         case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.PIC:
+        case Position.SUNDAY_PIC:
         case Position.ON_CALL:
             return false
         default: {
@@ -1037,6 +1043,8 @@ export enum Position {
     SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
     SUPERVISOR = 'SUPERVISOR',
     SUNDAY_SUPERVISOR = 'SUNDAY_SUPERVISOR',
+    PIC = 'PIC', // Person I Call - Same as on call shift
+    SUNDAY_PIC = 'SUNDAY_PIC',
     ON_CALL = 'ON_CALL', // deprecated
 }
 
@@ -1090,6 +1098,8 @@ const PositionToId: Record<Position, number> = {
     [Position.SUPERVISOR]: 25291330,
     [Position.SUNDAY_SUPERVISOR]: 25291331,
     [Position.ON_CALL]: 13464907,
+    [Position.PIC]: 25333970,
+    [Position.SUNDAY_PIC]: 25333971,
 }
 
 const PositionMap: Record<number, Position> = Object.fromEntries(
@@ -1173,6 +1183,8 @@ const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
     [Position.MISCELLANEOUS]: 'No Activity',
     [Position.SUNDAY_MISCELLANEOUS]: 'No Activity',
     [Position.ON_CALL]: 'No Activity',
+    [Position.PIC]: 'No Activity',
+    [Position.SUNDAY_PIC]: 'No Activity',
 }
 
 type COGSCasualOrdinaryMonSat =

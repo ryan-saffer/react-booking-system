@@ -12,6 +12,7 @@ import {
     getWeeks,
     hasBirthdayDuring,
     isCalledInShift,
+    isOnCallShift,
 } from '../timesheets.utils'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
@@ -2871,6 +2872,66 @@ describe('Timesheet suite', () => {
             strictEqual(row.payItem, 'NON-CGS OT - First 3 Hrs - Sunday - Head Office')
         })
 
+        it('should map CGS overtime first three hours - mon to sat', () => {
+            const baseProps = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: Position.PARTY_FACILITATOR,
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            } as const
+
+            const scenarios = [
+                { location: Location.BALWYN, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn' },
+                { location: Location.CHELTENHAM, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham' },
+                { location: Location.ESSENDON, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Essendon' },
+                { location: Location.KINGSVILLE, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville' },
+                { location: Location.MALVERN, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Malvern' },
+                { location: Location.HEAD_OFFICE, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Head Office' },
+            ]
+
+            scenarios.forEach(({ location, expected }) => {
+                const row = new TimesheetRow({ ...baseProps, location })
+                strictEqual(row.payItem, expected)
+            })
+        })
+
+        it('should map CGS overtime first three hours - sunday', () => {
+            const baseProps = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: Position.PARTY_FACILITATOR,
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: true, afterThreeHours: false },
+            } as const
+
+            const scenarios = [
+                { location: Location.BALWYN, expected: 'CGS OT - First 3 Hrs - Sunday - Balwyn' },
+                { location: Location.CHELTENHAM, expected: 'CGS OT - First 3 Hrs - Sunday - Cheltenham' },
+                { location: Location.ESSENDON, expected: 'CGS OT - First 3 Hrs - Sunday - Essendon' },
+                { location: Location.KINGSVILLE, expected: 'CGS OT - First 3 Hrs - Sunday - Kingsville' },
+                { location: Location.MALVERN, expected: 'CGS OT - First 3 Hrs - Sunday - Malvern' },
+                { location: Location.HEAD_OFFICE, expected: 'CGS OT - First 3 Hrs - Sunday - Head Office' },
+            ]
+
+            scenarios.forEach(({ location, expected }) => {
+                const row = new TimesheetRow({ ...baseProps, location })
+                strictEqual(row.payItem, expected)
+            })
+        })
+
         it('should map overtime after three hours', () => {
             // balwyn
             let row = new TimesheetRow({
@@ -2956,6 +3017,36 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: true },
             })
             strictEqual(row.payItem, 'NON-CGS OT - After 3 Hrs - Head Office')
+        })
+
+        it('should map CGS overtime after three hours', () => {
+            const baseProps = {
+                firstName: 'Ryan',
+                lastName: 'Saffer',
+                dob: olderThan18,
+                date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
+                hasBirthdayDuringPayrun: true,
+                isCasual: false,
+                position: Position.PARTY_FACILITATOR,
+                hours: 8,
+                rate: 'not required',
+                summary: '',
+                overtime: { firstThreeHours: false, afterThreeHours: true },
+            } as const
+
+            const scenarios = [
+                { location: Location.BALWYN, expected: 'CGS OT - After 3 Hrs - Balwyn' },
+                { location: Location.CHELTENHAM, expected: 'CGS OT - After 3 Hrs - Cheltenham' },
+                { location: Location.ESSENDON, expected: 'CGS OT - After 3 Hrs - Essendon' },
+                { location: Location.KINGSVILLE, expected: 'CGS OT - After 3 Hrs - Kingsville' },
+                { location: Location.MALVERN, expected: 'CGS OT - After 3 Hrs - Malvern' },
+                { location: Location.HEAD_OFFICE, expected: 'CGS OT - After 3 Hrs - Head Office' },
+            ]
+
+            scenarios.forEach(({ location, expected }) => {
+                const row = new TimesheetRow({ ...baseProps, location })
+                strictEqual(row.payItem, expected)
+            })
         })
 
         it('should map casual ordinary hours for employees under 18 on a rate above $18 on mon-sat to over 18 mon-sat', () => {
@@ -4066,6 +4157,34 @@ describe('Timesheet suite', () => {
                     }),
                 /Unrecognised location processing payroll/
             )
+        })
+    })
+
+    describe('isOnCallShift', () => {
+        it('should return true for every on call position', () => {
+            const onCallPositions: Position[] = [
+                Position.ON_CALL_PARTY_FACILITATOR,
+                Position.SUNDAY_ON_CALL_PARTY_FACILITATOR,
+                Position.ON_CALL_MOBILE_PARTY_FACILITATOR,
+                Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR,
+                Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
+                Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
+                Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                Position.ON_CALL_PLAY_LAB_FACILITATOR,
+                Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR,
+                Position.ON_CALL_EVENTS_AND_ACTIVATIONS,
+                Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS,
+                Position.ON_CALL_INCURSIONS,
+                Position.SUNDAY_ON_CALL_INCURSIONS,
+                Position.PIC,
+                Position.SUNDAY_PIC,
+                Position.ON_CALL,
+            ]
+
+            onCallPositions.forEach((position) => {
+                strictEqual(isOnCallShift(position), true, `${position} should be treated as an on call shift`)
+            })
         })
     })
 
