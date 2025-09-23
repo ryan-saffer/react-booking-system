@@ -821,7 +821,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                     <TextField
                                         id={createUniqueId(`takeHomeBags.${bagType}`, booking.id)}
                                         name={`takeHomeBags.${bagType}`}
-                                        label={TAKE_HOME_BAGS[bagType].label}
+                                        label={TAKE_HOME_BAGS[bagType].displayValue}
                                         fullWidth
                                         size="small"
                                         variant="outlined"

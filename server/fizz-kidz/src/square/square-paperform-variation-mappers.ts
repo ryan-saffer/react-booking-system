@@ -96,6 +96,8 @@ export function mapTakeHomeBagToSquareVariation(env: 'prod' | 'dev', variation: 
                 return 'RFPAE4HT6XGDC2TA33BHELLI'
             case 'toyBags':
                 return 'ZKQ6DLXI3PSJL3TA2TL7DGLB'
+            case 'lollyToyMixBags':
+                return '6VUJRREWNRG3S7B3ZCIZJ6KL'
             default: {
                 assertNever(variation)
                 throw new Error(`Unable to get take home bag variation for: ${variation}`)
