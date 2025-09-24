@@ -48,7 +48,6 @@ Use this table to confirm how each active Sling shift maps into Xero.
 | Incursion                                        | COGS     | Ordinary rate |
 | Miscellaneous                                    | Non COGS | Ordinary rate |
 | Mobile Party Facilitator                         | COGS     | Ordinary rate |
-| On Call                                          | COGS     | 10% rate      |
 | Party Facilitator                                | COGS     | Ordinary rate |
 | PIC                                              | Non COGS | 10% rate      |
 | Play Lab Facilitator                             | COGS     | Ordinary rate |
