@@ -8,7 +8,8 @@ export default defineConfig({
     starlight({
       title: "Fizz Kidz Docs",
       logo: {
-        src: "./src/assets/logo-white.png",
+        light: "./src/assets/logo-stacked.png",
+        dark: "./src/assets/logo-white.png",
       },
       sidebar: [
         {
