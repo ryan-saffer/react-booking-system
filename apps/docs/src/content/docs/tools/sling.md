@@ -5,7 +5,7 @@ description: How to roster shifts in Sling so Xero timesheets stay accurate for 
 
 Our Sling roster drives every casual-timesheet we create in Xero. Treat it as the source of truth for who worked, what they did, and how they should be paid.
 
-:::warning[Casual staff only]
+:::note[Casual staff only]
 Only roster employees engaged as casual staff. Anyone else added to Sling receives an auto-generated Xero timesheet that payroll cannot use.
 :::
 
@@ -15,8 +15,8 @@ Only roster employees engaged as casual staff. Anyone else added to Sling receiv
 - The integration tags every shift with a Xero tracking category that highlights the activity (e.g. in-studio party, mobile party, holiday program, Play Lab).
 - Pay items and tracking categories determine where labour costs surface, so double-check the shift name before publishing.
 
-
 ## Day-specific shift labels
+
 - Each core shift has a `[Sunday]` variant used only for Sling budgeting. Payroll applies Sunday loadings based on the calendar date, not the label.
 - On Call and Superhero variants do change the Xero rate (10% and 150% respectively), so select them only when that pay treatment is intended.
 
@@ -26,7 +26,7 @@ Only roster employees engaged as casual staff. Anyone else added to Sling receiv
 - Shifts containing `Superhero` pay 150% of the base rate and should be reserved for premium, hero-led experiences.
 - All other shifts pay the ordinary rate. If you intend a premium or standby payment, pick the matching shift name instead of editing timesheets later.
 
-:::tip[Xero review]
+:::caution[Xero review]
 Mislabelled rates flow straight into payroll. Validate rate-sensitive shifts in the published schedule before the pay run.
 :::
 
