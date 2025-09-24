@@ -18,10 +18,6 @@ export default defineConfig({
             { label: "Rostering - Sling", slug: "tools/sling" },
           ],
         },
-        {
-          label: "Reference",
-          autogenerate: { directory: "reference" },
-        },
       ],
     }),
   ],
