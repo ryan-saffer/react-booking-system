@@ -8,25 +8,24 @@ import dotenv from 'dotenv'
 // - otherwise dev
 
 function isProdProject(): boolean {
-  try {
-    if (process.env.FIREBASE_CONFIG) {
-      const cfg = JSON.parse(process.env.FIREBASE_CONFIG)
-      if (cfg?.projectId === 'bookings-prod') return true
+    try {
+        if (process.env.FIREBASE_CONFIG) {
+            const cfg = JSON.parse(process.env.FIREBASE_CONFIG)
+            if (cfg?.projectId === 'bookings-prod') return true
+        }
+    } catch {
+        // ignore parse errors
     }
-  } catch {
-    // ignore parse errors
-  }
-  if (process.env.GCLOUD_PROJECT === 'bookings-prod') return true
-  return false
+    if (process.env.GCLOUD_PROJECT === 'bookings-prod') return true
+    return false
 }
 
-(() => {
-  const serverDir = path.resolve(__dirname, '..')
-  const envFile = isProdProject() ? '.env.prod' : '.env'
-  const envPath = path.join(serverDir, envFile)
+;(() => {
+    const serverDir = path.resolve(__dirname, '..')
+    const envFile = isProdProject() ? '.env.prod' : '.env'
+    const envPath = path.join(serverDir, envFile)
 
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath })
-  }
+    if (fs.existsSync(envPath)) {
+        dotenv.config({ path: envPath })
+    }
 })()
-

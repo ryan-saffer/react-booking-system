@@ -161,13 +161,13 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
             .join('-')
         const tempFilePath = path.join(os.tmpdir(), filename)
 
-        fs.writeFileSync(tempFilePath, 'first_name,last_name,type,date,hours,notes\n')
+        fs.writeFileSync(tempFilePath, 'first_name,last_name,type,tracking_code,date,hours,notes\n')
         rows.map((row) =>
             fs.appendFileSync(
                 tempFilePath,
-                `${row.firstName},${row.lastname},${row.payItem},${row.date.toLocaleString(DateTime.DATE_SHORT)},${
-                    row.hours
-                },${row.summary.replace(/[\r\n]+/gm, '')}\n`
+                `${row.firstName},${row.lastname},${row.payItem},${row.activity},${row.date.toLocaleString(
+                    DateTime.DATE_SHORT
+                )},${row.hours},${row.summary.replace(/[\r\n]+/gm, '')}\n`
             )
         )
 
