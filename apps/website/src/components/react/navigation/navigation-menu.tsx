@@ -48,6 +48,11 @@ export const menu = [
         type: "link",
       },
       {
+        title: "K-Pop Demon Hunters Parties",
+        path: "/birthday-parties/k-pop-demon-hunters-parties",
+        type: "link",
+      },
+      {
         title: "Fairy Parties",
         path: "/birthday-parties/fairy-parties",
         type: "link",
