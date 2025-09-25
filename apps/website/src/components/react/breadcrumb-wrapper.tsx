@@ -9,6 +9,7 @@ import {
 import { Fragment } from "react/jsx-runtime";
 import NavigationMenuDropdown from "./navigation/navigation-menu-dropdown";
 import { cn } from "./lib/utils";
+import type { MenuLink } from "./navigation/navigation-menu";
 
 export function BreadcrumbWrapper({
   items,
@@ -19,7 +20,7 @@ export function BreadcrumbWrapper({
     | {
         type: "dropdown";
         title: string;
-        items: Readonly<{ type: "link"; title: string; path: string }[]>;
+        items: Readonly<MenuLink[]>;
       }
   )[];
 }) {

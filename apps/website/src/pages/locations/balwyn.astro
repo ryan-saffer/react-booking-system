@@ -21,6 +21,7 @@ import carousel2Image from "@/assets/images/pages/locations/balwyn/balwyn2.jpg";
 import carousel3Image from "@/assets/images/pages/locations/balwyn/balwyn3.jpg";
 import carousel4Image from "@/assets/images/pages/locations/balwyn/balwyn4.jpg";
 import carousel5Image from "@/assets/images/pages/locations/balwyn/balwyn5.jpg";
+import { menu } from "@/components/react/navigation/navigation-menu";
 
 const carousel1 = await getImage({ src: carousel1Image, format: "webp" });
 const carousel2 = await getImage({ src: carousel2Image, format: "webp" });
@@ -45,33 +46,7 @@ const carousel5 = await getImage({ src: carousel5Image, format: "webp" });
         {
           type: "dropdown",
           title: "Balwyn",
-          items: [
-            {
-              type: "link",
-              path: "/locations/balwyn",
-              title: "Balwyn",
-            },
-            {
-              type: "link",
-              path: "/locations/cheltenham",
-              title: "Cheltenham",
-            },
-            {
-              type: "link",
-              path: "/locations/essendon",
-              title: "Essendon",
-            },
-            {
-              type: "link",
-              path: "/locations/kingsville",
-              title: "Kingsville",
-            },
-            {
-              type: "link",
-              path: "/locations/malvern",
-              title: "Malvern",
-            },
-          ],
+          items: menu[5].items,
         },
       ]}
     />
