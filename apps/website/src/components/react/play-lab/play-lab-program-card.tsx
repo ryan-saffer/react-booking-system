@@ -80,8 +80,9 @@ const PlayLabProgramCard = ({
             <p className="mt-5">{content.description}</p>
           </div>
           <div className="mb-4 mt-6 flex flex-col gap-4 @[18rem]:flex-row">
-            {content.buttons.map((button) => (
+            {content.buttons.map((button, idx) => (
               <HoverTag
+                key={idx}
                 color={button.color}
                 text={button.content}
                 tooltip={button.tooltip}
