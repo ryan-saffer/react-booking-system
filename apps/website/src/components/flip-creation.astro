@@ -11,11 +11,14 @@ import { cn } from "./react/lib/utils";
 type Props = {
   image: ImageMetadata;
   color: "pink" | "yellow" | "green" | "purple" | "blue" | "white";
-  text: string;
+  text?: string[];
   flippable?: boolean;
 };
 
-const { image, color, text, flippable = true } = Astro.props;
+const { image, color, text = [], flippable = true } = Astro.props;
+
+const textLines = text.map((line) => `${line}`);
+const textHtml = textLines.join("<br />");
 
 const blob =
   color === "pink"
@@ -88,9 +91,11 @@ const hex =
       />
       {
         !flippable && (
-          <p class="text-center font-lilita text-2xl" style={{ color: hex }}>
-            {text}
-          </p>
+          <p
+            class="text-center font-lilita text-2xl"
+            style={{ color: hex }}
+            set:html={textHtml}
+          ></p>
         )
       }
     </div>
@@ -109,9 +114,10 @@ const hex =
               "-ml-8": color === "blue",
             })}
           />
-          <p class="absolute max-w-[130px] text-wrap text-center font-lilita text-2xl font-semibold text-white">
-            {text}
-          </p>
+          <p
+            class="absolute max-w-[130px] text-wrap text-center font-lilita text-2xl font-semibold text-white"
+            set:html={textHtml}
+          ></p>
         </div>
       )
     }

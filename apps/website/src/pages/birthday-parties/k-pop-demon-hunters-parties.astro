@@ -1,0 +1,51 @@
+---
+import PageIntro from "@/components/page-intro.astro";
+import Layout from "@/layout/Layout.astro";
+import PartyLayout from "@/layout/party-layout.astro";
+
+import kpopparty from "@/assets/images/pages/parties/k-pop-demon-hunters-party.png";
+import kpop from "@/assets/images/pages/parties/packages/k-pop-demon-hunters.png";
+import Creations from "@/components/party-package-creations.astro";
+import StarhexWands from "@/components/creations/starhex-wands.astro";
+import SquishyPockets from "@/components/creations/squishy-pockets.astro";
+import HendrixGlitterShine from "@/components/creations/hendrix-glitter-shine.astro";
+import GoldenSlime from "@/components/creations/golden-slime.astro";
+import StarlayClips from "@/components/creations/star-slay-clips.astro";
+import MoonBeamBracelets from "@/components/creations/moon-beam-bracelets.astro";
+---
+
+<Layout
+  title="Book a K-Pop Demon Hunters Birthday Party in Melbourne | Fizz Kidz"
+  description="TODO"
+>
+  <PartyLayout partyPackage="K-Pop Demon Hunters">
+    <PageIntro
+      slot="intro"
+      subtitle="The ultimate K-Pop party experience!"
+      type="image"
+      image={kpopparty}
+      imageAlt="a purple butcket of glycerine cubes, with pretty colourful unciron soaps on top"
+      actionButtonText="Book a party"
+      actionButtonPath="/birthday-parties/book-a-party/#book"
+      color="purple"
+    >
+      <span slot="title">Kids K-Pop Demon Hunters Parties</span>
+      <span slot="content">
+        Step into a world of magic and music where K-Pop energy meets fantasy
+        adventure!
+      </span>
+    </PageIntro>
+    <Creations
+      partyPackage="K-Pop Demon Hunters"
+      image={kpop}
+      imageAlt="Fairy Party Package"
+    >
+      <StarhexWands slot="1" flippable={false} />
+      <SquishyPockets slot="2" flippable={false} />
+      <HendrixGlitterShine slot="3" flippable={false} />
+      <GoldenSlime slot="4" flippable={false} />
+      <StarlayClips slot="5" flippable={false} />
+      <MoonBeamBracelets slot="6" flippable={false} />
+    </Creations>
+  </PartyLayout>
+</Layout>
