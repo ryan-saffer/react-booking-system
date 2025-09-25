@@ -1,14 +1,17 @@
 import { cn } from "../lib/utils";
+import { Badge } from "../ui/badge";
 
 function NavigationMenuItemMobile({
   title,
   path,
   nested,
+  isNew = false,
   italic = false,
 }: {
   title: string;
   path: string;
   nested: boolean;
+  isNew?: boolean;
   italic?: boolean;
 }) {
   return (
@@ -24,6 +27,7 @@ function NavigationMenuItemMobile({
         })}
       >
         {title}
+        {isNew && <Badge className="ml-2">New!</Badge>}
       </a>
     </div>
   );

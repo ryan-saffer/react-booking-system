@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import NavigationMenuItemDesktop from "./navigation-menu-item-desktop";
 import { cn } from "../lib/utils";
 import { useState } from "react";
+import type { MenuLink } from "./navigation-menu";
 
 function NavigationMenuDropdown({
   title,
@@ -18,12 +19,12 @@ function NavigationMenuDropdown({
   subtitle?: string;
   submenus: Readonly<
     (
-      | { type: "link"; title: string; path: string }
+      | MenuLink
       | {
           type: "dropdown";
           title: string;
           path?: string;
-          items: Readonly<{ title: string; path: string }[]>;
+          items: Readonly<Omit<MenuLink, "type">[]>;
         }
     )[]
   >;
@@ -77,6 +78,7 @@ function NavigationMenuDropdown({
               <NavigationMenuItemDesktop
                 path={menu.path}
                 title={menu.title}
+                isNew={menu.isNew}
                 key={idx}
                 className={isBreadcrumb ? "text-sm" : ""}
               />

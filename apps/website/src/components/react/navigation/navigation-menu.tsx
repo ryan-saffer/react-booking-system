@@ -13,12 +13,19 @@ import NavigationMenuItemMobile from "./navigation-menu-item-mobile";
 import { cn } from "../lib/utils";
 import { useEffect, useRef, useState } from "react";
 
+export type MenuLink = {
+  type: "link";
+  title: string;
+  path: string;
+  isNew: boolean;
+};
+
 export type MenuItem =
-  | { type: "link"; title: string; path: string }
+  | MenuLink
   | ({
       type: "dropdown";
       title: string;
-      items: Readonly<{ type: "link"; title: string; path: string }[]>;
+      items: Readonly<MenuLink[]>;
     } & (
       | { clickable: true; path: string; subTitle: string }
       | { clickable: false }
@@ -36,56 +43,67 @@ export const menu = [
         title: "Glam Parties",
         path: "/birthday-parties/glam-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "Science Parties",
         path: "/birthday-parties/science-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "Slime Parties",
         path: "/birthday-parties/slime-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "K-Pop Demon Hunters Parties",
         path: "/birthday-parties/k-pop-demon-hunters-parties",
         type: "link",
+        isNew: true,
       },
       {
         title: "Fairy Parties",
         path: "/birthday-parties/fairy-parties",
         type: "link",
+        isNew: false,
       },
       {
         title: "Fluid Bears Parties",
         path: "/birthday-parties/fluid-bears-parties",
         type: "link",
+        isNew: true,
       },
       {
         title: "Safari Parties",
         path: "/birthday-parties/safari-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "Unicorn Parties",
         path: "/birthday-parties/unicorn-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "Tie Dye Parties",
         path: "/birthday-parties/tie-dye-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "Taylor Swift Parties",
         path: "/birthday-parties/taylor-swift-parties/",
         type: "link",
+        isNew: false,
       },
       {
         title: "At Home Parties",
         path: "/birthday-parties/at-home-parties/",
         type: "link",
+        isNew: false,
       },
     ],
   },
@@ -93,11 +111,13 @@ export const menu = [
     type: "link",
     title: "Holiday programs",
     path: "/holiday-programs/",
+    isNew: false,
   },
   {
     type: "link",
     title: "Play lab (1.5 - 5 yrs)",
     path: "/play-lab",
+    isNew: false,
   },
   // {
   //   type: "dropdown",
@@ -127,14 +147,21 @@ export const menu = [
         type: "link",
         title: "After school programs",
         path: "/in-schools/after-school-programs/",
+        isNew: false,
       },
-      { type: "link", title: "Incursions", path: "/in-schools/incursions/" },
+      {
+        type: "link",
+        title: "Incursions",
+        path: "/in-schools/incursions/",
+        isNew: false,
+      },
     ],
   },
   {
     title: "Activations and events",
     type: "link",
     path: "/activations-and-events/",
+    isNew: false,
   },
   {
     title: "Locations",
@@ -143,11 +170,36 @@ export const menu = [
     path: "/locations",
     subTitle: "See All Locations",
     items: [
-      { type: "link", path: "/locations/balwyn", title: "Balwyn" },
-      { type: "link", path: "/locations/cheltenham", title: "Cheltenham" },
-      { type: "link", path: "/locations/essendon", title: "Essendon" },
-      { type: "link", path: "/locations/kingsville", title: "Kingsville" },
-      { type: "link", path: "/locations/malvern", title: "Malvern" },
+      {
+        type: "link",
+        path: "/locations/balwyn",
+        title: "Balwyn",
+        isNew: false,
+      },
+      {
+        type: "link",
+        path: "/locations/cheltenham",
+        title: "Cheltenham",
+        isNew: false,
+      },
+      {
+        type: "link",
+        path: "/locations/essendon",
+        title: "Essendon",
+        isNew: false,
+      },
+      {
+        type: "link",
+        path: "/locations/kingsville",
+        title: "Kingsville",
+        isNew: false,
+      },
+      {
+        type: "link",
+        path: "/locations/malvern",
+        title: "Malvern",
+        isNew: false,
+      },
     ],
   },
 
@@ -161,11 +213,12 @@ export const menu = [
         type: "link",
         title: "Contact Us",
         path: "/contact-us/",
+        isNew: false,
       },
-      { type: "link", title: "Careers", path: "/careers/" },
-      { type: "link", title: "Our Team", path: "/our-team/" },
+      { type: "link", title: "Careers", path: "/careers/", isNew: false },
+      { type: "link", title: "Our Team", path: "/our-team/", isNew: false },
       // { type: "link", title: "Franchising", path: "/franchising" },
-      { type: "link", title: "Policies", path: "/policies/" },
+      { type: "link", title: "Policies", path: "/policies/", isNew: false },
     ],
   },
 ] as const satisfies MenuItem[];
@@ -294,6 +347,7 @@ function NavigationMenu() {
                             key={item.title}
                             title={item.title}
                             path={item.path}
+                            isNew={item.isNew}
                             nested
                           />
                         ))}
@@ -306,6 +360,7 @@ function NavigationMenu() {
                       key={menuItem.title}
                       title={menuItem.title}
                       path={menuItem.path}
+                      isNew={menuItem.isNew}
                       nested={false}
                     />
                   );
