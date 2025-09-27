@@ -1,4 +1,7 @@
-import type { CreateUser, Timesheet, User } from '../staff/core/timesheets/timesheets.types'
+import type { CreateUser, Timesheet, UpdateWagesBody, User } from './sling.types'
+
+const UPDATE_VERBS = ['POST', 'PUT']
+const SLING_ORG_ID = '222525'
 
 export class SlingClient {
     #authToken: string = ''
@@ -26,7 +29,7 @@ export class SlingClient {
         this.#authToken = auth
     }
 
-    async #request(path: string, method: 'GET' | 'POST', data?: any, retryCount = 0): Promise<any> {
+    async #request(path: string, method: 'GET' | 'POST' | 'PUT', data?: any, retryCount = 0): Promise<any> {
         if (!this.#authToken) {
             await this.#getAuthToken()
         }
@@ -36,7 +39,7 @@ export class SlingClient {
                 'Content-Type': 'application/json',
                 Authorization: this.#authToken,
             },
-            ...(method === 'POST' && { body: JSON.stringify(data) }),
+            ...(UPDATE_VERBS.includes(method) && { body: JSON.stringify(data) }),
         })
 
         if (response.status === 401 && retryCount === 0) {
@@ -48,7 +51,7 @@ export class SlingClient {
             const result = await response.json()
             return result
         } else {
-            throw new Error(`Error calling sling api: '${response.statusText}'`)
+            throw new Error(`${response.status}, ${response.statusText}`)
         }
     }
 
@@ -60,6 +63,10 @@ export class SlingClient {
         return this.#request(path, 'POST', data)
     }
 
+    #put(path: string, data: any) {
+        return this.#request(path, 'PUT', data)
+    }
+
     async getUsers() {
         const users = await this.#get('users/concise')
         return users.users as User[]
@@ -69,9 +76,17 @@ export class SlingClient {
         return this.#post('users', user)
     }
 
+    addShiftsToUser(userId: number, shiftIds: number[]) {
+        return this.#put(`/users/${userId}`, { groups: shiftIds.map((id) => ({ id })) })
+    }
+
     async getTimesheets(startDate: Date, endDate: Date): Promise<Timesheet[]> {
         const range = encodeURIComponent(`${startDate.toISOString()}/${endDate.toISOString()}`)
         const timesheets = await this.#get(`reports/timesheets?dates=${range}`)
         return timesheets
+    }
+
+    updateWages(body: UpdateWagesBody) {
+        return this.#put(`${SLING_ORG_ID}/labor/wages/user/bulk`, body)
     }
 }

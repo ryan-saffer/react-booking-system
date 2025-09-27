@@ -21,6 +21,8 @@ const OVERTIME_START = 38
 
 type XeroUserCache = { [key: string]: Employee | undefined }
 
+export const ORDINARY_PAY_EARNINGS_RATE_ID = '1ef5805a-5208-4d89-8f35-620104543ed4'
+
 export async function generateTimesheets({ startDateInput, endDateInput }: GenerateTimesheetsParams) {
     const slingClient = new SlingClient()
 
@@ -51,8 +53,6 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
             errorCode: 'invalid-length',
         })
     }
-
-    const ORDINARY_PAY_EARNINGS_RATE_ID = '1ef5805a-5208-4d89-8f35-620104543ed4'
 
     try {
         // break the time period into weeks

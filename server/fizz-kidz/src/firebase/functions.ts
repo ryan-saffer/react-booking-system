@@ -8,6 +8,7 @@ export interface PubSubFunctions {
         | { name: 'sendPartyForms' }
         | { name: 'sendPartyFeedbackEmails' }
         | { name: 'remindAboutWwcc' }
+        | { name: 'updateSlingWages' }
         | { name: 'paperformSubmission'; form: 'incursion'; data: PaperFormResponse<IncursionForm> }
         | {
               name: 'paperformSubmission'

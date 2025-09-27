@@ -1,6 +1,10 @@
+import '../load-env'
+
 import { Location, ObjectKeys } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
+
+import { updateSlingWages } from '@/sling/update-sling-wages'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
@@ -12,13 +16,16 @@ import {
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
 import { generatePartyFormUrl } from './parties/generate-form'
-import { getParties } from './reports/get-parties'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
 import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices'
 import { getEvents } from './reports/get-events'
 import { getHolidayPrograms } from './reports/get-holiday-programs'
+import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
-;(async () => {
+
+;
+
+(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
@@ -39,6 +46,10 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
             {
                 title: 'List all users',
                 value: 'listAllUsers',
+            },
+            {
+                title: 'Update Sling Wages',
+                value: 'updateSlingWages',
             },
             {
                 title: 'Update all bookings to old prices',
@@ -236,5 +247,8 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
             'Holiday bookings': holidayPrograms.length,
             'Play Lab bookings': playLab.length,
         })
+    }
+    if (script === 'updateSlingWages') {
+        updateSlingWages()
     }
 })()

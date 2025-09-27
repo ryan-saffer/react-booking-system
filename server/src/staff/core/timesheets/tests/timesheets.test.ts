@@ -3,7 +3,8 @@ import { strictEqual, throws } from 'assert'
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
-import type { Timesheet } from '../timesheets.types'
+import type { Timesheet } from '@/sling/sling.types'
+
 import {
     Location,
     Position,
@@ -5085,6 +5086,250 @@ describe('Timesheet suite', () => {
 
             strictEqual(rows[8].payItem, 'CGS OT - After 3 Hrs - Balwyn')
             strictEqual(rows[8].hours, 1)
+        })
+
+        const buildTimesheet = (dtstart: string, dtend: string, positionId: number): Timesheet => ({
+            dtstart,
+            dtend,
+            location: { id: 4809521 }, // balwyn
+            position: { id: positionId },
+            user: { id: 123 },
+            status: 'published',
+            summary: '',
+        })
+
+        it('should keep on call pay items when shift crosses the weekly overtime threshold', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 25262039), // on call
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 6)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 2)
+            strictEqual(firstSegment.overtime.firstThreeHours, false)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, true)
+            strictEqual(secondSegment.overtime.afterThreeHours, false)
+        })
+
+        it('should keep on call pay items when an entire shift occurs inside weekly overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 25262039), // on call
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 7)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 1)
+            strictEqual(firstSegment.overtime.firstThreeHours, true)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, false)
+            strictEqual(secondSegment.overtime.afterThreeHours, true)
+        })
+
+        it('should keep called in pay items when shift crosses the weekly overtime threshold', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 13464921), // called in
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 6)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 2)
+            strictEqual(firstSegment.overtime.firstThreeHours, false)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, true)
+            strictEqual(secondSegment.overtime.afterThreeHours, false)
+        })
+
+        it('should keep called in pay items when an entire shift occurs inside weekly overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 13464921), // called in
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 7)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 1)
+            strictEqual(firstSegment.overtime.firstThreeHours, true)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, false)
+            strictEqual(secondSegment.overtime.afterThreeHours, true)
+        })
+
+        it('should switch ordinary shifts to overtime pay items once overtime is reached', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 4809533),
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 6)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'CGS COH - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 2)
+            strictEqual(firstSegment.overtime.firstThreeHours, false)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, true)
+            strictEqual(secondSegment.overtime.afterThreeHours, false)
+        })
+
+        it('should pay overtime rates for ordinary shifts worked entirely after the weekly threshold', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
+                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 4809533),
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 7)
+
+            const [firstSegment, secondSegment] = rows.slice(-2)
+
+            strictEqual(firstSegment.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
+            strictEqual(firstSegment.hours, 1)
+            strictEqual(firstSegment.overtime.firstThreeHours, true)
+            strictEqual(firstSegment.overtime.afterThreeHours, false)
+
+            strictEqual(secondSegment.payItem, 'CGS OT - After 3 Hrs - Balwyn')
+            strictEqual(secondSegment.hours, 2)
+            strictEqual(secondSegment.overtime.firstThreeHours, false)
+            strictEqual(secondSegment.overtime.afterThreeHours, true)
         })
     })
 

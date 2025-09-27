@@ -7,6 +7,7 @@ import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedba
 import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
 import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
 import { assertNever, type PubSubFunctions } from 'fizz-kidz'
+import { updateSlingWages } from './sling/update-sling-wages'
 
 export const pubsub = onMessagePublished('background', async (input: PubSubFunctions['background']) => {
     const { name } = input
@@ -34,6 +35,9 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'remindAboutWwcc':
             // 1st and 15th of every month at 8:30am
             await remindAboutWwcc()
+            break
+        case 'updateSlingWages':
+            await updateSlingWages()
             break
         case 'paperformSubmission':
             // triggered by paperform webhook
