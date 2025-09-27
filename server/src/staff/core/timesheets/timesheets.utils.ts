@@ -1,7 +1,9 @@
 import { ObjectKeys, assertNever } from 'fizz-kidz'
 import { DateTime, Duration, Interval } from 'luxon'
 
-import type { Rate, Timesheet as SlingTimesheet } from './timesheets.types'
+import type { Timesheet } from '@/sling/sling.types'
+
+import type { Rate } from './timesheets.types'
 
 /**
  * Breaks the range down into weeks, and returns them as an array of intervals.
@@ -57,7 +59,7 @@ export function createTimesheetRows({
     hasBirthdayDuringPayrun: boolean
     isCasual: boolean
     overtimeThreshold: number
-    usersTimesheets: SlingTimesheet[]
+    usersTimesheets: Timesheet[]
     rate: Rate
     timezone: string
 }): { rows: TimesheetRow[]; totalHours: number } {
@@ -393,11 +395,15 @@ export class TimesheetRow {
     }
 
     private getPayItem(position: Position, location: Location): PayItem {
+        // on call does not count towards overtime so check that first
+        if (isOnCallShift(position)) return this._getOnCallPayItem(location)
+        // called in pays more than overtime, so even if a called in shift is in overtime, it should still be a called in pay item
+        if (isCalledInShift(position)) return this._getCalledInPayItem(location)
+        // then get overtime if applicable
         if (this.overtime.firstThreeHours) return this._getOvertimeFirstThreeHours(location)
         if (this.overtime.afterThreeHours) return this._getOvertimeAfterThreeHours(location)
-        if (isOnCallShift(position)) return this._getOnCallPayItem(location)
-        if (isCalledInShift(position)) return this._getCalledInPayItem(location)
 
+        // and finally just ordinary pay items
         return this._getOrdinaryPayItem(location)
     }
 
@@ -861,6 +867,60 @@ export function hasBirthdayDuring(dob: DateTime, start: DateTime, end: DateTime)
     return false
 }
 
+/**
+ * Identical logic to the get pay item functions, but returns the rate rather than the pay item.
+ * Only used to set wage in Sling corressponding to the shift type so we can see the estimated wage of a shift.
+ * Not used to actually calculate any wages (that is done in Xero based on the pay item).
+ */
+export function getPositionRate({ positionId, rate, dob }: { positionId: number; rate: number; dob: DateTime }) {
+    const f = (val: number) => val.toFixed(4).toString()
+
+    const isRateAbove18 = rate * 1.25 >= 18
+
+    const position = PositionMap[positionId]
+
+    if (isOnCallShift(position)) {
+        if (!isSundayShift(position)) {
+            // mon - sat
+            if (isYoungerThan18(dob) && !isRateAbove18) {
+                return '1.8'
+            } else {
+                return f(rate * 0.125)
+            }
+        } else {
+            // sunday
+            return f(rate * 0.175)
+        }
+    }
+
+    if (isCalledInShift(position)) {
+        if (!isSundayShift(position)) {
+            // mon - sat
+            if (isYoungerThan18(dob) && !isRateAbove18) {
+                return '27'
+            } else {
+                return f(rate * 1.875)
+            }
+        } else {
+            // sunday
+            return f(rate * 2.625)
+        }
+    }
+
+    // ordinary shift
+    if (!isSundayShift(position)) {
+        // mon - sat
+        if (isYoungerThan18(dob) && !isRateAbove18) {
+            return '18'
+        } else {
+            return f(rate * 1.25)
+        }
+    } else {
+        // sunday
+        return f(rate * 1.75)
+    }
+}
+
 export function isOnCallShift(position: Position) {
     switch (position) {
         case Position.ON_CALL_PARTY_FACILITATOR:
@@ -985,6 +1045,68 @@ export function isCalledInShift(position: Position) {
     }
 }
 
+export function isSundayShift(position: Position) {
+    switch (position) {
+        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_CALLED_IN_INCURSIONS:
+        case Position.SUNDAY_MISCELLANEOUS:
+        case Position.SUNDAY_TRAINING:
+        case Position.SUNDAY_SUPERVISOR:
+        case Position.SUNDAY_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_INCURSIONS:
+        case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.SUNDAY_PIC:
+            return true
+        case Position.CALLED_IN_PARTY_FACILITATOR:
+        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.CALLED_IN_INCURSIONS:
+        case Position.MISCELLANEOUS:
+        case Position.TRAINING:
+        case Position.SUPERVISOR:
+        case Position.PARTY_FACILITATOR:
+        case Position.ON_CALL_PARTY_FACILITATOR:
+        case Position.MOBILE_PARTY_FACILITATOR:
+        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.PLAY_LAB_FACILITATOR:
+        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.EVENTS_AND_ACTIVATIONS:
+        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.INCURSIONS:
+        case Position.ON_CALL_INCURSIONS:
+        case Position.PIC:
+        case Position.ON_CALL:
+            return false
+        default: {
+            assertNever(position)
+            throw new Error(`Unrecognised position when asking isCalledInShift: '${position}'`)
+        }
+    }
+}
+
 export enum Location {
     BALWYN = 'BALWYN',
     CHELTENHAM = 'CHELTENHAM',
@@ -1048,7 +1170,7 @@ export enum Position {
     ON_CALL = 'ON_CALL', // deprecated
 }
 
-const PositionToId: Record<Position, number> = {
+export const PositionToId: Record<Position, number> = {
     [Position.PARTY_FACILITATOR]: 4809533,
     [Position.MOBILE_PARTY_FACILITATOR]: 25261610,
     [Position.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 5206290,
@@ -1102,7 +1224,7 @@ const PositionToId: Record<Position, number> = {
     [Position.SUNDAY_PIC]: 25333971,
 }
 
-const PositionMap: Record<number, Position> = Object.fromEntries(
+export const PositionMap: Record<string, Position> = Object.fromEntries(
     ObjectKeys(PositionToId).map((key) => [PositionToId[key], key])
 )
 
@@ -1115,7 +1237,7 @@ const LocationToId: Record<Location, number> = {
     [Location.HEAD_OFFICE]: 5557282,
 }
 
-const LocationsMap: Record<number, Location> = Object.fromEntries(
+const LocationsMap: Record<string, Location> = Object.fromEntries(
     ObjectKeys(LocationToId).map((key) => [LocationToId[key], key])
 )
 
