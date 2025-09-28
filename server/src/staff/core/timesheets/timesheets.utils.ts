@@ -78,15 +78,18 @@ export function createTimesheetRows({
         // calculate if this shift puts employee into overtime for the week
         const hoursUntilWeeklyOvertime = overtimeThreshold - totalHours
 
-        if (hoursUntilWeeklyOvertime > 0) {
+        // on call shifts do not contribute towards overtime
+        const isOnCall = isOnCallShift(position)
+
+        if (hoursUntilWeeklyOvertime > 0 || isOnCall) {
             // overtime not yet reached
 
             const overtimeHours = shiftLengthInHours - hoursUntilWeeklyOvertime
-            if (overtimeHours <= 0) {
+            if (overtimeHours <= 0 || isOnCall) {
                 // entire shift fits before reaching overtime
 
                 // any time above 10 hours in a single shift is overtime
-                const isShiftAboveTenHours = shiftLengthInHours > 10
+                const isShiftAboveTenHours = shiftLengthInHours > 10 && !isOnCall
                 const hoursAboveTen = shiftLengthInHours - 10
 
                 // first add up to the first 10 hours
@@ -222,7 +225,10 @@ export function createTimesheetRows({
                 timesheet.summary
             ).map((row) => rows.push(row))
         }
-        totalHours += shiftLengthInHours
+
+        if (!isOnCall) {
+            totalHours += shiftLengthInHours
+        }
     })
 
     return { rows, totalHours }
@@ -394,6 +400,9 @@ export class TimesheetRow {
         this.activity = PositionToActivityMap[position]
     }
 
+    /**
+     * On Call shifts and Called In shifts do not map to overtime hours, but still count towards the weekly 38 hours of overtime.
+     */
     private getPayItem(position: Position, location: Location): PayItem {
         // on call does not count towards overtime so check that first
         if (isOnCallShift(position)) return this._getOnCallPayItem(location)
