@@ -16,6 +16,7 @@ import {
     hasBirthdayDuring,
     isCalledInShift,
     isOnCallShift,
+    isSupervisorShift,
     isSundayShift,
 } from '../timesheets.utils'
 
@@ -438,6 +439,194 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
+        })
+
+        describe('Supervisor shifts', () => {
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            const supervisorExpectations = [
+                {
+                    location: Location.BALWYN,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Balwyn',
+                    sunday: 'SUPERVISOR COH - Sunday - Balwyn',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Balwyn',
+                },
+                {
+                    location: Location.CHELTENHAM,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Cheltenham',
+                    sunday: 'SUPERVISOR COH - Sunday - Cheltenham',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Cheltenham',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Cheltenham',
+                },
+                {
+                    location: Location.ESSENDON,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Essendon',
+                    sunday: 'SUPERVISOR COH - Sunday - Essendon',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essendon',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Essendon',
+                },
+                {
+                    location: Location.KINGSVILLE,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Kingsville',
+                    sunday: 'SUPERVISOR COH - Sunday - Kingsville',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kingsville',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Kingsville',
+                },
+                {
+                    location: Location.MALVERN,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Malvern',
+                    sunday: 'SUPERVISOR COH - Sunday - Malvern',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Malvern',
+                },
+                {
+                    location: Location.HEAD_OFFICE,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Head Office',
+                    sunday: 'SUPERVISOR COH - Sunday - Head Office',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Head Office',
+                },
+            ] as const
+
+            it('should map supervisor casual under 18 ordinary hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, under18MonSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: youngerThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 10,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, under18MonSat, `${location} should map to supervisor under-18 Mon-Sat ordinary hours`)
+                })
+            })
+
+            it('should map supervisor casual ordinary hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, monSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, monSat, `${location} should map to supervisor Mon-Sat ordinary hours`)
+                })
+            })
+
+            it('should map supervisor casual ordinary hours on sunday for every location', () => {
+                supervisorExpectations.forEach(({ location, sunday: expectedSunday }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, expectedSunday, `${location} should map to supervisor Sunday ordinary hours`)
+                })
+            })
+
+            it('should map supervisor overtime first three hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, firstThreeMonSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 3,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, firstThreeMonSat, `${location} should map to supervisor Mon-Sat first-3 overtime`)
+                })
+            })
+
+            it('should map supervisor overtime first three hours on sunday for every location', () => {
+                supervisorExpectations.forEach(({ location, firstThreeSunday }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        location,
+                        hours: 3,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, firstThreeSunday, `${location} should map to supervisor Sunday first-3 overtime`)
+                })
+            })
+
+            it('should map supervisor overtime after three hours for every location', () => {
+                supervisorExpectations.forEach(({ location, afterThree }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 4,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: true },
+                    })
+
+                    strictEqual(row.payItem, afterThree, `${location} should map to supervisor overtime after three hours`)
+                })
+            })
         })
 
         it('should map called in party facilitator for all locations mon-sat - over 18', () => {
@@ -4277,6 +4466,13 @@ describe('Timesheet suite', () => {
             throws(
                 () => isSundayShift('INVALID_POSITION' as Position),
                 /Unrecognised position when asking isCalledInShift/
+            )
+        })
+
+        it('should throw on unrecognised position when asking isSupervisorShift', () => {
+            throws(
+                () => isSupervisorShift('INVALID_POSITION' as Position),
+                /Unhandled position while determining isSupervisorShift/
             )
         })
     })

@@ -82,7 +82,7 @@ jobs:
         working-directory: client
 
       - name: Run server tests
-        run: npm test
+        run: npm test -- -reporter nyan
         working-directory: server
 
       - name: Install Firebase CLI
