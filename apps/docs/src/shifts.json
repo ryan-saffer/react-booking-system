@@ -35,8 +35,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 190,
-            "activeMemberCount": 28
+            "memberCount": 167,
+            "activeMemberCount": 5
         },
         "4809533": {
             "id": 4809533,
@@ -46,9 +46,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#F76B6A",
-            "memberCount": 233,
+            "memberCount": 238,
             "wages": [],
-            "activeMemberCount": 61
+            "activeMemberCount": 66
         },
         "4809537": {
             "id": 4809537,
@@ -75,8 +75,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 195,
-            "activeMemberCount": 31
+            "memberCount": 168,
+            "activeMemberCount": 4
         },
         "4895739": {
             "id": 4895739,
@@ -103,8 +103,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 197,
-            "activeMemberCount": 33
+            "memberCount": 168,
+            "activeMemberCount": 4
         },
         "5206290": {
             "id": 5206290,
@@ -114,9 +114,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#12B835",
-            "memberCount": 48,
+            "memberCount": 66,
             "wages": [],
-            "activeMemberCount": 48
+            "activeMemberCount": 66
         },
         "5557194": {
             "id": 5557194,
@@ -126,9 +126,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#5597B4",
-            "memberCount": 235,
+            "memberCount": 241,
             "wages": [],
-            "activeMemberCount": 60
+            "activeMemberCount": 66
         },
         "5557282": {
             "id": 5557282,
@@ -155,8 +155,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 59,
-            "activeMemberCount": 59
+            "memberCount": 3,
+            "activeMemberCount": 3
         },
         "6161153": {
             "id": 6161153,
@@ -178,9 +178,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#8666E1",
-            "memberCount": 216,
+            "memberCount": 229,
             "wages": [],
-            "activeMemberCount": 53
+            "activeMemberCount": 66
         },
         "7593122": {
             "id": 7593122,
@@ -303,8 +303,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 156,
-            "activeMemberCount": 29
+            "memberCount": 131,
+            "activeMemberCount": 4
         },
         "13464907": {
             "id": 13464907,
@@ -326,9 +326,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#67C3EB",
-            "memberCount": 71,
+            "memberCount": 85,
             "wages": [],
-            "activeMemberCount": 52
+            "activeMemberCount": 66
         },
         "13464922": {
             "id": 13464922,
@@ -350,9 +350,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#12B835",
-            "memberCount": 71,
+            "memberCount": 85,
             "wages": [],
-            "activeMemberCount": 52
+            "activeMemberCount": 66
         },
         "13464979": {
             "id": 13464979,
@@ -434,13 +434,13 @@
             "id": 22914259,
             "type": "position",
             "origin": null,
-            "name": "Events & Activations",
+            "name": "Events & Activations Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#3F51B5",
-            "memberCount": 97,
+            "memberCount": 72,
             "wages": [],
-            "activeMemberCount": 65
+            "activeMemberCount": 72
         },
         "22982854": {
             "id": 22982854,
@@ -467,8 +467,8 @@
                 "clockInFromWebAndApps": null,
                 "clockInFromKiosk": null
             },
-            "memberCount": 49,
-            "activeMemberCount": 34
+            "memberCount": 17,
+            "activeMemberCount": 2
         },
         "23638376": {
             "id": 23638376,
@@ -478,9 +478,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#F09795",
-            "memberCount": 22,
+            "memberCount": 71,
             "wages": [],
-            "activeMemberCount": 14
+            "activeMemberCount": 63
         },
         "23638377": {
             "id": 23638377,
@@ -490,9 +490,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#8EAAA1",
-            "memberCount": 12,
+            "memberCount": 68,
             "wages": [],
-            "activeMemberCount": 7
+            "activeMemberCount": 63
         },
         "23715882": {
             "id": 23715882,
@@ -542,9 +542,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#F09795",
-            "memberCount": 4,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 4
+            "activeMemberCount": 63
         },
         "25261965": {
             "id": 25261965,
@@ -554,9 +554,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#9C5DA7",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25261978": {
             "id": 25261978,
@@ -566,21 +566,21 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#5597B4",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25261991": {
             "id": 25261991,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] Events & Activations",
+            "name": "[Superhero] Events & Activations Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#8F827B",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262039": {
             "id": 25262039,
@@ -590,9 +590,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#00C49E",
-            "memberCount": 12,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 12
+            "activeMemberCount": 63
         },
         "25262047": {
             "id": 25262047,
@@ -602,21 +602,21 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#E6A462",
-            "memberCount": 5,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 5
+            "activeMemberCount": 63
         },
         "25262054": {
             "id": 25262054,
             "type": "position",
             "origin": null,
-            "name": "[On Call] Events & Activations",
+            "name": "[On Call] Events & Activations Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#70A7EE",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262063": {
             "id": 25262063,
@@ -626,9 +626,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#008F77",
-            "memberCount": 1,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 1
+            "activeMemberCount": 63
         },
         "25262076": {
             "id": 25262076,
@@ -638,9 +638,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#A8B400",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262094": {
             "id": 25262094,
@@ -650,153 +650,153 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#645BD0",
-            "memberCount": 2,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 2
+            "activeMemberCount": 63
         },
         "25262128": {
             "id": 25262128,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Mobile Party Facilitator",
+            "name": "[Sunday] [On Call] Mobile Party Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#937368",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262132": {
             "id": 25262132,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Events & Activations",
+            "name": "[Sunday] [On Call] Events & Activations Facilitate",
             "externalId": null,
             "archivedAt": null,
             "color": "#8F827B",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262136": {
             "id": 25262136,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Holiday Program Facilitator",
+            "name": "[Sunday] [On Call] Holiday Program Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#9C5DA7",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262140": {
             "id": 25262140,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Play Lab Facilitator",
+            "name": "[Sunday] [On Call] Play Lab Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#B68E96",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262141": {
             "id": 25262141,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Party Facilitator",
+            "name": "[Sunday] [On Call] Party Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#396D84",
-            "memberCount": 7,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 7
+            "activeMemberCount": 63
         },
         "25262142": {
             "id": 25262142,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] After School Facilitator",
+            "name": "[Sunday] [On Call] After School Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#A79B8E",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262144": {
             "id": 25262144,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Events & Activations",
+            "name": "[Sunday] [Superhero] Events & Activations",
             "externalId": null,
             "archivedAt": null,
             "color": "#5597B4",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262145": {
             "id": 25262145,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Party Facilitator",
+            "name": "[Sunday] [Superhero] Party Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#503F86",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262146": {
             "id": 25262146,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Mobile Party Facilitator",
+            "name": "[Sunday] [Superhero] Mobile Party Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#00C49E",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262147": {
             "id": 25262147,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Holiday Program Facilitator",
+            "name": "[Sunday] [Superhero] Holiday Program Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#845B4E",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262148": {
             "id": 25262148,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Play Lab Facilitator",
+            "name": "[Sunday] [Superhero] Play Lab Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#5597B4",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262149": {
             "id": 25262149,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] After School Program",
+            "name": "[Sunday] [Superhero] After School Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#B69663",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262618": {
             "id": 25262618,
@@ -806,9 +806,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#503F86",
-            "memberCount": 21,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 21
+            "activeMemberCount": 63
         },
         "25262619": {
             "id": 25262619,
@@ -818,9 +818,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#845B4E",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262620": {
             "id": 25262620,
@@ -830,9 +830,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#7986CB",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262621": {
             "id": 25262621,
@@ -842,21 +842,21 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#B68E96",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262622": {
             "id": 25262622,
             "type": "position",
             "origin": null,
-            "name": "[Sunday] Events & Activations",
+            "name": "[Sunday] Events & Activations Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#12B835",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25262624": {
             "id": 25262624,
@@ -866,9 +866,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#70A7EE",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25267526": {
             "id": 25267526,
@@ -878,9 +878,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#2466BC",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25267532": {
             "id": 25267532,
@@ -890,81 +890,81 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#429746",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25288121": {
             "id": 25288121,
             "type": "position",
             "origin": null,
-            "name": "Incursion",
+            "name": "Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#7986CB",
-            "memberCount": 1,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 1
+            "activeMemberCount": 63
         },
         "25288122": {
             "id": 25288122,
             "type": "position",
             "origin": null,
-            "name": "[On Call] Incursion",
+            "name": "[On Call] Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#B39DDB",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25288124": {
             "id": 25288124,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] Incursion",
+            "name": "[Superhero] Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#B68E96",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25288126": {
             "id": 25288126,
             "type": "position",
             "origin": null,
-            "name": "[Sunday] Incursion",
+            "name": "[Sunday] Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#F88853",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25288128": {
             "id": 25288128,
             "type": "position",
             "origin": null,
-            "name": "[Superhero] [Sunday] Incursion",
+            "name": "[Sunday] [Superhero] Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#937368",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25288131": {
             "id": 25288131,
             "type": "position",
             "origin": null,
-            "name": "[On Call] [Sunday] Incursion",
+            "name": "[Sunday] [On Call] Incursion Facilitator",
             "externalId": null,
             "archivedAt": null,
             "color": "#B69663",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25291330": {
             "id": 25291330,
@@ -974,9 +974,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#845B4E",
-            "memberCount": 5,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 5
+            "activeMemberCount": 63
         },
         "25291331": {
             "id": 25291331,
@@ -986,9 +986,9 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#A8B400",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25291777": {
             "id": 25291777,
@@ -1008,15 +1008,183 @@
             "externalId": null,
             "archivedAt": null,
             "color": "#5597B4",
-            "memberCount": 0,
+            "memberCount": 63,
             "wages": [],
-            "activeMemberCount": 0
+            "activeMemberCount": 63
         },
         "25333971": {
             "id": 25333971,
             "type": "position",
             "origin": null,
             "name": "[Sunday] PIC",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#8666E1",
+            "memberCount": 63,
+            "wages": [],
+            "activeMemberCount": 63
+        },
+        "25545172": {
+            "id": 25545172,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Party",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#A8B400",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545174": {
+            "id": 25545174,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Party",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#A8B400",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545179": {
+            "id": 25545179,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Mobile Party",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#BB6B00",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545180": {
+            "id": 25545180,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Mobile Party",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#3F51B5",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545181": {
+            "id": 25545181,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] After School Program",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#69A083",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545182": {
+            "id": 25545182,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] After School Program",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#12B835",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545184": {
+            "id": 25545184,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Events and Activations",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#A79B8E",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545185": {
+            "id": 25545185,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Events and Activations",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#BB6B00",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545186": {
+            "id": 25545186,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Holiday Programs",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#396D84",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545188": {
+            "id": 25545188,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Holiday Programs",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#E6A462",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545192": {
+            "id": 25545192,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Incursions",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#F76B6A",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545204": {
+            "id": 25545204,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Incursions",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#503F86",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545205": {
+            "id": 25545205,
+            "type": "position",
+            "origin": null,
+            "name": "[Supervisor] Play Lab",
+            "externalId": null,
+            "archivedAt": null,
+            "color": "#845B4E",
+            "memberCount": 0,
+            "wages": [],
+            "activeMemberCount": 0
+        },
+        "25545207": {
+            "id": 25545207,
+            "type": "position",
+            "origin": null,
+            "name": "[Sunday] [Supervisor] Play Lab",
             "externalId": null,
             "archivedAt": null,
             "color": "#8666E1",

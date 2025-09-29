@@ -18,7 +18,23 @@ export default defineConfig({
           label: "Tools",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Rostering - Sling", slug: "tools/sling" },
+            {
+              label: "Rostering / Sling",
+              items: [
+                {
+                  label: "What is Sling",
+                  slug: "tools/sling/sling-overview",
+                },
+                {
+                  label: "Shifts and Payroll",
+                  slug: "tools/sling/sling-payroll",
+                },
+                {
+                  label: "Budgeting",
+                  slug: "tools/sling/sling-budgeting",
+                },
+              ],
+            },
           ],
         },
       ],
