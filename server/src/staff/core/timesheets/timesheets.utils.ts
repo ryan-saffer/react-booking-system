@@ -825,19 +825,19 @@ export class TimesheetRow {
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                 case Location.CHELTENHAM:
                     return isSupervisorShift(this.position)
-                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Cheltenham'
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                 case Location.ESSENDON:
                     return isSupervisorShift(this.position)
-                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essendon'
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                 case Location.KINGSVILLE:
                     return isSupervisorShift(this.position)
-                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kingsville'
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
@@ -1742,9 +1742,9 @@ type NonCOGSOvertimeFirstThreeHoursMonSat =
 
 type SupervisorOvertimeFirstThreeHoursMonSat =
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
-    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Cheltenham'
-    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essendon'
-    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kingsville'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
     | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
 

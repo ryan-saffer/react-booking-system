@@ -460,7 +460,7 @@ describe('Timesheet suite', () => {
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Cheltenham',
                     sunday: 'SUPERVISOR COH - Sunday - Cheltenham',
-                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Cheltenham',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt',
                     firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham',
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Cheltenham',
                 },
@@ -469,7 +469,7 @@ describe('Timesheet suite', () => {
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Essendon',
                     sunday: 'SUPERVISOR COH - Sunday - Essendon',
-                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essendon',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend',
                     firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon',
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Essendon',
                 },
@@ -478,7 +478,7 @@ describe('Timesheet suite', () => {
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Kingsville',
                     sunday: 'SUPERVISOR COH - Sunday - Kingsville',
-                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kingsville',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings',
                     firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville',
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Kingsville',
                 },
@@ -519,7 +519,11 @@ describe('Timesheet suite', () => {
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
 
-                    strictEqual(row.payItem, under18MonSat, `${location} should map to supervisor under-18 Mon-Sat ordinary hours`)
+                    strictEqual(
+                        row.payItem,
+                        under18MonSat,
+                        `${location} should map to supervisor under-18 Mon-Sat ordinary hours`
+                    )
                 })
             })
 
@@ -561,7 +565,11 @@ describe('Timesheet suite', () => {
                         overtime: { firstThreeHours: false, afterThreeHours: false },
                     })
 
-                    strictEqual(row.payItem, expectedSunday, `${location} should map to supervisor Sunday ordinary hours`)
+                    strictEqual(
+                        row.payItem,
+                        expectedSunday,
+                        `${location} should map to supervisor Sunday ordinary hours`
+                    )
                 })
             })
 
@@ -582,7 +590,11 @@ describe('Timesheet suite', () => {
                         overtime: { firstThreeHours: true, afterThreeHours: false },
                     })
 
-                    strictEqual(row.payItem, firstThreeMonSat, `${location} should map to supervisor Mon-Sat first-3 overtime`)
+                    strictEqual(
+                        row.payItem,
+                        firstThreeMonSat,
+                        `${location} should map to supervisor Mon-Sat first-3 overtime`
+                    )
                 })
             })
 
@@ -603,7 +615,11 @@ describe('Timesheet suite', () => {
                         overtime: { firstThreeHours: true, afterThreeHours: false },
                     })
 
-                    strictEqual(row.payItem, firstThreeSunday, `${location} should map to supervisor Sunday first-3 overtime`)
+                    strictEqual(
+                        row.payItem,
+                        firstThreeSunday,
+                        `${location} should map to supervisor Sunday first-3 overtime`
+                    )
                 })
             })
 
@@ -624,7 +640,11 @@ describe('Timesheet suite', () => {
                         overtime: { firstThreeHours: false, afterThreeHours: true },
                     })
 
-                    strictEqual(row.payItem, afterThree, `${location} should map to supervisor overtime after three hours`)
+                    strictEqual(
+                        row.payItem,
+                        afterThree,
+                        `${location} should map to supervisor overtime after three hours`
+                    )
                 })
             })
         })
