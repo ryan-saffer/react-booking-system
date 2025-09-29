@@ -12,6 +12,7 @@ export default defineConfig({
         light: "./src/assets/logo-stacked.png",
         dark: "./src/assets/logo-white.png",
       },
+      favicon: "/favicon.png",
       plugins: [catppuccin()],
       sidebar: [
         {
