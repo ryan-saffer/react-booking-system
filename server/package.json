@@ -16,7 +16,7 @@
         "shell": "firebase functions:shell",
         "start": "npm run shell",
         "test": "npm --prefix fizz-kidz run build && mocha",
-        "test:coverage": "nyc --reporter=lcov mocha",
+        "test:coverage": "npm --prefix fizz-kidz run build && nyc --reporter=lcov mocha",
         "script:dev": "FIREBASE_CONFIG='{ \"projectId\": \"booking-system-6435d\" }' node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/_scripts/main.ts",
         "script:prod": "FIREBASE_CONFIG='{ \"projectId\": \"bookings-prod\" }' node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/_scripts/main.ts"
     },

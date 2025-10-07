@@ -78,15 +78,18 @@ export function createTimesheetRows({
         // calculate if this shift puts employee into overtime for the week
         const hoursUntilWeeklyOvertime = overtimeThreshold - totalHours
 
-        if (hoursUntilWeeklyOvertime > 0) {
+        // on call shifts do not contribute towards overtime
+        const isOnCall = isOnCallShift(position)
+
+        if (hoursUntilWeeklyOvertime > 0 || isOnCall) {
             // overtime not yet reached
 
             const overtimeHours = shiftLengthInHours - hoursUntilWeeklyOvertime
-            if (overtimeHours <= 0) {
+            if (overtimeHours <= 0 || isOnCall) {
                 // entire shift fits before reaching overtime
 
                 // any time above 10 hours in a single shift is overtime
-                const isShiftAboveTenHours = shiftLengthInHours > 10
+                const isShiftAboveTenHours = shiftLengthInHours > 10 && !isOnCall
                 const hoursAboveTen = shiftLengthInHours - 10
 
                 // first add up to the first 10 hours
@@ -222,7 +225,10 @@ export function createTimesheetRows({
                 timesheet.summary
             ).map((row) => rows.push(row))
         }
-        totalHours += shiftLengthInHours
+
+        if (!isOnCall) {
+            totalHours += shiftLengthInHours
+        }
     })
 
     return { rows, totalHours }
@@ -394,6 +400,9 @@ export class TimesheetRow {
         this.activity = PositionToActivityMap[position]
     }
 
+    /**
+     * On Call shifts and Called In shifts do not map to overtime hours, but still count towards the weekly 38 hours of overtime.
+     */
     private getPayItem(position: Position, location: Location): PayItem {
         // on call does not count towards overtime so check that first
         if (isOnCallShift(position)) return this._getOnCallPayItem(location)
@@ -428,10 +437,22 @@ export class TimesheetRow {
             case Position.SUNDAY_MISCELLANEOUS:
             case Position.TRAINING:
             case Position.SUNDAY_TRAINING:
-            case Position.SUPERVISOR:
-            case Position.SUNDAY_SUPERVISOR:
             case Position.PIC:
             case Position.SUNDAY_PIC:
+            case Position.SUPERVISOR_PARTY:
+            case Position.SUNDAY_SUPERVISOR_PARTY:
+            case Position.SUPERVISOR_MOBILE_PARTY:
+            case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+            case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+            case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+            case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+            case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+            case Position.SUPERVISOR_HOLIDAY_PROGRAM:
+            case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+            case Position.SUPERVISOR_INCURSIONS:
+            case Position.SUNDAY_SUPERVISOR_INCURSIONS:
+            case Position.SUPERVISOR_PLAY_LAB:
+            case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
                 return false
             case Position.PARTY_FACILITATOR:
             case Position.SUNDAY_PARTY_FACILITATOR:
@@ -475,7 +496,6 @@ export class TimesheetRow {
             case Position.CALLED_IN_INCURSIONS:
             case Position.SUNDAY_ON_CALL_INCURSIONS:
             case Position.SUNDAY_CALLED_IN_INCURSIONS:
-            case Position.ON_CALL:
                 return true
             default: {
                 assertNever(this.position)
@@ -491,27 +511,39 @@ export class TimesheetRow {
                 if (this._isYoungerThan18() && !this._isRateAbove18()) {
                     switch (location) {
                         case Location.BALWYN:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
                         case Location.CHELTENHAM:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
                         case Location.ESSENDON:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
                         case Location.KINGSVILLE:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
                         case Location.MALVERN:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
                         case Location.HEAD_OFFICE:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
+                                : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Head Office'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
                         default: {
@@ -522,27 +554,39 @@ export class TimesheetRow {
                 } else {
                     switch (location) {
                         case Location.BALWYN:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Balwyn'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS COH - Mon to Sat - Balwyn'
                         case Location.CHELTENHAM:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Cheltenham'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS COH - Mon to Sat - Cheltenham'
                         case Location.ESSENDON:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Essendon'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Essendon'
                                 : 'NON-CGS COH - Mon to Sat - Essendon'
                         case Location.KINGSVILLE:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Kingsville'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS COH - Mon to Sat - Kingsville'
                         case Location.MALVERN:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Malvern'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Malvern'
                                 : 'NON-CGS COH - Mon to Sat - Malvern'
                         case Location.HEAD_OFFICE:
-                            return this._isCOGSShift()
+                            return isSupervisorShift(this.position)
+                                ? 'SUPERVISOR COH - Mon to Sat - Head Office'
+                                : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Head Office'
                                 : 'NON-CGS COH - Mon to Sat - Head Office'
                         default: {
@@ -554,21 +598,39 @@ export class TimesheetRow {
             } else {
                 switch (location) {
                     case Location.BALWYN:
-                        return this._isCOGSShift() ? 'CGS COH - Sunday - Balwyn' : 'NON-CGS COH - Sunday - Balwyn'
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Balwyn'
+                            : this._isCOGSShift()
+                            ? 'CGS COH - Sunday - Balwyn'
+                            : 'NON-CGS COH - Sunday - Balwyn'
                     case Location.CHELTENHAM:
-                        return this._isCOGSShift()
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Cheltenham'
+                            : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Cheltenham'
                             : 'NON-CGS COH - Sunday - Cheltenham'
                     case Location.ESSENDON:
-                        return this._isCOGSShift() ? 'CGS COH - Sunday - Essendon' : 'NON-CGS COH - Sunday - Essendon'
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Essendon'
+                            : this._isCOGSShift()
+                            ? 'CGS COH - Sunday - Essendon'
+                            : 'NON-CGS COH - Sunday - Essendon'
                     case Location.KINGSVILLE:
-                        return this._isCOGSShift()
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Kingsville'
+                            : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Kingsville'
                             : 'NON-CGS COH - Sunday - Kingsville'
                     case Location.MALVERN:
-                        return this._isCOGSShift() ? 'CGS COH - Sunday - Malvern' : 'NON-CGS COH - Sunday - Malvern'
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Malvern'
+                            : this._isCOGSShift()
+                            ? 'CGS COH - Sunday - Malvern'
+                            : 'NON-CGS COH - Sunday - Malvern'
                     case Location.HEAD_OFFICE:
-                        return this._isCOGSShift()
+                        return isSupervisorShift(this.position)
+                            ? 'SUPERVISOR COH - Sunday - Head Office'
+                            : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Head Office'
                             : 'NON-CGS COH - Sunday - Head Office'
                     default: {
@@ -753,27 +815,39 @@ export class TimesheetRow {
         if (this._isMonSat()) {
             switch (location) {
                 case Location.BALWYN:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                 case Location.CHELTENHAM:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                 case Location.ESSENDON:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                 case Location.KINGSVILLE:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                 case Location.MALVERN:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                 case Location.HEAD_OFFICE:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
                 default: {
@@ -784,27 +858,39 @@ export class TimesheetRow {
         } else {
             switch (location) {
                 case Location.BALWYN:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
                 case Location.CHELTENHAM:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
                 case Location.ESSENDON:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
                 case Location.KINGSVILLE:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
                 case Location.MALVERN:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
                 case Location.HEAD_OFFICE:
-                    return this._isCOGSShift()
+                    return isSupervisorShift(this.position)
+                        ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
+                        : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Head Office'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
                 default: {
@@ -818,21 +904,39 @@ export class TimesheetRow {
     private _getOvertimeAfterThreeHours(location: Location): OvertimeAfterThreeHours {
         switch (location) {
             case Location.BALWYN:
-                return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Balwyn' : 'NON-CGS OT - After 3 Hrs - Balwyn'
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Balwyn'
+                    : this._isCOGSShift()
+                    ? 'CGS OT - After 3 Hrs - Balwyn'
+                    : 'NON-CGS OT - After 3 Hrs - Balwyn'
             case Location.CHELTENHAM:
-                return this._isCOGSShift()
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
+                    : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Cheltenham'
                     : 'NON-CGS OT - After 3 Hrs - Cheltenham'
             case Location.ESSENDON:
-                return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Essendon' : 'NON-CGS OT - After 3 Hrs - Essendon'
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Essendon'
+                    : this._isCOGSShift()
+                    ? 'CGS OT - After 3 Hrs - Essendon'
+                    : 'NON-CGS OT - After 3 Hrs - Essendon'
             case Location.KINGSVILLE:
-                return this._isCOGSShift()
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Kingsville'
+                    : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Kingsville'
                     : 'NON-CGS OT - After 3 Hrs - Kingsville'
             case Location.MALVERN:
-                return this._isCOGSShift() ? 'CGS OT - After 3 Hrs - Malvern' : 'NON-CGS OT - After 3 Hrs - Malvern'
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Malvern'
+                    : this._isCOGSShift()
+                    ? 'CGS OT - After 3 Hrs - Malvern'
+                    : 'NON-CGS OT - After 3 Hrs - Malvern'
             case Location.HEAD_OFFICE:
-                return this._isCOGSShift()
+                return isSupervisorShift(this.position)
+                    ? 'SUPERVISOR OT - After 3 Hrs - Head Office'
+                    : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Head Office'
                     : 'NON-CGS OT - After 3 Hrs - Head Office'
         }
@@ -921,6 +1025,79 @@ export function getPositionRate({ positionId, rate, dob }: { positionId: number;
     }
 }
 
+export function isSupervisorShift(position: Position) {
+    switch (position) {
+        case Position.SUPERVISOR_PARTY:
+        case Position.SUNDAY_SUPERVISOR_PARTY:
+        case Position.SUPERVISOR_MOBILE_PARTY:
+        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUPERVISOR_INCURSIONS:
+        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
+        case Position.SUPERVISOR_PLAY_LAB:
+        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+            return true
+        case Position.PARTY_FACILITATOR:
+        case Position.SUNDAY_PARTY_FACILITATOR:
+        case Position.ON_CALL_PARTY_FACILITATOR:
+        case Position.CALLED_IN_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case Position.MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case Position.HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case Position.PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
+        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case Position.EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case Position.INCURSIONS:
+        case Position.SUNDAY_INCURSIONS:
+        case Position.ON_CALL_INCURSIONS:
+        case Position.CALLED_IN_INCURSIONS:
+        case Position.SUNDAY_ON_CALL_INCURSIONS:
+        case Position.SUNDAY_CALLED_IN_INCURSIONS:
+        case Position.MISCELLANEOUS:
+        case Position.SUNDAY_MISCELLANEOUS:
+        case Position.TRAINING:
+        case Position.SUNDAY_TRAINING:
+        case Position.PIC:
+        case Position.SUNDAY_PIC:
+            return false
+        default: {
+            assertNever(position)
+            throw new Error(`Unhandled position while determining isSupervisorShift(): '${position}'`)
+        }
+    }
+}
+
 export function isOnCallShift(position: Position) {
     switch (position) {
         case Position.ON_CALL_PARTY_FACILITATOR:
@@ -939,14 +1116,11 @@ export function isOnCallShift(position: Position) {
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.PIC:
         case Position.SUNDAY_PIC:
-        case Position.ON_CALL:
             return true
         case Position.MISCELLANEOUS:
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.TRAINING:
         case Position.SUNDAY_TRAINING:
-        case Position.SUPERVISOR:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.CALLED_IN_PARTY_FACILITATOR:
@@ -975,6 +1149,20 @@ export function isOnCallShift(position: Position) {
         case Position.SUNDAY_INCURSIONS:
         case Position.CALLED_IN_INCURSIONS:
         case Position.SUNDAY_CALLED_IN_INCURSIONS:
+        case Position.SUPERVISOR_PARTY:
+        case Position.SUNDAY_SUPERVISOR_PARTY:
+        case Position.SUPERVISOR_MOBILE_PARTY:
+        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUPERVISOR_INCURSIONS:
+        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
+        case Position.SUPERVISOR_PLAY_LAB:
+        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1004,8 +1192,6 @@ export function isCalledInShift(position: Position) {
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.TRAINING:
         case Position.SUNDAY_TRAINING:
-        case Position.SUPERVISOR:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.ON_CALL_PARTY_FACILITATOR:
@@ -1036,7 +1222,20 @@ export function isCalledInShift(position: Position) {
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.PIC:
         case Position.SUNDAY_PIC:
-        case Position.ON_CALL:
+        case Position.SUPERVISOR_PARTY:
+        case Position.SUNDAY_SUPERVISOR_PARTY:
+        case Position.SUPERVISOR_MOBILE_PARTY:
+        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUPERVISOR_INCURSIONS:
+        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
+        case Position.SUPERVISOR_PLAY_LAB:
+        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1056,7 +1255,6 @@ export function isSundayShift(position: Position) {
         case Position.SUNDAY_CALLED_IN_INCURSIONS:
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.SUNDAY_TRAINING:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
         case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
@@ -1072,6 +1270,13 @@ export function isSundayShift(position: Position) {
         case Position.SUNDAY_INCURSIONS:
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.SUNDAY_PIC:
+        case Position.SUNDAY_SUPERVISOR_PARTY:
+        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
+        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
             return true
         case Position.CALLED_IN_PARTY_FACILITATOR:
         case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
@@ -1082,7 +1287,6 @@ export function isSundayShift(position: Position) {
         case Position.CALLED_IN_INCURSIONS:
         case Position.MISCELLANEOUS:
         case Position.TRAINING:
-        case Position.SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.ON_CALL_PARTY_FACILITATOR:
         case Position.MOBILE_PARTY_FACILITATOR:
@@ -1098,7 +1302,13 @@ export function isSundayShift(position: Position) {
         case Position.INCURSIONS:
         case Position.ON_CALL_INCURSIONS:
         case Position.PIC:
-        case Position.ON_CALL:
+        case Position.SUPERVISOR_PARTY:
+        case Position.SUPERVISOR_MOBILE_PARTY:
+        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
+        case Position.SUPERVISOR_INCURSIONS:
+        case Position.SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1124,6 +1334,13 @@ export enum Position {
     PLAY_LAB_FACILITATOR = 'PLAY_LAB_FACILITATOR',
     EVENTS_AND_ACTIVATIONS = 'EVENTS_AND_ACTIVATIONS',
     INCURSIONS = 'INCURSIONS',
+    SUPERVISOR_PARTY = 'SUPERVISOR_PARTY',
+    SUPERVISOR_MOBILE_PARTY = 'SUPERVISOR_MOBILE_PARTY',
+    SUPERVISOR_AFTER_SCHOOL_PROGRAM = 'SUPERVISOR_AFTER_SCHOOL_PROGRAM',
+    SUPERVISOR_HOLIDAY_PROGRAM = 'SUPERVISOR_HOLIDAY_PROGRAM',
+    SUPERVISOR_PLAY_LAB = 'SUPERVISOR_PLAY_LAB',
+    SUPERVISOR_EVENTS_AND_ACTIVATIONS = 'SUPERVISOR_EVENTS_AND_ACTIVATIONS',
+    SUPERVISOR_INCURSIONS = 'SUPERVISOR_INCURSIONS',
     ON_CALL_PARTY_FACILITATOR = 'ON_CALL_PARTY_FACILITATOR',
     ON_CALL_MOBILE_PARTY_FACILITATOR = 'ON_CALL_MOBILE_PARTY_FACILITATOR',
     ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR',
@@ -1145,6 +1362,13 @@ export enum Position {
     SUNDAY_PLAY_LAB_FACILITATOR = 'SUNDAY_PLAY_LAB_FACILITATOR',
     SUNDAY_EVENTS_AND_ACTIVATIONS = 'SUNDAY_EVENTS_AND_ACTIVATIONS',
     SUNDAY_INCURSIONS = 'SUNDAY_INCURSIONS',
+    SUNDAY_SUPERVISOR_PARTY = 'SUNDAY_SUPERVISOR_PARTY',
+    SUNDAY_SUPERVISOR_MOBILE_PARTY = 'SUNDAY_SUPERVISOR_MOBILE_PARTY',
+    SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM = 'SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM',
+    SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM = 'SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM',
+    SUNDAY_SUPERVISOR_PLAY_LAB = 'SUNDAY_SUPERVISOR_PLAY_LAB',
+    SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS = 'SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS',
+    SUNDAY_SUPERVISOR_INCURSIONS = 'SUNDAY_SUPERVISOR_INCURSIONS',
     SUNDAY_ON_CALL_PARTY_FACILITATOR = 'SUNDAY_ON_CALL_PARTY_FACILITATOR',
     SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR = 'SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR',
     SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR = 'SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR',
@@ -1159,15 +1383,13 @@ export enum Position {
     SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR = 'SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR',
     SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS = 'SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS',
     SUNDAY_CALLED_IN_INCURSIONS = 'SUNDAY_CALLED_IN_INCURSIONS',
+
     TRAINING = 'TRAINING', // NOT COGS
-    MISCELLANEOUS = 'MISCELLANEOUS', //  manager duties etc NOT COGS
     SUNDAY_TRAINING = 'SUNDAY_TRAINING',
-    SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
-    SUPERVISOR = 'SUPERVISOR',
-    SUNDAY_SUPERVISOR = 'SUNDAY_SUPERVISOR',
-    PIC = 'PIC', // Person I Call - Same as on call shift
+    PIC = 'PIC', // Person In Charge - Same as on call shift
     SUNDAY_PIC = 'SUNDAY_PIC',
-    ON_CALL = 'ON_CALL', // deprecated
+    MISCELLANEOUS = 'MISCELLANEOUS', // Catch all - Non COGS (Eg. Covering customer service)
+    SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
 }
 
 export const PositionToId: Record<Position, number> = {
@@ -1217,11 +1439,22 @@ export const PositionToId: Record<Position, number> = {
     [Position.MISCELLANEOUS]: 6161155,
     [Position.SUNDAY_TRAINING]: 25267532,
     [Position.SUNDAY_MISCELLANEOUS]: 25267526,
-    [Position.SUPERVISOR]: 25291330,
-    [Position.SUNDAY_SUPERVISOR]: 25291331,
-    [Position.ON_CALL]: 13464907,
     [Position.PIC]: 25333970,
     [Position.SUNDAY_PIC]: 25333971,
+    [Position.SUPERVISOR_PARTY]: 25545172,
+    [Position.SUNDAY_SUPERVISOR_PARTY]: 25545174,
+    [Position.SUPERVISOR_MOBILE_PARTY]: 25545179,
+    [Position.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 25545180,
+    [Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545181,
+    [Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545182,
+    [Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545184,
+    [Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545185,
+    [Position.SUPERVISOR_HOLIDAY_PROGRAM]: 25545186,
+    [Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 25545188,
+    [Position.SUPERVISOR_INCURSIONS]: 25545192,
+    [Position.SUNDAY_SUPERVISOR_INCURSIONS]: 25545204,
+    [Position.SUPERVISOR_PLAY_LAB]: 25545205,
+    [Position.SUNDAY_SUPERVISOR_PLAY_LAB]: 25545207,
 }
 
 export const PositionMap: Record<string, Position> = Object.fromEntries(
@@ -1252,7 +1485,6 @@ type XeroTrackingActivity =
     | 'Play Lab'
     | 'Products'
     | 'Science Programs in-store'
-    | 'Supervisor'
     | 'Training'
 
 const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
@@ -1300,13 +1532,24 @@ const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
     [Position.SUNDAY_CALLED_IN_INCURSIONS]: 'Incursions',
     [Position.TRAINING]: 'Training',
     [Position.SUNDAY_TRAINING]: 'Training',
-    [Position.SUPERVISOR]: 'Supervisor',
-    [Position.SUNDAY_SUPERVISOR]: 'Supervisor',
     [Position.MISCELLANEOUS]: 'No Activity',
     [Position.SUNDAY_MISCELLANEOUS]: 'No Activity',
-    [Position.ON_CALL]: 'No Activity',
     [Position.PIC]: 'No Activity',
     [Position.SUNDAY_PIC]: 'No Activity',
+    [Position.SUPERVISOR_PARTY]: 'Parties',
+    [Position.SUNDAY_SUPERVISOR_PARTY]: 'Parties',
+    [Position.SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
+    [Position.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
+    [Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
+    [Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
+    [Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [Position.SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
+    [Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
+    [Position.SUPERVISOR_INCURSIONS]: 'Incursions',
+    [Position.SUNDAY_SUPERVISOR_INCURSIONS]: 'Incursions',
+    [Position.SUPERVISOR_PLAY_LAB]: 'Play Lab',
+    [Position.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
 }
 
 type COGSCasualOrdinaryMonSat =
@@ -1325,6 +1568,14 @@ type NonCOGSCasualOrdinaryMonSat =
     | 'NON-CGS COH - Mon to Sat - Malvern'
     | 'NON-CGS COH - Mon to Sat - Head Office'
 
+type SupervisorCasualOrdinaryMonSat =
+    | 'SUPERVISOR COH - Mon to Sat - Balwyn'
+    | 'SUPERVISOR COH - Mon to Sat - Cheltenham'
+    | 'SUPERVISOR COH - Mon to Sat - Essendon'
+    | 'SUPERVISOR COH - Mon to Sat - Kingsville'
+    | 'SUPERVISOR COH - Mon to Sat - Malvern'
+    | 'SUPERVISOR COH - Mon to Sat - Head Office'
+
 type COGSCasualOrdinarySunday =
     | 'CGS COH - Sunday - Balwyn'
     | 'CGS COH - Sunday - Cheltenham'
@@ -1340,6 +1591,14 @@ type NonCOGSCasualOrdinarySunday =
     | 'NON-CGS COH - Sunday - Kingsville'
     | 'NON-CGS COH - Sunday - Malvern'
     | 'NON-CGS COH - Sunday - Head Office'
+
+type SupervisorCasualOrdinarySunday =
+    | 'SUPERVISOR COH - Sunday - Balwyn'
+    | 'SUPERVISOR COH - Sunday - Cheltenham'
+    | 'SUPERVISOR COH - Sunday - Essendon'
+    | 'SUPERVISOR COH - Sunday - Kingsville'
+    | 'SUPERVISOR COH - Sunday - Malvern'
+    | 'SUPERVISOR COH - Sunday - Head Office'
 
 type PTFTOrdinaryMonSat =
     | 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
@@ -1389,7 +1648,7 @@ type CalledInCasualOrdinarySunday =
     | 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
     | 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
 
-type COGSUnder18CasualOrdinaryHoursMonSat =
+type COGSUnder18CasualOrdinaryMonSat =
     | 'CGS 16&17yo COH - Mon to Sat - Balwyn'
     | 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
     | 'CGS 16&17yo COH - Mon to Sat - Essendon'
@@ -1397,7 +1656,7 @@ type COGSUnder18CasualOrdinaryHoursMonSat =
     | 'CGS 16&17yo COH - Mon to Sat - Malvern'
     | 'CGS 16&17yo COH - Mon to Sat - Head Office'
 
-type NonCOGSUnder18CasualOrdinaryHoursMonSat =
+type NonCOGSUnder18CasualOrdinaryMonSat =
     | 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
@@ -1405,7 +1664,15 @@ type NonCOGSUnder18CasualOrdinaryHoursMonSat =
     | 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
     | 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
 
-type Under18OnCallOrdinaryHoursMonSat =
+type SupervisorUnder18CasualOrdinaryMonSat =
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
+    | 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
+
+type Under18OnCallCasualOrdinaryMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
@@ -1413,7 +1680,7 @@ type Under18OnCallOrdinaryHoursMonSat =
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
     | 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
 
-type Under18CalledInOrdinaryHoursMonSat =
+type Under18CalledInOrdinaryMonSat =
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
     | 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
@@ -1437,21 +1704,13 @@ type NonCOGSOvertimeFirstThreeHoursMonSat =
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
     | 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
 
-type COGSOvertimeAfterThreeHours =
-    | 'CGS OT - After 3 Hrs - Balwyn'
-    | 'CGS OT - After 3 Hrs - Cheltenham'
-    | 'CGS OT - After 3 Hrs - Essendon'
-    | 'CGS OT - After 3 Hrs - Kingsville'
-    | 'CGS OT - After 3 Hrs - Malvern'
-    | 'CGS OT - After 3 Hrs - Head Office'
-
-type NonCOGSOvertimeAfterThreeHours =
-    | 'NON-CGS OT - After 3 Hrs - Balwyn'
-    | 'NON-CGS OT - After 3 Hrs - Cheltenham'
-    | 'NON-CGS OT - After 3 Hrs - Essendon'
-    | 'NON-CGS OT - After 3 Hrs - Kingsville'
-    | 'NON-CGS OT - After 3 Hrs - Malvern'
-    | 'NON-CGS OT - After 3 Hrs - Head Office'
+type SupervisorOvertimeFirstThreeHoursMonSat =
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
+    | 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
 
 type COGSOvertimeFirstThreeHoursSunday =
     | 'CGS OT - First 3 Hrs - Sunday - Balwyn'
@@ -1469,25 +1728,47 @@ type NonCOGSOvertimeFirstThreeHoursSunday =
     | 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
     | 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
 
-type OnCallPayItem = OnCallCasualOrdinaryMonSat | OnCallCasualOrdinarySunday | Under18OnCallOrdinaryHoursMonSat
+type SupervisorOvertimeFirstThreeHoursSunday =
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
+    | 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
 
-type CalledInPayItem = CalledInCasualOrdinaryMonSat | CalledInCasualOrdinarySunday | Under18CalledInOrdinaryHoursMonSat
+type COGSOvertimeAfterThreeHours =
+    | 'CGS OT - After 3 Hrs - Balwyn'
+    | 'CGS OT - After 3 Hrs - Cheltenham'
+    | 'CGS OT - After 3 Hrs - Essendon'
+    | 'CGS OT - After 3 Hrs - Kingsville'
+    | 'CGS OT - After 3 Hrs - Malvern'
+    | 'CGS OT - After 3 Hrs - Head Office'
 
-type OvertimeFirstThreeHours =
-    | COGSOvertimeFirstThreeHoursMonSat
-    | NonCOGSOvertimeFirstThreeHoursMonSat
-    | COGSOvertimeFirstThreeHoursSunday
-    | NonCOGSOvertimeFirstThreeHoursSunday
+type NonCOGSOvertimeAfterThreeHours =
+    | 'NON-CGS OT - After 3 Hrs - Balwyn'
+    | 'NON-CGS OT - After 3 Hrs - Cheltenham'
+    | 'NON-CGS OT - After 3 Hrs - Essendon'
+    | 'NON-CGS OT - After 3 Hrs - Kingsville'
+    | 'NON-CGS OT - After 3 Hrs - Malvern'
+    | 'NON-CGS OT - After 3 Hrs - Head Office'
 
-type OvertimeAfterThreeHours = COGSOvertimeAfterThreeHours | NonCOGSOvertimeAfterThreeHours
+type SupervisorOvertimeAfterThreeHours =
+    | 'SUPERVISOR OT - After 3 Hrs - Balwyn'
+    | 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
+    | 'SUPERVISOR OT - After 3 Hrs - Essendon'
+    | 'SUPERVISOR OT - After 3 Hrs - Kingsville'
+    | 'SUPERVISOR OT - After 3 Hrs - Malvern'
+    | 'SUPERVISOR OT - After 3 Hrs - Head Office'
 
-type OvertimePayItem = OvertimeFirstThreeHours | OvertimeAfterThreeHours
+// Ordinary
+type CasualOrdinaryMonSat = COGSCasualOrdinaryMonSat | NonCOGSCasualOrdinaryMonSat | SupervisorCasualOrdinaryMonSat
 
-type CasualOrdinaryMonSat = COGSCasualOrdinaryMonSat | NonCOGSCasualOrdinaryMonSat
+type CasualOrdinarySunday = COGSCasualOrdinarySunday | NonCOGSCasualOrdinarySunday | SupervisorCasualOrdinarySunday
 
-type CasualOrdinarySunday = COGSCasualOrdinarySunday | NonCOGSCasualOrdinarySunday
-
-type Under18CasualOrdinaryHoursMonSat = COGSUnder18CasualOrdinaryHoursMonSat | NonCOGSUnder18CasualOrdinaryHoursMonSat
+type Under18CasualOrdinaryHoursMonSat =
+    | COGSUnder18CasualOrdinaryMonSat
+    | NonCOGSUnder18CasualOrdinaryMonSat
+    | SupervisorUnder18CasualOrdinaryMonSat
 
 type OrdinaryPayItem =
     | CasualOrdinaryMonSat
@@ -1496,4 +1777,27 @@ type OrdinaryPayItem =
     | PTFTOrdinaryMonSat
     | PTFTOrdinaryHoursSunday
 
+// On call
+type OnCallPayItem = OnCallCasualOrdinaryMonSat | OnCallCasualOrdinarySunday | Under18OnCallCasualOrdinaryMonSat
+
+// Called in
+type CalledInPayItem = CalledInCasualOrdinaryMonSat | CalledInCasualOrdinarySunday | Under18CalledInOrdinaryMonSat
+
+// Overtime
+type OvertimeFirstThreeHours =
+    | COGSOvertimeFirstThreeHoursMonSat
+    | NonCOGSOvertimeFirstThreeHoursMonSat
+    | SupervisorOvertimeFirstThreeHoursMonSat
+    | COGSOvertimeFirstThreeHoursSunday
+    | NonCOGSOvertimeFirstThreeHoursSunday
+    | SupervisorOvertimeFirstThreeHoursSunday
+
+type OvertimeAfterThreeHours =
+    | COGSOvertimeAfterThreeHours
+    | NonCOGSOvertimeAfterThreeHours
+    | SupervisorOvertimeAfterThreeHours
+
+type OvertimePayItem = OvertimeFirstThreeHours | OvertimeAfterThreeHours
+
+// Result
 type PayItem = OrdinaryPayItem | OnCallPayItem | CalledInPayItem | OvertimePayItem

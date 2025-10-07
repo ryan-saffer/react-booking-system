@@ -8,12 +8,16 @@ import type { Timesheet } from '@/sling/sling.types'
 import {
     Location,
     Position,
+    PositionToId,
     TimesheetRow,
     createTimesheetRows,
+    getPositionRate,
     getWeeks,
     hasBirthdayDuring,
     isCalledInShift,
     isOnCallShift,
+    isSupervisorShift,
+    isSundayShift,
 } from '../timesheets.utils'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
@@ -98,7 +102,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -115,7 +119,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -132,7 +136,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -149,7 +153,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -166,7 +170,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -185,7 +189,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -202,7 +206,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -219,7 +223,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -236,7 +240,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -253,7 +257,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -272,7 +276,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -289,7 +293,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -306,7 +310,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -323,7 +327,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -340,7 +344,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -359,7 +363,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -376,7 +380,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -393,7 +397,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -410,7 +414,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -427,7 +431,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -435,6 +439,214 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'ON CALL - Cas Ord Hrs - Sunday - Head Office')
+        })
+
+        describe('Supervisor shifts', () => {
+            const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
+            const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
+
+            const supervisorExpectations = [
+                {
+                    location: Location.BALWYN,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Balwyn',
+                    sunday: 'SUPERVISOR COH - Sunday - Balwyn',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Balwyn',
+                },
+                {
+                    location: Location.CHELTENHAM,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Cheltenham',
+                    sunday: 'SUPERVISOR COH - Sunday - Cheltenham',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Cheltenham',
+                },
+                {
+                    location: Location.ESSENDON,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Essendon',
+                    sunday: 'SUPERVISOR COH - Sunday - Essendon',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Essendon',
+                },
+                {
+                    location: Location.KINGSVILLE,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Kingsville',
+                    sunday: 'SUPERVISOR COH - Sunday - Kingsville',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Kingsville',
+                },
+                {
+                    location: Location.MALVERN,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Malvern',
+                    sunday: 'SUPERVISOR COH - Sunday - Malvern',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Malvern',
+                },
+                {
+                    location: Location.HEAD_OFFICE,
+                    under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office',
+                    monSat: 'SUPERVISOR COH - Mon to Sat - Head Office',
+                    sunday: 'SUPERVISOR COH - Sunday - Head Office',
+                    firstThreeMonSat: 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO',
+                    firstThreeSunday: 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office',
+                    afterThree: 'SUPERVISOR OT - After 3 Hrs - Head Office',
+                },
+            ] as const
+
+            it('should map supervisor casual under 18 ordinary hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, under18MonSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: youngerThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 10,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(
+                        row.payItem,
+                        under18MonSat,
+                        `${location} should map to supervisor under-18 Mon-Sat ordinary hours`
+                    )
+                })
+            })
+
+            it('should map supervisor casual ordinary hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, monSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(row.payItem, monSat, `${location} should map to supervisor Mon-Sat ordinary hours`)
+                })
+            })
+
+            it('should map supervisor casual ordinary hours on sunday for every location', () => {
+                supervisorExpectations.forEach(({ location, sunday: expectedSunday }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        location,
+                        hours: 5,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: false },
+                    })
+
+                    strictEqual(
+                        row.payItem,
+                        expectedSunday,
+                        `${location} should map to supervisor Sunday ordinary hours`
+                    )
+                })
+            })
+
+            it('should map supervisor overtime first three hours on mon-sat for every location', () => {
+                supervisorExpectations.forEach(({ location, firstThreeMonSat }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 3,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    })
+
+                    strictEqual(
+                        row.payItem,
+                        firstThreeMonSat,
+                        `${location} should map to supervisor Mon-Sat first-3 overtime`
+                    )
+                })
+            })
+
+            it('should map supervisor overtime first three hours on sunday for every location', () => {
+                supervisorExpectations.forEach(({ location, firstThreeSunday }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: sunday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        location,
+                        hours: 3,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: true, afterThreeHours: false },
+                    })
+
+                    strictEqual(
+                        row.payItem,
+                        firstThreeSunday,
+                        `${location} should map to supervisor Sunday first-3 overtime`
+                    )
+                })
+            })
+
+            it('should map supervisor overtime after three hours for every location', () => {
+                supervisorExpectations.forEach(({ location, afterThree }) => {
+                    const row = new TimesheetRow({
+                        firstName: 'Ryan',
+                        lastName: 'Saffer',
+                        dob: olderThan18,
+                        date: monday,
+                        hasBirthdayDuringPayrun: false,
+                        isCasual: true,
+                        position: Position.SUPERVISOR_PARTY,
+                        location,
+                        hours: 4,
+                        rate: 20,
+                        summary: '',
+                        overtime: { firstThreeHours: false, afterThreeHours: true },
+                    })
+
+                    strictEqual(
+                        row.payItem,
+                        afterThree,
+                        `${location} should map to supervisor overtime after three hours`
+                    )
+                })
+            })
         })
 
         it('should map called in party facilitator for all locations mon-sat - over 18', () => {
@@ -3455,7 +3667,7 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3471,7 +3683,7 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3487,7 +3699,7 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3655,7 +3867,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 14.4,
@@ -3672,7 +3884,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 14.4,
@@ -3689,7 +3901,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 14.4,
@@ -3706,7 +3918,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 14.4,
@@ -3723,7 +3935,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 14.4,
@@ -3742,7 +3954,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 14.3,
@@ -3759,7 +3971,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 14.3,
@@ -3776,7 +3988,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 14.3,
@@ -3793,7 +4005,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 14.3,
@@ -3810,7 +4022,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 14.3,
@@ -3818,6 +4030,116 @@ describe('Timesheet suite', () => {
                 overtime: { firstThreeHours: false, afterThreeHours: false },
             })
             strictEqual(row.payItem, 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO')
+        })
+    })
+
+    describe('getPositionRate', () => {
+        it('should return 1.8 for under 18 on-call weekday shifts with low rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.ON_CALL_PARTY_FACILITATOR],
+                rate: 10,
+                dob: youngerThan18,
+            })
+
+            // then
+            strictEqual(result, '1.8')
+        })
+
+        it('should calculate weekday on-call rate multiplier for adults or higher rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.ON_CALL_PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '2.5000')
+        })
+
+        it('should calculate sunday on-call rate multiplier', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.SUNDAY_ON_CALL_PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '3.5000')
+        })
+
+        it('should return 27 for under 18 called-in weekday shifts with low rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.CALLED_IN_PARTY_FACILITATOR],
+                rate: 10,
+                dob: youngerThan18,
+            })
+
+            // then
+            strictEqual(result, '27')
+        })
+
+        it('should calculate weekday called-in rate multiplier for adults or higher rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.CALLED_IN_PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '37.5000')
+        })
+
+        it('should calculate sunday called-in rate multiplier', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '52.5000')
+        })
+
+        it('should return 18 for under 18 ordinary weekday shifts with low rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.PARTY_FACILITATOR],
+                rate: 10,
+                dob: youngerThan18,
+            })
+
+            // then
+            strictEqual(result, '18')
+        })
+
+        it('should calculate weekday ordinary rate multiplier for adults or higher rates', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '25.0000')
+        })
+
+        it('should calculate sunday ordinary rate multiplier', () => {
+            // when
+            const result = getPositionRate({
+                positionId: PositionToId[Position.SUNDAY_PARTY_FACILITATOR],
+                rate: 20,
+                dob: olderThan18,
+            })
+
+            // then
+            strictEqual(result, '35.0000')
         })
     })
 
@@ -3985,7 +4307,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4004,7 +4326,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4023,7 +4345,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4159,6 +4481,20 @@ describe('Timesheet suite', () => {
                 /Unrecognised location processing payroll/
             )
         })
+
+        it('should throw on unrecognised position when asking isSundayShift', () => {
+            throws(
+                () => isSundayShift('INVALID_POSITION' as Position),
+                /Unrecognised position when asking isCalledInShift/
+            )
+        })
+
+        it('should throw on unrecognised position when asking isSupervisorShift', () => {
+            throws(
+                () => isSupervisorShift('INVALID_POSITION' as Position),
+                /Unhandled position while determining isSupervisorShift/
+            )
+        })
     })
 
     describe('isOnCallShift', () => {
@@ -4180,7 +4516,7 @@ describe('Timesheet suite', () => {
                 Position.SUNDAY_ON_CALL_INCURSIONS,
                 Position.PIC,
                 Position.SUNDAY_PIC,
-                Position.ON_CALL,
+                Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
             ]
 
             onCallPositions.forEach((position) => {
@@ -5101,11 +5437,85 @@ describe('Timesheet suite', () => {
         it('should keep on call pay items when shift crosses the weekly overtime threshold', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 25262039), // on call
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T16:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 6-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T14:00:00+10:00',
+                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                ), // on call, 4-hour shift
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 5)
+
+            const onCallRow = rows[rows.length - 1]
+
+            strictEqual(onCallRow.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(onCallRow.hours, 4)
+            strictEqual(onCallRow.overtime.firstThreeHours, false)
+            strictEqual(onCallRow.overtime.afterThreeHours, false)
+        })
+
+        it('should keep on call pay items when an entire shift occurs inside weekly overtime', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T13:00:00+10:00',
+                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                ), // on call, 3-hour shift
             ]
 
             // when
@@ -5124,27 +5534,42 @@ describe('Timesheet suite', () => {
             // then
             strictEqual(rows.length, 6)
 
-            const [firstSegment, secondSegment] = rows.slice(-2)
+            const onCallRow = rows[rows.length - 1]
 
-            strictEqual(firstSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
-            strictEqual(firstSegment.hours, 2)
-            strictEqual(firstSegment.overtime.firstThreeHours, false)
-            strictEqual(firstSegment.overtime.afterThreeHours, false)
-
-            strictEqual(secondSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
-            strictEqual(secondSegment.hours, 2)
-            strictEqual(secondSegment.overtime.firstThreeHours, true)
-            strictEqual(secondSegment.overtime.afterThreeHours, false)
+            strictEqual(onCallRow.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(onCallRow.hours, 3)
+            strictEqual(onCallRow.overtime.firstThreeHours, false)
+            strictEqual(onCallRow.overtime.afterThreeHours, false)
         })
 
-        it('should keep on call pay items when an entire shift occurs inside weekly overtime', () => {
+        it('should ignore on call hours when determining weekly overtime for later shifts', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 25262039), // on call
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T20:00:00+10:00',
+                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                ), // on call, 10-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T18:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 8-hour shift
             ]
 
             // when
@@ -5161,29 +5586,97 @@ describe('Timesheet suite', () => {
             })
 
             // then
-            strictEqual(rows.length, 7)
+            strictEqual(rows.length, 5)
 
-            const [firstSegment, secondSegment] = rows.slice(-2)
+            const onCallRow = rows[3]
+            strictEqual(onCallRow.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(onCallRow.hours, 10)
+            strictEqual(onCallRow.overtime.firstThreeHours, false)
+            strictEqual(onCallRow.overtime.afterThreeHours, false)
 
-            strictEqual(firstSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
-            strictEqual(firstSegment.hours, 1)
-            strictEqual(firstSegment.overtime.firstThreeHours, true)
-            strictEqual(firstSegment.overtime.afterThreeHours, false)
+            const ordinaryRow = rows[4]
+            strictEqual(ordinaryRow.payItem, 'CGS COH - Mon to Sat - Balwyn')
+            strictEqual(ordinaryRow.hours, 8)
+            strictEqual(ordinaryRow.overtime.firstThreeHours, false)
+            strictEqual(ordinaryRow.overtime.afterThreeHours, false)
+        })
 
-            strictEqual(secondSegment.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
-            strictEqual(secondSegment.hours, 2)
-            strictEqual(secondSegment.overtime.firstThreeHours, false)
-            strictEqual(secondSegment.overtime.afterThreeHours, true)
+        it('should not treat long on call shifts as overtime even when crossing the weekly threshold', () => {
+            // given
+            const timesheets: Timesheet[] = [
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T08:00:00+10:00',
+                    '2023-05-04T20:00:00+10:00',
+                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                ), // on call, 12-hour shift
+            ]
+
+            // when
+            const { rows } = createTimesheetRows({
+                firstName: xeroUser.firstName,
+                lastName: xeroUser.lastName,
+                dob: DateTime.fromISO(xeroUser.dateOfBirth),
+                hasBirthdayDuringPayrun: true,
+                isCasual: true,
+                overtimeThreshold: 38,
+                usersTimesheets: timesheets,
+                rate: 'not required',
+                timezone: 'Australia/Melbourne',
+            })
+
+            // then
+            strictEqual(rows.length, 4)
+
+            const onCallRow = rows[3]
+            strictEqual(onCallRow.payItem, 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn')
+            strictEqual(onCallRow.hours, 12)
+            strictEqual(onCallRow.overtime.firstThreeHours, false)
+            strictEqual(onCallRow.overtime.afterThreeHours, false)
         })
 
         it('should keep called in pay items when shift crosses the weekly overtime threshold', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 13464921), // called in
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T16:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 6-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T14:00:00+10:00',
+                    PositionToId[Position.CALLED_IN_PARTY_FACILITATOR]
+                ), // called in, 4-hour shift
             ]
 
             // when
@@ -5218,11 +5711,31 @@ describe('Timesheet suite', () => {
         it('should keep called in pay items when an entire shift occurs inside weekly overtime', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 13464921), // called in
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T13:00:00+10:00',
+                    PositionToId[Position.CALLED_IN_PARTY_FACILITATOR]
+                ), // called in, 3-hour shift
             ]
 
             // when
@@ -5257,11 +5770,31 @@ describe('Timesheet suite', () => {
         it('should switch ordinary shifts to overtime pay items once overtime is reached', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T16:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T14:00:00+10:00', 4809533),
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T16:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 6-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T14:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 4-hour shift
             ]
 
             // when
@@ -5296,11 +5829,31 @@ describe('Timesheet suite', () => {
         it('should pay overtime rates for ordinary shifts worked entirely after the weekly threshold', () => {
             // given
             const timesheets: Timesheet[] = [
-                buildTimesheet('2023-05-01T10:00:00+10:00', '2023-05-01T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-02T10:00:00+10:00', '2023-05-02T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-03T10:00:00+10:00', '2023-05-03T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-04T10:00:00+10:00', '2023-05-04T20:00:00+10:00', 4809533),
-                buildTimesheet('2023-05-05T10:00:00+10:00', '2023-05-05T13:00:00+10:00', 4809533),
+                buildTimesheet(
+                    '2023-05-01T10:00:00+10:00',
+                    '2023-05-01T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-02T10:00:00+10:00',
+                    '2023-05-02T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-03T10:00:00+10:00',
+                    '2023-05-03T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-04T10:00:00+10:00',
+                    '2023-05-04T20:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 10-hour shift
+                buildTimesheet(
+                    '2023-05-05T10:00:00+10:00',
+                    '2023-05-05T13:00:00+10:00',
+                    PositionToId[Position.PARTY_FACILITATOR]
+                ), // 3-hour shift
             ]
 
             // when
