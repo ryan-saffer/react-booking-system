@@ -102,7 +102,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -119,7 +119,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -136,7 +136,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -153,7 +153,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -170,7 +170,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -189,7 +189,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -206,7 +206,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -223,7 +223,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -240,7 +240,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -257,7 +257,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -276,7 +276,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -293,7 +293,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -310,7 +310,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -327,7 +327,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -344,7 +344,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -363,7 +363,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 'not required',
@@ -380,7 +380,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 'not required',
@@ -397,7 +397,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 'not required',
@@ -414,7 +414,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 'not required',
@@ -431,7 +431,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 'not required',
@@ -3667,7 +3667,7 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3683,7 +3683,7 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3699,7 +3699,7 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.KINGSVILLE,
                 hours: 3,
                 rate: 'not required',
@@ -3867,7 +3867,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 14.4,
@@ -3884,7 +3884,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 14.4,
@@ -3901,7 +3901,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 14.4,
@@ -3918,7 +3918,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 14.4,
@@ -3935,7 +3935,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 14.4,
@@ -3954,7 +3954,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.BALWYN,
                 hours: 8,
                 rate: 14.3,
@@ -3971,7 +3971,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.CHELTENHAM,
                 hours: 8,
                 rate: 14.3,
@@ -3988,7 +3988,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.ESSENDON,
                 hours: 8,
                 rate: 14.3,
@@ -4005,7 +4005,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.MALVERN,
                 hours: 8,
                 rate: 14.3,
@@ -4022,7 +4022,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL,
+                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                 location: Location.HEAD_OFFICE,
                 hours: 8,
                 rate: 14.3,
@@ -4307,7 +4307,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4326,7 +4326,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4345,7 +4345,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL,
+                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4516,7 +4516,7 @@ describe('Timesheet suite', () => {
                 Position.SUNDAY_ON_CALL_INCURSIONS,
                 Position.PIC,
                 Position.SUNDAY_PIC,
-                Position.ON_CALL,
+                Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
             ]
 
             onCallPositions.forEach((position) => {

@@ -437,8 +437,6 @@ export class TimesheetRow {
             case Position.SUNDAY_MISCELLANEOUS:
             case Position.TRAINING:
             case Position.SUNDAY_TRAINING:
-            case Position.SUPERVISOR:
-            case Position.SUNDAY_SUPERVISOR:
             case Position.PIC:
             case Position.SUNDAY_PIC:
             case Position.SUPERVISOR_PARTY:
@@ -498,7 +496,6 @@ export class TimesheetRow {
             case Position.CALLED_IN_INCURSIONS:
             case Position.SUNDAY_ON_CALL_INCURSIONS:
             case Position.SUNDAY_CALLED_IN_INCURSIONS:
-            case Position.ON_CALL:
                 return true
             default: {
                 assertNever(this.position)
@@ -1044,8 +1041,6 @@ export function isSupervisorShift(position: Position) {
         case Position.SUNDAY_SUPERVISOR_INCURSIONS:
         case Position.SUPERVISOR_PLAY_LAB:
         case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
-        case Position.SUPERVISOR:
-        case Position.SUNDAY_SUPERVISOR:
             return true
         case Position.PARTY_FACILITATOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
@@ -1089,7 +1084,6 @@ export function isSupervisorShift(position: Position) {
         case Position.CALLED_IN_INCURSIONS:
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.SUNDAY_CALLED_IN_INCURSIONS:
-        case Position.ON_CALL:
         case Position.MISCELLANEOUS:
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.TRAINING:
@@ -1122,14 +1116,11 @@ export function isOnCallShift(position: Position) {
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.PIC:
         case Position.SUNDAY_PIC:
-        case Position.ON_CALL:
             return true
         case Position.MISCELLANEOUS:
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.TRAINING:
         case Position.SUNDAY_TRAINING:
-        case Position.SUPERVISOR:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.CALLED_IN_PARTY_FACILITATOR:
@@ -1201,8 +1192,6 @@ export function isCalledInShift(position: Position) {
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.TRAINING:
         case Position.SUNDAY_TRAINING:
-        case Position.SUPERVISOR:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.ON_CALL_PARTY_FACILITATOR:
@@ -1233,7 +1222,6 @@ export function isCalledInShift(position: Position) {
         case Position.SUNDAY_ON_CALL_INCURSIONS:
         case Position.PIC:
         case Position.SUNDAY_PIC:
-        case Position.ON_CALL:
         case Position.SUPERVISOR_PARTY:
         case Position.SUNDAY_SUPERVISOR_PARTY:
         case Position.SUPERVISOR_MOBILE_PARTY:
@@ -1267,7 +1255,6 @@ export function isSundayShift(position: Position) {
         case Position.SUNDAY_CALLED_IN_INCURSIONS:
         case Position.SUNDAY_MISCELLANEOUS:
         case Position.SUNDAY_TRAINING:
-        case Position.SUNDAY_SUPERVISOR:
         case Position.SUNDAY_PARTY_FACILITATOR:
         case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
         case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
@@ -1300,7 +1287,6 @@ export function isSundayShift(position: Position) {
         case Position.CALLED_IN_INCURSIONS:
         case Position.MISCELLANEOUS:
         case Position.TRAINING:
-        case Position.SUPERVISOR:
         case Position.PARTY_FACILITATOR:
         case Position.ON_CALL_PARTY_FACILITATOR:
         case Position.MOBILE_PARTY_FACILITATOR:
@@ -1316,7 +1302,6 @@ export function isSundayShift(position: Position) {
         case Position.INCURSIONS:
         case Position.ON_CALL_INCURSIONS:
         case Position.PIC:
-        case Position.ON_CALL:
         case Position.SUPERVISOR_PARTY:
         case Position.SUPERVISOR_MOBILE_PARTY:
         case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
@@ -1405,19 +1390,6 @@ export enum Position {
     SUNDAY_PIC = 'SUNDAY_PIC',
     MISCELLANEOUS = 'MISCELLANEOUS', // Catch all - Non COGS (Eg. Covering customer service)
     SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
-
-    /**
-     * @deprecated
-     */
-    SUPERVISOR = 'SUPERVISOR',
-    /**
-     * @deprecated
-     */
-    SUNDAY_SUPERVISOR = 'SUNDAY_SUPERVISOR',
-    /**
-     * @deprecated
-     */
-    ON_CALL = 'ON_CALL',
 }
 
 export const PositionToId: Record<Position, number> = {
@@ -1467,9 +1439,6 @@ export const PositionToId: Record<Position, number> = {
     [Position.MISCELLANEOUS]: 6161155,
     [Position.SUNDAY_TRAINING]: 25267532,
     [Position.SUNDAY_MISCELLANEOUS]: 25267526,
-    [Position.SUPERVISOR]: 25291330,
-    [Position.SUNDAY_SUPERVISOR]: 25291331,
-    [Position.ON_CALL]: 13464907,
     [Position.PIC]: 25333970,
     [Position.SUNDAY_PIC]: 25333971,
     [Position.SUPERVISOR_PARTY]: 25545172,
@@ -1563,7 +1532,6 @@ const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
     [Position.SUNDAY_CALLED_IN_INCURSIONS]: 'Incursions',
     [Position.TRAINING]: 'Training',
     [Position.SUNDAY_TRAINING]: 'Training',
-    [Position.SUNDAY_SUPERVISOR]: 'No Activity',
     [Position.MISCELLANEOUS]: 'No Activity',
     [Position.SUNDAY_MISCELLANEOUS]: 'No Activity',
     [Position.PIC]: 'No Activity',
@@ -1582,10 +1550,6 @@ const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
     [Position.SUNDAY_SUPERVISOR_INCURSIONS]: 'Incursions',
     [Position.SUPERVISOR_PLAY_LAB]: 'Play Lab',
     [Position.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
-
-    // DEPRECATED
-    [Position.ON_CALL]: 'No Activity',
-    [Position.SUPERVISOR]: 'No Activity',
 }
 
 type COGSCasualOrdinaryMonSat =
