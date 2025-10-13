@@ -1386,6 +1386,161 @@ As the slime still contains chemicals, it is important to wash your hands well a
 `,
 }
 
+const goldenSlime = {
+    name: 'Golden Slime',
+    markdown: `
+> FIZZ TIP: Play fun K-Pop music while mixing and cheer when the slime forms!
+
+### Ingredients
+* Glue x4 big spoons
+* Bicarb soda x1 flat spoon
+* Gold/yellow dye x2–4 drops
+* Shaving cream x1 handful
+* Gold glitter x1 shake
+* Activator x1 spoon
+* Popsicle stick, container + lid
+
+Today we're making Golden Slime! ✨ Just like the K-Pop Demon Hunters' magic powers!
+
+### Instructions
+1. Add glue to bowls and mix.
+2. Add bicarb soda and stir well.
+3. Add gold dye - "what's your K-Pop power? Strength? Sparkle? Glow?"
+4. Add activator and stir fast until slime forms.
+> FIZZ TIP: Too sticky? More activator. Too runny? More glue.
+5: Take out and knead! Stretch, squish, and chant “Shine bright, Golden Slime!”
+6: Sprinkle gold glitter (Star Power Dust!) and fold it in.
+7: Pop into containers to take home.
+`,
+}
+
+const hendrixGlitterSlime = {
+    name: 'Hendrix Glitter Slime',
+    markdown: `
+    
+### Ingredients
+* Xanthan Gum x1 1ml FLAT spoon
+* Vegetable liquid glycerin x1 1ml spoon
+* Warm Water x2 15ml spoon
+* Glitter all colours
+* Popsicle sticks x1 per child
+* Face paint containers 
+    
+
+### Recipe
+Let's Create Some Sparkle Power! ✨
+Today we're making Hendrix Glitter Shine so you'll be concert ready!
+1. Add xanthan gum to bowls.
+2. Add glycerin and mix well.
+3. Add warm water and stir — it'll look a bit like slime!
+4. Add glitter — as much sparkle as you like — and mix fast until it thickens.
+5. Spoon the glitter mix into containers (don't overfill or it won't close!).
+
+### Fizz Tipz and Trickz
+* If too goopy, add a few drops of water.
+* If too runny, add a tiny pinch of xanthan gum.
+* Let kids dab leftover glitter shine on their cheeks or give you a K-Pop sparkle makeover!
+`,
+}
+
+const wondersticks = {
+    name: 'Wondersticks',
+    markdown: `
+> Fizz Tip: Keep the group together and guide step-by-step — energy, sparkle, and fun all the way!
+
+### Ingredients
+* Wondersticks
+* Pipe cleaners
+* Air-dry clay
+* Aluminium foil
+* Silver stick-paper
+* Craft glue
+* Sequins
+* Shiny star stickers
+* K-Pop stickers
+
+### Preparation
+1. Rip foil into small pieces and place in bowls.
+2. Pour glue into bowls for each table.
+3. Cut up sticker sheets for easy sharing.
+4. Separate craft items (pipe cleaners, sequins, sticks, clay, etc.) into bowls.
+5. Place out markers.
+
+### Recipe
+1. Cover the Base — Hand each child a wonderstick and wrap it in silver paper or foil so no wood shows.
+2. Add Sparkle — Wrap thin strips of clay around the wand. Decorate with sequins, K-Pop stickers, and shiny stars.
+3. Add Energy — Twist pipe cleaners around the stick to make glowing “power” lines.
+4. Show Your Powers — Once complete, kids strike a pose with their Wonderstick, ready to battle in K-Pop style!
+`,
+}
+
+const moonBeamBracelets = {
+    name: 'Moon Beam Bracelets',
+    markdown: `
+> Let's Create Our Moon Beam Bracelets! ✨
+> “Today we're designing Moon Beam Bracelets! Just like the K-Pop Demon Hunters, these bracelets hold your friendship power and shine with every move!”
+
+### Ingredients
+* Glow in the dark beads
+* Elastic string
+
+### Recipe
+1. Place tubs of colourful beads on the tables (don't pass around the big grid box).
+2. Hand each child a piece of pre-cut elastic.
+3. Tie one bead on the end — this is the base bead.
+4. Let kids plan their design on the table. Ask: “What colours match your K-Pop power? Do you want to spell a word or name?”
+5. Once ready, thread beads onto the elastic to bring the design to life.
+6. Use the buddy system to tie the bracelet — one holds while the other ties, then swap.
+
+### Fizz Tipz and Trickz
+* Keep the vibe upbeat — play K-Pop music, cheer each child's design, and celebrate their unique Moon Beam powers! 💫
+`,
+}
+
+const squishyPockets = {
+    name: 'Squishy Pockets',
+    markdown: `
+> Let's Create Some K-Pop Cuteness! ✨
+> “Today we're making Kitty Squishie Pockets! These magical K-Pop pets hold your secret power slime!”
+
+### Ingredients
+* Squishy pocket x1 per child
+* Chain attachment x1 per child
+* Slime mix (use half the normal slime ingredients)
+
+### Recipe
+1. Make your slime using the usual Fizz Kidz slime recipe, but only half the ingredients.
+2. Once your slime is perfect, stretch and squish it into the kitty pocket.
+3. Zip it closed to seal the magic inside.
+4. Clip on the chain — now you've got a K-Pop power pocket to take on your next adventure!
+
+### Fizz Tipz and Trickz
+* Keep the slime slightly soft so it squishes perfectly.
+* Let kids show off their Kitty Pocket poses — K-Pop style!
+`,
+}
+
+const starSlayClips = {
+    name: 'Star Slay Clips',
+    markdown: `    
+### Ingredients
+* Coloured hair extensions x1 per child
+* Assorted beads
+* Mini elastic bands
+* Bead maker
+
+### Recipe
+“Today we're creating Star Slay Clips! Just like the K-Pop Demon Hunters' fierce, colourful hairstyles!”
+1. Hand each child their coloured hair extension clip — hype up the bright K-Pop colours!
+2. Explain styling options: braid the hair, split it into two braids, or add beads for extra sparkle.
+3. Use the bead maker and mini elastics to secure their chosen design, adding beads wherever they shine brightest.
+4. Clip the finished extension into their hair and strike a pose — Slay! They're ready for their K-Pop debut.
+
+### Fizz Tipz and Trickz
+* Guide the group step-by-step so everyone stays together and celebrated.
+* Encourage dramatic poses and cheer each completed look for maximum star power.
+`,
+}
 export const creations = [
     bathbombs,
     bugAnimalInSoap,
@@ -1404,12 +1559,15 @@ export const creations = [
     glitterFacePaint,
     glitterHairGel,
     glitterSlime,
+    goldenSlime,
+    hendrixGlitterSlime,
     instantSnowSlime,
     jellySoap,
     lipBalm,
     marshmallowSlime,
     monsterBrains,
     monsterSlime,
+    moonBeamBracelets,
     nutellaSlime,
     rainbowAndMarbleSoap,
     rainbowBathCrystals,
@@ -1417,6 +1575,8 @@ export const creations = [
     sandSlime,
     soap,
     spidermanSlime,
+    squishyPockets,
+    starSlayClips,
     sugarLipScrub,
     tieDye,
     unicornBathBombs,
@@ -1425,4 +1585,5 @@ export const creations = [
     unicornSlime,
     volcano,
     wobblySoap,
+    wondersticks,
 ]
