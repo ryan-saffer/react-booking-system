@@ -21,6 +21,7 @@ export type PartyFormV3 = {
     unicorn_creations: string[]
     tie_dye_creations: string[]
     taylor_swift_creations: string[]
+    demon_hunters_creations: string[]
     glam_creations_mobile: string[]
     science_creations_mobile: string[]
     slime_creations_mobile: string[]
@@ -30,6 +31,7 @@ export type PartyFormV3 = {
     unicorn_creations_mobile: string[]
     tie_dye_creations_mobile: string[]
     taylor_swift_creations_mobile: string[]
+    demon_hunters_creations_mobile: string[]
     food_package: string
     additions: string[]
     cake: string

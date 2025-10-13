@@ -77,6 +77,7 @@ export class PartyFormMapperV3 {
                       'unicorn_creations',
                       'tie_dye_creations',
                       'taylor_swift_creations',
+                      'demon_hunters_creations',
                   ] as const)
                 : ([
                       'glam_creations_mobile',
@@ -88,6 +89,7 @@ export class PartyFormMapperV3 {
                       'unicorn_creations_mobile',
                       'tie_dye_creations_mobile',
                       'taylor_swift_creations_mobile',
+                      'demon_hunters_creations_mobile',
                   ] as const)
 
         const creations = creationKeys.reduce(

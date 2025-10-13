@@ -100,6 +100,15 @@ const TAYLOR_SWIFT_CREATIONS = {
     loverTieDyeScrunchies: "'Lover' Tie Dye Scrunchies",
 } as const
 
+const DEMON_HUNTERS_CREATIONS = {
+    goldenSlime: 'Golden Slime',
+    hendrixGlitterShine: 'Hendrix Glitter Shine',
+    wondersticks: 'Wondersticks',
+    moonBeamBracelets: 'Moon Beam Bracelets',
+    squishiePockets: 'Squishy Pockets',
+    starSlayClips: 'Star Slay Clips',
+}
+
 const DEPRECATED_CREATIONS = {
     animalsInBathBombs: 'Animals in Bath Bombs',
     bugsInSoap: 'Bugs in Soap',
@@ -149,6 +158,7 @@ export const CREATIONS = {
     ...UNICORN_CREATIONS,
     ...TIE_DYE_CREATIONS,
     ...TAYLOR_SWIFT_CREATIONS,
+    ...DEMON_HUNTERS_CREATIONS,
     ...DEPRECATED_CREATIONS,
 }
 
