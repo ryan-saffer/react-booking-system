@@ -290,6 +290,61 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 break
             }
 
+            case 'schoolCelebration': {
+                const formData = JSON.parse(req.body) as Form['schoolCelebration']
+
+                await mailClient.sendEmail(
+                    'websiteSchoolCelebrationFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        school: formData.school,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
+
+                await mailClient.sendEmail(
+                    'websiteSchoolCelebrationFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        school: formData.school,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        enquiry: formData.enquiry,
+                    },
+                    {
+                        subject: `School Celebration - ${formData.name}, ${formData.school}`,
+                        replyTo: formData.email,
+                    }
+                )
+
+                const [firstName, lastName] = formData.name.split(' ')
+                await zohoClient.addBasicB2BContact({
+                    firstName,
+                    lastName,
+                    email: formData.email,
+                    mobile: formData.contactNumber,
+                    service: 'school_celebration',
+                    company: formData.school,
+                })
+
+                await mixpanelClient.track('website-enquiry', {
+                    distinct_id: formData.email,
+                    form: 'schoolCelebration',
+                    service: 'school-celebration',
+                })
+
+                break
+            }
+
             case 'careers': {
                 const formData = JSON.parse(req.body) as Form['careers']
 

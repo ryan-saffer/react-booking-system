@@ -22,6 +22,7 @@ type Service =
     | 'Activation / Event'
     | 'Incursion'
     | 'Play Lab'
+    | 'School Celebration'
     | ''
 
 export class ZohoClient {
@@ -373,12 +374,19 @@ export class ZohoClient {
         })
     }
 
-    addBasicB2BContact(props: WithBaseProps<{ service: 'incursion' | 'activation_event'; company?: string }>) {
+    addBasicB2BContact(
+        props: WithBaseProps<{ service: 'incursion' | 'activation_event' | 'school_celebration'; company?: string }>
+    ) {
         const { service, company, ...baseProps } = props
 
         return Promise.all([
             this.#upsertContact({
-                service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
+                service:
+                    service === 'incursion'
+                        ? 'Incursion'
+                        : service === 'school_celebration'
+                        ? 'School Celebration'
+                        : 'Activation / Event',
                 customer_type: 'B2B',
                 Company: company || '',
                 ...baseProps,

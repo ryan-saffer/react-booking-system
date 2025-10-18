@@ -400,6 +400,24 @@ export type Emails = {
         enquiry: string
     }
 
+    websiteSchoolCelebrationFormToCustomer: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
+
+    websiteSchoolCelebrationFormToFizz: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
+
     websiteCareersFormToCustomer: {
         name: string
         email: string

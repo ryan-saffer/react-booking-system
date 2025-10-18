@@ -41,6 +41,14 @@ export type Form = {
         module: IncursionFormModuleOption
         enquiry: string
     }
+    schoolCelebration: {
+        name: string
+        school: string
+        email: string
+        contactNumber: string
+        preferredDateAndTime: string
+        enquiry: string
+    }
     careers: {
         name: string
         email: string
@@ -80,6 +88,7 @@ export type ContactFormServiceOption =
     | 'after-school-program'
     | 'incursion'
     | 'activation'
+    | 'school-celebration'
     | 'other'
 
 export type ReferenceOption = 'google' | 'instagram' | 'word-of-mouth' | 'attended-fizz' | 'other'
@@ -141,6 +150,7 @@ export const ServiceDisplayValueMap: Record<ContactFormServiceOption, string> = 
     'after-school-program': 'After School Program',
     incursion: 'School Incursions',
     activation: 'Activation & Event',
+    'school-celebration': 'School Celebration',
     other: 'Other',
 }
 

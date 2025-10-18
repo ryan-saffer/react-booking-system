@@ -612,6 +612,34 @@ export class MailClient {
                     template: 'website_incursion_form_to_fizz.html',
                     useMjml: false,
                 }
+            case 'websiteSchoolCelebrationFormToCustomer':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Enquiry Recieved!',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'website_school_celebration_form_to_customer.mjml',
+                    useMjml: true,
+                }
+            case 'websiteSchoolCelebrationFormToFizz':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'School Celebration Form Enquiry',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'School Celebration Form Enquiry',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'website_school_celebration_form_to_fizz.html',
+                    useMjml: false,
+                }
             case 'websiteCareersFormToCustomer':
                 return {
                     emailInfo: {
