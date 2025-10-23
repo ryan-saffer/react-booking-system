@@ -39,7 +39,11 @@ export function StudioSelector() {
                         <SelectContent>
                             {import.meta.env.VITE_ENV === 'prod' &&
                                 SUPPORTED_LOCATIONS.map((location) => {
-                                    return <SelectItem value={location}>{capitalise(location)}</SelectItem>
+                                    return (
+                                        <SelectItem key={location} value={location}>
+                                            {capitalise(location)}
+                                        </SelectItem>
+                                    )
                                 })}
                             {import.meta.env.VITE_ENV === 'dev' && (
                                 <SelectItem value="test" key="test">

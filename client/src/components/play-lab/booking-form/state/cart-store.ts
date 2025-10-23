@@ -19,7 +19,10 @@ interface Cart {
               type: 'percentage' | 'price'
               amount: number // between 0-100 for %
               description: string
-          } & ({ isMultiSessionDiscount: true } | { isMultiSessionDiscount: false; code: string }))
+          } & (
+              | { isMultiSessionDiscount: true; sessionDiscountAmount: number }
+              | { isMultiSessionDiscount: false; code: string }
+          ))
         | null
     subtotal: number
     total: number
@@ -81,23 +84,27 @@ export const useCart = create<Cart>()((set, get) => ({
         }
 
         // check multi session discount eligibility
-        let discountPercent = 0
+        let sessionDiscountAmount = 0
         let description = ''
-        if (classes.length > 0) discountPercent = 0
-        if (classes.length >= 4) {
-            discountPercent = 10
-            description = 'Multi session discount - 4 or more sessions'
-        }
-        if (classes.length >= TERM_LENGTH) {
-            discountPercent = 20
-            description = 'Term enrolment - 10 session discount'
-        }
+        PRICING_STRUCTURE.forEach(({ minSessions, price, discount }) => {
+            if (classes.length >= minSessions) {
+                description = `Multi Session Discount - $${price} / session`
+                sessionDiscountAmount = discount
+            }
+        })
 
-        const multiSessionDiscountTotal = subtotal - subtotal * (discountPercent / 100)
+        const discountAmount = sessionDiscountAmount * classes.length * numberOfKids
+        const multiSessionDiscountTotal = subtotal - discountAmount
         const multiSessionDiscount =
-            discountPercent === 0
+            discountAmount === 0
                 ? null
-                : ({ type: 'percentage', amount: discountPercent, description, isMultiSessionDiscount: true } as const)
+                : ({
+                      type: 'price',
+                      amount: discountAmount,
+                      description,
+                      isMultiSessionDiscount: true,
+                      sessionDiscountAmount,
+                  } as const)
 
         // finally, apply the discount that is best
         if (totalAfterDiscountCode < multiSessionDiscountTotal && totalAfterDiscountCode >= 0) {
@@ -160,3 +167,21 @@ export const useCart = create<Cart>()((set, get) => ({
         return new Date()
     },
 }))
+
+export const PRICING_STRUCTURE = [
+    {
+        minSessions: 1,
+        price: 26,
+        discount: 0,
+    },
+    {
+        minSessions: 2,
+        price: 22,
+        discount: 4,
+    },
+    {
+        minSessions: 5,
+        price: 20,
+        discount: 6,
+    },
+]

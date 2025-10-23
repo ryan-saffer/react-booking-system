@@ -14,23 +14,27 @@ export const useFormStage = create<State>((set, get) => ({
         const currentStage = get().formStage
         if (currentStage === 'program-selection') {
             set({ formStage: 'form' })
-            window.scrollTo({ top: 170, behavior: 'instant' })
+            scrollToTop()
         } else if (currentStage === 'form') {
             set({ formStage: 'payment' })
-            window.scrollTo({ top: 170, behavior: 'instant' })
+            scrollToTop()
         } else if (currentStage === 'payment') {
             set({ formStage: 'success' })
-            window.scrollTo({ top: 170, behavior: 'instant' })
+            scrollToTop()
         }
     },
     previousStage: () => {
         const currentStage = get().formStage
         if (currentStage === 'form') {
             set({ formStage: 'program-selection' })
-            window.scrollTo({ top: 170, behavior: 'instant' })
+            scrollToTop()
         } else if (currentStage === 'payment') {
             set({ formStage: 'form' })
-            window.scrollTo({ top: 170, behavior: 'instant' })
+            scrollToTop()
         }
     },
 }))
+
+function scrollToTop() {
+    window.scrollTo({ top: 170, behavior: 'instant' })
+}

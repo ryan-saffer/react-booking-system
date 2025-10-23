@@ -1,4 +1,4 @@
-import { useCart } from '@components/play-lab/booking-form/state/cart-store'
+import { PRICING_STRUCTURE, useCart } from '@components/play-lab/booking-form/state/cart-store'
 import { useFormStage } from '@components/play-lab/booking-form/state/form-stage-store'
 import { Button } from '@ui-components/button'
 
@@ -7,19 +7,32 @@ export function ContinueButton() {
     const discount = useCart((store) => store.discount)
     const nextStage = useFormStage((store) => store.nextStage)
 
+    const numberOfSessions = Object.values(selectedClasses).length
+
     function renderDiscount() {
+        if (numberOfSessions === 1) {
+            return ` - $${PRICING_STRUCTURE[0].price} / session`
+        }
         if (discount) {
-            if (discount.type === 'percentage') {
-                return ` - ${discount.amount}% discount`
+            if (discount.isMultiSessionDiscount) {
+                let result = ''
+                PRICING_STRUCTURE.forEach(({ minSessions, price }) => {
+                    if (numberOfSessions >= minSessions) {
+                        result = ` - $${price} / session`
+                    }
+                })
+                return result
             } else {
-                return ` - $${discount.amount.toFixed(2)} off`
+                if (discount.type === 'percentage') {
+                    return ` - ${discount.amount}% discount`
+                } else {
+                    return ` - $${discount.amount.toFixed(2)} off`
+                }
             }
         } else {
             return null
         }
     }
-
-    const numberOfSessions = Object.values(selectedClasses).length
 
     if (Object.values(selectedClasses).length === 0) return null
 

@@ -12,7 +12,7 @@ import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { trpc } from '@utils/trpc'
 
-import { useCart } from '../../../state/cart-store'
+import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
 import { DiscountInput } from './discount-input'
@@ -112,6 +112,19 @@ export function Payment() {
         nextStage()
     }
 
+    function renderPriceCell(klass: LocalAcuityClass) {
+        if (discount?.isMultiSessionDiscount) {
+            return (
+                <div className="flex flex-col justify-end gap-2 sm:flex-row">
+                    <span className="line-through">${parseFloat(klass.price).toFixed(2)}</span>
+                    <span>${(parseFloat(klass.price) - discount.sessionDiscountAmount).toFixed(2)}</span>
+                </div>
+            )
+        } else {
+            return <span>${parseFloat(klass.price).toFixed(2)}</span>
+        }
+    }
+
     function renderError() {
         if (isError) {
             let errorMessage =
@@ -180,7 +193,7 @@ export function Payment() {
                                         {name}
                                     </TableCell>
                                     <TableCell>{child.firstName}</TableCell>
-                                    <TableCell className="text-right">${parseFloat(klass.price).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">{renderPriceCell(klass)}</TableCell>
                                 </TableRow>
                             ))
                         })}
