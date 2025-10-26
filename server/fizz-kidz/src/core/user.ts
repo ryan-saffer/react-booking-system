@@ -1,6 +1,6 @@
-import { LocationOrMaster } from './location'
-import { Role } from './role'
-import { PartialRecord } from '..'
+import type { LocationOrMaster } from './location'
+import type { Role } from './role'
+import type { PartialRecord } from '..'
 
 type BaseAuthUser = {
     uid: string

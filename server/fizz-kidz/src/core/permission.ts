@@ -1,4 +1,4 @@
-import { Role } from './role'
+import type { Role } from './role'
 
 const PERMISSIONS = [
     'dashboard:view',
