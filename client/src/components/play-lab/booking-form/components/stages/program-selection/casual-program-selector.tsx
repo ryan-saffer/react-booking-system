@@ -334,7 +334,15 @@ function BrowseByProgram({
         <>
             <div className="flex flex-col gap-6">
                 {Object.entries(groupedPrograms)
-                    .sort(([a], [b]) => a.localeCompare(b))
+                    .sort(([a], [b]) => {
+                        const aIsTerm = a.toLowerCase().startsWith('term')
+                        const bIsTerm = b.toLowerCase().startsWith('term')
+
+                        if (aIsTerm && !bIsTerm) return -1
+                        if (!aIsTerm && bIsTerm) return 1
+
+                        return a.localeCompare(b, undefined, { sensitivity: 'base' })
+                    })
                     .map(([term, programs]) => {
                         // Check if any programs in this term group should be shown
                         const hasVisiblePrograms = programs.some(
