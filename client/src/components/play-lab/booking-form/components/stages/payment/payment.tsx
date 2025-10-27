@@ -50,6 +50,9 @@ export function Payment() {
     }
 
     async function book(token: string, buyerVerificationToken: string) {
+        if (isError) {
+            idempotencyKey.current = crypto.randomUUID()
+        }
         await mutateAsync({
             idempotencyKey: idempotencyKey.current,
             bookingType: form.getValues().bookingType!,
@@ -250,7 +253,7 @@ export function Payment() {
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
                 cardTokenizeResponseReceived={({ status, token }, buyerVerification) => {
-                    if (status === 'OK' && token) {
+                    if (status === 'OK' && token && !isLoading) {
                         book(token, buyerVerification?.token || '')
                     } else {
                         toast.error('There was an error processing your payment')

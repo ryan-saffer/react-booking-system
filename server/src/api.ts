@@ -27,16 +27,18 @@ apiRouter.use(
         createContext,
         onError: ({ error, input, path }) => {
             const errorCode = getErrorCode(error.cause ?? error, error.code)
-            if (ERRORS_TO_IGNORE.includes(errorCode)) {
-                // not an error worth logging
-                return
-            }
-            logger.error(error.message, {
+            const payload = {
                 path,
                 input,
                 errorCode,
                 cause: error.cause,
-            })
+            }
+            if (ERRORS_TO_IGNORE.includes(errorCode)) {
+                // not an error worth getting notified
+                logger.warn(error.message, payload)
+            } else {
+                logger.error(error.message, payload)
+            }
         },
     })
 )
