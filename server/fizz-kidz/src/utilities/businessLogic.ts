@@ -1,18 +1,19 @@
-import { Location, type LocationOrTest } from '../core/location'
+import type { Studio } from 'fizz-kidz/src/core/studio'
+import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
 import type { Booking } from '../partyBookings/booking'
 import { capitalise } from './stringUtilities'
 
-export function getLocationAddress(location: Location) {
+export function getLocationAddress(location: Studio) {
     switch (location) {
-        case Location.BALWYN:
+        case 'balwyn':
             return '184 Whitehorse Rd, Balwyn VIC 3103'
-        case Location.CHELTENHAM:
+        case 'cheltenham':
             return '273 Bay Rd, Cheltenham VIC 3192'
-        case Location.ESSENDON:
+        case 'essendon':
             return '75 Raleigh St, Essendon VIC 3040'
-        case Location.KINGSVILLE:
+        case 'kingsville':
             return '238 Somerville Rd, Kingsville, VIC 3012'
-        case Location.MALVERN:
+        case 'malvern':
             return '20 Glenferrie Rd, Malvern VIC 3144'
         default: {
             const exhaustiveCheck: never = location
@@ -91,25 +92,25 @@ export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | 
     }
 }
 
-export function getNumberOfKidsAllowed(location: Location) {
-    if (location === Location.CHELTENHAM) {
+export function getNumberOfKidsAllowed(location: Studio) {
+    if (location === 'cheltenham') {
         return ['4 and 5 years old - max 20 kids', '6 years plus - max 26 kids']
     } else {
         return ['4 and 5 years old - max 24 kids', '6 years plus - max 30 kids']
     }
 }
 
-export function getPictureOfStudioUrl(location: Location) {
+export function getPictureOfStudioUrl(location: Studio) {
     switch (location) {
-        case Location.BALWYN:
+        case 'balwyn':
             return 'https://drive.google.com/file/d/14mqrG74qkbE43FGqexGS1_zfb11mOONy/view?usp=sharing'
-        case Location.CHELTENHAM:
+        case 'cheltenham':
             return 'https://drive.google.com/file/d/1PLiZZEqr2yGBd-ipLixzfLkh5FkrO1oG/view?usp=sharing'
-        case Location.ESSENDON:
+        case 'essendon':
             return 'https://drive.google.com/file/d/1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g/view?usp=sharing'
-        case Location.KINGSVILLE:
+        case 'kingsville':
             return 'https://drive.google.com/file/d/1aP9aFANjEhiaal8l7rjouWZhdUPfv5ts/view?usp=sharing'
-        case Location.MALVERN:
+        case 'malvern':
             return 'https://drive.google.com/file/d/1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh/view?usp=sharing'
         default: {
             const exhaustiveCheck: never = location
@@ -118,17 +119,17 @@ export function getPictureOfStudioUrl(location: Location) {
     }
 }
 
-export function getReviewUrl(location: Location) {
+export function getReviewUrl(location: Studio) {
     switch (location) {
-        case Location.BALWYN:
+        case 'balwyn':
             return 'https://search.google.com/local/writereview?placeid=ChIJRYl9pexB1moR5msbM8SdKVU'
-        case Location.CHELTENHAM:
+        case 'cheltenham':
             return 'https://search.google.com/local/writereview?placeid=ChIJxb0bw3lv1moRwrl1Q_P-cHo'
-        case Location.ESSENDON:
+        case 'essendon':
             return 'https://search.google.com/local/writereview?placeid=ChIJq_RqJMNd1moRksRMHNY2ExQ'
-        case Location.KINGSVILLE:
+        case 'kingsville':
             return 'https://g.page/r/CRQItX8-YnBFEBM/review'
-        case Location.MALVERN:
+        case 'malvern':
             return 'https://search.google.com/local/writereview?placeid=ChIJ92NJJx5q1moRdDSJo_X3BRo'
         default: {
             const exhaustiveCheck: never = location
@@ -137,7 +138,7 @@ export function getReviewUrl(location: Location) {
     }
 }
 
-export function studioNameAndAddress(studio: LocationOrTest) {
+export function studioNameAndAddress(studio: StudioOrTest) {
     if (studio === 'test') {
         return 'TEST'
     }

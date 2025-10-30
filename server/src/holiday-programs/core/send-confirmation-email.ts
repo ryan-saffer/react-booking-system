@@ -1,5 +1,5 @@
 import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants, AcuityUtilities, Location } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { MailClient } from '@/sendgrid/MailClient'
@@ -48,7 +48,7 @@ export async function sendConfirmationEmail(
                 address: appointments[0].location,
                 bookings,
                 receiptUrl,
-                showCrunch: location === Location.BALWYN || location === Location.MALVERN,
+                showCrunch: location === 'balwyn' || location === 'malvern',
             })
             break
         }

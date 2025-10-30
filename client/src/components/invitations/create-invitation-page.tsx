@@ -1,8 +1,8 @@
 import 'react-social-icons/whatsapp'
 
 import { format } from 'date-fns'
-import type { InvitationOption } from 'fizz-kidz'
-import { Location, capitalise, getApplicationDomain } from 'fizz-kidz'
+import type { InvitationOption, Studio } from 'fizz-kidz'
+import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
@@ -37,7 +37,7 @@ type TForm = {
     date: Date
     time: string
     type: 'studio' | 'mobile' | ''
-    studio: Location
+    studio: Studio
     address: string
     rsvpName: string
     rsvpDate: Date
@@ -318,9 +318,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                                 ref.ontouchstart = (e) => e.preventDefault()
                                             }}
                                         >
-                                            {Object.values(Location).map((location) => (
-                                                <SelectItem key={location} value={location}>
-                                                    {capitalise(location)}
+                                            {STUDIOS.map((studio) => (
+                                                <SelectItem key={studio} value={studio}>
+                                                    {capitalise(studio)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

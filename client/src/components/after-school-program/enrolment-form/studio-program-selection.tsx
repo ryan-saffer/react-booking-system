@@ -1,5 +1,5 @@
 import type { AcuityTypes } from 'fizz-kidz'
-import { Location, capitalise } from 'fizz-kidz'
+import { STUDIOS, capitalise } from 'fizz-kidz'
 import { MessageCircleWarning } from 'lucide-react'
 
 import Loader from '@components/Shared/Loader'
@@ -46,9 +46,9 @@ export function StudioProgramSelection() {
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                {Object.values(Location).map((location) => (
-                                    <SelectItem value={location} key={location}>
-                                        {capitalise(location)}
+                                {STUDIOS.map((studio) => (
+                                    <SelectItem value={studio} key={studio}>
+                                        {capitalise(studio)}
                                     </SelectItem>
                                 ))}
                             </SelectContent>

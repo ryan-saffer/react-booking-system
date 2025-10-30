@@ -1,4 +1,5 @@
-import { Location, capitalise } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
+import { capitalise } from 'fizz-kidz'
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
@@ -7,7 +8,7 @@ import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
 
-const SUPPORTED_LOCATIONS: Location[] = [Location.ESSENDON, Location.KINGSVILLE]
+const SUPPORTED_LOCATIONS: Studio[] = ['essendon', 'kingsville']
 
 export function StudioSelector() {
     const form = useBookingForm()

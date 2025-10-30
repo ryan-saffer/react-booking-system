@@ -1,4 +1,4 @@
-import { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import type { calendar_v3 } from 'googleapis'
 
 import { env } from '../init'
@@ -18,12 +18,12 @@ type CalendarParams =
     | {
           eventType: 'party-bookings'
           type: 'studio'
-          location: Location
+          location: Studio
       }
     | {
           eventType: 'party-bookings'
           type: 'mobile'
-          location: Location
+          location: Studio
       }
     | {
           eventType: 'events'
@@ -133,23 +133,23 @@ export class CalendarClient {
                         : 'fizzkidz.com.au_k5gsanlpnslk9i4occfd4elt00@group.calendar.google.com'
                 }
                 switch (eventType.location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return env === 'prod'
                             ? 'fizzkidz.com.au_7vor3m1efd3fqbr0ola2jvglf8@group.calendar.google.com'
                             : 'fizzkidz.com.au_ofsgsp4oijbjpvm40o1bihk7bg@group.calendar.google.com'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return env === 'prod'
                             ? 'c_05efd7a4c88896e52d0e108168534ca1ef482ef43566ee6a35387a8e8069b831@group.calendar.google.com'
                             : 'c_c760d908ac1b8659df09adef13067950a026a814b94f160e4ecb51d7b3229032@group.calendar.google.com'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return env === 'prod'
                             ? 'fizzkidz.com.au_k1ubc2bi0ufvhoer4o9pakion0@group.calendar.google.com'
                             : 'c_3aae8htcpjgpmnrod7ujrqsccc@group.calendar.google.com'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return env === 'prod'
                             ? 'c_c5ed845cf900830382f3da6a88f96f8a9f5c5af76e4ba6656fcf7dbf589c77fc@group.calendar.google.com'
                             : 'c_07737c232df8345b6ec19eadc978c266e31bf252eb26e323213cfb49e868192c@group.calendar.google.com'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return env === 'prod'
                             ? 'fizzkidz.com.au_j13ot3jarb1p9k70c302249j4g@group.calendar.google.com'
                             : 'fizzkidz.com.au_knove8gbjklh2cm5di6qfs0bs0@group.calendar.google.com'

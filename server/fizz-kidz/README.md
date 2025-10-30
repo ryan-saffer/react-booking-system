@@ -4,9 +4,9 @@ This directory contains the `fizz-kidz` module, a crucial internal library for t
 
 ## Table of Contents
 
-- [Purpose](#purpose)
-- [Structure](#structure)
-- [Build and Usage](#build-and-usage)
+-   [Purpose](#purpose)
+-   [Structure](#structure)
+-   [Build and Usage](#build-and-usage)
 
 ## Purpose
 
@@ -27,7 +27,7 @@ This module is located within the main `server/` directory (as `server/fizz-kidz
 The module is organized by feature or domain within its `src/` directory:
 
 -   **`src/index.ts`**: The main entry point that exports all public functionalities of the module.
--   **`src/core/`**: Defines fundamental platform concepts like `Location`, `Role`, `AuthUser`, and `Permission`.
+-   **`src/core/`**: Defines fundamental platform concepts like `Studio`, `Role`, `AuthUser`, and `Permission`.
 -   **`src/partyBookings/`**: Contains extensive logic for party bookings, including types for `Booking`, `Addition`, `Creation`, and `Invitation` utilities.
 -   **`src/acuity/`**, **`src/stripe/`**, **`src/square/`**, **`src/zoho/`**, **`src/paperform/`**: Provide types, constants, and utility functions for interacting with these respective third-party services.
 -   **`src/after-school-program/`**, **`src/holidayPrograms/`**, **`src/events/`**: Contain logic specific to these program types.

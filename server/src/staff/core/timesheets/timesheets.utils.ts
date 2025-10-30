@@ -245,7 +245,7 @@ function createOvertimeTimesheetRows(
     isCasual: boolean,
     date: DateTime,
     position: Position,
-    location: Location,
+    location: Studio,
     rate: Rate,
     summary: string
 ) {
@@ -374,7 +374,7 @@ export class TimesheetRow {
         hasBirthdayDuringPayrun: boolean
         date: DateTime
         position: Position
-        location: Location
+        location: Studio
         isCasual: boolean
         hours: number
         overtime: Overtime
@@ -403,7 +403,7 @@ export class TimesheetRow {
     /**
      * On Call shifts and Called In shifts do not map to overtime hours, but still count towards the weekly 38 hours of overtime.
      */
-    private getPayItem(position: Position, location: Location): PayItem {
+    private getPayItem(position: Position, location: Studio): PayItem {
         // on call does not count towards overtime so check that first
         if (isOnCallShift(position)) return this._getOnCallPayItem(location)
         // called in pays more than overtime, so even if a called in shift is in overtime, it should still be a called in pay item
@@ -504,43 +504,43 @@ export class TimesheetRow {
         }
     }
 
-    private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
+    private _getOrdinaryPayItem(location: Studio): OrdinaryPayItem {
         if (this.isCasual) {
             // CASUAL EMPLOYEES
             if (this._isMonSat()) {
                 if (this._isYoungerThan18() && !this._isRateAbove18()) {
                     switch (location) {
-                        case Location.BALWYN:
+                        case Studio.BALWYN:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
-                        case Location.CHELTENHAM:
+                        case Studio.CHELTENHAM:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
-                        case Location.ESSENDON:
+                        case Studio.ESSENDON:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
-                        case Location.KINGSVILLE:
+                        case Studio.KINGSVILLE:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
-                        case Location.MALVERN:
+                        case Studio.MALVERN:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
-                        case Location.HEAD_OFFICE:
+                        case Studio.HEAD_OFFICE:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
@@ -553,37 +553,37 @@ export class TimesheetRow {
                     }
                 } else {
                     switch (location) {
-                        case Location.BALWYN:
+                        case Studio.BALWYN:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS COH - Mon to Sat - Balwyn'
-                        case Location.CHELTENHAM:
+                        case Studio.CHELTENHAM:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS COH - Mon to Sat - Cheltenham'
-                        case Location.ESSENDON:
+                        case Studio.ESSENDON:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Essendon'
                                 : 'NON-CGS COH - Mon to Sat - Essendon'
-                        case Location.KINGSVILLE:
+                        case Studio.KINGSVILLE:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS COH - Mon to Sat - Kingsville'
-                        case Location.MALVERN:
+                        case Studio.MALVERN:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Malvern'
                                 : 'NON-CGS COH - Mon to Sat - Malvern'
-                        case Location.HEAD_OFFICE:
+                        case Studio.HEAD_OFFICE:
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
@@ -597,37 +597,37 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Balwyn'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Balwyn'
                             : 'NON-CGS COH - Sunday - Balwyn'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Cheltenham'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Cheltenham'
                             : 'NON-CGS COH - Sunday - Cheltenham'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Essendon'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Essendon'
                             : 'NON-CGS COH - Sunday - Essendon'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Kingsville'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Kingsville'
                             : 'NON-CGS COH - Sunday - Kingsville'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Malvern'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Malvern'
                             : 'NON-CGS COH - Sunday - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Head Office'
                             : this._isCOGSShift()
@@ -643,17 +643,17 @@ export class TimesheetRow {
             // PT/FT EMPLOYEES
             if (this._isMonSat()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -662,17 +662,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'PT/FT Ordinary Hours - Sunday - Balwyn'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'PT/FT Ordinary Hours - Sunday - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'PT/FT Ordinary Hours - Sunday - Essendon'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'PT/FT Ordinary Hours - Sunday - Kingsville'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'PT/FT Ordinary Hours - Sunday - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'PT/FT Ordinary Hours - Sunday - Head Office'
                     default: {
                         assertNever(location)
@@ -683,22 +683,22 @@ export class TimesheetRow {
         }
     }
 
-    private _getOnCallPayItem(location: Location): OnCallPayItem {
+    private _getOnCallPayItem(location: Studio): OnCallPayItem {
         // all 'on calls' are COGS
         if (this._isMonSat()) {
             if (this._isYoungerThan18() && !this._isRateAbove18()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -707,17 +707,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -727,17 +727,17 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case Studio.BALWYN:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
-                case Location.CHELTENHAM:
+                case Studio.CHELTENHAM:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
-                case Location.ESSENDON:
+                case Studio.ESSENDON:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Essend'
-                case Location.KINGSVILLE:
+                case Studio.KINGSVILLE:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
-                case Location.MALVERN:
+                case Studio.MALVERN:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
-                case Location.HEAD_OFFICE:
+                case Studio.HEAD_OFFICE:
                     return 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
@@ -747,22 +747,22 @@ export class TimesheetRow {
         }
     }
 
-    private _getCalledInPayItem(location: Location): CalledInPayItem {
+    private _getCalledInPayItem(location: Studio): CalledInPayItem {
         // all called in are COGS
         if (this._isMonSat()) {
             if (this._isYoungerThan18() && !this._isRateAbove18()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -771,17 +771,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case Studio.BALWYN:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case Studio.CHELTENHAM:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case Studio.ESSENDON:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case Studio.KINGSVILLE:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case Studio.MALVERN:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case Studio.HEAD_OFFICE:
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -791,17 +791,17 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case Studio.BALWYN:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
-                case Location.CHELTENHAM:
+                case Studio.CHELTENHAM:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
-                case Location.ESSENDON:
+                case Studio.ESSENDON:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
-                case Location.KINGSVILLE:
+                case Studio.KINGSVILLE:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
-                case Location.MALVERN:
+                case Studio.MALVERN:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
-                case Location.HEAD_OFFICE:
+                case Studio.HEAD_OFFICE:
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
                 default: {
                     assertNever(location)
@@ -811,40 +811,40 @@ export class TimesheetRow {
         }
     }
 
-    private _getOvertimeFirstThreeHours(location: Location): OvertimeFirstThreeHours {
+    private _getOvertimeFirstThreeHours(location: Studio): OvertimeFirstThreeHours {
         if (this._isMonSat()) {
             switch (location) {
-                case Location.BALWYN:
+                case Studio.BALWYN:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
-                case Location.CHELTENHAM:
+                case Studio.CHELTENHAM:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
-                case Location.ESSENDON:
+                case Studio.ESSENDON:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
-                case Location.KINGSVILLE:
+                case Studio.KINGSVILLE:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
-                case Location.MALVERN:
+                case Studio.MALVERN:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-                case Location.HEAD_OFFICE:
+                case Studio.HEAD_OFFICE:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
                         : this._isCOGSShift()
@@ -857,37 +857,37 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case Studio.BALWYN:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
-                case Location.CHELTENHAM:
+                case Studio.CHELTENHAM:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
-                case Location.ESSENDON:
+                case Studio.ESSENDON:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
-                case Location.KINGSVILLE:
+                case Studio.KINGSVILLE:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
-                case Location.MALVERN:
+                case Studio.MALVERN:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
-                case Location.HEAD_OFFICE:
+                case Studio.HEAD_OFFICE:
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
                         : this._isCOGSShift()
@@ -901,39 +901,39 @@ export class TimesheetRow {
         }
     }
 
-    private _getOvertimeAfterThreeHours(location: Location): OvertimeAfterThreeHours {
+    private _getOvertimeAfterThreeHours(location: Studio): OvertimeAfterThreeHours {
         switch (location) {
-            case Location.BALWYN:
+            case Studio.BALWYN:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Balwyn'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Balwyn'
                     : 'NON-CGS OT - After 3 Hrs - Balwyn'
-            case Location.CHELTENHAM:
+            case Studio.CHELTENHAM:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Cheltenham'
                     : 'NON-CGS OT - After 3 Hrs - Cheltenham'
-            case Location.ESSENDON:
+            case Studio.ESSENDON:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Essendon'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Essendon'
                     : 'NON-CGS OT - After 3 Hrs - Essendon'
-            case Location.KINGSVILLE:
+            case Studio.KINGSVILLE:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Kingsville'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Kingsville'
                     : 'NON-CGS OT - After 3 Hrs - Kingsville'
-            case Location.MALVERN:
+            case Studio.MALVERN:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Malvern'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Malvern'
                     : 'NON-CGS OT - After 3 Hrs - Malvern'
-            case Location.HEAD_OFFICE:
+            case Studio.HEAD_OFFICE:
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Head Office'
                     : this._isCOGSShift()
@@ -1317,12 +1317,12 @@ export function isSundayShift(position: Position) {
     }
 }
 
-export enum Location {
-    BALWYN = 'BALWYN',
-    CHELTENHAM = 'CHELTENHAM',
-    ESSENDON = 'ESSENDON',
-    KINGSVILLE = 'KINGSVILLE',
-    MALVERN = 'MALVERN',
+export enum Studio {
+    BALWYN = 'balwyn',
+    CHELTENHAM = 'cheltenham',
+    ESSENDON = 'essendon',
+    KINGSVILLE = 'kingsville',
+    MALVERN = 'malvern',
     HEAD_OFFICE = 'HEAD_OFFICE',
 }
 
@@ -1461,16 +1461,16 @@ export const PositionMap: Record<string, Position> = Object.fromEntries(
     ObjectKeys(PositionToId).map((key) => [PositionToId[key], key])
 )
 
-const LocationToId: Record<Location, number> = {
-    [Location.BALWYN]: 4809521,
-    [Location.CHELTENHAM]: 11315826,
-    [Location.ESSENDON]: 4895739,
-    [Location.KINGSVILLE]: 22982854,
-    [Location.MALVERN]: 4809537,
-    [Location.HEAD_OFFICE]: 5557282,
+const LocationToId: Record<Studio, number> = {
+    [Studio.BALWYN]: 4809521,
+    [Studio.CHELTENHAM]: 11315826,
+    [Studio.ESSENDON]: 4895739,
+    [Studio.KINGSVILLE]: 22982854,
+    [Studio.MALVERN]: 4809537,
+    [Studio.HEAD_OFFICE]: 5557282,
 }
 
-const LocationsMap: Record<string, Location> = Object.fromEntries(
+const LocationsMap: Record<string, Studio> = Object.fromEntries(
     ObjectKeys(LocationToId).map((key) => [LocationToId[key], key])
 )
 

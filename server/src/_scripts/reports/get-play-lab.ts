@@ -1,7 +1,8 @@
-import { AcuityClient } from '@/acuity/core/acuity-client'
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { AcuityClient } from '@/acuity/core/acuity-client'
 
 const PLAY_LAB_NAMES = ['All Playz', 'Creative Kinders', 'Little Explorers'] as const
 
@@ -12,7 +13,7 @@ export async function getPlayLabPrograms({
 }: {
     from?: Date
     to?: Date
-    studio: Location
+    studio: Studio
 }) {
     const acuity = await AcuityClient.getInstance()
 

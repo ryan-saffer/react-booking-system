@@ -1,5 +1,5 @@
 import type { AcuityTypes } from 'fizz-kidz'
-import { Location } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +38,7 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                 ? [
                       'Science Club',
                       'Art Program',
-                      ...Object.values(Location).flatMap((it) => [`science-${it}` as const, `art-${it}` as const]),
+                      ...STUDIOS.flatMap((it) => [`science-${it}` as const, `art-${it}` as const]),
                   ]
                 : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
     })

@@ -9,7 +9,7 @@ import type {
     DiscountCode,
     Invitation,
     WithoutId,
-    LocationOrMaster,
+    StudioOrMaster,
     AuthUser,
 } from 'fizz-kidz'
 import type { Document } from './FirestoreRefs'
@@ -293,7 +293,7 @@ class Client {
         return (await (await FirestoreRefs.user(uid)).get()).data()
     }
 
-    async getUsersByStudio(studio: LocationOrMaster) {
+    async getUsersByStudio(studio: StudioOrMaster) {
         const collection = await FirestoreRefs.users()
         const snap = await collection.where('accountType', '==', 'staff').get()
         return snap.docs

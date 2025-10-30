@@ -1,6 +1,7 @@
 import { Button, DatePicker, Divider, Form, Input, InputNumber, Modal, Select, Typography, message } from 'antd'
 import type { Dayjs } from 'dayjs'
-import { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import React, { useState } from 'react'
 
 import { capitalise } from '@utils/stringUtilities'
@@ -16,7 +17,7 @@ type TNewEmployeeForm = {
     position: string
     customPosition?: string
     commencementDate: Dayjs
-    location: Location
+    location: Studio
     normalRate: number
     sundayRate: number
     managerName: string
@@ -146,9 +147,9 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
                     </Form.Item>
                     <Form.Item name="location" label="Studio" rules={[{ required: true }]}>
                         <Select>
-                            {Object.values(Location).map((location) => (
-                                <Option key={location} value={location}>
-                                    {capitalise(location)}
+                            {STUDIOS.map((studio) => (
+                                <Option key={studio} value={studio}>
+                                    {capitalise(studio)}
                                 </Option>
                             ))}
                         </Select>

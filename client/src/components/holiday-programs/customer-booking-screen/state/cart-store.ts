@@ -1,10 +1,10 @@
-import type { AcuityTypes, DiscountCode, LocationOrTest } from 'fizz-kidz'
+import type { AcuityTypes, DiscountCode, StudioOrTest } from 'fizz-kidz'
 import { create } from 'zustand'
 
 type Class = AcuityTypes.Client.Class
 
 type Cart = {
-    selectedStudio: LocationOrTest | null
+    selectedStudio: StudioOrTest | null
     selectedClasses: Record<number, Class>
     /**
      * Array of classIds that are in the cart and are an 'all day' class
@@ -13,7 +13,7 @@ type Cart = {
     subtotal: number
     total: number
     discount: DiscountCode | null // only for discount codes, not multi session discounts
-    setSelectedStudio: (location: LocationOrTest) => void
+    setSelectedStudio: (location: StudioOrTest) => void
     clearCart: () => void
     applyDiscount: (discount: DiscountCode, numberOfKids: number) => void
     clearDiscount: (numberOfKids: number) => void

@@ -1,4 +1,4 @@
-import type { IncursionEvent, Location } from 'fizz-kidz'
+import type { IncursionEvent, Studio } from 'fizz-kidz'
 import fs from 'fs/promises'
 
 import { eventsRouter } from '../../events/functions/trpc/trpc.events'
@@ -94,7 +94,7 @@ async function bookIntoNewSystem(legacyEvents: LegacyEvent[]) {
         await caller.createEvent({
             event: {
                 $type: 'standard',
-                studio: firstSlot.studio as Location,
+                studio: firstSlot.studio as Studio,
                 eventName: firstSlot.eventName,
                 contactName: firstSlot.contactName,
                 contactNumber: firstSlot.contactNumber,
@@ -115,7 +115,7 @@ async function bookIntoNewSystem(legacyEvents: LegacyEvent[]) {
         await caller.createEvent({
             event: {
                 $type: 'incursion',
-                studio: firstSlot.studio as Location,
+                studio: firstSlot.studio as Studio,
                 module: firstSlot.module as IncursionEvent['module'],
                 $incursionFormCompleted: false,
                 incursionFormSent: false,

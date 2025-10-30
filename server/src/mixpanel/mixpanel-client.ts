@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions/v2'
 import type { InvitationOption } from 'fizz-kidz'
-import { type Location } from 'fizz-kidz'
+import { type Studio, type StudioOrTest } from 'fizz-kidz'
 import type { Mixpanel } from 'mixpanel'
 import type { ClientStatus } from '../utilities/types'
 import type {
@@ -9,7 +9,6 @@ import type {
     Form,
     ReferenceOption,
 } from '../website/core/website-form-types'
-import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 
 export class MixpanelClient {
     private static instance: MixpanelClient
@@ -87,7 +86,7 @@ export type MixpanelEvent = {
     }
     'holiday-program-booking': {
         distinct_id: string
-        location: LocationOrTest
+        location: StudioOrTest
         amount: number
         numberOfSlots: number
         numberOfKids: number
@@ -98,7 +97,7 @@ export type MixpanelEvent = {
     }
     'birthday-party-booking': {
         distinct_id: string
-        location: Location
+        location: Studio
         length: '1' | '1.5' | '2'
         includesFood: boolean
         type: 'studio' | 'mobile'
@@ -108,7 +107,7 @@ export type MixpanelEvent = {
     'birthday-party-form-completed': {
         distinct_id: string
         type: 'mobile' | 'studio'
-        location: Location
+        location: Studio
         creations: string[]
         additions: string[]
         orderedPartyPack: boolean
@@ -147,7 +146,7 @@ export type MixpanelEvent = {
         bookingType: 'term-booking' | 'casual'
         appointmntTypeIds: number[]
         programNames: string[]
-        location: LocationOrTest
+        location: StudioOrTest
         amount: number
         discountType?: 'percentage' | 'price'
         discountAmount?: number

@@ -1,4 +1,4 @@
-import type { Location, ScienceModule } from '..'
+import type { ScienceModule, Studio } from '..'
 
 type BaseEvent = {
     id: string
@@ -8,7 +8,7 @@ type BaseEvent = {
     contactNumber: string
     contactEmail: string
     organisation: string
-    studio: Location
+    studio: Studio
     address: string
     price: string
     startTime: Date
