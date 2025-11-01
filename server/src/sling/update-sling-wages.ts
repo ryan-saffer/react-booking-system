@@ -3,7 +3,7 @@ import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, 
 import { DateTime } from 'luxon'
 
 import { OrdindayEarningsRateMap } from '@/staff/core/timesheets/generate-timesheets'
-import { LocationToId, PositionToId, getPositionRate } from '@/staff/core/timesheets/timesheets.utils'
+import { SlingLocationToId, SlingPositionToId, getPositionRate } from '@/staff/core/timesheets/timesheets.utils'
 import { logError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
@@ -42,8 +42,8 @@ export async function updateSlingWages() {
         // if an employee is assigned a franchise, use that franchise to lookup their rate, otherwise use master
         // head office is safe, because we default to master
         let studio: FranchiseOrMaster = 'master'
-        for (const location of ObjectKeys(LocationToId)) {
-            if (slingUser.groupIds.includes(LocationToId[location]) && isFranchise(location as Studio)) {
+        for (const location of ObjectKeys(SlingLocationToId)) {
+            if (slingUser.groupIds.includes(SlingLocationToId[location]) && isFranchise(location as Studio)) {
                 studio = location as FranchiseStudio
             }
         }
@@ -76,16 +76,16 @@ export async function updateSlingWages() {
         // If we instead skipped this shift (since its not assigned), the user can still be assigned shifts at this position, and those shifts will appear as $0 shifts.
         // Therefore, we assign all shifts to all users.
         try {
-            await slingClient.addShiftsToUser(slingUser.id, Object.values(PositionToId))
+            await slingClient.addShiftsToUser(slingUser.id, Object.values(SlingPositionToId))
         } catch (err) {
             logError(`Error adding shifts to user: ${slingUser.id}`, err, {
-                shiftsToAdd: Object.values(PositionToId),
+                shiftsToAdd: Object.values(SlingPositionToId),
             })
             continue
         }
 
         // iterate all positions
-        for (const positionId of Object.values(PositionToId)) {
+        for (const positionId of Object.values(SlingPositionToId)) {
             body.push({
                 // if editing, (wage item for this position already exists), update it by providing the id. Otherwise it will create. [It will 409 confict if this logic is wrong].
                 ...(slingUser.wages?.[positionId] && { id: slingUser.wages[positionId][0].id }),

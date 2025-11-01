@@ -9,7 +9,13 @@ import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 import type { Rate } from './timesheets.types'
 import type { TimesheetRow } from './timesheets.utils'
-import { createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18, LocationsMap } from './timesheets.utils'
+import {
+    createTimesheetRows,
+    getWeeks,
+    hasBirthdayDuring,
+    isYoungerThan18,
+    SlingLocationsMap,
+} from './timesheets.utils'
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
 import { SlingClient } from '@/sling/sling-client'
@@ -90,13 +96,16 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
                 .filter((it) => it.status === 'published')
                 // depending on the franchise, filter out the location
                 .filter((it) => {
-                    const shiftLocation = LocationsMap[it.location.id]
+                    const shiftLocation = SlingLocationsMap[it.location.id]
                     if (studio === 'master') {
                         // TODO: TEMPORARY - Balwyn is part of master studios until november, so manually decide that here.
                         if (DateTime.fromISO(it.dtstart, { setZone: true }).month <= 10) {
-                            return STUDIOS.includes(shiftLocation as any)
+                            if (shiftLocation === 'head-office') return true
+                            return STUDIOS.includes(shiftLocation)
                         } else {
-                            return MASTER_STUDIOS.includes(shiftLocation as any)
+                            if (shiftLocation === 'head-office') return true
+                            if (shiftLocation === 'balwyn') return false
+                            return MASTER_STUDIOS.includes(shiftLocation)
                         }
                     }
                     return shiftLocation === studio
