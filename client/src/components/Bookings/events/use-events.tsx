@@ -1,5 +1,5 @@
-import type { Event, IncursionEvent, Service, StandardEvent } from 'fizz-kidz'
-import { Location } from 'fizz-kidz'
+import type { Event, IncursionEvent, Service, StandardEvent, Studio } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'
@@ -10,19 +10,16 @@ import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
 
 export function useEvents<T extends Event['$type']>(
     type: T
-): Service<Record<Location, T extends 'standard' ? StandardEvent[] : IncursionEvent[]>> {
+): Service<Record<Studio, T extends 'standard' ? StandardEvent[] : IncursionEvent[]>> {
     const firebase = useFirebase()
 
     const { date } = useDateNavigation()
-    const [events, setEvents] = useState<Service<Record<Location, Event[]>>>({ status: 'loading' })
+    const [events, setEvents] = useState<Service<Record<Studio, Event[]>>>({ status: 'loading' })
 
     const { currentOrg } = useOrg()
 
-    const generateLocationsMap = (events: Event[]): Record<Location, Event[]> =>
-        Object.values(Location).reduce(
-            (acc, curr) => ({ ...acc, [curr]: events.filter((it) => it.studio === curr) }),
-            {} as any
-        )
+    const generateLocationsMap = (events: Event[]): Record<Studio, Event[]> =>
+        STUDIOS.reduce((acc, curr) => ({ ...acc, [curr]: events.filter((it) => it.studio === curr) }), {} as any)
 
     useEffect(() => {
         async function fetchEvents() {

@@ -2,10 +2,11 @@ import { Alert, Button, Card, Collapse, DatePicker, Divider, Layout, Typography,
 import type { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import updateLocale from 'dayjs/plugin/updateLocale'
-import type { GenerateTimesheetsResponse, Service } from 'fizz-kidz'
+import { isFranchise, type GenerateTimesheetsResponse, type Service } from 'fizz-kidz'
 import { useState } from 'react'
 
 import { DownloadOutlined } from '@ant-design/icons'
+import { useOrg } from '@components/Session/use-org'
 import { styled } from '@mui/material/styles'
 import { trpc } from '@utils/trpc'
 
@@ -45,6 +46,8 @@ export const Payroll = () => {
         token: { colorBgContainer },
     } = theme.useToken()
 
+    const { currentOrg } = useOrg()
+
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
     const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
 
@@ -61,6 +64,7 @@ export const Payroll = () => {
             const result = await generateTimesheetsMutation.mutateAsync({
                 startDateInput: selectedDates[0],
                 endDateInput: selectedDates[1],
+                studio: isFranchise(currentOrg!) ? currentOrg : 'master',
             })
             setTimesheetsService({ status: 'loaded', result })
         } catch (error) {
@@ -173,8 +177,10 @@ export const Payroll = () => {
                                                 pay template for 'Staff - Ordinary Hours'.
                                             </li>
                                             <li>
-                                                Inside Sling, the 'Employee ID' field has been provided under the
-                                                employees 'Work' tab. This ID should come from their profile in Xero.
+                                                Inside Sling, the employees email address should match the one entered
+                                                in Xero. If they are different, update Xero to match. If the employee
+                                                wants it the other way around, they must update their Sling email
+                                                address themselves.
                                             </li>
                                             <li>
                                                 Check if this is the first pay run for this employee. If not,{' '}

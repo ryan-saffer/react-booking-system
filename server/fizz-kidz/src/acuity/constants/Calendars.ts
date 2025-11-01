@@ -1,7 +1,6 @@
-import type { ValuesAsKeys } from '../../utilities'
-import type { Location } from '../..'
+import type { Studio } from '../..'
 
-export const StoreCalendars: ValuesAsKeys<typeof Location, number> = {
+export const StoreCalendars: Record<Studio, number> = {
     balwyn: 3163510,
     cheltenham: 7382613,
     essendon: 3723560,

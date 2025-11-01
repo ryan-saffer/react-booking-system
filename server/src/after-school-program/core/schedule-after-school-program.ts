@@ -1,4 +1,4 @@
-import type { AcuityTypes, AfterSchoolEnrolment, Location, ScheduleAfterSchoolEnrolmentParams } from 'fizz-kidz'
+import type { AcuityTypes, AfterSchoolEnrolment, ScheduleAfterSchoolEnrolmentParams, Studio } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities, capitalise, getApplicationDomain, studioNameAndAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
@@ -86,7 +86,7 @@ export default async function scheduleAfterSchoolProgram(
         appointments: appointments.map((it) => it.id),
         price: appointments[0].price,
         status: 'active',
-        location: calendar.location as Location,
+        location: calendar.location as Studio,
         continuingWithTerm: '',
         invoiceId: '',
         notes: '',

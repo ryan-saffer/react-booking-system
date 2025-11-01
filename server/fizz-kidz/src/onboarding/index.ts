@@ -1,4 +1,4 @@
-import type { Location } from '../core/location'
+import type { Studio } from 'fizz-kidz/src/core/studio'
 
 interface BaseEmployee {
     id: string
@@ -9,7 +9,7 @@ interface BaseEmployee {
     email: string
     mobile: string
     commencementDate: string
-    location: Location
+    location: Studio
     normalRate: number
     sundayRate: number
     managerName: string
@@ -58,7 +58,7 @@ export type InitiateEmployeeProps = {
     email: string
     mobile: string
     commencementDate: string
-    location: Location
+    location: Studio
     normalRate: number
     sundayRate: number
     managerName: string

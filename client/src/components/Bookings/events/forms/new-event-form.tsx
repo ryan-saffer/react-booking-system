@@ -10,7 +10,7 @@ import BaseEventForm from './base-event-form'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { trpc } from '@utils/trpc'
-import type { Location, ScienceModule } from 'fizz-kidz'
+import type { Studio, ScienceModule } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 const PREFIX = 'NewEventForm'
@@ -122,7 +122,7 @@ const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                     contactEmail: values.contactEmail,
                     organisation: values.organisation,
                     address: values.address,
-                    studio: values.studio as Location,
+                    studio: values.studio as Studio,
                     price: values.price,
                     notes: values.notes,
                     invoiceUrl: values.invoiceUrl,

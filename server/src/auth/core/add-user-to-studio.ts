@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase-admin/auth'
-import type { LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import type { Role, StaffAuthUser, StudioOrMaster } from 'fizz-kidz'
 import { ObjectKeys } from 'fizz-kidz'
 
 import { TRPCError } from '@trpc/server'
@@ -18,7 +18,7 @@ export async function addUserToStudio({
     lastname: string
     email: string
     role: Role
-    studio: LocationOrMaster
+    studio: StudioOrMaster
 }) {
     const auth = getAuth()
 

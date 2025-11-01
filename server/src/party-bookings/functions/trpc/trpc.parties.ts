@@ -1,4 +1,4 @@
-import type { Booking, GenerateInvitation, Location } from 'fizz-kidz'
+import type { Booking, GenerateInvitation, Studio } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
@@ -10,7 +10,7 @@ import { getPrefilledFormUrl } from '../../core/utils.party'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
-export type DeletePartyBooking = { bookingId: string; eventId: string; location: Location; type: Booking['type'] }
+export type DeletePartyBooking = { bookingId: string; eventId: string; location: Studio; type: Booking['type'] }
 
 export const partiesRouter = router({
     createPartyBooking: authenticatedProcedure

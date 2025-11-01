@@ -4,8 +4,6 @@ declare global {
             FIREBASE_CONFIG: string
             MIXPANEL_API_KEY: string
             SQUARE_TOKEN: string
-            XERO_CLIENT_ID: string
-            XERO_CLIENT_SECRET: string
             ACUITY_USER_ID: string
             ACUITY_API_KEY: string
             ESIGNATURES_SECRET: string
@@ -20,6 +18,11 @@ declare global {
             ZOHO_CLIENT_ID: string
             ZOHO_CLIENT_SECRET: string
             ZOHO_REFRESH_TOKEN: string
+
+            MASTER_XERO_CLIENT_ID: string
+            MASTER_XERO_CLIENT_SECRET: string
+            BALWYN_XERO_CLIENT_ID: string
+            BALWYN_XERO_CLIENT_SECRET: string
         }
     }
 }

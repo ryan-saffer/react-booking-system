@@ -1,6 +1,6 @@
 import 'typeface-roboto'
 
-import { FormBookingFields, Location } from 'fizz-kidz'
+import { FormBookingFields, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 
@@ -406,7 +406,7 @@ const _NewBookingForm = (props) => {
                             error={formValues.location.error}
                             onChange={handleFormChange}
                         >
-                            {Object.values(Location).map((location) => (
+                            {STUDIOS.map((location) => (
                                 <MenuItem key={location} value={location}>
                                     {capitalise(location)}
                                 </MenuItem>

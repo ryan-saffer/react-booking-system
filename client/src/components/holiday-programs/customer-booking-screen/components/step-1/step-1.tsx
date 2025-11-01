@@ -1,6 +1,6 @@
 import { Alert, Button, Card, Checkbox, Form, Select } from 'antd'
 import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants, Location } from 'fizz-kidz'
+import { AcuityConstants, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useMemo } from 'react'
 
@@ -45,18 +45,14 @@ const Step1: React.FC<Props> = ({ appointmentTypeId, classes, onClassSelectionCh
                 <Select value={selectedStudio} onChange={(studio) => setSelectedStudio(studio)}>
                     {(() => {
                         if (import.meta.env.VITE_ENV === 'prod') {
-                            return Object.values(Location)
-                                .filter(
-                                    (location) =>
-                                        !!classes.find(
-                                            (it) => it.calendarID === AcuityConstants.StoreCalendars[location]
-                                        )
-                                )
-                                .map((location) => (
-                                    <Option value={location} key={location}>
-                                        {capitalise(location)}
-                                    </Option>
-                                ))
+                            return STUDIOS.filter(
+                                (studio) =>
+                                    !!classes.find((it) => it.calendarID === AcuityConstants.StoreCalendars[studio])
+                            ).map((studio) => (
+                                <Option value={studio} key={studio}>
+                                    {capitalise(studio)}
+                                </Option>
+                            ))
                         } else {
                             return (
                                 <Option value="test" key="test">

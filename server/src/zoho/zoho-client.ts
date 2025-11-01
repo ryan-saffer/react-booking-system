@@ -1,6 +1,5 @@
-import type { Booking, Location } from 'fizz-kidz'
+import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise } from 'fizz-kidz'
-import type { LocationOrTest } from 'fizz-kidz/src/core/location'
 import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../firebase/DatabaseClient'
@@ -240,7 +239,7 @@ export class ZohoClient {
         })
     }
 
-    addBirthdayPartyContact(props: WithBaseProps<{ type: Booking['type']; studio: Location; partyDate: Date }>) {
+    addBirthdayPartyContact(props: WithBaseProps<{ type: Booking['type']; studio: Studio; partyDate: Date }>) {
         const { type, studio, partyDate, ...baseProps } = props
 
         return this.#upsertContact({
@@ -265,7 +264,7 @@ export class ZohoClient {
 
     async addHolidayProgramContact(
         props: WithBaseProps<{
-            studio: LocationOrTest
+            studio: StudioOrTest
             childName: string
             childBirthdayISO: string // ISO string,
             holidayProgramDateISO: string // ISO string
@@ -309,7 +308,7 @@ export class ZohoClient {
 
     async addPlayLabContact(
         props: WithBaseProps<{
-            studio: LocationOrTest
+            studio: StudioOrTest
             childName: string
             childBirthdayISO: string // ISO string,
         }>
@@ -363,7 +362,7 @@ export class ZohoClient {
         })
     }
 
-    addBasicB2CContact(props: WithBaseProps<{ studio?: Location | undefined }>) {
+    addBasicB2CContact(props: WithBaseProps<{ studio?: Studio | undefined }>) {
         const { studio, ...baseProps } = props
         return this.#upsertContact({
             service: '',

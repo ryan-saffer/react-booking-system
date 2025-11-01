@@ -1,4 +1,4 @@
-import { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 
 export type Form = {
     party: {
@@ -46,7 +46,7 @@ export type Form = {
         email: string
         contactNumber: string
         role: CareersFormRoleOption
-        location: Location | ''
+        location: Studio | ''
         wwcc: string
         driversLicense: string
         application: string
@@ -84,7 +84,7 @@ export type ContactFormServiceOption =
 
 export type ReferenceOption = 'google' | 'instagram' | 'word-of-mouth' | 'attended-fizz' | 'other'
 
-export type ContactFormLocationOption = `${Location}` | 'at-home' | 'other'
+export type ContactFormLocationOption = `${Studio}` | 'at-home' | 'other'
 
 type IncursionFormModuleOption =
     | 'chemicalScience'
@@ -97,22 +97,22 @@ type CareersFormRoleOption = 'people' | 'manager' | 'supervisor' | 'facilitator'
 
 type FranchisingInterestOption = 'browsing' | '3' | '6' | '12' | '12+'
 
-export const ContactFormLocationMap: Record<ContactFormLocationOption, Location | undefined> = {
+export const ContactFormLocationMap: Record<ContactFormLocationOption, Studio | undefined> = {
     'at-home': undefined,
     other: undefined,
-    balwyn: Location.BALWYN,
-    cheltenham: Location.CHELTENHAM,
-    essendon: Location.ESSENDON,
-    kingsville: Location.KINGSVILLE,
-    malvern: Location.MALVERN,
+    balwyn: 'balwyn',
+    cheltenham: 'cheltenham',
+    essendon: 'essendon',
+    kingsville: 'kingsville',
+    malvern: 'malvern',
 }
 
-export const PartyFormLocationMap: Record<ContactFormLocationOption, Location | undefined> = {
-    balwyn: Location.BALWYN,
-    cheltenham: Location.CHELTENHAM,
-    essendon: Location.ESSENDON,
-    kingsville: Location.KINGSVILLE,
-    malvern: Location.MALVERN,
+export const PartyFormLocationMap: Record<ContactFormLocationOption, Studio | undefined> = {
+    balwyn: 'balwyn',
+    cheltenham: 'cheltenham',
+    essendon: 'essendon',
+    kingsville: 'kingsville',
+    malvern: 'malvern',
     'at-home': undefined,
     other: undefined,
 }

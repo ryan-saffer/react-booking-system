@@ -1,6 +1,6 @@
 import '../load-env'
 
-import { Location, ObjectKeys } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
@@ -170,8 +170,8 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
                 type: (prev) => (prev === 'certainLocation' ? 'select' : null),
                 name: 'location',
                 message: 'Select the location',
-                choices: ObjectKeys(Location).map((it) => ({
-                    value: Location[it],
+                choices: STUDIOS.map((it) => ({
+                    value: it,
                     title: it,
                 })),
             },
@@ -229,8 +229,8 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
                 type: 'select',
                 name: 'studio',
                 message: 'Select the studio',
-                choices: ObjectKeys(Location).map((it) => ({
-                    value: Location[it],
+                choices: STUDIOS.map((it) => ({
+                    value: it,
                     title: it,
                 })),
             },

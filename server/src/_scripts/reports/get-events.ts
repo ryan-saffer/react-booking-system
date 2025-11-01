@@ -1,9 +1,10 @@
-import { timestampConverter } from '@/firebase/firestore-converters'
-import { FirestoreClient } from '@/firebase/FirestoreClient'
-import type { Location, Event } from 'fizz-kidz'
+import type { Event, Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-export async function getEvents({ from = new Date(), to, studio }: { from?: Date; to?: Date; studio?: Location }) {
+import { FirestoreClient } from '@/firebase/FirestoreClient'
+import { timestampConverter } from '@/firebase/firestore-converters'
+
+export async function getEvents({ from = new Date(), to, studio }: { from?: Date; to?: Date; studio?: Studio }) {
     const firestore = await FirestoreClient.getInstance()
 
     const snap = await firestore

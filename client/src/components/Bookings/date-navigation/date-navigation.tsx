@@ -1,4 +1,4 @@
-import { Location, capitalise } from 'fizz-kidz'
+import { STUDIOS, capitalise } from 'fizz-kidz'
 import { CalendarPlus } from 'lucide-react'
 import { DateTime } from 'luxon'
 import type { FC, PropsWithChildren } from 'react'
@@ -298,9 +298,9 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                                             <div>All Locations</div>
                                         </div>
                                     </MenuItem>
-                                    {Object.values(Location).map((location) => (
-                                        <MenuItem key={location} value={location}>
-                                            {capitalise(location)}
+                                    {STUDIOS.map((studio) => (
+                                        <MenuItem key={studio} value={studio}>
+                                            {capitalise(studio)}
                                         </MenuItem>
                                     ))}
                                 </Select>

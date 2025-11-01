@@ -1,7 +1,7 @@
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { createContext } from 'react'
 
-export type LocationFilter = Location | 'all'
+export type LocationFilter = Studio | 'all'
 
 export const FilterContext = createContext<{
     selectedLocation: LocationFilter

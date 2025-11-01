@@ -1,19 +1,19 @@
-import { Location, type LocationOrTest } from '../core/location'
+import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
 import { assertNever } from '../utilities/assert-never'
 
-export function getSquareLocationId(studio: LocationOrTest) {
+export function getSquareLocationId(studio: StudioOrTest) {
     switch (studio) {
         case 'test':
             return 'L834ATV1QTRQW'
-        case Location.BALWYN:
+        case 'balwyn':
             return 'PZ2H7FT3BW5F4'
-        case Location.CHELTENHAM:
+        case 'cheltenham':
             return 'LEMPV8BSN8T40'
-        case Location.MALVERN:
+        case 'malvern':
             return 'NSS38M5PEET6N'
-        case Location.KINGSVILLE:
+        case 'kingsville':
             return 'L380VTEX8KAVT'
-        case Location.ESSENDON:
+        case 'essendon':
             return '6P5FX9MG3SBJ6'
         default: {
             assertNever(studio)
