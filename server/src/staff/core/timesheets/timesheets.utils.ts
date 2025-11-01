@@ -1545,6 +1545,8 @@ const SlingPositionToActivityMap: Record<SlingPosition, XeroTrackingActivity> = 
     [SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
 }
 
+export const NON_CASUAL_EMPLOYEE_GROUP_ID = 25291777
+
 type COGSCasualOrdinaryMonSat =
     | 'CGS COH - Mon to Sat - Balwyn'
     | 'CGS COH - Mon to Sat - Cheltenham'

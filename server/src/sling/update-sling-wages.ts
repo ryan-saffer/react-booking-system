@@ -3,7 +3,12 @@ import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, 
 import { DateTime } from 'luxon'
 
 import { OrdindayEarningsRateMap } from '@/staff/core/timesheets/generate-timesheets'
-import { SlingLocationToId, SlingPositionToId, getPositionRate } from '@/staff/core/timesheets/timesheets.utils'
+import {
+    NON_CASUAL_EMPLOYEE_GROUP_ID,
+    SlingLocationToId,
+    SlingPositionToId,
+    getPositionRate,
+} from '@/staff/core/timesheets/timesheets.utils'
 import { logError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
@@ -31,7 +36,8 @@ export async function updateSlingWages() {
     const slingClient = new SlingClient()
     const users = await slingClient.getUsers()
 
-    const activeUsers = users.filter((it) => it.active === true)
+    // to ensure warnings are legitimite, exclude non casual staff (or anyone we know won't be in Sling) - see Sling group 'Non Casual Staff'.
+    const activeUsers = users.filter((it) => it.active === true && !it.groupIds.includes(NON_CASUAL_EMPLOYEE_GROUP_ID))
 
     // a cache for the 'GET all employees' endpoint for each franchise
     // needed in order to find the employee's xero employeeId
