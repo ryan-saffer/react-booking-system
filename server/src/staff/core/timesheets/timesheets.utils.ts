@@ -1461,7 +1461,7 @@ export const PositionMap: Record<string, Position> = Object.fromEntries(
     ObjectKeys(PositionToId).map((key) => [PositionToId[key], key])
 )
 
-const LocationToId: Record<Studio, number> = {
+export const LocationToId: Record<Studio, number> = {
     [Studio.BALWYN]: 4809521,
     [Studio.CHELTENHAM]: 11315826,
     [Studio.ESSENDON]: 4895739,
@@ -1470,7 +1470,7 @@ const LocationToId: Record<Studio, number> = {
     [Studio.HEAD_OFFICE]: 5557282,
 }
 
-const LocationsMap: Record<string, Studio> = Object.fromEntries(
+export const LocationsMap: Record<string, Studio> = Object.fromEntries(
     ObjectKeys(LocationToId).map((key) => [LocationToId[key], key])
 )
 

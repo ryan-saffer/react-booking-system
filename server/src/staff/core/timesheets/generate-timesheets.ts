@@ -3,27 +3,29 @@ import os from 'os'
 import path from 'path'
 
 import { logger } from 'firebase-functions/v2'
-import type { GenerateTimesheetsParams } from 'fizz-kidz'
+import { MASTER_STUDIOS, STUDIOS, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
-import { StorageClient } from '../../../firebase/StorageClient'
-import { projectId } from '../../../init'
-import { SlingClient } from '../../../sling/sling-client'
-import { throwTrpcError } from '../../../utilities'
-import { XeroClient } from '../../../xero/XeroClient'
 import type { Rate } from './timesheets.types'
 import type { TimesheetRow } from './timesheets.utils'
-import { createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18 } from './timesheets.utils'
+import { createTimesheetRows, getWeeks, hasBirthdayDuring, isYoungerThan18, LocationsMap } from './timesheets.utils'
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
+import { SlingClient } from '@/sling/sling-client'
+import { throwTrpcError } from '@/utilities'
+import { XeroClient } from '@/xero/XeroClient'
 
-const BONNIE_OVERTIME_START = 30
 const OVERTIME_START = 38
 
 type XeroUserCache = { [key: string]: Employee | undefined }
 
-export const ORDINARY_PAY_EARNINGS_RATE_ID = '1ef5805a-5208-4d89-8f35-620104543ed4'
+export const OrdindayEarningsRateMap: Record<FranchiseOrMaster, string> = {
+    master: '1ef5805a-5208-4d89-8f35-620104543ed4',
+    balwyn: '5c60fbcc-9afa-4f93-a7c8-53a9a0bca39a',
+}
 
-export async function generateTimesheets({ startDateInput, endDateInput }: GenerateTimesheetsParams) {
+export async function generateTimesheets({ startDateInput, endDateInput, studio }: GenerateTimesheetsParams) {
     const slingClient = new SlingClient()
 
     // ensure dates start and end at midnight
@@ -64,7 +66,7 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
         // cache for xero users
         const xeroUsersCache: XeroUserCache = {}
 
-        const xero = await XeroClient.getInstance()
+        const xero = await XeroClient.getInstance(studio)
 
         const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
 
@@ -84,14 +86,28 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
         for (const week of weeks) {
             // get all shifts for the time period
             const allTimesheets = await slingClient.getTimesheets(week.start.toJSDate(), week.end.toJSDate())
-            const timesheets = allTimesheets.filter((it) => it.status === 'published')
+            const timesheets = allTimesheets
+                .filter((it) => it.status === 'published')
+                // depending on the franchise, filter out the location
+                .filter((it) => {
+                    const shiftLocation = LocationsMap[it.location.id]
+                    if (studio === 'master') {
+                        // TODO: TEMPORARY - Balwyn is part of master studios until november, so manually decide that here.
+                        if (DateTime.fromISO(it.dtstart, { setZone: true }).month <= 10) {
+                            return STUDIOS.includes(shiftLocation as any)
+                        } else {
+                            return MASTER_STUDIOS.includes(shiftLocation as any)
+                        }
+                    }
+                    return shiftLocation === studio
+                })
 
             // for each user, get all their timesheets
             for (const slingUser of slingUsers) {
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
                 if (usersTimesheets.length === 0) continue
 
-                let xeroUser = xeroUsers?.find((user) => user.employeeID === slingUser.employeeId)
+                let xeroUser = xeroUsers?.find((user) => user.email?.toLowerCase() === slingUser.email.toLowerCase())
                 if (!xeroUser) {
                     logger.log(`unable to find sling user in Xero: ${slingUser.legalName} ${slingUser.lastname}`)
                     skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)
@@ -112,9 +128,9 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
                 // only fetch under 18 year olds because this call is expensive.
                 let rate: Rate = 'not required'
                 if (isYoungerThan18(dob)) {
-                    xeroUser = await getAndCacheXeroUser(slingUser.employeeId, xeroUsersCache)
+                    xeroUser = await getAndCacheXeroUser(xeroUser.employeeID!, xeroUsersCache, studio)
                     const ordinaryRate = xeroUser.payTemplate?.earningsLines?.find(
-                        (line) => line.earningsRateID === ORDINARY_PAY_EARNINGS_RATE_ID
+                        (line) => line.earningsRateID === OrdindayEarningsRateMap[studio]
                     )?.ratePerUnit
                     if (!ordinaryRate) {
                         logger.log(
@@ -126,20 +142,13 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
                     rate = ordinaryRate
                 }
 
-                const BONNIE_ID = '1551679a-9e81-47d3-b019-906d7ce617f1'
-                const partTimeEmployees = [
-                    BONNIE_ID,
-                    'fa53fa93-ed63-4d20-bf99-e0996700044a', // ebony perkins
-                ]
-                const isCasual = !partTimeEmployees.includes(slingUser.employeeId)
-
                 const { rows: employeesRows, totalHours } = createTimesheetRows({
                     firstName: xeroUser.firstName,
                     lastName: xeroUser.lastName,
                     dob,
                     hasBirthdayDuringPayrun,
-                    isCasual,
-                    overtimeThreshold: slingUser.employeeId === BONNIE_ID ? BONNIE_OVERTIME_START : OVERTIME_START,
+                    isCasual: true,
+                    overtimeThreshold: OVERTIME_START,
                     usersTimesheets,
                     rate,
                     timezone: slingUser.timezone,
@@ -195,11 +204,11 @@ export async function generateTimesheets({ startDateInput, endDateInput }: Gener
     }
 }
 
-async function getAndCacheXeroUser(userId: string, cache: XeroUserCache) {
+async function getAndCacheXeroUser(userId: string, cache: XeroUserCache, studio: FranchiseOrMaster) {
     const cachedUser = cache[userId]
     if (cachedUser) return cachedUser
 
-    const xero = await XeroClient.getInstance()
+    const xero = await XeroClient.getInstance(studio)
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
     cache[userId] = employee

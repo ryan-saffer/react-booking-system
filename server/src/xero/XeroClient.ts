@@ -1,8 +1,21 @@
+import type { FranchiseOrMaster, StudioOrMaster } from 'fizz-kidz'
 import type { XeroClient as TXeroClient } from 'xero-node'
+
 import type { ClientStatus } from '../utilities/types'
 
+const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: string }> = {
+    master: {
+        clientId: process.env.MASTER_XERO_CLIENT_ID!,
+        clientSecret: process.env.MASTER_XERO_CLIENT_SECRET!,
+    },
+    balwyn: {
+        clientId: process.env.BALWYN_XERO_CLIENT_ID!,
+        clientSecret: process.env.BALWYN_XERO_CLIENT_SECRET!,
+    },
+}
+
 export class XeroClient {
-    private static instance: XeroClient
+    private static instances: Partial<Record<StudioOrMaster, XeroClient>> = {}
     #status: ClientStatus = 'not-initialised'
 
     #client: TXeroClient | null = null
@@ -10,29 +23,29 @@ export class XeroClient {
 
     private constructor() {}
 
-    static async getInstance() {
-        if (!XeroClient.instance) {
-            XeroClient.instance = new XeroClient()
-            await XeroClient.instance.#initialise()
+    static async getInstance(studio: FranchiseOrMaster) {
+        if (!XeroClient.instances[studio]) {
+            XeroClient.instances[studio] = new XeroClient()
+            await XeroClient.instances[studio].#initialise(studio)
         }
-        while (XeroClient.instance.#status === 'initialising') {
+        while (XeroClient.instances[studio].#status === 'initialising') {
             await new Promise((resolve) => setTimeout(resolve, 20))
         }
-        if (!XeroClient.instance.#client) {
+        if (!XeroClient.instances[studio].#client) {
             throw new Error('Xero client not initialised')
         }
         // Ensure we have a valid token before returning the client
-        await XeroClient.instance.#ensureValidToken()
-        return XeroClient.instance.#client
+        await XeroClient.instances[studio].#ensureValidToken()
+        return XeroClient.instances[studio].#client
     }
 
-    async #initialise() {
+    async #initialise(studio: FranchiseOrMaster) {
         this.#status = 'initialising'
         try {
             const { XeroClient: _XeroClient } = await import('xero-node')
             this.#client = new _XeroClient({
-                clientId: process.env.XERO_CLIENT_ID,
-                clientSecret: process.env.XERO_CLIENT_SECRET,
+                clientId: ENV_MAP[studio].clientId,
+                clientSecret: ENV_MAP[studio].clientSecret,
                 grantType: 'client_credentials',
             })
 
