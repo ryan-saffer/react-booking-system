@@ -34,9 +34,9 @@ export function getManager(
     switch (location) {
         case 'balwyn':
             return {
-                name: 'Lami',
+                name: 'Swetha',
                 email: 'balwyn@fizzkidz.com.au',
-                mobile: '0431 379 953',
+                mobile: '0452 020 191',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
