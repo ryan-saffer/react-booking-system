@@ -20,10 +20,12 @@ function AdditionalInfoAccordion() {
           <ul className="list-disc pl-4">
             <li>Fairy bread platter - $30 (VV)</li>
             <li>
-              Fruit platter (watermelon, rockmelon, strawberries, apples) - $45
+              Fruit platter (watermelon, rockmelon, strawberries, apples) (VV) -
+              $45
             </li>
-            <li>Watermelon platter - $25</li>
+            <li>Watermelon platter (VV) - $25</li>
             <li>Frankfurts - $30 (GF, contains Beef)</li>
+            <li>Chicken Nuggets - $35</li>
             <li>Hot potato wedges - $30 (VV) - GF available on request</li>
             <li>Cheese / tomato sandwiches - $35 (VV)</li>
             <li>
