@@ -1,4 +1,4 @@
-import { ObjectKeys, assertNever } from 'fizz-kidz'
+import { ObjectKeys, assertNever, type Studio } from 'fizz-kidz'
 import { DateTime, Duration, Interval } from 'luxon'
 
 import type { Timesheet } from '@/sling/sling.types'
@@ -69,8 +69,8 @@ export function createTimesheetRows({
     let totalHours = 0
 
     usersTimesheets.map((timesheet) => {
-        const position = PositionMap[timesheet.position.id]
-        const location = LocationsMap[timesheet.location.id]
+        const position = SlingPositionMap[timesheet.position.id]
+        const location = SlingLocationsMap[timesheet.location.id]
         const start = DateTime.fromISO(timesheet.dtstart, { zone: timezone })
         const end = DateTime.fromISO(timesheet.dtend, { zone: timezone })
         const shiftLengthInHours = end.diff(start, 'hours').hours
@@ -244,8 +244,8 @@ function createOvertimeTimesheetRows(
     hasBirthdayDuringPayrun: boolean,
     isCasual: boolean,
     date: DateTime,
-    position: Position,
-    location: Location,
+    position: SlingPosition,
+    location: SlingLocation,
     rate: Rate,
     summary: string
 ) {
@@ -351,7 +351,7 @@ export class TimesheetRow {
     overtime: Overtime
     rate: Rate
     summary: string
-    position: Position
+    position: SlingPosition
     activity: XeroTrackingActivity
 
     constructor({
@@ -373,8 +373,8 @@ export class TimesheetRow {
         dob: DateTime
         hasBirthdayDuringPayrun: boolean
         date: DateTime
-        position: Position
-        location: Location
+        position: SlingPosition
+        location: SlingLocation
         isCasual: boolean
         hours: number
         overtime: Overtime
@@ -397,13 +397,13 @@ export class TimesheetRow {
         this.payItem = this.getPayItem(position, location)
 
         // map to activity
-        this.activity = PositionToActivityMap[position]
+        this.activity = SlingPositionToActivityMap[position]
     }
 
     /**
      * On Call shifts and Called In shifts do not map to overtime hours, but still count towards the weekly 38 hours of overtime.
      */
-    private getPayItem(position: Position, location: Location): PayItem {
+    private getPayItem(position: SlingPosition, location: SlingLocation): PayItem {
         // on call does not count towards overtime so check that first
         if (isOnCallShift(position)) return this._getOnCallPayItem(location)
         // called in pays more than overtime, so even if a called in shift is in overtime, it should still be a called in pay item
@@ -433,69 +433,69 @@ export class TimesheetRow {
 
     private _isCOGSShift() {
         switch (this.position) {
-            case Position.MISCELLANEOUS:
-            case Position.SUNDAY_MISCELLANEOUS:
-            case Position.TRAINING:
-            case Position.SUNDAY_TRAINING:
-            case Position.PIC:
-            case Position.SUNDAY_PIC:
-            case Position.SUPERVISOR_PARTY:
-            case Position.SUNDAY_SUPERVISOR_PARTY:
-            case Position.SUPERVISOR_MOBILE_PARTY:
-            case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
-            case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-            case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-            case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-            case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-            case Position.SUPERVISOR_HOLIDAY_PROGRAM:
-            case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
-            case Position.SUPERVISOR_INCURSIONS:
-            case Position.SUNDAY_SUPERVISOR_INCURSIONS:
-            case Position.SUPERVISOR_PLAY_LAB:
-            case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+            case SlingPosition.MISCELLANEOUS:
+            case SlingPosition.SUNDAY_MISCELLANEOUS:
+            case SlingPosition.TRAINING:
+            case SlingPosition.SUNDAY_TRAINING:
+            case SlingPosition.PIC:
+            case SlingPosition.SUNDAY_PIC:
+            case SlingPosition.SUPERVISOR_PARTY:
+            case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+            case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+            case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+            case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+            case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+            case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+            case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+            case SlingPosition.SUPERVISOR_INCURSIONS:
+            case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+            case SlingPosition.SUPERVISOR_PLAY_LAB:
+            case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
                 return false
-            case Position.PARTY_FACILITATOR:
-            case Position.SUNDAY_PARTY_FACILITATOR:
-            case Position.ON_CALL_PARTY_FACILITATOR:
-            case Position.CALLED_IN_PARTY_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
-            case Position.MOBILE_PARTY_FACILITATOR:
-            case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
-            case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
-            case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
-            case Position.HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-            case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
-            case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-            case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-            case Position.PLAY_LAB_FACILITATOR:
-            case Position.SUNDAY_PLAY_LAB_FACILITATOR:
-            case Position.ON_CALL_PLAY_LAB_FACILITATOR:
-            case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
-            case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
-            case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
-            case Position.EVENTS_AND_ACTIVATIONS:
-            case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
-            case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
-            case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
-            case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
-            case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
-            case Position.INCURSIONS:
-            case Position.SUNDAY_INCURSIONS:
-            case Position.ON_CALL_INCURSIONS:
-            case Position.CALLED_IN_INCURSIONS:
-            case Position.SUNDAY_ON_CALL_INCURSIONS:
-            case Position.SUNDAY_CALLED_IN_INCURSIONS:
+            case SlingPosition.PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+            case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+            case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+            case SlingPosition.MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+            case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+            case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+            case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+            case SlingPosition.PLAY_LAB_FACILITATOR:
+            case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+            case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+            case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+            case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+            case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+            case SlingPosition.EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+            case SlingPosition.INCURSIONS:
+            case SlingPosition.SUNDAY_INCURSIONS:
+            case SlingPosition.ON_CALL_INCURSIONS:
+            case SlingPosition.CALLED_IN_INCURSIONS:
+            case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+            case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
                 return true
             default: {
                 assertNever(this.position)
@@ -504,43 +504,43 @@ export class TimesheetRow {
         }
     }
 
-    private _getOrdinaryPayItem(location: Location): OrdinaryPayItem {
+    private _getOrdinaryPayItem(location: SlingLocation): OrdinaryPayItem {
         if (this.isCasual) {
             // CASUAL EMPLOYEES
             if (this._isMonSat()) {
                 if (this._isYoungerThan18() && !this._isRateAbove18()) {
                     switch (location) {
-                        case Location.BALWYN:
+                        case 'balwyn':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
-                        case Location.CHELTENHAM:
+                        case 'cheltenham':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
-                        case Location.ESSENDON:
+                        case 'essendon':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
-                        case Location.KINGSVILLE:
+                        case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
-                        case Location.MALVERN:
+                        case 'malvern':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
                                 ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
                                 : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
-                        case Location.HEAD_OFFICE:
+                        case 'head-office':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
@@ -553,37 +553,37 @@ export class TimesheetRow {
                     }
                 } else {
                     switch (location) {
-                        case Location.BALWYN:
+                        case 'balwyn':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Balwyn'
                                 : 'NON-CGS COH - Mon to Sat - Balwyn'
-                        case Location.CHELTENHAM:
+                        case 'cheltenham':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Cheltenham'
                                 : 'NON-CGS COH - Mon to Sat - Cheltenham'
-                        case Location.ESSENDON:
+                        case 'essendon':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Essendon'
                                 : 'NON-CGS COH - Mon to Sat - Essendon'
-                        case Location.KINGSVILLE:
+                        case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Kingsville'
                                 : 'NON-CGS COH - Mon to Sat - Kingsville'
-                        case Location.MALVERN:
+                        case 'malvern':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
                                 ? 'CGS COH - Mon to Sat - Malvern'
                                 : 'NON-CGS COH - Mon to Sat - Malvern'
-                        case Location.HEAD_OFFICE:
+                        case 'head-office':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
@@ -597,37 +597,37 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Balwyn'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Balwyn'
                             : 'NON-CGS COH - Sunday - Balwyn'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Cheltenham'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Cheltenham'
                             : 'NON-CGS COH - Sunday - Cheltenham'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Essendon'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Essendon'
                             : 'NON-CGS COH - Sunday - Essendon'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Kingsville'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Kingsville'
                             : 'NON-CGS COH - Sunday - Kingsville'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Malvern'
                             : this._isCOGSShift()
                             ? 'CGS COH - Sunday - Malvern'
                             : 'NON-CGS COH - Sunday - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Head Office'
                             : this._isCOGSShift()
@@ -643,17 +643,17 @@ export class TimesheetRow {
             // PT/FT EMPLOYEES
             if (this._isMonSat()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Essendon'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'PT/FT Ordinary Hours - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -662,17 +662,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'PT/FT Ordinary Hours - Sunday - Balwyn'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'PT/FT Ordinary Hours - Sunday - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'PT/FT Ordinary Hours - Sunday - Essendon'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'PT/FT Ordinary Hours - Sunday - Kingsville'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'PT/FT Ordinary Hours - Sunday - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'PT/FT Ordinary Hours - Sunday - Head Office'
                     default: {
                         assertNever(location)
@@ -683,22 +683,22 @@ export class TimesheetRow {
         }
     }
 
-    private _getOnCallPayItem(location: Location): OnCallPayItem {
+    private _getOnCallPayItem(location: SlingLocation): OnCallPayItem {
         // all 'on calls' are COGS
         if (this._isMonSat()) {
             if (this._isYoungerThan18() && !this._isRateAbove18()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Balw'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Kings'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'On call - 16&17yo Csl Or Hs - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -707,17 +707,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'ON CALL - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -727,17 +727,17 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case 'balwyn':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Balwyn'
-                case Location.CHELTENHAM:
+                case 'cheltenham':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Chelt'
-                case Location.ESSENDON:
+                case 'essendon':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Essend'
-                case Location.KINGSVILLE:
+                case 'kingsville':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Kingsville'
-                case Location.MALVERN:
+                case 'malvern':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Malvern'
-                case Location.HEAD_OFFICE:
+                case 'head-office':
                     return 'ON CALL - Cas Ord Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
@@ -747,22 +747,22 @@ export class TimesheetRow {
         }
     }
 
-    private _getCalledInPayItem(location: Location): CalledInPayItem {
+    private _getCalledInPayItem(location: SlingLocation): CalledInPayItem {
         // all called in are COGS
         if (this._isMonSat()) {
             if (this._isYoungerThan18() && !this._isRateAbove18()) {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Balw'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Kings'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'CALLEDIN - 16&17 Cas Ord Hrs - Mon to Sat - Malv'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'CALLEDIN - 16&17 COH - Mon to Sat - HO'
                     default: {
                         assertNever(location)
@@ -771,17 +771,17 @@ export class TimesheetRow {
                 }
             } else {
                 switch (location) {
-                    case Location.BALWYN:
+                    case 'balwyn':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Balwyn'
-                    case Location.CHELTENHAM:
+                    case 'cheltenham':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Chelt'
-                    case Location.ESSENDON:
+                    case 'essendon':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Essen'
-                    case Location.KINGSVILLE:
+                    case 'kingsville':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Kingsville'
-                    case Location.MALVERN:
+                    case 'malvern':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Malvern'
-                    case Location.HEAD_OFFICE:
+                    case 'head-office':
                         return 'CALLEDIN - Cas Ord Hrs - Mon to Sat - Head Office'
                     default: {
                         assertNever(location)
@@ -791,17 +791,17 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case 'balwyn':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Balwyn'
-                case Location.CHELTENHAM:
+                case 'cheltenham':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Chelt'
-                case Location.ESSENDON:
+                case 'essendon':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Essend'
-                case Location.KINGSVILLE:
+                case 'kingsville':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Kingsville'
-                case Location.MALVERN:
+                case 'malvern':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Malvern'
-                case Location.HEAD_OFFICE:
+                case 'head-office':
                     return 'CALLEDIN - Cas Ord Hrs - Sun - Head Office'
                 default: {
                     assertNever(location)
@@ -811,40 +811,40 @@ export class TimesheetRow {
         }
     }
 
-    private _getOvertimeFirstThreeHours(location: Location): OvertimeFirstThreeHours {
+    private _getOvertimeFirstThreeHours(location: SlingLocation): OvertimeFirstThreeHours {
         if (this._isMonSat()) {
             switch (location) {
-                case Location.BALWYN:
+                case 'balwyn':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
-                case Location.CHELTENHAM:
+                case 'cheltenham':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
-                case Location.ESSENDON:
+                case 'essendon':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
-                case Location.KINGSVILLE:
+                case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
-                case Location.MALVERN:
+                case 'malvern':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-                case Location.HEAD_OFFICE:
+                case 'head-office':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
                         : this._isCOGSShift()
@@ -857,37 +857,37 @@ export class TimesheetRow {
             }
         } else {
             switch (location) {
-                case Location.BALWYN:
+                case 'balwyn':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Balwyn'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
-                case Location.CHELTENHAM:
+                case 'cheltenham':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
-                case Location.ESSENDON:
+                case 'essendon':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
-                case Location.KINGSVILLE:
+                case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Kingsville'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
-                case Location.MALVERN:
+                case 'malvern':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
                         : this._isCOGSShift()
                         ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
                         : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
-                case Location.HEAD_OFFICE:
+                case 'head-office':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
                         : this._isCOGSShift()
@@ -901,39 +901,39 @@ export class TimesheetRow {
         }
     }
 
-    private _getOvertimeAfterThreeHours(location: Location): OvertimeAfterThreeHours {
+    private _getOvertimeAfterThreeHours(location: SlingLocation): OvertimeAfterThreeHours {
         switch (location) {
-            case Location.BALWYN:
+            case 'balwyn':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Balwyn'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Balwyn'
                     : 'NON-CGS OT - After 3 Hrs - Balwyn'
-            case Location.CHELTENHAM:
+            case 'cheltenham':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Cheltenham'
                     : 'NON-CGS OT - After 3 Hrs - Cheltenham'
-            case Location.ESSENDON:
+            case 'essendon':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Essendon'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Essendon'
                     : 'NON-CGS OT - After 3 Hrs - Essendon'
-            case Location.KINGSVILLE:
+            case 'kingsville':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Kingsville'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Kingsville'
                     : 'NON-CGS OT - After 3 Hrs - Kingsville'
-            case Location.MALVERN:
+            case 'malvern':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Malvern'
                     : this._isCOGSShift()
                     ? 'CGS OT - After 3 Hrs - Malvern'
                     : 'NON-CGS OT - After 3 Hrs - Malvern'
-            case Location.HEAD_OFFICE:
+            case 'head-office':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Head Office'
                     : this._isCOGSShift()
@@ -981,7 +981,7 @@ export function getPositionRate({ positionId, rate, dob }: { positionId: number;
 
     const isRateAbove18 = rate * 1.25 >= 18
 
-    const position = PositionMap[positionId]
+    const position = SlingPositionMap[positionId]
 
     if (isOnCallShift(position)) {
         if (!isSundayShift(position)) {
@@ -1025,71 +1025,71 @@ export function getPositionRate({ positionId, rate, dob }: { positionId: number;
     }
 }
 
-export function isSupervisorShift(position: Position) {
+export function isSupervisorShift(position: SlingPosition) {
     switch (position) {
-        case Position.SUPERVISOR_PARTY:
-        case Position.SUNDAY_SUPERVISOR_PARTY:
-        case Position.SUPERVISOR_MOBILE_PARTY:
-        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
-        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUPERVISOR_INCURSIONS:
-        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
-        case Position.SUPERVISOR_PLAY_LAB:
-        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUPERVISOR_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+        case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
             return true
-        case Position.PARTY_FACILITATOR:
-        case Position.SUNDAY_PARTY_FACILITATOR:
-        case Position.ON_CALL_PARTY_FACILITATOR:
-        case Position.CALLED_IN_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
-        case Position.MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
-        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
-        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
-        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
-        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.INCURSIONS:
-        case Position.SUNDAY_INCURSIONS:
-        case Position.ON_CALL_INCURSIONS:
-        case Position.CALLED_IN_INCURSIONS:
-        case Position.SUNDAY_ON_CALL_INCURSIONS:
-        case Position.SUNDAY_CALLED_IN_INCURSIONS:
-        case Position.MISCELLANEOUS:
-        case Position.SUNDAY_MISCELLANEOUS:
-        case Position.TRAINING:
-        case Position.SUNDAY_TRAINING:
-        case Position.PIC:
-        case Position.SUNDAY_PIC:
+        case SlingPosition.PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+        case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.INCURSIONS:
+        case SlingPosition.SUNDAY_INCURSIONS:
+        case SlingPosition.ON_CALL_INCURSIONS:
+        case SlingPosition.CALLED_IN_INCURSIONS:
+        case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
+        case SlingPosition.MISCELLANEOUS:
+        case SlingPosition.SUNDAY_MISCELLANEOUS:
+        case SlingPosition.TRAINING:
+        case SlingPosition.SUNDAY_TRAINING:
+        case SlingPosition.PIC:
+        case SlingPosition.SUNDAY_PIC:
             return false
         default: {
             assertNever(position)
@@ -1098,71 +1098,71 @@ export function isSupervisorShift(position: Position) {
     }
 }
 
-export function isOnCallShift(position: Position) {
+export function isOnCallShift(position: SlingPosition) {
     switch (position) {
-        case Position.ON_CALL_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
-        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.ON_CALL_INCURSIONS:
-        case Position.SUNDAY_ON_CALL_INCURSIONS:
-        case Position.PIC:
-        case Position.SUNDAY_PIC:
+        case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.ON_CALL_INCURSIONS:
+        case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+        case SlingPosition.PIC:
+        case SlingPosition.SUNDAY_PIC:
             return true
-        case Position.MISCELLANEOUS:
-        case Position.SUNDAY_MISCELLANEOUS:
-        case Position.TRAINING:
-        case Position.SUNDAY_TRAINING:
-        case Position.PARTY_FACILITATOR:
-        case Position.SUNDAY_PARTY_FACILITATOR:
-        case Position.CALLED_IN_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
-        case Position.MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
-        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
-        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
-        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
-        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.INCURSIONS:
-        case Position.SUNDAY_INCURSIONS:
-        case Position.CALLED_IN_INCURSIONS:
-        case Position.SUNDAY_CALLED_IN_INCURSIONS:
-        case Position.SUPERVISOR_PARTY:
-        case Position.SUNDAY_SUPERVISOR_PARTY:
-        case Position.SUPERVISOR_MOBILE_PARTY:
-        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
-        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUPERVISOR_INCURSIONS:
-        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
-        case Position.SUPERVISOR_PLAY_LAB:
-        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+        case SlingPosition.MISCELLANEOUS:
+        case SlingPosition.SUNDAY_MISCELLANEOUS:
+        case SlingPosition.TRAINING:
+        case SlingPosition.SUNDAY_TRAINING:
+        case SlingPosition.PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+        case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.INCURSIONS:
+        case SlingPosition.SUNDAY_INCURSIONS:
+        case SlingPosition.CALLED_IN_INCURSIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+        case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1171,71 +1171,71 @@ export function isOnCallShift(position: Position) {
     }
 }
 
-export function isCalledInShift(position: Position) {
+export function isCalledInShift(position: SlingPosition) {
     switch (position) {
-        case Position.CALLED_IN_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
-        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.CALLED_IN_INCURSIONS:
-        case Position.SUNDAY_CALLED_IN_INCURSIONS:
+        case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.CALLED_IN_INCURSIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
             return true
-        case Position.MISCELLANEOUS:
-        case Position.SUNDAY_MISCELLANEOUS:
-        case Position.TRAINING:
-        case Position.SUNDAY_TRAINING:
-        case Position.PARTY_FACILITATOR:
-        case Position.SUNDAY_PARTY_FACILITATOR:
-        case Position.ON_CALL_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
-        case Position.MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
-        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
-        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
-        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
-        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.INCURSIONS:
-        case Position.SUNDAY_INCURSIONS:
-        case Position.ON_CALL_INCURSIONS:
-        case Position.SUNDAY_ON_CALL_INCURSIONS:
-        case Position.PIC:
-        case Position.SUNDAY_PIC:
-        case Position.SUPERVISOR_PARTY:
-        case Position.SUNDAY_SUPERVISOR_PARTY:
-        case Position.SUPERVISOR_MOBILE_PARTY:
-        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
-        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUPERVISOR_INCURSIONS:
-        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
-        case Position.SUPERVISOR_PLAY_LAB:
-        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+        case SlingPosition.MISCELLANEOUS:
+        case SlingPosition.SUNDAY_MISCELLANEOUS:
+        case SlingPosition.TRAINING:
+        case SlingPosition.SUNDAY_TRAINING:
+        case SlingPosition.PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+        case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.INCURSIONS:
+        case SlingPosition.SUNDAY_INCURSIONS:
+        case SlingPosition.ON_CALL_INCURSIONS:
+        case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+        case SlingPosition.PIC:
+        case SlingPosition.SUNDAY_PIC:
+        case SlingPosition.SUPERVISOR_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+        case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1244,71 +1244,71 @@ export function isCalledInShift(position: Position) {
     }
 }
 
-export function isSundayShift(position: Position) {
+export function isSundayShift(position: SlingPosition) {
     switch (position) {
-        case Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_CALLED_IN_INCURSIONS:
-        case Position.SUNDAY_MISCELLANEOUS:
-        case Position.SUNDAY_TRAINING:
-        case Position.SUNDAY_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PARTY_FACILITATOR:
-        case Position.SUNDAY_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_AFTER_SCHOOL_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.SUNDAY_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.SUNDAY_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_INCURSIONS:
-        case Position.SUNDAY_ON_CALL_INCURSIONS:
-        case Position.SUNDAY_PIC:
-        case Position.SUNDAY_SUPERVISOR_PARTY:
-        case Position.SUNDAY_SUPERVISOR_MOBILE_PARTY:
-        case Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUNDAY_SUPERVISOR_INCURSIONS:
-        case Position.SUNDAY_SUPERVISOR_PLAY_LAB:
+        case SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_CALLED_IN_INCURSIONS:
+        case SlingPosition.SUNDAY_MISCELLANEOUS:
+        case SlingPosition.SUNDAY_TRAINING:
+        case SlingPosition.SUNDAY_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_INCURSIONS:
+        case SlingPosition.SUNDAY_ON_CALL_INCURSIONS:
+        case SlingPosition.SUNDAY_PIC:
+        case SlingPosition.SUNDAY_SUPERVISOR_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB:
             return true
-        case Position.CALLED_IN_PARTY_FACILITATOR:
-        case Position.CALLED_IN_MOBILE_PARTY_FACILITATOR:
-        case Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.CALLED_IN_PLAY_LAB_FACILITATOR:
-        case Position.CALLED_IN_EVENTS_AND_ACTIVATIONS:
-        case Position.CALLED_IN_INCURSIONS:
-        case Position.MISCELLANEOUS:
-        case Position.TRAINING:
-        case Position.PARTY_FACILITATOR:
-        case Position.ON_CALL_PARTY_FACILITATOR:
-        case Position.MOBILE_PARTY_FACILITATOR:
-        case Position.ON_CALL_MOBILE_PARTY_FACILITATOR:
-        case Position.HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
-        case Position.AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
-        case Position.PLAY_LAB_FACILITATOR:
-        case Position.ON_CALL_PLAY_LAB_FACILITATOR:
-        case Position.EVENTS_AND_ACTIVATIONS:
-        case Position.ON_CALL_EVENTS_AND_ACTIVATIONS:
-        case Position.INCURSIONS:
-        case Position.ON_CALL_INCURSIONS:
-        case Position.PIC:
-        case Position.SUPERVISOR_PARTY:
-        case Position.SUPERVISOR_MOBILE_PARTY:
-        case Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
-        case Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
-        case Position.SUPERVISOR_HOLIDAY_PROGRAM:
-        case Position.SUPERVISOR_INCURSIONS:
-        case Position.SUPERVISOR_PLAY_LAB:
+        case SlingPosition.CALLED_IN_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR:
+        case SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.CALLED_IN_INCURSIONS:
+        case SlingPosition.MISCELLANEOUS:
+        case SlingPosition.TRAINING:
+        case SlingPosition.PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_PARTY_FACILITATOR:
+        case SlingPosition.MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR:
+        case SlingPosition.HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR:
+        case SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR:
+        case SlingPosition.PLAY_LAB_FACILITATOR:
+        case SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR:
+        case SlingPosition.EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.INCURSIONS:
+        case SlingPosition.ON_CALL_INCURSIONS:
+        case SlingPosition.PIC:
+        case SlingPosition.SUPERVISOR_PARTY:
+        case SlingPosition.SUPERVISOR_MOBILE_PARTY:
+        case SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM:
+        case SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS:
+        case SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM:
+        case SlingPosition.SUPERVISOR_INCURSIONS:
+        case SlingPosition.SUPERVISOR_PLAY_LAB:
             return false
         default: {
             assertNever(position)
@@ -1317,16 +1317,9 @@ export function isSundayShift(position: Position) {
     }
 }
 
-export enum Location {
-    BALWYN = 'BALWYN',
-    CHELTENHAM = 'CHELTENHAM',
-    ESSENDON = 'ESSENDON',
-    KINGSVILLE = 'KINGSVILLE',
-    MALVERN = 'MALVERN',
-    HEAD_OFFICE = 'HEAD_OFFICE',
-}
+export type SlingLocation = Studio | 'head-office'
 
-export enum Position {
+export enum SlingPosition {
     PARTY_FACILITATOR = 'PARTY_FACILITATOR',
     MOBILE_PARTY_FACILITATOR = 'MOBILE_PARTY_FACILITATOR',
     AFTER_SCHOOL_PROGRAM_FACILITATOR = 'AFTER_SCHOOL_PROGRAM_FACILITATOR',
@@ -1392,86 +1385,86 @@ export enum Position {
     SUNDAY_MISCELLANEOUS = 'SUNDAY_MISCELLANEOUS',
 }
 
-export const PositionToId: Record<Position, number> = {
-    [Position.PARTY_FACILITATOR]: 4809533,
-    [Position.MOBILE_PARTY_FACILITATOR]: 25261610,
-    [Position.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 5206290,
-    [Position.HOLIDAY_PROGRAM_FACILITATOR]: 5557194,
-    [Position.PLAY_LAB_FACILITATOR]: 23638376,
-    [Position.EVENTS_AND_ACTIVATIONS]: 22914259,
-    [Position.INCURSIONS]: 25288121,
-    [Position.ON_CALL_PARTY_FACILITATOR]: 25262039,
-    [Position.ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262063,
-    [Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262076,
-    [Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262047,
-    [Position.ON_CALL_PLAY_LAB_FACILITATOR]: 25262094,
-    [Position.ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262054,
-    [Position.ON_CALL_INCURSIONS]: 25288122,
-    [Position.CALLED_IN_PARTY_FACILITATOR]: 13464921,
-    [Position.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25261978,
-    [Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25261965,
-    [Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 13464944,
-    [Position.CALLED_IN_PLAY_LAB_FACILITATOR]: 23638377,
-    [Position.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25261991,
-    [Position.CALLED_IN_INCURSIONS]: 25288124,
-    [Position.SUNDAY_PARTY_FACILITATOR]: 25262618,
-    [Position.SUNDAY_MOBILE_PARTY_FACILITATOR]: 25262619,
-    [Position.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 25262621,
-    [Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 25262620,
-    [Position.SUNDAY_PLAY_LAB_FACILITATOR]: 25262624,
-    [Position.SUNDAY_EVENTS_AND_ACTIVATIONS]: 25262622,
-    [Position.SUNDAY_INCURSIONS]: 25288126,
-    [Position.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 25262141,
-    [Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262128,
-    [Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262142,
-    [Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262136,
-    [Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 25262140,
-    [Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262132,
-    [Position.SUNDAY_ON_CALL_INCURSIONS]: 25288131,
-    [Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 25262145,
-    [Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25262146,
-    [Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262149,
-    [Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 25262147,
-    [Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 25262148,
-    [Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25262144,
-    [Position.SUNDAY_CALLED_IN_INCURSIONS]: 25288128,
-    [Position.TRAINING]: 22914258,
-    [Position.MISCELLANEOUS]: 6161155,
-    [Position.SUNDAY_TRAINING]: 25267532,
-    [Position.SUNDAY_MISCELLANEOUS]: 25267526,
-    [Position.PIC]: 25333970,
-    [Position.SUNDAY_PIC]: 25333971,
-    [Position.SUPERVISOR_PARTY]: 25545172,
-    [Position.SUNDAY_SUPERVISOR_PARTY]: 25545174,
-    [Position.SUPERVISOR_MOBILE_PARTY]: 25545179,
-    [Position.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 25545180,
-    [Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545181,
-    [Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545182,
-    [Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545184,
-    [Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545185,
-    [Position.SUPERVISOR_HOLIDAY_PROGRAM]: 25545186,
-    [Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 25545188,
-    [Position.SUPERVISOR_INCURSIONS]: 25545192,
-    [Position.SUNDAY_SUPERVISOR_INCURSIONS]: 25545204,
-    [Position.SUPERVISOR_PLAY_LAB]: 25545205,
-    [Position.SUNDAY_SUPERVISOR_PLAY_LAB]: 25545207,
+export const SlingPositionToId: Record<SlingPosition, number> = {
+    [SlingPosition.PARTY_FACILITATOR]: 4809533,
+    [SlingPosition.MOBILE_PARTY_FACILITATOR]: 25261610,
+    [SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 5206290,
+    [SlingPosition.HOLIDAY_PROGRAM_FACILITATOR]: 5557194,
+    [SlingPosition.PLAY_LAB_FACILITATOR]: 23638376,
+    [SlingPosition.EVENTS_AND_ACTIVATIONS]: 22914259,
+    [SlingPosition.INCURSIONS]: 25288121,
+    [SlingPosition.ON_CALL_PARTY_FACILITATOR]: 25262039,
+    [SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262063,
+    [SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262076,
+    [SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262047,
+    [SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR]: 25262094,
+    [SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262054,
+    [SlingPosition.ON_CALL_INCURSIONS]: 25288122,
+    [SlingPosition.CALLED_IN_PARTY_FACILITATOR]: 13464921,
+    [SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25261978,
+    [SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25261965,
+    [SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 13464944,
+    [SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR]: 23638377,
+    [SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25261991,
+    [SlingPosition.CALLED_IN_INCURSIONS]: 25288124,
+    [SlingPosition.SUNDAY_PARTY_FACILITATOR]: 25262618,
+    [SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR]: 25262619,
+    [SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 25262621,
+    [SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 25262620,
+    [SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR]: 25262624,
+    [SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS]: 25262622,
+    [SlingPosition.SUNDAY_INCURSIONS]: 25288126,
+    [SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 25262141,
+    [SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 25262128,
+    [SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262142,
+    [SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 25262136,
+    [SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 25262140,
+    [SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 25262132,
+    [SlingPosition.SUNDAY_ON_CALL_INCURSIONS]: 25288131,
+    [SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 25262145,
+    [SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 25262146,
+    [SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 25262149,
+    [SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 25262147,
+    [SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 25262148,
+    [SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 25262144,
+    [SlingPosition.SUNDAY_CALLED_IN_INCURSIONS]: 25288128,
+    [SlingPosition.TRAINING]: 22914258,
+    [SlingPosition.MISCELLANEOUS]: 6161155,
+    [SlingPosition.SUNDAY_TRAINING]: 25267532,
+    [SlingPosition.SUNDAY_MISCELLANEOUS]: 25267526,
+    [SlingPosition.PIC]: 25333970,
+    [SlingPosition.SUNDAY_PIC]: 25333971,
+    [SlingPosition.SUPERVISOR_PARTY]: 25545172,
+    [SlingPosition.SUNDAY_SUPERVISOR_PARTY]: 25545174,
+    [SlingPosition.SUPERVISOR_MOBILE_PARTY]: 25545179,
+    [SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 25545180,
+    [SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545181,
+    [SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 25545182,
+    [SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545184,
+    [SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 25545185,
+    [SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM]: 25545186,
+    [SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 25545188,
+    [SlingPosition.SUPERVISOR_INCURSIONS]: 25545192,
+    [SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS]: 25545204,
+    [SlingPosition.SUPERVISOR_PLAY_LAB]: 25545205,
+    [SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB]: 25545207,
 }
 
-export const PositionMap: Record<string, Position> = Object.fromEntries(
-    ObjectKeys(PositionToId).map((key) => [PositionToId[key], key])
+export const SlingPositionMap: Record<string, SlingPosition> = Object.fromEntries(
+    ObjectKeys(SlingPositionToId).map((key) => [SlingPositionToId[key], key])
 )
 
-const LocationToId: Record<Location, number> = {
-    [Location.BALWYN]: 4809521,
-    [Location.CHELTENHAM]: 11315826,
-    [Location.ESSENDON]: 4895739,
-    [Location.KINGSVILLE]: 22982854,
-    [Location.MALVERN]: 4809537,
-    [Location.HEAD_OFFICE]: 5557282,
+export const SlingLocationToId: Record<SlingLocation, number> = {
+    ['balwyn']: 4809521,
+    ['cheltenham']: 11315826,
+    ['essendon']: 4895739,
+    ['kingsville']: 22982854,
+    ['malvern']: 4809537,
+    ['head-office']: 5557282,
 }
 
-const LocationsMap: Record<string, Location> = Object.fromEntries(
-    ObjectKeys(LocationToId).map((key) => [LocationToId[key], key])
+export const SlingLocationsMap: Record<string, SlingLocation> = Object.fromEntries(
+    ObjectKeys(SlingLocationToId).map((key) => [SlingLocationToId[key], key])
 )
 
 type XeroTrackingActivity =
@@ -1487,70 +1480,72 @@ type XeroTrackingActivity =
     | 'Science Programs in-store'
     | 'Training'
 
-const PositionToActivityMap: Record<Position, XeroTrackingActivity> = {
-    [Position.PARTY_FACILITATOR]: 'Parties',
-    [Position.MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
-    [Position.HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.INCURSIONS]: 'Incursions',
-    [Position.ON_CALL_PARTY_FACILITATOR]: 'Parties',
-    [Position.ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
-    [Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.ON_CALL_INCURSIONS]: 'Incursions',
-    [Position.CALLED_IN_PARTY_FACILITATOR]: 'Parties',
-    [Position.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
-    [Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.CALLED_IN_INCURSIONS]: 'Incursions',
-    [Position.SUNDAY_PARTY_FACILITATOR]: 'Parties',
-    [Position.SUNDAY_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 'After School Programs',
-    [Position.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.SUNDAY_PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.SUNDAY_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.SUNDAY_INCURSIONS]: 'Incursions',
-    [Position.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 'Parties',
-    [Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
-    [Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.SUNDAY_ON_CALL_INCURSIONS]: 'Incursions',
-    [Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 'Parties',
-    [Position.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
-    [Position.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
-    [Position.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
-    [Position.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
-    [Position.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.SUNDAY_CALLED_IN_INCURSIONS]: 'Incursions',
-    [Position.TRAINING]: 'Training',
-    [Position.SUNDAY_TRAINING]: 'Training',
-    [Position.MISCELLANEOUS]: 'No Activity',
-    [Position.SUNDAY_MISCELLANEOUS]: 'No Activity',
-    [Position.PIC]: 'No Activity',
-    [Position.SUNDAY_PIC]: 'No Activity',
-    [Position.SUPERVISOR_PARTY]: 'Parties',
-    [Position.SUNDAY_SUPERVISOR_PARTY]: 'Parties',
-    [Position.SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
-    [Position.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
-    [Position.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
-    [Position.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
-    [Position.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
-    [Position.SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
-    [Position.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
-    [Position.SUPERVISOR_INCURSIONS]: 'Incursions',
-    [Position.SUNDAY_SUPERVISOR_INCURSIONS]: 'Incursions',
-    [Position.SUPERVISOR_PLAY_LAB]: 'Play Lab',
-    [Position.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
+const SlingPositionToActivityMap: Record<SlingPosition, XeroTrackingActivity> = {
+    [SlingPosition.PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [SlingPosition.HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.INCURSIONS]: 'Incursions',
+    [SlingPosition.ON_CALL_PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.ON_CALL_INCURSIONS]: 'Incursions',
+    [SlingPosition.CALLED_IN_PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.CALLED_IN_INCURSIONS]: 'Incursions',
+    [SlingPosition.SUNDAY_PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.SUNDAY_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.SUNDAY_AFTER_SCHOOL_FACILITATOR]: 'After School Programs',
+    [SlingPosition.SUNDAY_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.SUNDAY_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.SUNDAY_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.SUNDAY_INCURSIONS]: 'Incursions',
+    [SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.SUNDAY_ON_CALL_INCURSIONS]: 'Incursions',
+    [SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR]: 'Parties',
+    [SlingPosition.SUNDAY_CALLED_IN_MOBILE_PARTY_FACILITATOR]: 'Mobile Parties',
+    [SlingPosition.SUNDAY_CALLED_IN_AFTER_SCHOOL_PROGRAM_FACILITATOR]: 'After School Programs',
+    [SlingPosition.SUNDAY_CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR]: 'Holiday Programs',
+    [SlingPosition.SUNDAY_CALLED_IN_PLAY_LAB_FACILITATOR]: 'Play Lab',
+    [SlingPosition.SUNDAY_CALLED_IN_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.SUNDAY_CALLED_IN_INCURSIONS]: 'Incursions',
+    [SlingPosition.TRAINING]: 'Training',
+    [SlingPosition.SUNDAY_TRAINING]: 'Training',
+    [SlingPosition.MISCELLANEOUS]: 'No Activity',
+    [SlingPosition.SUNDAY_MISCELLANEOUS]: 'No Activity',
+    [SlingPosition.PIC]: 'No Activity',
+    [SlingPosition.SUNDAY_PIC]: 'No Activity',
+    [SlingPosition.SUPERVISOR_PARTY]: 'Parties',
+    [SlingPosition.SUNDAY_SUPERVISOR_PARTY]: 'Parties',
+    [SlingPosition.SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
+    [SlingPosition.SUNDAY_SUPERVISOR_MOBILE_PARTY]: 'Mobile Parties',
+    [SlingPosition.SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
+    [SlingPosition.SUNDAY_SUPERVISOR_AFTER_SCHOOL_PROGRAM]: 'After School Programs',
+    [SlingPosition.SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.SUNDAY_SUPERVISOR_EVENTS_AND_ACTIVATIONS]: 'Events & Activations',
+    [SlingPosition.SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
+    [SlingPosition.SUNDAY_SUPERVISOR_HOLIDAY_PROGRAM]: 'Holiday Programs',
+    [SlingPosition.SUPERVISOR_INCURSIONS]: 'Incursions',
+    [SlingPosition.SUNDAY_SUPERVISOR_INCURSIONS]: 'Incursions',
+    [SlingPosition.SUPERVISOR_PLAY_LAB]: 'Play Lab',
+    [SlingPosition.SUNDAY_SUPERVISOR_PLAY_LAB]: 'Play Lab',
 }
+
+export const NON_CASUAL_EMPLOYEE_GROUP_ID = 25291777
 
 type COGSCasualOrdinaryMonSat =
     | 'CGS COH - Mon to Sat - Balwyn'

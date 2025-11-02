@@ -1,7 +1,8 @@
-import { AcuityClient } from '@/acuity/core/acuity-client'
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { AcuityClient } from '@/acuity/core/acuity-client'
 
 export async function getHolidayPrograms({
     from = new Date(),
@@ -10,7 +11,7 @@ export async function getHolidayPrograms({
 }: {
     from?: Date
     to?: Date
-    studio: Location
+    studio: Studio
 }) {
     const acuity = await AcuityClient.getInstance()
 

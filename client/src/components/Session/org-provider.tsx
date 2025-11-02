@@ -1,4 +1,4 @@
-import type { LocationOrMaster, Permission, Role } from 'fizz-kidz'
+import type { Permission, Role, StudioOrMaster } from 'fizz-kidz'
 import { ObjectKeys } from 'fizz-kidz'
 import type { ReactNode } from 'react'
 import { createContext, useCallback, useEffect, useState } from 'react'
@@ -7,9 +7,9 @@ import { useAuth } from '@components/Hooks/context/useAuth'
 import { checkRoleForPermission } from '@constants/permissions'
 
 export const OrgContext = createContext<{
-    availableOrgs: LocationOrMaster[] | null
-    switchToOrg: (org: LocationOrMaster) => void
-    currentOrg: LocationOrMaster | null
+    availableOrgs: StudioOrMaster[] | null
+    switchToOrg: (org: StudioOrMaster) => void
+    currentOrg: StudioOrMaster | null
     role: Role | null
     hasPermission: (permission: Permission) => boolean
 }>({ availableOrgs: null, currentOrg: null, switchToOrg: () => {}, role: null, hasPermission: () => false })
@@ -17,15 +17,15 @@ export const OrgContext = createContext<{
 export function OrgProvider({ children }: { children: ReactNode }) {
     const user = useAuth()
 
-    const [availableOrgs, setAvailableOrgs] = useState<LocationOrMaster[] | null>(null)
+    const [availableOrgs, setAvailableOrgs] = useState<StudioOrMaster[] | null>(null)
 
     const cachedOrg = localStorage.getItem('selectedOrg')
-    const [currentOrg, setCurrentOrg] = useState<LocationOrMaster | null>(
-        cachedOrg ? (cachedOrg as LocationOrMaster) : null
+    const [currentOrg, setCurrentOrg] = useState<StudioOrMaster | null>(
+        cachedOrg ? (cachedOrg as StudioOrMaster) : null
     )
 
     const getRole = useCallback(
-        (org: LocationOrMaster | null) => {
+        (org: StudioOrMaster | null) => {
             if (user?.accountType === 'staff' && org) {
                 return user.roles?.[org] || null
             }
@@ -44,7 +44,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     )
 
     const switchToOrg = useCallback(
-        (org: LocationOrMaster) => {
+        (org: StudioOrMaster) => {
             setCurrentOrg(org)
             localStorage.setItem('selectedOrg', org)
             setRole(getRole(org))

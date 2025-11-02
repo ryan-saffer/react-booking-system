@@ -1,4 +1,4 @@
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -106,7 +106,7 @@ const childSchema = z
 export const formSchema = z.object({
     type: z.enum(['studio', 'school']),
     programType: z.enum(['science', 'art']).optional(),
-    studio: z.custom<Location>((value) => !!value, 'Please select a studio.').optional(),
+    studio: z.custom<Studio>((value) => !!value, 'Please select a studio.').optional(),
     main: z
         .object({
             parentFirstName: z.string().trim().min(1, 'Parent first name is required'),

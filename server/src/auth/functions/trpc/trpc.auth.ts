@@ -1,5 +1,5 @@
 import { FieldValue } from 'firebase-admin/firestore'
-import type { AuthUser, LocationOrMaster, Role, StaffAuthUser } from 'fizz-kidz'
+import type { AuthUser, Role, StaffAuthUser, StudioOrMaster } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { authenticatedProcedure, router } from '../../../trpc/trpc'
@@ -13,23 +13,23 @@ export const authRouter = router({
         .input((input: unknown) => input as { firstname: string; lastname: string })
         .mutation(({ ctx, input }) => DatabaseClient.updateUser(ctx.uid, input)),
     getUsers: authenticatedProcedure
-        .input((input: unknown) => input as { studio: LocationOrMaster | null })
+        .input((input: unknown) => input as { studio: StudioOrMaster | null })
         .query(async ({ input }) => {
             if (!input.studio) return []
             const users = await DatabaseClient.getUsersByStudio(input.studio)
             return users as StaffAuthUser[]
         }),
     updateUserRole: authenticatedProcedure
-        .input((input: unknown) => input as { uid: string; studio: LocationOrMaster; role: Role })
+        .input((input: unknown) => input as { uid: string; studio: StudioOrMaster; role: Role })
         .mutation(({ input }) => DatabaseClient.updateUser(input.uid, { roles: { [input.studio]: input.role } })),
     addUserToStudio: authenticatedProcedure
         .input(
             (input: unknown) =>
-                input as { firstname: string; lastname: string; email: string; role: Role; studio: LocationOrMaster }
+                input as { firstname: string; lastname: string; email: string; role: Role; studio: StudioOrMaster }
         )
         .mutation(({ input }) => addUserToStudio(input)),
     removeUserFromStudio: authenticatedProcedure
-        .input((input: unknown) => input as { uid: string; studio: LocationOrMaster })
+        .input((input: unknown) => input as { uid: string; studio: StudioOrMaster })
         .mutation(async ({ input }) => {
             DatabaseClient.updateUser(input.uid, { roles: { [input.studio]: FieldValue.delete() } })
 

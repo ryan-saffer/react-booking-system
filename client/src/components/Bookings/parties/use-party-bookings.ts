@@ -1,5 +1,5 @@
-import type { FirestoreBooking, Service, WithId } from 'fizz-kidz'
-import { Location } from 'fizz-kidz'
+import type { FirestoreBooking, Service, Studio, WithId } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useEffect, useRef, useState } from 'react'
 
@@ -19,16 +19,14 @@ export function usePartyBookings() {
 
     const { filterByLocation } = useLocationFilter()
 
-    const [bookings, setBookings] = useState<Service<Record<Location, WithId<FirestoreBooking>[]>>>({
+    const [bookings, setBookings] = useState<Service<Record<Studio, WithId<FirestoreBooking>[]>>>({
         status: 'loading',
     })
 
     const { date, setDate } = useDateNavigation()
 
-    const generateLocationsMap = (
-        bookings: WithId<FirestoreBooking>[]
-    ): Record<Location, WithId<FirestoreBooking>[]> => {
-        return Object.values(Location).reduce(
+    const generateLocationsMap = (bookings: WithId<FirestoreBooking>[]): Record<Studio, WithId<FirestoreBooking>[]> => {
+        return STUDIOS.reduce(
             (acc, curr) => ({ ...acc, [curr]: bookings.filter((it) => it.location === curr) }),
             {} as any
         )

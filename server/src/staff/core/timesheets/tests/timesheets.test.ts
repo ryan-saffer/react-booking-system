@@ -6,9 +6,8 @@ import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 import type { Timesheet } from '@/sling/sling.types'
 
 import {
-    Location,
-    Position,
-    PositionToId,
+    SlingPosition,
+    SlingPositionToId,
     TimesheetRow,
     createTimesheetRows,
     getPositionRate,
@@ -16,8 +15,9 @@ import {
     hasBirthdayDuring,
     isCalledInShift,
     isOnCallShift,
-    isSupervisorShift,
     isSundayShift,
+    isSupervisorShift,
+    type SlingLocation,
 } from '../timesheets.utils'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
@@ -102,8 +102,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -119,8 +119,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -136,8 +136,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -153,8 +153,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -170,8 +170,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -189,8 +189,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -206,8 +206,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -223,8 +223,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -240,8 +240,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -257,8 +257,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -276,8 +276,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -293,8 +293,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -310,8 +310,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -327,8 +327,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -344,8 +344,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -363,8 +363,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -380,8 +380,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -397,8 +397,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -414,8 +414,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -431,8 +431,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -447,7 +447,7 @@ describe('Timesheet suite', () => {
 
             const supervisorExpectations = [
                 {
-                    location: Location.BALWYN,
+                    location: 'balwyn',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Balwyn',
                     sunday: 'SUPERVISOR COH - Sunday - Balwyn',
@@ -456,7 +456,7 @@ describe('Timesheet suite', () => {
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Balwyn',
                 },
                 {
-                    location: Location.CHELTENHAM,
+                    location: 'cheltenham',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Cheltenham',
                     sunday: 'SUPERVISOR COH - Sunday - Cheltenham',
@@ -465,7 +465,7 @@ describe('Timesheet suite', () => {
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Cheltenham',
                 },
                 {
-                    location: Location.ESSENDON,
+                    location: 'essendon',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Essendon',
                     sunday: 'SUPERVISOR COH - Sunday - Essendon',
@@ -474,7 +474,7 @@ describe('Timesheet suite', () => {
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Essendon',
                 },
                 {
-                    location: Location.KINGSVILLE,
+                    location: 'kingsville',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Kingsville',
                     sunday: 'SUPERVISOR COH - Sunday - Kingsville',
@@ -483,7 +483,7 @@ describe('Timesheet suite', () => {
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Kingsville',
                 },
                 {
-                    location: Location.MALVERN,
+                    location: 'malvern',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Malvern',
                     sunday: 'SUPERVISOR COH - Sunday - Malvern',
@@ -492,7 +492,7 @@ describe('Timesheet suite', () => {
                     afterThree: 'SUPERVISOR OT - After 3 Hrs - Malvern',
                 },
                 {
-                    location: Location.HEAD_OFFICE,
+                    location: 'head-office',
                     under18MonSat: 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office',
                     monSat: 'SUPERVISOR COH - Mon to Sat - Head Office',
                     sunday: 'SUPERVISOR COH - Sunday - Head Office',
@@ -511,7 +511,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUPERVISOR_PARTY,
+                        position: SlingPosition.SUPERVISOR_PARTY,
                         location,
                         hours: 5,
                         rate: 10,
@@ -536,7 +536,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUPERVISOR_PARTY,
+                        position: SlingPosition.SUPERVISOR_PARTY,
                         location,
                         hours: 5,
                         rate: 20,
@@ -557,7 +557,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        position: SlingPosition.SUNDAY_SUPERVISOR_PARTY,
                         location,
                         hours: 5,
                         rate: 20,
@@ -582,7 +582,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUPERVISOR_PARTY,
+                        position: SlingPosition.SUPERVISOR_PARTY,
                         location,
                         hours: 3,
                         rate: 20,
@@ -607,7 +607,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUNDAY_SUPERVISOR_PARTY,
+                        position: SlingPosition.SUNDAY_SUPERVISOR_PARTY,
                         location,
                         hours: 3,
                         rate: 20,
@@ -632,7 +632,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.SUPERVISOR_PARTY,
+                        position: SlingPosition.SUPERVISOR_PARTY,
                         location,
                         hours: 4,
                         rate: 20,
@@ -658,8 +658,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -675,8 +675,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -692,8 +692,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -709,8 +709,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -726,8 +726,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -745,8 +745,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -762,8 +762,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -779,8 +779,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -796,8 +796,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -813,8 +813,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -832,8 +832,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -849,8 +849,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -866,8 +866,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -883,8 +883,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -900,8 +900,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -919,8 +919,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -936,8 +936,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -953,8 +953,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -970,8 +970,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -987,8 +987,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 2, month: 5, year: 2023 }), // tuesday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1006,8 +1006,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1023,8 +1023,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1040,8 +1040,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1057,8 +1057,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1074,8 +1074,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1093,8 +1093,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1110,8 +1110,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1127,8 +1127,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1144,8 +1144,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1161,8 +1161,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1180,8 +1180,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1197,8 +1197,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1214,8 +1214,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1231,8 +1231,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1248,8 +1248,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1267,8 +1267,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1284,8 +1284,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1301,8 +1301,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1318,8 +1318,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1335,8 +1335,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.CALLED_IN_HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1354,8 +1354,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1371,8 +1371,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1388,8 +1388,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1405,8 +1405,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1422,8 +1422,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1441,8 +1441,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1458,8 +1458,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1475,8 +1475,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1492,8 +1492,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1509,8 +1509,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1528,8 +1528,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1545,8 +1545,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1562,8 +1562,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1579,8 +1579,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1596,8 +1596,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1615,8 +1615,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1632,8 +1632,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1649,8 +1649,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1666,8 +1666,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1683,8 +1683,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1702,8 +1702,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1719,8 +1719,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1736,8 +1736,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1753,8 +1753,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1770,8 +1770,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1789,8 +1789,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1806,8 +1806,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1823,8 +1823,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1840,8 +1840,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1857,8 +1857,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1876,8 +1876,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1893,8 +1893,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1910,8 +1910,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1927,8 +1927,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1944,8 +1944,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1963,8 +1963,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1980,8 +1980,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -1997,8 +1997,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2014,8 +2014,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2031,8 +2031,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.HOLIDAY_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.HOLIDAY_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2050,8 +2050,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2067,8 +2067,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2084,8 +2084,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2101,8 +2101,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2118,8 +2118,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2137,8 +2137,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2154,8 +2154,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2171,8 +2171,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2188,8 +2188,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2205,8 +2205,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2224,8 +2224,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2241,8 +2241,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2258,8 +2258,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2275,8 +2275,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2292,8 +2292,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2311,8 +2311,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2328,8 +2328,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2345,8 +2345,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2362,8 +2362,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2379,8 +2379,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2398,8 +2398,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2415,8 +2415,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2432,8 +2432,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2449,8 +2449,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2466,8 +2466,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2485,8 +2485,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2502,8 +2502,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2519,8 +2519,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2536,8 +2536,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2553,8 +2553,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2572,8 +2572,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2589,8 +2589,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2606,8 +2606,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2623,8 +2623,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2640,8 +2640,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2659,8 +2659,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2676,8 +2676,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2693,8 +2693,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2710,8 +2710,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2727,8 +2727,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2746,8 +2746,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2763,8 +2763,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2780,8 +2780,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2797,8 +2797,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2814,8 +2814,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2833,8 +2833,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2850,8 +2850,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2867,8 +2867,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2884,8 +2884,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2901,8 +2901,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2920,8 +2920,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2937,8 +2937,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2954,8 +2954,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2971,8 +2971,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -2988,8 +2988,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3007,8 +3007,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3024,8 +3024,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3041,8 +3041,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3058,8 +3058,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3075,8 +3075,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3093,7 +3093,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.PARTY_FACILITATOR,
+                position: SlingPosition.PARTY_FACILITATOR,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3101,13 +3101,13 @@ describe('Timesheet suite', () => {
             } as const
 
             const scenarios = [
-                { location: Location.BALWYN, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn' },
-                { location: Location.CHELTENHAM, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham' },
-                { location: Location.ESSENDON, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Essendon' },
-                { location: Location.KINGSVILLE, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville' },
-                { location: Location.MALVERN, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Malvern' },
-                { location: Location.HEAD_OFFICE, expected: 'CGS OT - First 3 Hrs - Mon to Sat - Head Office' },
-            ]
+                { location: 'balwyn', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn' },
+                { location: 'cheltenham', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham' },
+                { location: 'essendon', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Essendon' },
+                { location: 'kingsville', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville' },
+                { location: 'malvern', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Malvern' },
+                { location: 'head-office', expected: 'CGS OT - First 3 Hrs - Mon to Sat - Head Office' },
+            ] as const
 
             scenarios.forEach(({ location, expected }) => {
                 const row = new TimesheetRow({ ...baseProps, location })
@@ -3123,7 +3123,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.PARTY_FACILITATOR,
+                position: SlingPosition.PARTY_FACILITATOR,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3131,13 +3131,13 @@ describe('Timesheet suite', () => {
             } as const
 
             const scenarios = [
-                { location: Location.BALWYN, expected: 'CGS OT - First 3 Hrs - Sunday - Balwyn' },
-                { location: Location.CHELTENHAM, expected: 'CGS OT - First 3 Hrs - Sunday - Cheltenham' },
-                { location: Location.ESSENDON, expected: 'CGS OT - First 3 Hrs - Sunday - Essendon' },
-                { location: Location.KINGSVILLE, expected: 'CGS OT - First 3 Hrs - Sunday - Kingsville' },
-                { location: Location.MALVERN, expected: 'CGS OT - First 3 Hrs - Sunday - Malvern' },
-                { location: Location.HEAD_OFFICE, expected: 'CGS OT - First 3 Hrs - Sunday - Head Office' },
-            ]
+                { location: 'balwyn', expected: 'CGS OT - First 3 Hrs - Sunday - Balwyn' },
+                { location: 'cheltenham', expected: 'CGS OT - First 3 Hrs - Sunday - Cheltenham' },
+                { location: 'essendon', expected: 'CGS OT - First 3 Hrs - Sunday - Essendon' },
+                { location: 'kingsville', expected: 'CGS OT - First 3 Hrs - Sunday - Kingsville' },
+                { location: 'malvern', expected: 'CGS OT - First 3 Hrs - Sunday - Malvern' },
+                { location: 'head-office', expected: 'CGS OT - First 3 Hrs - Sunday - Head Office' },
+            ] as const
 
             scenarios.forEach(({ location, expected }) => {
                 const row = new TimesheetRow({ ...baseProps, location })
@@ -3154,8 +3154,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3171,8 +3171,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3188,8 +3188,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3205,8 +3205,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3222,8 +3222,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 7, month: 5, year: 2023 }), // sunday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3240,7 +3240,7 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: false,
-                position: Position.PARTY_FACILITATOR,
+                position: SlingPosition.PARTY_FACILITATOR,
                 hours: 8,
                 rate: 'not required',
                 summary: '',
@@ -3248,13 +3248,13 @@ describe('Timesheet suite', () => {
             } as const
 
             const scenarios = [
-                { location: Location.BALWYN, expected: 'CGS OT - After 3 Hrs - Balwyn' },
-                { location: Location.CHELTENHAM, expected: 'CGS OT - After 3 Hrs - Cheltenham' },
-                { location: Location.ESSENDON, expected: 'CGS OT - After 3 Hrs - Essendon' },
-                { location: Location.KINGSVILLE, expected: 'CGS OT - After 3 Hrs - Kingsville' },
-                { location: Location.MALVERN, expected: 'CGS OT - After 3 Hrs - Malvern' },
-                { location: Location.HEAD_OFFICE, expected: 'CGS OT - After 3 Hrs - Head Office' },
-            ]
+                { location: 'balwyn', expected: 'CGS OT - After 3 Hrs - Balwyn' },
+                { location: 'cheltenham', expected: 'CGS OT - After 3 Hrs - Cheltenham' },
+                { location: 'essendon', expected: 'CGS OT - After 3 Hrs - Essendon' },
+                { location: 'kingsville', expected: 'CGS OT - After 3 Hrs - Kingsville' },
+                { location: 'malvern', expected: 'CGS OT - After 3 Hrs - Malvern' },
+                { location: 'head-office', expected: 'CGS OT - After 3 Hrs - Head Office' },
+            ] as const
 
             scenarios.forEach(({ location, expected }) => {
                 const row = new TimesheetRow({ ...baseProps, location })
@@ -3271,8 +3271,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3288,8 +3288,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3305,8 +3305,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3322,8 +3322,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3339,8 +3339,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3358,8 +3358,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3375,8 +3375,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3392,8 +3392,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.ESSENDON,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'essendon',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3409,8 +3409,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.MALVERN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'malvern',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3426,8 +3426,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'head-office',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3452,15 +3452,15 @@ describe('Timesheet suite', () => {
 
             const cogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
             })
             strictEqual(cogsRow.payItem, 'CGS 16&17yo COH - Mon to Sat - Balwyn')
 
             const nonCogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
             })
             strictEqual(nonCogsRow.payItem, 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn')
         })
@@ -3481,15 +3481,15 @@ describe('Timesheet suite', () => {
 
             const cogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
             })
             strictEqual(cogsRow.payItem, 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
 
             const nonCogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
             })
             strictEqual(nonCogsRow.payItem, 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn')
         })
@@ -3510,15 +3510,15 @@ describe('Timesheet suite', () => {
 
             const cogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
             })
             strictEqual(cogsRow.payItem, 'CGS OT - After 3 Hrs - Balwyn')
 
             const nonCogsRow = new TimesheetRow({
                 ...baseArgs,
-                position: Position.MISCELLANEOUS,
-                location: Location.BALWYN,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'balwyn',
             })
             strictEqual(nonCogsRow.payItem, 'NON-CGS OT - After 3 Hrs - Balwyn')
         })
@@ -3534,8 +3534,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3550,8 +3550,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3566,8 +3566,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3582,8 +3582,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3598,8 +3598,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3614,8 +3614,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3630,8 +3630,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: false,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3646,8 +3646,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: false,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 4,
                 rate: 'not required',
                 summary: '',
@@ -3667,8 +3667,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3683,8 +3683,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3699,8 +3699,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3715,8 +3715,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3731,8 +3731,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3747,8 +3747,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.CALLED_IN_PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 3,
                 rate: 'not required',
                 summary: '',
@@ -3768,8 +3768,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3784,8 +3784,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3800,8 +3800,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3816,8 +3816,8 @@ describe('Timesheet suite', () => {
                 date: sunday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3832,8 +3832,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3848,8 +3848,8 @@ describe('Timesheet suite', () => {
                 date: monday,
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.MISCELLANEOUS,
-                location: Location.KINGSVILLE,
+                position: SlingPosition.MISCELLANEOUS,
+                location: 'kingsville',
                 hours: 2,
                 rate: 'not required',
                 summary: '',
@@ -3867,8 +3867,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3884,8 +3884,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3901,8 +3901,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3918,8 +3918,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3935,8 +3935,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 14.4,
                 summary: '',
@@ -3954,8 +3954,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'balwyn',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3971,8 +3971,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.CHELTENHAM,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'cheltenham',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -3988,8 +3988,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.ESSENDON,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'essendon',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -4005,8 +4005,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.MALVERN,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'malvern',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -4022,8 +4022,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }), // monday
                 hasBirthdayDuringPayrun: true,
                 isCasual: true,
-                position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                location: Location.HEAD_OFFICE,
+                position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                location: 'head-office',
                 hours: 8,
                 rate: 14.3,
                 summary: '',
@@ -4037,7 +4037,7 @@ describe('Timesheet suite', () => {
         it('should return 1.8 for under 18 on-call weekday shifts with low rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.ON_CALL_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR],
                 rate: 10,
                 dob: youngerThan18,
             })
@@ -4049,7 +4049,7 @@ describe('Timesheet suite', () => {
         it('should calculate weekday on-call rate multiplier for adults or higher rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.ON_CALL_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4061,7 +4061,7 @@ describe('Timesheet suite', () => {
         it('should calculate sunday on-call rate multiplier', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.SUNDAY_ON_CALL_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4073,7 +4073,7 @@ describe('Timesheet suite', () => {
         it('should return 27 for under 18 called-in weekday shifts with low rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.CALLED_IN_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.CALLED_IN_PARTY_FACILITATOR],
                 rate: 10,
                 dob: youngerThan18,
             })
@@ -4085,7 +4085,7 @@ describe('Timesheet suite', () => {
         it('should calculate weekday called-in rate multiplier for adults or higher rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.CALLED_IN_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.CALLED_IN_PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4097,7 +4097,7 @@ describe('Timesheet suite', () => {
         it('should calculate sunday called-in rate multiplier', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.SUNDAY_CALLED_IN_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.SUNDAY_CALLED_IN_PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4109,7 +4109,7 @@ describe('Timesheet suite', () => {
         it('should return 18 for under 18 ordinary weekday shifts with low rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
                 rate: 10,
                 dob: youngerThan18,
             })
@@ -4121,7 +4121,7 @@ describe('Timesheet suite', () => {
         it('should calculate weekday ordinary rate multiplier for adults or higher rates', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4133,7 +4133,7 @@ describe('Timesheet suite', () => {
         it('should calculate sunday ordinary rate multiplier', () => {
             // when
             const result = getPositionRate({
-                positionId: PositionToId[Position.SUNDAY_PARTY_FACILITATOR],
+                positionId: SlingPositionToId[SlingPosition.SUNDAY_PARTY_FACILITATOR],
                 rate: 20,
                 dob: olderThan18,
             })
@@ -4145,7 +4145,7 @@ describe('Timesheet suite', () => {
 
     describe('Guard clauses', () => {
         it('should throw on unrecognised position while determining COGS shift', () => {
-            const invalidPosition = 'INVALID_POSITION' as Position
+            const invalidPosition = 'INVALID_POSITION' as SlingPosition
             throws(
                 () =>
                     new TimesheetRow({
@@ -4156,7 +4156,7 @@ describe('Timesheet suite', () => {
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
                         position: invalidPosition,
-                        location: Location.BALWYN,
+                        location: 'balwyn',
                         hours: 1,
                         rate: 'not required',
                         summary: '',
@@ -4174,8 +4174,8 @@ describe('Timesheet suite', () => {
                 date: DateTime.fromObject({ day: 1, month: 5, year: 2023 }),
                 hasBirthdayDuringPayrun: false,
                 isCasual: true,
-                position: Position.PARTY_FACILITATOR,
-                location: Location.BALWYN,
+                position: SlingPosition.PARTY_FACILITATOR,
+                location: 'balwyn',
                 hours: 1,
                 rate: 'not required',
                 summary: '',
@@ -4188,12 +4188,12 @@ describe('Timesheet suite', () => {
         })
 
         it('should throw on unrecognised position when asking isCalledInShift', () => {
-            const invalidPosition = 'INVALID_POSITION' as Position
+            const invalidPosition = 'INVALID_POSITION' as SlingPosition
             throws(() => isCalledInShift(invalidPosition), /Unrecognised position when asking isCalledInShift/)
         })
 
         it('should throw on unrecognised location for ordinary pay items', () => {
-            const invalidLocation = 'INVALID_LOCATION' as Location
+            const invalidLocation = 'INVALID_LOCATION' as SlingLocation
             const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
             const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
 
@@ -4206,7 +4206,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4225,7 +4225,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.MISCELLANEOUS,
+                        position: SlingPosition.MISCELLANEOUS,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4244,7 +4244,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.MISCELLANEOUS,
+                        position: SlingPosition.MISCELLANEOUS,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4263,7 +4263,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: false,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4282,7 +4282,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: false,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4294,7 +4294,7 @@ describe('Timesheet suite', () => {
         })
 
         it('should throw on unrecognised location for on call pay items', () => {
-            const invalidLocation = 'INVALID_LOCATION' as Location
+            const invalidLocation = 'INVALID_LOCATION' as SlingLocation
             const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
             const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
 
@@ -4307,7 +4307,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                        position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4326,7 +4326,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                        position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4345,7 +4345,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                        position: SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4357,7 +4357,7 @@ describe('Timesheet suite', () => {
         })
 
         it('should throw on unrecognised location for called in pay items', () => {
-            const invalidLocation = 'INVALID_LOCATION' as Location
+            const invalidLocation = 'INVALID_LOCATION' as SlingLocation
             const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
             const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
 
@@ -4370,7 +4370,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4389,7 +4389,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4408,7 +4408,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.CALLED_IN_PARTY_FACILITATOR,
+                        position: SlingPosition.CALLED_IN_PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4420,7 +4420,7 @@ describe('Timesheet suite', () => {
         })
 
         it('should throw on unrecognised location for overtime pay items', () => {
-            const invalidLocation = 'INVALID_LOCATION' as Location
+            const invalidLocation = 'INVALID_LOCATION' as SlingLocation
             const monday = DateTime.fromObject({ day: 1, month: 5, year: 2023 })
             const sunday = DateTime.fromObject({ day: 7, month: 5, year: 2023 })
 
@@ -4433,7 +4433,7 @@ describe('Timesheet suite', () => {
                         date: monday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4452,7 +4452,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4471,7 +4471,7 @@ describe('Timesheet suite', () => {
                         date: sunday,
                         hasBirthdayDuringPayrun: false,
                         isCasual: true,
-                        position: Position.PARTY_FACILITATOR,
+                        position: SlingPosition.PARTY_FACILITATOR,
                         location: invalidLocation,
                         hours: 1,
                         rate: 'not required',
@@ -4484,14 +4484,14 @@ describe('Timesheet suite', () => {
 
         it('should throw on unrecognised position when asking isSundayShift', () => {
             throws(
-                () => isSundayShift('INVALID_POSITION' as Position),
+                () => isSundayShift('INVALID_POSITION' as SlingPosition),
                 /Unrecognised position when asking isCalledInShift/
             )
         })
 
         it('should throw on unrecognised position when asking isSupervisorShift', () => {
             throws(
-                () => isSupervisorShift('INVALID_POSITION' as Position),
+                () => isSupervisorShift('INVALID_POSITION' as SlingPosition),
                 /Unhandled position while determining isSupervisorShift/
             )
         })
@@ -4499,24 +4499,24 @@ describe('Timesheet suite', () => {
 
     describe('isOnCallShift', () => {
         it('should return true for every on call position', () => {
-            const onCallPositions: Position[] = [
-                Position.ON_CALL_PARTY_FACILITATOR,
-                Position.SUNDAY_ON_CALL_PARTY_FACILITATOR,
-                Position.ON_CALL_MOBILE_PARTY_FACILITATOR,
-                Position.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR,
-                Position.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
-                Position.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
-                Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                Position.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
-                Position.ON_CALL_PLAY_LAB_FACILITATOR,
-                Position.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR,
-                Position.ON_CALL_EVENTS_AND_ACTIVATIONS,
-                Position.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS,
-                Position.ON_CALL_INCURSIONS,
-                Position.SUNDAY_ON_CALL_INCURSIONS,
-                Position.PIC,
-                Position.SUNDAY_PIC,
-                Position.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+            const onCallPositions: SlingPosition[] = [
+                SlingPosition.ON_CALL_PARTY_FACILITATOR,
+                SlingPosition.SUNDAY_ON_CALL_PARTY_FACILITATOR,
+                SlingPosition.ON_CALL_MOBILE_PARTY_FACILITATOR,
+                SlingPosition.SUNDAY_ON_CALL_MOBILE_PARTY_FACILITATOR,
+                SlingPosition.ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
+                SlingPosition.SUNDAY_ON_CALL_HOLIDAY_PROGRAM_FACILITATOR,
+                SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                SlingPosition.SUNDAY_ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
+                SlingPosition.ON_CALL_PLAY_LAB_FACILITATOR,
+                SlingPosition.SUNDAY_ON_CALL_PLAY_LAB_FACILITATOR,
+                SlingPosition.ON_CALL_EVENTS_AND_ACTIVATIONS,
+                SlingPosition.SUNDAY_ON_CALL_EVENTS_AND_ACTIVATIONS,
+                SlingPosition.ON_CALL_INCURSIONS,
+                SlingPosition.SUNDAY_ON_CALL_INCURSIONS,
+                SlingPosition.PIC,
+                SlingPosition.SUNDAY_PIC,
+                SlingPosition.ON_CALL_AFTER_SCHOOL_PROGRAM_FACILITATOR,
             ]
 
             onCallPositions.forEach((position) => {
@@ -5440,27 +5440,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T16:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 6-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T14:00:00+10:00',
-                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR]
                 ), // on call, 4-hour shift
             ]
 
@@ -5494,27 +5494,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T13:00:00+10:00',
-                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR]
                 ), // on call, 3-hour shift
             ]
 
@@ -5548,27 +5548,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T20:00:00+10:00',
-                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR]
                 ), // on call, 10-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T18:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 8-hour shift
             ]
 
@@ -5607,22 +5607,22 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T08:00:00+10:00',
                     '2023-05-04T20:00:00+10:00',
-                    PositionToId[Position.ON_CALL_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.ON_CALL_PARTY_FACILITATOR]
                 ), // on call, 12-hour shift
             ]
 
@@ -5655,27 +5655,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T16:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 6-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T14:00:00+10:00',
-                    PositionToId[Position.CALLED_IN_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.CALLED_IN_PARTY_FACILITATOR]
                 ), // called in, 4-hour shift
             ]
 
@@ -5714,27 +5714,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T13:00:00+10:00',
-                    PositionToId[Position.CALLED_IN_PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.CALLED_IN_PARTY_FACILITATOR]
                 ), // called in, 3-hour shift
             ]
 
@@ -5773,27 +5773,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T16:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 6-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T14:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 4-hour shift
             ]
 
@@ -5832,27 +5832,27 @@ describe('Timesheet suite', () => {
                 buildTimesheet(
                     '2023-05-01T10:00:00+10:00',
                     '2023-05-01T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-02T10:00:00+10:00',
                     '2023-05-02T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-03T10:00:00+10:00',
                     '2023-05-03T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-04T10:00:00+10:00',
                     '2023-05-04T20:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 10-hour shift
                 buildTimesheet(
                     '2023-05-05T10:00:00+10:00',
                     '2023-05-05T13:00:00+10:00',
-                    PositionToId[Position.PARTY_FACILITATOR]
+                    SlingPositionToId[SlingPosition.PARTY_FACILITATOR]
                 ), // 3-hour shift
             ]
 

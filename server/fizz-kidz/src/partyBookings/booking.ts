@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import type { firestore } from 'firebase-admin' // https://stackoverflow.com/a/51275905/7870403
+import type { Studio } from 'fizz-kidz/src/core/studio'
 
-import type { Location } from '../core/location'
 import type { CakeFlavours } from './CakeFlavours'
 import type { Addition } from './additions'
 import type { Creation } from './creations'
@@ -18,7 +18,7 @@ export interface BaseBooking extends AdditionKeyValues {
     parentMobile: string
     childName: string
     childAge: string
-    location: Location
+    location: Studio
     type: 'studio' | 'mobile'
     partyLength: '1' | '1.5' | '2'
     address: string

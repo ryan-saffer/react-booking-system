@@ -1,5 +1,5 @@
-import type { Booking } from 'fizz-kidz'
-import { ADDITIONS, CREATIONS, getKeyByValue, Location, ObjectEntries, type PartyFormV3 } from 'fizz-kidz'
+import type { Booking, Studio } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, getKeyByValue, ObjectEntries, type PartyFormV3, STUDIOS } from 'fizz-kidz'
 import { logger } from 'firebase-functions/v2'
 import type { PaperformSubmission } from '@/paperforms/core/paperform-client'
 
@@ -12,7 +12,7 @@ export class PartyFormMapperV3 {
         this.bookingId = this.responses.getFieldValue('id')
     }
 
-    mapToBooking(type: Booking['type'], location: Location) {
+    mapToBooking(type: Booking['type'], location: Studio) {
         // first get all questions shown to both in-store and mobile parties
         let booking = this.getSharedQuestions(type, location)
 
@@ -117,7 +117,7 @@ export class PartyFormMapperV3 {
      * Return a booking object with all values from questions
      * shared across both in-store and mobile
      */
-    private getSharedQuestions(type: Booking['type'], location: Location) {
+    private getSharedQuestions(type: Booking['type'], location: Studio) {
         const creations = this.getCreations(type)
 
         const booking: Partial<Booking> = {
@@ -151,8 +151,8 @@ export class PartyFormMapperV3 {
         }
     }
 
-    private isValidLocation(location: string): location is Location {
-        return (<any>Object).values(Location).includes(location)
+    private isValidLocation(studio: string): studio is Studio {
+        return STUDIOS.includes(studio as any)
     }
 
     private getFoodPackage() {

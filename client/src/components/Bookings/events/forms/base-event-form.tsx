@@ -1,5 +1,5 @@
-import type { Event, ScienceModule } from 'fizz-kidz'
-import { Location, ModuleNameMap, ObjectKeys } from 'fizz-kidz'
+import type { Event, ScienceModule, Studio } from 'fizz-kidz'
+import { ModuleNameMap, ObjectKeys, STUDIOS } from 'fizz-kidz'
 import type { DateTime } from 'luxon'
 import React from 'react'
 import type { Control, UseFieldArrayReturn } from 'react-hook-form'
@@ -47,7 +47,7 @@ export type Form = {
     contactNumber: string
     contactEmail: string
     organisation: string
-    studio: Location | ''
+    studio: Studio | ''
     address: string
     type: Event['$type'] | ''
     module: ScienceModule | ''
@@ -153,9 +153,9 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                                     error={!!errors.studio}
                                     classes={{ root: classes.disabled }}
                                 >
-                                    {Object.values(Location).map((location) => (
-                                        <MenuItem key={location} value={location}>
-                                            {capitalise(location)}
+                                    {STUDIOS.map((studio) => (
+                                        <MenuItem key={studio} value={studio}>
+                                            {capitalise(studio)}
                                         </MenuItem>
                                     ))}
                                 </Select>

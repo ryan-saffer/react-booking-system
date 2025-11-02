@@ -1,5 +1,5 @@
 import type { Booking } from 'fizz-kidz'
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import { FirestoreClient } from '../../firebase/FirestoreClient'
@@ -19,7 +19,7 @@ export async function getParties({
 }: {
     from?: Date
     to?: Date
-    studio?: Location
+    studio?: Studio
     type?: 'studio' | 'mobile'
 }) {
     const firestore = await FirestoreClient.getInstance()

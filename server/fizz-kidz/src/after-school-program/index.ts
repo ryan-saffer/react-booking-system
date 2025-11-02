@@ -1,4 +1,4 @@
-import type { LocationOrTest } from '../core/location'
+import type { StudioOrTest } from 'fizz-kidz/src/core/studio'
 
 export type ScheduleAfterSchoolEnrolmentParams = Pick<
     AfterSchoolEnrolment,
@@ -36,7 +36,7 @@ export type AfterSchoolEnrolment = {
     status: 'active' | 'inactive'
     appointmentTypeId: number
     calendarId: number
-    location: LocationOrTest
+    location: StudioOrTest
     appointments: number[]
     parent: {
         firstName: string

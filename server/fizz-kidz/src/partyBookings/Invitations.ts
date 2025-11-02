@@ -1,4 +1,4 @@
-import { Location } from '..'
+import { Studio } from '..'
 
 type BaseInvitationProps = {
     childName: string
@@ -10,7 +10,7 @@ type BaseInvitationProps = {
     rsvpNumber: string
     invitation: InvitationOption
 }
-type StudioInvitationProps = BaseInvitationProps & { $type: 'studio'; studio: Location }
+type StudioInvitationProps = BaseInvitationProps & { $type: 'studio'; studio: Studio }
 type MobileInvitationProps = BaseInvitationProps & { $type: 'mobile'; address: string }
 
 export type GenerateInvitation = StudioInvitationProps | MobileInvitationProps

@@ -4,10 +4,10 @@ import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
 import {
     CREATIONS,
     FormBookingFields,
-    Location,
     ObjectKeys,
     PRODUCTS,
     PROD_ADDITIONS,
+    STUDIOS,
     TAKE_HOME_BAGS,
     Utilities,
 } from 'fizz-kidz'
@@ -404,9 +404,9 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                     error={formValues[FormBookingFields.location].error}
                                     onChange={handleFormChange}
                                 >
-                                    {Object.values(Location).map((location) => (
-                                        <MenuItem key={location} value={location}>
-                                            {capitalise(location)}
+                                    {STUDIOS.map((studio) => (
+                                        <MenuItem key={studio} value={studio}>
+                                            {capitalise(studio)}
                                         </MenuItem>
                                     ))}
                                 </Select>

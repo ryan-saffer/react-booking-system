@@ -1,4 +1,4 @@
-import { Location } from '../core/location'
+import type { Studio } from 'fizz-kidz/src/core/studio'
 
 /**
  * Subject Pronoun:
@@ -11,7 +11,7 @@ import { Location } from '../core/location'
  * "If you have any questions, feel free to contact his team."
  */
 export function getManager(
-    location: Location,
+    location: Studio,
     env: 'dev' | 'prod' = 'prod'
 ): {
     name: string
@@ -32,16 +32,16 @@ export function getManager(
         }
     }
     switch (location) {
-        case Location.BALWYN:
+        case 'balwyn':
             return {
-                name: 'Lami',
+                name: 'Swetha',
                 email: 'balwyn@fizzkidz.com.au',
-                mobile: '0431 379 953',
+                mobile: '0452 020 191',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
-        case Location.CHELTENHAM:
+        case 'cheltenham':
             return {
                 name: 'Lami',
                 email: 'cheltenham@fizzkidz.com.au',
@@ -50,7 +50,7 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
-        case Location.ESSENDON:
+        case 'essendon':
             return {
                 name: 'Kym',
                 email: 'essendon@fizzkidz.com.au',
@@ -59,7 +59,7 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
-        case Location.KINGSVILLE:
+        case 'kingsville':
             return {
                 name: 'Kym',
                 email: 'kingsville@fizzkidz.com.au',
@@ -68,7 +68,7 @@ export function getManager(
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
             }
-        case Location.MALVERN:
+        case 'malvern':
             return {
                 name: 'Lami',
                 email: 'malvern@fizzkidz.com.au',

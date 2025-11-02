@@ -1,6 +1,6 @@
-import { LocationOrMaster } from './location'
-import { Role } from './role'
-import { PartialRecord } from '..'
+import type { Role } from './role'
+import type { StudioOrMaster } from './studio'
+import type { PartialRecord } from '..'
 
 type BaseAuthUser = {
     uid: string
@@ -11,7 +11,7 @@ type BaseAuthUser = {
 }
 
 export type StaffAuthUser = BaseAuthUser & {
-    roles?: PartialRecord<LocationOrMaster, Role>
+    roles?: PartialRecord<StudioOrMaster, Role>
     accountType: 'staff'
 }
 

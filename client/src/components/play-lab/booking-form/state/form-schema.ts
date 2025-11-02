@@ -1,7 +1,8 @@
-import type { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
+
 import { useCart } from './cart-store'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
@@ -45,7 +46,7 @@ const childSchema = z
     )
 
 export const formSchema = z.object({
-    studio: z.custom<Location>((value) => !!value, 'Please select a studio.').nullable(),
+    studio: z.custom<Studio>((value) => !!value, 'Please select a studio.').nullable(),
     bookingType: z.enum(['term-booking', 'casual']).nullable(),
     appointmentTypeId: z.number().nullable(),
     parentFirstName: z.string().trim().min(1, 'Parent first name is required'),

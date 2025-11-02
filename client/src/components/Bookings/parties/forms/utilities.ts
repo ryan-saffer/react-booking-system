@@ -1,5 +1,5 @@
 import type { Booking, FirestoreBooking, FormBooking } from 'fizz-kidz'
-import { Location, Utilities } from 'fizz-kidz'
+import { Utilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
 import type { ExistingBookingFormFields } from './ExistingBookingForm/types'
@@ -131,7 +131,7 @@ export function getEmptyValues(): ExistingBookingFormFields {
             errorText: 'Time cannot be empty',
         },
         location: {
-            value: Location.BALWYN,
+            value: 'balwyn',
             error: false,
             errorText: 'Location cannot be empty',
         },
@@ -346,7 +346,7 @@ function getEmptyDomainBooking(): FormBooking {
         parentMobile: '',
         childName: '',
         childAge: '',
-        location: Location.BALWYN,
+        location: 'balwyn',
         type: 'studio',
         date: new Date(),
         time: new Date(),
