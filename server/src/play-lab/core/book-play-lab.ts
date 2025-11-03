@@ -13,6 +13,7 @@ import { FieldValue } from 'firebase-admin/firestore'
 import { Status } from 'google-gax'
 import { SquareError } from 'square'
 import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
+import { logger } from 'firebase-functions/v2'
 
 export type BookPlayLabProps = {
     idempotencyKey: string
