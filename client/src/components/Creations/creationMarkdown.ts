@@ -1415,7 +1415,7 @@ Today we're making Golden Slime! ✨ Just like the K-Pop Demon Hunters' magic po
 }
 
 const hendrixGlitterSlime = {
-    name: 'Hendrix Glitter Slime',
+    name: 'Huntrix Glitter Slime',
     markdown: `
     
 ### Ingredients
@@ -1429,7 +1429,7 @@ const hendrixGlitterSlime = {
 
 ### Recipe
 Let's Create Some Sparkle Power! ✨
-Today we're making Hendrix Glitter Shine so you'll be concert ready!
+Today we're making Huntrix Glitter Shine so you'll be concert ready!
 1. Add xanthan gum to bowls.
 2. Add glycerin and mix well.
 3. Add warm water and stir — it'll look a bit like slime!

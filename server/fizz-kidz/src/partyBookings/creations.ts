@@ -102,7 +102,7 @@ const TAYLOR_SWIFT_CREATIONS = {
 
 const DEMON_HUNTERS_CREATIONS = {
     goldenSlime: 'Golden Slime',
-    hendrixGlitterShine: 'Hendrix Glitter Shine',
+    hendrixGlitterShine: 'Huntrix Glitter Shine',
     wondersticks: 'Wondersticks',
     moonBeamBracelets: 'Moon Beam Bracelets',
     squishiePockets: 'Squishy Pockets',
