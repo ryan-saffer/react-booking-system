@@ -79,6 +79,7 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         if (e.code === Status.ALREADY_EXISTS) {
             // already run this function for this payment. perhaps a double click.. (has happened before)
             // end early.
+            logger.warn('duplicate idempotency key during play lab booking', { input })
             return
         }
         throwTrpcError('INTERNAL_SERVER_ERROR', 'unable to create payment idempotency key for holiday program', e, {
