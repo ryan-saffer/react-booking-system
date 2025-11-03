@@ -252,9 +252,9 @@ export function Payment() {
                 key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
-                cardTokenizeResponseReceived={({ status, token }, buyerVerification) => {
+                cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
                     if (status === 'OK' && token && !isLoading) {
-                        book(token, buyerVerification?.token || '')
+                        await book(token, buyerVerification?.token || '')
                     } else {
                         toast.error('There was an error processing your payment')
                     }
