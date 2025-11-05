@@ -116,7 +116,11 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
                 const usersTimesheets = timesheets.filter((it) => it.user.id === slingUser.id)
                 if (usersTimesheets.length === 0) continue
 
-                let xeroUser = xeroUsers?.find((user) => user.email?.toLowerCase() === slingUser.email.toLowerCase())
+                let xeroUser = xeroUsers?.find(
+                    (user) =>
+                        user.email?.toLowerCase() === slingUser.email.toLowerCase() ||
+                        user.email?.toLowerCase() === slingUser.pending?.toLowerCase()
+                )
                 if (!xeroUser) {
                     logger.log(`unable to find sling user in Xero: ${slingUser.legalName} ${slingUser.lastname}`)
                     skippedUsers.push(`${slingUser.legalName} ${slingUser.lastname}`)

@@ -5,6 +5,7 @@ export type User = {
     legalName: string
     name: string
     email: string
+    pending: string | null // if the user changes their email in Sling, it sits in this field until it moves to 'email'
     lastname: string
     employeeId: string
     countryCode: string

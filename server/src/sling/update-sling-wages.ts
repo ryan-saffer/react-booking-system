@@ -55,7 +55,11 @@ export async function updateSlingWages() {
         }
         const xero = await XeroClient.getInstance(studio)
         const xeroUsers = await getAndCacheAllXeroEmployees(studio, xeroUsersByStudioCache)
-        const xeroUser = xeroUsers?.find((user) => user.email?.toLowerCase() === slingUser.email.toLowerCase())
+        const xeroUser = xeroUsers?.find(
+            (user) =>
+                user.email?.toLowerCase() === slingUser.email.toLowerCase() ||
+                user.email?.toLowerCase() === slingUser.pending?.toLowerCase()
+        )
 
         if (!xeroUser) {
             logger.warn(
