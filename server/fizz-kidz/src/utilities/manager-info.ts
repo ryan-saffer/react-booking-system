@@ -70,9 +70,9 @@ export function getManager(
             }
         case 'malvern':
             return {
-                name: 'Lami',
+                name: 'Ginny',
                 email: 'malvern@fizzkidz.com.au',
-                mobile: '0431 379 953',
+                mobile: '0423 077 262',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
