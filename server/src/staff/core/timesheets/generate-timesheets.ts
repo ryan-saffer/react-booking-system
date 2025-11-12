@@ -3,7 +3,7 @@ import os from 'os'
 import path from 'path'
 
 import { logger } from 'firebase-functions/v2'
-import { MASTER_STUDIOS, STUDIOS, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
+import { isFranchise, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
@@ -85,7 +85,7 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         // keeps track of users who have a birthday during the pay period
         const employeesWithBirthday: string[] = []
 
-        // leeps track of users who are under 18, but worked for more than 30 hrs in a single week (in order to be paid super)
+        // keeps track of users who are under 18, but worked for more than 30 hrs in a single week (in order to be paid super)
         const employeesUnder18Over30Hrs: string[] = []
 
         // calculate timesheets one week at a time
@@ -94,21 +94,14 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
             const allTimesheets = await slingClient.getTimesheets(week.start.toJSDate(), week.end.toJSDate())
             const timesheets = allTimesheets
                 .filter((it) => it.status === 'published')
-                // depending on the franchise, filter out the location
                 .filter((it) => {
-                    const shiftLocation = SlingLocationsMap[it.location.id]
+                    // depending on the franchise, filter out the location
+                    const slingLocation = SlingLocationsMap[it.location.id]
                     if (studio === 'master') {
-                        // TODO: TEMPORARY - Balwyn is part of master studios until november, so manually decide that here.
-                        if (DateTime.fromISO(it.dtstart, { setZone: true }).month <= 10) {
-                            if (shiftLocation === 'head-office') return true
-                            return STUDIOS.includes(shiftLocation)
-                        } else {
-                            if (shiftLocation === 'head-office') return true
-                            if (shiftLocation === 'balwyn') return false
-                            return MASTER_STUDIOS.includes(shiftLocation)
-                        }
+                        if (slingLocation === 'head-office') return true
+                        return !isFranchise(slingLocation)
                     }
-                    return shiftLocation === studio
+                    return slingLocation === studio
                 })
 
             // for each user, get all their timesheets
