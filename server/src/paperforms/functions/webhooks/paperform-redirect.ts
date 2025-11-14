@@ -20,6 +20,8 @@ import { handlePartyFormSubmissionV3 } from '@/party-bookings/core/handle-party-
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { logError } from '@/utilities'
+import { randomUUID } from 'crypto'
+import type { InventoryChange } from 'square/api'
 
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'
 const ERROR_REDIRECT = 'https://fizzkidz.com.au/form-result?result=error'
@@ -179,6 +181,49 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
         )
         res.redirect(303, ERROR_REDIRECT)
         return
+    }
+
+    // Square automatically removes tracked inventory quantities.
+    // Since these are ordered through the supplier, we don't want to change the inventory levels - so adjust it back here.
+    const takeHomeBags = responses.getFieldValue('take_home_bags')
+    const products = responses.getFieldValue('products')
+    if (takeHomeBags.length > 0 || products.length > 0) {
+        const booking = await DatabaseClient.getPartyBooking(responses.getFieldValue('id'))
+        const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
+        const square = await SquareClient.getInstance()
+        const takeHomeBagChanges: InventoryChange[] = takeHomeBags.map((item) => ({
+            type: 'ADJUSTMENT',
+            adjustment: {
+                catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
+                locationId,
+                quantity: item.quantity.toString(),
+                fromState: 'NONE',
+                toState: 'IN_STOCK',
+                occurredAt: new Date().toISOString(),
+            },
+        }))
+        const productsChanges: InventoryChange[] = products.map((product) => ({
+            type: 'ADJUSTMENT',
+            adjustment: {
+                catalogObjectId: mapProductToSquareVariation(env, product.SKU as ProductType),
+                locationId,
+                quantity: product.quantity.toString(),
+                fromState: 'NONE',
+                toState: 'IN_STOCK',
+                occurredAt: new Date().toISOString(),
+            },
+        }))
+        try {
+            await square.inventory.batchCreateChanges({
+                idempotencyKey: randomUUID(),
+                changes: [...takeHomeBagChanges, ...productsChanges],
+            })
+        } catch (err) {
+            logError('Error adjusting inventory for square item during party form payment', err, {
+                bookingId: responses.getFieldValue('id'),
+                submissionId,
+            })
+        }
     }
 
     // Handle the complete form submission (mapping, database updates, emails, etc.)
