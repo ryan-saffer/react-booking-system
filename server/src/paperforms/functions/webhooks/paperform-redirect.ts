@@ -186,11 +186,12 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     // Square automatically removes tracked inventory quantities.
     // Since these are ordered through the supplier, we don't want to change the inventory levels - so adjust it back here.
     const takeHomeBags = responses.getFieldValue('take_home_bags')
-    if (takeHomeBags.length > 0) {
+    const products = responses.getFieldValue('products')
+    if (takeHomeBags.length > 0 || products.length > 0) {
         const booking = await DatabaseClient.getPartyBooking(responses.getFieldValue('id'))
         const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
         const square = await SquareClient.getInstance()
-        const changes: InventoryChange[] = takeHomeBags.map((item) => ({
+        const takeHomeBagChanges: InventoryChange[] = takeHomeBags.map((item) => ({
             type: 'ADJUSTMENT',
             adjustment: {
                 catalogObjectId: mapTakeHomeBagToSquareVariation(env, item.SKU as TakeHomeBagType),
@@ -201,10 +202,21 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
                 occurredAt: new Date().toISOString(),
             },
         }))
+        const productsChanges: InventoryChange[] = products.map((product) => ({
+            type: 'ADJUSTMENT',
+            adjustment: {
+                catalogObjectId: mapProductToSquareVariation(env, product.SKU as ProductType),
+                locationId,
+                quantity: product.quantity.toString(),
+                fromState: 'NONE',
+                toState: 'IN_STOCK',
+                occurredAt: new Date().toISOString(),
+            },
+        }))
         try {
             await square.inventory.batchCreateChanges({
                 idempotencyKey: randomUUID(),
-                changes,
+                changes: [...takeHomeBagChanges, ...productsChanges],
             })
         } catch (err) {
             logError('Error adjusting inventory for square item during party form payment', err, {
