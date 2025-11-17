@@ -86,7 +86,10 @@ export async function updateSlingWages() {
         // If we instead skipped this shift (since its not assigned), the user can still be assigned shifts at this position, and those shifts will appear as $0 shifts.
         // Therefore, we assign all shifts to all users.
         try {
-            await slingClient.addShiftsToUser(slingUser.id, Object.values(SlingPositionToId))
+            await slingClient.addShiftsToUser(slingUser.id, [
+                ...slingUser.groupIds, // without this, existing groups get deleted such as locations
+                ...Object.values(SlingPositionToId),
+            ])
         } catch (err) {
             logError(`Error adding shifts to user: ${slingUser.id}`, err, {
                 shiftsToAdd: Object.values(SlingPositionToId),
