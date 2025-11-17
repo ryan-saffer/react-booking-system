@@ -37,6 +37,7 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
             await remindAboutWwcc()
             break
         case 'updateSlingWages':
+            // 6:00am every Friday
             await updateSlingWages()
             break
         case 'paperformSubmission':
