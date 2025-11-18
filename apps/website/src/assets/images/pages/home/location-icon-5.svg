@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90">
+  <defs>
+    <style>
+      .cls-1 { fill: #9044e2; }
+    </style>
+  </defs>
+
+  <!-- Outer wavy diamond -->
+  <path class="cls-1" d="
+    M30 3
+    C39 8, 47 15, 52 26
+    C57 37, 57 48, 52 59
+    C47 70, 39 78, 30 87
+    C21 78, 13 70, 8 59
+    C3 48, 3 37, 8 26
+    C13 15, 21 8, 30 3
+    Z
+  "/>
+
+  <!-- Inner blob -->
+  <ellipse cx="30" cy="45" rx="12" ry="14" fill="white"/>
+</svg>

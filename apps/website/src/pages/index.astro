@@ -21,6 +21,7 @@ import location1 from "@/assets/images/pages/home/location-icon-1.svg";
 import location2 from "@/assets/images/pages/home/location-icon-2.svg";
 import location3 from "@/assets/images/pages/home/location-icon-3.svg";
 import location4 from "@/assets/images/pages/home/location-icon-4.svg";
+import location5 from "@/assets/images/pages/home/location-icon-5.svg";
 import PartyThemes from "@/components/party-themes.astro";
 import ReviewsCarousel from "@/components/react/reviews-carousel";
 
@@ -50,6 +51,10 @@ const locations = [
   {
     icon: location3,
     location: "Essendon",
+  },
+  {
+    icon: location5,
+    location: "Kingsville",
   },
   {
     icon: location4,
@@ -328,7 +333,7 @@ const services = [
           captivating, welcoming,and glowing with excitement!
         </h4>
         <div
-          class="m-auto my-16 grid w-max max-w-4xl grid-cols-2 gap-12 min-[900px]:grid-cols-4"
+          class="m-auto my-16 flex max-w-2xl flex-wrap justify-center gap-12"
         >
           {
             locations.map((location) => (
@@ -336,7 +341,7 @@ const services = [
                 <Image
                   src={location.icon}
                   alt="icon"
-                  class="h-12 min-[400px]:h-16 sm:h-24"
+                  class="min-h-12 min-[400px]:min-h-16 sm:min-h-24"
                 />
                 <p class="font-lilita text-xl uppercase min-[400px]:text-2xl sm:text-3xl">
                   {location.location}
