@@ -1,7 +1,7 @@
+import catppuccin from "@catppuccin/starlight";
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import catppuccin from "@catppuccin/starlight";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,6 +15,20 @@ export default defineConfig({
       favicon: "/favicon.png",
       plugins: [catppuccin()],
       sidebar: [
+        {
+          label: "Services",
+          items: [
+            {
+              label: "Birthday Parties",
+              items: [
+                {
+                  label: "Customer Journey",
+                  slug: "services/birthday-parties/customer-journey",
+                },
+              ],
+            },
+          ],
+        },
         {
           label: "Tools",
           items: [
