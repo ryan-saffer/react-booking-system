@@ -49,6 +49,7 @@ function convertFormBookingToBooking(formBooking: FormBooking): Booking {
 
     const booking = temp as Booking
     booking.dateTime = dateTime
+    console.log(typeof booking.createdAt)
     return booking
 }
 
@@ -73,6 +74,7 @@ export function mapFirestoreBookingToFormValues(firestoreBooking: FirestoreBooki
 }
 
 function convertFirestoreBookingToFormBooking(firestoreBooking: FirestoreBooking): FormBooking {
+    console.log({ dateTime: firestoreBooking.dateTime })
     const dateTime = firestoreBooking.dateTime.toDate()
 
     // downcast to any, since we know deleting dateTime is safe.
