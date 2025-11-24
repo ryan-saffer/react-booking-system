@@ -7,8 +7,8 @@ import type { drive_v3 } from 'googleapis'
 import { finished } from 'stream/promises'
 import type { ReadableStream } from 'stream/web'
 
-import { getOAuth2Client } from './google-oauth'
 import type { ClientStatus } from '../utilities/types'
+import { getOAuth2Client } from './google-oauth'
 
 export class DriveClient {
     private static instance: DriveClient
@@ -52,6 +52,7 @@ export class DriveClient {
 
         // upload
         await this.#drive.files.create({
+            supportsAllDrives: true,
             requestBody: {
                 name: filename,
                 parents: [folderId],
@@ -67,6 +68,7 @@ export class DriveClient {
         const {
             data: { id: folderId },
         } = await this.#drive.files.create({
+            supportsAllDrives: true,
             requestBody: {
                 name: folderName,
                 parents: [parent],
