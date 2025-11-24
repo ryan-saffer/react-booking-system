@@ -9,88 +9,206 @@ function JobListings() {
   return (
     <Accordion type="multiple" className="rounded-2xl border">
       <AccordionItem value="1" className="px-4">
-        <AccordionTrigger className="font-bold">
-          People & Culture Lead
-        </AccordionTrigger>
+        <AccordionTrigger className="font-bold">Area Manager</AccordionTrigger>
         <AccordionContent className="text-base">
-          <strong>About the role:</strong>
+          <strong>Position Overview:</strong>
           <br />
-          At Fizz Kidz, our team is the heartbeat of everything we do - and
-          we're on the lookout for a passionate, people-focused leader to help
-          us support, grow, and celebrate our fizz-tastic crew! If you're
-          energised by creating strong teams, building joyful culture, and
-          making a real impact on a growing business (in a flexible, casual
-          capacity), this might just be your dream role. As our People & Culture
-          Lead, you'll own and lead the end-to-end people experience at Fizz
-          Kidz. From recruitment to culture-building, training to performance
-          support- you'll play a key role in creating a people-first workplace
-          where our team can truly thrive.
+          The Area Manager is a key leadership role responsible for overseeing
+          multiple Fizz Kidz studio locations within a designated geographic
+          area. This position involves strategic planning, operational
+          management, and driving business growth while ensuring consistent
+          delivery of high-quality, engaging experiences for children across all
+          studios. The Area Manager will lead a team of Studio Supervisors and
+          Franchisees, fostering a culture of excellence and innovation in line
+          with Fizz Kidz's mission and values.
           <br />
           <br />
-          <strong>What you'll be doing:</strong>
+          <strong>Key Responsibilities:</strong>
+          <br />
+          <i>Strategic Leadership</i>
           <ul className="mb-4 list-disc pl-4">
             <li>
-              Lead recruitment and onboarding across all studios and departments
+              Develop and implement regional strategies to drive growth,
+              profitability, and market share.
             </li>
             <li>
-              Design and deliver meaningful induction and training experiences
-            </li>
-            <li>
-              Build and nurture our culture across teams, locations and roles
-            </li>
-            <li>Support team development, wellbeing, and communication. </li>
-            <li>
-              Manage performance and feedback systems (with empathy and clarity)
-            </li>
-            <li>
-              Partner with studio managers and franchisees to ensure alignment
-              and consistency
-            </li>
-            <li>
-              Organise team connection moments, workshops and engagement
-              initiatives
+              Drive performance goals for each studio and monitor progress
+              through key performance indicators (KPIs).
             </li>
           </ul>
-          <strong>About you:</strong>
+          <br />
+          <i>Operational Excellence</i>
           <ul className="mb-4 list-disc pl-4">
             <li>
-              You bring 2+ years experience in HR, people ops, or team
-              leadership & training
+              Oversee the day-to-day operations of multiple Fizz Kidz studios
+              within the region.
             </li>
             <li>
-              You have hands-on facilitation experience and the skills to train
-              staff in building a stronger, more confident facilitation
-              presence.
+              Ensure consistency in service quality, safety standards, and brand
+              experience across all locations.
             </li>
             <li>
-              You're confident, kind and proactive, with strong communication
-              skills
-            </li>
-            <li>You understand the needs of a casual, Gen Z-heavy team </li>
-            <li>
-              You love creating fun, supportive and inclusive environments
-            </li>
-            <li>
-              You're organised, values-led and can work both autonomously and
-              collaboratively
-            </li>
-            <li>
-              Bonus points: experience in hospitality, education, creative
-              industries or franchising
+              Implement and maintain operational systems and processes to
+              maximize efficiency and effectiveness.
             </li>
           </ul>
-          <strong>What we offer:</strong>
+          <i>Financial Management</i>
           <ul className="mb-4 list-disc pl-4">
             <li>
-              A casual role (1-2 days) with flexibility and hybrid work options
+              Manage regional budgets, including cost control, and revenue
+              optimization.
             </li>
-            <li>A warm, creative and empowering team culture </li>
-            <li>Mentorship + professional development </li>
-            <li>A values-led business where your voice shapes the future </li>
             <li>
-              The chance to support a team that brings joy to kids every day
+              Analyse financial performance of individual studios and the region
+              as a whole.
+            </li>
+            <li>
+              Identify areas for cost savings and revenue growth opportunities.
             </li>
           </ul>
+          <br />
+          <i>Team Leadership and Development</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Recruit, train, and mentor Studio Supervisors to build a
+              high-performing regional team.
+            </li>
+            <li>
+              Conduct regular performance reviews and provide ongoing feedback
+              and coaching.
+            </li>
+            <li>
+              Foster a positive work culture that aligns with Fizz Kidz values
+              and promotes employee engagement and retention.
+            </li>
+          </ul>
+          <i>Quality Assurance and Compliance</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Ensure all studios adhere to Fizz Kidz brand standards, safety
+              protocols, and legal requirements.
+            </li>
+            <li>
+              Conduct regular audits of studio operations and implement
+              corrective actions as needed.
+            </li>
+            <li>
+              Stay informed about industry trends and regulations, updating
+              regional practices accordingly.
+            </li>
+          </ul>
+          <i>Customer Experience and Satisfaction</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Monitor customer feedback across the region and implement
+              strategies to enhance overall satisfaction.
+            </li>
+            <li>
+              Address and resolve escalated customer issues promptly and
+              effectively.
+            </li>
+            <li>
+              Develop initiatives to improve the customer journey and increase
+              repeat business.
+            </li>
+          </ul>
+          <i>Marketing and Business Development</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Collaborate with the marketing team to develop and execute
+              regional marketing strategies.
+            </li>
+            <li>
+              Build and maintain relationships with key stakeholders, including
+              local businesses, schools, and community organizations.
+            </li>
+          </ul>
+          <i>Innovation and Program Development</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Work with the product development team to test and implement new
+              party themes and activities.
+            </li>
+            <li>
+              Gather insights from Studio team and customers to inform product
+              improvements and innovations.
+            </li>
+            <li>
+              Lead the rollout of new programs and initiatives across the
+              region.
+            </li>
+          </ul>
+          <br />
+          <strong>Qualifications:</strong>
+          <br />
+          <i>Essential Skills &amp; Experience</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Minimum of 3 years of multi-unit management experience,
+              preferably in the children's entertainment, education, or
+              hospitality sectors.
+            </li>
+            <li>
+              Proven track record of driving business growth and improving
+              operational efficiency.
+            </li>
+            <li>
+              Strong financial acumen with experience in budgeting and P&amp;L
+              management.
+            </li>
+            <li>
+              Excellent leadership skills with the ability to motivate and
+              develop teams.
+            </li>
+            <li>Working with Children Check.</li>
+          </ul>
+          <i>Preferred Skills</i>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Knowledge of children's developmental needs and educational
+              trends.
+            </li>
+            <li>
+              Experience in franchise operations or working with franchisees
+              highly regarded.
+            </li>
+          </ul>
+          <br />
+          <strong>Key Attributes:</strong>
+          <ul className="mb-4 list-disc pl-4">
+            <li>Hands-on approach to problem-solving.</li>
+            <li>
+              Excellent communicator with the ability to build relationships at
+              all levels.
+            </li>
+            <li>
+              Adaptable and resilient, able to thrive in a fast-paced, dynamic
+              environment.
+            </li>
+            <li>
+              Passionate about creating positive experiences for children and
+              families.
+            </li>
+          </ul>
+          <br />
+          <strong>Work Conditions:</strong>
+          <ul className="mb-4 list-disc pl-4">
+            <li>
+              Regular travel required to visit studios within the region (up to
+              50% of time).
+            </li>
+            <li>
+              Flexible schedule including weekends and occasional evenings to
+              attend training, events, or address urgent matters.
+            </li>
+            <li>
+              Base location in studios with remote work options as appropriate.
+            </li>
+          </ul>
+          <br />
+          This position offers an exciting opportunity to lead and grow a
+          vibrant network of Fizz Kidz party studios, making a positive impact
+          on children's lives while driving business success.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="2" className="px-4">
@@ -176,35 +294,6 @@ function JobListings() {
             <li>
               Ability to work independently, manage time effectively, and move
               fast
-            </li>
-          </ul>
-        </AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="3" className="px-4">
-        <AccordionTrigger className="font-bold">
-          Studio Manager
-        </AccordionTrigger>
-        <AccordionContent className="text-base">
-          <strong>About the role:</strong>
-          <br />
-          Are you an experienced leader or manager who aspires to have the ideal
-          balance between fun and operational excellence? As our Fizz Kidz
-          Studio Manager you will lead and inspire a team of passionate
-          facilitators, ensuring smooth studio operations and exceptional
-          customer service.
-          <br />
-          <br />
-          <strong>Required Skills:</strong>
-          <ul className="mb-4 list-disc pl-4">
-            <li>Oversee all studio operations and team management</li>
-            <li>Train, onboard, and supervise Party/Program Facilitators</li>
-            <li>Organise and manage rosters, ensuring adequate staffing</li>
-            <li>Facilitate parties and programs, ensuring smooth execution</li>
-            <li>Handle customer service and resolve issues as they arise</li>
-            <li>Manage inventory and ensure supplies are stocked</li>
-            <li>Perform administrative tasks (emails, calls, scheduling)</li>
-            <li>
-              Work closely with the Leadership Team on business priorities
             </li>
           </ul>
         </AccordionContent>

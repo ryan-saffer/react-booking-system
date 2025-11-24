@@ -38,9 +38,8 @@ const formSchema = z
       .min(10, "Contact number must be at least 10 digits long"),
     role: z
       .enum([
-        "people",
+        "area-manager",
         "social-media",
-        "manager",
         "supervisor",
         "facilitator",
         "other",
@@ -58,7 +57,7 @@ const formSchema = z
     reference: z.string().min(1, "Please answer"),
   })
   .superRefine((val, ctx) => {
-    if (val.role !== "people" && val.role !== "social-media") {
+    if (val.role !== "area-manager" && val.role !== "social-media") {
       if (!val.location) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -205,7 +204,7 @@ function CareersForm() {
               >
                 <SelectValue placeholder="Select role" />
                 <SelectContent>
-                  <SelectItem value="people">People & Culture Lead</SelectItem>
+                  <SelectItem value="area-manager">Area Manager</SelectItem>
                   <SelectItem value="social-media">
                     Social Media Talent
                   </SelectItem>
@@ -221,7 +220,7 @@ function CareersForm() {
             </FormItem>
           )}
         />
-        {form.watch("role") !== "people" &&
+        {form.watch("role") !== "area-manager" &&
           form.watch("role") !== "social-media" && (
             <FormField
               control={form.control}
