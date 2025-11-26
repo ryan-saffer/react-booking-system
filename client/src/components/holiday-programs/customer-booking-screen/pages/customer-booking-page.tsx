@@ -8,6 +8,7 @@ import { useSearchParams } from 'react-router-dom'
 import { LeftOutlined } from '@ant-design/icons'
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
+import { FacebookPixel } from '@components/facebook-pixel/facebook-pixel'
 import { useIsMutating } from '@tanstack/react-query'
 import { getQueryKey } from '@trpc/react-query'
 import { trpc } from '@utils/trpc'
@@ -192,6 +193,7 @@ export const CustomerBookingPage = () => {
 
     return (
         <Root width="centered" useTailwindPreflight={false}>
+            <FacebookPixel />
             <Typography.Title level={4} style={{ margin: 24, marginTop: 0, textAlign: 'center' }}>
                 Booking Form
             </Typography.Title>
