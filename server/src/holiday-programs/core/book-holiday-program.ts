@@ -1,23 +1,20 @@
 import { FieldValue } from 'firebase-admin/firestore'
+import { logger } from 'firebase-functions/v2'
 import type { DiscountCode } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
-import { SquareError } from 'square'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { SheetsClient } from '@/google/SheetsClient'
-import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
-import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
-import { SquareClient } from '@/square/core/square-client'
-import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
+import { ClassFullError } from '@/trpc/trpc.errors'
 import { logError, throwCustomTrpcError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
+import { processHolidayProgramPayment } from './process-holiday-program-payment'
 import { sendConfirmationEmail } from './send-confirmation-email'
-import { logger } from 'firebase-functions/v2'
 
 export type HolidayProgramBookingProps = {
     idempotencyKey: string
@@ -32,6 +29,7 @@ export type HolidayProgramBookingProps = {
     payment: {
         token: string
         buyerVerificationToken: string
+        giftCardId: string
         amount: number // in cents
         locationId: string
         lineItems: {
@@ -94,93 +92,8 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
 
         // all classes have enough spots! let's continue
 
-        // get or create customer in square
-        const customerId = await getOrCreateCustomer(input.parentFirstName, input.parentLastName, input.parentEmail)
-
         // MARK: Process payment
-        const square = await SquareClient.getInstance()
-
-        const { order } = await square.orders
-            .create({
-                idempotencyKey: input.idempotencyKey,
-                order: {
-                    customerId,
-                    locationId: input.payment.locationId,
-                    lineItems: input.payment.lineItems.map((item) => ({
-                        name: item.name,
-                        quantity: item.quantity,
-                        basePriceMoney: { currency: 'AUD', amount: BigInt(item.amount) },
-                        catalogObjectId: env === 'prod' ? '4B3QJRX5DK34ZFWVGXRZ4U67' : 'REHIF6QHHSED6UALQA36JMPJ', // Holiday program session
-                        metadata: {
-                            classId: item.classId.toString(),
-                            lineItemIdentifier: item.lineItemIdentifier,
-                        },
-                    })),
-                    discounts: input.payment.discount
-                        ? input.payment.discount.discountType === 'percentage'
-                            ? [
-                                  {
-                                      type: 'FIXED_PERCENTAGE',
-                                      percentage: input.payment.discount.discountAmount.toFixed(2),
-                                      name: input.payment.discount.description,
-                                  },
-                              ]
-                            : [
-                                  {
-                                      type: 'FIXED_AMOUNT',
-                                      amountMoney: {
-                                          currency: 'AUD',
-                                          amount: BigInt(input.payment.discount.discountAmount),
-                                      },
-                                      name: input.payment.discount.description,
-                                  },
-                              ]
-                        : null,
-                    metadata: {
-                        programType: 'holiday-program',
-                    },
-                },
-            })
-            .catch((error) =>
-                throwTrpcError('INTERNAL_SERVER_ERROR', 'Error creating order for holiday program payment', error, {
-                    input,
-                })
-            )
-
-        let recieptUrl: string | undefined = undefined
-        if (order?.totalMoney?.amount === BigInt(0)) {
-            await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey: input.idempotencyKey })
-        } else {
-            const { payment } = await square.payments
-                .create({
-                    sourceId: input.payment.token,
-                    idempotencyKey: input.idempotencyKey,
-                    locationId: input.payment.locationId,
-                    amountMoney: {
-                        currency: 'AUD',
-                        amount: BigInt(input.payment.amount),
-                    },
-                    orderId: order!.id,
-                    customerDetails: {
-                        customerInitiated: true,
-                        sellerKeyedIn: false,
-                    },
-                    buyerEmailAddress: input.parentEmail,
-                    verificationToken: input.payment.buyerVerificationToken,
-                })
-                .catch((err) => {
-                    if (err instanceof SquareError) {
-                        const error = err.errors[0]
-                        if (error.category === 'PAYMENT_METHOD_ERROR') {
-                            throwCustomTrpcError(new PaymentMethodInvalidError())
-                        }
-                    }
-                    throwTrpcError('INTERNAL_SERVER_ERROR', 'Unable to process payment for holiday program', err, {
-                        input,
-                    })
-                })
-            recieptUrl = payment!.receiptUrl
-        }
+        const { orderId, recieptUrl } = await processHolidayProgramPayment(input)
 
         // MARK: Schedule into acuity
         const appointments = await Promise.all(
@@ -223,7 +136,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                         },
                         {
                             id: AcuityConstants.FormFields.ORDER_ID,
-                            value: order!.id || '',
+                            value: orderId,
                         },
                         {
                             id: AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER,
@@ -235,7 +148,7 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         ).catch((error) =>
             throwTrpcError('INTERNAL_SERVER_ERROR', 'There was an error booking a holiday program into acuity', error, {
                 input,
-                orderId: order?.id,
+                orderId: orderId,
             })
         )
 

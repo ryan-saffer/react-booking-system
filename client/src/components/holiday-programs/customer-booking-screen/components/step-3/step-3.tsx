@@ -1,3 +1,4 @@
+import { Button } from 'antd'
 import type { DiscountCode } from 'fizz-kidz'
 import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
@@ -17,6 +18,7 @@ import type { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
 import BookingSummary from './booking-summary'
 import DiscountInput from './discount-input'
+import { GiftCardInput } from './gift-card-input'
 
 type Props = {
     form: Form
@@ -42,8 +44,10 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const sameDayClasses = useCart((store) => store.sameDayClasses)
     const selectedStudio = useCart((store) => store.selectedStudio)
     const total = useCart((store) => store.total)
+    const totalShownToCustomer = useCart((store) => store.totalShownToCustomer)
     const subtotal = useCart((store) => store.subtotal)
     const discount = useCart((store) => store.discount)
+    const giftCard = useCart((store) => store.giftCard)
 
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
@@ -60,6 +64,56 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     }, [isSuccess, handleBookingSuccess])
 
     // MARK: functions
+    function handleBooking({ token, buyerVerificationToken }: { token?: string; buyerVerificationToken?: string }) {
+        return book({
+            idempotencyKey: idempotencyKey.current,
+            parentFirstName: form.parentFirstName,
+            parentLastName: form.parentLastName,
+            parentEmail: form.parentEmail,
+            parentPhone: form.phone,
+            emergencyContactName: form.emergencyContact,
+            emergencyContactPhone: form.emergencyPhone,
+            joinMailingList: form.joinMailingList,
+            numberOfKids: form.children.length,
+            payment: {
+                token: token || '',
+                buyerVerificationToken: buyerVerificationToken || '',
+                giftCardId: giftCard?.id || '',
+                amount: Math.round(total * 100), // cents
+                locationId: squareLocationId,
+                lineItems: Object.values(selectedClasses).flatMap((klass) =>
+                    form.children.map((child) => ({
+                        name: `${child.childName} - ${formatClassTime(klass.time)}`,
+                        amount: Math.round(parseInt(klass.price) * 100), // cents
+                        quantity: '1',
+                        classId: klass.id,
+                        lineItemIdentifier: crypto.randomUUID(),
+                        appointmentTypeId: klass.appointmentTypeID,
+                        time: klass.time,
+                        calendarId: klass.calendarID,
+                        childName: child.childName,
+                        childDob: child.childAge.toISOString(),
+                        childAllergies: child.allergies || '',
+                        childAdditionalInfo: child.additionalInfo || '',
+                        isAllDayClass: sameDayClasses.includes(klass.id),
+                        title: klass.title,
+                        creations: klass.creations,
+                    }))
+                ),
+                discount: discount
+                    ? {
+                          ...discount,
+                          discountAmount:
+                              discount.discountType === 'percentage'
+                                  ? discount.discountAmount
+                                  : discount.discountAmount * 100, // price discounts must be in cents
+                          description: discountDescription(discount),
+                      }
+                    : null,
+            },
+        })
+    }
+
     function formatClassTime(date: string) {
         return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toFormat('EEEE MMMM d, h:mm a')
     }
@@ -90,8 +144,14 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                     'Unfortunately we were unable to process your payment. Please check your payment method and try again.'
             }
 
+            if (error.data?.code === 'GIFT_CARD_INACTIVE') {
+                errorTitle = 'Gift Card Inactive'
+                errorMessage =
+                    'The provided gift card is not active and cannot be used. Please check your gift card and try again.'
+            }
+
             return (
-                <Alert variant="destructive" className="mt-4">
+                <Alert variant="destructive" className="twp my-4">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle className="font-semibold">{errorTitle}</AlertTitle>
                     <AlertDescription className="font-medium">{errorMessage}</AlertDescription>
@@ -143,6 +203,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
         <>
             <BookingSummary form={form} numberOfKids={form.children.length} />
             <DiscountInput numberOfKids={form.children.length} />
+            <GiftCardInput numberOfKids={form.children.length} />
             <Root>
                 <PaymentForm
                     key={walletKey}
@@ -150,52 +211,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                     locationId={squareLocationId}
                     cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
                         if (status === 'OK' && token) {
-                            await book({
-                                idempotencyKey: idempotencyKey.current,
-                                parentFirstName: form.parentFirstName,
-                                parentLastName: form.parentLastName,
-                                parentEmail: form.parentEmail,
-                                parentPhone: form.phone,
-                                emergencyContactName: form.emergencyContact,
-                                emergencyContactPhone: form.emergencyPhone,
-                                joinMailingList: form.joinMailingList,
-                                numberOfKids: form.children.length,
-                                payment: {
-                                    token: token,
-                                    buyerVerificationToken: buyerVerification?.token || '',
-                                    amount: Math.round(total * 100), // cents
-                                    locationId: squareLocationId,
-                                    lineItems: Object.values(selectedClasses).flatMap((klass) =>
-                                        form.children.map((child) => ({
-                                            name: `${child.childName} - ${formatClassTime(klass.time)}`,
-                                            amount: Math.round(parseInt(klass.price) * 100), // cents
-                                            quantity: '1',
-                                            classId: klass.id,
-                                            lineItemIdentifier: crypto.randomUUID(),
-                                            appointmentTypeId: klass.appointmentTypeID,
-                                            time: klass.time,
-                                            calendarId: klass.calendarID,
-                                            childName: child.childName,
-                                            childDob: child.childAge.toISOString(),
-                                            childAllergies: child.allergies || '',
-                                            childAdditionalInfo: child.additionalInfo || '',
-                                            isAllDayClass: sameDayClasses.includes(klass.id),
-                                            title: klass.title,
-                                            creations: klass.creations,
-                                        }))
-                                    ),
-                                    discount: discount
-                                        ? {
-                                              ...discount,
-                                              discountAmount:
-                                                  discount.discountType === 'percentage'
-                                                      ? discount.discountAmount
-                                                      : discount.discountAmount * 100, // price discounts must be in cents
-                                              description: discountDescription(discount),
-                                          }
-                                        : null,
-                                },
-                            })
+                            await handleBooking({ token, buyerVerificationToken: buyerVerification?.token })
                         } else {
                             toast.error('There was an error processing your payment')
                         }
@@ -232,12 +248,23 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                             : undefined,
                         total: {
                             label: 'Total',
-                            amount: total.toFixed(2),
+                            amount: totalShownToCustomer.toFixed(2),
                         },
                     })}
                 >
                     {isError ? (
                         renderError()
+                    ) : totalShownToCustomer === 0 ? (
+                        <Button
+                            block
+                            type="primary"
+                            size="large"
+                            className="my-4"
+                            disabled={isLoading}
+                            onClick={() => handleBooking({ token: '', buyerVerificationToken: '' })}
+                        >
+                            Book
+                        </Button>
                     ) : (
                         <>
                             <ApplePay style={{ marginTop: 32, marginBottom: 8 }} />

@@ -3,6 +3,14 @@ import { create } from 'zustand'
 
 type Class = AcuityTypes.Client.Class
 
+type GiftCard = {
+    id: string
+    state: 'ACTIVE' | 'DEACTIVATED' | 'BLOCKED' | 'PENDING' | 'UNKNOWN'
+    balanceAppliedCents: number
+    balanceRemainingCents: number
+    last4: string
+}
+
 type Cart = {
     selectedStudio: StudioOrTest | null
     selectedClasses: Record<number, Class>
@@ -10,13 +18,17 @@ type Cart = {
      * Array of classIds that are in the cart and are an 'all day' class
      */
     sameDayClasses: number[]
-    subtotal: number
-    total: number
+    subtotal: number // total before discounts
+    totalShownToCustomer: number // total after discounts less gift card (amount shown to customer as owed - applying a gift card reduces this number)
+    total: number // total after disconts (amount to be paid - gift cards not included since its a payment method, not a 'reduction' in the cost)
     discount: DiscountCode | null // only for discount codes, not multi session discounts
+    giftCard: GiftCard | null
     setSelectedStudio: (location: StudioOrTest) => void
     clearCart: () => void
     applyDiscount: (discount: DiscountCode, numberOfKids: number) => void
     clearDiscount: (numberOfKids: number) => void
+    applyGiftCard: (giftCard: GiftCard, numberOfKids: number) => void
+    clearGiftCard: (numberOfKids: number) => void
     toggleClass: (klass: Class, numberOfKids: number) => void
     updateSameDayClasses: () => void
     calculateTotal: (numberOfKids: number) => void
@@ -33,8 +45,10 @@ export const useCart = create<Cart>()((set, get) => ({
     selectedClasses: {},
     sameDayClasses: [],
     subtotal: 0,
+    totalShownToCustomer: 0,
     total: 0,
     discount: null,
+    giftCard: null,
     setSelectedStudio: (location) => {
         set({ selectedStudio: location })
     },
@@ -47,6 +61,14 @@ export const useCart = create<Cart>()((set, get) => ({
     },
     applyDiscount: (discount, numberOfKids) => {
         set({ discount })
+        get().calculateTotal(numberOfKids)
+    },
+    applyGiftCard: (giftCard, numberOfKids) => {
+        set({ giftCard })
+        get().calculateTotal(numberOfKids)
+    },
+    clearGiftCard: (numberOfKids) => {
+        set({ giftCard: null })
         get().calculateTotal(numberOfKids)
     },
     toggleClass: (klass, numberOfKids) => {
@@ -69,9 +91,10 @@ export const useCart = create<Cart>()((set, get) => ({
         const sameDayClasses: number[] = []
         for (let i = 0; i < classes.length; i++) {
             for (let j = i + 1; j < classes.length; j++) {
-                const date1 = new Date(classes[i].time)
-                const date2 = new Date(classes[j].time)
-                if (date1.getDate() === date2.getDate()) {
+                // Compare date portion only (avoid timezone shifts from Date parsing)
+                const date1 = classes[i].time.split('T')[0]
+                const date2 = classes[j].time.split('T')[0]
+                if (date1 === date2) {
                     sameDayClasses.push(classes[i].id)
                     sameDayClasses.push(classes[j].id)
                 }
@@ -106,7 +129,35 @@ export const useCart = create<Cart>()((set, get) => ({
             }
         }
 
-        set({ subtotal, total })
+        const giftCard = get().giftCard
+        let totalShownToCustomer = total
+        if (giftCard) {
+            const balanceDollars = giftCard.balanceRemainingCents / 100
+
+            if (total === 0) {
+                set({ giftCard: null })
+            } else if (total <= balanceDollars) {
+                set({
+                    giftCard: {
+                        ...giftCard,
+                        balanceAppliedCents: total * 100,
+                        balanceRemainingCents: giftCard.balanceRemainingCents - total * 100,
+                    },
+                })
+                totalShownToCustomer = 0
+            } else {
+                set({
+                    giftCard: {
+                        ...giftCard,
+                        balanceAppliedCents: giftCard.balanceRemainingCents,
+                        balanceRemainingCents: 0,
+                    },
+                })
+                totalShownToCustomer -= balanceDollars
+            }
+        }
+
+        set({ subtotal, total, totalShownToCustomer })
     },
     getEarliestClass: () => {
         const sorted = Object.values(get().selectedClasses).sort(

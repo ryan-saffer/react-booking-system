@@ -13,7 +13,8 @@
         "preview": "vite preview",
         "ts:check": "tsc -b",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "test": "react-scripts test",
+        "test": "vitest --run",
+        "test:coverage": "vitest run --coverage",
         "eject": "react-scripts eject"
     },
     "dependencies": {
@@ -87,12 +88,14 @@
         "@types/dateformat": "^3.0.1",
         "@types/luxon": "^2.3.2",
         "@types/mixpanel-browser": "^2.38.0",
-        "@types/node": "^14.14.37",
+        "@types/node": "^22.16.0",
         "@types/react": "^18.2.33",
         "@types/react-dom": "^18.2.14",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vitejs/plugin-react": "^4.0.3",
+        "@vitest/coverage-v8": "^4.0.14",
+        "@vitest/ui": "^4.0.14",
         "autoprefixer": "^10.4.17",
         "concurrently": "^8.2.1",
         "eslint": "^8.45.0",
@@ -108,7 +111,8 @@
         "tailwindcss-bg-patterns": "^0.3.0",
         "typescript": "^5.5.2",
         "vite": "^4.4.5",
-        "vite-plugin-html": "^3.2.2"
+        "vite-plugin-html": "^3.2.2",
+        "vitest": "^4.0.14"
     },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {

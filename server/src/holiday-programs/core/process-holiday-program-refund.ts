@@ -86,36 +86,39 @@ export async function processHolidayProgramRefund(data: AcuityWebhookData) {
     }
 
     let receiptUrl = ''
-    const paymentId = order?.tenders?.[0].paymentId
-    if (!paymentId) {
-        logError('Order does not have a tendered payment id while processing holiday program refund', null, {
+    let paymentId = ''
+
+    if (!order.tenders) {
+        logError('Order does not have any tenders while processing holiday program refund', null, {
             webhookData: data,
             orderId: orderId,
         })
     } else {
-        try {
+        for (const tender of order.tenders) {
             await square.refunds.refundPayment({
-                amountMoney: { amount: amountToRefund, currency: 'AUD' },
-                reason: 'Cancelled more than 48 hours before program - automatic refund',
-                paymentId,
-                idempotencyKey: data.id,
+                idempotencyKey: `${data.id}-refund-${tender.id!}`,
+                amountMoney: tender.amountMoney!,
+                paymentId: tender.paymentId!,
             })
-        } catch (err) {
-            logError(`Unable to process square refund for holiday program booking with id: ${appointment.id}`, err, {
-                webhookData: data,
-                refundAmount: amountToRefund,
-            })
+            paymentId = tender.paymentId!
         }
 
-        try {
-            const { payment } = await square.payments.get({ paymentId })
-            receiptUrl = payment?.receiptUrl || ''
-        } catch (error) {
-            logError('Error getting payment receipt while processing holiday program refund', error, {
-                data,
-                paymentId,
-                appointment,
+        if (!paymentId) {
+            logError('could not find a payment id while processing holiday program refund', null, {
+                webhookData: data,
+                orderId: orderId,
             })
+        } else {
+            try {
+                const { payment } = await square.payments.get({ paymentId })
+                receiptUrl = payment?.receiptUrl || ''
+            } catch (error) {
+                logError('Error getting payment receipt while processing holiday program refund', error, {
+                    data,
+                    paymentId,
+                    appointment,
+                })
+            }
         }
     }
 
