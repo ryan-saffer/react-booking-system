@@ -3,6 +3,7 @@ import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
 import { DateTime } from 'luxon'
 import React, { useEffect, useRef } from 'react'
+import { Helmet } from 'react-helmet'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
 
@@ -104,16 +105,27 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     // MARK: rendering
     if (isSuccess) {
         return (
-            <Alert variant="success" className="twp">
-                <CheckCircle className="h-4 w-4" />
-                <AlertTitle className="font-semibold">Booked!</AlertTitle>
-                <AlertDescription className="font-medium">
-                    Your sessions have been booked, and you should have a booking confirmation email.
-                    <br />
-                    <br />
-                    We can't wait to see you soon!
-                </AlertDescription>
-            </Alert>
+            <>
+                <Alert variant="success" className="twp">
+                    <CheckCircle className="h-4 w-4" />
+                    <AlertTitle className="font-semibold">Booked!</AlertTitle>
+                    <AlertDescription className="font-medium">
+                        Your sessions have been booked, and you should have a booking confirmation email.
+                        <br />
+                        <br />
+                        We can't wait to see you soon!
+                    </AlertDescription>
+                </Alert>
+                <Helmet>
+                    <script>
+                        {`
+                        if (window.fbq) {
+                            window.fbq('track', 'HolidayProgramBooking', { value: ${total} });
+                        }
+                    `}
+                    </script>
+                </Helmet>
+            </>
         )
     }
 
