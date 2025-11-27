@@ -12,7 +12,7 @@ import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { FieldValue } from 'firebase-admin/firestore'
 import { Status } from 'google-gax'
 import { SquareError } from 'square'
-import { ClassFullError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
+import { ClassFullError, CustomTrpcError, PaymentMethodInvalidError } from '@/trpc/trpc.errors'
 import { logger } from 'firebase-functions/v2'
 
 export type BookPlayLabProps = {
@@ -40,6 +40,7 @@ export type BookPlayLabProps = {
     payment: {
         token: string
         buyerVerificationToken: string
+        giftCardId: string
         locationId: string
         amount: number // in cents
         lineItems: {
@@ -118,7 +119,10 @@ export async function bookPlayLab(input: BookPlayLabProps) {
         input.payment,
         input.parentEmail,
         customerId
-    ).catch((err) => {
+    ).catch((err: any) => {
+        if (err.cause instanceof CustomTrpcError) {
+            throw err
+        }
         if (err instanceof SquareError) {
             const error = err.errors[0]
             if (error.category === 'PAYMENT_METHOD_ERROR') {

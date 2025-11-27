@@ -1,5 +1,5 @@
 import { getSquareLocationId } from 'fizz-kidz'
-import { AlertCircle, PartyPopper, XIcon } from 'lucide-react'
+import { AlertCircle, PartyPopper, XIcon, CreditCard as CreditCardIcon } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useRef } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
@@ -16,20 +16,30 @@ import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
 import { DiscountInput } from './discount-input'
+import { GiftCardInput } from './gift-card-input'
 
 export function Payment() {
     //#region Variables
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
     const nextStage = useFormStage((store) => store.nextStage)
-    const { selectedClasses, discount, subtotal, total, removeDiscount } = useCart()
+    const {
+        selectedClasses,
+        discount,
+        subtotal,
+        total,
+        totalShownToCustomer,
+        giftCard,
+        clearGiftCard,
+        removeDiscount,
+    } = useCart()
 
     const children = form.watch('children')
     const studio = form.watch('studio')
 
     const squareLocationId = studio ? getSquareLocationId(studio) : ''
 
-    const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}` // force rerender the square checkout component when disconut code changes
+    const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}-${giftCard?.id}` // force rerender the square checkout component when disconut code changes
 
     const idempotencyKey = useRef(crypto.randomUUID())
 
@@ -78,6 +88,7 @@ export function Payment() {
             payment: {
                 token,
                 buyerVerificationToken,
+                giftCardId: giftCard?.id || '',
                 locationId: squareLocationId,
                 amount: Math.round(total * 100), // cents
                 lineItems: Object.values(selectedClasses).flatMap((klass) => {
@@ -146,6 +157,12 @@ export function Payment() {
                     'Unfortunately we were unable to process your payment. Please check your payment method and try again.'
             }
 
+            if (error.data?.code === 'GIFT_CARD_INACTIVE') {
+                errorTitle = 'Gift Card invalid'
+                errorMessage =
+                    'This gift card has either been deactivated or has not yet been activated. Please try again after activating the card.'
+            }
+
             return (
                 <Alert variant="destructive" className="mt-4">
                     <AlertCircle className="h-4 w-4" />
@@ -202,52 +219,64 @@ export function Payment() {
                         })}
                 </TableBody>
                 <TableFooter>
+                    {(discount || giftCard) && (
+                        <TableRow>
+                            <TableCell colSpan={2} className="py-2 font-light italic">
+                                Subtotal
+                            </TableCell>
+                            <TableCell className="py-2 text-right font-light italic">${subtotal.toFixed(2)}</TableCell>
+                        </TableRow>
+                    )}
                     {discount && (
-                        <>
-                            <TableRow>
-                                <TableCell colSpan={2} className="py-2 font-light italic">
-                                    Subtotal
-                                </TableCell>
-                                <TableCell className="py-2 text-right font-light italic">
-                                    ${subtotal.toFixed(2)}
-                                </TableCell>
-                            </TableRow>
-                            <TableRow className="bg-green-200 hover:bg-green-200/80">
-                                <TableCell colSpan={2} className="py-2 font-light italic text-green-800">
-                                    <div className="flex items-center">
-                                        <PartyPopper className="mr-2 h-5 w-5" />
-                                        {discount.description}
-                                        {!discount.isMultiSessionDiscount && (
-                                            <Button
-                                                className="ml-2 min-h-0 border border-transparent p-1 hover:border-green-800  hover:bg-green-200/80"
-                                                variant="ghost"
-                                                onClick={() =>
-                                                    removeDiscount(
-                                                        form.getValues().children.length,
-                                                        form.getValues().bookingType === 'term-booking'
-                                                    )
-                                                }
-                                            >
-                                                <XIcon className="size-4" />
-                                            </Button>
-                                        )}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="py-2 text-right font-light italic text-green-800">
-                                    {discount.type === 'percentage'
-                                        ? `${discount.amount}% off`
-                                        : `$${discount.amount} off`}
-                                </TableCell>
-                            </TableRow>
-                        </>
+                        <TableRow className="bg-green-200 hover:bg-green-200/80">
+                            <TableCell colSpan={2} className="py-2 font-light italic text-green-800">
+                                <div className="flex items-center">
+                                    <PartyPopper className="mr-2 h-5 w-5" />
+                                    {discount.description}
+                                    {!discount.isMultiSessionDiscount && (
+                                        <Button
+                                            className="ml-2 min-h-0 border border-transparent p-1 hover:border-green-800  hover:bg-green-200/80"
+                                            variant="ghost"
+                                            onClick={() => removeDiscount(form.getValues().children.length)}
+                                        >
+                                            <XIcon className="size-4" />
+                                        </Button>
+                                    )}
+                                </div>
+                            </TableCell>
+                            <TableCell className="py-2 text-right font-light italic text-green-800">
+                                {discount.type === 'percentage' ? `${discount.amount}% off` : `$${discount.amount} off`}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                    {giftCard && (
+                        <TableRow className="bg-blue-200 hover:bg-blue-200/80">
+                            <TableCell colSpan={2} className="py-2 font-light italic text-blue-800">
+                                <div className="flex items-center">
+                                    <CreditCardIcon className="mr-2 h-5 w-5" />
+                                    Gift Card (${(giftCard.balanceRemainingCents / 100).toFixed(2)} remaining)
+                                    <Button
+                                        className="ml-2 min-h-0 border border-transparent p-1 hover:border-blue-800  hover:bg-blue-200/80"
+                                        variant="ghost"
+                                        onClick={() => clearGiftCard(form.getValues().children.length)}
+                                    >
+                                        <XIcon className="size-4" />
+                                    </Button>
+                                </div>
+                            </TableCell>
+                            <TableCell className="py-2 text-right font-light italic text-blue-800">
+                                -${(giftCard.balanceAppliedCents / 100).toFixed(2)}
+                            </TableCell>
+                        </TableRow>
                     )}
                     <TableRow className="border-t">
                         <TableCell colSpan={2}>Total</TableCell>
-                        <TableCell className="pt-2 text-right">${total.toFixed(2)}</TableCell>
+                        <TableCell className="pt-2 text-right">${totalShownToCustomer.toFixed(2)}</TableCell>
                     </TableRow>
                 </TableFooter>
             </Table>
             <DiscountInput />
+            <GiftCardInput />
             <PaymentForm
                 key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
@@ -260,7 +289,7 @@ export function Payment() {
                     }
                 }}
                 createVerificationDetails={() => ({
-                    amount: total.toFixed(2),
+                    amount: totalShownToCustomer.toFixed(2),
                     billingContact: {
                         givenName: form.getValues().parentFirstName,
                         familyName: form.getValues().parentLastName,
@@ -286,13 +315,17 @@ export function Payment() {
                             : [{ label: 'Discount', amount: discount.amount.toFixed(2) }]
                         : undefined,
                     total: {
-                        amount: total.toFixed(2),
+                        amount: totalShownToCustomer.toFixed(2),
                         label: 'Total',
                     },
                 })}
             >
                 {isError ? (
                     renderError()
+                ) : totalShownToCustomer === 0 ? (
+                    <Button className="mt-4 w-full" onClick={() => book('', '')}>
+                        Book
+                    </Button>
                 ) : (
                     <div className="mt-8">
                         <ApplePay className="mb-4" />

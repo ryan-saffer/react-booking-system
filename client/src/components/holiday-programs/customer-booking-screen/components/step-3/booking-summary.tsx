@@ -15,8 +15,10 @@ const BookingSummary: React.FC<Props> = ({ form, numberOfKids }) => {
     const selectedClasses = useCart((store) => store.selectedClasses)
     const subtotal = useCart((store) => store.subtotal)
     const discount = useCart((store) => store.discount)
-    const total = useCart((store) => store.total)
+    const totalShownToCustomer = useCart((store) => store.totalShownToCustomer)
     const clearDiscount = useCart((store) => store.clearDiscount)
+    const giftCard = useCart((store) => store.giftCard)
+    const clearGiftCard = useCart((store) => store.clearGiftCard)
     //#endregion
 
     //#region Render
@@ -25,9 +27,6 @@ const BookingSummary: React.FC<Props> = ({ form, numberOfKids }) => {
             header={<Typography.Title level={4}>Booking summary</Typography.Title>}
             footer={
                 <>
-                    <Typography.Title level={4}>
-                        Total price: {discount && <del>${subtotal.toFixed(2)}</del>} ${total.toFixed(2)}
-                    </Typography.Title>
                     {discount && (
                         <Tag
                             style={{
@@ -44,6 +43,23 @@ const BookingSummary: React.FC<Props> = ({ form, numberOfKids }) => {
                                 : `-$${discount.discountAmount.toFixed(2)}`}
                         </Tag>
                     )}
+                    {giftCard && (
+                        <Tag
+                            style={{
+                                fontSize: 14,
+                                padding: 7,
+                            }}
+                            color="green"
+                            closable
+                            onClose={() => clearGiftCard(numberOfKids)}
+                        >
+                            Gift card applied: -${(giftCard.balanceAppliedCents / 100).toFixed(2)} ($
+                            {(giftCard.balanceRemainingCents / 100).toFixed(2)} reamining)
+                        </Tag>
+                    )}
+                    <Typography.Title level={4}>
+                        Total price: {discount && <del>${subtotal.toFixed(2)}</del>} ${totalShownToCustomer.toFixed(2)}
+                    </Typography.Title>
                 </>
             }
             dataSource={Object.values(selectedClasses)
