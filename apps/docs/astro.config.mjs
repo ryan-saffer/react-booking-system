@@ -27,6 +27,10 @@ export default defineConfig({
                 },
               ],
             },
+            {
+              label: "Gift Cards",
+              link: "services/gift-cards",
+            },
           ],
         },
         {
