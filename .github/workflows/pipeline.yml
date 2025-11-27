@@ -81,8 +81,12 @@ jobs:
         run: npm ci
         working-directory: client
 
+      - name: Run client tests
+        run: npm test
+        working-directory: client
+
       - name: Run server tests
-        run: npm test -- -reporter nyan
+        run: npm test
         working-directory: server
 
       - name: Install Firebase CLI

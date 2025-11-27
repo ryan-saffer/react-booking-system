@@ -52,3 +52,4 @@ export * from './events/incursion-module-map'
 
 export * from './zoho/zoho.types'
 export * from './square'
+export * from './gift-cards/gift-cards'

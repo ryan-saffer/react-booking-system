@@ -8,6 +8,7 @@ import {
     type CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
+import { checkGiftCardBalance } from '@/gift-cards/check-gift-card-balance'
 import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({
@@ -23,4 +24,7 @@ export const holidayProgramsRouter = router({
     checkDiscountCode: publicProcedure
         .input((input: unknown) => input as { code: string })
         .mutation(({ input }) => checkDiscountCode(input.code)),
+    checkGiftCardBalance: publicProcedure
+        .input((input: unknown) => input as { giftCardNumber: string })
+        .mutation(({ input }) => checkGiftCardBalance(input.giftCardNumber)),
 })

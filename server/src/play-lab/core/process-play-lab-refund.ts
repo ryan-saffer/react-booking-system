@@ -82,9 +82,9 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
         return
     }
 
-    const amountToRefund = lineItemToRefund.totalMoney?.amount
+    let amountToRefund = lineItemToRefund.totalMoney?.amount
 
-    if (amountToRefund === BigInt(0)) {
+    if (!amountToRefund || amountToRefund === BigInt(0)) {
         // dont process refunds on free bookings
         await mailClient.sendEmail('playLabCancellation', appointment.email, {
             booking: lineItemToRefund.name!,
@@ -96,36 +96,80 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     }
 
     let receiptUrl = ''
-    const paymentId = order?.tenders?.[0].paymentId
-    if (!paymentId) {
-        logError('Order does not have a tendered payment id while processing play lab refund', null, {
+    let lastRefundPaymentId = ''
+
+    if (!order.tenders || order.tenders.length === 0) {
+        logError('Order does not have any tenders while processing play lab refund', null, {
             webhookData: data,
             orderId: orderId,
         })
     } else {
-        try {
+        for (const tender of order.tenders) {
+            if (amountToRefund <= BigInt(0)) {
+                break
+            }
+
+            // determine remaining refundable amount on this tender (subtract any prior refunds)
+            let refundableAmount = tender.amountMoney?.amount ?? BigInt(0)
+            try {
+                if (tender.paymentId) {
+                    const { payment } = await square.payments.get({ paymentId: tender.paymentId })
+                    const alreadyRefunded = payment?.refundedMoney?.amount ?? BigInt(0)
+                    refundableAmount = refundableAmount - alreadyRefunded
+                }
+            } catch (error) {
+                logError('Error determining refundable amount for tender during play lab refund', error, {
+                    webhookData: data,
+                    orderId,
+                    tenderId: tender.id,
+                    paymentId: tender.paymentId,
+                })
+            }
+
+            if (refundableAmount <= BigInt(0)) {
+                continue
+            }
+
+            const refundThisTender = amountToRefund > refundableAmount ? refundableAmount : amountToRefund
+
+            if (refundThisTender <= BigInt(0)) {
+                continue
+            }
+
             await square.refunds.refundPayment({
-                amountMoney: { amount: amountToRefund, currency: 'AUD' },
+                idempotencyKey: `${data.id}-refund-${tender.id!}`,
+                amountMoney: { amount: refundThisTender, currency: tender.amountMoney?.currency || 'AUD' },
+                paymentId: tender.paymentId!,
                 reason: 'Cancelled more than 48 hours before program - automatic refund',
-                paymentId,
-                idempotencyKey: data.id,
             })
-        } catch (err) {
-            logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
+            lastRefundPaymentId = tender.paymentId!
+            amountToRefund -= refundThisTender
+        }
+
+        if (amountToRefund > BigInt(0)) {
+            logError('Refund amount not fully covered by tenders while processing play lab refund', null, {
                 webhookData: data,
-                refundAmount: amountToRefund,
+                orderId,
+                remainingAmount: amountToRefund.toString(),
             })
         }
 
-        try {
-            const { payment } = await square.payments.get({ paymentId })
-            receiptUrl = payment?.receiptUrl || ''
-        } catch (error) {
-            logError('Error getting payment receipt while processing play lab refund', error, {
-                data,
-                paymentId,
-                appointment,
+        if (!lastRefundPaymentId) {
+            logError('could not find a payment id while processing play lab refund', null, {
+                webhookData: data,
+                orderId: orderId,
             })
+        } else {
+            try {
+                const { payment } = await square.payments.get({ paymentId: lastRefundPaymentId })
+                receiptUrl = payment?.receiptUrl || ''
+            } catch (error) {
+                logError('Error getting payment receipt while processing play lab refund', error, {
+                    data,
+                    paymentId: lastRefundPaymentId,
+                    appointment,
+                })
+            }
         }
     }
 

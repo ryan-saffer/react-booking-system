@@ -7,11 +7,14 @@ export function getErrorCode(error: Error | undefined, defaultCode: TRPC_ERROR_C
     if (error instanceof ClassFullError) {
         return 'CLASS_FULL'
     }
+    if (error instanceof GiftCardInactiveError) {
+        return 'GIFT_CARD_INACTIVE'
+    }
     return defaultCode
 }
 
 // MARK: Custom errors
-export type AppErrorCode = TRPC_ERROR_CODE_KEY | 'PAYMENT_METHOD_INVALID' | 'CLASS_FULL'
+export type AppErrorCode = TRPC_ERROR_CODE_KEY | 'PAYMENT_METHOD_INVALID' | 'CLASS_FULL' | 'GIFT_CARD_INACTIVE'
 
 /**
  * This class just exists to ensure only custom errors can be thrown by throwCustomTrpcError()
@@ -40,5 +43,12 @@ export class ClassFullError extends CustomTrpcError {
     constructor(message?: string) {
         super(message ?? 'One or more of the selected classes does not have enough spots available')
         this.name = 'ClassFullError'
+    }
+}
+
+export class GiftCardInactiveError extends CustomTrpcError {
+    constructor(message?: string) {
+        super(message ?? 'The provided gift card is not active and cannot be used')
+        this.name = 'GiftCardInactiveError'
     }
 }
