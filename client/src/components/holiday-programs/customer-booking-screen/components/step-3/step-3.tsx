@@ -217,7 +217,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                         }
                     }}
                     createVerificationDetails={() => ({
-                        amount: total.toFixed(2),
+                        amount: totalShownToCustomer.toFixed(2),
                         billingContact: {
                             givenName: form.parentFirstName,
                             familyName: form.parentLastName,

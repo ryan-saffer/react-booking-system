@@ -289,7 +289,7 @@ export function Payment() {
                     }
                 }}
                 createVerificationDetails={() => ({
-                    amount: total.toFixed(2),
+                    amount: totalShownToCustomer.toFixed(2),
                     billingContact: {
                         givenName: form.getValues().parentFirstName,
                         familyName: form.getValues().parentLastName,
