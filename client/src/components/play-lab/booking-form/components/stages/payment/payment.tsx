@@ -39,7 +39,7 @@ export function Payment() {
 
     const squareLocationId = studio ? getSquareLocationId(studio) : ''
 
-    const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}` // force rerender the square checkout component when disconut code changes
+    const walletKey = `${discount?.description}-${discount?.amount}-${discount?.type}-${giftCard?.id}` // force rerender the square checkout component when disconut code changes
 
     const idempotencyKey = useRef(crypto.randomUUID())
 

@@ -52,7 +52,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const squareLocationId = getSquareLocationId(selectedStudio!)
 
     const idempotencyKey = useRef(crypto.randomUUID())
-    const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}` // force rerender the square checkout component when disconut code changes
+    const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}-${giftCard?.id}` // force rerender the square checkout component when disconut code changes
 
     // MARK: hooks
     const { mutateAsync: book, isLoading, isSuccess, isError, error } = trpc.holidayPrograms.book.useMutation()
