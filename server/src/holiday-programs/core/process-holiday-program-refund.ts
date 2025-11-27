@@ -99,6 +99,7 @@ export async function processHolidayProgramRefund(data: AcuityWebhookData) {
                 idempotencyKey: `${data.id}-refund-${tender.id!}`,
                 amountMoney: tender.amountMoney!,
                 paymentId: tender.paymentId!,
+                reason: 'Cancelled more than 48 hours before program - automatic refund',
             })
             paymentId = tender.paymentId!
         }

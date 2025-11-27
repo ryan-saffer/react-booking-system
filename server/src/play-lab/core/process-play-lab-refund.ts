@@ -96,37 +96,25 @@ export async function processPlayLabRefund(data: AcuityWebhookData) {
     }
 
     let receiptUrl = ''
-    const paymentId = order?.tenders?.[0].paymentId
-    if (!paymentId) {
-        logError('Order does not have a tendered payment id while processing play lab refund', null, {
+    let paymentId = ''
+
+    if (!order.tenders) {
+        logError('Order does not have any tenders while processing play lab refund', null, {
             webhookData: data,
             orderId: orderId,
         })
     } else {
-        try {
+        for (const tender of order.tenders) {
             await square.refunds.refundPayment({
-                amountMoney: { amount: amountToRefund, currency: 'AUD' },
+                idempotencyKey: `${data.id}-refund-${tender.id!}`,
+                amountMoney: tender.amountMoney!,
+                paymentId: tender.paymentId!,
                 reason: 'Cancelled more than 48 hours before program - automatic refund',
-                paymentId,
-                idempotencyKey: data.id,
             })
-        } catch (err) {
-            logError(`Unable to process square refund for plab lab booking with id: ${appointment.id}`, err, {
-                webhookData: data,
-                refundAmount: amountToRefund,
-            })
+            paymentId = tender.paymentId!
         }
-
-        try {
-            const { payment } = await square.payments.get({ paymentId })
-            receiptUrl = payment?.receiptUrl || ''
-        } catch (error) {
-            logError('Error getting payment receipt while processing play lab refund', error, {
-                data,
-                paymentId,
-                appointment,
-            })
-        }
+        const { payment } = await square.payments.get({ paymentId })
+        receiptUrl = payment?.receiptUrl || ''
     }
 
     await mailClient.sendEmail('playLabCancellation', appointment.email, {

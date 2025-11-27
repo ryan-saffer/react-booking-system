@@ -1,4 +1,4 @@
-import type { AcuityTypes } from 'fizz-kidz'
+import type { AcuityTypes, GiftCard } from 'fizz-kidz'
 import { create } from 'zustand'
 
 export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date; image?: string }
@@ -25,7 +25,9 @@ interface Cart {
           ))
         | null
     subtotal: number
+    totalShownToCustomer: number
     total: number
+    giftCard: GiftCard | null
     calculateTotal: (numberOfKids: number) => void
     applyDiscountCode: (
         discount: { discountType: 'percentage' | 'price'; discountAmount: number; code: string },
@@ -34,7 +36,9 @@ interface Cart {
     ) => {
         error: string | null
     }
-    removeDiscount: (numberOfKids: number, isTermEnrolment: boolean) => void
+    removeDiscount: (numberOfKids: number) => void
+    applyGiftCard: (giftCard: GiftCard, numberOfKids: number) => void
+    clearGiftCard: (numberOfKids: number) => void
     /**
      * Gets the date of the earliest class in the cart. Returns todays date if nothing in the cart.
      *
@@ -47,7 +51,9 @@ export const useCart = create<Cart>()((set, get) => ({
     selectedClasses: {},
     discount: null,
     subtotal: 0,
+    totalShownToCustomer: 0,
     total: 0,
+    giftCard: null,
     toggleClass: (klass, numberOfKids) => {
         const current = get().selectedClasses
         let next: Record<number, LocalAcuityClass>
@@ -107,11 +113,44 @@ export const useCart = create<Cart>()((set, get) => ({
                   } as const)
 
         // finally, apply the discount that is best
+        let total = subtotal
         if (totalAfterDiscountCode < multiSessionDiscountTotal && totalAfterDiscountCode >= 0) {
-            set({ total: totalAfterDiscountCode, subtotal })
+            total = totalAfterDiscountCode
         } else {
-            set({ discount: multiSessionDiscount, subtotal, total: multiSessionDiscountTotal })
+            total = multiSessionDiscountTotal
+            set({ discount: multiSessionDiscount })
         }
+
+        // gift cards
+        const giftCard = get().giftCard
+        let totalShownToCustomer = total
+        if (giftCard) {
+            const balanceDollars = giftCard.balanceRemainingCents / 100
+
+            if (total === 0) {
+                set({ giftCard: null })
+            } else if (total <= balanceDollars) {
+                set({
+                    giftCard: {
+                        ...giftCard,
+                        balanceAppliedCents: total * 100,
+                        balanceRemainingCents: giftCard.balanceRemainingCents - total * 100,
+                    },
+                })
+                totalShownToCustomer = 0
+            } else {
+                set({
+                    giftCard: {
+                        ...giftCard,
+                        balanceAppliedCents: giftCard.balanceRemainingCents,
+                        balanceRemainingCents: 0,
+                    },
+                })
+                totalShownToCustomer -= balanceDollars
+            }
+        }
+
+        set({ total, subtotal, totalShownToCustomer })
     },
     applyDiscountCode: (discount, numberOfKids) => {
         const subtotal = get().subtotal
@@ -154,6 +193,14 @@ export const useCart = create<Cart>()((set, get) => ({
     },
     removeDiscount: (numberOfKids) => {
         set({ discount: null })
+        get().calculateTotal(numberOfKids)
+    },
+    applyGiftCard: (giftCard, numberOfKids) => {
+        set({ giftCard })
+        get().calculateTotal(numberOfKids)
+    },
+    clearGiftCard: (numberOfKids) => {
+        set({ giftCard: null })
         get().calculateTotal(numberOfKids)
     },
     getEarliestClassDate: () => {

@@ -1,15 +1,7 @@
-import type { AcuityTypes, DiscountCode, StudioOrTest } from 'fizz-kidz'
+import type { AcuityTypes, DiscountCode, GiftCard, StudioOrTest } from 'fizz-kidz'
 import { create } from 'zustand'
 
 type Class = AcuityTypes.Client.Class
-
-type GiftCard = {
-    id: string
-    state: 'ACTIVE' | 'DEACTIVATED' | 'BLOCKED' | 'PENDING' | 'UNKNOWN'
-    balanceAppliedCents: number
-    balanceRemainingCents: number
-    last4: string
-}
 
 type Cart = {
     selectedStudio: StudioOrTest | null
@@ -129,6 +121,7 @@ export const useCart = create<Cart>()((set, get) => ({
             }
         }
 
+        // gift cards
         const giftCard = get().giftCard
         let totalShownToCustomer = total
         if (giftCard) {

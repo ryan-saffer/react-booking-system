@@ -8,7 +8,7 @@ import {
     type CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
-import { checkGiftCardBalance } from '@/holiday-programs/core/check-gift-card-balance'
+import { checkGiftCardBalance } from '@/gift-cards/check-gift-card-balance'
 import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({
