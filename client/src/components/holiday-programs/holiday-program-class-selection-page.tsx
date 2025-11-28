@@ -1,9 +1,10 @@
 import type { AcuityTypes } from 'fizz-kidz'
 import { AcuityConstants, ObjectEntries } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+import { useOrg } from '@components/Session/use-org'
 import { Button, Paper } from '@mui/material'
 import { Skeleton } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
@@ -73,6 +74,10 @@ const Root = styled('div')(({ theme }) => ({
 
     [`& .${cssClasses.submitButton}`]: {
         marginTop: 16,
+        background: '#AC4390',
+        ['&:hover']: {
+            background: '#B5589D',
+        },
     },
 }))
 
@@ -84,8 +89,14 @@ export const HolidayProgramSelectionPage = () => {
 
     const navigate = useNavigate()
 
+    const { currentOrg } = useOrg()
+
+    const showLocationSelector = currentOrg === 'master'
+
     const [filteredClasses, setFilteredClasses] = useState<AcuityTypes.Api.Class[]>([])
-    const [selectedCalendar, setSelectedCalendar] = useState<string>('')
+    const [selectedCalendar, setSelectedCalendar] = useState<number | ''>(
+        currentOrg === 'master' ? '' : AcuityConstants.StoreCalendars[currentOrg!]
+    )
     const [selectedClass, setSelectedClass] = useState<string>('')
 
     const {
@@ -101,12 +112,22 @@ export const HolidayProgramSelectionPage = () => {
         minDate: nowRef.current,
     })
 
-    const handleCalendarChange = (event: SelectChangeEvent<string>) => {
-        const calendar = event.target.value
+    useEffect(() => {
+        if (currentOrg !== 'master' && isSuccess) {
+            setFilteredClasses(classes.filter((it) => it.calendarID === AcuityConstants.StoreCalendars[currentOrg!]))
+        }
+    }, [currentOrg, isSuccess, classes])
+
+    useEffect(() => {
+        setSelectedCalendar(currentOrg === 'master' ? '' : AcuityConstants.StoreCalendars[currentOrg!])
+    }, [currentOrg])
+
+    const handleCalendarChange = (event: SelectChangeEvent<number>) => {
+        const calendar = event.target.value as number
         setSelectedCalendar(calendar)
         setSelectedClass('')
         if (isSuccess) {
-            setFilteredClasses(classes.filter((it) => it.calendarID === parseInt(calendar)))
+            setFilteredClasses(classes.filter((it) => it.calendarID === calendar))
         }
     }
 
@@ -142,82 +163,87 @@ export const HolidayProgramSelectionPage = () => {
                 <h1 className="lilita text-2xl">{renderProgramTitle()}</h1>
                 <Paper className={cssClasses.paper}>
                     <div className={cssClasses.main}>
-                        {
+                        {isLoading ? (
+                            <Skeleton height={80} />
+                        ) : (
                             <>
-                                <Typography className={cssClasses.heading} variant="body1">
-                                    Select location:
-                                </Typography>
-                                <FormControl className={cssClasses.formControl} variant="outlined">
-                                    <Select
-                                        id="calendars-select"
-                                        value={selectedCalendar}
-                                        onChange={handleCalendarChange}
-                                    >
-                                        {import.meta.env.VITE_ENV === 'prod' &&
-                                            ObjectEntries(AcuityConstants.StoreCalendars)
-                                                .filter(
-                                                    ([location]) =>
-                                                        !!classes?.find(
-                                                            (it) =>
-                                                                it.calendarID ===
-                                                                AcuityConstants.StoreCalendars[location]
-                                                        )
-                                                )
-                                                .map(([store, calendarId]) => {
-                                                    return (
-                                                        <MenuItem key={calendarId} value={calendarId}>
-                                                            {capitalise(store)}
-                                                        </MenuItem>
-                                                    )
-                                                })}
-                                        {import.meta.env.VITE_ENV === 'dev' && (
-                                            <MenuItem
-                                                key={AcuityConstants.TestCalendarId}
-                                                value={AcuityConstants.TestCalendarId}
+                                {showLocationSelector && (
+                                    <>
+                                        <Typography className={cssClasses.heading} variant="body1">
+                                            Select studio:
+                                        </Typography>
+                                        <FormControl className={cssClasses.formControl} variant="outlined">
+                                            <Select
+                                                id="calendars-select"
+                                                value={selectedCalendar}
+                                                onChange={handleCalendarChange}
                                             >
-                                                Test Calendar
-                                            </MenuItem>
-                                        )}
-                                    </Select>
-                                </FormControl>
-                            </>
-                        }
-
-                        {selectedCalendar && filteredClasses.length !== 0 && (
-                            <>
-                                <Typography className={cssClasses.heading} variant="body1">
-                                    Select class:
-                                </Typography>
-                                <FormControl className={cssClasses.formControl} variant="outlined">
-                                    <Select
-                                        id="classes-select"
-                                        value={selectedClass}
-                                        onChange={(e) => setSelectedClass(e.target.value as string)}
-                                    >
-                                        {filteredClasses.map((mClass) => {
-                                            const midnight = DateTime.now().set({ hour: 0 })
-                                            const classDateTime = DateTime.fromISO(mClass.time)
-                                            if (classDateTime > midnight) {
-                                                return (
-                                                    <MenuItem key={mClass.id} value={mClass.id}>
-                                                        {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
+                                                {import.meta.env.VITE_ENV === 'prod' &&
+                                                    ObjectEntries(AcuityConstants.StoreCalendars)
+                                                        .filter(
+                                                            ([location]) =>
+                                                                !!classes?.find(
+                                                                    (it) =>
+                                                                        it.calendarID ===
+                                                                        AcuityConstants.StoreCalendars[location]
+                                                                )
+                                                        )
+                                                        .map(([store, calendarId]) => {
+                                                            return (
+                                                                <MenuItem key={calendarId} value={calendarId}>
+                                                                    {capitalise(store)}
+                                                                </MenuItem>
+                                                            )
+                                                        })}
+                                                {import.meta.env.VITE_ENV === 'dev' && (
+                                                    <MenuItem
+                                                        key={AcuityConstants.TestCalendarId}
+                                                        value={AcuityConstants.TestCalendarId}
+                                                    >
+                                                        Test Calendar
                                                     </MenuItem>
-                                                )
-                                            } else return ''
-                                        })}
-                                    </Select>
-                                </FormControl>
-                                <Button
-                                    className={cssClasses.submitButton}
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleClassSelection}
-                                >
-                                    Select
-                                </Button>
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </>
+                                )}
+                                {filteredClasses.length !== 0 && (
+                                    <>
+                                        <Typography className={cssClasses.heading} variant="body1">
+                                            Select class:
+                                        </Typography>
+                                        <FormControl className={cssClasses.formControl} variant="outlined">
+                                            <Select
+                                                id="classes-select"
+                                                value={selectedClass}
+                                                onChange={(e) => setSelectedClass(e.target.value as string)}
+                                            >
+                                                {filteredClasses.map((mClass) => {
+                                                    const midnight = DateTime.now().set({ hour: 0 })
+                                                    const classDateTime = DateTime.fromISO(mClass.time)
+                                                    if (classDateTime > midnight) {
+                                                        return (
+                                                            <MenuItem key={mClass.id} value={mClass.id}>
+                                                                {classDateTime.toFormat('EEEE MMMM d, h:mm a, yyyy')}
+                                                            </MenuItem>
+                                                        )
+                                                    } else return ''
+                                                })}
+                                            </Select>
+                                        </FormControl>
+                                        <Button
+                                            className={cssClasses.submitButton}
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleClassSelection}
+                                            disabled={!selectedCalendar || !selectedClass}
+                                        >
+                                            Select
+                                        </Button>
+                                    </>
+                                )}
                             </>
                         )}
-                        {selectedCalendar && isLoading && <Skeleton height={80} />}
                     </div>
                 </Paper>
             </div>
