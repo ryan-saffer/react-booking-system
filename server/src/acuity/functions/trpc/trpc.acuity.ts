@@ -23,6 +23,7 @@ export const acuityRouter = router({
     getAppointments: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.GetAppointmentsParams)
         .query(({ ctx, input }) => ctx.acuityClient.getAppointments(input.ids)),
+    getCalendars: acuityPublicProcedure.query(({ ctx }) => ctx.acuityClient.getCalendars()),
     classAvailability: acuityPublicProcedure
         .input((input: unknown) => input as AcuityTypes.Client.ClassAvailabilityParams)
         .query(
