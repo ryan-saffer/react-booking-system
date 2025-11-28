@@ -118,6 +118,10 @@ export const HolidayProgramSelectionPage = () => {
         }
     }, [currentOrg, isSuccess, classes])
 
+    useEffect(() => {
+        setSelectedCalendar(currentOrg === 'master' ? '' : AcuityConstants.StoreCalendars[currentOrg!])
+    }, [currentOrg])
+
     const handleCalendarChange = (event: SelectChangeEvent<number>) => {
         const calendar = event.target.value as number
         setSelectedCalendar(calendar)
