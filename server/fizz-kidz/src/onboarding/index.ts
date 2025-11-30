@@ -1,8 +1,9 @@
-import type { Studio } from 'fizz-kidz/src/core/studio'
+import type { Studio, StudioOrMaster } from 'fizz-kidz/src/core/studio'
 
 interface BaseEmployee {
     id: string
     created: number
+    studio: StudioOrMaster
     firstName: string
     lastName: string
     position: string
@@ -52,6 +53,7 @@ export type Employee =
       })
 
 export type InitiateEmployeeProps = {
+    studio: StudioOrMaster
     firstName: string
     lastName: string
     position: string
