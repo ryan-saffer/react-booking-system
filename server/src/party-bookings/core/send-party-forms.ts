@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { MailClient } from '../../sendgrid/MailClient'
 import { logError } from '../../utilities'
-import { getPrefilledFormUrl, getUpcoming } from './utils.party'
+import { getPartyFormUrl, getUpcoming } from './utils.party'
 
 export async function sendPartyForms() {
     // since this runs on a Tuesday, it will get Tuesday in one week from today.
@@ -26,6 +26,7 @@ export async function sendPartyForms() {
             const firestoreBooking = documentSnapshot.data()
             const booking = {
                 ...firestoreBooking,
+                createdAt: firestoreBooking.createdAt.toDate(),
                 dateTime: firestoreBooking.dateTime.toDate(),
             } satisfies Booking
 
@@ -43,7 +44,7 @@ export async function sendPartyForms() {
 async function sendForm(bookingId: string, booking: Booking) {
     const mailClient = await MailClient.getInstance()
 
-    const prefilledFormUrl = getPrefilledFormUrl(bookingId, booking)
+    const prefilledFormUrl = getPartyFormUrl(bookingId)
     const manager = getManager(booking.location)
 
     return mailClient.sendEmail(

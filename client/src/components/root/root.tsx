@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc } from '@utils/trpc'
 import { httpBatchLink } from '@trpc/client'
 import { useEmulators } from '@components/Firebase/firebase'
-import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
+import { getCloudFunctionsDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
@@ -52,9 +52,7 @@ const antdTheme: ThemeConfig = {
 function _Root() {
     const firebase = useFirebase()
 
-    const domain = useEmulators
-        ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-        : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
+    const domain = getCloudFunctionsDomain(import.meta.env.VITE_ENV, useEmulators)
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
