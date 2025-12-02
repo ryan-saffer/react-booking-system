@@ -12,6 +12,7 @@ import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { getDownloadURL, ref } from 'firebase/storage'
+import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -28,7 +29,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
-import { WhatsappIcon } from '@drawables/icons/whatsapp'
 
 import { useMutation } from '@tanstack/react-query'
 
@@ -480,7 +480,7 @@ function SuccessDialog({
 }) {
     const { state } = useLocation()
     const invitationText = `You're invited to ${childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
 
     const copy = () => {
         navigator.clipboard.writeText(inviteUrl)

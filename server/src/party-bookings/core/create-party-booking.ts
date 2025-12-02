@@ -43,7 +43,10 @@ export async function createPartyBooking(_booking: Booking) {
                 start: booking.dateTime.toDate(),
                 end,
                 location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
-                description: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                description: `${getApplicationDomain(
+                    env,
+                    process.env.FUNCTIONS_EMULATOR === 'true'
+                )}/dashboard/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
@@ -90,7 +93,10 @@ export async function createPartyBooking(_booking: Booking) {
         `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
     ]
 
-    const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
+    const invitationsUrl = `${getApplicationDomain(
+        env,
+        process.env.FUNCTIONS_EMULATOR === 'true'
+    )}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 

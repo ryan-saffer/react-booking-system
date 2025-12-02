@@ -18,7 +18,10 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
             const encodedContinueQueryParams = Buffer.from(continueQueryParams).toString('base64')
             const encodedUnenrollQueryParams = Buffer.from(unenrollQueryParams).toString('base64')
 
-            const baseUrl = `${getApplicationDomain(env)}/after-school-program-enrolment`
+            const baseUrl = `${getApplicationDomain(
+                env,
+                process.env.FUNCTIONS_EMULATOR === 'true'
+            )}/after-school-program-enrolment`
 
             try {
                 const mailClient = await MailClient.getInstance()

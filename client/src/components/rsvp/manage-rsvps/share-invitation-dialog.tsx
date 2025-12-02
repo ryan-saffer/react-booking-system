@@ -15,7 +15,7 @@ import { useInvitation } from '../hooks/use-invitation'
 export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
     const invitation = useInvitation()
     const invitationText = `You're invited to ${invitation.childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/v2/${invitation.id}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/invitation/v2/${invitation.id}`
 
     function copy() {
         navigator.clipboard.writeText(inviteUrl)
