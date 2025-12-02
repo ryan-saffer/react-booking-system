@@ -1,4 +1,4 @@
-import { Location } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
 
 export type InvitationState = {
     bookingId: string
@@ -7,7 +7,7 @@ export type InvitationState = {
     date: Date
     time: string
     type: 'studio' | 'mobile' | ''
-    studio: Location
+    studio: Studio
     address: string
     rsvpDate: Date
     parentName: string

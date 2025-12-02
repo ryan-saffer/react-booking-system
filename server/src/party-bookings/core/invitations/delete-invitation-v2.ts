@@ -1,6 +1,6 @@
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { StorageClient } from '../../../firebase/StorageClient'
-import { projectId } from '../../../init'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
 
 export async function deleteInvitationV2(invitationId: string) {
     // delete from storage

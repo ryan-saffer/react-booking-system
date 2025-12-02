@@ -1,4 +1,4 @@
-import { InvitationsV2 } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
 
 export const INVITATIONS: { name: InvitationsV2.InvitationOption; src: string }[] = [
     {

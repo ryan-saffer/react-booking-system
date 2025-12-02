@@ -1,4 +1,4 @@
-import { Rsvp, RsvpStatus } from 'fizz-kidz'
+import type { Rsvp, RsvpStatus } from 'fizz-kidz'
 import { ChevronRight, EllipsisVertical, Trash2 } from 'lucide-react'
 
 import { createColumnHelper } from '@tanstack/react-table'
@@ -16,7 +16,7 @@ import {
 } from '@ui-components/dropdown-menu'
 import { cn } from '@utils/tailwind'
 
-import { UseRsvpTableProps } from '../hooks/use-rsvp-table'
+import type { UseRsvpTableProps } from '../hooks/use-rsvp-table'
 
 // An rsvp can have multiple children, but we want a row for every child
 export type RsvpRow = Omit<Rsvp, 'children'> & Rsvp['children'][number] & { childIdx: number }

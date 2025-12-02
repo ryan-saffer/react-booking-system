@@ -1,9 +1,10 @@
-import { Rsvp, RsvpStatus } from 'fizz-kidz'
+import type { Rsvp, RsvpStatus } from 'fizz-kidz'
 import { useMemo } from 'react'
 
 import { getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
 
-import { RsvpRow, createColumns } from '../manage-rsvps/columns'
+import type { RsvpRow } from '../manage-rsvps/columns'
+import { createColumns } from '../manage-rsvps/columns'
 
 export type UseRsvpTableProps = {
     rsvps: Rsvp[]

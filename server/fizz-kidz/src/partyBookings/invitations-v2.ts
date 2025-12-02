@@ -1,4 +1,4 @@
-import { Location } from '..'
+import type { Studio } from '..'
 
 type BaseInvitation = {
     id: string // same id used to upload to storage
@@ -13,7 +13,7 @@ type BaseInvitation = {
     parentMobile: string
     invitation: InvitationOption
 }
-type StudioInvitation = BaseInvitation & { $type: 'studio'; studio: Location }
+type StudioInvitation = BaseInvitation & { $type: 'studio'; studio: Studio }
 type MobileInvitation = BaseInvitation & { $type: 'mobile'; address: string }
 
 export type Invitation = StudioInvitation | MobileInvitation

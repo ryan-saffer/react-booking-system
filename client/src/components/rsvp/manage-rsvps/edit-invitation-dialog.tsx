@@ -1,4 +1,4 @@
-import { InvitationsV2 } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
 import { Download, Edit, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Img } from 'react-image'
