@@ -1,4 +1,5 @@
-import { capitalise, getLocationAddress, InvitationsV2 } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
+import { capitalise, getLocationAddress } from 'fizz-kidz'
 
 export function Result({
     rsvp,

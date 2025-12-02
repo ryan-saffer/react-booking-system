@@ -1,6 +1,7 @@
-import { InvitationsV2 } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
 

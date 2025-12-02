@@ -1,4 +1,5 @@
-import { InvitationsV2, capitalise, getLocationAddress } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
+import { capitalise, getLocationAddress } from 'fizz-kidz'
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 
