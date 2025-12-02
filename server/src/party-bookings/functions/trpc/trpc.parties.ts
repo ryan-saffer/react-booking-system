@@ -3,6 +3,7 @@ import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { editInvitation } from '@/party-bookings/core/invitations/edit-invitation-v2'
 import { generateInvitation } from '@/party-bookings/core/invitations/generate-invitation'
+import { generateInvitationUrl } from '@/party-bookings/core/invitations/generate-invitation-url'
 import { generateInvitationV2 } from '@/party-bookings/core/invitations/generate-invitation-v2'
 import { linkInvitation } from '@/party-bookings/core/invitations/link-invitation-v2'
 import { resetInvitation } from '@/party-bookings/core/invitations/reset-invitation-v2'
@@ -11,6 +12,7 @@ import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPrefilledFormUrl } from '@/party-bookings/core/utils.party'
 import { authenticatedProcedure, publicProcedure, router } from '@/trpc/trpc'
 import type { Booking, GenerateInvitation, InvitationsV2, Studio, WithoutId, WithoutUid } from 'fizz-kidz'
+import { z } from 'zod'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -32,9 +34,13 @@ export const partiesRouter = router({
             const booking = await DatabaseClient.getPartyBooking(input.bookingId)
             return getPrefilledFormUrl(input.bookingId, booking)
         }),
+
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),
+    generateInvitationUrl: authenticatedProcedure
+        .input(z.object({ bookingId: z.string() }))
+        .mutation(({ input }) => generateInvitationUrl(input.bookingId)),
     generateInvitationV2: publicProcedure
         .input((input: unknown) => input as WithoutId<WithoutUid<InvitationsV2.Invitation>>)
         .mutation(({ input }) => generateInvitationV2(input)),
