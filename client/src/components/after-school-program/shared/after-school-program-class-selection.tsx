@@ -1,9 +1,10 @@
-import type { AcuityTypes } from 'fizz-kidz'
-import { STUDIOS } from 'fizz-kidz'
+import type { AcuityTypes, Studio } from 'fizz-kidz'
+import { STUDIOS, isFranchise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useOrg } from '@components/Session/use-org'
 import type { SelectChangeEvent } from '@mui/material'
 import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
 import { Label } from '@ui-components/label'
@@ -32,6 +33,10 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
     >()
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
+    const { data: calendars } = trpc.acuity.getCalendars.useQuery()
+
+    const { currentOrg } = useOrg()
+
     const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
         category:
             import.meta.env.VITE_ENV === 'prod'
@@ -52,6 +57,29 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
         {
             enabled: !!selectedAppointmentType?.id,
         }
+    )
+
+    const filteredAppointmentTypes = useMemo(
+        () =>
+            appointmentTypes?.filter((it) => {
+                const calendar = calendars?.find(
+                    (calendar) => it.calendarIDs.length > 0 && it.calendarIDs[0] === calendar.id
+                )
+
+                if (!calendar) return false
+
+                // for invoicing, show all schools on master business
+                if (currentOrg === 'master' && !classRequired) {
+                    return true
+                }
+
+                if (isFranchise(calendar.location as Studio)) {
+                    return calendar.location === currentOrg
+                } else {
+                    return currentOrg === 'master'
+                }
+            }),
+        [appointmentTypes, calendars, classRequired, currentOrg]
     )
 
     const handleAppointmentTypeChange = (e: SelectChangeEvent<number>) => {
@@ -87,7 +115,7 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
     return (
         <Paper className={styles.paper}>
             <div className={styles.main}>
-                {appointmentTypes && appointmentTypes.length !== 0 && (
+                {filteredAppointmentTypes && filteredAppointmentTypes.length !== 0 && (
                     <>
                         <Typography className={styles.heading} variant="body1">
                             Select program:
@@ -97,9 +125,9 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                                 id="programs-select"
                                 value={selectedAppointmentType?.id || ''}
                                 onChange={handleAppointmentTypeChange}
-                                disabled={appointmentTypes?.length === 0}
+                                disabled={filteredAppointmentTypes?.length === 0}
                             >
-                                {appointmentTypes?.map((appointmentType) => (
+                                {filteredAppointmentTypes?.map((appointmentType) => (
                                     <MenuItem key={appointmentType.id} value={appointmentType.id}>
                                         {appointmentType.name}
                                     </MenuItem>

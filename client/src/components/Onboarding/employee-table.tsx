@@ -4,12 +4,13 @@ import type { Employee } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useOrg } from '@components/Session/use-org'
 import Loader from '@components/Shared/Loader'
 import { styled } from '@mui/material/styles'
 
+import { DeleteEmployeeButton } from './delete-employee-button'
 import EmployeeVerificationButton from './employee-verification-button'
 import { EmployeeWWCCButton } from './employee-wwcc-button'
-import { DeleteEmployeeButton } from './delete-employee-button'
 
 const PREFIX = 'EmployeeTable'
 
@@ -31,21 +32,24 @@ const StyledDescriptions = styled(Descriptions)({
 const useEmployees = () => {
     const firebase = useFirebase()
 
+    const { currentOrg } = useOrg()
+
     const [loading, setLoading] = useState(true)
     const [employees, setEmployees] = useState<Employee[]>([])
 
     useEffect(() => {
+        setLoading(true)
         const unsubscribe = firebase.db
             .collection('employees')
-            .orderBy('created')
+            .orderBy('created', 'desc')
             .onSnapshot((snap) => {
-                setEmployees(snap.docs.map((doc) => doc.data() as Employee))
+                setEmployees(snap.docs.map((doc) => doc.data() as Employee).filter((it) => it.studio === currentOrg))
                 setLoading(false)
             })
 
         return unsubscribe
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [currentOrg])
 
     return { employees, loading }
 }

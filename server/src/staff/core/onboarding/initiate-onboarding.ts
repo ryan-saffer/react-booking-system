@@ -37,6 +37,7 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
     const employee = {
         id: employeeRef.id,
         created: new Date().getTime(),
+        studio: input.studio,
         lastName: input.lastName,
         email: input.email,
         mobile: input.mobile,

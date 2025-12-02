@@ -2,9 +2,10 @@ import { AcuityConstants, ObjectEntries, addOrdinalSuffix, capitalise } from 'fi
 import { Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
 import type { ReactNode } from 'react'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useOrg } from '@components/Session/use-org'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
@@ -36,11 +37,20 @@ function Root({ children }: { children: ReactNode }) {
  */
 export function PlayLabSessionSelectorPage() {
     const navigate = useNavigate()
+    const { currentOrg } = useOrg()
 
-    const [selectedCalendar, setSelectedCalendar] = useState<string | null>(null)
+    const showLocationSelector = currentOrg === 'master'
+
+    const [selectedCalendar, setSelectedCalendar] = useState<string | null>(
+        currentOrg === 'master' ? null : `${AcuityConstants.StoreCalendars[currentOrg!]}`
+    )
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<string | null>(null)
     const [selectedClass, setSelectedClass] = useState<string | null>(null)
     const [showPreviousSessions, setShowPreviousSessions] = useState(false)
+
+    useEffect(() => {
+        setSelectedCalendar(currentOrg === 'master' ? null : `${AcuityConstants.StoreCalendars[currentOrg!]}`)
+    }, [currentOrg])
 
     const {
         data: appointmentTypes,
@@ -72,6 +82,11 @@ export function PlayLabSessionSelectorPage() {
     const isError = isErrorAppointmentTypes || isErrorClasses
 
     const now = useRef(DateTime.now())
+
+    const filteredAppointmentTypes = useMemo(
+        () => appointmentTypes?.filter((it) => it.calendarIDs.includes(parseInt(selectedCalendar || ''))) || [],
+        [appointmentTypes, selectedCalendar]
+    )
 
     const filteredClasses = useMemo(
         () =>
@@ -141,43 +156,53 @@ export function PlayLabSessionSelectorPage() {
     if (isSuccess) {
         return (
             <Root>
-                <Select
-                    onValueChange={(id) => {
-                        setSelectedCalendar(id)
-                        setSelectedAppointmentType(null)
-                        setSelectedClass(null)
-                    }}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select Studio" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {import.meta.env.VITE_ENV === 'prod' ? (
-                            filteredStudios.map(([store, calendarId]) => (
-                                <SelectItem key={calendarId} value={calendarId.toString()}>
-                                    {capitalise(store)}
+                {showLocationSelector && (
+                    <Select
+                        onValueChange={(id) => {
+                            console.log(id)
+                            setSelectedCalendar(id)
+                            setSelectedAppointmentType(null)
+                            setSelectedClass(null)
+                        }}
+                        value={selectedCalendar || ''}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select Studio" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {import.meta.env.VITE_ENV === 'prod' ? (
+                                filteredStudios.map(([store, calendarId]) => (
+                                    <SelectItem key={calendarId} value={calendarId.toString()}>
+                                        {capitalise(store)}
+                                    </SelectItem>
+                                ))
+                            ) : (
+                                <SelectItem key="test" value={AcuityConstants.TestCalendarId.toString()}>
+                                    Test
                                 </SelectItem>
-                            ))
-                        ) : (
-                            <SelectItem key="test" value={AcuityConstants.TestCalendarId.toString()}>
-                                Test
-                            </SelectItem>
-                        )}
-                    </SelectContent>
-                </Select>
+                            )}
+                        </SelectContent>
+                    </Select>
+                )}
 
                 <Select
                     onValueChange={(id) => {
                         setSelectedAppointmentType(id)
                         setSelectedClass(null)
                     }}
-                    disabled={!selectedCalendar}
+                    disabled={!selectedCalendar || filteredAppointmentTypes.length === 0}
                 >
                     <SelectTrigger>
-                        <SelectValue placeholder="Select Program" />
+                        <SelectValue
+                            placeholder={
+                                filteredAppointmentTypes.length === 0 && selectedCalendar
+                                    ? 'No available programs'
+                                    : 'Select Program'
+                            }
+                        />
                     </SelectTrigger>
                     <SelectContent>
-                        {appointmentTypes.map((appointmentType) => {
+                        {filteredAppointmentTypes.map((appointmentType) => {
                             const { time } = JSON.parse(appointmentType.description)
                             return (
                                 <SelectItem
