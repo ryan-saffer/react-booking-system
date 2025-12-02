@@ -7,7 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@utils/tailwind'
 
 import { useInvitation } from '../hooks/use-invitation'
-import { UseRsvpTableProps, useRsvpTable } from '../hooks/use-rsvp-table'
+import type { UseRsvpTableProps } from '../hooks/use-rsvp-table'
+import { useRsvpTable } from '../hooks/use-rsvp-table'
 import { useRsvps } from '../hooks/use-rsvps'
 import { EditInvitationDialog } from './edit-invitation-dialog'
 import { ShareInvitaitonDialog } from './share-invitation-dialog'

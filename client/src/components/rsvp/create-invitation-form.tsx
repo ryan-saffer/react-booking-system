@@ -1,7 +1,9 @@
 import { format } from 'date-fns'
-import { InvitationsV2, Location } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 import { CalendarIcon } from 'lucide-react'
-import { ReactNode, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@ui-components/button'
@@ -177,9 +179,9 @@ export function CreateInvitationForm({
                                                 ref.ontouchstart = (e) => e.preventDefault()
                                             }}
                                         >
-                                            {Object.values(Location).map((location) => (
-                                                <SelectItem key={location} value={location}>
-                                                    {capitalise(location)}
+                                            {Object.values(STUDIOS).map((studio) => (
+                                                <SelectItem key={studio} value={studio}>
+                                                    {capitalise(studio)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>

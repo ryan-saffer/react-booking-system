@@ -1,4 +1,4 @@
-import { InvitationsV2, Service } from 'fizz-kidz'
+import type { InvitationsV2, Service } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 

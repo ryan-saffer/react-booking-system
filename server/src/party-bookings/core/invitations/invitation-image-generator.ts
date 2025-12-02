@@ -1,8 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-import { PNGStream, createCanvas, loadImage, registerFont } from 'canvas'
-import { InvitationsV2, ObjectKeys, WithoutUid, getApplicationDomain, getLocationAddress } from 'fizz-kidz'
+import type { PNGStream } from 'canvas'
+import { createCanvas, loadImage, registerFont } from 'canvas'
+import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
+import { ObjectKeys, getApplicationDomain, getLocationAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 

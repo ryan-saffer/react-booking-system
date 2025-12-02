@@ -1,12 +1,14 @@
 import fs from 'fs'
 
-import { InvitationsV2, WithoutId, WithoutUid, generateRandomString } from 'fizz-kidz'
+import type { InvitationsV2, WithoutId, WithoutUid } from 'fizz-kidz'
+import { generateRandomString } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { StorageClient } from '../../../firebase/StorageClient'
-import { projectId } from '../../../init'
-import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+
 import { InvitationImageGenerator } from './invitation-image-generator'
 
 /**
