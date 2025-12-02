@@ -1,4 +1,4 @@
-import { Studio } from '..'
+import type { Studio } from '..'
 
 type BaseInvitationProps = {
     childName: string
@@ -35,3 +35,4 @@ export type InvitationOption =
     | 'Slime Time'
     | 'Tie Dye'
     | 'Swiftie'
+    | 'K-pop Demon Hunters'

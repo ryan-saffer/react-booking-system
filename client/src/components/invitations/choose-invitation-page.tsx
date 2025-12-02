@@ -1,4 +1,4 @@
-import type { InvitationOption } from 'fizz-kidz'
+import { ObjectKeys } from 'fizz-kidz'
 import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
@@ -7,46 +7,13 @@ import frame from '@drawables/frame.webp'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
 
+import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
 
-const Invitations: { name: InvitationOption; src: string }[] = [
-    {
-        name: 'Freckles',
-        src: '/invitations/Invitation+Envelope-Freckles.png',
-    },
-    {
-        name: 'Stripes',
-        src: '/invitations/Invitation+Envelope-Stripes.png',
-    },
-    {
-        name: 'Dots',
-        src: '/invitations/Invitation+Envelope-Dots.png',
-    },
-    {
-        name: 'Glitz & Glam',
-        src: '/invitations/Invitation+Envelope-Glitz.png',
-    },
-    {
-        name: 'Swiftie',
-        src: '/invitations/Invitation+Envelope-Swift.png',
-    },
-    {
-        name: 'Bubbling Fun',
-        src: '/invitations/Invitation+Envelope-Bubbling.png',
-    },
-    {
-        name: 'Bubbling Blue Fun',
-        src: '/invitations/Invitation+Envelope-Bubbling-Blue.png',
-    },
-    {
-        name: 'Slime Time',
-        src: '/invitations/Invitation+Envelope-Slime.png',
-    },
-    {
-        name: 'Tie Dye',
-        src: '/invitations/Invitation+Envelope-Tye-Dye.png',
-    },
-]
+const Invitations = ObjectKeys(InvitationTemplates).map((name) => ({
+    name,
+    src: InvitationTemplates[name].invitationAndEnvelope,
+}))
 
 export const ChooseInvitationPage = () => {
     const stickyRef = useRef<HTMLDivElement>(null)
