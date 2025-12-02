@@ -36,6 +36,13 @@ export async function retrieveInvoiceStatus(enrolment: AfterSchoolEnrolment): Pr
                 dashboardUrl: url,
                 paymentUrl: invoice.publicUrl || '',
             }
+        } else if (invoice.status === 'PARTIALLY_REFUNDED') {
+            return {
+                status: 'PAID',
+                amount: parseInt(invoice.paymentRequests![0].computedAmountMoney!.amount!.toString()),
+                dashboardUrl: url,
+                paymentUrl: invoice.publicUrl || '',
+            }
         } else if (invoice.status === 'CANCELED') {
             return {
                 status: 'VOID',

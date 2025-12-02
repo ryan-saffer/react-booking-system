@@ -4,6 +4,7 @@ import type { Studio } from 'fizz-kidz'
 import { STUDIOS } from 'fizz-kidz'
 import React, { useState } from 'react'
 
+import { useOrg } from '@components/Session/use-org'
 import { capitalise } from '@utils/stringUtilities'
 import { trpc } from '@utils/trpc'
 
@@ -35,6 +36,8 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
     const [form] = Form.useForm<TNewEmployeeForm>()
     const [messageApi] = message.useMessage()
 
+    const { currentOrg } = useOrg()
+
     const [submitting, setSubmitting] = useState(false)
 
     const initiateOnboardingMutation = trpc.staff.initiateOnboarding.useMutation()
@@ -44,6 +47,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
             const values = await form.validateFields()
             const formattedValues = {
                 ...values,
+                studio: currentOrg!,
                 commencementDate: values.commencementDate.format('YYYY-MM-DD'),
             }
             if (formattedValues.position === 'other') {
