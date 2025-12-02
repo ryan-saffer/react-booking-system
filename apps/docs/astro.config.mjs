@@ -54,6 +54,10 @@ export default defineConfig({
                 },
               ],
             },
+            {
+              label: "Acuity Scheduling",
+              link: "tools/acuity",
+            },
           ],
         },
       ],
