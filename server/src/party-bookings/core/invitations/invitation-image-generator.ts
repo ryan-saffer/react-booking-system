@@ -50,7 +50,9 @@ export class InvitationImageGenerator {
         })
 
         const qrCodeBuffer = await QRCode.toBuffer(
-            `${getApplicationDomain(env)}/invitation/v2/${this.#invitation.id}`,
+            `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitation/v2/${
+                this.#invitation.id
+            }`,
             { width: 300 }
         )
         const qrCodeImage = await loadImage(qrCodeBuffer)

@@ -480,7 +480,7 @@ function SuccessDialog({
 }) {
     const { state } = useLocation()
     const invitationText = `You're invited to ${childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
+    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/invitation/${invitationId}?type=${encodeURIComponent(state.invitation)}`
 
     const copy = () => {
         navigator.clipboard.writeText(inviteUrl)
