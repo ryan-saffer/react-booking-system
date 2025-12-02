@@ -116,7 +116,9 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
                         {
                             id: AcuityConstants.FormFields.CHILDREN_AGES,
                             // convert ISO string to age
-                            value: Math.floor(DateTime.now().diff(DateTime.fromISO(item.childDob), 'years').years),
+                            value: Math.floor(
+                                DateTime.fromISO(item.time).diff(DateTime.fromISO(item.childDob), 'years').years
+                            ),
                         },
                         {
                             id: AcuityConstants.FormFields.CHILDREN_ALLERGIES,
