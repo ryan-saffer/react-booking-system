@@ -77,6 +77,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const updateBookingMutation = trpc.parties.updatePartyBooking.useMutation()
     const deleteBookingMutation = trpc.parties.deletePartyBooking.useMutation()
     const getPartyFormUrl = trpc.parties.getPartyFormUrl.useMutation()
+    const getInvitationUrl = trpc.parties.generateInvitationUrl.useMutation()
 
     const { setDate } = useDateNavigation()
 
@@ -956,6 +957,21 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             } catch (err) {
                                 console.error(err)
                                 toast.error('Unable to get party form link.')
+                            }
+                            setLoading(false)
+                        },
+                    },
+                    {
+                        label: 'Get invitation link',
+                        action: async () => {
+                            setLoading(true)
+                            try {
+                                const url = await getInvitationUrl.mutateAsync({ bookingId: booking.id })
+                                navigator.clipboard.writeText(url)
+                                toast.success('Invitation link copied to clipboard.')
+                            } catch (err) {
+                                console.error(err)
+                                toast.error('Unable to get invitation link.')
                             }
                             setLoading(false)
                         },
