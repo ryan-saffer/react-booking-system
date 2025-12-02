@@ -1,10 +1,10 @@
+import type { InvitationsV2 } from 'fizz-kidz'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useRouterState } from '@components/Hooks/use-router-state'
 
 import { hasRequiredState } from '../utils/has-required-state'
-import { InvitationsV2 } from 'fizz-kidz'
 
 /**
  * Ensures that all the required values are present in react routers state.
