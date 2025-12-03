@@ -7,7 +7,7 @@ import { env } from '@/init'
 /**
  * Generates a URL for a parent to create their invitation.
  *
- * Included in their booking confirmation email, and can be generated at any time in the portal.
+ * Used when the server redirects here if no invitation yet exists for this booking, or when the parent specifically asks to choose a new design.
  */
 export async function generateInvitationUrl(bookingId: string) {
     const booking = await DatabaseClient.getPartyBooking(bookingId)

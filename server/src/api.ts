@@ -13,6 +13,7 @@ import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
 import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
 import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
+import { invitationRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
 
 const app = express()
 const apiRouter = express.Router()
@@ -61,7 +62,14 @@ webhooks.use((req, _, next) => {
 })
 
 // Mount all webhooks under /webhooks
-webhooks.use('/webhooks', [acuityWebhook, esignaturesWebhook, paperformWebhook, partyFormRedirect, websiteFormsWebhook])
+webhooks.use('/webhooks', [
+    acuityWebhook,
+    esignaturesWebhook,
+    paperformWebhook,
+    partyFormRedirect,
+    websiteFormsWebhook,
+    invitationRedirect,
+])
 apiRouter.use(webhooks)
 
 // Mount all API routes under /api

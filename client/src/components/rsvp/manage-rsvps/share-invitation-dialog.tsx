@@ -1,4 +1,4 @@
-import { getApplicationDomain } from 'fizz-kidz'
+import { getCloudFunctionsDomain } from 'fizz-kidz'
 import { Copy, Download, Mail, MessageCircleMore, PartyPopper, Sparkles } from 'lucide-react'
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
@@ -15,7 +15,7 @@ import { useInvitationImage } from '../hooks/use-invitation-image'
 export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
     const invitation = useInvitation()
     const invitationText = `You're invited to ${invitation.childName}'s party!`
-    const inviteUrl = `${getApplicationDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/invitation/v2/${invitation.id}`
+    const inviteUrl = `${getCloudFunctionsDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/webhooks/invitation/${invitation.bookingId}`
     const invitationImageUrl = useInvitationImage(invitation.id, false)
 
     function copy() {
