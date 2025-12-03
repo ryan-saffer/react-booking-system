@@ -61,6 +61,7 @@ Functions exported from `server/src/index.ts` are deployed via Firebase. The cur
     -   **Acuity Scheduling (`acuity/functions/webhook.ts`):** Processes updates from Acuity, such as new appointments or cancellations. Notably, holiday program cancellations trigger Square refunds for the corresponding order line items.
     -   **Paperform (`paperforms/functions/webhooks/paperform.webhook.ts`):** Ingests new form submissions from Paperform.
     -   **Contact Form 7 (`contact-form-7/webhook/contact-form-7-webhook.ts`):** Receives submissions from Contact Form 7.
+    -   **Invitation redirect (`party-bookings/functions/webhooks/invitation-redirect.ts`):** Single entry for invitation links that resolves the booking and redirects either to create or view/manage the invitation (see `party-bookings/core/rsvp/README.md`).
 
 ### Pub/Sub Functions
 
