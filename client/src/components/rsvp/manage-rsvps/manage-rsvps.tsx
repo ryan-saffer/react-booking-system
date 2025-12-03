@@ -77,10 +77,6 @@ export function ManageRsvps() {
                     </div>
                 </div>
 
-                <div className="mt-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-600 shadow sm:mt-4 sm:px-5">
-                    Share the link or download and print the invite—the QR code on it takes guests straight to the RSVP page.
-                </div>
-
                 {rsvps.status === 'loading' && <Skeleton className="mt-8 h-[260px] w-full rounded-2xl" />}
 
                 {rsvps.status === 'loaded' && (
