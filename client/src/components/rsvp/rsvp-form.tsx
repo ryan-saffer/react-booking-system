@@ -61,7 +61,13 @@ const formSchema = z.object({
     joinMailingList: z.boolean(),
 })
 
-export function RsvpForm({ invitation, onComplete }: { invitation: InvitationsV2.Invitation; onComplete: () => void }) {
+export function RsvpForm({
+    invitation,
+    onComplete,
+}: {
+    invitation: InvitationsV2.Invitation
+    onComplete: (status: 'attending' | 'not-attending') => void
+}) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -102,7 +108,8 @@ export function RsvpForm({ invitation, onComplete }: { invitation: InvitationsV2
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             await sendRsvp({ ...values, bookingId: invitation.bookingId })
-            onComplete()
+            const hasAttending = values.children.some((child) => child.rsvp === 'attending')
+            onComplete(hasAttending ? 'attending' : 'not-attending')
         } catch {
             // TODO - track this error
             toast.error("There was a problem RSVP'ing. Please let the parent know directly if you are able to attend.")
@@ -112,7 +119,7 @@ export function RsvpForm({ invitation, onComplete }: { invitation: InvitationsV2
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="mb-16 space-y-4">
+                <div className="space-y-4 pb-4">
                     <SectionBreak title="Parent Details" />
                     <FormField
                         control={form.control}
@@ -375,11 +382,11 @@ export function RsvpForm({ invitation, onComplete }: { invitation: InvitationsV2
                     />
                 </div>
                 <Button
-                    variant="blue"
-                    className="fixed bottom-0 -ml-4 h-16 w-full rounded-none font-extrabold"
+                    className="w-full rounded-2xl bg-[#9B3EEA] text-base font-semibold text-white shadow-lg transition hover:bg-[#8B2DE3] hover:shadow-xl disabled:opacity-70"
                     type="submit"
+                    disabled={isLoading}
                 >
-                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'RSVP'}
+                    {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Send RSVP'}
                 </Button>
             </form>
         </Form>

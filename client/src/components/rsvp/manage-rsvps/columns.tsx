@@ -51,12 +51,29 @@ export function createColumns({
             cell: (rsvp) => {
                 const isAttending = rsvp.getValue() === 'attending'
 
-                return <Badge variant={isAttending ? 'success' : 'destructive'}>{isAttending ? 'Yes' : 'No'}</Badge>
+                return (
+                    <Badge
+                        className={cn(
+                            'rounded-full border px-3 py-1 text-xs font-semibold',
+                            isAttending
+                                ? 'border-emerald-100 bg-emerald-50 text-emerald-700'
+                                : 'border-rose-100 bg-rose-50 text-rose-700'
+                        )}
+                        variant={isAttending ? 'outline' : 'outline'}
+                    >
+                        {isAttending ? 'Attending' : 'Not attending'}
+                    </Badge>
+                )
             },
         }),
         columnHelper.accessor('hasAllergies', {
             header: () => <div>Has allergies?</div>,
-            cell: (rsvp) => rsvp.getValue() && <Badge variant="destructive">Yes</Badge>,
+            cell: (rsvp) =>
+                rsvp.getValue() && (
+                    <Badge className="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700" variant="outline">
+                        Allergies
+                    </Badge>
+                ),
             meta: {
                 headerClassName: 'hidden sm:table-cell',
                 cellClassName: 'hidden sm:table-cell',
