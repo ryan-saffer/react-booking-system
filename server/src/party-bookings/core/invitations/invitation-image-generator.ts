@@ -4,7 +4,7 @@ import path from 'path'
 import type { PNGStream } from 'canvas'
 import { createCanvas, loadImage, registerFont } from 'canvas'
 import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ObjectKeys, getApplicationDomain, getLocationAddress } from 'fizz-kidz'
+import { ObjectKeys, getCloudFunctionsDomain, getLocationAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
@@ -50,8 +50,8 @@ export class InvitationImageGenerator {
         })
 
         const qrCodeBuffer = await QRCode.toBuffer(
-            `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitation/v2/${
-                this.#invitation.id
+            `${getCloudFunctionsDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitation/${
+                this.#invitation.bookingId
             }`,
             { width: 300 }
         )

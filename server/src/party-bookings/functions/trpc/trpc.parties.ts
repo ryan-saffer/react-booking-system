@@ -34,7 +34,6 @@ export const partiesRouter = router({
             const booking = await DatabaseClient.getPartyBooking(input.bookingId)
             return getPrefilledFormUrl(input.bookingId, booking)
         }),
-
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),

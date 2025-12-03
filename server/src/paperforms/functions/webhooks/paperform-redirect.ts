@@ -1,7 +1,6 @@
 import express from 'express'
 import {
     getCloudFunctionsDomain,
-    getFunctionEmulatorDomain,
     getSquareLocationId,
     mapCakeSizeToSquareVariation,
     mapCandleToSquareVariation,
@@ -61,16 +60,13 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     const takeHomeBags = responses.getFieldValue('take_home_bags')
     const products = responses.getFieldValue('products')
 
-    const host =
-        process.env.FUNCTIONS_EMULATOR === 'true'
-            ? `https://${req.get('host')}/${getFunctionEmulatorDomain(env, false)}`
-            : getCloudFunctionsDomain(env)
+    const host = getCloudFunctionsDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')
 
     const orderedCake = cake !== 'I will bring my own cake'
 
     if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
         // should not be in checkout flow. redirect to form-complete.
-        res.redirect(303, `${host}/api/api/webhooks/party-form/form-complete?submissionId=${submissionId}`)
+        res.redirect(303, `${host}/webhooks/party-form/form-complete?submissionId=${submissionId}`)
         return
     }
 
