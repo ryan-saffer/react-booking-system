@@ -179,16 +179,20 @@ const router = createBrowserRouter([
             },
             {
                 path: 'sign-in',
-                Component: () => (
-                    <Suspense fallback={<Loader />}>
-                        <SignedIn>
-                            <Navigate to="/" />
-                        </SignedIn>
-                        <SignedOut>
-                            <SignInPage />
-                        </SignedOut>
-                    </Suspense>
-                ),
+                Component: function SignInRoute() {
+                    const [searchParams] = useSearchParams()
+                    const returnTo = searchParams.get('returnTo') ?? '/'
+                    return (
+                        <Suspense fallback={<Loader />}>
+                            <SignedIn>
+                                <Navigate to={returnTo} replace />
+                            </SignedIn>
+                            <SignedOut>
+                                <SignInPage />
+                            </SignedOut>
+                        </Suspense>
+                    )
+                },
             },
             {
                 path: 'sign-up',
