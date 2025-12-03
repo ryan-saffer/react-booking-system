@@ -1,7 +1,7 @@
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -22,6 +22,8 @@ const formSchema = z.object({
 export function SignInPage() {
     const firebase = useFirebase()
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const returnTo = searchParams.get('returnTo') || '/'
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -36,7 +38,7 @@ export function SignInPage() {
     const signInWithGoogle = async () => {
         try {
             await firebase.doSignInWithGoogle()
-            navigate('../dashboard')
+            navigate(returnTo, { replace: true })
         } catch (err: any) {
             toast.error(err?.message)
         }
@@ -46,6 +48,7 @@ export function SignInPage() {
         try {
             setLoading(true)
             await firebase.doSignInWithEmailAndPassword(values.email, values.password)
+            navigate(returnTo, { replace: true })
         } catch (err) {
             toast.error('Invalid email address and password.')
         } finally {
