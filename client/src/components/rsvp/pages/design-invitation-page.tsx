@@ -1,5 +1,5 @@
 import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ArrowLeft, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
 import { useNavigate } from 'react-router-dom'
@@ -101,31 +101,64 @@ export function DesignInvitationPage() {
     }
 
     return (
-        <div className="twp h-full w-full">
+        <div className="twp min-h-screen bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF]">
             <Navbar />
-            {childName && (
-                <h1 className="mt-4 text-center font-lilita text-3xl text-[#9B3EEA]">{childName}'s Birthday party</h1>
-            )}
-            <div className="relative m-auto max-w-3xl">
-                <Button variant="outline" className="absolute left-4 top-2" size="sm" onClick={goBack}>
-                    <ArrowLeft />
-                </Button>
-                <p className=" mt-6 text-center font-lilita text-5xl">Step {step}</p>
+            <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between gap-3">
+                    <Button variant="ghost" size="sm" className="gap-2 text-slate-700" onClick={goBack}>
+                        <ArrowLeft className="h-4 w-4" />
+                        Back
+                    </Button>
+                    <div className="text-sm font-semibold text-slate-600">Step {step} of 3</div>
+                </div>
+                {childName && (
+                    <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/80 px-6 py-4 shadow-lg backdrop-blur">
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-full bg-[#F2E7FF] p-2 text-[#9B3EEA]">
+                                <Wand2 className="h-5 w-5" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                                    Invitation setup
+                                </p>
+                                <p className="font-lilita text-2xl text-slate-900">{childName}&apos;s birthday party</p>
+                            </div>
+                        </div>
+                        <div className="hidden sm:block text-sm text-slate-600">
+                            We&apos;ll choose a design, personalise details, then preview &amp; share.
+                        </div>
+                    </div>
+                )}
+                <div className="mt-6 h-2 rounded-full bg-white/60 shadow-inner">
+                    <div
+                        className="h-full rounded-full bg-gradient-to-r from-[#9B3EEA] to-[#7EC8F4] transition-all"
+                        style={{ width: `${(step / 3) * 100}%` }}
+                    />
+                </div>
+                <div className="mt-8">
+                    {step === 1 && (
+                        <Step1
+                            api={api}
+                            setApi={setApi}
+                            nextStep={nextStep}
+                            selectedInvitation={selectedInvitation}
+                        />
+                    )}
+                    {step === 2 && (
+                        <Step2
+                            selectedInvitation={selectedInvitation}
+                            onInvitationGenerated={(invitation) => {
+                                setInvitation(invitation)
+                                nextStep()
+                            }}
+                        />
+                    )}
+                    {step === 3 && invitation && (
+                        <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
+                    )}
+                </div>
+                <LoginDialog open={!auth && finishPressed} />
             </div>
-            {step === 1 && <Step1 api={api} setApi={setApi} nextStep={nextStep} />}
-            {step === 2 && (
-                <Step2
-                    selectedInvitation={selectedInvitation}
-                    onInvitationGenerated={(invitation) => {
-                        setInvitation(invitation)
-                        nextStep()
-                    }}
-                />
-            )}
-            {step === 3 && invitation && (
-                <Step3 invitationId={invitation.id} nextStep={nextStep} loading={hasCreatedAccount} />
-            )}
-            <LoginDialog open={!auth && finishPressed} />
         </div>
     )
 }
@@ -134,62 +167,85 @@ function Step1({
     api,
     setApi,
     nextStep,
+    selectedInvitation,
 }: {
-    api: CarouselApi
+    api: CarouselApi | undefined
     setApi: (api: CarouselApi) => void
     nextStep: () => void
+    selectedInvitation: number
 }) {
+    const selectedName = INVITATIONS[selectedInvitation]?.name
+
     return (
-        <>
-            <p className="mt-4 text-center">
-                We make kids parties easy!
-                <br />
-                Choose the design of your invite
-            </p>
-            {/* <div className="my-4 flex items-center justify-center">
-                <p className="italic">Swipe to see more</p>
-                <ArrowRight className="ml-2 h-4 w-4" />
-            </div> */}
-            <div className="my-4 flex items-center justify-center gap-8">
-                <Button
-                    disabled={!api?.canScrollPrev()}
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => api?.scrollPrev()}
-                >
-                    <ChevronLeft />
-                </Button>
-                <Button
-                    disabled={!api?.canScrollNext()}
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => api?.scrollNext()}
-                >
-                    <ChevronRight />
-                </Button>
+        <div className="overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur">
+            <div className="flex flex-col gap-3 border-b border-slate-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Step 1</p>
+                    <p className="text-xl font-semibold text-slate-900">Choose your invitation design</p>
+                    <p className="text-sm text-slate-600">Swipe through the options or use the arrows to preview.</p>
+                </div>
+                {selectedName && (
+                    <div className="inline-flex items-center gap-2 rounded-full bg-[#F2E7FF] px-3 py-2 text-sm font-semibold text-[#9B3EEA]">
+                        <Sparkles className="h-4 w-4" />
+                        {selectedName}
+                    </div>
+                )}
             </div>
-            <Carousel className="pb-20" setApi={setApi} opts={{ align: 'center' }}>
-                <CarouselContent className="m-auto max-w-xl">
-                    {INVITATIONS.map((invitation, index) => (
-                        <CarouselItem key={index} className="basis-full pr-4">
-                            <div className="flex flex-col gap-4 rounded-xl border p-2">
-                                {/* <p className="mt-2 text-center font-lilita text-2xl uppercase">{invitation.name}</p> */}
-                                <img src={invitation.src} className="w-full"></img>
-                            </div>
-                        </CarouselItem>
-                    ))}
-                </CarouselContent>
-            </Carousel>
-            {/* </div> */}
-            <button
-                onClick={nextStep}
-                className="fixed bottom-0 flex h-16 w-full items-center  justify-center bg-[#9B3EEA] font-bold uppercase text-white"
-            >
-                Select this design
-            </button>
-        </>
+            <div className="px-4 py-6 sm:px-6">
+                <div className="mb-4 flex items-center justify-center gap-3">
+                    <Button
+                        disabled={!api?.canScrollPrev()}
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full bg-white/80"
+                        onClick={() => api?.scrollPrev()}
+                    >
+                        <ChevronLeft />
+                    </Button>
+                    <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                        Swipe or tap to preview
+                    </p>
+                    <Button
+                        disabled={!api?.canScrollNext()}
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full bg-white/80"
+                        onClick={() => api?.scrollNext()}
+                    >
+                        <ChevronRight />
+                    </Button>
+                </div>
+                <Carousel className="pb-4" setApi={setApi} opts={{ align: 'center' }}>
+                    <CarouselContent className="m-auto max-w-3xl">
+                        {INVITATIONS.map((invitation, index) => {
+                            const isActive = selectedInvitation === index
+                            return (
+                                <CarouselItem key={index} className="basis-full px-2 sm:px-4">
+                                    <div
+                                        className={`relative overflow-hidden rounded-2xl border bg-white shadow-lg transition-all duration-200 ${
+                                            isActive ? 'border-slate-200 shadow-xl scale-[1.01]' : 'border-slate-100'
+                                        }`}
+                                    >
+                                        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow">
+                                            {invitation.name}
+                                        </div>
+                                        <img src={invitation.src} className="w-full" />
+                                    </div>
+                                </CarouselItem>
+                            )
+                        })}
+                    </CarouselContent>
+                </Carousel>
+                <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                    <p className="text-sm text-slate-600">
+                        We&apos;ll personalise this design with your party details next.
+                    </p>
+                    <Button className="rounded-xl bg-[#9B3EEA] px-6 text-sm font-semibold hover:bg-[#8B2DE3]" onClick={nextStep}>
+                        Use this design
+                    </Button>
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -252,23 +308,33 @@ function Step2({
     }
 
     return (
-        <div className="relative p-4">
-            <p className="my-8 text-center">Put in your details to customise your invitation.</p>
-            <CreateInvitationForm
-                defaultValues={defaultValues}
-                isLoading={isLoading}
-                onSubmit={onSubmit}
-                submitButton={
-                    <button
-                        type="submit"
-                        className="fixed bottom-0 -ml-4 flex h-16 w-full items-center justify-center bg-[#9B3EEA] font-bold text-white"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'Next'}
-                    </button>
-                }
-                className="pb-16"
-            />
+        <div className="overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur">
+            <div className="border-b border-slate-100 px-6 py-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Step 2</p>
+                <p className="text-xl font-semibold text-slate-900">Confirm the party details</p>
+                <p className="text-sm text-slate-600">
+                    We pre-filled everything from your booking. Update anything that needs tweaking before we generate your invite.
+                </p>
+            </div>
+            <div className="relative px-4 py-6 sm:px-6">
+                <CreateInvitationForm
+                    defaultValues={defaultValues}
+                    isLoading={isLoading}
+                    onSubmit={onSubmit}
+                    submitButton={
+                        <div className="sticky bottom-0 left-0 right-0 -mx-4 -mb-4 bg-gradient-to-t from-white via-white to-white/80 px-4 pb-4 pt-4 sm:px-0">
+                            <Button
+                                type="submit"
+                                className="w-full rounded-xl bg-[#9B3EEA] font-semibold shadow-lg hover:bg-[#8B2DE3]"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Preview invitation'}
+                            </Button>
+                        </div>
+                    }
+                    className="pb-20"
+                />
+            </div>
         </div>
     )
 }
@@ -277,28 +343,33 @@ function Step3({ invitationId, nextStep, loading }: { invitationId: string; next
     const invitationUrl = useInvitationImage(invitationId, true)
 
     return (
-        <>
-            <div className="px-8">
-                <p className="my-4 text-center">You're invitation is ready!</p>
-                <p className="my-4 text-center">Use the back arrow to edit the details or choose a different design.</p>
-                <div className="relative flex items-center justify-center">
+        <div className="overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur">
+            <div className="border-b border-slate-100 px-6 py-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Step 3</p>
+                <p className="text-xl font-semibold text-slate-900">Preview your invitation</p>
+                <p className="text-sm text-slate-600">
+                    Looks good? Save and move to sharing. You can go back to adjust details or pick a different design.
+                </p>
+            </div>
+            <div className="px-4 py-8 sm:px-8">
+                <div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
                     <Img
                         src={invitationUrl}
                         loader={<Loader className="my-12" />}
-                        className="h-full max-w-2xl border"
+                        className="h-full w-full"
                         onContextMenu={() => false}
                     />
-                    {/* Covers the image so it can't be right clicked and downloaded */}
-                    <div className="absolute h-full w-full" />
+                    <div className="absolute inset-0" />
                 </div>
-                <div className="pb-24" />
+                <div className="mt-8 flex items-center justify-center">
+                    <Button
+                        onClick={nextStep}
+                        className="min-w-[220px] rounded-xl bg-[#9B3EEA] px-6 font-semibold shadow-lg hover:bg-[#8B2DE3]"
+                    >
+                        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Finish & share'}
+                    </Button>
+                </div>
             </div>
-            <button
-                onClick={nextStep}
-                className="fixed bottom-0 flex h-16 w-full items-center justify-center bg-[#9B3EEA] text-center font-semibold text-white"
-            >
-                {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : 'FINISH AND SHARE'}
-            </button>
-        </>
+        </div>
     )
 }
