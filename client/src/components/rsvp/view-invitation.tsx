@@ -91,7 +91,7 @@ export function ViewInvitation() {
                     <p className="max-w-3xl">Sign in to view and manage RSVP responses for this invitation.</p>
                     <Button
                         variant="outline"
-                        className="mt-1 rounded-xl border-slate-200 font-semibold text-[#9B3EEA] hover:border-[#9B3EEA] hover:bg-[#9B3EEA]/10"
+                        className="mt-1 rounded-xl border-slate-200 font-semibold text-[#9B3EEA] hover:border-[#9B3EEA] hover:bg-[#9B3EEA]/10 hover:text-[#9B3EEA]"
                         onClick={() =>
                             navigate(`/sign-in?returnTo=${encodeURIComponent(location.pathname + location.search)}`)
                         }
