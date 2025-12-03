@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { Clock, MapPin, PartyPopper, Sparkles, User } from 'lucide-react'
 import { Img } from 'react-image'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
@@ -14,13 +14,14 @@ import { useInvitationImage } from './hooks/use-invitation-image'
 
 export function ViewInvitation() {
     const navigate = useNavigate()
+    const location = useLocation()
 
     const invitation = useInvitation()
     const invitationUrl = useInvitationImage(invitation.id, false)
 
     const formattedDate = format(invitation.date, 'EEEE, MMM d, yyyy')
     const time = invitation.time
-    const location =
+    const address =
         invitation.$type === 'studio'
             ? `${invitation.studio ? invitation.studio.charAt(0).toUpperCase() + invitation.studio.slice(1) : 'Fizz Kidz'} studio`
             : invitation.address
@@ -31,14 +32,13 @@ export function ViewInvitation() {
                 <div className="flex flex-col items-center gap-4 text-center">
                     <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#9B3EEA] shadow-sm">
                         <Sparkles className="h-4 w-4" />
-                        You&apos;re invited!
+                        You're invited!
                     </div>
                     <p className="font-lilita text-4xl text-slate-900 sm:text-5xl">
-                        {invitation.childName}&apos;s {invitation.childAge}th Birthday
+                        {invitation.childName}'s {invitation.childAge}th Birthday
                     </p>
                     <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
-                        We&apos;d love to celebrate with you. Check the details below and let us know if you can make
-                        it.
+                        We'd love to celebrate with you. Check the details below and let us know if you can make it.
                     </p>
                 </div>
 
@@ -63,7 +63,7 @@ export function ViewInvitation() {
                             </div>
                             <DetailRow icon={<Sparkles />} label="Birthday star" value={invitation.childName} />
                             <DetailRow icon={<Clock />} label="Date & time" value={`${formattedDate} · ${time}`} />
-                            <DetailRow icon={<MapPin />} label="Location" value={location} />
+                            <DetailRow icon={<MapPin />} label="Location" value={address} />
                             <DetailRow icon={<User />} label="Hosted by" value={invitation.parentName} />
                             <Separator />
                             <p className="text-sm text-slate-600">
@@ -73,21 +73,31 @@ export function ViewInvitation() {
                                 className="w-full rounded-xl bg-[#9B3EEA] font-semibold shadow-lg hover:bg-[#8B2DE3]"
                                 onClick={() => navigate('rsvp', { state: { invitation } })}
                             >
-                                RSVP to {invitation.childName}&apos;s party
+                                RSVP to {invitation.childName}'s party
                             </Button>
+                            <p className="text-xs text-slate-600">
+                                Already RSVP'd? You should have an email confirmation with your RSVP. In order to change
+                                your response, let the party host know and they can update it for you.
+                            </p>
                         </CardContent>
                     </Card>
                 </div>
 
-                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-4 text-center text-sm text-slate-600 shadow sm:px-6">
+                <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-5 text-center text-sm text-slate-600 shadow sm:px-6">
                     <div className="flex items-center gap-2 text-[#9B3EEA]">
                         <Sparkles className="h-4 w-4" />
-                        <span className="font-semibold">Already RSVP'd?</span>
+                        <span className="font-semibold">Are you the party host?</span>
                     </div>
-                    <p className="max-w-3xl">
-                        You should have an email confirmation with your RSVP. In order to change your response, let the
-                        party host know and they can update it for you.
-                    </p>
+                    <p className="max-w-3xl">Sign in to view and manage RSVP responses for this invitation.</p>
+                    <Button
+                        variant="outline"
+                        className="mt-1 rounded-xl border-slate-200 font-semibold text-[#9B3EEA] hover:border-[#9B3EEA] hover:bg-[#9B3EEA]/10"
+                        onClick={() =>
+                            navigate(`/sign-in?returnTo=${encodeURIComponent(location.pathname + location.search)}`)
+                        }
+                    >
+                        Sign in to manage RSVPs
+                    </Button>
                 </div>
             </div>
         </div>
