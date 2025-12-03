@@ -4,22 +4,22 @@ This directory contains the frontend React application for the Fizz Kidz Portal.
 
 ## Table of Contents
 
-- [Key Technologies](#key-technologies)
-- [Project Structure](#project-structure)
-- [Routing](#routing)
-- [UI Components](#ui-components)
-- [State Management](#state-management)
-- [API Communication](#api-communication)
-- [Development](#development)
+-   [Key Technologies](#key-technologies)
+-   [Project Structure](#project-structure)
+-   [Routing](#routing)
+-   [UI Components](#ui-components)
+-   [State Management](#state-management)
+-   [API Communication](#api-communication)
+-   [Development](#development)
 
 ## Key Technologies
 
-- **Framework:** React
-- **Build Tool:** Vite
-- **Routing:** React Router DOM
-- **UI:** shadcn/ui (with Tailwind CSS & Radix UI). Material UI (MUI) and Ant Design are present but are being phased out.
-- **State Management:** Zustand (preferred), React Context
-- **API:** tRPC client
+-   **Framework:** React
+-   **Build Tool:** Vite
+-   **Routing:** React Router DOM
+-   **UI:** shadcn/ui (with Tailwind CSS & Radix UI). Material UI (MUI) and Ant Design are present but are being phased out.
+-   **State Management:** Zustand (preferred), React Context
+-   **API:** tRPC client
 
 ## Project Structure
 
