@@ -3,7 +3,7 @@ import { getApplicationDomain } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
-import { generateInvitationUrl } from '@/party-bookings/core/invitations/generate-invitation-url'
+import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
 
 export const invitationRedirect = express.Router()
 

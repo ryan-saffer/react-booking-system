@@ -3,7 +3,7 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { throwTrpcError } from '@/utilities'
 
 import type { DeletePartyBooking } from '../functions/trpc/trpc.parties'
-import { deleteInvitationV2 } from './invitations/delete-invitation-v2'
+import { deleteInvitationV2 } from './rsvp/delete-invitation-v2'
 
 export async function deletePartyBooking({ eventId, type, location, bookingId }: DeletePartyBooking) {
     const calendarClient = await CalendarClient.getInstance()
