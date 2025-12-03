@@ -1,12 +1,15 @@
-import { InvitationsV2, Rsvp, Service } from 'fizz-kidz'
+import type { InvitationsV2, Rsvp, Service } from 'fizz-kidz'
 import { useEffect, useState } from 'react'
 
+import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
-import { UseRsvpTableProps } from './use-rsvp-table'
+import type { UseRsvpTableProps } from './use-rsvp-table'
 
 export function useRsvps(invitation: InvitationsV2.Invitation) {
     const firebase = useFirebase()
+
+    const confirm = useConfirm()
 
     const [rsvps, setRsvps] = useState<
         Service<
@@ -33,6 +36,11 @@ export function useRsvps(invitation: InvitationsV2.Invitation) {
         const existingRsvp = (
             await firebase.db.doc(`bookings/${invitation.bookingId}/rsvps/${id}`).get()
         ).data() as Rsvp
+        const result = await confirm({
+            title: 'Delete RSVP',
+            description: 'Are you sure you want to delete this RSVP? This cannot be undone.',
+        })
+        if (!result) return
         if (existingRsvp.children.length === 1) {
             // delete the entire RSVP
             await firebase.db.doc(`bookings/${invitation.bookingId}/rsvps/${id}`).delete()
