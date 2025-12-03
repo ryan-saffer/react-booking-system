@@ -1,3 +1,5 @@
+import { CheckCircle2, Eye, Frown, Share2, Sparkles, Users } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Fragment, useState } from 'react'
 
 import { flexRender } from '@tanstack/react-table'
@@ -36,143 +38,301 @@ export function ManageRsvps() {
     const [showShareDialog, setShowShareDialog] = useState(false)
     const [showEditDialog, setShowEditDialog] = useState(false)
 
+    const isLoaded = rsvps.status === 'loaded'
+    const attendingCount = isLoaded ? rsvps.result.attendingCount : 0
+    const notAttendingCount = isLoaded ? rsvps.result.notAttendingCount : 0
+    const totalResponses = isLoaded ? rsvps.result.rsvps.length : 0
+    const colSpan = table.getVisibleFlatColumns().length
+
     return (
-        <>
-            <div className="p-4 pb-20">
-                {rsvps.status === 'loading' && <Skeleton className="h-[200px]" />}
-                {rsvps.status === 'loaded' && (
-                    <div className="m-auto w-full max-w-5xl">
-                        <p className="my-2 text-center text-2xl font-bold">RSVP Status</p>
-                        <p className="mb-6 mt-2 text-center text-xl">
-                            <span className="font-extrabold">{rsvps.result.attendingCount}</span> Attending,{' '}
-                            <span className="font-extrabold">{rsvps.result.notAttendingCount}</span> Unable to attend
+        <div className="twp min-h-screen bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF]">
+            <div className="mx-auto max-w-6xl px-4 pb-28 pt-4 sm:px-6 lg:px-8">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-1">
+                        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Manage RSVPs</p>
+                        <p className="flex items-center gap-2 font-lilita text-2xl text-slate-900 sm:text-3xl">
+                            <Sparkles className="h-5 w-5 text-[#9B3EEA]" />
+                            {invitation.childName}&apos;s guest list
                         </p>
-                        <div className="rounded-md border">
-                            <Table className="table-fixed">
-                                <TableHeader>
-                                    {table.getHeaderGroups().map((headerGroup) => (
-                                        <TableRow key={headerGroup.id}>
-                                            {headerGroup.headers.map((header) => {
-                                                return (
-                                                    <TableHead
-                                                        key={header.id}
-                                                        className={cn(
-                                                            'px-2 text-xs sm:text-sm',
-                                                            header.column.columnDef.meta?.headerClassName
-                                                        )}
-                                                    >
-                                                        {header.isPlaceholder
-                                                            ? null
-                                                            : flexRender(
-                                                                  header.column.columnDef.header,
-                                                                  header.getContext()
-                                                              )}
-                                                    </TableHead>
-                                                )
-                                            })}
-                                        </TableRow>
-                                    ))}
-                                </TableHeader>
-                                <TableBody>
-                                    {table.getRowModel().rows?.length ? (
-                                        table.getRowModel().rows.map((row) => (
-                                            <Fragment key={row.id}>
-                                                <TableRow
-                                                    onClick={() => row.toggleExpanded(!row.getIsExpanded())}
-                                                    className="cursor-pointer"
-                                                    data-state={row.getIsExpanded() && 'selected'}
-                                                >
-                                                    {row.getVisibleCells().map((cell) => (
-                                                        <TableCell
-                                                            key={cell.id}
+                        <p className="text-sm text-slate-600">
+                            Track responses, view details, and resend your invitation link anytime.
+                        </p>
+                    </div>
+                    <div className="hidden flex-wrap gap-2 sm:flex">
+                        <Button
+                            variant="outline"
+                            className="gap-2 rounded-xl border-slate-200"
+                            onClick={() => setShowEditDialog(true)}
+                        >
+                            <Eye className="h-4 w-4" />
+                            Preview invitation
+                        </Button>
+                        <Button
+                            className="gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
+                            onClick={() => setShowShareDialog(true)}
+                        >
+                            <Share2 className="h-4 w-4" />
+                            Share invitation
+                        </Button>
+                    </div>
+                </div>
+
+                {rsvps.status === 'loading' && <Skeleton className="mt-8 h-[260px] w-full rounded-2xl" />}
+
+                {rsvps.status === 'loaded' && (
+                    <>
+                        <div className="mt-4 flex flex-wrap gap-2 sm:hidden">
+                            <SummaryChip icon={<Users className="h-4 w-4" />} label="Total" value={totalResponses} />
+                            <SummaryChip
+                                icon={<CheckCircle2 className="h-4 w-4" />}
+                                label="Attending"
+                                value={attendingCount}
+                                tone="green"
+                            />
+                            <SummaryChip
+                                icon={<Frown className="h-4 w-4" />}
+                                label="Not attending"
+                                value={notAttendingCount}
+                                tone="amber"
+                            />
+                        </div>
+
+                        <div className="mt-6 hidden grid-cols-3 gap-4 sm:grid">
+                            <SummaryCard
+                                icon={<Users className="h-5 w-5" />}
+                                label="Total responses"
+                                value={totalResponses}
+                                tone="slate"
+                            />
+                            <SummaryCard
+                                icon={<CheckCircle2 className="h-5 w-5" />}
+                                label="Attending"
+                                value={attendingCount}
+                                tone="green"
+                            />
+                            <SummaryCard
+                                icon={<Frown className="h-5 w-5" />}
+                                label="Unable to attend"
+                                value={notAttendingCount}
+                                tone="amber"
+                            />
+                        </div>
+
+                        <div className="mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur sm:mt-6">
+                            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:px-6">
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-900">Guest list & RSVPs</p>
+                                    <p className="text-xs text-slate-600">
+                                        Tap a guest row to see parent details and notes.
+                                    </p>
+                                </div>
+                                <div className="rounded-full bg-[#F2E7FF] px-3 py-1 text-xs font-semibold text-[#9B3EEA]">
+                                    Live updates
+                                </div>
+                            </div>
+                            <div className="overflow-auto">
+                                <Table className="w-full table-auto">
+                                    <TableHeader>
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                            <TableRow key={headerGroup.id} className="bg-slate-50/60">
+                                                {headerGroup.headers.map((header) => {
+                                                    return (
+                                                        <TableHead
+                                                            key={header.id}
                                                             className={cn(
-                                                                'p-2',
-                                                                cell.column.columnDef.meta?.cellClassName
+                                                                'px-2 py-2 text-xs sm:px-3 sm:py-3 sm:text-sm',
+                                                                header.column.columnDef.meta?.headerClassName
                                                             )}
                                                         >
-                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                        </TableCell>
-                                                    ))}
-                                                </TableRow>
-                                                {row.getIsExpanded() && (
-                                                    <>
-                                                        {row.original.hasAllergies && row.original.allergies && (
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(
+                                                                      header.column.columnDef.header,
+                                                                      header.getContext()
+                                                                  )}
+                                                        </TableHead>
+                                                    )
+                                                })}
+                                            </TableRow>
+                                        ))}
+                                    </TableHeader>
+                                    <TableBody>
+                                        {table.getRowModel().rows?.length ? (
+                                            table.getRowModel().rows.map((row) => (
+                                                <Fragment key={row.id}>
+                                                    <TableRow
+                                                        onClick={() => row.toggleExpanded(!row.getIsExpanded())}
+                                                        className="cursor-pointer transition hover:bg-[#F7F1FF]/60 data-[state=selected]:bg-[#F2E7FF]/70"
+                                                        data-state={row.getIsExpanded() && 'selected'}
+                                                    >
+                                                        {row.getVisibleCells().map((cell) => (
+                                                            <TableCell
+                                                                key={cell.id}
+                                                                className={cn(
+                                                                    'p-2 text-xs sm:p-3 sm:text-sm',
+                                                                    cell.column.columnDef.meta?.cellClassName
+                                                                )}
+                                                            >
+                                                                {flexRender(
+                                                                    cell.column.columnDef.cell,
+                                                                    cell.getContext()
+                                                                )}
+                                                            </TableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                    {row.getIsExpanded() && (
+                                                        <>
+                                                            {row.original.hasAllergies && row.original.allergies && (
+                                                                <ExpandableContent
+                                                                    label="Allergies"
+                                                                    value={row.original.allergies}
+                                                                    colSpan={colSpan}
+                                                                />
+                                                            )}
                                                             <ExpandableContent
-                                                                label="Allergies"
-                                                                value={row.original.allergies}
+                                                                label="Parent Name"
+                                                                value={row.original.parentName}
+                                                                colSpan={colSpan}
                                                             />
-                                                        )}
-                                                        <ExpandableContent
-                                                            label="Parent Name:"
-                                                            value={row.original.parentName}
-                                                        />
-                                                        <ExpandableContent
-                                                            label="Parent Phone:"
-                                                            value={row.original.parentMobile}
-                                                        />
-                                                        <ExpandableContent
-                                                            label="Parent Email:"
-                                                            value={row.original.parentEmail}
-                                                        />
-                                                        {row.original.message && (
                                                             <ExpandableContent
-                                                                label="Message:"
-                                                                value={row.original.message}
+                                                                label="Parent Phone"
+                                                                value={row.original.parentMobile}
+                                                                colSpan={colSpan}
                                                             />
-                                                        )}
-                                                    </>
-                                                )}
-                                            </Fragment>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={table.getAllColumns().length}
-                                                className="h-24 text-center"
-                                            >
-                                                No one has RSVP'd yet. Click the share button to share your invitation
-                                                with all of {invitation.childName}'s friends!
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
+                                                            <ExpandableContent
+                                                                label="Parent Email"
+                                                                value={row.original.parentEmail}
+                                                                colSpan={colSpan}
+                                                            />
+                                                            {row.original.message && (
+                                                                <ExpandableContent
+                                                                    label="Message"
+                                                                    value={row.original.message}
+                                                                    colSpan={colSpan}
+                                                                />
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </Fragment>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell
+                                                    colSpan={table.getAllColumns().length}
+                                                    className="h-28 text-center text-sm text-slate-600"
+                                                >
+                                                    No RSVPs yet. Share your invitation to start collecting responses.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
             </div>
+
             <EditInvitationDialog isOpen={showEditDialog} close={() => setShowEditDialog(false)} />
             <ShareInvitaitonDialog isOpen={showShareDialog} close={() => setShowShareDialog(false)} />
-            <div className="fixed bottom-0 flex h-16 w-full">
-                <Button
-                    variant="blue"
-                    className="h-full w-full text-wrap rounded-none p-4 font-bold uppercase"
-                    onClick={() => setShowEditDialog(true)}
-                >
-                    Preview Invitation
-                </Button>
-                <Button
-                    variant="yellow"
-                    className="h-full w-full text-wrap rounded-none p-4 font-bold uppercase"
-                    onClick={() => setShowShareDialog(true)}
-                >
-                    Share Invitation
-                </Button>
+
+            <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/90 backdrop-blur">
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-3 sm:flex-row sm:px-6">
+                    <Button
+                        variant="outline"
+                        className="w-full gap-2 rounded-xl border-slate-200"
+                        onClick={() => setShowEditDialog(true)}
+                    >
+                        <Eye className="h-4 w-4" />
+                        Preview invitation
+                    </Button>
+                    <Button
+                        className="w-full gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
+                        onClick={() => setShowShareDialog(true)}
+                    >
+                        <Share2 className="h-4 w-4" />
+                        Share invitation
+                    </Button>
+                </div>
             </div>
-        </>
+        </div>
     )
 }
 
-function ExpandableContent({ label, value }: { label: string; value: string }) {
+function ExpandableContent({ label, value, colSpan }: { label: string; value: string; colSpan: number }) {
     return (
-        <TableRow>
-            <TableCell />
-            <TableCell className="p-2" colSpan={1}>
-                {label}
-            </TableCell>
-            <TableCell className="p-2" colSpan={3}>
-                {value}
+        <TableRow className="bg-slate-50/70">
+            <TableCell className="p-3" colSpan={colSpan}>
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+                    <span className="w-[140px] text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 sm:w-[180px]">
+                        {label}
+                    </span>
+                    <span className="text-sm text-slate-700">{value}</span>
+                </div>
             </TableCell>
         </TableRow>
+    )
+}
+
+function SummaryCard({
+    icon,
+    label,
+    value,
+    tone = 'slate',
+}: {
+    icon: ReactNode
+    label: string
+    value: number
+    tone?: 'slate' | 'green' | 'amber'
+}) {
+    const toneClasses =
+        tone === 'green'
+            ? 'bg-emerald-50 text-emerald-700'
+            : tone === 'amber'
+              ? 'bg-amber-50 text-amber-700'
+              : 'bg-slate-50 text-slate-700'
+    return (
+        <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-lg backdrop-blur">
+            <div className="flex items-center gap-3">
+                <div className={cn('rounded-full p-2', toneClasses)}>{icon}</div>
+                <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">{label}</p>
+                    <p className="text-2xl font-bold text-slate-900">{value}</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SummaryChip({
+    icon,
+    label,
+    value,
+    tone = 'slate',
+}: {
+    icon: ReactNode
+    label: string
+    value: number
+    tone?: 'slate' | 'green' | 'amber'
+}) {
+    const toneClasses =
+        tone === 'green'
+            ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+            : tone === 'amber'
+              ? 'bg-amber-100 text-amber-800 border-amber-200'
+              : 'bg-slate-100 text-slate-800 border-slate-200'
+    return (
+        <div
+            className={cn(
+                'inline-flex min-w-[112px] items-center gap-2 rounded-full border px-3 py-1.5 text-xs',
+                toneClasses
+            )}
+        >
+            <div className="rounded-full bg-white/70 p-1 text-current">{icon}</div>
+            <div className="flex w-full items-center justify-between gap-2">
+                <span className="font-semibold">{label}</span>
+                <span className="text-sm font-bold">{value}</span>
+            </div>
+        </div>
     )
 }

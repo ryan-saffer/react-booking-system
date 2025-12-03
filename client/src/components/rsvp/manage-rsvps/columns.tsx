@@ -39,8 +39,8 @@ export function createColumns({
                 />
             ),
             meta: {
-                headerClassName: 'w-10',
-                cellClassName: 'pl-4',
+                headerClassName: 'w-10 sm:w-12',
+                cellClassName: 'pl-2 sm:pl-4',
             },
         }),
         columnHelper.accessor('name', {
@@ -57,11 +57,15 @@ export function createColumns({
         columnHelper.accessor('hasAllergies', {
             header: () => <div>Has allergies?</div>,
             cell: (rsvp) => rsvp.getValue() && <Badge variant="destructive">Yes</Badge>,
+            meta: {
+                headerClassName: 'hidden sm:table-cell',
+                cellClassName: 'hidden sm:table-cell',
+            },
         }),
         columnHelper.display({
             id: 'action',
             meta: {
-                headerClassName: 'w-16',
+                headerClassName: 'w-12 sm:w-16',
             },
             cell: ({ row }) => (
                 <DropdownMenu>

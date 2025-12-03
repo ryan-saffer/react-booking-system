@@ -1,5 +1,5 @@
 import type { InvitationsV2 } from 'fizz-kidz'
-import { Download, Edit, Loader2 } from 'lucide-react'
+import { Download, Edit, Loader2, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Img } from 'react-image'
 
@@ -55,33 +55,75 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                 close()
             }}
         >
-            <DialogContent className="twp">
+            <DialogContent className="twp max-w-5xl overflow-hidden border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0 sm:max-w-6xl">
                 {!isEditing ? (
-                    <div className="flex flex-col">
-                        <h5 className="my-4 text-center font-lilita text-2xl">Invitation Preview</h5>
-                        <Img src={invitationUrl} loader={<Loader className="my-12" />} />
-                        <div className="mt-4 flex w-full gap-2">
-                            <Button variant="yellow" className="w-1/2" onClick={downloadInvitation}>
-                                Download Invitation
-                                <Download className="ml-2 h-4 w-4" />
-                            </Button>
-                            <Button variant="darkPurple" className="w-1/2" onClick={() => setIsEditing(true)}>
-                                Edit Invitation
-                                <Edit className="ml-2 h-4 w-4" />
-                            </Button>
+                    <div className="grid gap-6 p-6 sm:p-8">
+                        <div className="flex flex-wrap items-start justify-between gap-6 pr-10">
+                            <div className="space-y-2">
+                                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                                    Invitation preview
+                                </p>
+                                <p className="font-lilita text-3xl text-slate-900 sm:text-4xl">
+                                    Your invite is ready to share
+                                </p>
+                                <p className="text-sm text-slate-600">
+                                    Save, edit, or jump back to sending. You can always return to tweak details without
+                                    losing RSVPs.
+                                </p>
+                            </div>
+                            <div className="hidden items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#9B3EEA] shadow sm:inline-flex">
+                                <Sparkles className="h-4 w-4" />
+                                High-res download included
+                            </div>
+                        </div>
+
+                        <div className="overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-4 shadow-md backdrop-blur">
+                            <div className="flex justify-center rounded-2xl bg-gradient-to-b from-slate-50 to-white p-2">
+                                <Img
+                                    src={invitationUrl}
+                                    loader={<Loader className="my-12" />}
+                                    className="max-h-[70vh] w-full max-w-4xl object-contain"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <p className="text-xs text-slate-600">
+                                Need a different design? Reopen the link from your booking email and start again—your
+                                RSVPs stay intact.
+                            </p>
+                            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                                <Button
+                                    variant="outline"
+                                    className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
+                                    onClick={downloadInvitation}
+                                >
+                                    <Download className="h-4 w-4" />
+                                    Download
+                                </Button>
+                                <Button
+                                    variant="darkPurple"
+                                    className="w-full gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
+                                    onClick={() => setIsEditing(true)}
+                                >
+                                    <Edit className="h-4 w-4" />
+                                    Edit details
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 ) : (
-                    <div>
-                        <h5 className="mt-4 text-center font-lilita text-2xl">Edit Invitation</h5>
-                        <p className="my-3">
-                            If you'd like to choose a different invitation design, open the link in your booking
-                            confirmation email and start again.
-                            <br />
-                            <br />
-                            You will not lose any of your RSVP's, and will be taken back to this page once the
-                            invitation has been generated.
-                        </p>
+                    <div className="grid gap-4 p-6 sm:p-8">
+                        <div className="space-y-2">
+                            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                                Edit invitation
+                            </p>
+                            <p className="font-lilita text-3xl text-slate-900 sm:text-4xl">Update your party details</p>
+                            <p className="text-sm text-slate-600">
+                                To switch designs entirely, reopen the booking link and regenerate—your RSVP list will
+                                stay safe.
+                            </p>
+                        </div>
                         <CreateInvitationForm
                             defaultValues={invitation}
                             isLoading={isLoading}
@@ -89,10 +131,10 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             submitButton={
                                 <Button
                                     type="submit"
-                                    className="w-full bg-[#9B3EEA] hover:bg-[#9B3EEA]/80"
+                                    className="w-full rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
                                     disabled={isLoading}
                                 >
-                                    {isLoading ? <Loader2 className="animate-spin" /> : 'Generate Invitation'}
+                                    {isLoading ? <Loader2 className="animate-spin" /> : 'Save & refresh invite'}
                                 </Button>
                             }
                         />
