@@ -8,7 +8,7 @@ import { ObjectKeys, getCloudFunctionsDomain, getLocationAddress } from 'fizz-ki
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
-import { env } from '../../../init'
+import { env } from '@/init'
 
 export class InvitationImageGenerator {
     #invitation: WithoutUid<InvitationsV2.Invitation>
