@@ -3,7 +3,7 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
-import { deleteInvitationV2 } from './invitations/delete-invitation-v2'
+import { deleteInvitationV2 } from './rsvp/delete-invitation-v2'
 
 import type { DeletePartyBooking } from '../functions/trpc/trpc.parties'
 
