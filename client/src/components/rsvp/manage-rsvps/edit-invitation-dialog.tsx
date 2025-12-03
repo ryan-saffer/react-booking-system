@@ -1,5 +1,5 @@
 import type { InvitationsV2 } from 'fizz-kidz'
-import { Download, Edit, Loader2, Sparkles } from 'lucide-react'
+import { Download, Edit, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useState } from 'react'
 import { Img } from 'react-image'
 
@@ -19,6 +19,8 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
     const [isEditing, setIsEditing] = useState(false)
 
     const { isLoading, mutateAsync: editInvitation } = trpc.parties.editInvitation.useMutation()
+    const { mutateAsync: generateNewDesignUrl, isLoading: isLoadingNewUrl } =
+        trpc.parties.generateInvitationUrl.useMutation()
 
     async function onSubmit(values: InvitationsV2.Invitation) {
         await editInvitation({
@@ -87,27 +89,54 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                            <p className="text-xs text-slate-600">
-                                Need a different design? Reopen the link from your booking email and start again—your
-                                RSVPs stay intact.
-                            </p>
-                            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                        <div className="grid gap-2 sm:grid-cols-2">
+                            <Button
+                                variant="outline"
+                                className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
+                                onClick={downloadInvitation}
+                            >
+                                <Download className="h-4 w-4" />
+                                Download
+                            </Button>
+                            <Button
+                                variant="darkPurple"
+                                className="w-full gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                <Edit className="h-4 w-4" />
+                                Edit details
+                            </Button>
+                        </div>
+
+                        <div className="flex items-start gap-3 rounded-xl border border-white/70 bg-white/80 px-3 py-3 text-sm text-slate-700 shadow-sm">
+                            <div className="mt-0.5 rounded-full bg-[#F2E7FF] p-2 text-[#9B3EEA]">
+                                <Wand2 className="h-4 w-4" />
+                            </div>
+                            <div className="flex w-full flex-col gap-2">
+                                <div>
+                                    <p className="font-semibold text-slate-900">Choose a different design</p>
+                                    <p className="text-sm text-slate-600">
+                                        Click the button below to choose a new design entirely. You won't lose any of
+                                        your RSVP data.
+                                    </p>
+                                </div>
                                 <Button
                                     variant="outline"
-                                    className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
-                                    onClick={downloadInvitation}
+                                    className="w-full gap-2 rounded-xl"
+                                    onClick={async () => {
+                                        const url = await generateNewDesignUrl({ bookingId: invitation.bookingId })
+                                        window.location.assign(url)
+                                    }}
+                                    disabled={isLoadingNewUrl}
                                 >
-                                    <Download className="h-4 w-4" />
-                                    Download
-                                </Button>
-                                <Button
-                                    variant="darkPurple"
-                                    className="w-full gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
-                                    onClick={() => setIsEditing(true)}
-                                >
-                                    <Edit className="h-4 w-4" />
-                                    Edit details
+                                    {isLoadingNewUrl ? (
+                                        <Loader2 className="animate-spin" />
+                                    ) : (
+                                        <>
+                                            <Wand2 className="h-4 w-4" />
+                                            Choose a new design
+                                        </>
+                                    )}
                                 </Button>
                             </div>
                         </div>

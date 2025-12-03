@@ -82,7 +82,6 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const deleteBookingMutation = useMutation(trpc.parties.deletePartyBooking.mutationOptions())
     const getPartyFormUrl = useMutation(trpc.parties.getPartyFormUrl.mutationOptions())
     const getCakeFormUrl = useMutation(trpc.parties.getCakeFormUrl.mutationOptions())
-    const getInvitationUrl = useMutation(trpc.parties.generateInvitationUrl.mutationOptions())
 
     const { setDate } = useDateNavigation()
 
@@ -984,16 +983,10 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         label: 'Get invitation link',
 
                         action: async () => {
-                            setLoading(true)
-                            try {
-                                const url = await getInvitationUrl.mutateAsync({ bookingId: booking.id })
-                                navigator.clipboard.writeText(url)
-                                toast.success('Invitation link copied to clipboard.')
-                            } catch (err) {
-                                console.error(err)
-                                toast.error('Unable to get invitation link.')
-                            }
-                            setLoading(false)
+                            navigator.clipboard.writeText(
+                                `${getCloudFunctionsDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/webhooks/invitation/${booking.id}`
+                            )
+                            toast.success('Invitation link copied to clipboard')
                         },
                     },
                 ]}
