@@ -18,12 +18,12 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
 
     const [isEditing, setIsEditing] = useState(false)
 
-    const { isLoading, mutateAsync: editInvitation } = trpc.parties.editInvitation.useMutation()
+    const { isLoading, mutateAsync: generateAndLinkInvitation } = trpc.parties.generateAndLinkInvitation.useMutation()
     const { mutateAsync: generateNewDesignUrl, isLoading: isLoadingNewUrl } =
         trpc.parties.generateInvitationUrl.useMutation()
 
     async function onSubmit(values: InvitationsV2.Invitation) {
-        await editInvitation({
+        await generateAndLinkInvitation({
             ...values,
             bookingId: invitation.bookingId,
             id: invitation.id,
