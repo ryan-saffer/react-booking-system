@@ -1,8 +1,8 @@
-import fs from 'fs'
-
 import type { InvitationsV2, WithoutId, WithoutUid } from 'fizz-kidz'
 import { generateRandomString } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
+import os from 'os'
+import path from 'path'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
@@ -33,26 +33,26 @@ export async function generateInvitationV2(input: WithoutId<WithoutUid<Invitatio
     // invitations are first stored in temp, and only moved to their actual location during linking.
     // this makes it very easy to clear all unlinked invitations.
     const filename = 'invitation.png'
-    const LOCAL_PATH = `${__dirname}/temp/${id}/${filename}`
     const FIREBASE_STORAGE_PATH = `invitations-v2/temp/${id}/${filename}`
 
-    if (!fs.existsSync(`${__dirname}/temp`)) {
-        await fsPromise.mkdir(`${__dirname}/temp`)
-    }
-    if (!fs.existsSync(`${__dirname}/temp/${id}`)) {
-        await fsPromise.mkdir(`${__dirname}/temp/${id}`)
-    }
+    let tempDir: string | undefined
 
     const imageGenerator = new InvitationImageGenerator({ ...input, id })
-    await imageGenerator.generatePng(LOCAL_PATH)
+    try {
+        tempDir = await fsPromise.mkdtemp(path.join(os.tmpdir(), 'fizzkidz-invitation-'))
+        const LOCAL_PATH = path.join(tempDir, filename)
 
-    const storage = await StorageClient.getInstance()
-    await storage.bucket(`${projectId}.appspot.com`).upload(LOCAL_PATH, {
-        destination: FIREBASE_STORAGE_PATH,
-    })
+        await imageGenerator.generatePng(LOCAL_PATH)
 
-    // delete the file locally since its not needed anymore
-    await fsPromise.rm(LOCAL_PATH)
+        const storage = await StorageClient.getInstance()
+        await storage.bucket(`${projectId}.appspot.com`).upload(LOCAL_PATH, {
+            destination: FIREBASE_STORAGE_PATH,
+        })
+    } finally {
+        if (tempDir) {
+            await fsPromise.rm(tempDir, { recursive: true, force: true })
+        }
+    }
 
     const mixpanel = await MixpanelClient.getInstance()
     await mixpanel.track('invitation-generated-v2', {
