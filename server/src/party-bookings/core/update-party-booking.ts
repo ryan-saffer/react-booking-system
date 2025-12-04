@@ -1,5 +1,5 @@
 import type { Booking } from 'fizz-kidz'
-import { getLocationAddress, getPartyEndDate } from 'fizz-kidz'
+import { getPartyEndDate, getStudioAddress } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'
@@ -23,7 +23,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             { eventType: 'party-bookings', type: booking.type, location: booking.location },
             {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                 start: booking.dateTime,
                 end: getPartyEndDate(booking.dateTime, booking.partyLength),
             }

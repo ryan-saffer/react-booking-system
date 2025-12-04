@@ -4,7 +4,7 @@ import path from 'path'
 import type { PNGStream } from 'canvas'
 import { createCanvas, loadImage, registerFont } from 'canvas'
 import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ObjectKeys, getCloudFunctionsDomain, getLocationAddress } from 'fizz-kidz'
+import { ObjectKeys, getCloudFunctionsDomain, getStudioAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
@@ -105,7 +105,7 @@ export class InvitationImageGenerator {
             }
             case 'address': {
                 return this.#invitation.$type === 'studio'
-                    ? getLocationAddress(this.#invitation.studio)
+                    ? getStudioAddress(this.#invitation.studio)
                     : this.#invitation.address
             }
             default: {

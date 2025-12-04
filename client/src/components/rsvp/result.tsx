@@ -1,5 +1,5 @@
 import type { InvitationsV2 } from 'fizz-kidz'
-import { capitalise, getLocationAddress } from 'fizz-kidz'
+import { capitalise, getStudioAddress } from 'fizz-kidz'
 import { CalendarDays, MapPin, PartyPopper, Sparkles } from 'lucide-react'
 
 export function Result({
@@ -9,7 +9,7 @@ export function Result({
     rsvp: 'attending' | 'not-attending'
     invitation: InvitationsV2.Invitation
 }) {
-    const address = invitation.$type === 'mobile' ? invitation.address : getLocationAddress(invitation.studio)
+    const address = invitation.$type === 'mobile' ? invitation.address : getStudioAddress(invitation.studio)
 
     const heading = rsvp === 'attending' ? "Yay! We can't wait to see you there." : "We're sorry you can't make it!"
 

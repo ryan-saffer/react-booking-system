@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
-import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
+import { addOrdinalSuffix, getStudioAddress } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
@@ -47,7 +47,7 @@ export async function generateInvitation(input: GenerateInvitation) {
             childAge: addOrdinalSuffix(input.childAge),
             date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
             rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
-            address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
+            address: input.$type === 'studio' ? getStudioAddress(input.studio) : input.address,
         })
 
         if (!process.env.FUNCTIONS_EMULATOR) {

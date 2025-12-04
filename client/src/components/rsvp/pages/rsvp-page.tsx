@@ -1,6 +1,6 @@
 import { format } from 'date-fns'
 import type { InvitationsV2 } from 'fizz-kidz'
-import { capitalise, getLocationAddress } from 'fizz-kidz'
+import { capitalise, getStudioAddress } from 'fizz-kidz'
 import { CheckCircle2, Clock, MapPin, PartyPopper, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
@@ -27,7 +27,7 @@ export function RsvpPage() {
 
     const { invitation } = state
 
-    const address = invitation.$type === 'mobile' ? invitation.address : getLocationAddress(invitation.studio)
+    const address = invitation.$type === 'mobile' ? invitation.address : getStudioAddress(invitation.studio)
     const formattedDate = format(invitation.date, 'EEEE, MMM d, yyyy')
 
     return (

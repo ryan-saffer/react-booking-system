@@ -1,7 +1,7 @@
 import type { Booking } from 'fizz-kidz'
 import {
     capitalise,
-    getLocationAddress,
+    getStudioAddress,
     getManager,
     ObjectKeys,
     PRODUCTS,
@@ -342,7 +342,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                         minute: '2-digit',
                         hour12: true,
                     }),
-                    studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
+                    studio: `${capitalise(fullBooking.location)} - ${getStudioAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
                     cakeSelection: mappedBooking.cake.selection,
@@ -381,7 +381,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                         minute: '2-digit',
                         hour12: true,
                     }),
-                    studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
+                    studio: `${capitalise(fullBooking.location)} - ${getStudioAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
                     ...(existingBooking.takeHomeBags && {
