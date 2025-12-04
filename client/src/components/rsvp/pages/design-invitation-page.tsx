@@ -271,6 +271,7 @@ function Step2({
                 rsvpDate: values.rsvpDate,
                 parentMobile: values.parentMobile,
                 invitation: INVITATIONS[selectedInvitation].name,
+                rsvpNotificationsEnabled: values.rsvpNotificationsEnabled,
                 bookingId,
                 ...(values.$type === 'studio'
                     ? {

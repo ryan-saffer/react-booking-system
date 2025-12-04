@@ -5,7 +5,7 @@ import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
 import { generateInvitation } from '@/party-bookings/core/generate-invitation'
-import { editInvitation } from '@/party-bookings/core/rsvp/edit-invitation-v2'
+import { generateAndLinkInvitation } from '@/party-bookings/core/rsvp/edit-invitation-v2'
 import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
 import { generateInvitationV2 } from '@/party-bookings/core/rsvp/generate-invitation-v2'
 import { linkInvitation } from '@/party-bookings/core/rsvp/link-invitation-v2'
@@ -48,9 +48,9 @@ export const partiesRouter = router({
     linkInvitation: authenticatedProcedure
         .input((input: unknown) => input as WithoutUid<InvitationsV2.Invitation>)
         .mutation(({ input, ctx }) => linkInvitation({ ...input, uid: ctx.uid })),
-    editInvitation: authenticatedProcedure
+    generateAndLinkInvitation: authenticatedProcedure
         .input((input: unknown) => input as InvitationsV2.Invitation)
-        .mutation(({ input }) => editInvitation(input)),
+        .mutation(({ input }) => generateAndLinkInvitation(input)),
     resetInvitation: authenticatedProcedure
         .input((input: unknown) => input as { invitationId: string })
         .mutation(({ input }) => resetInvitation(input.invitationId)),

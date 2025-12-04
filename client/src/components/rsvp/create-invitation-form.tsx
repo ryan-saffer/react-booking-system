@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-component
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
+import { Switch } from '@ui-components/switch'
 import { capitalise } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
 
@@ -274,6 +275,29 @@ export function CreateInvitationForm({
                                         autoComplete="off"
                                         disabled={isLoading}
                                         {...field}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="rsvpNotificationsEnabled"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center justify-between rounded-xl border border-dashed border-slate-200 bg-white/70 px-3 py-3">
+                                <div>
+                                    <FormLabel className="text-sm font-semibold text-slate-800">
+                                        Email me when guests RSVP
+                                    </FormLabel>
+                                    <p className="text-xs text-slate-500">
+                                        We'll send updates to you each time a guest replies.
+                                    </p>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value ?? true}
+                                        onCheckedChange={(checked) => field.onChange(!!checked)}
+                                        disabled={isLoading}
                                     />
                                 </FormControl>
                             </FormItem>

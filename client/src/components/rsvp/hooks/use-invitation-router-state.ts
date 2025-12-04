@@ -49,5 +49,6 @@ export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' 
         studio: state!.studio!,
         ...(state!.$type === 'mobile' && { address: state!.address! }),
         rsvpDate: state!.rsvpDate!,
+        rsvpNotificationsEnabled: true,
     }
 }
