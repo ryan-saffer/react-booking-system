@@ -12,8 +12,9 @@ type BaseInvitation = {
     rsvpDate: Date
     parentMobile: string
     invitation: InvitationOption
+    studio: Studio
 }
-type StudioInvitation = BaseInvitation & { $type: 'studio'; studio: Studio }
+type StudioInvitation = BaseInvitation & { $type: 'studio' }
 type MobileInvitation = BaseInvitation & { $type: 'mobile'; address: string }
 
 export type Invitation = StudioInvitation | MobileInvitation

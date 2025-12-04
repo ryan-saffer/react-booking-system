@@ -107,7 +107,7 @@ export function RsvpForm({
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            await sendRsvp({ ...values, bookingId: invitation.bookingId })
+            await sendRsvp({ ...values, bookingId: invitation.bookingId, invitationId: invitation.id })
             const hasAttending = values.children.some((child) => child.rsvp === 'attending')
             onComplete(hasAttending ? 'attending' : 'not-attending')
         } catch {
