@@ -4,6 +4,7 @@ type BaseInvitation = {
     id: string // same id used to upload to storage
     uid: string // owner
     bookingId: string
+    rsvpNotificationsEnabled: boolean
     childName: string
     childAge: string
     date: Date
