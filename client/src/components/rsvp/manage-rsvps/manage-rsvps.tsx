@@ -2,9 +2,11 @@ import { CheckCircle2, Eye, Frown, Share2, Sparkles, Users } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Fragment, useState } from 'react'
 
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { flexRender } from '@tanstack/react-table'
 import { Button } from '@ui-components/button'
 import { Skeleton } from '@ui-components/skeleton'
+import { Switch } from '@ui-components/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
 
@@ -14,6 +16,8 @@ import { useRsvpTable } from '../hooks/use-rsvp-table'
 import { useRsvps } from '../hooks/use-rsvps'
 import { EditInvitationDialog } from './edit-invitation-dialog'
 import { ShareInvitaitonDialog } from './share-invitation-dialog'
+import type { InvitationsV2 } from 'fizz-kidz'
+import { useAuth } from '@components/Hooks/context/useAuth'
 
 const emptyState: UseRsvpTableProps = {
     rsvps: [],
@@ -22,8 +26,11 @@ const emptyState: UseRsvpTableProps = {
 }
 
 export function ManageRsvps() {
+    const firebase = useFirebase()
     const invitation = useInvitation()
     const rsvps = useRsvps(invitation)
+
+    const auth = useAuth()
 
     const table = useRsvpTable(
         rsvps.status === 'loaded'
@@ -43,6 +50,12 @@ export function ManageRsvps() {
     const notAttendingCount = isLoaded ? rsvps.result.notAttendingCount : 0
     const totalResponses = isLoaded ? rsvps.result.rsvps.length : 0
     const colSpan = table.getVisibleFlatColumns().length
+
+    function updateRsvpNotifications(rsvpNotificationsEnabled: boolean) {
+        firebase.db
+            .doc(`invitations-v2/${invitation.id}`)
+            .update({ rsvpNotificationsEnabled } satisfies Partial<InvitationsV2.Invitation>)
+    }
 
     return (
         <div className="twp min-h-screen bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF]">
@@ -76,6 +89,19 @@ export function ManageRsvps() {
                         </Button>
                     </div>
                 </div>
+
+                {auth?.uid === invitation.uid && (
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow sm:px-5">
+                        <div>
+                            <p className="font-semibold text-slate-900">Email notifications</p>
+                            <p className="text-xs text-slate-600">Get an email when guests RSVP to this invitation.</p>
+                        </div>
+                        <Switch
+                            checked={invitation.rsvpNotificationsEnabled}
+                            onCheckedChange={(checked) => updateRsvpNotifications(checked)}
+                        />
+                    </div>
+                )}
 
                 {rsvps.status === 'loading' && <Skeleton className="mt-8 h-[260px] w-full rounded-2xl" />}
 
@@ -118,7 +144,7 @@ export function ManageRsvps() {
                             />
                         </div>
 
-                        <div className="mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-2xl backdrop-blur sm:mt-6">
+                        <div className="mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-md backdrop-blur sm:mt-6">
                             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:px-6">
                                 <div>
                                     <p className="text-sm font-semibold text-slate-900">Guest list & RSVPs</p>
