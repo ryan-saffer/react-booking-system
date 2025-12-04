@@ -295,6 +295,18 @@ export type Emails = {
         address: string
     }
 
+    rsvpNotificationToHost: {
+        parentName: string
+        childrenNames: string
+        children: {
+            childName: string
+            isAttending: boolean
+            allergies?: string
+        }[]
+        birthdayChildName: string
+        invitationUrl: string
+    }
+
     // EVENTS
     standardEventBookingConfirmation: {
         contactName: string

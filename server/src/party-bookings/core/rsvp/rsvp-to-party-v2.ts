@@ -1,9 +1,10 @@
-import { capitalise, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
+import { capitalise, getRsvpUrl, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
+import { env } from '@/init'
 
 export type RsvpProps = WithoutId<Rsvp> & {
     bookingId: string
@@ -54,4 +55,36 @@ export async function rsvpToParty(input: RsvpProps) {
     } catch (err) {
         logError(`Error sending rsvp confirmation to parent '${input.parentEmail}'`, err, { input })
     }
+
+    // notify the host
+    if (invitation.rsvpNotificationsEnabled) {
+        const booking = await DatabaseClient.getPartyBooking(invitation.bookingId)
+        try {
+            await mailClient.sendEmail('rsvpNotificationToHost', booking.parentEmail, {
+                parentName: invitation.parentName,
+                childrenNames: mergeChildrenNames(input.children),
+                birthdayChildName: invitation.childName,
+                children: input.children.map((child) => ({
+                    childName: child.name,
+                    isAttending: child.rsvp === 'attending',
+                    allergies: child.allergies,
+                })),
+                invitationUrl: getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', invitation.bookingId),
+            })
+        } catch (err) {
+            logError(`Error sending RSVP notification to host '${booking.parentEmail}'`, err, { input })
+        }
+    }
+}
+
+/**
+ * Merges children names such that it output "Harry, Jane and Sally" etc.
+ */
+function mergeChildrenNames(children: RsvpProps['children']) {
+    if (children.length === 0) return ''
+    if (children.length === 1) return children[0].name
+    if (children.length === 2) return `${children[0].name} and ${children[1].name}`
+    const names = children.map((child) => child.name)
+    const last = names.pop()
+    return `${names.join(', ')} and ${last}`
 }
