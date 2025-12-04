@@ -8,6 +8,7 @@ import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
 import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
 import { assertNever, type PubSubFunctions } from 'fizz-kidz'
 import { updateSlingWages } from './sling/update-sling-wages'
+import { cleanUpStaleInvitations } from './party-bookings/core/rsvp/clean-up-stale-invitations'
 
 export const pubsub = onMessagePublished('background', async (input: PubSubFunctions['background']) => {
     const { name } = input
@@ -43,6 +44,10 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'paperformSubmission':
             // triggered by paperform webhook
             await handlePaperformSubmission(input)
+            break
+        case 'cleanUpStaleInvitations':
+            // 1st of each month at 3:00am
+            await cleanUpStaleInvitations()
             break
         default:
             assertNever(name)

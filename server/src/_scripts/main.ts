@@ -4,6 +4,7 @@ import { STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
+import { cleanUpStaleInvitations } from '@/party-bookings/core/rsvp/clean-up-stale-invitations'
 import { updateSlingWages } from '@/sling/update-sling-wages'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
@@ -31,6 +32,10 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Clear stale invitations',
+                value: 'clearStaleInvitations',
+            },
             {
                 title: 'Run report on bookings',
                 value: 'runBookingsReport',
@@ -249,6 +254,10 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
         })
     }
     if (script === 'updateSlingWages') {
-        updateSlingWages()
+        await updateSlingWages()
+    }
+    if (script === 'clearStaleInvitations') {
+        const result = await cleanUpStaleInvitations()
+        console.log(result)
     }
 })()
