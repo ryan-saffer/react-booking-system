@@ -48,7 +48,7 @@ export function ManageRsvps() {
     const isLoaded = rsvps.status === 'loaded'
     const attendingCount = isLoaded ? rsvps.result.attendingCount : 0
     const notAttendingCount = isLoaded ? rsvps.result.notAttendingCount : 0
-    const totalResponses = isLoaded ? rsvps.result.rsvps.length : 0
+    const totalResponses = isLoaded ? rsvps.result.rsvps.reduce((acc, curr) => (acc += curr.children.length), 0) : 0
     const colSpan = table.getVisibleFlatColumns().length
 
     function updateRsvpNotifications(rsvpNotificationsEnabled: boolean) {
@@ -119,7 +119,7 @@ export function ManageRsvps() {
                                 icon={<Frown className="h-4 w-4" />}
                                 label="Not attending"
                                 value={notAttendingCount}
-                                tone="amber"
+                                tone="rose"
                             />
                         </div>
 
@@ -140,7 +140,7 @@ export function ManageRsvps() {
                                 icon={<Frown className="h-5 w-5" />}
                                 label="Unable to attend"
                                 value={notAttendingCount}
-                                tone="amber"
+                                tone="rose"
                             />
                         </div>
 
@@ -309,13 +309,13 @@ function SummaryCard({
     icon: ReactNode
     label: string
     value: number
-    tone?: 'slate' | 'green' | 'amber'
+    tone?: 'slate' | 'green' | 'rose'
 }) {
     const toneClasses =
         tone === 'green'
             ? 'bg-emerald-50 text-emerald-700'
-            : tone === 'amber'
-              ? 'bg-amber-50 text-amber-700'
+            : tone === 'rose'
+              ? 'bg-rose-50 text-rose-700'
               : 'bg-slate-50 text-slate-700'
     return (
         <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-lg backdrop-blur">
@@ -339,13 +339,13 @@ function SummaryChip({
     icon: ReactNode
     label: string
     value: number
-    tone?: 'slate' | 'green' | 'amber'
+    tone?: 'slate' | 'green' | 'rose'
 }) {
     const toneClasses =
         tone === 'green'
             ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-            : tone === 'amber'
-              ? 'bg-amber-100 text-amber-800 border-amber-200'
+            : tone === 'rose'
+              ? 'bg-rose-100 text-rose-800 border-rose-200'
               : 'bg-slate-100 text-slate-800 border-slate-200'
     return (
         <div
