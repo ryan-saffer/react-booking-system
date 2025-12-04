@@ -31,6 +31,7 @@ import {
     TAKE_HOME_BAGS,
     Utilities,
     capitalise,
+    getRsvpUrl,
 } from 'fizz-kidz'
 import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
 
@@ -984,7 +985,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
 
                         action: async () => {
                             navigator.clipboard.writeText(
-                                `${getCloudFunctionsDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/webhooks/invitation/${booking.id}`
+                                getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
                             )
                             toast.success('Invitation link copied to clipboard')
                         },
