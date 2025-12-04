@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
+import { useOrg } from '@components/Session/use-org'
 import Loader from '@components/Shared/Loader'
 import { Button } from '@ui-components/button'
 import { timestampConverter } from '@utils/firebase/converters'
@@ -25,6 +26,8 @@ export function ViewInvitationPage() {
 
     const [invitation, setInvitation] = useState<Service<InvitationsV2.Invitation>>({ status: 'loading' })
 
+    const { role } = useOrg()
+
     useEffect(() => {
         const unsub = firebase.db
             .collection('invitations-v2')
@@ -42,6 +45,12 @@ export function ViewInvitationPage() {
         return () => unsub()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
+
+    function canManageRsvps(invitation: InvitationsV2.Invitation) {
+        if (auth && auth.uid === invitation.uid) return true
+        if (role !== null) return true
+        return false
+    }
 
     return (
         <div className="twp">
@@ -85,8 +94,7 @@ export function ViewInvitationPage() {
             )}
             {invitation.status === 'loaded' && (
                 <InvitationProvider invitation={invitation.result}>
-                    {auth && auth.uid === invitation.result.uid && <ManageRsvps />}
-                    {(!auth || auth.uid !== invitation.result.uid) && <ViewInvitation />}
+                    {canManageRsvps(invitation.result) ? <ManageRsvps /> : <ViewInvitation />}
                 </InvitationProvider>
             )}
         </div>
