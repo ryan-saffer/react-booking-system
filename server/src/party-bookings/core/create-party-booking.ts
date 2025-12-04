@@ -5,7 +5,7 @@ import type { Booking, FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
-    getLocationAddress,
+    getStudioAddress,
     getManager,
     getNumberOfKidsAllowed,
     getPartyCreationCount,
@@ -46,7 +46,7 @@ export async function createPartyBooking(_booking: Booking) {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                 description: `${getApplicationDomain(
                     env,
                     process.env.FUNCTIONS_EMULATOR === 'true'
@@ -142,7 +142,7 @@ export async function createPartyBooking(_booking: Booking) {
                     endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
                         DateTime.TIME_SIMPLE
                     ),
-                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
