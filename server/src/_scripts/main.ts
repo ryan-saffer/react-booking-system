@@ -4,6 +4,7 @@ import { AcuityConstants, AcuityUtilities, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
+import { cleanUpStaleInvitations } from '@/party-bookings/core/rsvp/clean-up-stale-invitations'
 import { updateSlingWages } from '@/sling/update-sling-wages'
 
 import { SquareClient } from '@/square/core/square-client'
@@ -33,6 +34,10 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
             {
                 title: 'Holiday Program Bookings',
                 value: 'runHolidayProgramsReport',
+            },
+            {
+                title: 'Clear stale invitations',
+                value: 'clearStaleInvitations',
             },
             {
                 title: 'Run report on bookings',
@@ -257,7 +262,11 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
         })
     }
     if (script === 'updateSlingWages') {
-        updateSlingWages()
+        await updateSlingWages()
+    }
+    if (script === 'clearStaleInvitations') {
+        const result = await cleanUpStaleInvitations()
+        console.log(result)
     }
     // get all holiday program bookings for a certain time period and calculate the total spent.
     // used for franchise ownership transfer, to know how many future bookings made.
