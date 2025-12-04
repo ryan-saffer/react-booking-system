@@ -26,7 +26,7 @@ export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' 
         state?.date ?? null,
         state?.time ?? null,
         state?.$type ?? null,
-        state?.$type === 'studio' ? state?.studio?.toString() ?? null : null,
+        state?.studio ?? null,
         state?.$type === 'mobile' ? state?.address ?? null : null,
         state?.rsvpDate ?? null
     )
@@ -46,7 +46,7 @@ export function useInvitationRouterState(): Omit<InvitationsV2.Invitation, 'id' 
         date: state!.date!,
         time: state!.time!,
         $type: state!.$type!,
-        ...(state!.$type === 'studio' && { studio: state!.studio! }),
+        studio: state!.studio!,
         ...(state!.$type === 'mobile' && { address: state!.address! }),
         rsvpDate: state!.rsvpDate!,
     }

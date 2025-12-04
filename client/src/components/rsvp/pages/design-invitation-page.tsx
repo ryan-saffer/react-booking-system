@@ -1,4 +1,4 @@
-import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
+import type { InvitationsV2, WithoutId, WithoutUid } from 'fizz-kidz'
 import { ArrowLeft, ChevronLeft, ChevronRight, Loader2, Sparkles, Wand2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Img } from 'react-image'
@@ -121,11 +121,11 @@ export function DesignInvitationPage() {
                                 <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
                                     Invitation setup
                                 </p>
-                                <p className="font-lilita text-2xl text-slate-900">{childName}&apos;s birthday party</p>
+                                <p className="font-lilita text-2xl text-slate-900">{childName}'s birthday party</p>
                             </div>
                         </div>
-                        <div className="hidden sm:block text-sm text-slate-600">
-                            We&apos;ll choose a design, personalise details, then preview &amp; share.
+                        <div className="hidden text-sm text-slate-600 sm:block">
+                            We'll choose a design, personalise details, then preview & share.
                         </div>
                     </div>
                 )}
@@ -137,12 +137,7 @@ export function DesignInvitationPage() {
                 </div>
                 <div className="mt-8">
                     {step === 1 && (
-                        <Step1
-                            api={api}
-                            setApi={setApi}
-                            nextStep={nextStep}
-                            selectedInvitation={selectedInvitation}
-                        />
+                        <Step1 api={api} setApi={setApi} nextStep={nextStep} selectedInvitation={selectedInvitation} />
                     )}
                     {step === 2 && (
                         <Step2
@@ -223,7 +218,7 @@ function Step1({
                                 <CarouselItem key={index} className="basis-full px-2 sm:px-4">
                                     <div
                                         className={`relative overflow-hidden rounded-2xl border bg-white shadow-lg transition-all duration-200 ${
-                                            isActive ? 'border-slate-200 shadow-xl scale-[1.01]' : 'border-slate-100'
+                                            isActive ? 'scale-[1.01] border-slate-200 shadow-xl' : 'border-slate-100'
                                         }`}
                                     >
                                         <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow">
@@ -238,9 +233,12 @@ function Step1({
                 </Carousel>
                 <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
                     <p className="text-sm text-slate-600">
-                        We&apos;ll personalise this design with your party details next.
+                        We'll personalise this design with your party details next.
                     </p>
-                    <Button className="rounded-xl bg-[#9B3EEA] px-6 text-sm font-semibold hover:bg-[#8B2DE3]" onClick={nextStep}>
+                    <Button
+                        className="rounded-xl bg-[#9B3EEA] px-6 text-sm font-semibold hover:bg-[#8B2DE3]"
+                        onClick={nextStep}
+                    >
                         Use this design
                     </Button>
                 </div>
@@ -263,34 +261,26 @@ function Step2({
 
     const onSubmit = async (values: InvitationsV2.Invitation) => {
         try {
-            const invitation =
-                values.$type === 'studio'
-                    ? ({
-                          childName: values.childName,
-                          childAge: values.childAge,
-                          time: values.time,
-                          date: values.date,
+            const invitation = {
+                childName: values.childName,
+                childAge: values.childAge,
+                time: values.time,
+                date: values.date,
+                studio: values.studio,
+                parentName: values.parentName,
+                rsvpDate: values.rsvpDate,
+                parentMobile: values.parentMobile,
+                invitation: INVITATIONS[selectedInvitation].name,
+                bookingId,
+                ...(values.$type === 'studio'
+                    ? {
                           $type: 'studio',
-                          studio: values.studio,
-                          parentName: values.parentName,
-                          rsvpDate: values.rsvpDate,
-                          parentMobile: values.parentMobile,
-                          invitation: INVITATIONS[selectedInvitation].name,
-                          bookingId,
-                      } as const)
-                    : ({
-                          childName: values.childName,
-                          childAge: values.childAge,
-                          time: values.time,
-                          date: values.date,
+                      }
+                    : {
                           $type: 'mobile',
                           address: values.address,
-                          parentName: values.parentName,
-                          rsvpDate: values.rsvpDate,
-                          parentMobile: values.parentMobile,
-                          invitation: INVITATIONS[selectedInvitation].name,
-                          bookingId,
-                      } as const)
+                      }),
+            } satisfies WithoutUid<WithoutId<InvitationsV2.Invitation>>
 
             const { invitationId } = await generateInvitation(invitation)
             onInvitationGenerated({ ...invitation, id: invitationId })
@@ -313,7 +303,8 @@ function Step2({
                 <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Step 2</p>
                 <p className="text-xl font-semibold text-slate-900">Confirm the party details</p>
                 <p className="text-sm text-slate-600">
-                    We pre-filled everything from your booking. Update anything that needs tweaking before we generate your invite.
+                    We pre-filled everything from your booking. Update anything that needs tweaking before we generate
+                    your invite.
                 </p>
             </div>
             <div className="relative px-4 py-6 sm:px-6">

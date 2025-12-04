@@ -16,14 +16,23 @@ export function hasRequiredState(
     address: string | null,
     rsvpDate: string | Date | null
 ) {
-    if (bookingId && parentName && parentNumber && childName && childAge && date && time && type && rsvpDate) {
+    if (
+        bookingId &&
+        parentName &&
+        parentNumber &&
+        childName &&
+        childAge &&
+        date &&
+        time &&
+        type &&
+        rsvpDate &&
+        studio
+    ) {
         // ensure combination of type and studio / address
-        if (type === 'studio' && studio) {
-            return true
-        }
         if (type === 'mobile' && address) {
             return true
         }
+        return true
     }
     return false
 }

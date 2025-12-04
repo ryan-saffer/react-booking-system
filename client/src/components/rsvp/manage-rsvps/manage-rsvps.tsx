@@ -264,7 +264,7 @@ function ExpandableContent({ label, value, colSpan }: { label: string; value: st
         <TableRow className="bg-slate-50/70">
             <TableCell className="p-3" colSpan={colSpan}>
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-                    <span className="w-[140px] text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 sm:w-[180px]">
+                    <span className="w-[140px] text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 sm:ml-12 sm:w-[180px]">
                         {label}
                     </span>
                     <span className="text-sm text-slate-700">{value}</span>

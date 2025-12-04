@@ -277,6 +277,24 @@ export type Emails = {
         oldTakeHomeBags?: { name: string; quantity: string }[]
     }
 
+    // PARTY RSVPS
+    rsvpToParty: {
+        parentName: string
+        children: {
+            childName: string
+            isAttending: boolean
+            allergies?: string
+        }[]
+        attending: boolean // if any child is attending set this to true
+        hostName: string
+        hostPhone: string
+        date: string
+        time: string
+        isMobile: boolean
+        studio: string
+        address: string
+    }
+
     // EVENTS
     standardEventBookingConfirmation: {
         contactName: string
