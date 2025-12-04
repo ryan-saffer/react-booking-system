@@ -10,7 +10,7 @@ import {
     STUDIOS,
     TAKE_HOME_BAGS,
     Utilities,
-    getCloudFunctionsDomain,
+    getRsvpUrl,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { ChangeEvent } from 'react'
@@ -965,7 +965,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         label: 'Get invitation link',
                         action: async () => {
                             navigator.clipboard.writeText(
-                                `${getCloudFunctionsDomain(import.meta.env.VITE_ENV, import.meta.env.DEV)}/webhooks/invitation/${booking.id}`
+                                getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
                             )
                             toast.success('Invitation link copied to clipboard')
                         },
