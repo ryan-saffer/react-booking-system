@@ -1,0 +1,107 @@
+---
+title: Invitations & RSVP's
+description: Create and share party invitations, collect RSVPs online, and manage guest lists securely.
+---
+
+import {
+  Aside,
+  Badge,
+  Card,
+  CardGrid,
+  Steps,
+} from "@astrojs/starlight/components";
+
+<CardGrid>
+  <Card title="Create once, share anywhere" icon="instagram">
+    <p>
+      Hosts build an invitation, then share a link or download a printable
+      version. Every printed invite includes a QR code that lands on the live
+      web page.
+    </p>
+  </Card>
+  <Card title="RSVPs stay in sync" icon="rocket">
+    <p>
+      Guests can RSVP directly on the invitation page - including multiple
+      children at once - and their responses stay tied to the party, even if the
+      host updates the invitation or swaps designs later.
+    </p>
+  </Card>
+  <Card title="Automatic confirmations" icon="email">
+    <p>
+      Guests receive an email confirming their RSVP and are added to our mailing
+      list. When enabled, hosts also get an email alert for each new response.
+    </p>
+  </Card>
+  <Card title="Secure, role-aware access" icon="seti:lock">
+    <p>
+      Authentication decides what someone sees: guests get the RSVP form, hosts
+      see the tracking dashboard, and staff signing in from the portal see the
+      same tracking view on iPads.
+    </p>
+  </Card>
+</CardGrid>
+
+## Guest experience
+
+<Steps>
+  <ol>
+    <li>
+      <h3>
+        Open the invitation <Badge text="Link" variant="note" size="small" />{" "}
+        <Badge text="QR code" variant="tip" size="small" />
+      </h3>
+      <p>
+        Guests tap the shared link or scan the QR on a printed invite to load
+        the live page with all party details and the invitation design the host
+        selected.
+      </p>
+    </li>
+    <li>
+      <h3>Submit an RSVP for any children attending</h3>
+      <p>
+        The form accepts multiple children in one submission so families can
+        reply once. Guests can include allergy details alongside their response.
+      </p>
+    </li>
+    <li>
+      <h3>Confirmation and notifications</h3>
+      <p>
+        After submitting, guests receive an email confirming their RSVP and are
+        added to our mailing list. If the host chose notifications, they receive
+        the same alert when a new RSVP arrives.
+      </p>
+    </li>
+  </ol>
+</Steps>
+
+## Host view and controls
+
+- Hosts must sign in or create an account before finalising an invitation so
+  guest details stay protected.
+- When a signed-in host opens their invitation link, they are taken to the RSVP
+  management view instead of the guest form.
+- Hosts can review every RSVP, edit entries, or delete responses as needed.
+- Invitations can be edited or redesigned at any time without losing RSVP data;
+  existing printed QR codes keep pointing to the right page.
+- Only the invitation owner can make edits once it is created.
+
+<Aside type="tip" title="Keep designs fresh without risk">
+  Swapping to a new invitation template never breaks the QR codes that were
+  already handed out - guests still land on the current invitation and their
+  responses remain intact.
+</Aside>
+
+## Staff access
+
+Staff can open the invitation from the portal on iPads (while signed in) to see
+the same tracking view as hosts. This list helps the team gauge expected head
+count and check allergy requirements before the party.
+
+## Security rules
+
+<Aside type="caution" title="Authentication first">
+  All RSVP data is protected. Every invitation requires the host to be signed in
+  before it can be finalised or edited, and only the owner can make changes. The
+  live page adapts to the viewer - guests get the RSVP form, while hosts and
+  staff see the tracking view after authenticating.
+</Aside>

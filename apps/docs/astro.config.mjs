@@ -25,6 +25,10 @@ export default defineConfig({
                   label: "Customer Journey",
                   slug: "services/birthday-parties/customer-journey",
                 },
+                {
+                  label: "Invitations & RSVP's",
+                  slug: "services/birthday-parties/rsvp",
+                },
               ],
             },
             {
