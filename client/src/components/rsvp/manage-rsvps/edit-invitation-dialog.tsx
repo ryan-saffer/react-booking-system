@@ -57,7 +57,7 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                 close()
             }}
         >
-            <DialogContent className="twp max-w-5xl overflow-hidden border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0 sm:max-w-6xl">
+            <DialogContent className="twp max-h-[90vh] w-full max-w-[95vw] overflow-auto border-none bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF] p-0 sm:max-w-6xl sm:overflow-auto">
                 {!isEditing ? (
                     <div className="grid gap-6 p-6 sm:p-8">
                         <div className="flex flex-wrap items-start justify-between gap-6 pr-10">
@@ -84,7 +84,7 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                                 <Img
                                     src={invitationUrl}
                                     loader={<Loader className="my-12" />}
-                                    className="max-h-[70vh] w-full max-w-4xl object-contain"
+                                    className="max-h-[60vh] w-full max-w-4xl object-contain"
                                 />
                             </div>
                         </div>
@@ -108,37 +108,39 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             </Button>
                         </div>
 
-                        <div className="flex items-start gap-3 rounded-xl border border-white/70 bg-white/80 px-3 py-3 text-sm text-slate-700 shadow-sm">
-                            <div className="mt-0.5 rounded-full bg-[#F2E7FF] p-2 text-[#9B3EEA]">
-                                <Wand2 className="h-4 w-4" />
-                            </div>
-                            <div className="flex w-full flex-col gap-2">
-                                <div>
-                                    <p className="font-semibold text-slate-900">Choose a different design</p>
-                                    <p className="text-sm text-slate-600">
-                                        Click the button below to choose a new design entirely. You won't lose any of
-                                        your RSVP data.
-                                    </p>
+                        <div className="flex flex-col items-start gap-3 rounded-xl border border-white/70 bg-white/80 px-3 py-3 text-sm text-slate-700 shadow-sm">
+                            <div className="flex w-full items-center gap-3">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F2E7FF] text-[#9B3EEA]">
+                                    <Wand2 className="h-4 w-4" />
                                 </div>
-                                <Button
-                                    variant="outline"
-                                    className="w-full gap-2 rounded-xl"
-                                    onClick={async () => {
-                                        const url = await generateNewDesignUrl({ bookingId: invitation.bookingId })
-                                        window.location.assign(url)
-                                    }}
-                                    disabled={isLoadingNewUrl}
-                                >
-                                    {isLoadingNewUrl ? (
-                                        <Loader2 className="animate-spin" />
-                                    ) : (
-                                        <>
-                                            <Wand2 className="h-4 w-4" />
-                                            Choose a new design
-                                        </>
-                                    )}
-                                </Button>
+                                <div className="flex w-full flex-col gap-2">
+                                    <div>
+                                        <p className="font-semibold text-slate-900">Choose a different design</p>
+                                        <p className="text-sm text-slate-600">
+                                            Click the button below to choose a new design entirely. You won't lose any
+                                            of your RSVP data.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+                            <Button
+                                variant="outline"
+                                className="w-full gap-2 rounded-xl"
+                                onClick={async () => {
+                                    const url = await generateNewDesignUrl({ bookingId: invitation.bookingId })
+                                    window.location.assign(url)
+                                }}
+                                disabled={isLoadingNewUrl}
+                            >
+                                {isLoadingNewUrl ? (
+                                    <Loader2 className="animate-spin" />
+                                ) : (
+                                    <>
+                                        <Wand2 className="h-4 w-4" />
+                                        Choose a new design
+                                    </>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 ) : (
@@ -158,13 +160,19 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             isLoading={isLoading}
                             onSubmit={onSubmit}
                             submitButton={
-                                <Button
-                                    type="submit"
-                                    className="w-full rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? <Loader2 className="animate-spin" /> : 'Save & refresh invite'}
-                                </Button>
+                                <div className="pt-4">
+                                    <Button
+                                        type="submit"
+                                        className="w-full rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? (
+                                            <Loader2 className="h-5 w-5 animate-spin" />
+                                        ) : (
+                                            'Save & refresh invite'
+                                        )}
+                                    </Button>
+                                </div>
                             }
                         />
                     </div>

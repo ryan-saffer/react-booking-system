@@ -59,7 +59,7 @@ export function ManageRsvps() {
 
     return (
         <div className="twp min-h-screen bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF]">
-            <div className="mx-auto max-w-6xl px-4 pb-28 pt-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-6xl px-4 pb-28 pt-4 sm:px-6 sm:pb-16 lg:px-8">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                         <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Manage RSVPs</p>
@@ -144,7 +144,7 @@ export function ManageRsvps() {
                             />
                         </div>
 
-                        <div className="mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-md backdrop-blur sm:mt-6">
+                        <div className="mb-4 mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-[0px_0px_16px_rgba(17,17,26,0.1)] backdrop-blur sm:mt-6">
                             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-4 sm:px-6">
                                 <div>
                                     <p className="text-sm font-semibold text-slate-900">Guest list & RSVPs</p>
@@ -318,7 +318,7 @@ function SummaryCard({
               ? 'bg-rose-50 text-rose-700'
               : 'bg-slate-50 text-slate-700'
     return (
-        <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-lg backdrop-blur">
+        <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-md backdrop-blur">
             <div className="flex items-center gap-3">
                 <div className={cn('rounded-full p-2', toneClasses)}>{icon}</div>
                 <div>
