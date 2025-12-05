@@ -12,6 +12,7 @@ import { getRsvpUrl, type Booking, type FirestoreBooking, type WithId } from 'fi
 import { Button } from '@ui-components/button'
 
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
+import { UsersRound } from 'lucide-react'
 
 const PREFIX = 'BookingPanel'
 
@@ -83,6 +84,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                         </div>
                         {booking.invitationId && (
                             <Button
+                                className="twp hidden sm:inline-flex"
                                 variant="darkPurple"
                                 size="sm"
                                 onClick={(e) => {
@@ -93,6 +95,7 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
                                     )
                                 }}
                             >
+                                <UsersRound className="mr-2 h-4 w-4" />
                                 View RSVP's
                             </Button>
                         )}
@@ -112,6 +115,23 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
             <AccordionDetails>
                 <Grid container spacing={3}>
                     <Grid item xs>
+                        {booking.invitationId && (
+                            <Button
+                                className="twp mb-4 w-full sm:hidden"
+                                variant="darkPurple"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    window.open(
+                                        getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id),
+                                        '_blank'
+                                    )
+                                }}
+                            >
+                                <UsersRound className="mr-2 h-4 w-4" />
+                                View RSVP's
+                            </Button>
+                        )}
                         <ExistingBookingForm booking={booking} />
                     </Grid>
                 </Grid>
