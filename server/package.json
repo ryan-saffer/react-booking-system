@@ -77,7 +77,7 @@
         "typescript": "^5.6.3"
     },
     "engines": {
-        "node": "22"
+        "node": "20"
     },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {
