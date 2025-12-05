@@ -59,6 +59,22 @@ export type MixpanelEvent = {
         partyDate: Date
         invitation: InvitationOption
     }
+    'invitation-generated-v2': {
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        invitation: InvitationOption
+        parentName: string
+        parentEmail: string
+    }
+    'invitation-rsvp': {
+        bookingId: string
+        invitationId: string
+        partyDate: Date
+        parentName: string
+        parentEmail: string
+        numberOfChildren: number
+    }
     'invitation-coupon-signup': {
         distinct_id: string
         invitationId: string
@@ -161,6 +177,8 @@ export type MixpanelEvent = {
 
 const EventNameMap: Record<keyof MixpanelEvent, string> = {
     'invitation-generated': 'Invitation Generated',
+    'invitation-generated-v2': 'Invitation Generated [New]',
+    'invitation-rsvp': 'Invitation RSVP',
     'invitation-coupon-signup': 'Invitation Coupon Code Signup',
     'holiday-program-website-discount': 'Website Holiday Program Discount Generated',
     'website-enquiry': 'Website Enquiry',

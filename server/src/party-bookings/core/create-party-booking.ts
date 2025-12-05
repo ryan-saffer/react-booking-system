@@ -3,7 +3,7 @@ import type { Booking, FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
-    getLocationAddress,
+    getStudioAddress,
     getManager,
     getNumberOfKidsAllowed,
     getPartyCreationCount,
@@ -42,8 +42,11 @@ export async function createPartyBooking(_booking: Booking) {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
-                description: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
+                description: `${getApplicationDomain(
+                    env,
+                    process.env.FUNCTIONS_EMULATOR === 'true'
+                )}/dashboard/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
@@ -90,7 +93,10 @@ export async function createPartyBooking(_booking: Booking) {
         `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
     ]
 
-    const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
+    const invitationsUrl = `${getApplicationDomain(
+        env,
+        process.env.FUNCTIONS_EMULATOR === 'true'
+    )}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 
@@ -113,7 +119,7 @@ export async function createPartyBooking(_booking: Booking) {
                     endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
                         DateTime.TIME_SIMPLE
                     ),
-                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
