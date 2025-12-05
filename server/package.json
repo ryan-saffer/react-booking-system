@@ -75,7 +75,7 @@
         "tsconfig-paths": "^4.2.0"
     },
     "engines": {
-        "node": "22"
+        "node": "20"
     },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {
