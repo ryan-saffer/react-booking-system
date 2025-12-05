@@ -1,13 +1,13 @@
+import os from 'os'
+import path from 'path'
+
 import type { InvitationsV2, WithoutId, WithoutUid } from 'fizz-kidz'
 import { generateRandomString } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
-import os from 'os'
-import path from 'path'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
-import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 import { InvitationImageGenerator } from './invitation-image-generator'
 
@@ -53,15 +53,6 @@ export async function generateInvitationV2(input: WithoutId<WithoutUid<Invitatio
             await fsPromise.rm(tempDir, { recursive: true, force: true })
         }
     }
-
-    const mixpanel = await MixpanelClient.getInstance()
-    await mixpanel.track('invitation-generated-v2', {
-        invitationId: id,
-        partyDate: input.date,
-        invitation: input.invitation,
-        bookingId: input.bookingId,
-        parentName: input.parentName,
-    })
 
     return { invitationId: id }
 }

@@ -5,6 +5,7 @@ import { MailClient } from '@/sendgrid/MailClient'
 import { logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 import { env } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 export type RsvpProps = WithoutId<Rsvp> & {
     bookingId: string
@@ -75,6 +76,17 @@ export async function rsvpToParty(input: RsvpProps) {
             logError(`Error sending RSVP notification to host '${booking.parentEmail}'`, err, { input })
         }
     }
+
+    // tracking
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('invitation-rsvp', {
+        bookingId: invitation.bookingId,
+        invitationId: invitation.id,
+        partyDate: invitation.date,
+        parentName: input.parentName,
+        parentEmail: input.parentEmail,
+        numberOfChildren: input.children.length,
+    })
 }
 
 /**

@@ -1,6 +1,7 @@
 import type { InvitationsV2 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
@@ -11,6 +12,17 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
 
     // store invitationId against booking
     const booking = await DatabaseClient.getPartyBooking(invitation.bookingId)
+
+    // tracking
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('invitation-generated-v2', {
+        invitationId: invitation.id,
+        partyDate: invitation.date,
+        invitation: invitation.invitation,
+        bookingId: invitation.bookingId,
+        parentName: invitation.parentName,
+        parentEmail: booking.parentEmail,
+    })
 
     // if booking already has an invitation, check who the owner is
     if (booking.invitationId) {
