@@ -60,7 +60,7 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-lg backdrop-blur">
+                    <div className="rounded-2xl border border-white/70 bg-white/80 p-3 shadow-md backdrop-blur">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
                             <Input value={inviteUrl} readOnly className="text-sm" />
                             <Button variant="outline" className="w-full sm:w-auto" onClick={copy}>
