@@ -60,48 +60,52 @@ export function ManageRsvps() {
     return (
         <div className="twp min-h-screen bg-gradient-to-br from-[#F7F1FF] via-white to-[#EAF6FF]">
             <div className="mx-auto max-w-6xl px-4 pb-28 pt-4 sm:px-6 sm:pb-16 lg:px-8">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1">
-                        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">Manage RSVPs</p>
-                        <p className="flex items-center gap-2 font-lilita text-2xl text-slate-900 sm:text-3xl">
-                            <Sparkles className="h-5 w-5 text-[#9B3EEA]" />
-                            {invitation.childName}&apos;s guest list
-                        </p>
-                        <p className="text-sm text-slate-600">
-                            Track responses, view details, and resend your invitation link anytime.
-                        </p>
+                <div className="my-4 grid gap-3 sm:grid-cols-[2fr_1fr]">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="space-y-1">
+                            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                                Manage RSVPs
+                            </p>
+                            <p className="flex items-center gap-2 font-lilita text-2xl text-slate-900 sm:text-3xl">
+                                <Sparkles className="h-5 w-5 text-[#9B3EEA]" />
+                                {invitation.childName}&apos;s guest list
+                            </p>
+                            <p className="text-sm text-slate-600">
+                                Track responses, view details, and resend your invitation link anytime.
+                            </p>
+                        </div>
                     </div>
-                    <div className="hidden flex-wrap gap-2 sm:flex">
-                        <Button
-                            variant="outline"
-                            className="gap-2 rounded-xl border-slate-200"
-                            onClick={() => setShowEditDialog(true)}
-                        >
-                            <Eye className="h-4 w-4" />
-                            Preview invitation
-                        </Button>
-                        <Button
-                            className="gap-2 rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
-                            onClick={() => setShowShareDialog(true)}
-                        >
-                            <Share2 className="h-4 w-4" />
-                            Share invitation
-                        </Button>
-                    </div>
+                    {auth?.uid === invitation.uid && (
+                        <div className="flex items-center justify-between rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow sm:px-5">
+                            <div>
+                                <p className="font-semibold text-slate-900">Email notifications</p>
+                                <p className="text-xs text-slate-600">Get an email when guests RSVP.</p>
+                            </div>
+                            <Switch
+                                checked={invitation.rsvpNotificationsEnabled}
+                                onCheckedChange={(checked) => updateRsvpNotifications(checked)}
+                            />
+                        </div>
+                    )}
                 </div>
 
-                {auth?.uid === invitation.uid && (
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow sm:px-5">
-                        <div>
-                            <p className="font-semibold text-slate-900">Email notifications</p>
-                            <p className="text-xs text-slate-600">Get an email when guests RSVP to this invitation.</p>
-                        </div>
-                        <Switch
-                            checked={invitation.rsvpNotificationsEnabled}
-                            onCheckedChange={(checked) => updateRsvpNotifications(checked)}
-                        />
-                    </div>
-                )}
+                <div className="hidden w-full items-center justify-start gap-2 sm:flex">
+                    <Button
+                        className="w-full gap-2 rounded-xl bg-[#9B3EEA] font-semibold shadow hover:bg-[#8B2DE3]"
+                        onClick={() => setShowShareDialog(true)}
+                    >
+                        <Share2 className="h-4 w-4" />
+                        Share invitation
+                    </Button>
+                    <Button
+                        variant="outline"
+                        className="w-full gap-2 rounded-xl border-slate-200"
+                        onClick={() => setShowEditDialog(true)}
+                    >
+                        <Eye className="h-4 w-4" />
+                        Preview invitation
+                    </Button>
+                </div>
 
                 {rsvps.status === 'loading' && <Skeleton className="mt-8 h-[260px] w-full rounded-2xl" />}
 
