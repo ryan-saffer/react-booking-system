@@ -120,9 +120,6 @@ export function CreateInvitationPage() {
                                         />
                                         <InfoRow icon={<Share2 />} label="Time" value={time!} />
                                     </div>
-                                    <p className="text-sm text-slate-500">
-                                        You can tweak any of these details on the next step before sending.
-                                    </p>
                                 </div>
                                 <div className="rounded-2xl border border-slate-100 bg-gradient-to-b from-white to-[#F7F9FB] p-6 shadow-inner">
                                     <p className="text-sm font-semibold uppercase tracking-[0.08em] text-[#9B3EEA]">
