@@ -780,6 +780,20 @@ export class MailClient {
                     template: 'rsvp_notification_to_host.mjml',
                     useMjml: true,
                 }
+            case 'invitationCreated':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || "You're invitation is ready",
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'invitation_generated_notification_to_host.mjml',
+                    useMjml: true,
+                }
             default: {
                 const exhaustiveCheck: never = email
                 throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
