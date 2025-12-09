@@ -110,6 +110,11 @@ export function ShareInvitaitonDialog({ isOpen, close }: { isOpen: boolean; clos
                             </Label>
                         </ShareTile>
                     </div>
+
+                    <p className="px-8 text-center text-sm text-muted-foreground">
+                        Want to see what your guests will experience? Try opening the link in an{' '}
+                        <span className="italic">incognito</span> or <span className="italic">private</span> window.
+                    </p>
                 </div>
             </DialogContent>
         </Dialog>

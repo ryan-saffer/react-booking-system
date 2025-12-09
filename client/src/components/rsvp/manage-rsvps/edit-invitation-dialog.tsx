@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Img } from 'react-image'
 
 import Loader from '@components/Shared/Loader'
+import { Share } from '@mui/icons-material'
 import { Button } from '@ui-components/button'
 import { Dialog, DialogContent } from '@ui-components/dialog'
 import { trpc } from '@utils/trpc'
@@ -12,7 +13,15 @@ import { CreateInvitationForm } from '../create-invitation-form'
 import { useInvitation } from '../hooks/use-invitation'
 import { useInvitationImage } from '../hooks/use-invitation-image'
 
-export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close: () => void }) {
+export function EditInvitationDialog({
+    isOpen,
+    close,
+    share,
+}: {
+    isOpen: boolean
+    close: () => void
+    share: () => void
+}) {
     const invitation = useInvitation()
     const invitationUrl = useInvitationImage(invitation.id, false)
 
@@ -89,7 +98,7 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             </div>
                         </div>
 
-                        <div className="grid gap-2 sm:grid-cols-2">
+                        <div className="grid gap-2 sm:grid-cols-3">
                             <Button
                                 variant="outline"
                                 className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
@@ -97,6 +106,17 @@ export function EditInvitationDialog({ isOpen, close }: { isOpen: boolean; close
                             >
                                 <Download className="h-4 w-4" />
                                 Download
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="w-full gap-2 rounded-xl border-slate-200 bg-white/80"
+                                onClick={() => {
+                                    close()
+                                    share()
+                                }}
+                            >
+                                <Share className="h-4 w-4" />
+                                Share
                             </Button>
                             <Button
                                 variant="darkPurple"
