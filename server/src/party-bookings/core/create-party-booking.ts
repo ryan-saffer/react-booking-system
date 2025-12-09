@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase-admin/firestore'
-import type { Booking, FirestoreBooking } from 'fizz-kidz'
+import type { FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
@@ -9,6 +9,7 @@ import {
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
+    getRsvpUrl,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { DatabaseClient } from '../../firebase/DatabaseClient'
@@ -18,10 +19,12 @@ import { MailClient } from '../../sendgrid/MailClient'
 import { logError, throwTrpcError } from '../../utilities'
 import { ZohoClient } from '../../zoho/zoho-client'
 import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
 
-export async function createPartyBooking(_booking: Booking) {
+export async function createPartyBooking(_booking: CreatePartyBooking) {
+    const { useRsvpSystem, ...rest } = _booking
     const booking = {
-        ..._booking,
+        ...rest,
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -93,10 +96,10 @@ export async function createPartyBooking(_booking: Booking) {
         `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
     ]
 
-    const invitationsUrl = `${getApplicationDomain(
-        env,
-        process.env.FUNCTIONS_EMULATOR === 'true'
-    )}/invitations?${params.join('&')}`
+    // only use the new rsvp system if it was chosen during booking
+    const invitationsUrl = useRsvpSystem
+        ? getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', bookingId)
+        : `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 
@@ -130,6 +133,7 @@ export async function createPartyBooking(_booking: Booking) {
                     managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
+                    useRsvpSystem,
                     invitationsUrl,
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio' && booking.location !== 'cheltenham',
@@ -155,5 +159,6 @@ export async function createPartyBooking(_booking: Booking) {
         type: booking.type,
         childAge: booking.childAge,
         date: booking.dateTime.toDate().toISOString(),
+        useRsvpSystem,
     })
 }

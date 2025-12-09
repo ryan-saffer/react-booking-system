@@ -119,6 +119,7 @@ export type MixpanelEvent = {
         type: 'studio' | 'mobile'
         childAge: string
         date: string // ISO
+        useRsvpSystem: boolean
     }
     'birthday-party-form-completed': {
         distinct_id: string
