@@ -141,11 +141,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                 { replyTo: manager.email }
             )
         } catch (err) {
-            throwTrpcError(
-                'INTERNAL_SERVER_ERROR',
-                'party booked successfully, but unable to send confirmation email',
-                err
-            )
+            logError('party booked successfully, but unable to send confirmation email', err, { _booking })
         }
     }
 
