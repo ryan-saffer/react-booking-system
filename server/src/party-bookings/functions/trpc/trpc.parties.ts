@@ -16,7 +16,7 @@ import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
 import { getPrefilledFormUrl } from '@/party-bookings/core/utils.party'
 import { authenticatedProcedure, publicProcedure, router } from '@/trpc/trpc'
 
-export type CreatePartyBooking = Booking
+export type CreatePartyBooking = Booking & { useRsvpSystem: boolean }
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
 export type DeletePartyBooking = { bookingId: string; eventId: string; location: Studio; type: Booking['type'] }
 
