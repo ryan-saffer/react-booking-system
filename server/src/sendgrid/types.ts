@@ -279,6 +279,11 @@ export type Emails = {
     }
 
     // PARTY RSVPS
+    invitationCreated: {
+        parentName: string
+        invitationLink: string
+    }
+
     rsvpToParty: {
         parentName: string
         children: {

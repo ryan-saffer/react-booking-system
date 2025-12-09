@@ -1,10 +1,12 @@
-import type { InvitationsV2 } from 'fizz-kidz'
+import { getRsvpUrl, type InvitationsV2 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
 
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
+import { env } from '@/init'
 
 export async function linkInvitation(invitation: InvitationsV2.Invitation) {
     invitation.date = new Date(invitation.date)
@@ -12,17 +14,6 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
 
     // store invitationId against booking
     const booking = await DatabaseClient.getPartyBooking(invitation.bookingId)
-
-    // tracking
-    const mixpanel = await MixpanelClient.getInstance()
-    await mixpanel.track('invitation-generated-v2', {
-        invitationId: invitation.id,
-        partyDate: invitation.date,
-        invitation: invitation.invitation,
-        bookingId: invitation.bookingId,
-        parentName: invitation.parentName,
-        parentEmail: booking.parentEmail,
-    })
 
     // if booking already has an invitation, check who the owner is
     if (booking.invitationId) {
@@ -54,6 +45,24 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
         await DatabaseClient.updatePartyBooking(invitation.bookingId, {
             invitationId: invitation.id,
             invitationOwnerUid: invitation.uid,
+        })
+
+        // if its the first time the invitation was linked to a booking, send an email to the host confirming
+        const mailClient = await MailClient.getInstance()
+        await mailClient.sendEmail('invitationCreated', booking.parentEmail, {
+            parentName: invitation.parentName,
+            invitationLink: getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', invitation.bookingId),
+        })
+
+        // tracking - only track in the case its the first time its being linked to a booking
+        const mixpanel = await MixpanelClient.getInstance()
+        await mixpanel.track('invitation-generated-v2', {
+            invitationId: invitation.id,
+            partyDate: invitation.date,
+            invitation: invitation.invitation,
+            bookingId: invitation.bookingId,
+            parentName: invitation.parentName,
+            parentEmail: booking.parentEmail,
         })
 
         return { invitationId: invitation.id }
