@@ -290,6 +290,20 @@ export class MailClient {
                     template: 'party_booking_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'partyTimeUpdated':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your party booking has been updated',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_booking_time_updated.mjml',
+                    useMjml: true,
+                }
             case 'partyForm':
                 return {
                     emailInfo: {
