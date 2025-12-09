@@ -114,6 +114,18 @@ export function SignInPage() {
                             >
                                 Forgot your password?
                             </Link>
+                            <p className="mt-3 text-center text-[12px] text-[#747686]">
+                                By continuing you agree to our{' '}
+                                <a
+                                    href="https://fizzkidz.com.au/privacy-policy"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="font-medium text-[#B14594] hover:underline"
+                                >
+                                    Privacy Policy
+                                </a>
+                                .
+                            </p>
                         </form>
                     </Form>
                 </div>

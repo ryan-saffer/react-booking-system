@@ -132,6 +132,18 @@ export function SignUpPage() {
                             <Button className="mt-4 h-8 bg-[#B14594] hover:bg-[#b0288c]" type="submit">
                                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Create account'}
                             </Button>
+                            <p className="mt-3 text-center text-[12px] text-[#747686]">
+                                By continuing you agree to our{' '}
+                                <a
+                                    href="https://fizzkidz.com.au/privacy-policy"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="font-medium text-[#B14594] hover:underline"
+                                >
+                                    Privacy Policy
+                                </a>
+                                .
+                            </p>
                         </form>
                     </Form>
                 </div>
