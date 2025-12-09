@@ -93,7 +93,7 @@ export function RsvpPage() {
                                     </p>
                                     <p className="text-lg font-semibold text-slate-900">Tell us who&apos;s coming</p>
                                     <p className="mb-4 text-sm text-slate-600">
-                                        You can include multiple children in one response.
+                                        You can include multiple invited children in one response.
                                     </p>
                                     <RsvpForm invitation={invitation} onComplete={setRsvpStatus} />
                                 </CardContent>
