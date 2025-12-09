@@ -1,16 +1,17 @@
 import { Timestamp } from 'firebase-admin/firestore'
 import { DateTime } from 'luxon'
 
-import type { Booking, FirestoreBooking } from 'fizz-kidz'
+import type { FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
-    getStudioAddress,
+    getLocationAddress,
     getManager,
     getNumberOfKidsAllowed,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
+    getRsvpUrl,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -23,9 +24,12 @@ import { ZohoClient } from '@/zoho/zoho-client'
 
 import { getCakeFormUrl } from './utils.party'
 
-export async function createPartyBooking(_booking: Booking) {
+import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
+
+export async function createPartyBooking(_booking: CreatePartyBooking) {
+    const { useRsvpSystem, ...rest } = _booking
     const booking = {
-        ..._booking,
+        ...rest,
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -46,7 +50,7 @@ export async function createPartyBooking(_booking: Booking) {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
-                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                 description: `${getApplicationDomain(
                     env,
                     process.env.FUNCTIONS_EMULATOR === 'true'
@@ -116,10 +120,10 @@ export async function createPartyBooking(_booking: Booking) {
     ]
 
     const cakeFormUrl = getCakeFormUrl(bookingId)
-    const invitationsUrl = `${getApplicationDomain(
-        env,
-        process.env.FUNCTIONS_EMULATOR === 'true'
-    )}/invitations?${params.join('&')}`
+    // only use the new rsvp system if it was chosen during booking
+    const invitationsUrl = useRsvpSystem
+        ? getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', bookingId)
+        : `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 
@@ -142,7 +146,7 @@ export async function createPartyBooking(_booking: Booking) {
                     endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
                         DateTime.TIME_SIMPLE
                     ),
-                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
@@ -153,6 +157,7 @@ export async function createPartyBooking(_booking: Booking) {
                     managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
+                    useRsvpSystem,
                     invitationsUrl,
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
@@ -179,5 +184,6 @@ export async function createPartyBooking(_booking: Booking) {
         type: booking.type,
         childAge: booking.childAge,
         date: booking.dateTime.toDate().toISOString(),
+        useRsvpSystem,
     })
 }

@@ -107,6 +107,7 @@ export type Emails = {
         managerObjectPronoun: string
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
+        useRsvpSystem: boolean
         invitationsUrl: string
         includesFood: boolean
         canOrderCake: boolean
