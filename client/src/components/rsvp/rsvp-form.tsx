@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { DateCalendar } from '@mui/x-date-pickers'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-components/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { SelectContent, SelectForm, SelectItem, SelectValue } from '@ui-components/select'
@@ -316,6 +316,11 @@ export function RsvpForm({
                                                     Please enter {form.watch('children')[idx].name || 'the child'}'s
                                                     allergies here
                                                 </FormLabel>
+                                                <FormDescription>
+                                                    This information is for the host's planning. Fizz Kidz doesn't
+                                                    monitor these RSVPs - your host will handle any allergy arrangements
+                                                    directly.
+                                                </FormDescription>
                                                 <FormControl>
                                                     <Textarea disabled={isLoading} {...field} />
                                                 </FormControl>
@@ -344,7 +349,7 @@ export function RsvpForm({
                         }
                         disabled={isLoading}
                     >
-                        {form.getValues('children').length === 0 ? 'Add Child' : 'Add another child'}
+                        {form.getValues('children').length === 0 ? 'Add Child' : 'Add another invited child'}
                         <Plus className="ml-2 h-4 w-4" />
                     </Button>
                     <FormField
@@ -380,6 +385,18 @@ export function RsvpForm({
                             </FormItem>
                         )}
                     />
+                    <p className="text-sm text-muted-foreground">
+                        RSVP details are only visible to the party host and Fizz Kidz. Check out our{' '}
+                        <a
+                            className="font-medium text-[#9B3EEA] underline underline-offset-2 hover:text-[#8B2DE3]"
+                            href="https://fizzkidz.com.au/policies#privacy"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            privacy policy
+                        </a>
+                        .
+                    </p>
                 </div>
                 <Button
                     className="w-full rounded-2xl bg-[#9B3EEA] text-base font-semibold text-white shadow-lg transition hover:bg-[#8B2DE3] hover:shadow-xl disabled:opacity-70"
