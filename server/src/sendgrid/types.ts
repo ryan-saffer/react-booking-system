@@ -132,6 +132,19 @@ export type Emails = {
         prefilledFormUrl: string
     }
 
+    partyTimeUpdated: {
+        parentName: string
+        childName: string
+        childAge: string
+        startDate: string
+        startTime: string
+        endTime: string
+        address: string
+        location: string
+        isMobile: boolean
+        managerName: string
+    }
+
     partyForm: {
         parentName: string
         childName: string
