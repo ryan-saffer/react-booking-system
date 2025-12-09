@@ -132,6 +132,12 @@
                         {{/children}}
                     </mj-table>
 
+                    <mj-text
+                        >Please bear in mind that this information is for the host's planning. Fizz Kidz doesn't monitor
+                        these RSVPs - your host will handle any allergy arrangements directly.</mj-text
+                    >
+                    <mj-divider border-color="#E2E8F0" padding="16px 0 8px 0" border-width="1px" />
+
                     <mj-text font-weight="700" color="#0f172a" padding="6px 24px">Need to make a change?</mj-text>
                     <mj-text padding="0 24px">Reach out to your party host:</mj-text>
                     <mj-text padding="0 24px">{{hostName}} - {{hostPhone}}</mj-text>
