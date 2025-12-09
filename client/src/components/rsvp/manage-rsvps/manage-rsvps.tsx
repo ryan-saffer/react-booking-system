@@ -263,7 +263,11 @@ export function ManageRsvps() {
                 )}
             </div>
 
-            <EditInvitationDialog isOpen={showEditDialog} close={() => setShowEditDialog(false)} />
+            <EditInvitationDialog
+                isOpen={showEditDialog}
+                close={() => setShowEditDialog(false)}
+                share={() => setShowShareDialog(true)}
+            />
             <ShareInvitaitonDialog isOpen={showShareDialog} close={() => setShowShareDialog(false)} />
 
             <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/90 backdrop-blur">
