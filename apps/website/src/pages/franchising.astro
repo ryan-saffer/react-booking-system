@@ -61,12 +61,25 @@ import { Button } from "@/components/react/ui/button";
 import FranchisingForm from "@/components/react/forms/franchising-form";
 ---
 
+<!--This is to hide the header box shadow so the slime looks good, but re-enable it after scrolling down -->
 <style lang="css">
-  /* Disable the header box shadow so the slime works */
   :global(header) {
     box-shadow: none !important;
+    transition: box-shadow 150ms ease;
+  }
+  :global(body.scrolled header) {
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
   }
 </style>
+<script is:inline>
+  const toggleHeaderShadow = () => {
+    document.body.classList.toggle("scrolled", window.scrollY > 10);
+  };
+  window.addEventListener("scroll", toggleHeaderShadow, { passive: true });
+  toggleHeaderShadow();
+</script>
 
 <Layout
   title="Kids Party & Event Franchise Opportunities in Melbourne"

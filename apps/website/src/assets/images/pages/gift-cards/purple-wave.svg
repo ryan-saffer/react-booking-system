@@ -1,0 +1,18 @@
+<svg
+    width="2048"
+    height="83"
+    viewBox="0 0 2048 83"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <path
+        d="
+      M 0 83
+      L 0 40
+      C 0 40 512 0 1024 0
+        1536 0 2048 40 2048 40
+      L 2048 83
+      Z
+    "
+        fill="#8F44E1"
+    />
+</svg>
