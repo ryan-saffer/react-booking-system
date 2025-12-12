@@ -6,6 +6,7 @@ import { useAuth } from '@components/Hooks/context/useAuth'
 import { useOrg } from '@components/Session/use-org'
 import afterSchool from '@drawables/after-school.webp'
 import bodyGlitter from '@drawables/body-glitter.webp'
+import bracelets from '@drawables/bracelets.webp'
 import energy from '@drawables/energy.webp'
 import holidayPrograms from '@drawables/holiday-programs.webp'
 import jonah from '@drawables/jonah.webp'
@@ -62,11 +63,20 @@ const programs: NavigationItem[] = [
 const creations: NavigationItem[] = [
     {
         title: 'Birthday Party Creations',
-        description: 'Step-by-step guides specific for birthday parties.',
+        description: 'Our core creations that are on offer for all birthday parties.',
         to: 'creations',
         imgSrc: bodyGlitter,
         accent: '#b14594',
         accentSoft: 'rgba(177, 69, 148, 0.14)',
+    },
+    {
+        title: 'Holiday Program Creations',
+        description: 'Full schedule and instructions for the current holiday program period.',
+        to: 'holiday-creations',
+        imgSrc: bracelets,
+        accent: '#F6BA33',
+        accentSoft: 'rgba(242, 221, 174, 0.4)',
+        tag: 'Seasonal',
     },
 ]
 
@@ -246,22 +256,24 @@ function ListItem({ title, to, imgSrc, onClick, description, accent, accentSoft,
             }}
         >
             <div className="flex items-start gap-3 sm:gap-4">
-                <img src={imgSrc} alt={`${title} icon`} className="h-14 w-14 rounded-xl object-cover object-center" />
+                <img
+                    src={imgSrc}
+                    alt={`${title} icon`}
+                    className="h-14 w-14 shrink-0 rounded-xl object-cover object-center"
+                />
                 <div className="flex flex-1 flex-col gap-1">
                     <div className="flex items-start justify-between gap-2">
                         <h4 className="m-0 text-base font-extrabold text-slate-900 sm:text-[17px]">{title}</h4>
                         {tag ? (
                             <span
-                                className="hidden items-center rounded-full px-3 py-1 text-[11px] font-semibold sm:flex"
+                                className="flex items-center rounded-full px-3 py-1 text-[11px] font-semibold"
                                 style={{ backgroundColor: accentSoft, color: accent }}
                             >
                                 {tag} <ArrowRight className="ml-2 h-4 w-4" />
                             </span>
                         ) : null}
                     </div>
-                    {description ? (
-                        <p className="m-0 line-clamp-2 text-sm leading-snug text-slate-600">{description}</p>
-                    ) : null}
+                    {description ? <p className="m-0 text-sm leading-snug text-slate-600">{description}</p> : null}
                 </div>
             </div>
         </Link>

@@ -88,8 +88,13 @@ const CustomerBookingScreen = lazy(() =>
 const Onboarding = lazy(() =>
     import('./components/Onboarding/employee-onboarding.js').then((module) => ({ default: module.EmployeeOnboarding }))
 )
-const CreationsPage = lazy(() =>
-    import('./components/Creations/Creations.js').then((module) => ({ default: module.CreationsPage }))
+const PartyCreationsPage = lazy(() =>
+    import('./components/Creations/party-creations-page.js').then((module) => ({ default: module.PartyCreationsPage }))
+)
+const HolidayCreationsPage = lazy(() =>
+    import('./components/Creations/holiday-program-creations-page.js').then((module) => ({
+        default: module.HolidayCreationsPage,
+    }))
 )
 const ChooseInvitationPage = lazy(() =>
     import('./components/invitations/choose-invitation-page.js').then((module) => ({
@@ -364,7 +369,17 @@ const router = createBrowserRouter([
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
                                 <ProtectedRoute permission="creations:read">
-                                    <CreationsPage />
+                                    <PartyCreationsPage />
+                                </ProtectedRoute>
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: 'holiday-creations',
+                        Component: () => (
+                            <Suspense fallback={<Loader fullScreen />}>
+                                <ProtectedRoute permission="creations:read">
+                                    <HolidayCreationsPage />
                                 </ProtectedRoute>
                             </Suspense>
                         ),
