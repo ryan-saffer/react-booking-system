@@ -169,7 +169,7 @@ export const Navigation = () => {
                                 Welcome{auth?.firstname ? ` ${auth.firstname}` : '!'}
                             </span>
                             <h1 className="lilita m-0 bg-gradient-to-r from-[#ff4f9c] via-[#f6ba34] to-[#00c2e3] bg-clip-text text-3xl leading-tight text-transparent sm:text-5xl">
-                                Let's party!
+                                Let's Fizz!
                             </h1>
                             <p className="m-0 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base">
                                 Welcome to the Fizz Kidz Portal. Use this as a launchpad to access all things Fizz.
