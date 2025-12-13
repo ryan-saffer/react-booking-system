@@ -7,6 +7,7 @@ import { TRPCError } from '@trpc/server'
 import type { TRPC_ERROR_CODE_KEY } from '@trpc/server/dist/rpc'
 import type { DateTime } from 'luxon'
 import type { CustomTrpcError } from '@/trpc/trpc.errors'
+import * as Sentry from '@sentry/node'
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
     return fireOnMessagePublished({ topic, region: 'australia-southeast1', concurrency: 1, maxInstances: 1 }, (event) =>
@@ -54,6 +55,7 @@ export function withExponentialBackoff<T extends () => any>(fn: T, backoffCodes:
 
 export function logError(message: string, error?: unknown, additionalInfo: object = {}) {
     const hasAdditionalInfo = Object.keys(additionalInfo).length !== 0
+    Sentry.captureException(error)
     if (error) {
         if (error instanceof Error) {
             logger.error(
@@ -128,6 +130,7 @@ export function throwTrpcError(
     error?: unknown,
     additionalInfo: object = {}
 ): never {
+    Sentry.captureException(error)
     throw new TRPCError({
         code,
         message,
