@@ -216,7 +216,7 @@ export const Navigation = () => {
 
 function Section({ title, subtitle, items }: { title: string; subtitle?: string; items: NavigationItem[] }) {
     return (
-        <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/90 p-4 shadow-[0_14px_32px_rgba(15,23,42,0.1)] backdrop-blur sm:p-5">
+        <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white p-4 shadow-[0_14px_32px_rgba(15,23,42,0.1)] sm:bg-white/90 sm:backdrop-blur sm:p-5">
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
                 <div className="flex flex-col">
                     <h2 className="lilita m-0 text-xl text-slate-900 sm:text-2xl">{title}</h2>
