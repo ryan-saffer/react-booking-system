@@ -154,14 +154,9 @@ export const Navigation = () => {
     const auth = useAuth()
 
     return (
-        <div className="min-h-full bg-[radial-gradient(circle_at_16%_20%,rgba(255,79,156,0.12),transparent_26%),radial-gradient(circle_at_80%_12%,rgba(0,194,227,0.12),transparent_22%),linear-gradient(140deg,#fef6fb_0%,#fdf5e6_35%,#f0f7ff_100%)] px-4 py-6 sm:px-6 sm:py-8">
+        <div className="min-h-full bg-gradient-to-b from-[#fff7fb] via-[#fff7ec] to-[#f2faff] px-4 py-6 sm:px-6 sm:py-8">
             <div className="mx-auto flex max-w-6xl flex-col gap-6">
-                <header className="relative isolate overflow-hidden py-6 sm:py-8">
-                    <div className="pointer-events-none absolute inset-0">
-                        <div className="absolute -left-16 top-0 h-36 w-36 rounded-full bg-[rgba(255,79,156,0.06)] blur-3xl" />
-                        <div className="absolute -top-12 right-2 h-28 w-28 rounded-full bg-[rgba(0,194,227,0.08)] blur-3xl" />
-                        <div className="absolute bottom-4 left-16 h-28 w-28 rounded-full bg-[rgba(246,186,52,0.08)] blur-3xl" />
-                    </div>
+                <header className="relative isolate py-6 sm:py-8">
                     <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div className="relative flex flex-col gap-3">
                             <span className="inline-flex items-center gap-2 self-start rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200">
