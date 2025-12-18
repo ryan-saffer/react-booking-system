@@ -60,32 +60,106 @@ Instructions for String Slime: Use the syringe to suck up some of the water mixt
         markdown: `
 ## Morning- Kawaii Sanrio
 ### Kitty Keyrings
-[Casey Hall](mailto:casey@fizzkidz.com.au)Please write instructions when you receive the kits.  
-![1](https://a-ap.storyblok.com/f/3000434/1024x1024/3195e0a8be/image23.png)
+
+**Materials:**
+
+1. Kitty Keyrings Bead pack
+2. Usual pony beads
+
+> **NOTE**
+>
+> The Kitty Keyrings Bead pack are specific to this keyring activity and are not to be mixed with our usual pony beads for bracelets.
+
+**Preparation**
+- Cut the string into roughly 15 cm lengths.  
+- Pour the beads into small containers or creation bowls.  
+- One packet contains small silver beads. These are the **crimp beads** and must be kept with the facilitator.
+
+**Method:**
+> Depending on the number of children, Step 1 can be done during prep or together with the children.
+
+1. Add a crimp bead to one end of the string. Using the tool, press the crimp bead onto the string until it flattens and holds securely.  
+![0](https://a-ap.storyblok.com/f/3000434/1536x1024/168451b0d5/whatsapp-image-2025-12-19-at-00-14-47.jpeg)
+2. Children choose their beads to create their kitty keyrings. Each child may use one bow tie bead and one kitty bead.  
+3. Add another crimp bead and a silver keyring. Thread the string back through the crimp bead and close it firmly using the tool provided.  
+4. Attach the silver keyring to the main purple or pink keyring. The kitty keyring is now complete.
+![1](https://a-ap.storyblok.com/f/3000434/1560x1230/33620212cf/whatsapp-image-2025-12-19-at-01-00-13.jpeg)
 
 ### Kitty Head Bands 🎀
-Hello Kitty Headband Activity  
-What You’ll Need (per child): 1 Plain headband, Colourful pipe cleaners, Extra Fluddy Pipecleaners  
-Instructions: Guide kids through the activity at the same speed allowing time for each step. Hand Out Headbands – Each child receives their own plain headband to decorate. Wrap Pipe Cleaners – Kids choose colourful pipe cleaners and wrap them around the headband. They can twist them into fun shapes like swirls, zig-zags, or even little ears! Encourage creativity—no two headbands should look the same.
+**What You’ll Need (per child):**
+1. 2 Plain headband
+2. Colourful pipe cleaners
+3. Extra Fluddy Pipe cleaners  
+
+**Instructions**: 
+1. Give each child a Hello Kitty headband.
+2. Set up the tables with both fluffy pipe cleaners and regular pipe cleaners laid out and ready to use.
+3. Explain that the goal is to wrap the pipe cleaners around the headband to decorate it.
+4. Bring out the pony beads and show the children how to thread beads onto the pipe cleaners.
+5. Once the beads are on, children can wrap those beaded pipe cleaners around their headband as well.
+6. Encourage creativity and fun with colours, textures, and designs.
+
+> Ignore the keyring in this image
+![1](https://a-ap.storyblok.com/f/3000434/1024x1024/3195e0a8be/image23.png)
 
 ### Cinnamoroll Slime Squishies
-Cinnamonroll Squishie. Usual Slime Materials. Blue Chain (1 per child).  
-Kids make slime using the usual Fizz Kidz Slime method, however use half the ingredients. Then push the slime into the squishy and zip close. Add a chain.  
+**Materials:**
+1. Usual Slime Materials.
+2. Blue Chain (1 per child).
+3. Hole Puncher
+
+**Instructions:**
+
+1. Kids make slime following the usual Fizz Kidz Slime method.
+2. Once the slime is actiated push the slime into the squishy and zip close. 
+3. Add a hole punch in the top right hand corner of the squishy.  
+4. Add a blue metal chain.
 ![1](https://a-ap.storyblok.com/f/3000434/578x850/ae2d6ccf97/image36.png)
 
 ## Afternoon- Super Science
 ### String Slime
-PREP: Fill your container up half way with warm water. Add half your white powder mixture into warm water. Stir with popsicle stick and watch it dissolve.  
-Instructions for String Slime: Use the syringe to suck up some of the water mixture and squirt it out again - repeat this a few times (this coats the inside of the syringe with water mixture). Squeeze some of your coloured mixture into a cup, then use the syringe to suck up the coloured mixture and squirt it into the tub. (See image). Wait 1 minute, then kids can use their hands to lift out the string slime!! Repeat this process. *Kids don’t take the string slime home*  
+
+**Materials:**
+- White powder mixture (string slime kit)  
+- Warm water  
+- Popsicle sticks  
+- Syringes  
+- Coloured mixture cups  
+- Tub (shared)  
+
+**Preparation:**
+1. Fill the container halfway with warm water.  
+2. Add half the white powder mixture into the warm water.  
+3. Stir with a popsicle stick until dissolved.  
+
+**Instructions:**
+1. Use the syringe to suck up some of the water mixture and squirt it back out a few times to coat the inside.  
+2. Squeeze coloured mixture into a cup, then use the syringe to draw it up and squirt it into the tub (see images).  
+3. Wait 1 minute, then kids can lift out the string slime with their hands.  
+4. Repeat as many times as they like. *Kids don’t take the string slime home.*  
 ![1](https://a-ap.storyblok.com/f/3000434/924x588/a86659c2a6/image47.png)
 ![2](https://a-ap.storyblok.com/f/3000434/612x498/29fea66443/image8.png)
 
 ### Fizzy Bath Bombs
-Follow the usual Fizz Kidz Bath-Bomb instructions. Kids choose their own colours. REMINDER: NO GLITTER IN BATH BOMBS
+**Instructions:**
+1. Follow the usual Fizz Kidz Bath-Bomb method.  
+2. Let kids choose their own colours.  
+> Reminder: NO GLITTER IN BATH BOMBS.  
 
 ### Galaxy Explosions
-Bicarb X 1 15ml spoon. Citric Acid X 1 15ml spoon. Vinegar in a jug. Red and Blue Colour Dye.  
-Kids add a tablespoon of choice of coloured bicarb to a creation bowl. Once all kids have bicarb, add 4 tablespoons of vinegar into each bowl. Potions will ‘fizz’ and then die down. Add a choice of colour glitter and stir with icypole stick. Have kids observe that when the glitter is added the ‘fizz’ goes away. Add a tablespoon of citric acid. This is the best part! Potion will ‘fizz’ for ages and makes the glitter bubble and sparkle!  
+**Materials:**
+- Bicarb soda – 1 x 15ml spoon per child  
+- Citric acid – 1 x 15ml spoon per child  
+- Vinegar (in a jug)  
+- Red and blue colour dye  
+- Glitter  
+- Creation bowls and icypole sticks  
+
+**Instructions:**
+1. Add 1 tablespoon of coloured bicarb to each creation bowl.  
+2. Add 4 tablespoons of vinegar to each bowl and let the fizz settle.  
+3. Stir in a choice of glitter with an icypole stick; notice the fizz settle further.  
+4. Add 1 tablespoon of citric acid—watch the potion fizz and sparkle for ages!  
 ![couldronPotions1](https://a-ap.storyblok.com/f/3000434/1500x1999/de59817a82/image22.jpg)
 `,
     },
