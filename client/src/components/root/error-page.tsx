@@ -1,4 +1,4 @@
-import { ArrowRight, Bug, PartyPopper, RotateCw, Sparkles } from 'lucide-react'
+import { ArrowRight, Bug, RotateCw, Sparkles } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@ui-components/button'
