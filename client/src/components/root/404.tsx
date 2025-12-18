@@ -11,5 +11,11 @@ export function _404() {
         }
     }
 
-    return <ErrorScreen showRefresh label="Something went wrong" text="Sorry, something broke. Try refreshing the page." />
+    return (
+        <ErrorScreen
+            showRefresh
+            label="Something went wrong"
+            text="If this keeps happening, try emailing us at bookings@fizzkidz.com.au."
+        />
+    )
 }
