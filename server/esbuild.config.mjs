@@ -1,5 +1,30 @@
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import dotenv from 'dotenv'
 import { build } from 'esbuild'
 import { sentryEsbuildPlugin } from '@sentry/esbuild-plugin'
+
+function isProdProject() {
+    try {
+        if (process.env.FIREBASE_CONFIG) {
+            const cfg = JSON.parse(process.env.FIREBASE_CONFIG)
+            if (cfg?.projectId === 'bookings-prod') return true
+        }
+    } catch {
+        // ignore parse errors
+    }
+    if (process.env.GCLOUD_PROJECT === 'bookings-prod') return true
+    return false
+}
+
+const serverDir = path.dirname(fileURLToPath(import.meta.url))
+const envFile = isProdProject() ? '.env.prod' : '.env'
+const envPath = path.join(serverDir, envFile)
+
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath })
+}
 
 await build({
     entryPoints: ['src/index.ts'],
