@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => {
             // Put the Sentry Vite plugin after all other plugins
             sentryVitePlugin({
                 org: 'fizz-kidz',
-                project: 'javascript-react',
+                project: 'client',
                 authToken: env.SENTRY_AUTH_TOKEN,
                 sourcemaps: {
                     // As you're enabling client source maps, you probably want to delete them after they're uploaded to Sentry.
