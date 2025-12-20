@@ -138,6 +138,11 @@ const getEmptyValues = () => ({
         error: false,
         errorText: '',
     },
+    useRsvpSystem: {
+        value: false,
+        error: false,
+        errorText: '',
+    },
     oldPrices: {
         value: false,
         error: false,
@@ -205,7 +210,7 @@ const _NewBookingForm = (props) => {
         let value
         if (isDateOrTimeField) {
             value = e.toJSDate()
-        } else if (field === 'sendConfirmationEmail') {
+        } else if (field === 'sendConfirmationEmail' || field === 'useRsvpSystem') {
             value = e.target.checked
         } else {
             value = e.target.value
@@ -509,6 +514,22 @@ const _NewBookingForm = (props) => {
                             />
                         }
                         label="Send confirmation email"
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        className={classes.confirmationEmailCheckbox}
+                        control={
+                            <Checkbox
+                                id="useRsvpSystem"
+                                color="secondary"
+                                name="useRsvpSystem"
+                                checked={formValues.useRsvpSystem.value}
+                                value={formValues.useRsvpSystem.value}
+                                onChange={handleFormChange}
+                            />
+                        }
+                        label="Use the RSVP system"
                     />
                 </Grid>
             </Grid>

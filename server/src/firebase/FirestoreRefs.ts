@@ -1,4 +1,4 @@
-import type { FieldValue, CollectionGroup } from 'firebase-admin/firestore'
+import type { CollectionGroup, FieldValue } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
     AuthUser,
@@ -8,6 +8,8 @@ import type {
     Event,
     FirestoreBooking,
     Invitation,
+    InvitationsV2,
+    Rsvp,
     ZohoAccessToken,
 } from 'fizz-kidz'
 
@@ -78,8 +80,26 @@ export class FirestoreRefs {
         return (await FirestoreClient.getInstance()).collection('invitations') as Collection<Invitation>
     }
 
+    static async invitationsV2() {
+        return (await FirestoreClient.getInstance()).collection(
+            'invitations-v2'
+        ) as Collection<InvitationsV2.Invitation>
+    }
+
     static async invitation(id: string) {
         return (await this.invitations()).doc(id)
+    }
+
+    static async invitationV2(id: string) {
+        return (await this.invitationsV2()).doc(id)
+    }
+
+    static async rsvps(bookingId: string) {
+        return (await this.partyBooking(bookingId)).collection('rsvps') as Collection<Rsvp>
+    }
+
+    static async rsvp(bookingId: string, rsvpId: string) {
+        return (await this.rsvps(bookingId)).doc(rsvpId)
     }
 
     static async discountCodes() {
