@@ -204,26 +204,55 @@ Follow Fizz Kidz Bubbling Volcano instructions Reminder - keep kids engaged and 
         markdown: `
 ## Morning –Spooky Spectacular
 ### Monster Slime
-Follow the usual Fizz Kidz slime method (using green colour dye) and add in googly eyes at the very end.
+Follow the usual Fizz Kidz monster slime method (using green colour dye) and add in googly eyes at the very end!
 
 ### Spooky Haunted Houses
-Follow instructions in the kit [Casey Hall](mailto:casey@fizzkidz.com.au)anything to add here? :)  
+Welcome to your spooky adventure. Follow the instructions in the kit to bring your spooky house to life.
+> **Note:**
+> **Guide kids through the activity at the same speed, offering step by step instructions, keeping kids at the same pace. By doing this kids will stay engaged in the activity together.**
+  
 ![1](https://a-ap.storyblok.com/f/3000434/1184x1278/96bd412f09/image48.png)
 
 ### Glow-Up Lanterns
-Materials: 1 Lantern per child. Paint (in creation bowls). Textas. Stickers.  
-**Prep for Staff** Set out markers, bowls of different paint colours, on the tables. Add any other fun craft materials you have on hand (confetti, sequins, gems, etc.).  
-**Activity Instructions for Kids** Assemble the lantern: Kids may need some help with this step. Decorate the base layer. Once assembled, kids can start by decorating their lantern with paint and textas. Add extra decorations: After the base layer is done, they can add confetti, stickers, and any other fun craft materials to finish off their design.  
+**Materials:**
+1. Lantern per child.
+2. Paint (in creation bowls). Add a dash of water and mix.
+3. Textas. 
+4. Stickers.  
+  
+**Preparation**
+1. Set out markers, bowls of different paint colours, on the tables.
+2. Add any other fun craft materials you have on hand (confetti, sequins, gems, etc.).  
+
+**Instructions for Kids** 
+1. Assemble the lantern: Kids may need some help with this step.
+2. Decorate the base layer. Once assembled, kids can start by decorating their lantern with paint and textas.
+3. Add extra decorations: After the base layer is done, they can add confetti, stickers, and any other fun craft materials to finish off their design.  
 ![1](https://a-ap.storyblok.com/f/3000434/914x1158/5f5c9762d7/image46.png)
 
 ## Afternoon – Speed and Squish
 ### Balloon Race Cars
-Follow FunBox Instructions. Once the Cars have been built, run some competitions! Create a start line at the top of the table and on the count of three launch your cars to see who wins!  
+It's time to zoom! Follow the FunBox instructions.
+Once the Cars have been built, run some competitions! Create a start line at the top of the table and on the count of three launch your cars to see who wins!  
 ![1](https://a-ap.storyblok.com/f/3000434/1314x1308/57678aafb6/image55.png)
 
 ### Fidget Poppers
-Materials: Cardboard tube, Balloon, Pom Poms (in Funbox) Textas, Masking tape.  
-Instructions Pre-cut the tops off balloons (about 1cm) so the openings are large enough to fit securely over the cardboard tubes. Decorate Hand each child a tube to decorate *Encourage fun decorating using markers, stickers, and paper to personalize their poppers.* Attach the Balloon Pair kids into partners to help each other. One child holds the tube, while the other stretches the balloon opening over one end of the tube. Demonstrate how working with partners makes this step easier by showing a visual example. Test the Poppers Hand each child a pom pom. Show how to place the pom pom inside the tube, pull back on the balloon, and release it to create a force that launches the pom pom into the air! Play a Game Kids stand in a line Count to three and let everyone launch their pom poms at the same time! Woo!  
+**Materials:**
+1. Cardboard tube
+2. Balloon
+3. Pom Poms
+4. Textas
+5. Masking tape.  
+
+**Instructions:**
+1. Pre-cut the tops off balloons (about 1cm) so the openings are large enough to fit securely over the cardboard tubes.
+2. Hand each child a tube to decorate *Encourage fun decorating using markers, stickers, and paper to personalize their poppers.!* 
+3. Attach the Balloon
+4. Pair kids into partners to help each other. One child holds the tube, while the other stretches the balloon opening over one end of the tube. Demonstrate how working with partners makes this step easier by showing a visual example. 
+5. Test the Poppers
+6. Hand each child a pom pom. 
+7. Show how to place the pom pom inside the tube, pull back on the balloon, and release it to create a force that launches the pom pom into the air! 
+8. Play a Game Kids stand in a line Count to three and let everyone launch their pom poms at the same time! Woo!  
 ![1](https://a-ap.storyblok.com/f/3000434/1224x698/be9e7915d4/image17.png)
 
 ### Fluffy Slime
