@@ -264,28 +264,48 @@ Follow Usual Fluffy Slime Fizz Kidz Process.
         markdown: `
 ## Morning – Cheery Christmas
 ### Christmas Slime Squishies
-Christmas Tree Squishie. Usual Slime Materials. Green Chain (1 per child). Kids make slime using the usual Fizz Kidz Slime method, however use half the ingredients. Then push the slime into the squishy and zip close. Add a chain.  
+**Ingredients:**
+- Christmas green squishie.
+- Usual Slime Materials. 
+
+**Method:**
+1. Kids make slime using the usual Fizz Kidz Slime method.
+2. Once slime is activated, push the sparkly slime into the squishy pocket and zip closed.
 ![1](https://a-ap.storyblok.com/f/3000434/868x1102/8a4c5c8942/image38.png)
 
 ### Christmas Tree Baubles
-Baubles Alphabet sheets Alphabet sheets Hat stickers Rolls bright red string  
-[Casey Hall](mailto:casey@fizzkidz.com.au), please write instructions.  
+Bring your christmas cheer! Follow the FunBox directions. Have fun!
+> **Note:**
+> **Guide kids through the activity at the same speed, offering step by step instructions, keeping kids at the same pace. By doing this kids will stay engaged in the activity together.**
+
 ![1](https://a-ap.storyblok.com/f/3000434/924x922/4baf2d0cf8/image33.png)
 
 ### Christmas Bath Bombs
-Kids make our usual Fizz Kidz bath bombs. Some will make red and others will make green, and then they’ll share their mixtures to create a fun red-and-green layered bath bomb. REMINDER: NO GLITTER IN BATH BOMBS
+Follow the usual Fizz Kidz Bath Bomb process to create your white base.
+Then split the group in half and assign one group to make red bath bombs and the other half to make green bath bombs 🎄
+
+This ensures we have even amounts of each colour. To build the bath bomb, kids share their mixtures and create red and green layers, pressing down firmly as they go.
+
+> 🚨 Important reminder: No glitter in bath bombs please!
 
 ## Afternoon – Roaring Rainbows
 ### Rainbow Slime
-Usual Fizz Kidz Rainbow Slime.
+It's rainbow time! Follow the usual Fizz Kidz rainbow slime.
 
 ### Rainbow Tie Dye Totes
-Fizz Kidz usual method.
+Follow the usual Fizz Kidz Tie Dye method.
 
 ### Rainbow Charm KeyRings
-Wooden Rainbow, Rainbow String, Rainbow Charm, Rainbow Hooks, Hooks, Gems, Textas  
-![1](https://a-ap.storyblok.com/f/3000434/462x562/bf57b9f1c6/image52.png) [Casey Hall](mailto:casey@fizzkidz.com.au)please write instructions when you get these materials.
-`,
+1. Hand each child a **wooden rainbow** to decorate.
+2. **Step 1 – Base colour:** Use markers to colour in the rainbow base. Encourage bright, bold colours.
+3. **Step 2 – Decorate:** Add stickers and gems to make it really stand out and sparkle ✨
+4. Once decorated, add a **rainbow string**.
+5. Thread the **rainbow charm** through the wooden chain and then attach it to the hook.
+> **Note:**
+> **Guide kids through the activity at the same speed, offering step by step instructions, keeping kids at the same pace. By doing this kids will stay engaged in the activity together.**
+
+Your rainbow keyring is complete and ready to take home 🌈
+![1](https://a-ap.storyblok.com/f/3000434/462x562/bf57b9f1c6/image52.png)`,
     },
     {
         name: 'Mon 5 Jan — Chemical Reactions / Spectacular Space',
