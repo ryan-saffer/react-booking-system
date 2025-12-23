@@ -3,9 +3,12 @@ import Markdown from 'react-markdown'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
 
 import { markdownComponents } from './markdown-components'
-import { creations, slimeActivator, taylorSwift } from './party-creations-markdown'
+import { slimeActivator, taylorSwift } from './party-creations-markdown'
+import { trpc } from '@utils/trpc'
 
 export const PartyCreationsPage = () => {
+    const { data } = trpc.creations.getBirthdayPartyCreations.useQuery(undefined, { cacheTime: 0 })
+
     return (
         <div className="twp min-h-full bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
             <div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -44,12 +47,8 @@ export const PartyCreationsPage = () => {
                     type="multiple"
                     className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
                 >
-                    {creations.map((creation) => (
-                        <AccordionItem
-                            key={creation.name}
-                            value={creation.name}
-                            className="border-b border-slate-200"
-                        >
+                    {data?.map((creation) => (
+                        <AccordionItem key={creation.name} value={creation.name} className="border-b border-slate-200">
                             <AccordionTrigger className="px-4 text-left text-base font-semibold text-slate-900 sm:px-6">
                                 {creation.name}
                             </AccordionTrigger>

@@ -72,4 +72,16 @@ export class StoryblokClient {
                 })),
             }))
     }
+
+    async getBirthdayPartyCreations(): Promise<{ name: string; markdown: string }[]> {
+        const { data } = await this.#storyblok.get('cdn/stories', {
+            starts_with: 'creation_instructions/birthday_party_creations',
+            version: env === 'prod' ? 'published' : 'draft',
+        })
+
+        return data.stories.map(({ content }: any) => ({
+            name: content.creation_name,
+            markdown: content.markdown,
+        }))
+    }
 }
