@@ -1,3 +1,4 @@
+import { creationsRouter } from '@/creations/functions/trpc/trpc.creations'
 import { acuityRouter } from '../acuity/functions/trpc/trpc.acuity'
 import { afterSchoolProgramRouter } from '../after-school-program/functions/trpc/trpc.after-school-program'
 import { authRouter } from '../auth/functions/trpc/trpc.auth'
@@ -17,6 +18,7 @@ export const appRouter = router({
     staff: staffRouter,
     auth: authRouter,
     playLab: playLabRouter,
+    creations: creationsRouter,
 })
 
 export type AppRouter = typeof appRouter

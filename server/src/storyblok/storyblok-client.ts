@@ -2,6 +2,7 @@ import type Client from 'storyblok-js-client'
 
 import { env } from '../init'
 import type { ClientStatus } from '../utilities/types'
+import type { CreationInstructions } from 'fizz-kidz'
 
 export type HolidayProgramWeek = {
     title: string
@@ -44,7 +45,10 @@ export class StoryblokClient {
         this.#status = 'initialising'
         try {
             const Storyblok = (await import('storyblok-js-client')).default
-            this.#storyblokClient = new Storyblok({ accessToken: process.env.STORYBLOK_TOKEN, region: 'ap' })
+            this.#storyblokClient = new Storyblok({
+                accessToken: process.env.STORYBLOK_TOKEN,
+                region: 'ap',
+            })
         } catch (err) {
             throw { message: 'error initialising storyblok client', error: err }
         }
@@ -70,6 +74,47 @@ export class StoryblokClient {
                     image: program.image.filename,
                     color: program.color,
                 })),
+            }))
+    }
+
+    async getBirthdayPartyCreations(): Promise<{ top: CreationInstructions[]; bottom: CreationInstructions[] }> {
+        const { data } = await this.#storyblok.get('cdn/stories', {
+            starts_with: 'creation_instructions/birthday_party_creations',
+            version: env === 'prod' ? 'published' : 'draft',
+            per_page: 100,
+        })
+
+        return data.stories
+            .sort((a: any, b: any) => (a.content.creation_name < b.content.creation_name ? -1 : 1))
+            .reduce(
+                (acc: { top: CreationInstructions[]; bottom: CreationInstructions[] }, curr: any) => {
+                    const creation = {
+                        name: curr.content.creation_name,
+                        markdown: curr.content.markdown,
+                    }
+                    if (curr.content.show_on_top) {
+                        acc.top.push(creation)
+                    } else {
+                        acc.bottom.push(creation)
+                    }
+                    return acc
+                },
+                { top: [], bottom: [] }
+            )
+    }
+
+    async getHolidayProgramCreations(): Promise<CreationInstructions[]> {
+        const { data } = await this.#storyblok.get('cdn/stories', {
+            starts_with: 'creation_instructions/holiday_program_creations',
+            version: env === 'prod' ? 'published' : 'draft',
+            per_page: 100,
+        })
+
+        return data.stories
+            .sort((a: any, b: any) => (a.content.date < b.content.date ? -1 : 1))
+            .map((creation: any) => ({
+                name: creation.content.creation_name,
+                markdown: creation.content.markdown,
             }))
     }
 }

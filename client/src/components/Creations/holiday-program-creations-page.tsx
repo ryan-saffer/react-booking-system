@@ -3,10 +3,11 @@ import Markdown from 'react-markdown'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
 
 import { markdownComponents } from './markdown-components'
-import { holidayProgramCreations } from './holiday-program-creation-markdown'
+import { trpc } from '@utils/trpc'
+import Loader from '@components/Shared/Loader'
 
 export const HolidayCreationsPage = () => {
-    const hasCreations = holidayProgramCreations.length > 0
+    const { data, isLoading, isSuccess } = trpc.creations.getHolidayProgramCreations.useQuery()
 
     return (
         <div className="twp min-h-full bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
@@ -19,12 +20,14 @@ export const HolidayCreationsPage = () => {
                     </p>
                 </header>
 
-                <Accordion
-                    type="multiple"
-                    className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-                >
-                    {hasCreations ? (
-                        holidayProgramCreations.map((creation) => (
+                {isLoading && <Loader />}
+
+                {isSuccess && (
+                    <Accordion
+                        type="multiple"
+                        className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                    >
+                        {data?.map((creation) => (
                             <AccordionItem
                                 key={creation.name}
                                 value={creation.name}
@@ -37,11 +40,9 @@ export const HolidayCreationsPage = () => {
                                     <Markdown components={markdownComponents}>{creation.markdown}</Markdown>
                                 </AccordionContent>
                             </AccordionItem>
-                        ))
-                    ) : (
-                        <div className="p-6 text-sm text-slate-600">No holiday creations added yet.</div>
-                    )}
-                </Accordion>
+                        ))}
+                    </Accordion>
+                )}
             </div>
         </div>
     )
