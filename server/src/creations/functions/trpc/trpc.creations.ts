@@ -6,4 +6,8 @@ export const creationsRouter = router({
         const storyblok = await StoryblokClient.getInstance()
         return storyblok.getBirthdayPartyCreations()
     }),
+    getHolidayProgramCreations: authenticatedProcedure.query(async () => {
+        const storyblok = await StoryblokClient.getInstance()
+        return storyblok.getHolidayProgramCreations()
+    }),
 })

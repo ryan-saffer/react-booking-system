@@ -163,3 +163,8 @@ export const CREATIONS = {
 }
 
 export type Creation = keyof typeof CREATIONS
+
+export type CreationInstructions = {
+    name: string
+    markdown: string
+}

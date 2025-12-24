@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
-import { build } from 'esbuild'
+import { build, context } from 'esbuild'
 import { sentryEsbuildPlugin } from '@sentry/esbuild-plugin'
 
 function isProdProject() {
@@ -26,7 +27,20 @@ if (fs.existsSync(envPath)) {
     dotenv.config({ path: envPath })
 }
 
-await build({
+const isWatch = process.argv.includes('--watch')
+
+const plugins = isWatch
+    ? []
+    : [
+          sentryEsbuildPlugin({
+              // eslint-disable-next-line no-undef
+              authToken: process.env.SENTRY_AUTH_TOKEN,
+              org: 'fizz-kidz',
+              project: 'server',
+          }),
+      ]
+
+const buildOptions = {
     entryPoints: ['src/index.ts'],
     bundle: true,
     platform: 'node',
@@ -34,12 +48,12 @@ await build({
     supported: { 'dynamic-import': false },
     sourcemap: true,
     outdir: 'lib',
-    plugins: [
-        sentryEsbuildPlugin({
-            // eslint-disable-next-line no-undef
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-            org: 'fizz-kidz',
-            project: 'server',
-        }),
-    ],
-})
+    plugins,
+}
+
+if (isWatch) {
+    const ctx = await context(buildOptions)
+    await ctx.watch()
+} else {
+    await build(buildOptions)
+}
