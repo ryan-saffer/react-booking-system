@@ -82,6 +82,7 @@ export class StoryblokClient {
             starts_with: 'creation_instructions/birthday_party_creations',
             version: env === 'prod' ? 'published' : 'draft',
             per_page: 100,
+            cv: Date.now(),
         })
 
         return data.stories
@@ -108,6 +109,7 @@ export class StoryblokClient {
             starts_with: 'creation_instructions/holiday_program_creations',
             version: env === 'prod' ? 'published' : 'draft',
             per_page: 100,
+            cv: Date.now(),
         })
 
         return data.stories
