@@ -41,14 +41,12 @@ export async function sendConfirmationEmail(
     switch (appointmentTypeId) {
         case AcuityConstants.AppointmentTypes.HOLIDAY_PROGRAM:
         case AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM: {
-            const location = AcuityUtilities.getStudioByCalendarId(appointments[0].calendarID)
             await mailClient.sendEmail('holidayProgramConfirmation', appointments[0].email, {
                 parentName: appointments[0].firstName,
                 location: `Fizz Kidz ${appointments[0].calendar}`,
                 address: appointments[0].location,
                 bookings,
                 receiptUrl,
-                showCrunch: location === 'balwyn' || location === 'malvern',
             })
             break
         }
