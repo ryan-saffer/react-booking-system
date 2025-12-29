@@ -1,0 +1,8 @@
+{
+    "files": [],
+    "references": [
+        { "path": "./server/fizz-kidz" },
+        { "path": "./server" },
+        { "path": "./client" }
+    ]
+}

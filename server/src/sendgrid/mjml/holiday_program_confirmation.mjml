@@ -86,24 +86,6 @@
                     time you have selected!
                 </mj-text>
             </mj-column>
-            {{#showCrunch}}
-            <mj-column width="100%">
-                <mj-text
-                    color="#212b35"
-                    font-size="12px"
-                    text-transform="uppercase"
-                    font-weight="bold"
-                    padding-bottom="0"
-                    >Crunch Lunchboxes</mj-text
-                >
-                <mj-text color="#637381" font-size="16px">
-                    Like to order a lunchbox for the day your child is at Fizz Kidz? Simply click
-                    <a href="https://tally.so/r/nGyYoo">HERE</a> to order a lunchbox and have it there waiting for you
-                    on the day!</mj-text
-                >
-                <mj-image src="https://www.fizzkidz.com.au/emails/crunch.jpg"></mj-image>
-            </mj-column>
-            {{/showCrunch}}
             <mj-column width="100%">
                 <mj-text
                     color="#212b35"
