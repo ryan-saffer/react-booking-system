@@ -4,6 +4,9 @@ import { STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
+import { sendCakeForms } from '@/party-bookings/core/send-cake-form'
+
+;
 import { updateSlingWages } from '@/sling/update-sling-wages'
 
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
@@ -23,14 +26,13 @@ import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
 
-;
-
 (async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
         message: 'Select script to run',
         choices: [
+            { title: 'temp', value: 'temp' },
             {
                 title: 'Run report on bookings',
                 value: 'runBookingsReport',
@@ -250,5 +252,8 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
     }
     if (script === 'updateSlingWages') {
         updateSlingWages()
+    }
+    if (script === 'temp') {
+        sendCakeForms()
     }
 })()

@@ -9,6 +9,7 @@ import type { MailService } from '@sendgrid/mail'
 import { env } from '../init'
 import type { ClientStatus } from '../utilities/types'
 import type { Emails } from './types'
+import { assertNever } from 'fizz-kidz'
 
 type Options = {
     /**
@@ -388,6 +389,20 @@ export class MailClient {
                     template: 'party_form_completed.mjml',
                     useMjml: true,
                 }
+            case 'cakeFormConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your Party Details',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'cake_form_completed.mjml',
+                    useMjml: true,
+                }
             case 'partyFeedback':
                 return {
                     emailInfo: {
@@ -753,8 +768,8 @@ export class MailClient {
                     useMjml: true,
                 }
             default: {
-                const exhaustiveCheck: never = email
-                throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
+                assertNever(email)
+                throw new Error(`Unrecognised email template: ${email}`)
             }
         }
     }

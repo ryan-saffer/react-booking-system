@@ -22,6 +22,7 @@ import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
         ..._booking,
+        createdAt: Timestamp.fromDate(new Date(_booking.createdAt)),
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -126,7 +127,7 @@ export async function createPartyBooking(_booking: Booking) {
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
-                    canOrderCake: booking.type === 'studio' && booking.location !== 'cheltenham',
+                    canOrderCake: booking.type === 'studio',
                 },
                 { replyTo: manager.email }
             )

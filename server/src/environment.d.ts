@@ -1,6 +1,8 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
+            FUNCTIONS_EMULATOR: 'true' | 'false'
+
             FIREBASE_CONFIG: string
             MIXPANEL_API_KEY: string
             SQUARE_TOKEN: string

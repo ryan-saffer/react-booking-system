@@ -77,6 +77,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     const updateBookingMutation = trpc.parties.updatePartyBooking.useMutation()
     const deleteBookingMutation = trpc.parties.deletePartyBooking.useMutation()
     const getPartyFormUrl = trpc.parties.getPartyFormUrl.useMutation()
+    const getCakeFormUrl = trpc.parties.getCakeFormUrl.useMutation()
 
     const { setDate } = useDateNavigation()
 
@@ -955,6 +956,21 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             } catch (err) {
                                 console.error(err)
                                 toast.error('Unable to get party form link.')
+                            }
+                            setLoading(false)
+                        },
+                    },
+                    {
+                        label: 'Get cake form link',
+                        action: async () => {
+                            setLoading(true)
+                            try {
+                                const url = await getCakeFormUrl.mutateAsync({ bookingId: booking.id })
+                                navigator.clipboard.writeText(url)
+                                toast.success('Cake form link copied to clipboard.')
+                            } catch (err) {
+                                console.error(err)
+                                toast.error('Unable to get cake form link.')
                             }
                             setLoading(false)
                         },
