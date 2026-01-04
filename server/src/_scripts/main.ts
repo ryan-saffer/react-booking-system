@@ -1,11 +1,13 @@
 import '../load-env'
 
-import { STUDIOS } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
 import { updateSlingWages } from '@/sling/update-sling-wages'
 
+import { SquareClient } from '@/square/core/square-client'
+import { Order } from 'square/api'
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
@@ -23,14 +25,16 @@ import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
 
-;
-
-(async () => {
+;(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
         message: 'Select script to run',
         choices: [
+            {
+                title: 'Holiday Program Bookings',
+                value: 'runHolidayProgramsReport',
+            },
             {
                 title: 'Run report on bookings',
                 value: 'runBookingsReport',
@@ -218,7 +222,12 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
     }
     if (script === 'runBookingsReport') {
         const { startDate, endDate, studio } = await prompts([
-            { type: 'date', name: 'startDate', message: 'Enter a start date', initial: new Date() },
+            {
+                type: 'date',
+                name: 'startDate',
+                message: 'Enter a start date',
+                initial: new Date(),
+            },
             {
                 type: 'date',
                 name: 'endDate',
@@ -250,5 +259,75 @@ import { getPlayLabPrograms } from './reports/get-play-lab'
     }
     if (script === 'updateSlingWages') {
         updateSlingWages()
+    }
+    // get all holiday program bookings for a certain time period and calculate the total spent.
+    // used for franchise ownership transfer, to know how many future bookings made.
+    if (script === 'runHolidayProgramsReport') {
+        const { startDate, endDate, studio } = await prompts([
+            { type: 'date', name: 'startDate', message: 'Enter a start date', initial: new Date() },
+            {
+                type: 'date',
+                name: 'endDate',
+                message: 'Enter an end date',
+                initial: (prev) => DateTime.fromJSDate(prev).plus({ years: 10 }).toJSDate(),
+            },
+            {
+                type: 'select',
+                name: 'studio',
+                message: 'Select the studio',
+                choices: STUDIOS.map((it) => ({
+                    value: it,
+                    title: it,
+                })),
+            },
+        ])
+
+        const holidayPrograms = await getHolidayPrograms({ from: startDate, to: endDate, studio })
+
+        const orderLookups = holidayPrograms.map((program) => ({
+            orderId: AcuityUtilities.retrieveFormAndField(
+                program,
+                AcuityConstants.Forms.PAYMENT,
+                AcuityConstants.FormFields.ORDER_ID
+            ),
+            lineItemIdentifier: AcuityUtilities.retrieveFormAndField(
+                program,
+                AcuityConstants.Forms.PAYMENT,
+                AcuityConstants.FormFields.LINE_ITEM_IDENTIFIER
+            ),
+        }))
+
+        const square = await SquareClient.getInstance()
+        const ordersById = new Map<string, Order>()
+        const orderIds = Array.from(new Set(orderLookups.map((lookup) => lookup.orderId).filter((orderId) => orderId)))
+
+        for (let i = 0; i < orderIds.length; i += 100) {
+            const batch = orderIds.slice(i, i + 100)
+            const response = await square.orders.batchGet({ orderIds: batch })
+            response.orders?.forEach((order) => {
+                if (order.id) {
+                    ordersById.set(order.id, order)
+                }
+            })
+        }
+
+        let total = 0
+        orderLookups.forEach(({ orderId, lineItemIdentifier }) => {
+            if (!orderId || !lineItemIdentifier) {
+                console.log('Could not find order: ', { orderId, lineItemIdentifier })
+                return
+            }
+            const order = ordersById.get(orderId)
+            const lineItem = order?.lineItems?.find((item) => item.metadata?.lineItemIdentifier === lineItemIdentifier)
+            if (lineItem?.totalMoney?.amount || lineItem?.totalMoney?.amount === BigInt(0)) {
+                total += Number(lineItem.totalMoney.amount)
+            } else {
+                console.log('Could not find amount spent: ', { orderId, lineItemIdentifier })
+            }
+        })
+        console.table({
+            Bookings: holidayPrograms.length,
+            Spend: `$${total / 100}`,
+        })
     }
 })()
