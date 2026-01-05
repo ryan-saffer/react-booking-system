@@ -7,7 +7,7 @@ import prompts from 'prompts'
 import { updateSlingWages } from '@/sling/update-sling-wages'
 
 import { SquareClient } from '@/square/core/square-client'
-import { Order } from 'square/api'
+import type { Order } from 'square/api'
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
@@ -24,7 +24,6 @@ import { getEvents } from './reports/get-events'
 import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
-
 ;(async () => {
     const { script } = await prompts({
         type: 'select',
