@@ -5,7 +5,7 @@ import { useMemo, useRef, useState } from 'react'
 import Loader from '@components/Shared/Loader'
 import { Calendar } from '@ui-components/calendar'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { TERM_LENGTH, useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useFormStage } from '../../../state/form-stage-store'
@@ -20,7 +20,10 @@ import { Checkbox } from '@ui-components/checkbox'
 import { DateTime } from 'luxon'
 import { PricingStructure } from './pricing-structure'
 
+import { useQuery } from '@tanstack/react-query'
+
 export function CasualProgramSelector() {
+    const trpc = useTRPC()
     const form = useBookingForm()
     const { formStage } = useFormStage()
 
@@ -31,34 +34,38 @@ export function CasualProgramSelector() {
 
     const {
         data: appointmentTypes,
-        isLoading: isLoadingAppointmentTypes,
+        isPending: isLoadingAppointmentTypes,
         isError: isErrorAppointmentTypes,
-    } = trpc.acuity.getAppointmentTypes.useQuery(
-        {
-            category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
-            availableToBook: false,
-        },
-        {
-            enabled: formStage === 'program-selection',
-        }
+    } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions(
+            {
+                category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
+                availableToBook: false,
+            },
+            {
+                enabled: formStage === 'program-selection',
+            }
+        )
     )
 
     const {
         data: classes,
         isSuccess: isSuccessClasses,
-        isLoading: isLoadingClasses,
+        isPending: isLoadingClasses,
         isError: isErrorClasses,
         refetch,
-    } = trpc.acuity.classAvailability.useQuery(
-        {
-            appointmentTypeIds: appointmentTypes?.map((type) => type.id) || [],
-            includeUnavailable: true,
-            minDate: minDate.current,
-        },
-        {
-            enabled: !!appointmentTypes && formStage === 'program-selection',
-            select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })),
-        }
+    } = useQuery(
+        trpc.acuity.classAvailability.queryOptions(
+            {
+                appointmentTypeIds: appointmentTypes?.map((type) => type.id) || [],
+                includeUnavailable: true,
+                minDate: minDate.current,
+            },
+            {
+                enabled: !!appointmentTypes && formStage === 'program-selection',
+                select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })),
+            }
+        )
     )
 
     const filteredClasses = useMemo(

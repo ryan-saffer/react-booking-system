@@ -3,11 +3,14 @@ import type { DiscountCode } from 'fizz-kidz'
 import { useState } from 'react'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../state/cart-store'
 
+import { useMutation } from "@tanstack/react-query";
+
 const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
+    const trpc = useTRPC();
     const total = useCart((store) => store.total)
     const applyDiscount = useCart((store) => store.applyDiscount)
 
@@ -15,7 +18,7 @@ const DiscountInput = ({ numberOfKids }: { numberOfKids: number }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const checkDiscountCodeMutation = trpc.holidayPrograms.checkDiscountCode.useMutation()
+    const checkDiscountCodeMutation = useMutation(trpc.holidayPrograms.checkDiscountCode.mutationOptions())
 
     function calculateDiscountedAmount(total: number, discount: DiscountCode) {
         switch (discount.discountType) {

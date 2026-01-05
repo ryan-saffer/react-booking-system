@@ -3,11 +3,13 @@ import { MessageCircleWarning } from 'lucide-react'
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { FormField } from '@ui-components/form'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useEnrolmentForm } from './form-schema'
 import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
+
+import { useQuery } from '@tanstack/react-query'
 
 const PROGRAMS = [
     {
@@ -25,19 +27,22 @@ const PROGRAMS = [
 ] as const
 
 export function SchoolProgramSelection() {
+    const trpc = useTRPC()
     const form = useEnrolmentForm()
 
     const programType = form.watch('programType')
 
-    const { data, isLoading, isSuccess } = trpc.acuity.getAppointmentTypes.useQuery(
-        {
-            category:
-                import.meta.env.VITE_ENV === 'prod'
-                    ? [programType === 'science' ? 'Science Club' : 'Art Program']
-                    : ['TEST-art', 'TEST-science'],
-            availableToBook: true,
-        },
-        { enabled: !!programType, staleTime: Infinity }
+    const { data, isPending, isSuccess } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions(
+            {
+                category:
+                    import.meta.env.VITE_ENV === 'prod'
+                        ? [programType === 'science' ? 'Science Club' : 'Art Program']
+                        : ['TEST-art', 'TEST-science'],
+                availableToBook: true,
+            },
+            { enabled: !!programType, staleTime: Infinity }
+        )
     )
 
     const { selectedProgram, selectProgram } = useSelectedProgram()
@@ -68,7 +73,7 @@ export function SchoolProgramSelection() {
     return (
         <>
             <h3 className="text-lg font-medium">Select program:</h3>
-            {isLoading && <Loader />}
+            {isPending && <Loader />}
             {isSuccess && data.length > 0 && (
                 <div className="flex flex-col gap-4">
                     {data.map((program) => {

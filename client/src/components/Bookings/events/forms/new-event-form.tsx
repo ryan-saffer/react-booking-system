@@ -9,9 +9,11 @@ import type { Form } from './base-event-form'
 import BaseEventForm from './base-event-form'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 import type { Studio, ScienceModule } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'NewEventForm'
 
@@ -39,11 +41,12 @@ type Props = {
 } & ErrorDialogProps
 
 const _NewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
+    const trpc = useTRPC()
     const [emailMessage, setEmailMessage] = useState('')
     const [emailMessageError, setEmailMessageError] = useState(false)
     const [sendConfirmationEmail, setSendConfirmationEmail] = useState(true)
 
-    const bookEventMutation = trpc.events.createEvent.useMutation()
+    const bookEventMutation = useMutation(trpc.events.createEvent.mutationOptions())
 
     const methods = useForm<Form>({
         defaultValues: {

@@ -22,22 +22,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@ui-components/separator'
 import { Skeleton } from '@ui-components/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { NewUserDialog } from './new-user-dialog'
+
+import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 const columnHelper = createColumnHelper<StaffAuthUser>()
 
 export function ManageUsersTable() {
+    const trpc = useTRPC()
     const { currentOrg, role, hasPermission } = useOrg()
     const authUser = useAuth()
-    const { data, isSuccess, isLoading, refetch } = trpc.auth.getUsers.useQuery({ studio: currentOrg })
+    const { data, isSuccess, isPending, refetch } = useQuery(trpc.auth.getUsers.queryOptions({ studio: currentOrg }))
 
     const [openNewUserDialog, setOpenNewUserDialog] = useState(false)
     const confirm = useConfirm()
 
-    const updateUserRoleMutation = trpc.auth.updateUserRole.useMutation()
-    const removeUserMutation = trpc.auth.removeUserFromStudio.useMutation()
+    const updateUserRoleMutation = useMutation(trpc.auth.updateUserRole.mutationOptions())
+    const removeUserMutation = useMutation(trpc.auth.removeUserFromStudio.mutationOptions())
 
     const [removingUser, setRemovingUser] = useState<string | null>(null)
 
@@ -265,7 +269,7 @@ export function ManageUsersTable() {
                     {hasPermission('admin') && <Button onClick={() => setOpenNewUserDialog(true)}>Add User</Button>}
                 </div>
                 <Separator className="my-6" />
-                {isLoading && <Skeleton className="h-[400px]" />}
+                {isPending && <Skeleton className="h-[400px]" />}
                 {isSuccess && (
                     <div className="mb-8 rounded-md border">
                         <Table>

@@ -3,18 +3,22 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { InfoCircleOutlined } from '@ant-design/icons'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../state/cart-store'
 
+import { useMutation } from '@tanstack/react-query'
+
 export function GiftCardInput({ numberOfKids }: { numberOfKids: number }) {
+    const trpc = useTRPC()
     const applyGiftCard = useCart((store) => store.applyGiftCard)
     const clearGiftCard = useCart((store) => store.clearGiftCard)
 
     const [giftCardNumber, setGiftCardNumber] = useState('')
 
-    const { mutateAsync: checkGiftCardBalance, isLoading: isCheckingGiftCard } =
-        trpc.holidayPrograms.checkGiftCardBalance.useMutation()
+    const { mutateAsync: checkGiftCardBalance, isPending: isCheckingGiftCard } = useMutation(
+        trpc.holidayPrograms.checkGiftCardBalance.mutationOptions()
+    )
 
     async function handleGiftCardApply() {
         const cleanedNumber = giftCardNumber.replace(/[\s-]/g, '')

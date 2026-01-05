@@ -25,7 +25,7 @@
         "@sendgrid/mail": "^7.7.0",
         "@sentry/node": "^10.30.0",
         "@sparticuz/chromium": "^121.0.0",
-        "@trpc/server": "^10.43.3",
+        "@trpc/server": "^11.8.1",
         "acuityscheduling": "^0.1.9",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",

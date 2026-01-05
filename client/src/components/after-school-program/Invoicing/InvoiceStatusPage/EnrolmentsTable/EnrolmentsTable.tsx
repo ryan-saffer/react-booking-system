@@ -11,10 +11,14 @@ import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { useConfirmWithCheckbox } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/use-confirmation-dialog-with-checkbox'
 import { styled } from '@mui/material/styles'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
 import InvoiceStatusCell from './InvoiceStatusCell'
+
+import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
 const PREFIX = 'EnrolmentsTable'
 
@@ -84,6 +88,7 @@ const _EnrolmentsTable: React.FC<Props> = ({
     onAppointmentTypeChange,
     showConfirmationDialog,
 }) => {
+    const trpc = useTRPC()
     const [loading, setLoading] = useState(true)
     const [changingClass, setChangingClass] = useState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
@@ -94,18 +99,22 @@ const _EnrolmentsTable: React.FC<Props> = ({
 
     const {
         data: invoiceStatusMap,
-        isLoading: isLoadingInvoices,
+        isPending: isLoadingInvoices,
         isSuccess,
-    } = trpc.afterSchoolProgram.retrieveInvoiceStatuses.useQuery(
-        {
-            appointmentIds: enrolments.map((it) => it.id),
-        },
-        { initialData: {} }
+    } = useQuery(
+        trpc.afterSchoolProgram.retrieveInvoiceStatuses.queryOptions(
+            {
+                appointmentIds: enrolments.map((it) => it.id),
+            },
+            { initialData: {} }
+        )
     )
-    const sendInvoicesMutation = trpc.afterSchoolProgram.sendInvoices.useMutation()
-    const sendContinuationEmailsMutation = trpc.afterSchoolProgram.sendTermContinuationEmails.useMutation()
-    const unenrollMutation = trpc.afterSchoolProgram.unenrollFromAfterSchoolProgram.useMutation()
-    const trpcUtils = trpc.useUtils()
+    const sendInvoicesMutation = useMutation(trpc.afterSchoolProgram.sendInvoices.mutationOptions())
+    const sendContinuationEmailsMutation = useMutation(
+        trpc.afterSchoolProgram.sendTermContinuationEmails.mutationOptions()
+    )
+    const unenrollMutation = useMutation(trpc.afterSchoolProgram.unenrollFromAfterSchoolProgram.mutationOptions())
+    const queryClient = useQueryClient()
 
     const handleExpand = (expanded: boolean, record: TableData) => {
         if (expanded) {
@@ -195,8 +204,10 @@ const _EnrolmentsTable: React.FC<Props> = ({
             const result = await sendInvoicesMutation.mutateAsync(
                 selectedRowKeys.map((it) => ({ id: it.toString(), numberOfWeeks }))
             )
-            trpcUtils.afterSchoolProgram.retrieveInvoiceStatuses.setData(
-                { appointmentIds: enrolments.map((it) => it.id) },
+            queryClient.setQueryData(
+                trpc.afterSchoolProgram.retrieveInvoiceStatuses.queryKey({
+                    appointmentIds: enrolments.map((it) => it.id),
+                }),
                 (invoiceStatusMap) => ({ ...invoiceStatusMap, ...result })
             )
             setSelectedRowKeys([])

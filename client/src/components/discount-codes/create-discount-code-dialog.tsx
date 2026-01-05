@@ -20,7 +20,9 @@ import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 type NumberOrString<T> = {
     [P in keyof T]: T[P] extends number ? T[P] | string : T[P]
@@ -28,6 +30,7 @@ type NumberOrString<T> = {
 type TForm = WithoutId<Omit<DiscountCode, 'numberOfUses'>>
 
 export function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
+    const trpc = useTRPC()
     const form = useForm<NumberOrString<TForm>>({
         defaultValues: {
             code: '',
@@ -38,7 +41,9 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
         },
     })
 
-    const { mutateAsync: createDiscount, isLoading } = trpc.holidayPrograms.createDiscountCode.useMutation()
+    const { mutateAsync: createDiscount, isPending } = useMutation(
+        trpc.holidayPrograms.createDiscountCode.mutationOptions()
+    )
 
     const onSubmit = async (values: NumberOrString<TForm>) => {
         const discountAmount =
@@ -229,8 +234,8 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                             )}
                         />
                         <DialogFooter>
-                            <Button className="mt-4 min-w-48" type="submit" disabled={isLoading}>
-                                {isLoading ? <Loader2 className="animate-spin" /> : 'Create discount code'}
+                            <Button className="mt-4 min-w-48" type="submit" disabled={isPending}>
+                                {isPending ? <Loader2 className="animate-spin" /> : 'Create discount code'}
                             </Button>
                         </DialogFooter>
                     </form>

@@ -5,19 +5,24 @@ import { toast } from 'sonner'
 import { Button } from '@ui-components/button'
 import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 
+import { useMutation } from '@tanstack/react-query'
+
 export function DiscountInput() {
+    const trpc = useTRPC()
     const form = useBookingForm()
     const applyDiscountCode = useCart((cart) => cart.applyDiscountCode)
 
     const [discountCode, setDiscountCode] = useState('')
     const [error, setError] = useState<string | null>(null)
 
-    const { mutateAsync: checkDiscountCode, isLoading } = trpc.holidayPrograms.checkDiscountCode.useMutation()
+    const { mutateAsync: checkDiscountCode, isPending } = useMutation(
+        trpc.holidayPrograms.checkDiscountCode.mutationOptions()
+    )
 
     const validateDiscount = async () => {
         // do not allow the 'allday' discount code
@@ -67,10 +72,10 @@ export function DiscountInput() {
                 <Button
                     className="min-w-32"
                     variant={discountCode.length ? 'default' : 'secondary'}
-                    disabled={!discountCode.length || isLoading}
+                    disabled={!discountCode.length || isPending}
                     onClick={validateDiscount}
                 >
-                    {isLoading ? <Loader2 className="animate-spin" /> : 'Apply discount'}
+                    {isPending ? <Loader2 className="animate-spin" /> : 'Apply discount'}
                 </Button>
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}

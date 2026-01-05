@@ -8,17 +8,15 @@ import { useSearchParams } from 'react-router-dom'
 import { LeftOutlined } from '@ant-design/icons'
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
-import { FacebookPixel } from '@components/facebook-pixel/facebook-pixel'
 import { useIsMutating } from '@tanstack/react-query'
-import { getQueryKey } from '@trpc/react-query'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import Step1 from '../components/step-1/step-1'
 import { Step2 } from '../components/step-2/step-2'
 import Step3 from '../components/step-3/step-3'
 import { useCart } from '../state/cart-store'
 
-const { Step } = Steps
+import { useQuery } from '@tanstack/react-query'
 
 export type Form = {
     parentFirstName: string
@@ -39,6 +37,7 @@ export type Form = {
 }
 
 export const CustomerBookingPage = () => {
+    const trpc = useTRPC()
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
 
@@ -59,17 +58,19 @@ export const CustomerBookingPage = () => {
     const [step, setStep] = useState(1)
     const [showNoChildrenModal, setShowNoChildrenModal] = useState(false)
 
-    const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeIds:
-            import.meta.env.VITE_ENV === 'prod'
-                ? [appointmentTypeId]
-                : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
-        includeUnavailable: true,
-        minDate: nowRef.current,
-    })
+    const { data, isPending, isSuccess, isError } = useQuery(
+        trpc.acuity.classAvailability.queryOptions({
+            appointmentTypeIds:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? [appointmentTypeId]
+                    : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
+            includeUnavailable: true,
+            minDate: nowRef.current,
+        })
+    )
 
     const isMutating = useIsMutating({
-        mutationKey: getQueryKey(trpc.holidayPrograms.book),
+        mutationKey: trpc.holidayPrograms.book.mutationKey(),
     })
 
     useEffect(() => {
@@ -109,7 +110,7 @@ export const CustomerBookingPage = () => {
     }
 
     const renderForm = () => {
-        if (isLoading) {
+        if (isPending) {
             return <Loader style={{ marginTop: 24, marginBottom: 24 }} />
         }
 
@@ -193,15 +194,14 @@ export const CustomerBookingPage = () => {
 
     return (
         <Root width="centered" useTailwindPreflight={false}>
-            <FacebookPixel />
             <Typography.Title level={4} style={{ margin: 24, marginTop: 0, textAlign: 'center' }}>
                 Booking Form
             </Typography.Title>
-            <Steps current={step - 1} style={{ marginBottom: 24 }}>
-                <Step title="Select sessions" />
-                <Step title="Your information" />
-                <Step title="Payment" />
-            </Steps>
+            <Steps
+                current={step - 1}
+                style={{ marginBottom: 24 }}
+                items={[{ title: 'Select sessions' }, { title: 'Your information' }, { title: 'Payment' }]}
+            />
             <div style={{ width: '100%', maxWidth: 500 }}>
                 <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                     {step > 1 && !isMutating && !bookingComplete && (

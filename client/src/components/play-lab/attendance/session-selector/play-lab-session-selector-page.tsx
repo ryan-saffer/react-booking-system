@@ -12,7 +12,9 @@ import { Checkbox } from '@ui-components/checkbox'
 import { Label } from '@ui-components/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Skeleton } from '@ui-components/skeleton'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useQuery } from '@tanstack/react-query'
 
 function Root({ children }: { children: ReactNode }) {
     return (
@@ -36,6 +38,7 @@ function Root({ children }: { children: ReactNode }) {
  * Confirming will navigate to '/play-lab/{appointmentTypeId}' and provide classId and classTime as search params.
  */
 export function PlayLabSessionSelectorPage() {
+    const trpc = useTRPC()
     const navigate = useNavigate()
     const { currentOrg } = useOrg()
 
@@ -54,31 +57,35 @@ export function PlayLabSessionSelectorPage() {
 
     const {
         data: appointmentTypes,
-        isLoading: isLoadingAppointmentTypes,
+        isPending: isLoadingAppointmentTypes,
         isSuccess: isSuccessAppointmentTypes,
         isError: isErrorAppointmentTypes,
         refetch,
         isFetching,
-    } = trpc.acuity.getAppointmentTypes.useQuery({
-        category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
-    })
+    } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions({
+            category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
+        })
+    )
 
     // can only fetch the classes once the appointment types have been returned
     const {
         data: classes,
         isSuccess: isSuccessClasses,
-        isLoading: isLoadingClasses,
+        isPending: isLoadingClasses,
         isError: isErrorClasses,
-    } = trpc.acuity.classAvailability.useQuery(
-        {
-            appointmentTypeIds: isSuccessAppointmentTypes ? appointmentTypes.map((it) => it.id) : [],
-            includeUnavailable: true,
-        },
-        { enabled: isSuccessAppointmentTypes }
+    } = useQuery(
+        trpc.acuity.classAvailability.queryOptions(
+            {
+                appointmentTypeIds: isSuccessAppointmentTypes ? appointmentTypes.map((it) => it.id) : [],
+                includeUnavailable: true,
+            },
+            { enabled: isSuccessAppointmentTypes }
+        )
     )
 
     const isSuccess = isSuccessAppointmentTypes && isSuccessClasses
-    const isLoading = isLoadingAppointmentTypes || isLoadingClasses
+    const isPending = isLoadingAppointmentTypes || isLoadingClasses
     const isError = isErrorAppointmentTypes || isErrorClasses
 
     const now = useRef(DateTime.now())
@@ -129,7 +136,7 @@ export function PlayLabSessionSelectorPage() {
         )
     }
 
-    if (isLoading)
+    if (isPending)
         return (
             <Root>
                 <Skeleton className="h-10" />

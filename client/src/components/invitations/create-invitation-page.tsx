@@ -26,10 +26,12 @@ import { ScrollArea } from '@ui-components/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
+
+import { useMutation } from '@tanstack/react-query'
 
 type TForm = {
     childName: string
@@ -135,7 +137,10 @@ function Sidebar() {
 }
 
 function CustomiseForm({ onClose }: { onClose?: () => void }) {
-    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
+    const trpc = useTRPC()
+    const { isPending, mutateAsync: generateInvitation } = useMutation(
+        trpc.parties.generateInvitation.mutationOptions()
+    )
 
     const [open, setOpen] = useState(false)
     const [invitationId, setInvitationId] = useState('')
@@ -410,9 +415,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <Button
                         type="submit"
                         className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                        disabled={isLoading}
+                        disabled={isPending}
                     >
-                        {isLoading ? (
+                        {isPending ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Generating...

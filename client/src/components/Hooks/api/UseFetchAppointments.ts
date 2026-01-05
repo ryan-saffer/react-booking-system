@@ -2,7 +2,9 @@ import type { AcuityTypes } from 'fizz-kidz'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useState } from 'react'
 
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from "@tanstack/react-query";
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>
@@ -14,11 +16,12 @@ interface UseFetchAppointmentsProps {
 }
 
 const useFetchAppointments = (props: UseFetchAppointmentsProps) => {
+    const trpc = useTRPC();
     const { setLoading, appointmentTypeId, calendarId, classId, sorter, classTime } = props
 
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[] | null>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
+    const searchForAppointmentsMutation = useMutation(trpc.acuity.searchForAppointmentsMutation.mutationOptions())
 
     useEffect(() => {
         const fetchClients = (data: AcuityTypes.Client.FetchAppointmentsParams) => {

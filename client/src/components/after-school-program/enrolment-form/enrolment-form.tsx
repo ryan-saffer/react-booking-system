@@ -19,7 +19,7 @@ import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { FileUploadInput } from './file-upload-input'
 import { GRADES, useEnrolmentForm } from './form-schema'
@@ -27,7 +27,10 @@ import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
 
+import { useQuery } from '@tanstack/react-query'
+
 export function EnrolmentForm({ submitting }: { submitting: boolean }) {
+    const trpc = useTRPC()
     const form = useEnrolmentForm()
 
     const {
@@ -55,14 +58,16 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
     }
 
     const {
-        isLoading,
+        isPending,
         isSuccess,
         isError,
         data: classes,
-    } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeIds: [selectedProgram!.id],
-        includeUnavailable: true,
-    })
+    } = useQuery(
+        trpc.acuity.classAvailability.queryOptions({
+            appointmentTypeIds: [selectedProgram!.id],
+            includeUnavailable: true,
+        })
+    )
 
     function formatCurrency(amount: number) {
         return amount % 1 === 0 ? `$${amount}` : `$${amount.toFixed(2)}`
@@ -87,7 +92,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
     const [showTermsAndConditions, setShowTermsAndConditions] = useState(false)
 
-    if (isLoading) {
+    if (isPending) {
         return <Loader />
     }
 
@@ -322,7 +327,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Does {form.watch('main.children')[idx].firstName || 'this child'} have any
+                                        Does {form.watch('main.children')?.[idx].firstName || 'this child'} have any
                                         allergies?
                                     </FormLabel>
                                     <FormControl>
@@ -352,14 +357,14 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 </FormItem>
                             )}
                         />
-                        {form.watch('main.children')[idx].hasAllergies && (
+                        {form.watch('main.children')?.[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
                                 name={`main.children.${idx}.allergies` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Please enter {form.watch('main.children')[idx].firstName || 'the child'}'s
+                                            Please enter {form.watch('main.children')?.[idx].firstName || 'the child'}'s
                                             allergies here
                                         </FormLabel>
                                         <FormControl>
@@ -370,14 +375,14 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 )}
                             />
                         )}
-                        {form.watch('main.children')[idx].hasAllergies && (
+                        {form.watch('main.children')?.[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
                                 name={`main.children.${idx}.isAnaphylactic` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Is {form.watch('main.children')[idx].firstName || 'this child'}{' '}
+                                            Is {form.watch('main.children')?.[idx].firstName || 'this child'}{' '}
                                             anaphylactic?
                                         </FormLabel>
                                         <FormControl>
@@ -408,7 +413,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 )}
                             />
                         )}
-                        {form.watch('main.children')[idx].isAnaphylactic && (
+                        {form.watch('main.children')?.[idx].isAnaphylactic && (
                             <FormField
                                 control={form.control}
                                 name={`main.children.${idx}.anaphylaxisPlan` as const}
@@ -416,8 +421,8 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 render={({ field: { value, onChange, ...fieldProps } }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Please upload {form.watch('main.children')[idx].firstName || 'the child'}'s
-                                            anaphylaxis plan
+                                            Please upload {form.watch('main.children')?.[idx].firstName || 'the child'}
+                                            's anaphylaxis plan
                                         </FormLabel>
                                         <FormControl>
                                             <FileUploadInput
@@ -441,7 +446,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Does {form.watch('main.children')[idx].firstName || 'your child'} need extra
+                                        Does {form.watch('main.children')?.[idx].firstName || 'your child'} need extra
                                         support for learning difficulties, disabilites or additional learning needs?
                                     </FormLabel>
                                     <FormControl>
@@ -471,7 +476,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 </FormItem>
                             )}
                         />
-                        {form.watch('main.children')[idx].needsSupport && (
+                        {form.watch('main.children')?.[idx].needsSupport && (
                             <FormField
                                 control={form.control}
                                 name={`main.children.${idx}.support` as const}
@@ -479,7 +484,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     <FormItem>
                                         <FormLabel>
                                             How best can we support{' '}
-                                            {form.watch('main.children')[idx].firstName || 'your child'}?
+                                            {form.watch('main.children')?.[idx].firstName || 'your child'}?
                                         </FormLabel>
                                         <FormControl>
                                             <Textarea {...field} />
@@ -497,7 +502,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     <FormLabel>
                                         We love to show other parents the cool things that we do by taking pictures and
                                         videos. Do you give permission for{' '}
-                                        {form.watch('main.children')[idx].firstName || 'your child'} to be in our
+                                        {form.watch('main.children')?.[idx].firstName || 'your child'} to be in our
                                         marketing content?
                                     </FormLabel>
                                     <FormControl>
@@ -535,7 +540,7 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     variant="outline"
                     onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
                 >
-                    {form.getValues('main.children').length === 0 ? 'Add Child' : 'Enrol Another Child'}
+                    {form.getValues('main.children')?.length === 0 ? 'Add Child' : 'Enrol Another Child'}
                     <Plus className="ml-2 h-4 w-4" />
                 </Button>
                 <SectionBreak title="Emergency Contact" />

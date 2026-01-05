@@ -1,17 +1,17 @@
 import { ChevronLeft } from 'lucide-react'
 
 import { useIsMutating } from '@tanstack/react-query'
-import { getQueryKey } from '@trpc/react-query'
 import { Button } from '@ui-components/button'
-import { trpc } from '@utils/trpc'
 
 import { useFormStage } from '../../state/form-stage-store'
+import { useTRPC } from '@utils/trpc'
 
 export function BackButton() {
     const { formStage, previousStage } = useFormStage()
+    const trpc = useTRPC()
 
     const isMutating = useIsMutating({
-        mutationKey: getQueryKey(trpc.playLab),
+        mutationKey: trpc.playLab.book.mutationKey(),
     })
 
     if (formStage === 'program-selection' || formStage === 'success') return null

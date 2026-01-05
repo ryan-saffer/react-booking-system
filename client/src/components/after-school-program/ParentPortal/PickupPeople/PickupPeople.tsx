@@ -8,9 +8,11 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import styles from './PickupPeople.module.css'
+
+import { useMutation } from "@tanstack/react-query";
 
 const { useForm } = Form
 
@@ -21,6 +23,7 @@ type Props = {
 }
 
 const PickupPeople: React.FC<Props> = ({ appointment }) => {
+    const trpc = useTRPC();
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -35,7 +38,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
         pickupPeople: appointment.pickupPeople.map((person) => ({ person })),
     })
 
-    const updateEnrolmentMutation = trpc.afterSchoolProgram.updateAfterSchoolEnrolment.useMutation()
+    const updateEnrolmentMutation = useMutation(trpc.afterSchoolProgram.updateAfterSchoolEnrolment.mutationOptions())
 
     const onFinish = async (values: { pickupPeople: { person: string }[] }) => {
         setLoading(true)

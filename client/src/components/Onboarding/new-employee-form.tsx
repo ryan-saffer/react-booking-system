@@ -6,7 +6,9 @@ import React, { useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'
 import { capitalise } from '@utils/stringUtilities'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from "@tanstack/react-query";
 
 const { Option } = Select
 
@@ -33,6 +35,7 @@ type Props = {
 }
 
 const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
+    const trpc = useTRPC();
     const [form] = Form.useForm<TNewEmployeeForm>()
     const [messageApi] = message.useMessage()
 
@@ -40,7 +43,7 @@ const NewEmployeeForm: React.FC<Props> = ({ open, onCancel }) => {
 
     const [submitting, setSubmitting] = useState(false)
 
-    const initiateOnboardingMutation = trpc.staff.initiateOnboarding.useMutation()
+    const initiateOnboardingMutation = useMutation(trpc.staff.initiateOnboarding.mutationOptions())
 
     const submit = async () => {
         try {

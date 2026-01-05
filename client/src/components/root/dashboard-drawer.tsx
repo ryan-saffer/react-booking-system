@@ -12,12 +12,14 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 
 import { useOrg } from '@components/Session/use-org'
 import { useMediaQuery } from '@mui/material'
-import { Drawer, DrawerContent } from '@ui-components/drawer'
+import { Drawer, DrawerContent, DrawerTitle } from '@ui-components/drawer'
 import { ScrollArea } from '@ui-components/scroll-area'
 import { cn } from '@utils/tailwind'
+import { DialogDescription } from '@radix-ui/react-dialog'
 
 export function DashboardDrawer({
     drawerOpen,
@@ -39,6 +41,12 @@ export function DashboardDrawer({
                 className="twp top-0 mt-16 h-[calc(100vh-4rem)] w-full rounded-none border-none bg-slate-100 sm:w-[400px]"
                 showTopBar={false}
             >
+                <VisuallyHidden asChild>
+                    <DrawerTitle>Drawer</DrawerTitle>
+                </VisuallyHidden>
+                <VisuallyHidden asChild>
+                    <DialogDescription>App navigation drawer</DialogDescription>
+                </VisuallyHidden>
                 <ScrollArea className="h-full">
                     <div className="flex flex-col gap-0.5 px-4">
                         <img

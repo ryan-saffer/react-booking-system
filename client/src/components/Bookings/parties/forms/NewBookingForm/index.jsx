@@ -25,9 +25,11 @@ import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 
 import { capitalise } from '../../../../../utilities/stringUtilities'
-import { trpc } from '../../../../../utilities/trpc'
+import { useTRPC } from '../../../../../utilities/trpc'
 import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
+
+import { useMutation } from "@tanstack/react-query";
 
 const PREFIX = 'index'
 
@@ -192,12 +194,13 @@ const mapFormToBooking = (formValues) => {
 
 /** The booking form component */
 const _NewBookingForm = (props) => {
+    const trpc = useTRPC();
     const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const createBookingMutation = trpc.parties.createPartyBooking.useMutation()
+    const createBookingMutation = useMutation(trpc.parties.createPartyBooking.mutationOptions())
 
     const handleFormChange = (e, id) => {
         const isDateOrTimeField = e instanceof DateTime
