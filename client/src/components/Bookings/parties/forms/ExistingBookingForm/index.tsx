@@ -901,7 +901,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             label="Questions"
                             fullWidth
                             multiline
-                            rows={1}
+                            rows={6}
                             size="small"
                             variant={editing || formValues[FormBookingFields.questions].value ? 'outlined' : 'filled'}
                             disabled={!editing}
@@ -920,7 +920,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             label="Fun Facts"
                             fullWidth
                             multiline
-                            rows={1}
+                            rows={6}
                             size="small"
                             variant={editing || formValues[FormBookingFields.funFacts].value ? 'outlined' : 'filled'}
                             disabled={!editing}
