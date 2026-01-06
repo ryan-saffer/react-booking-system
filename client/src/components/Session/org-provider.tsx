@@ -75,7 +75,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     }, [user, currentOrg, getRole, switchToOrg])
 
     return (
-        <OrgContext.Provider
+        <OrgContext
             value={{
                 availableOrgs,
                 currentOrg,
@@ -85,6 +85,6 @@ export function OrgProvider({ children }: { children: ReactNode }) {
             }}
         >
             {children}
-        </OrgContext.Provider>
+        </OrgContext>
     )
 }

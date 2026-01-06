@@ -19,13 +19,13 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
     }, [])
 
     return (
-        <FilterContext.Provider
+        <FilterContext
             value={{
                 selectedLocation,
                 filterByLocation,
             }}
         >
             {children}
-        </FilterContext.Provider>
+        </FilterContext>
     )
 }

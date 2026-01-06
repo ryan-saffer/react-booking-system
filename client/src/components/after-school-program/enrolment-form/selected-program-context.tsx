@@ -16,13 +16,13 @@ export function SelectedProgramProvider({ children }: { children: ReactNode }) {
     const [selectedProgram, setSelectedProgram] = useState<NullableProgram>(null)
 
     return (
-        <SelectedProgramContext.Provider
+        <SelectedProgramContext
             value={{
                 selectedProgram,
                 selectProgram: setSelectedProgram,
             }}
         >
             {children}
-        </SelectedProgramContext.Provider>
+        </SelectedProgramContext>
     )
 }

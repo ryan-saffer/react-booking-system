@@ -53,7 +53,7 @@ export function ConfirmationDialogWithCheckboxProvider({ children }: { children:
     )
 
     return (
-        <ConfirmationDialogWithCheckboxContext.Provider value={confirm}>
+        <ConfirmationDialogWithCheckboxContext value={confirm}>
             {children}
             <Dialog open={state.open} onOpenChange={() => fn.current({ confirmed: false, checked: state.isChecked })}>
                 <DialogContent className="twp max-w-md">
@@ -87,6 +87,6 @@ export function ConfirmationDialogWithCheckboxProvider({ children }: { children:
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </ConfirmationDialogWithCheckboxContext.Provider>
+        </ConfirmationDialogWithCheckboxContext>
     )
 }

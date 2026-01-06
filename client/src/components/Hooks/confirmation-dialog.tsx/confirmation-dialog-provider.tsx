@@ -40,7 +40,7 @@ export function ConfirmationDialogProvider({ children }: { children: ReactNode }
     )
 
     return (
-        <ConfirmationDialogContext.Provider value={confirm}>
+        <ConfirmationDialogContext value={confirm}>
             {children}
             <AlertDialog open={state.open} onOpenChange={() => fn.current(false)}>
                 <AlertDialogContent className="twp">
@@ -54,6 +54,6 @@ export function ConfirmationDialogProvider({ children }: { children: ReactNode }
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </ConfirmationDialogContext.Provider>
+        </ConfirmationDialogContext>
     )
 }

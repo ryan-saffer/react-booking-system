@@ -88,7 +88,7 @@ function _Root() {
     )
 
     return (
-        <MixpanelContext.Provider value={mixpanel}>
+        <MixpanelContext value={mixpanel}>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={theme}>
                     <ConfigProvider theme={antdTheme}>
@@ -112,7 +112,7 @@ function _Root() {
                     </ConfigProvider>
                 </ThemeProvider>
             </StyledEngineProvider>
-        </MixpanelContext.Provider>
+        </MixpanelContext>
     )
 }
 
