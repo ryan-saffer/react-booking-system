@@ -8,7 +8,7 @@ import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
 import { SignedOut } from '@components/Session/signed-out.js'
 import Loader from '@components/Shared/Loader.js'
-import { _404 } from '@components/root/404.js'
+import { NotFound404 } from '@components/root/404.js'
 import { DashboardLayout } from '@components/root/dashboard-layout.js'
 import { Root } from '@components/root/root.js'
 
@@ -151,7 +151,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         Component: Root,
-        ErrorBoundary: _404,
+        ErrorBoundary: NotFound404,
         children: [
             {
                 // redirects the base route to the dashboard, or the sign in page if not logged in

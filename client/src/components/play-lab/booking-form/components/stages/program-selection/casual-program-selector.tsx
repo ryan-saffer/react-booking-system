@@ -1,6 +1,6 @@
 import { isSameDay, parseISO } from 'date-fns'
 import { AlertCircle, ArrowRight, CheckCircleIcon, ChevronLeft, MessageCircleWarning, RefreshCcw } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Calendar } from '@ui-components/calendar'
@@ -30,7 +30,7 @@ export function CasualProgramSelector() {
     const studio = form.watch('studio')
     const bookingType = form.watch('bookingType')
 
-    const minDate = useRef(Date.now())
+    const [minDate] = useState(() => Date.now())
 
     const {
         data: appointmentTypes,
@@ -59,7 +59,7 @@ export function CasualProgramSelector() {
             {
                 appointmentTypeIds: appointmentTypes?.map((type) => type.id) || [],
                 includeUnavailable: true,
-                minDate: minDate.current,
+                minDate: minDate,
             },
             {
                 enabled: !!appointmentTypes && formStage === 'program-selection',

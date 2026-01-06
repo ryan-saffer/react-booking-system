@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import type { SelectChangeEvent } from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
@@ -46,13 +46,6 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         const [confirmButton, setConfirmButton] = useState('')
         const [confirmCallback, setConfirmCallback] = useState<ConfirmationCallback>(() => {})
 
-        useEffect(() => {
-            // reset form when closing
-            if (!open) {
-                reset()
-            }
-        }, [open])
-
         const reset = () => {
             setListItems(null)
             setSelectedListItem('')
@@ -66,8 +59,10 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             setContent(params.dialogContent)
             setConfirmButton(params.confirmationButtonText)
             setConfirmCallback(() => params.onConfirm)
+            setSelectedListItem('')
+            setFormError(false)
             setOpen(true)
-            params.listItems && setListItems(params.listItems)
+            setListItems(params.listItems ?? null)
         }
 
         const handleListItemChange = (event: SelectChangeEvent<string>) => {
@@ -82,12 +77,14 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             } else {
                 confirmCallback(selectedListItem) // if listItems not provided, selectedListItem will be null here - but thats okay
                 setOpen(false)
+                reset()
             }
         }
 
         const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             setOpen(false)
+            reset()
         }
 
         return (

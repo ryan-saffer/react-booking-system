@@ -2,7 +2,7 @@ import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
 
 import { ErrorScreen } from './error-page'
 
-export function _404() {
+export function NotFound404() {
     const error = useRouteError()
 
     if (isRouteErrorResponse(error)) {

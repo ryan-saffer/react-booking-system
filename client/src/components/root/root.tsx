@@ -50,7 +50,7 @@ const antdTheme: ThemeConfig = {
     },
 }
 
-function _Root() {
+function InnerRoot() {
     const firebase = useFirebase()
 
     const domain = useEmulators
@@ -119,7 +119,7 @@ function _Root() {
 export function Root() {
     return (
         <FirebaseProvider>
-            <_Root />
+            <InnerRoot />
         </FirebaseProvider>
     )
 }

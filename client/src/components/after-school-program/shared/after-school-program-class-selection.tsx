@@ -1,7 +1,7 @@
 import type { AcuityTypes, Studio } from 'fizz-kidz'
 import { STUDIOS, isFranchise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useOrg } from '@components/Session/use-org'
@@ -29,7 +29,7 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
     const [showPreviousClasses, setShowPreviousClasses] = useState(
         (localStorage.getItem(PREV_CLASSES_CACHE_KEY) ?? 'false') === 'true'
     )
-    const nowRef = useRef(showPreviousClasses ? 1704027600000 : Date.now())
+    const [now, setNow] = useState(() => (showPreviousClasses ? 1704027600000 : Date.now()))
 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<
         AcuityTypes.Api.AppointmentType | undefined
@@ -58,7 +58,7 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
             {
                 appointmentTypeIds: selectedAppointmentType?.id ? [selectedAppointmentType.id] : [],
                 includeUnavailable: true,
-                minDate: nowRef.current,
+                minDate: now,
             },
             {
                 enabled: !!selectedAppointmentType?.id,
@@ -174,11 +174,11 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                             checked={showPreviousClasses}
                             onCheckedChange={(checked) => {
                                 if (checked) {
-                                    nowRef.current = 1704027600000 // 01/01/24
+                                    setNow(1704027600000) // 01/01/24
                                     setShowPreviousClasses(true)
                                     localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'true')
                                 } else {
-                                    nowRef.current = Date.now()
+                                    setNow(Date.now())
                                     setShowPreviousClasses(false)
                                     localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'false')
                                 }

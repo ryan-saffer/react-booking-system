@@ -45,7 +45,7 @@ import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } fro
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import type { ExistingBookingFormFields } from './types'
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'index'
 
@@ -65,12 +65,12 @@ interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogP
     booking: WithId<FirestoreBooking>
 }
 
-const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
+const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     booking,
     displayError,
     showConfirmationDialog,
 }) => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(getEmptyValues())
 
     useEffect(() => {
@@ -972,4 +972,4 @@ function createUniqueId(field: string, id: string) {
     return `${field}-${id}`
 }
 
-export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(_ExistingBookingForm))
+export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(InnerExistingBookingForm))

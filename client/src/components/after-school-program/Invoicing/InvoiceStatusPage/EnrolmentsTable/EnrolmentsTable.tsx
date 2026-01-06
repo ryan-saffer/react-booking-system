@@ -81,7 +81,7 @@ function getAppointmentWeekRange(enrolments: AfterSchoolEnrolment[]) {
     return output.sort()
 }
 
-const _EnrolmentsTable: React.FC<Props> = ({
+const InnerEnrolmentsTable: React.FC<Props> = ({
     enrolments,
     calendar,
     appointmentTypes,
@@ -448,4 +448,4 @@ const _EnrolmentsTable: React.FC<Props> = ({
     )
 }
 
-export const EnrolmentsTable = WithConfirmationDialog(_EnrolmentsTable)
+export const EnrolmentsTable = WithConfirmationDialog(InnerEnrolmentsTable)

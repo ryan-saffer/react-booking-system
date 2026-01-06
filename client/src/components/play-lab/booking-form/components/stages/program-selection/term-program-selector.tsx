@@ -2,7 +2,7 @@ import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
 import { AlertCircle, ChevronLeft, MessageCircleWarning } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -114,11 +114,11 @@ function ContinueOrError() {
     const appointmentTypeId = form.watch('appointmentTypeId')
     const numberOfKids = form.watch('children').length
 
-    const now = useRef(Date.now())
+    const [now] = useState(() => Date.now())
 
     const { data, isPending, isSuccess, isError } = useQuery(
         trpc.acuity.classAvailability.queryOptions(
-            { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true, minDate: now.current },
+            { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true, minDate: now },
             { enabled: !!appointmentTypeId, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
         )
     )

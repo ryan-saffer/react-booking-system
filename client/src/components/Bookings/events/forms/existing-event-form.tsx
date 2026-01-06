@@ -17,7 +17,7 @@ import { useTRPC } from '@utils/trpc'
 import { Grid, TextField, Typography, styled } from '@mui/material'
 import { toast } from 'sonner'
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 
 type Props = {
     event: Event
@@ -38,8 +38,8 @@ const Root = styled('div')({
     },
 })
 
-const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
-    const trpc = useTRPC();
+const InnerExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
+    const trpc = useTRPC()
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false)
 
@@ -308,4 +308,4 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     )
 }
 
-export const ExistingEventForm = WithConfirmationDialog(WithErrorDialog(_ExistingEventForm))
+export const ExistingEventForm = WithConfirmationDialog(WithErrorDialog(InnerExistingEventForm))

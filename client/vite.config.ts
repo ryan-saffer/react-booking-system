@@ -28,7 +28,11 @@ export default defineConfig(({ mode }) => {
             sourcemap: true,
         },
         plugins: [
-            react(),
+            react({
+                babel: {
+                    plugins: ['babel-plugin-react-compiler'],
+                },
+            }),
             createHtmlPlugin({
                 pages: [
                     { entry: '/src/index.tsx', filename: 'index.html', template: 'public/index.html' },
