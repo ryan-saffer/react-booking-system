@@ -76,7 +76,7 @@ const AfterSchoolProgramEnrolmentPage = lazy(() =>
     )
 )
 const SelectedProgramProvider = lazy(() =>
-    import('./components/after-school-program/enrolment-form/selected-program-context.js').then((module) => ({
+    import('./components/after-school-program/enrolment-form/selected-program.provider.js').then((module) => ({
         default: module.SelectedProgramProvider,
     }))
 )

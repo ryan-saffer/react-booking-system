@@ -1,6 +1,5 @@
 import { useContext } from 'react'
-
-import { ConfirmationDialogWithCheckboxContext } from './confirmation-dialog-with-checkbox-provider'
+import { ConfirmationDialogWithCheckboxContext } from './confirmation-dialog-with-checkbox.context'
 
 export function useConfirmWithCheckbox() {
     const context = useContext(ConfirmationDialogWithCheckboxContext)

@@ -1,18 +1,11 @@
-import type { Permission, Role, StudioOrMaster } from 'fizz-kidz'
+import type { Permission, StudioOrMaster } from 'fizz-kidz'
 import { ObjectKeys } from 'fizz-kidz'
 import type { ReactNode } from 'react'
-import { createContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { checkRoleForPermission } from '@constants/permissions'
-
-export const OrgContext = createContext<{
-    availableOrgs: StudioOrMaster[] | null
-    switchToOrg: (org: StudioOrMaster) => void
-    currentOrg: StudioOrMaster | null
-    role: Role | null
-    hasPermission: (permission: Permission) => boolean
-}>({ availableOrgs: null, currentOrg: null, switchToOrg: () => {}, role: null, hasPermission: () => false })
+import { OrgContext } from './org.context'
 
 export function OrgProvider({ children }: { children: ReactNode }) {
     const user = useAuth()

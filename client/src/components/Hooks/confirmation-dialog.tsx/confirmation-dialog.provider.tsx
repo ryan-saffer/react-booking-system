@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { createContext, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import {
     AlertDialog,
@@ -11,12 +11,9 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@ui-components/alert-dialog'
+import { ConfirmationDialogContext } from './confirmation-dialog.context'
 
-type Props = { title: string; description: string }
-
-export const ConfirmationDialogContext = createContext<(props: Props) => Promise<boolean>>(
-    () => new Promise((resolve) => resolve(false))
-)
+export type Props = { title: string; description: string }
 
 export function ConfirmationDialogProvider({ children }: { children: ReactNode }) {
     const [state, setState] = useState({

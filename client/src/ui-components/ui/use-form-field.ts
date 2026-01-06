@@ -1,7 +1,6 @@
-import React from "react"
-import { useFormContext } from "react-hook-form"
-
-import { FormFieldContext, FormItemContext } from "./form"
+import React from 'react'
+import { useFormContext } from 'react-hook-form'
+import { FormFieldContext, FormItemContext } from './form.context'
 
 export const useFormField = () => {
     const fieldContext = React.useContext(FormFieldContext)
@@ -25,3 +24,4 @@ export const useFormField = () => {
         ...fieldState,
     }
 }
+

@@ -8,17 +8,9 @@ import { Label } from '@ui-components/label'
 import { cn } from '@utils/tailwind'
 
 import { useFormField } from './use-form-field'
+import { FormFieldContext, FormItemContext } from './form.context'
 
 const Form = FormProvider
-
-type FormFieldContextValue<
-    TFieldValues extends FieldValues = FieldValues,
-    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-    name: TName
-}
-
-export const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue)
 
 const FormField = <
     TFieldValues extends FieldValues = FieldValues,
@@ -32,12 +24,6 @@ const FormField = <
         </FormFieldContext>
     )
 }
-
-type FormItemContextValue = {
-    id: string
-}
-
-export const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue)
 
 const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => {
