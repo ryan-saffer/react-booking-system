@@ -199,15 +199,15 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="twp w-auto p-0" align="start">
+                                        <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
+                                                captionLayout="dropdown"
                                                 onSelect={(e) => {
                                                     field.onChange(e)
                                                     setIsCalendarOpen(false)
                                                 }}
-                                                initialFocus
                                             />
                                         </PopoverContent>
                                     </Popover>

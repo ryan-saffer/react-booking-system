@@ -98,7 +98,7 @@ export const CreateInvitationPage = () => {
                     </div>
                     {/* 216px is Navbar (64px) + Breadcrumbs (52px) + Footer (100px). 116px is just Navbar and Breadcrumbs */}
                     <div className="relative flex h-screen max-h-[calc(100vh-216px)] w-full justify-center min-[1060px]:max-h-[776px]">
-                        <div className="pattern-opacity-30 pattern-wavy pattern-bg-white pattern-purple-400 pattern-size-1 absolute h-full w-full"></div>
+                        <div className="pattern-opacity-30 pattern-wavy absolute h-full w-full pattern-bg-white pattern-purple-400 pattern-size-1"></div>
                         <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
                             <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
                                 <img src={InvitationTemplates[state.invitation as InvitationOption].invitation} />
@@ -247,9 +247,10 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                    <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                         <Calendar
                                             mode="single"
+                                            captionLayout="dropdown"
                                             selected={field.value}
                                             onSelect={(e) => {
                                                 field.onChange(e)
@@ -384,9 +385,10 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                    <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                         <Calendar
                                             mode="single"
+                                            captionLayout="dropdown"
                                             selected={field.value}
                                             onSelect={(e) => {
                                                 field.onChange(e)
