@@ -155,7 +155,7 @@ function BrowseByDate({
                 </Button>
             </div>
             <Calendar
-                className="mb-4"
+                className="mb-4 w-full"
                 showOutsideDays={false}
                 onDayClick={(day) => {
                     setSelectedDay(day)
