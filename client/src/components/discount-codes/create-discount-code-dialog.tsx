@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import type { DiscountCode, WithoutId } from 'fizz-kidz'
 import { CalendarIcon, DollarSign, Loader2, Percent } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '@ui-components/button'
@@ -40,6 +40,8 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
             numberOfUsesAllocated: 1,
         },
     })
+
+    const discountType = useWatch({ control: form.control, name: 'discountType' })
 
     const { mutateAsync: createDiscount, isPending } = useMutation(
         trpc.holidayPrograms.createDiscountCode.mutationOptions()
@@ -149,7 +151,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                     <FormLabel>Discount Amount</FormLabel>
                                     <FormControl>
                                         <div className="relative">
-                                            {form.watch('discountType') === 'percentage' ? (
+                                            {discountType === 'percentage' ? (
                                                 <Percent className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                                             ) : (
                                                 <DollarSign className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -165,7 +167,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                         </div>
                                     </FormControl>
                                     <FormDescription>
-                                        {form.watch('discountType') === 'percentage'
+                                        {discountType === 'percentage'
                                             ? 'The percentage off (0-100).'
                                             : 'The amount off in dollars.'}
                                     </FormDescription>

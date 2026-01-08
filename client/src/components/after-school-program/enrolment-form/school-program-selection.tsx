@@ -10,6 +10,7 @@ import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
 import { useQuery } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
 
 const PROGRAMS = [
     {
@@ -30,7 +31,7 @@ export function SchoolProgramSelection() {
     const trpc = useTRPC()
     const form = useEnrolmentForm()
 
-    const programType = form.watch('programType')
+    const programType = useWatch({ control: form.control, name: 'programType' })
 
     const { data, isPending, isSuccess } = useQuery(
         trpc.acuity.getAppointmentTypes.queryOptions(

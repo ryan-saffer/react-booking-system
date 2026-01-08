@@ -19,6 +19,7 @@ import { DiscountInput } from './discount-input'
 import { GiftCardInput } from './gift-card-input'
 
 import { useMutation } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
 
 export function Payment() {
     const trpc = useTRPC()
@@ -37,8 +38,8 @@ export function Payment() {
         removeDiscount,
     } = useCart()
 
-    const children = form.watch('children')
-    const studio = form.watch('studio')
+    const children = useWatch({ control: form.control, name: 'children' })
+    const studio = useWatch({ control: form.control, name: 'studio' })
 
     const squareLocationId = studio ? getSquareLocationId(studio) : ''
 

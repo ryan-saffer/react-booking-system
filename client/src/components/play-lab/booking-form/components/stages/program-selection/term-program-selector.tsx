@@ -17,6 +17,7 @@ import { useFormStage } from '../../../state/form-stage-store'
 import { ContinueButton } from './continue-button'
 
 import { useQuery } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
 
 /**
  * Renders the list of appointment types.
@@ -29,7 +30,8 @@ export function TermProgramSelector() {
     const form = useBookingForm()
     const { formStage } = useFormStage()
 
-    const appointmentTypeId = form.watch('appointmentTypeId')
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
+    const bookingType = useWatch({ control: form.control, name: 'bookingType' })
 
     const { data, isPending, isSuccess, isError } = useQuery(
         trpc.acuity.getAppointmentTypes.queryOptions({
@@ -37,8 +39,6 @@ export function TermProgramSelector() {
             availableToBook: false,
         })
     )
-
-    const bookingType = form.watch('bookingType')
 
     if (formStage !== 'program-selection') return null
     if (!bookingType || bookingType === 'casual') return null
@@ -110,9 +110,10 @@ function ContinueOrError() {
 
     const setSelectedClasses = useCart((store) => store.setSelectedClasses)
 
-    const studio = form.watch('studio')
-    const appointmentTypeId = form.watch('appointmentTypeId')
-    const numberOfKids = form.watch('children').length
+    const studio = useWatch({ control: form.control, name: 'studio' })
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
+    const watchedChildren = useWatch({ control: form.control, name: 'children' })
+    const numberOfKids = watchedChildren.length
 
     const [now] = useState(() => Date.now())
 
@@ -225,7 +226,7 @@ function ContinueOrError() {
 
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
-    const appointmentTypeId = form.watch('appointmentTypeId')
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
     const { name, day, time, begins, ages } = JSON.parse(program.description)
 
     function handleCardClick() {

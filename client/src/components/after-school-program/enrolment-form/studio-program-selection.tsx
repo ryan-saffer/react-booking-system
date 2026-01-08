@@ -14,12 +14,13 @@ import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
 import { useQuery } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
 
 export function StudioProgramSelection() {
     const trpc = useTRPC()
     const form = useEnrolmentForm()
 
-    const studio = form.watch('studio')
+    const studio = useWatch({ control: form.control, name: 'studio' })
 
     const { data, isPending, isSuccess } = useQuery(
         trpc.acuity.getAppointmentTypes.queryOptions(

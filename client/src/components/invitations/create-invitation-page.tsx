@@ -6,7 +6,7 @@ import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { Img } from 'react-image'
 import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
@@ -98,7 +98,7 @@ export const CreateInvitationPage = () => {
                     </div>
                     {/* 216px is Navbar (64px) + Breadcrumbs (52px) + Footer (100px). 116px is just Navbar and Breadcrumbs */}
                     <div className="relative flex h-screen max-h-[calc(100vh-216px)] w-full justify-center min-[1060px]:max-h-[776px]">
-                        <div className="pattern-opacity-30 pattern-wavy absolute h-full w-full pattern-bg-white pattern-purple-400 pattern-size-1"></div>
+                        <div className="pattern-opacity-30 pattern-wavy pattern-bg-white pattern-purple-400 pattern-size-1 absolute h-full w-full"></div>
                         <div className="relative hidden w-full items-center justify-center min-[700px]:flex">
                             <div className="absolute left-1/2 top-1/2 z-20 w-[450px] translate-x-[-70%] translate-y-[-50%]">
                                 <img src={InvitationTemplates[state.invitation as InvitationOption].invitation} />
@@ -146,6 +146,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
     const [invitationId, setInvitationId] = useState('')
 
     const form = useFormContext<TForm>()
+    const type = useWatch({ control: form.control, name: 'type' })
 
     // used to close calendar popover after date selection
     const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
@@ -281,7 +282,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         name="type"
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
+                            <FormItem className={type === '' ? 'pb-2' : ''}>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormLabel>Party Location</FormLabel>
                                     <FormControl>
@@ -303,7 +304,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             </FormItem>
                         )}
                     />
-                    {form.watch('type') === 'studio' && (
+                    {type === 'studio' && (
                         <FormField
                             control={form.control}
                             name="studio"
@@ -335,7 +336,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             )}
                         />
                     )}
-                    {form.watch('type') === 'mobile' && (
+                    {type === 'mobile' && (
                         <FormField
                             control={form.control}
                             name="address"

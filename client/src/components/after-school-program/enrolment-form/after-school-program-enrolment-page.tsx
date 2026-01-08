@@ -1,6 +1,6 @@
 import { CheckCircle, ChevronLeft } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import type { z } from 'zod'
@@ -63,8 +63,8 @@ export function AfterSchoolProgramEnrolmentPage() {
         },
     })
 
-    const selectedStudio = form.watch('studio')
-    const selectedProgramType = form.watch('programType')
+    const selectedStudio = useWatch({ control: form.control, name: 'studio' })
+    const selectedProgramType = useWatch({ control: form.control, name: 'programType' })
 
     const showBackButton = (inStudio && !!selectedStudio) || (!inStudio && !!selectedProgramType)
 

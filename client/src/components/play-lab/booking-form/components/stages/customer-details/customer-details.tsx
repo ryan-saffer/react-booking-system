@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { CalendarIcon, CircleX, Plus } from 'lucide-react'
 import type { DateTime } from 'luxon'
 import { Fragment, useState } from 'react'
-import { useFieldArray } from 'react-hook-form'
+import { useFieldArray, useWatch } from 'react-hook-form'
 
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { DateCalendar } from '@mui/x-date-pickers'
@@ -40,6 +40,9 @@ export function CustomerDetails() {
 
     const selectedClasses = useCart((store) => store.selectedClasses)
     const calculateTotal = useCart((store) => store.calculateTotal)
+
+    const watchedChildren = useWatch({ control: form.control, name: 'children' }) ?? []
+    const reference = useWatch({ control: form.control, name: 'reference' })
 
     const [showNotEnoughSpotsDialog, setShowNotEnoughSpotsDialog] = useState(false)
 
@@ -134,141 +137,165 @@ export function CustomerDetails() {
                 )}
             />
             <SectionBreak title={`${children.length > 1 ? 'Children' : 'Child'} Details`} />
-            {children.map((child, idx) => (
-                <Fragment key={child.id}>
-                    {children.length > 1 && (
-                        <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-medium">{getChildNumber(idx + 1)}</h3>
-                            <TooltipProvider delayDuration={150}>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-8 w-8 p-0"
-                                            type="button"
-                                            onClick={() => removeChild(idx)}
-                                        >
-                                            <CircleX className="h-4 w-4" color="#E16A92" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Remove child</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        </div>
-                    )}
-                    <FormField
-                        control={form.control}
-                        name={`children.${idx}.firstName` as const}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Child First Name</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={`children.${idx}.lastName` as const}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Child Last Name</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={`children.${idx}.dob` as const}
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Date of birth</FormLabel>
-                                <Popover
-                                    open={openCalendars[child.id]}
-                                    onOpenChange={(open) => setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))}
-                                >
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
+            {children.map((child, idx) => {
+                const watchedChild = watchedChildren[idx]
+                return (
+                    <Fragment key={child.id}>
+                        {children.length > 1 && (
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-lg font-medium">{getChildNumber(idx + 1)}</h3>
+                                <TooltipProvider delayDuration={150}>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
                                             <Button
-                                                variant={'outline'}
-                                                className={cn(
-                                                    'w-[240px] pl-3 text-left font-normal',
-                                                    !field.value && 'text-muted-foreground'
-                                                )}
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0"
+                                                type="button"
+                                                onClick={() => removeChild(idx)}
                                             >
-                                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                <CircleX className="h-4 w-4" color="#E16A92" />
                                             </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <DateCalendar
-                                            openTo="year"
-                                            onChange={(datetime: DateTime | null, state) => {
-                                                if (datetime && state === 'finish') {
-                                                    field.onChange(datetime.toJSDate())
-                                                    setOpenCalendars((prev) => ({ ...prev, [child.id]: false }))
-                                                }
-                                            }}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Remove child</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
                         )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name={`children.${idx}.hasAllergies` as const}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Does {form.watch('children')[idx].firstName || 'this child'} have any allergies?
-                                </FormLabel>
-                                <FormControl>
-                                    <Select
-                                        onValueChange={(value) => {
-                                            if (value === 'yes') {
-                                                field.onChange(true)
-                                            }
-                                            if (value === 'no') {
-                                                field.onChange(false)
-                                            }
-                                        }}
-                                        defaultValue={''}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Please select" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="yes">Yes</SelectItem>
-                                            <SelectItem value="no">No</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    {form.watch('children')[idx].hasAllergies && (
                         <FormField
                             control={form.control}
-                            name={`children.${idx}.allergies` as const}
+                            name={`children.${idx}.firstName` as const}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Child First Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`children.${idx}.lastName` as const}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Child Last Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`children.${idx}.dob` as const}
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Date of birth</FormLabel>
+                                    <Popover
+                                        open={openCalendars[child.id]}
+                                        onOpenChange={(open) =>
+                                            setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
+                                        }
+                                    >
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={'outline'}
+                                                    className={cn(
+                                                        'w-[240px] pl-3 text-left font-normal',
+                                                        !field.value && 'text-muted-foreground'
+                                                    )}
+                                                >
+                                                    {field.value ? (
+                                                        format(field.value, 'PPP')
+                                                    ) : (
+                                                        <span>Pick a date</span>
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <DateCalendar
+                                                openTo="year"
+                                                onChange={(datetime: DateTime | null, state) => {
+                                                    if (datetime && state === 'finish') {
+                                                        field.onChange(datetime.toJSDate())
+                                                        setOpenCalendars((prev) => ({ ...prev, [child.id]: false }))
+                                                    }
+                                                }}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name={`children.${idx}.hasAllergies` as const}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Please enter {form.watch('children')[idx].firstName || 'the child'}'s allergies
-                                        here
+                                        Does {watchedChild.firstName || 'this child'} have any allergies?
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Select
+                                            onValueChange={(value) => {
+                                                if (value === 'yes') {
+                                                    field.onChange(true)
+                                                }
+                                                if (value === 'no') {
+                                                    field.onChange(false)
+                                                }
+                                            }}
+                                            defaultValue={''}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Please select" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="yes">Yes</SelectItem>
+                                                <SelectItem value="no">No</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {watchedChild.hasAllergies && (
+                            <FormField
+                                control={form.control}
+                                name={`children.${idx}.allergies` as const}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Please enter {watchedChild.firstName || 'the child'}'s allergies here
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Textarea {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+                        <FormField
+                            control={form.control}
+                            name={`children.${idx}.additionalInfo` as const}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Is there additional information you would like us to know about{' '}
+                                        {watchedChild.firstName || 'this child'}?
                                     </FormLabel>
                                     <FormControl>
                                         <Textarea {...field} />
@@ -277,25 +304,9 @@ export function CustomerDetails() {
                                 </FormItem>
                             )}
                         />
-                    )}
-                    <FormField
-                        control={form.control}
-                        name={`children.${idx}.additionalInfo` as const}
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>
-                                    Is there additional information you would like us to know about{' '}
-                                    {form.watch('children')[idx].firstName || 'this child'}?
-                                </FormLabel>
-                                <FormControl>
-                                    <Textarea {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </Fragment>
-            ))}
+                    </Fragment>
+                )
+            })}
             <Button
                 className="border-2 border-dashed bg-slate-50"
                 type="button"
@@ -397,7 +408,7 @@ export function CustomerDetails() {
                     </FormItem>
                 )}
             />
-            {form.watch('reference') === 'other' && (
+            {reference === 'other' && (
                 <FormField
                     control={form.control}
                     name="referenceOther"

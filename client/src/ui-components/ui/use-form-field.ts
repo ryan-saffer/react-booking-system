@@ -1,12 +1,13 @@
 import React from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useFormState } from 'react-hook-form'
 import { FormFieldContext, FormItemContext } from './form.context'
 
 export const useFormField = () => {
     const fieldContext = React.useContext(FormFieldContext)
     const itemContext = React.useContext(FormItemContext)
-    const { getFieldState, formState } = useFormContext()
+    const { getFieldState, control } = useFormContext()
 
+    const formState = useFormState({ control, name: fieldContext.name })
     const fieldState = getFieldState(fieldContext.name, formState)
 
     if (!fieldContext) {
@@ -24,4 +25,3 @@ export const useFormField = () => {
         ...fieldState,
     }
 }
-
