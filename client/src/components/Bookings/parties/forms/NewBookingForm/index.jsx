@@ -25,7 +25,7 @@ import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import { capitalise } from '@utils/stringUtilities'
 import { useTRPC } from '@utils/trpc'
-import WithErrorDialog from '../../../Dialogs/ErrorDialog'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
 
