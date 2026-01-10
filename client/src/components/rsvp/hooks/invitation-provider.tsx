@@ -1,7 +1,6 @@
 import type { InvitationsV2 } from 'fizz-kidz'
 import type { ReactNode } from 'react'
-import { createContext } from 'react'
-export const InvitationContext = createContext<InvitationsV2.Invitation | null>(null)
+import { InvitationContext } from './invitation.context'
 
 export function InvitationProvider({
     invitation,

@@ -1,4 +1,3 @@
-
 import AddIcon from '@mui/icons-material/Add'
 import LaunchIcon from '@mui/icons-material/Launch'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
@@ -19,7 +18,7 @@ import {
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
 import React from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 import { ModuleNameMap, ObjectKeys, STUDIOS } from 'fizz-kidz'
 import type { Event, ScienceModule, Studio } from 'fizz-kidz'
@@ -86,8 +85,9 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
     const {
         control,
         formState: { errors },
-        watch,
     } = useFormContext<Form>()
+
+    const type = useWatch({ control, name: 'type' })
 
     const disabled = props.isNew ? false : props.disabled
 
@@ -166,7 +166,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         {errors.studio && <FormHelperText error={true}>Studio is required</FormHelperText>}
                     </FormControl>
                 </Grid>
-                {watch('type') === 'incursion' && (
+                {type === 'incursion' && (
                     <Grid item xs={12}>
                         <FormControl fullWidth>
                             <InputLabel>Module</InputLabel>
