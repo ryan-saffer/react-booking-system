@@ -9,6 +9,7 @@ import useFirebase from '@components/Hooks/context/UseFirebase'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { styled } from '@mui/material/styles'
 import { useTRPC } from '@utils/trpc'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
@@ -100,53 +101,54 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
         // needed to track within the scope of this render
         let _isFirstLoad = true
         let _appointments = appointments
-        const unsubscribe = firebase.db
-            .collection('afterSchoolEnrolments')
-            .where('appointmentTypeId', '==', appointmentTypeId)
-            .where('status', '==', 'active')
-            .onSnapshot(async (snapshot) => {
-                if (_isFirstLoad) {
-                    try {
-                        _appointments = await searchForAppointmentsMutation.mutateAsync({
-                            appointmentTypeId,
-                            calendarId,
-                            classTime,
-                        })
-                    } catch (err) {
-                        console.error(err)
-                        setError(true)
-                        return
-                    }
+        const enrolmentsQuery = query(
+            collection(firebase.db, 'afterSchoolEnrolments'),
+            where('appointmentTypeId', '==', appointmentTypeId),
+            where('status', '==', 'active')
+        )
+        const unsubscribe = onSnapshot(enrolmentsQuery, async (snapshot) => {
+            if (_isFirstLoad) {
+                try {
+                    _appointments = await searchForAppointmentsMutation.mutateAsync({
+                        appointmentTypeId,
+                        calendarId,
+                        classTime,
+                    })
+                } catch (err) {
+                    console.error(err)
+                    setError(true)
+                    return
                 }
+            }
 
-                snapshot.docs.forEach((doc) => {
-                    const enrolment = doc.data() as AfterSchoolEnrolment
-                    _enrolmentsMap[enrolment.id] = enrolment
+            snapshot.docs.forEach((doc) => {
+                const enrolment = doc.data() as AfterSchoolEnrolment
+                _enrolmentsMap[enrolment.id] = enrolment
+            })
+
+            setEnrolmentsMap(_enrolmentsMap)
+
+            if (_isFirstLoad) {
+                // filter out appointments that are not stored in firestore
+                // side effect from migration. should be impossible. remove at end of term 4 22.
+                const filteredAppointments = _appointments.filter((it) => getEnrolment(it, _enrolmentsMap))
+
+                // sort appointments by child name
+                filteredAppointments.sort((a, b) => {
+                    const enrolment1 = getEnrolment(a, _enrolmentsMap)
+                    const enrolment2 = getEnrolment(b, _enrolmentsMap)
+                    return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], {
+                        numeric: false,
+                    })
                 })
 
-                setEnrolmentsMap(_enrolmentsMap)
+                _isFirstLoad = false
+                _appointments = filteredAppointments
 
-                if (_isFirstLoad) {
-                    // filter out appointments that are not stored in firestore
-                    // side effect from migration. should be impossible. remove at end of term 4 22.
-                    const filteredAppointments = _appointments.filter((it) => getEnrolment(it, _enrolmentsMap))
-
-                    // sort appointments by child name
-                    filteredAppointments.sort((a, b) => {
-                        const enrolment1 = getEnrolment(a, _enrolmentsMap)
-                        const enrolment2 = getEnrolment(b, _enrolmentsMap)
-                        return enrolment1.child.firstName.localeCompare(enrolment2.child.firstName, [], {
-                            numeric: false,
-                        })
-                    })
-
-                    _isFirstLoad = false
-                    _appointments = filteredAppointments
-
-                    setAppointments(filteredAppointments)
-                    setLoading(false)
-                }
-            })
+                setAppointments(filteredAppointments)
+                setLoading(false)
+            }
+        })
         return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

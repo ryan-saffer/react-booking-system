@@ -1,55 +1,66 @@
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-import 'firebase/compat/functions'
-import 'firebase/compat/storage'
-
-import firebase from 'firebase/compat/app'
+import { getApp, getApps, initializeApp } from 'firebase/app'
+import {
+    GoogleAuthProvider,
+    type Auth,
+    createUserWithEmailAndPassword,
+    getAuth,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut,
+} from 'firebase/auth'
+import { type Firestore, getFirestore } from 'firebase/firestore'
+import { connectFunctionsEmulator, type Functions, getFunctions } from 'firebase/functions'
+import { type FirebaseStorage, getStorage } from 'firebase/storage'
 
 export const useEmulators = false
 
 class Firebase {
-    auth: firebase.auth.Auth
-    db: firebase.firestore.Firestore
-    functions: firebase.functions.Functions
-    googleProvider: firebase.auth.GoogleAuthProvider
-    storage: firebase.storage.Storage
+    auth: Auth
+    db: Firestore
+    functions: Functions
+    googleProvider: GoogleAuthProvider
+    storage: FirebaseStorage
 
     constructor() {
-        const app = firebase.initializeApp({
-            apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-            authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-            databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-            projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-            storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-            messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-            appId: import.meta.env.VITE_FIREBASE_APP_ID,
-            measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-        })
+        const app =
+            getApps().length > 0
+                ? getApp()
+                : initializeApp({
+                      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+                      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+                      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+                      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+                      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+                      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+                      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+                      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+                  })
 
-        this.auth = app.auth()
-        this.db = app.firestore()
-        this.functions = app.functions('australia-southeast1')
+        this.auth = getAuth(app)
+        this.db = getFirestore(app)
+        this.functions = getFunctions(app, 'australia-southeast1')
         if (useEmulators) {
-            this.functions.useEmulator('localhost', 5001)
+            connectFunctionsEmulator(this.functions, 'localhost', 5001)
         }
-        this.googleProvider = new firebase.auth.GoogleAuthProvider()
-        this.storage = app.storage()
+        this.googleProvider = new GoogleAuthProvider()
+        this.storage = getStorage(app)
     }
 
     doCreateUserWithEmailAndPassword = (email: string, password: string) =>
-        this.auth.createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(this.auth, email, password)
 
     doSignInWithEmailAndPassword = (email: string, password: string) =>
-        this.auth.signInWithEmailAndPassword(email, password)
+        signInWithEmailAndPassword(this.auth, email, password)
 
-    doSignInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider)
+    doSignInWithGoogle = () => signInWithPopup(this.auth, this.googleProvider)
 
     doSignOut = async () => {
-        await this.auth.signOut()
+        await signOut(this.auth)
         localStorage.removeItem('authUser')
     }
 
-    resetPassword = (email: string) => this.auth.sendPasswordResetEmail(email)
+    resetPassword = (email: string) => sendPasswordResetEmail(this.auth, email)
 }
 
 export default Firebase

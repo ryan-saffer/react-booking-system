@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
 import type { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import {
     flexRender,
@@ -33,18 +34,16 @@ export const DiscountCodesPage = () => {
     const [calendarsOpen, setCalendarsOpen] = useState<Record<string, boolean>>({})
 
     useEffect(() => {
-        const unsubscribe = firebase.db
-            .collection('discountCodes')
-            .withConverter(timestampConverter)
-            .onSnapshot((codes) =>
-                setData({ status: 'loaded', result: codes.docs.map((it) => it.data() as DiscountCode) })
-            )
+        const codesRef = collection(firebase.db, 'discountCodes').withConverter(timestampConverter<DiscountCode>())
+        const unsubscribe = onSnapshot(codesRef, (codes) =>
+            setData({ status: 'loaded', result: codes.docs.map((it) => it.data() as DiscountCode) })
+        )
         return () => unsubscribe()
     }, [firebase])
 
     const updateDiscountCode = async (code: DiscountCode) => {
         try {
-            await firebase.db.collection('discountCodes').doc(code.id).set(code, { merge: true })
+            await setDoc(doc(firebase.db, 'discountCodes', code.id), code, { merge: true })
             toast.success('Discount code updated.')
         } catch (err) {
             console.error({ err })
@@ -58,7 +57,7 @@ export const DiscountCodesPage = () => {
 
     const deleteCode = async (id: string) => {
         try {
-            await firebase.db.collection('discountCodes').doc(id).delete()
+            await deleteDoc(doc(firebase.db, 'discountCodes', id))
             toast.success('Discount code deleted.')
         } catch (err) {
             console.error(err)

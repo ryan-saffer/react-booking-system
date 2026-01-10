@@ -7,6 +7,7 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { useTRPC } from '@utils/trpc'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
 import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
 
@@ -31,20 +32,21 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
     }))
 
     useEffect(() => {
-        const unsubscribe = firebase.db
-            .collection('afterSchoolEnrolments')
-            .where('appointmentTypeId', '==', appointmentTypeId)
-            .where('status', '==', 'active')
-            .onSnapshot((snapshot) => {
-                let enrolments = snapshot.docs.map((enrolment) => {
-                    return {
-                        ...(enrolment.data() as AfterSchoolEnrolment),
-                        id: enrolment.id,
-                    }
-                })
-                enrolments = enrolments.sort((a, b) => a.parent.firstName.localeCompare(b.parent.firstName))
-                setEnrolmentsService({ status: 'loaded', result: enrolments })
+        const enrolmentsQuery = query(
+            collection(firebase.db, 'afterSchoolEnrolments'),
+            where('appointmentTypeId', '==', appointmentTypeId),
+            where('status', '==', 'active')
+        )
+        const unsubscribe = onSnapshot(enrolmentsQuery, (snapshot) => {
+            let enrolments = snapshot.docs.map((enrolment) => {
+                return {
+                    ...(enrolment.data() as AfterSchoolEnrolment),
+                    id: enrolment.id,
+                }
             })
+            enrolments = enrolments.sort((a, b) => a.parent.firstName.localeCompare(b.parent.firstName))
+            setEnrolmentsService({ status: 'loaded', result: enrolments })
+        })
 
         return () => unsubscribe()
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import type Firebase from '@components/Firebase'
 import { FirebaseContext } from '@components/Firebase'
+import { doc, getDoc } from 'firebase/firestore'
 
 const useFetchAfterSchoolProgramEnrolment = (id: string) => {
     const firebase = useContext(FirebaseContext) as Firebase
@@ -10,17 +11,20 @@ const useFetchAfterSchoolProgramEnrolment = (id: string) => {
     const [service, setService] = useState<Service<AfterSchoolEnrolment>>({ status: 'loading' })
 
     useEffect(() => {
-        firebase.db
-            .doc(`afterSchoolEnrolments/${id}`)
-            .get()
-            .then((result) => {
-                if (result.exists) {
+        async function fetchEnrolment() {
+            try {
+                const result = await getDoc(doc(firebase.db, 'afterSchoolEnrolments', id))
+                if (result.exists()) {
                     setService({ status: 'loaded', result: result.data() as AfterSchoolEnrolment })
                 } else {
                     setService({ status: 'error', error: 'appointment not found' })
                 }
-            })
-            .catch((error) => setService({ status: 'error', error }))
+            } catch (error) {
+                setService({ status: 'error', error })
+            }
+        }
+
+        fetchEnrolment()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

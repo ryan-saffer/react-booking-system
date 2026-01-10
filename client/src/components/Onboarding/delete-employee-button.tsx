@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react'
 import { Button, Modal, Typography } from 'antd'
 import type { Employee } from 'fizz-kidz'
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { deleteDoc, doc } from 'firebase/firestore'
 
 type Props = { employee: Employee }
 
@@ -20,7 +21,7 @@ export const DeleteEmployeeButton: React.FC<Props> = ({ employee }) => {
         setLoading(true)
         // timeout to make it feel like its thinking..
         setTimeout(async () => {
-            await firebase.db.doc(`employees/${employee.id}`).delete()
+            await deleteDoc(doc(firebase.db, 'employees', employee.id))
             onCancel()
         }, 500)
     }

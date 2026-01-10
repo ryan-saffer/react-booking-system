@@ -4,6 +4,7 @@ import type { MouseEvent } from 'react'
 import { useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { doc, updateDoc } from 'firebase/firestore'
 
 export const EmployeeWWCCButton = ({ employee }: { employee: Employee }) => {
     const firebase = useFirebase()
@@ -17,7 +18,7 @@ export const EmployeeWWCCButton = ({ employee }: { employee: Employee }) => {
 
     const updateEmployee = async () => {
         setLoading(true)
-        await firebase.db.doc(`employees/${employee.id}`).update({ 'wwcc.status': 'I have a WWCC' })
+        await updateDoc(doc(firebase.db, 'employees', employee.id), { 'wwcc.status': 'I have a WWCC' })
         setLoading(false)
         setShowModal(false)
     }

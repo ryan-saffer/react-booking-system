@@ -14,6 +14,7 @@ import { SocialIcon } from 'react-social-icons/component'
 import { Toaster, toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { getDownloadURL, ref } from 'firebase/storage'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -493,10 +494,8 @@ function SuccessDialog({
     useEffect(() => {
         async function getInvitation() {
             if (invitationId) {
-                const url = await firebase.storage
-                    .ref()
-                    .child(`invitations/${invitationId}/invitation.png`)
-                    .getDownloadURL()
+                const invitationRef = ref(firebase.storage, `invitations/${invitationId}/invitation.png`)
+                const url = await getDownloadURL(invitationRef)
                 setInvitationUrl(url)
                 console.log(url)
             }
