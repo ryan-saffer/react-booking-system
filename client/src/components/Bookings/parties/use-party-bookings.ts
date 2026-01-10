@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 
@@ -45,36 +46,35 @@ export function usePartyBookings() {
         let unsubscribe = () => {}
 
         if (id.current) {
-            unsubscribe = firebase.db
-                .collection('bookings')
-                .doc(id.current)
-                .onSnapshot((snapshot) => {
-                    if (!snapshot.exists) {
-                        setBookings({
-                            status: 'loaded',
-                            result: generateLocationsMap([]),
-                        })
-                        return
-                    }
-                    const booking = snapshot.data() as FirestoreBooking
-                    setDate(DateTime.fromJSDate(booking.dateTime.toDate()))
-                    runSubscription.current = false // since we changed the date, this stops an infinite loop
-                    id.current = null
-                    setBookings({ status: 'loaded', result: generateLocationsMap([{ ...booking, id: snapshot.id }]) })
-                    filterByLocation(booking.location)
-                })
+            const bookingRef = doc(firebase.db, 'bookings', id.current)
+            unsubscribe = onSnapshot(bookingRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    setBookings({
+                        status: 'loaded',
+                        result: generateLocationsMap([]),
+                    })
+                    return
+                }
+                const booking = snapshot.data() as FirestoreBooking
+                setDate(DateTime.fromJSDate(booking.dateTime.toDate()))
+                runSubscription.current = false // since we changed the date, this stops an infinite loop
+                id.current = null
+                setBookings({ status: 'loaded', result: generateLocationsMap([{ ...booking, id: snapshot.id }]) })
+                filterByLocation(booking.location)
+            })
         } else {
             const followingDate = date.plus({ days: 1 })
-            let query = firebase.db
-                .collection('bookings')
-                .where('dateTime', '>', date.toJSDate())
-                .where('dateTime', '<', followingDate.toJSDate())
+            const constraints = [
+                where('dateTime', '>', date.toJSDate()),
+                where('dateTime', '<', followingDate.toJSDate()),
+            ]
 
             if (currentOrg !== 'master') {
-                query = query.where('location', '==', currentOrg)
+                constraints.push(where('location', '==', currentOrg))
             }
 
-            unsubscribe = query.onSnapshot((snapshot) => {
+            const bookingsQuery = query(collection(firebase.db, 'bookings'), ...constraints)
+            unsubscribe = onSnapshot(bookingsQuery, (snapshot) => {
                 const bookings = snapshot.docs.map((doc) => ({
                     ...(doc.data() as FirestoreBooking),
                     id: doc.id,

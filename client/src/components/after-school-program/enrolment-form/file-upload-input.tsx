@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Progress } from '@ui-components/progress'
 import { cn } from '@utils/tailwind'
+import { ref, uploadBytesResumable } from 'firebase/storage'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     onSuccess: (file: File) => void
@@ -41,8 +42,8 @@ const FileUploadInput = forwardRef<HTMLInputElement, InputProps>(({ className, a
 
         setUploading(true)
         const path = `anaphylaxisPlans/${file.name}`
-        const storageRef = firebase.storage.ref().child(path)
-        const uploadTask = storageRef.put(file as unknown as Blob, { contentType: 'application/pdf' })
+        const storageRef = ref(firebase.storage, path)
+        const uploadTask = uploadBytesResumable(storageRef, file, { contentType: 'application/pdf' })
         uploadTask.on(
             'state_changed',
             (snapshot) => {

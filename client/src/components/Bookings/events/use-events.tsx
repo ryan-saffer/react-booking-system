@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'
 import { convertTimestamps } from '@utils/firebase/converters'
+import { collectionGroup, getDocs, query, where } from 'firebase/firestore'
 
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
@@ -31,17 +32,18 @@ export function useEvents<T extends Event['$type']>(
             // an event will never be 90 days long, so a safe window
             const ninetyDaysAgo = date.minus({ days: 90 })
 
-            let query = firebase.db
-                .collectionGroup('eventSlots')
-                .where('$type', '==', type)
-                .where('startTime', '<', nextDay.toJSDate())
-                .where('startTime', '>', ninetyDaysAgo.toJSDate())
+            const constraints = [
+                where('$type', '==', type),
+                where('startTime', '<', nextDay.toJSDate()),
+                where('startTime', '>', ninetyDaysAgo.toJSDate()),
+            ]
 
             if (currentOrg !== 'master') {
-                query = query.where('studio', '==', currentOrg)
+                constraints.push(where('studio', '==', currentOrg))
             }
 
-            const snap = await query.get()
+            const eventsQuery = query(collectionGroup(firebase.db, 'eventSlots'), ...constraints)
+            const snap = await getDocs(eventsQuery)
 
             try {
                 const events = snap.docs

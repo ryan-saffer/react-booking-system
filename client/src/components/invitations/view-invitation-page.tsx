@@ -8,6 +8,7 @@ import { Toaster, toast } from 'sonner'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import * as Logo from '@drawables/fizz-logo.png'
 import science from '@drawables/science.webp'
+import { getDownloadURL, ref } from 'firebase/storage'
 import { Button } from '@ui-components/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@ui-components/card'
 import { Dialog, DialogContent } from '@ui-components/dialog'
@@ -39,7 +40,8 @@ export const ViewInvitationPage = () => {
 
     useEffect(() => {
         async function getUrl() {
-            const url = await firebase.storage.ref().child(`invitations/${id}/invitation.png`).getDownloadURL()
+            const invitationRef = ref(firebase.storage, `invitations/${id}/invitation.png`)
+            const url = await getDownloadURL(invitationRef)
             setInvitationUrl(url)
             // give time for img component to load content
             setTimeout(() => setLoading(false), 500)

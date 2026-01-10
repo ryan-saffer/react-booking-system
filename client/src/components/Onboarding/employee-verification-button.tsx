@@ -4,6 +4,7 @@ import type { MouseEvent } from 'react'
 import React, { useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import { doc, updateDoc } from 'firebase/firestore'
 
 type Props = { employee: Employee }
 
@@ -21,7 +22,7 @@ const EmployeeVerificationButton: React.FC<Props> = ({ employee }) => {
         setLoading(true)
         // timeout to make it feel like its thinking..
         setTimeout(async () => {
-            await firebase.db.doc(`employees/${employee.id}`).update({ status: 'complete' })
+            await updateDoc(doc(firebase.db, 'employees', employee.id), { status: 'complete' })
             onCancel()
         }, 1000)
     }
