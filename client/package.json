@@ -87,7 +87,7 @@
         "@types/dateformat": "^3.0.1",
         "@types/luxon": "^2.3.2",
         "@types/mixpanel-browser": "^2.38.0",
-        "@types/node": "^22.16.0",
+        "@types/node": "^20.19.6",
         "@types/react": "19.2.7",
         "@types/react-dom": "19.2.3",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
