@@ -2,6 +2,7 @@ import type { InvitationsV2, Service } from 'fizz-kidz'
 import { RotateCw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { doc, onSnapshot } from 'firebase/firestore'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
@@ -29,18 +30,17 @@ export function ViewInvitationPage() {
     const { role } = useOrg()
 
     useEffect(() => {
-        const unsub = firebase.db
-            .collection('invitations-v2')
-            .doc(id)
-            .withConverter(timestampConverter)
-            .onSnapshot((snap) => {
-                if (snap.exists) {
-                    const invitation = snap.data() as InvitationsV2.Invitation
-                    setInvitation({ status: 'loaded', result: invitation })
-                } else {
-                    setInvitation({ status: 'error', error: 'not-found' })
-                }
-            })
+        const invitationRef = doc(firebase.db, 'invitations-v2', id as string).withConverter(
+            timestampConverter<InvitationsV2.Invitation>()
+        )
+        const unsub = onSnapshot(invitationRef, (snap) => {
+            if (snap.exists()) {
+                const invitation = snap.data() as InvitationsV2.Invitation
+                setInvitation({ status: 'loaded', result: invitation })
+            } else {
+                setInvitation({ status: 'error', error: 'not-found' })
+            }
+        })
 
         return () => unsub()
         // eslint-disable-next-line react-hooks/exhaustive-deps

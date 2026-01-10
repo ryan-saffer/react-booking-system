@@ -1,6 +1,7 @@
 import { CheckCircle2, Eye, Frown, Share2, Sparkles, Users } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Fragment, useState } from 'react'
+import { doc, updateDoc } from 'firebase/firestore'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { flexRender } from '@tanstack/react-table'
@@ -52,9 +53,9 @@ export function ManageRsvps() {
     const colSpan = table.getVisibleFlatColumns().length
 
     function updateRsvpNotifications(rsvpNotificationsEnabled: boolean) {
-        firebase.db
-            .doc(`invitations-v2/${invitation.id}`)
-            .update({ rsvpNotificationsEnabled } satisfies Partial<InvitationsV2.Invitation>)
+        updateDoc(doc(firebase.db, 'invitations-v2', invitation.id), {
+            rsvpNotificationsEnabled,
+        } satisfies Partial<InvitationsV2.Invitation>)
     }
 
     return (

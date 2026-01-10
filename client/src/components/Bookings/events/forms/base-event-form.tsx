@@ -3,7 +3,7 @@ import { ModuleNameMap, ObjectKeys, STUDIOS } from 'fizz-kidz'
 import type { DateTime } from 'luxon'
 import React from 'react'
 import type { Control, UseFieldArrayReturn } from 'react-hook-form'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 import AddIcon from '@mui/icons-material/Add'
 import LaunchIcon from '@mui/icons-material/Launch'
@@ -84,8 +84,9 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
     const {
         control,
         formState: { errors },
-        watch,
     } = useFormContext<Form>()
+
+    const type = useWatch({ control, name: 'type' })
 
     const disabled = props.isNew ? false : props.disabled
 
@@ -164,7 +165,7 @@ const BaseEventForm: React.FC<NewProps | ExistingProps> = (props) => {
                         {errors.studio && <FormHelperText error={true}>Studio is required</FormHelperText>}
                     </FormControl>
                 </Grid>
-                {watch('type') === 'incursion' && (
+                {type === 'incursion' && (
                     <Grid item xs={12}>
                         <FormControl fullWidth>
                             <InputLabel>Module</InputLabel>

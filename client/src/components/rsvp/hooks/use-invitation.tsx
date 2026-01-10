@@ -1,6 +1,5 @@
 import { useContext } from 'react'
-
-import { InvitationContext } from './invitation-provider'
+import { InvitationContext } from './invitation.context'
 
 export function useInvitation() {
     const invitation = useContext(InvitationContext)
