@@ -4,6 +4,8 @@ import * as React from 'react'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { cn } from '@utils/tailwind'
 
+import { FormControl, FormLabel } from './form'
+
 const Select = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group
@@ -29,6 +31,48 @@ const SelectTrigger = React.forwardRef<
     </SelectPrimitive.Trigger>
 ))
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
+
+// Fixes issue linked, but specifically for use in forms.
+// https://github.com/shadcn-ui/ui/issues/2654#issuecomment-2094510483
+const SelectForm = React.forwardRef<
+    React.ElementRef<typeof SelectPrimitive.Trigger>,
+    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> & { label: string }
+>(({ children, label, ...props }, ref) => {
+    const [isOpen, setIsOpen] = React.useState(false)
+    const isTouchDevice = () => {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    }
+    return (
+        <SelectPrimitive.Root open={isOpen} onOpenChange={setIsOpen} {...props}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+                <SelectPrimitive.Trigger
+                    onPointerDown={(e) => {
+                        if (isTouchDevice()) {
+                            e.preventDefault()
+                        }
+                    }}
+                    onClick={() => {
+                        if (isTouchDevice()) {
+                            setIsOpen((state) => !state)
+                        }
+                    }}
+                    ref={ref}
+                    className={cn(
+                        'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1'
+                    )}
+                >
+                    {children}
+                    <SelectPrimitive.Icon asChild>
+                        <ChevronDown className="h-4 w-4 opacity-50" />
+                    </SelectPrimitive.Icon>
+                </SelectPrimitive.Trigger>
+            </FormControl>
+        </SelectPrimitive.Root>
+    )
+})
+
+SelectForm.displayName = 'SelectWithTrigger'
 
 const SelectScrollUpButton = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
@@ -143,4 +187,5 @@ export {
     SelectSeparator,
     SelectScrollUpButton,
     SelectScrollDownButton,
+    SelectForm,
 }

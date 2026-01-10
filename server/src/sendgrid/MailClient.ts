@@ -290,6 +290,20 @@ export class MailClient {
                     template: 'party_booking_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'partyTimeUpdated':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Your party booking has been updated',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'party_booking_time_updated.mjml',
+                    useMjml: true,
+                }
             case 'partyForm':
                 return {
                     emailInfo: {
@@ -750,6 +764,48 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'play_lab_cancellation.mjml',
+                    useMjml: true,
+                }
+            case 'rsvpToParty':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'RSVP Recieved',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'rsvp_to_party.mjml',
+                    useMjml: true,
+                }
+            case 'rsvpNotificationToHost':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || 'New RSVP Received',
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'rsvp_notification_to_host.mjml',
+                    useMjml: true,
+                }
+            case 'invitationCreated':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'noreply@fizzkidz.com.au',
+                        },
+                        subject: subject || "You're invitation is ready",
+                        replyTo: replyTo || 'no-reply@fizzkidz.com.au',
+                    },
+                    template: 'invitation_generated_notification_to_host.mjml',
                     useMjml: true,
                 }
             default: {

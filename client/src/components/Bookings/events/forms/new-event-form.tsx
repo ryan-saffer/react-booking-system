@@ -7,7 +7,7 @@ import type { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
 import WithErrorDialog from '../../../Dialogs/ErrorDialog'
 import type { Form } from './base-event-form'
 import BaseEventForm from './base-event-form'
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
+import { useForm, useFieldArray, FormProvider, useWatch } from 'react-hook-form'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { useTRPC } from '@utils/trpc'
 import type { Studio, ScienceModule } from 'fizz-kidz'
@@ -70,8 +70,9 @@ const InnerNewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
         control,
         formState: { isValid },
         handleSubmit,
-        watch,
     } = methods
+
+    const type = useWatch({ control, name: 'type' })
 
     const fieldArray = useFieldArray({ control, name: 'slots', rules: { minLength: 1 } })
 
@@ -165,7 +166,7 @@ const InnerNewEventForm: React.FC<Props> = ({ onSuccess, displayError }) => {
                         <Grid item xs={12} sx={{ marginTop: 2 }}>
                             <Typography variant="h6">Email Message</Typography>
                             <Typography variant="body1" sx={{ fontSize: 12 }}>
-                                {watch('type') === 'standard' ? (
+                                {type === 'standard' ? (
                                     <i>
                                         "Hi [name],
                                         <br />

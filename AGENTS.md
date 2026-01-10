@@ -25,6 +25,7 @@ This guide orients you to the codebase and points to the authoritative README fi
   - Function types (tRPC routers, webhooks, Pub/Sub), structure, lazy SDK pattern, local development with emulators.
 - Core module: [server/fizz-kidz/README.md](server/fizz-kidz/README.md)
   - Purpose, structure, build/use as local dependency for shared types and logic.
+- Invitations & RSVP: client flow [client/src/components/rsvp/README.md](client/src/components/rsvp/README.md); server lifecycle [server/src/party-bookings/core/rsvp/README.md](server/src/party-bookings/core/rsvp/README.md).
 - Holiday Programs (customer booking screen): [client/src/components/holiday-programs/customer-booking-screen/README.md](client/src/components/holiday-programs/customer-booking-screen/README.md)
   - Booking flow, Square order/payment, discounts, direct Acuity scheduling, refunds, limitations.
 - Scripts: [scripts/readme.md](scripts/readme.md)

@@ -7,7 +7,7 @@
         "bundle": "node ./esbuild.config.mjs",
         "build": "npm run lint && npm --prefix fizz-kidz run build && npm run ts:check && npm run bundle && npm run copy-files",
         "build:watch": "concurrently \"npm --prefix fizz-kidz run build:watch\" \"npm run ts:check -- --watch\" \"npm run copy-files\" \"npm run bundle -- --watch\"",
-        "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml lib",
+        "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.mjml src/**/*.png src/**/*.ttf lib",
         "deploy": "firebase deploy --only functions",
         "ts:check": "tsc --noEmit",
         "lint": "eslint -c .eslintrc.json --ext .ts src",
@@ -27,6 +27,7 @@
         "@sparticuz/chromium": "^121.0.0",
         "@trpc/server": "^11.8.1",
         "acuityscheduling": "^0.1.9",
+        "canvas": "^2.11.2",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "firebase-admin": "^11.11.0",
@@ -38,6 +39,7 @@
         "mjml": "^4.12.0",
         "mustache": "^4.2.0",
         "puppeteer": "^23.2.1",
+        "qrcode": "^1.5.4",
         "square": "^42.1.0",
         "storyblok-js-client": "^6.10.11",
         "stripe": "^10.17.0",
@@ -52,8 +54,9 @@
         "@types/mjml": "^4.7.0",
         "@types/mocha": "^10.0.1",
         "@types/mustache": "^4.2.2",
-        "@types/node": "^18.19.50",
+        "@types/node": "^20.19.6",
         "@types/prompts": "^2.4.9",
+        "@types/qrcode": "^1.5.5",
         "@types/request": "^2.48.8",
         "@types/stripe": "^7.13.23",
         "@typescript-eslint/eslint-plugin": "^6.7.5",
@@ -71,10 +74,10 @@
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.2.0",
         "tslint": "^6.1.2",
-        "typescript": "^5.5.2"
+        "typescript": "^5.6.3"
     },
     "engines": {
-        "node": "22"
+        "node": "20"
     },
     "importSort": {
         ".ts, .tsx, .js, .jsx": {
