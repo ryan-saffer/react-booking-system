@@ -3,7 +3,7 @@ import type { InvitationsV2 } from 'fizz-kidz'
 import { CalendarIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
@@ -30,6 +30,8 @@ export function CreateInvitationForm({
     const form = useForm<InvitationsV2.Invitation>({
         defaultValues,
     })
+
+    const type = useWatch({ control: form.control, name: '$type' })
 
     useEffect(() => form.setFocus('childName'), [form])
 
@@ -137,7 +139,7 @@ export function CreateInvitationForm({
                             )
                         }}
                     />
-                    {form.watch('$type') === 'studio' && (
+                    {type === 'studio' && (
                         <FormField
                             control={form.control}
                             name="studio"
@@ -159,7 +161,7 @@ export function CreateInvitationForm({
                             )}
                         />
                     )}
-                    {form.watch('$type') === 'mobile' && (
+                    {type === 'mobile' && (
                         <FormField
                             control={form.control}
                             name="address"
