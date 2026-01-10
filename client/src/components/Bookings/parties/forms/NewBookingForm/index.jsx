@@ -2,7 +2,7 @@ import 'typeface-roboto'
 
 import { FormBookingFields, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import CheckIcon from '@mui/icons-material/Check'
 import SaveIcon from '@mui/icons-material/Save'
@@ -23,11 +23,13 @@ import {
 import { green } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { capitalise } from '@utils/stringUtilities'
+import { useTRPC } from '@utils/trpc'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 
-import { capitalise } from '../../../../../utilities/stringUtilities'
-import { trpc } from '../../../../../utilities/trpc'
-import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
+
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'index'
 
@@ -191,13 +193,14 @@ const mapFormToBooking = (formValues) => {
 }
 
 /** The booking form component */
-const _NewBookingForm = (props) => {
+const InnerNewBookingForm = (props) => {
+    const trpc = useTRPC()
     const [formValues, setFormValues] = useState(getEmptyValues)
     const [valid, setValid] = useState(true)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
-    const createBookingMutation = trpc.parties.createPartyBooking.useMutation()
+    const createBookingMutation = useMutation(trpc.parties.createPartyBooking.mutationOptions())
 
     const handleFormChange = (e, id) => {
         const isDateOrTimeField = e instanceof DateTime
@@ -529,4 +532,4 @@ const _NewBookingForm = (props) => {
     )
 }
 
-export const NewBookingForm = WithErrorDialog(_NewBookingForm)
+export const NewBookingForm = WithErrorDialog(InnerNewBookingForm)

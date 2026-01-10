@@ -3,26 +3,29 @@ import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import Loader from '../../../Shared/Loader'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'
+
+import { useQuery } from '@tanstack/react-query'
 
 type Props = {
     appointment: AfterSchoolEnrolment
 }
 
 const ClassManager: React.FC<Props> = ({ appointment }) => {
+    const trpc = useTRPC()
     const {
-        isLoading,
+        isPending,
         isError,
         data: appointments,
-    } = trpc.acuity.getAppointments.useQuery({ ids: appointment.appointments })
+    } = useQuery(trpc.acuity.getAppointments.queryOptions({ ids: appointment.appointments }))
 
     const { ErrorModal, showError } = useErrorDialog()
 
-    if (isLoading) {
+    if (isPending) {
         return <Loader />
     }
 

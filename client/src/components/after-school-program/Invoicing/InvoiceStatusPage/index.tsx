@@ -6,11 +6,14 @@ import { useSearchParams } from 'react-router-dom'
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import SkeletonRows from '@components/Shared/SkeletonRows'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
 
+import { useQuery } from "@tanstack/react-query";
+
 export const AfterSchoolProgramInvoicing: React.FC = () => {
+    const trpc = useTRPC();
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -20,12 +23,12 @@ export const AfterSchoolProgramInvoicing: React.FC = () => {
 
     const [enrolmentsService, setEnrolmentsService] = useState<Service<AfterSchoolEnrolment[]>>({ status: 'loading' })
 
-    const { data: appointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
+    const { data: appointmentTypes } = useQuery(trpc.acuity.getAppointmentTypes.queryOptions({
         category:
             import.meta.env.VITE_ENV === 'prod'
                 ? ['Science Club', 'Art Program']
                 : ['TEST', 'TEST-science', 'TEST-art'],
-    })
+    }))
 
     useEffect(() => {
         const unsubscribe = firebase.db

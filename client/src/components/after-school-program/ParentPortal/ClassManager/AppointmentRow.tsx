@@ -8,13 +8,16 @@ import type { WithErrorModal } from '@components/Hooks/UseErrorDialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
     appointment: AcuityTypes.Api.Appointment
 } & WithErrorModal
 
 const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
+    const trpc = useTRPC();
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -26,7 +29,7 @@ const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
     const [attending, setAttending] = useState(!notAttending)
     const [loading, setSetloading] = useState(false)
 
-    const updateAppointmentMutation = trpc.acuity.updateAppointment.useMutation()
+    const updateAppointmentMutation = useMutation(trpc.acuity.updateAppointment.mutationOptions())
 
     const toggle = async (checked: boolean) => {
         setSetloading(true)

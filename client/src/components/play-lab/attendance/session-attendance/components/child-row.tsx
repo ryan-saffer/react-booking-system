@@ -7,24 +7,30 @@ import { Button } from '@ui-components/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { TableCell } from '@ui-components/table'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useParams } from '../hooks/use-params'
 
-export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
-    const params = useParams()
-    const utils = trpc.useUtils()
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 
-    const { mutate: updateLabel, isLoading } = trpc.acuity.updateLabel.useMutation({
-        // changing a label requires appointments to reflect the change
-        onSuccess: (appointment) =>
-            utils.acuity.searchForAppointments.setData(params!, (cachedAppointments) => {
-                if (!cachedAppointments) return []
-                return cachedAppointments.map((cachedApt) =>
-                    cachedApt.id === appointment.id ? appointment : cachedApt
-                )
-            }),
-    })
+export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
+    const trpc = useTRPC()
+    const params = useParams()
+    const queryClient = useQueryClient()
+
+    const { mutate: updateLabel, isPending } = useMutation(
+        trpc.acuity.updateLabel.mutationOptions({
+            // changing a label requires appointments to reflect the change
+            onSuccess: (appointment) =>
+                queryClient.setQueryData(trpc.acuity.searchForAppointments.queryKey(params!), (cachedAppointments) => {
+                    if (!cachedAppointments) return []
+                    return cachedAppointments.map((cachedApt) =>
+                        cachedApt.id === appointment.id ? appointment : cachedApt
+                    )
+                }),
+        })
+    )
 
     const label = appointment.labels?.[0].id
     const status = label ? (label === AcuityConstants.Labels.CHECKED_IN ? 'signed-in' : 'signed-out') : 'not-signed-in'
@@ -68,7 +74,7 @@ export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appoint
         const label = appointment.labels?.[0].id
         return (
             <div className="flex justify-center gap-2">
-                {isLoading ? (
+                {isPending ? (
                     <Loader2 className="animate-spin" />
                 ) : (
                     <>

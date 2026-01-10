@@ -7,18 +7,19 @@ import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/
 import { ConfigProvider, type ThemeConfig } from 'antd'
 import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { trpc } from '@utils/trpc'
-import { httpBatchLink } from '@trpc/client'
+import { httpBatchLink, createTRPCClient } from '@trpc/client'
 import { useEmulators } from '@components/Firebase/firebase'
 import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import { Toaster } from 'sonner'
-import { OrgProvider } from '@components/Session/org-provider'
-import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog-provider'
+import { OrgProvider } from '@components/Session/org.provider'
+import { ConfirmationDialogProvider } from '@components/Hooks/confirmation-dialog.tsx/confirmation-dialog.provider'
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox-provider'
+import { ConfirmationDialogWithCheckboxProvider } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/confirmation-dialog-with-checkbox.provider'
+import { TRPCProvider } from '@utils/trpc'
+import type { AppRouter } from '../../../../server/src/trpc/trpc.app-router'
 
 mixpanel.init(import.meta.env.VITE_MIXPANEL_API_KEY, { debug: import.meta.env.VITE_ENV === 'dev' })
 
@@ -49,7 +50,7 @@ const antdTheme: ThemeConfig = {
     },
 }
 
-function _Root() {
+function InnerRoot() {
     const firebase = useFirebase()
 
     const domain = useEmulators
@@ -58,7 +59,7 @@ function _Root() {
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
-        trpc.createClient({
+        createTRPCClient<AppRouter>({
             links: [
                 httpBatchLink({
                     url: `${domain}/api/api/trpc`, // double '/api' since not using hosting redirect
@@ -87,12 +88,12 @@ function _Root() {
     )
 
     return (
-        <MixpanelContext.Provider value={mixpanel}>
+        <MixpanelContext value={mixpanel}>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={theme}>
                     <ConfigProvider theme={antdTheme}>
                         <LocalizationProvider dateAdapter={AdapterLuxon}>
-                            <trpc.Provider client={trpcClient} queryClient={queryClient}>
+                            <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
                                 <QueryClientProvider client={queryClient}>
                                     <AuthProvider>
                                         <OrgProvider>
@@ -106,19 +107,19 @@ function _Root() {
                                         </OrgProvider>
                                     </AuthProvider>
                                 </QueryClientProvider>
-                            </trpc.Provider>
+                            </TRPCProvider>
                         </LocalizationProvider>
                     </ConfigProvider>
                 </ThemeProvider>
             </StyledEngineProvider>
-        </MixpanelContext.Provider>
+        </MixpanelContext>
     )
 }
 
 export function Root() {
     return (
         <FirebaseProvider>
-            <_Root />
+            <InnerRoot />
         </FirebaseProvider>
     )
 }

@@ -8,7 +8,9 @@ import { useState } from 'react'
 import { DownloadOutlined } from '@ant-design/icons'
 import { useOrg } from '@components/Session/use-org'
 import { styled } from '@mui/material/styles'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'Payroll'
 
@@ -42,6 +44,7 @@ dayjs.extend(updateLocale)
 dayjs.updateLocale('en', { weekStart: 1 })
 
 export const Payroll = () => {
+    const trpc = useTRPC()
     const {
         token: { colorBgContainer },
     } = theme.useToken()
@@ -51,7 +54,7 @@ export const Payroll = () => {
     const [selectedDates, setSelectedDates] = useState<[string, string]>(['', ''])
     const [timesheetsService, setTimesheetsService] = useState<Service<GenerateTimesheetsResponse>>({ status: 'init' })
 
-    const generateTimesheetsMutation = trpc.staff.generateTimesheets.useMutation()
+    const generateTimesheetsMutation = useMutation(trpc.staff.generateTimesheets.mutationOptions())
 
     const onChange: RangePickerProps['onChange'] = async (_, format) => {
         setSelectedDates(format)
@@ -81,7 +84,7 @@ export const Payroll = () => {
             message = 'Invalid range'
             description = 'The date range must be 28 days or less'
         }
-        return <Alert message={message} description={description} type="error" showIcon closable />
+        return <Alert title={message} description={description} type="error" showIcon closable />
     }
 
     return (
@@ -139,7 +142,7 @@ export const Payroll = () => {
                         <Title level={3} style={{ margin: 0 }}>
                             Result
                         </Title>
-                        <Divider orientation="left">Skipped employees</Divider>
+                        <Divider orientation="horizontal">Skipped employees</Divider>
                         {timesheetsService.result.skippedEmployees.length !== 0 ? (
                             <div className={`${classes.flexCol} ${classes['gap-16']}`}>
                                 <Alert
@@ -194,9 +197,9 @@ export const Payroll = () => {
                                 </Collapse>
                             </div>
                         ) : (
-                            <Alert message="All employees successfully found in Xero." type="success" showIcon />
+                            <Alert title="All employees successfully found in Xero." type="success" showIcon />
                         )}
-                        <Divider orientation="left">Employee Birthdays</Divider>
+                        <Divider orientation="horizontal">Employee Birthdays</Divider>
                         {timesheetsService.result.employeesWithBirthday.length !== 0 ? (
                             <div className={`${classes.flexCol} ${classes['gap-16']}`}>
                                 <Alert
@@ -253,9 +256,9 @@ export const Payroll = () => {
                                 </Collapse>
                             </div>
                         ) : (
-                            <Alert message="No birthdays during this pay cycle." type="success" showIcon />
+                            <Alert title="No birthdays during this pay cycle." type="success" showIcon />
                         )}
-                        <Divider orientation="left">Superannuation</Divider>
+                        <Divider orientation="horizontal">Superannuation</Divider>
                         {timesheetsService.result.employeesUnder18Over30Hrs.length > 0 ? (
                             <>
                                 <Alert
@@ -282,7 +285,7 @@ export const Payroll = () => {
                         ) : (
                             <Alert
                                 type="success"
-                                message="No employees under 18 worked more than 30 hours in a week."
+                                title="No employees under 18 worked more than 30 hours in a week."
                                 showIcon
                             />
                         )}

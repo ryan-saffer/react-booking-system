@@ -8,10 +8,12 @@ import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { styled } from '@mui/material/styles'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
+
+import { useMutation } from "@tanstack/react-query";
 
 const PREFIX = 'AfterSchoolProgramCheckinClassDetails'
 
@@ -62,6 +64,7 @@ const Root = styled('div')({
 export type EnrolmentsMap = { [key: string]: AfterSchoolEnrolment }
 
 export const AfterSchoolProgramCheckinClassDetails = () => {
+    const trpc = useTRPC();
     const firebase = useFirebase()
     const { height } = useWindowDimensions()
 
@@ -71,7 +74,7 @@ export const AfterSchoolProgramCheckinClassDetails = () => {
     const [enrolmentsMap, setEnrolmentsMap] = useState<EnrolmentsMap>({})
     const [appointments, setAppointments] = useState<AcuityTypes.Api.Appointment[]>([])
 
-    const searchForAppointmentsMutation = trpc.acuity.searchForAppointmentsMutation.useMutation()
+    const searchForAppointmentsMutation = useMutation(trpc.acuity.searchForAppointmentsMutation.mutationOptions())
 
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('appointmentTypeId')!)

@@ -3,11 +3,14 @@ import Markdown from 'react-markdown'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
 
 import { markdownComponents } from './markdown-components'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 import Loader from '@components/Shared/Loader'
 
+import { useQuery } from '@tanstack/react-query'
+
 export const HolidayCreationsPage = () => {
-    const { data, isLoading, isSuccess } = trpc.creations.getHolidayProgramCreations.useQuery()
+    const trpc = useTRPC()
+    const { data, isPending, isSuccess } = useQuery(trpc.creations.getHolidayProgramCreations.queryOptions())
 
     return (
         <div className="twp min-h-full bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
@@ -20,7 +23,7 @@ export const HolidayCreationsPage = () => {
                     </p>
                 </header>
 
-                {isLoading && <Loader />}
+                {isPending && <Loader />}
 
                 {isSuccess && (
                     <Accordion

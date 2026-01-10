@@ -21,7 +21,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@ui-components/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { getOrgName } from '@utils/studioUtils'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 const formSchema = z.object({
     firstname: z.string().min(1, { message: 'First name cannot be empty.' }),
@@ -31,6 +33,7 @@ const formSchema = z.object({
 })
 
 export function NewUserDialog({ open, close }: { open: boolean; close: () => void }) {
+    const trpc = useTRPC()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -42,7 +45,7 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
 
     const { currentOrg } = useOrg()
 
-    const { mutateAsync: addUser, isLoading } = trpc.auth.addUserToStudio.useMutation()
+    const { mutateAsync: addUser, isPending } = useMutation(trpc.auth.addUserToStudio.mutationOptions())
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
@@ -146,7 +149,7 @@ export function NewUserDialog({ open, close }: { open: boolean; close: () => voi
                         />
                         <DialogFooter>
                             <Button type="submit">
-                                {isLoading ? <Loader2 className="animate-spin" /> : 'Save changes'}
+                                {isPending ? <Loader2 className="animate-spin" /> : 'Save changes'}
                             </Button>
                         </DialogFooter>
                     </form>

@@ -6,7 +6,9 @@ import React, { useState } from 'react'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { styled } from '@mui/material/styles'
 import { formatMobileNumber } from '@utils/stringUtilities'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 const { Panel } = Collapse
 
@@ -29,10 +31,11 @@ type Props = {
 }
 
 const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment, ...props }) => {
+    const trpc = useTRPC()
     const [appointment, setAppointment] = useState(originalAppointment)
     const [loading, setLoading] = useState(false)
 
-    const updateLabelMutation = trpc.acuity.updateLabel.useMutation()
+    const updateLabelMutation = useMutation(trpc.acuity.updateLabel.mutationOptions())
 
     const notSignedIn = appointment.labels === null
     const isSignedIn = appointment.labels && appointment.labels[0].id === AcuityConstants.Labels.CHECKED_IN
@@ -138,7 +141,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
 
     const renderExtra = () => {
         return (
-            <>
+            <div className="flex items-center gap-4">
                 {hasAllergies && (
                     <Tag color="red" icon={<ExclamationCircleOutlined />}>
                         Allergy
@@ -155,7 +158,7 @@ const ChildExpansionPanel: React.FC<Props> = ({ appointment: originalAppointment
                         Sign in
                     </AntButton>
                 )}
-            </>
+            </div>
         )
     }
 

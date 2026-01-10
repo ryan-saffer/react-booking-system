@@ -3,12 +3,15 @@ import Markdown from 'react-markdown'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
 
 import { markdownComponents } from './markdown-components'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 import Loader from '@components/Shared/Loader'
 import type { CreationInstructions } from 'fizz-kidz'
 
+import { useQuery } from '@tanstack/react-query'
+
 export const PartyCreationsPage = () => {
-    const { data, isLoading, isSuccess } = trpc.creations.getBirthdayPartyCreations.useQuery()
+    const trpc = useTRPC()
+    const { data, isPending, isSuccess } = useQuery(trpc.creations.getBirthdayPartyCreations.queryOptions())
 
     const renderAccordion = (creations: CreationInstructions[]) => {
         return (
@@ -40,7 +43,7 @@ export const PartyCreationsPage = () => {
                         Open a card to see ingredients, steps, and Fizz tips for party creations.
                     </p>
                 </header>
-                {isLoading && <Loader />}
+                {isPending && <Loader />}
 
                 {isSuccess && (
                     <>

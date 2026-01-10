@@ -4,7 +4,6 @@ import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
 import { DateTime } from 'luxon'
 import React, { useEffect, useRef } from 'react'
-import { Helmet } from 'react-helmet'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
 
@@ -12,13 +11,15 @@ import Loader from '@components/Shared/Loader'
 import { SQUARE_APPLICATION_ID } from '@constants/square'
 import { styled } from '@mui/material/styles'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import type { Form } from '../../pages/customer-booking-page'
 import { useCart } from '../../state/cart-store'
 import BookingSummary from './booking-summary'
 import DiscountInput from './discount-input'
 import { GiftCardInput } from './gift-card-input'
+
+import { useMutation } from '@tanstack/react-query'
 
 type Props = {
     form: Form
@@ -39,6 +40,7 @@ const Root = styled('div')({
 })
 
 const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
+    const trpc = useTRPC()
     // MARK: variables
     const selectedClasses = useCart((store) => store.selectedClasses)
     const sameDayClasses = useCart((store) => store.sameDayClasses)
@@ -55,7 +57,13 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
     const walletKey = `${discount?.code}-${discount?.discountAmount}-${discount?.discountType}-${giftCard?.id}` // force rerender the square checkout component when disconut code changes
 
     // MARK: hooks
-    const { mutateAsync: book, isLoading, isSuccess, isError, error } = trpc.holidayPrograms.book.useMutation()
+    const {
+        mutateAsync: book,
+        isPending,
+        isSuccess,
+        isError,
+        error,
+    } = useMutation(trpc.holidayPrograms.book.mutationOptions())
 
     useEffect(() => {
         if (isSuccess) {
@@ -176,20 +184,11 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                         We can't wait to see you soon!
                     </AlertDescription>
                 </Alert>
-                <Helmet>
-                    <script>
-                        {`
-                        if (window.fbq) {
-                            window.fbq('track', 'HolidayProgramBooking', { value: ${total} });
-                        }
-                    `}
-                    </script>
-                </Helmet>
             </>
         )
     }
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <div className="twp">
                 <p className="mt-4 text-center">Processing payment...</p>
@@ -209,9 +208,12 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                     key={walletKey}
                     applicationId={SQUARE_APPLICATION_ID}
                     locationId={squareLocationId}
-                    cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
-                        if (status === 'OK' && token) {
-                            await handleBooking({ token, buyerVerificationToken: buyerVerification?.token })
+                    cardTokenizeResponseReceived={async (result, buyerVerification) => {
+                        if (result.status === 'OK' && result.token) {
+                            await handleBooking({
+                                token: result.token,
+                                buyerVerificationToken: buyerVerification?.token,
+                            })
                         } else {
                             toast.error('There was an error processing your payment')
                         }
@@ -260,7 +262,7 @@ const Step3: React.FC<Props> = ({ form, handleBookingSuccess }) => {
                             type="primary"
                             size="large"
                             className="my-4"
-                            disabled={isLoading}
+                            disabled={isPending}
                             onClick={() => handleBooking({ token: '', buyerVerificationToken: '' })}
                         >
                             Book

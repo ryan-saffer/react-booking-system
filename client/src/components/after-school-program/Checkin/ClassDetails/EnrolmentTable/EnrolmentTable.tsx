@@ -5,13 +5,15 @@ import { AcuityConstants } from 'fizz-kidz'
 import React, { useMemo, useState } from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { getEnrolment } from '../ClassDetails.utils'
 import ActionButton from './ActionButton'
 import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
 import type { EnrolmentsMap } from '..'
+
+import { useMutation } from '@tanstack/react-query'
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540
@@ -34,12 +36,13 @@ export type SetAppointmentLabel = (id: number, label: 'signed-in' | 'signed-out'
 export type UpdateEnrolment = (id: string, enrolment: Partial<AfterSchoolEnrolment>) => void
 
 const EnrolmentTable: React.FC<Props> = ({ appointments, updateAppointment, enrolmentsMap, calendarName }) => {
+    const trpc = useTRPC()
     const { width } = useWindowDimensions()
 
     const [expandedRows, setExpandedRows] = useState<number[]>([])
 
-    const updateAppointmentMutation = trpc.acuity.updateAppointment.useMutation()
-    const updateEnrolmentMutation = trpc.afterSchoolProgram.updateAfterSchoolEnrolment.useMutation()
+    const updateAppointmentMutation = useMutation(trpc.acuity.updateAppointment.mutationOptions())
+    const updateEnrolmentMutation = useMutation(trpc.afterSchoolProgram.updateAfterSchoolEnrolment.mutationOptions())
 
     const handleExpandRow = (expanded: boolean, record: TableData) => {
         if (expanded) {

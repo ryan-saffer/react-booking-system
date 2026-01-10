@@ -9,13 +9,16 @@ import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Skeleton } from '@ui-components/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { ChildExpandedDetails } from '../components/child-expanded-details'
 import { ChildRow } from '../components/child-row'
 import { useParams } from '../hooks/use-params'
 
+import { useQuery } from '@tanstack/react-query'
+
 export function PlayLabSessionAttendancePage() {
+    const trpc = useTRPC()
     const params = useParams()
 
     const [openItems, setOpenItems] = useState<Record<string, boolean>>({})
@@ -24,18 +27,18 @@ export function PlayLabSessionAttendancePage() {
     const {
         data: appointments,
         isSuccess,
-        isLoading,
+        isPending,
         isFetching,
         isError,
         error,
         refetch,
-    } = trpc.acuity.searchForAppointments.useQuery(params!, { enabled: !!params })
+    } = useQuery(trpc.acuity.searchForAppointments.queryOptions(params!, { enabled: !!params }))
 
     if (!params) {
         return <Navigate to="/dashboard/play-lab" />
     }
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <div className="twp m-4">
                 <Skeleton className="h-10" />

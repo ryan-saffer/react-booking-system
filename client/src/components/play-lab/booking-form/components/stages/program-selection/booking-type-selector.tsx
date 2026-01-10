@@ -6,14 +6,15 @@ import { useFormStage } from '../../../state/form-stage-store'
 import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
 import { PricingStructure } from './pricing-structure'
 import { Button } from '@ui-components/button'
+import { useWatch } from 'react-hook-form'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
     const clearCart = useCart((cart) => cart.clearCart)
 
-    const studio = form.watch('studio')
-    const bookingType = form.watch('bookingType')
+    const studio = useWatch({ control: form.control, name: 'studio' })
+    const bookingType = useWatch({ control: form.control, name: 'bookingType' })
 
     function handleSelection(type: PlayLabBookingForm['bookingType']) {
         if (bookingType !== type) {

@@ -1,10 +1,8 @@
-import type { IncomingMessage, ServerResponse } from 'http'
-
 import { getAuth } from 'firebase-admin/auth'
 import { logger } from 'firebase-functions/v2'
 
 import { initTRPC } from '@trpc/server'
-import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/dist/adapters/node-http'
+import type * as trpcExpress from '@trpc/server/adapters/express'
 
 import { AcuityClient } from '../acuity/core/acuity-client'
 import { throwTrpcError } from '../utilities'
@@ -26,9 +24,7 @@ export const router = t.router
 export const middleware = t.middleware
 
 // CONTEXT
-export function createContext({
-    req,
-}: NodeHTTPCreateContextFnOptions<IncomingMessage, ServerResponse<IncomingMessage>>) {
+export function createContext({ req }: trpcExpress.CreateExpressContextOptions) {
     return { authToken: req.headers.authorization }
 }
 
@@ -42,15 +38,16 @@ const isAuthenticated = middleware(async ({ ctx, next }) => {
     }
 })
 
-const logging = middleware(({ next, path, rawInput }) => {
+const logging = middleware(async ({ next, path, getRawInput }) => {
+    const input = await getRawInput()
     if (process.env.FUNCTIONS_EMULATOR) {
         console.log(`- - - - ${path} - - - -`)
-        console.log(rawInput)
+        console.log(input)
         console.log('- - - - - - - - - - - - - - - - - - - -')
     } else {
         logger.debug({
             endpoint: path,
-            input: rawInput,
+            input,
         })
     }
     return next()

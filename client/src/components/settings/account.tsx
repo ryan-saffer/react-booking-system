@@ -9,7 +9,9 @@ import { Button } from '@ui-components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Separator } from '@ui-components/separator'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 const FormSchema = z.object({
     firstname: z.string().min(3, { message: 'First name must be at least 3 characters long.' }),
@@ -17,9 +19,10 @@ const FormSchema = z.object({
 })
 
 export function Account() {
+    const trpc = useTRPC()
     const user = useAuth()
 
-    const { mutateAsync: updateUser, isLoading } = trpc.auth.updateProfile.useMutation()
+    const { mutateAsync: updateUser, isPending } = useMutation(trpc.auth.updateProfile.mutationOptions())
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -72,7 +75,7 @@ export function Account() {
                         )}
                     />
                     <Button type="submit" className="mt-4 w-32">
-                        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Update account'}
+                        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Update account'}
                     </Button>
                 </form>
             </Form>

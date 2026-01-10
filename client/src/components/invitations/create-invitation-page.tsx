@@ -6,7 +6,7 @@ import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { Img } from 'react-image'
 import { Link, useLocation } from 'react-router-dom'
 import { WhatsappShareButton } from 'react-share'
@@ -26,10 +26,12 @@ import { ScrollArea } from '@ui-components/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
+
+import { useMutation } from '@tanstack/react-query'
 
 type TForm = {
     childName: string
@@ -135,12 +137,16 @@ function Sidebar() {
 }
 
 function CustomiseForm({ onClose }: { onClose?: () => void }) {
-    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitation.useMutation()
+    const trpc = useTRPC()
+    const { isPending, mutateAsync: generateInvitation } = useMutation(
+        trpc.parties.generateInvitation.mutationOptions()
+    )
 
     const [open, setOpen] = useState(false)
     const [invitationId, setInvitationId] = useState('')
 
     const form = useFormContext<TForm>()
+    const type = useWatch({ control: form.control, name: 'type' })
 
     // used to close calendar popover after date selection
     const [isDateCalendarOpen, setIsDateCalendarOpen] = useState(false)
@@ -242,9 +248,10 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                    <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                         <Calendar
                                             mode="single"
+                                            captionLayout="dropdown"
                                             selected={field.value}
                                             onSelect={(e) => {
                                                 field.onChange(e)
@@ -275,7 +282,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                         name="type"
                         rules={{ required: true }}
                         render={({ field }) => (
-                            <FormItem className={form.watch('type') === '' ? 'pb-2' : ''}>
+                            <FormItem className={type === '' ? 'pb-2' : ''}>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormLabel>Party Location</FormLabel>
                                     <FormControl>
@@ -297,7 +304,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             </FormItem>
                         )}
                     />
-                    {form.watch('type') === 'studio' && (
+                    {type === 'studio' && (
                         <FormField
                             control={form.control}
                             name="studio"
@@ -329,7 +336,7 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                             )}
                         />
                     )}
-                    {form.watch('type') === 'mobile' && (
+                    {type === 'mobile' && (
                         <FormField
                             control={form.control}
                             name="address"
@@ -379,9 +386,10 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="twp w-auto p-0" align="start">
+                                    <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                         <Calendar
                                             mode="single"
+                                            captionLayout="dropdown"
                                             selected={field.value}
                                             onSelect={(e) => {
                                                 field.onChange(e)
@@ -410,9 +418,9 @@ function CustomiseForm({ onClose }: { onClose?: () => void }) {
                     <Button
                         type="submit"
                         className="w-full rounded-2xl bg-fuchsia-700 hover:bg-fuchsia-900"
-                        disabled={isLoading}
+                        disabled={isPending}
                     >
-                        {isLoading ? (
+                        {isPending ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Generating...
