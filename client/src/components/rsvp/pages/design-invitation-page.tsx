@@ -11,7 +11,7 @@ import { TRPCClientError } from '@trpc/client'
 import { Button } from '@ui-components/button'
 import type { CarouselApi } from '@ui-components/carousel'
 import { Carousel, CarouselContent, CarouselItem } from '@ui-components/carousel'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { INVITATIONS } from '../constants/invitations'
 import { CreateInvitationForm } from '../create-invitation-form'
@@ -20,7 +20,10 @@ import { useInvitationRouterState } from '../hooks/use-invitation-router-state'
 import { LoginDialog } from '../login-dialog'
 import { Navbar } from '../navbar'
 
+import { useMutation } from '@tanstack/react-query'
+
 export function DesignInvitationPage() {
+    const trpc = useTRPC()
     const auth = useAuth()
 
     const state = useInvitationRouterState()
@@ -36,7 +39,7 @@ export function DesignInvitationPage() {
 
     const [finishPressed, setFinishPressed] = useState(false)
 
-    const { mutateAsync: linkInvitation } = trpc.parties.linkInvitation.useMutation()
+    const { mutateAsync: linkInvitation } = useMutation(trpc.parties.linkInvitation.mutationOptions())
 
     // track selected carousel item
     useEffect(() => {
@@ -254,10 +257,13 @@ function Step2({
     selectedInvitation: number
     onInvitationGenerated: (invitation: WithoutUid<InvitationsV2.Invitation>) => void
 }) {
+    const trpc = useTRPC()
     const state = useInvitationRouterState()
     const { bookingId, ...defaultValues } = state
 
-    const { isLoading, mutateAsync: generateInvitation } = trpc.parties.generateInvitationV2.useMutation()
+    const { isPending, mutateAsync: generateInvitation } = useMutation(
+        trpc.parties.generateInvitationV2.mutationOptions()
+    )
 
     const onSubmit = async (values: InvitationsV2.Invitation) => {
         try {
@@ -311,16 +317,16 @@ function Step2({
             <div className="relative px-4 py-6 sm:px-6">
                 <CreateInvitationForm
                     defaultValues={defaultValues}
-                    isLoading={isLoading}
+                    isLoading={isPending}
                     onSubmit={onSubmit}
                     submitButton={
                         <div className="sticky bottom-0 left-0 right-0 -mx-4 -mb-4 bg-gradient-to-t from-white via-white to-white/80 px-4 pb-4 pt-4 sm:px-0">
                             <Button
                                 type="submit"
                                 className="w-full rounded-xl bg-[#9B3EEA] font-semibold shadow-lg hover:bg-[#8B2DE3]"
-                                disabled={isLoading}
+                                disabled={isPending}
                             >
-                                {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Preview invitation'}
+                                {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Preview invitation'}
                             </Button>
                         </div>
                     }

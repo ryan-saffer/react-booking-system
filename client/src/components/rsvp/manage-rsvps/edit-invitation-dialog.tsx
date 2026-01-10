@@ -7,11 +7,13 @@ import Loader from '@components/Shared/Loader'
 import { Share } from '@mui/icons-material'
 import { Button } from '@ui-components/button'
 import { Dialog, DialogContent } from '@ui-components/dialog'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { CreateInvitationForm } from '../create-invitation-form'
 import { useInvitation } from '../hooks/use-invitation'
 import { useInvitationImage } from '../hooks/use-invitation-image'
+
+import { useMutation } from '@tanstack/react-query'
 
 export function EditInvitationDialog({
     isOpen,
@@ -22,14 +24,18 @@ export function EditInvitationDialog({
     close: () => void
     share: () => void
 }) {
+    const trpc = useTRPC()
     const invitation = useInvitation()
     const invitationUrl = useInvitationImage(invitation.id, false)
 
     const [isEditing, setIsEditing] = useState(false)
 
-    const { isLoading, mutateAsync: generateAndLinkInvitation } = trpc.parties.generateAndLinkInvitation.useMutation()
-    const { mutateAsync: generateNewDesignUrl, isLoading: isLoadingNewUrl } =
-        trpc.parties.generateInvitationUrl.useMutation()
+    const { isPending, mutateAsync: generateAndLinkInvitation } = useMutation(
+        trpc.parties.generateAndLinkInvitation.mutationOptions()
+    )
+    const { mutateAsync: generateNewDesignUrl, isPending: isPendingNewUrl } = useMutation(
+        trpc.parties.generateInvitationUrl.mutationOptions()
+    )
 
     async function onSubmit(values: InvitationsV2.Invitation) {
         await generateAndLinkInvitation({
@@ -150,9 +156,9 @@ export function EditInvitationDialog({
                                     const url = await generateNewDesignUrl({ bookingId: invitation.bookingId })
                                     window.location.assign(url)
                                 }}
-                                disabled={isLoadingNewUrl}
+                                disabled={isPendingNewUrl}
                             >
-                                {isLoadingNewUrl ? (
+                                {isPendingNewUrl ? (
                                     <Loader2 className="animate-spin" />
                                 ) : (
                                     <>
@@ -177,16 +183,16 @@ export function EditInvitationDialog({
                         </div>
                         <CreateInvitationForm
                             defaultValues={invitation}
-                            isLoading={isLoading}
+                            isLoading={isPending}
                             onSubmit={onSubmit}
                             submitButton={
                                 <div className="pt-4">
                                     <Button
                                         type="submit"
                                         className="w-full rounded-xl bg-[#9B3EEA] font-semibold hover:bg-[#8B2DE3]"
-                                        disabled={isLoading}
+                                        disabled={isPending}
                                     >
-                                        {isLoading ? (
+                                        {isPending ? (
                                             <Loader2 className="h-5 w-5 animate-spin" />
                                         ) : (
                                             'Save & refresh invite'

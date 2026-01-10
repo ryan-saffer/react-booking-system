@@ -20,7 +20,9 @@ import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 const formSchema = z.object({
     parentName: z.string().trim().min(1, { message: 'Please enter your name' }),
@@ -68,6 +70,7 @@ export function RsvpForm({
     invitation: InvitationsV2.Invitation
     onComplete: (status: 'attending' | 'not-attending') => void
 }) {
+    const trpc = useTRPC()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -101,7 +104,7 @@ export function RsvpForm({
         form.setFocus('parentName')
     }, [form])
 
-    const { isLoading, mutateAsync: sendRsvp } = trpc.parties.rsvp.useMutation()
+    const { isPending, mutateAsync: sendRsvp } = useMutation(trpc.parties.rsvp.mutationOptions())
     // needed to close date picker when date is chosen
     const [openCalendars, setOpenCalendars] = useState<Record<string, boolean>>({})
 
@@ -131,7 +134,7 @@ export function RsvpForm({
                                     <Input
                                         placeholder="Parent's Name"
                                         autoComplete="off"
-                                        disabled={isLoading}
+                                        disabled={isPending}
                                         {...field}
                                     />
                                 </FormControl>
@@ -145,7 +148,7 @@ export function RsvpForm({
                             <FormItem>
                                 <FormLabel>Parent Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Parent's Email" disabled={isLoading} {...field} />
+                                    <Input placeholder="Parent's Email" disabled={isPending} {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -157,7 +160,7 @@ export function RsvpForm({
                             <FormItem className="pb-2">
                                 <FormLabel>Parent Mobile</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Parent's Mobile" disabled={isLoading} {...field} />
+                                    <Input placeholder="Parent's Mobile" disabled={isPending} {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -201,7 +204,7 @@ export function RsvpForm({
                                                 <Input
                                                     placeholder="Child's first name"
                                                     autoComplete="off"
-                                                    disabled={isLoading}
+                                                    disabled={isPending}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -228,7 +231,7 @@ export function RsvpForm({
                                                                 'w-full pl-3 text-left font-normal',
                                                                 !field.value && 'text-muted-foreground'
                                                             )}
-                                                            disabled={isLoading}
+                                                            disabled={isPending}
                                                         >
                                                             {field.value ? (
                                                                 format(field.value, 'PPP')
@@ -266,7 +269,7 @@ export function RsvpForm({
                                                 label={`Will ${watchChild.name || 'this child'} be able to attend?`}
                                                 onValueChange={field.onChange}
                                                 defaultValue={''}
-                                                disabled={isLoading}
+                                                disabled={isPending}
                                             >
                                                 <SelectValue placeholder="Please select" />
                                                 <SelectContent>
@@ -294,7 +297,7 @@ export function RsvpForm({
                                                         }
                                                     }}
                                                     defaultValue={''}
-                                                    disabled={isLoading}
+                                                    disabled={isPending}
                                                 >
                                                     <SelectValue placeholder="Please select" />
                                                     <SelectContent>
@@ -322,7 +325,7 @@ export function RsvpForm({
                                                     directly.
                                                 </FormDescription>
                                                 <FormControl>
-                                                    <Textarea disabled={isLoading} {...field} />
+                                                    <Textarea disabled={isPending} {...field} />
                                                 </FormControl>
                                             </FormItem>
                                         )}
@@ -347,7 +350,7 @@ export function RsvpForm({
                                 { shouldFocus: true }
                             )
                         }
-                        disabled={isLoading}
+                        disabled={isPending}
                     >
                         {form.getValues('children').length === 0 ? 'Add Child' : 'Add another invited child'}
                         <Plus className="ml-2 h-4 w-4" />
@@ -362,7 +365,7 @@ export function RsvpForm({
                                     <Textarea
                                         placeholder={`An optional message to send to ${invitation.childName}'s parents`}
                                         rows={4}
-                                        disabled={isLoading}
+                                        disabled={isPending}
                                         {...field}
                                     />
                                 </FormControl>
@@ -401,9 +404,9 @@ export function RsvpForm({
                 <Button
                     className="w-full rounded-2xl bg-[#9B3EEA] text-base font-semibold text-white shadow-lg transition hover:bg-[#8B2DE3] hover:shadow-xl disabled:opacity-70"
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isPending}
                 >
-                    {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Send RSVP'}
+                    {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Send RSVP'}
                 </Button>
             </form>
         </Form>
