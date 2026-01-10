@@ -307,9 +307,9 @@ export const DateNavigation: FC<PropsWithChildren<Props>> = (props) => {
                             </FormControl>
                         )}
                     </div>
-                    <DateNavigationContext.Provider value={{ date, setDate: handleDateChange, setLoading }}>
+                    <DateNavigationContext value={{ date, setDate: handleDateChange, setLoading }}>
                         {children}
-                    </DateNavigationContext.Provider>
+                    </DateNavigationContext>
                 </Box>
             </Grid>
         </Root>

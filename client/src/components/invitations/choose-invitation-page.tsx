@@ -86,7 +86,7 @@ export const ChooseInvitationPage = () => {
     )
 }
 
-const useSticky = ({ ref, offset }: { ref: RefObject<HTMLElement>; offset: number }) => {
+const useSticky = ({ ref, offset }: { ref: RefObject<HTMLElement | null>; offset: number }) => {
     const [sticky, setSticky] = useState(false)
 
     useEffect(() => {

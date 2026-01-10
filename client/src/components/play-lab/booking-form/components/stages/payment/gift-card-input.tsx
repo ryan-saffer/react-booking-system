@@ -7,15 +7,22 @@ import { useBookingForm } from '@components/play-lab/booking-form/state/form-sch
 import { Button } from '@ui-components/button'
 import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 export function GiftCardInput() {
+    const trpc = useTRPC()
     const form = useBookingForm()
     const applyGiftCard = useCart((store) => store.applyGiftCard)
 
     const [giftCardNumber, setGiftCardNumber] = useState('')
 
-    const { mutateAsync: checkGiftCardBalance, isLoading, error } = trpc.playLab.checkGiftCardBalance.useMutation()
+    const {
+        mutateAsync: checkGiftCardBalance,
+        isPending,
+        error,
+    } = useMutation(trpc.playLab.checkGiftCardBalance.mutationOptions())
 
     async function validateGiftCard() {
         const cleanedNumber = giftCardNumber.replace(/[\s-]/g, '')
@@ -57,10 +64,10 @@ export function GiftCardInput() {
                 <Button
                     className="min-w-32"
                     variant={giftCardNumber ? 'default' : 'secondary'}
-                    disabled={!giftCardNumber || isLoading}
+                    disabled={!giftCardNumber || isPending}
                     onClick={validateGiftCard}
                 >
-                    {isLoading ? <Loader2 className="animate-spin" /> : 'Apply gift card'}
+                    {isPending ? <Loader2 className="animate-spin" /> : 'Apply gift card'}
                 </Button>
             </div>
             {error && <p className="text-sm text-red-500">{error.message}</p>}

@@ -1,7 +1,7 @@
 import type { AcuityTypes, Studio } from 'fizz-kidz'
 import { STUDIOS, isFranchise } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useOrg } from '@components/Session/use-org'
@@ -9,9 +9,11 @@ import type { SelectChangeEvent } from '@mui/material'
 import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
 import { Label } from '@ui-components/label'
 import { Switch } from '@ui-components/switch'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import styles from './after-school-program-class-selection.module.css'
+
+import { useQuery } from '@tanstack/react-query'
 
 const PREV_CLASSES_CACHE_KEY = 'show-previous-classes'
 
@@ -21,42 +23,47 @@ type Props = {
 }
 
 export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, classRequired }) => {
+    const trpc = useTRPC()
     const navigate = useNavigate()
 
     const [showPreviousClasses, setShowPreviousClasses] = useState(
         (localStorage.getItem(PREV_CLASSES_CACHE_KEY) ?? 'false') === 'true'
     )
-    const nowRef = useRef(showPreviousClasses ? 1704027600000 : Date.now())
+    const [now, setNow] = useState(() => (showPreviousClasses ? 1704027600000 : Date.now()))
 
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<
         AcuityTypes.Api.AppointmentType | undefined
     >()
     const [selectedClass, setSelectedClass] = useState<AcuityTypes.Api.Class | undefined>()
 
-    const { data: calendars } = trpc.acuity.getCalendars.useQuery()
+    const { data: calendars } = useQuery(trpc.acuity.getCalendars.queryOptions())
 
     const { currentOrg } = useOrg()
 
-    const { data: appointmentTypes, isLoading: loadingAppointmentTypes } = trpc.acuity.getAppointmentTypes.useQuery({
-        category:
-            import.meta.env.VITE_ENV === 'prod'
-                ? [
-                      'Science Club',
-                      'Art Program',
-                      ...STUDIOS.flatMap((it) => [`science-${it}` as const, `art-${it}` as const]),
-                  ]
-                : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
-    })
+    const { data: appointmentTypes, isPending: loadingAppointmentTypes } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions({
+            category:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? [
+                          'Science Club',
+                          'Art Program',
+                          ...STUDIOS.flatMap((it) => [`science-${it}` as const, `art-${it}` as const]),
+                      ]
+                    : ['TEST', 'TEST-science', 'TEST-art', 'test-after-school-in-studio'],
+        })
+    )
 
-    const { data: classes, isLoading: loadingClasses } = trpc.acuity.classAvailability.useQuery(
-        {
-            appointmentTypeIds: selectedAppointmentType?.id ? [selectedAppointmentType.id] : [],
-            includeUnavailable: true,
-            minDate: nowRef.current,
-        },
-        {
-            enabled: !!selectedAppointmentType?.id,
-        }
+    const { data: classes, isPending: loadingClasses } = useQuery(
+        trpc.acuity.classAvailability.queryOptions(
+            {
+                appointmentTypeIds: selectedAppointmentType?.id ? [selectedAppointmentType.id] : [],
+                includeUnavailable: true,
+                minDate: now,
+            },
+            {
+                enabled: !!selectedAppointmentType?.id,
+            }
+        )
     )
 
     const filteredAppointmentTypes = useMemo(
@@ -167,11 +174,11 @@ export const AfterSchoolProgramClassSelection: React.FC<Props> = ({ classRoute, 
                             checked={showPreviousClasses}
                             onCheckedChange={(checked) => {
                                 if (checked) {
-                                    nowRef.current = 1704027600000 // 01/01/24
+                                    setNow(1704027600000) // 01/01/24
                                     setShowPreviousClasses(true)
                                     localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'true')
                                 } else {
-                                    nowRef.current = Date.now()
+                                    setNow(Date.now())
                                     setShowPreviousClasses(false)
                                     localStorage.setItem(PREV_CLASSES_CACHE_KEY, 'false')
                                 }

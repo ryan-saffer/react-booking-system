@@ -6,11 +6,13 @@ import { MixpanelEvents } from '@components/Mixpanel/Events'
 import * as logo from '@drawables/fizz-logo.png'
 import { Divider } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import Footer from './Footer'
 import Loading from './Loading'
 import { Error as ErrorResult, Success } from './Result'
+
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'EnrolmentPage'
 
@@ -50,6 +52,7 @@ const Root = styled('div')({
  * @param continuing either 'yes' if they want to continue with the term, or ''
  */
 export const EnrolmentPage = () => {
+    const trpc = useTRPC()
     // remove first '?'
     const base64String = window.location.search.substring(1, window.location.search.length)
     const searchParams = new URLSearchParams(atob(base64String))
@@ -59,8 +62,9 @@ export const EnrolmentPage = () => {
 
     const mixpanel = useMixpanel()
 
-    const { mutate, data, isLoading, isSuccess, isError } =
-        trpc.afterSchoolProgram.updateAfterSchoolEnrolment.useMutation()
+    const { mutate, data, isPending, isSuccess, isError } = useMutation(
+        trpc.afterSchoolProgram.updateAfterSchoolEnrolment.mutationOptions()
+    )
 
     useEffect(() => {
         mutate({ id: appointmentId, continuingWithTerm })
@@ -95,7 +99,7 @@ export const EnrolmentPage = () => {
         <Root className={classes.main}>
             <img className={classes.logo} src={logo.default} alt="fizz kidz logo" />
             <Divider className={classes.divider} />
-            {isLoading && <Loading />}
+            {isPending && <Loading />}
             {isSuccess && <Success continuing={continuingWithTerm} appointment={data} />}
             {isError && <ErrorResult />}
             <Footer />

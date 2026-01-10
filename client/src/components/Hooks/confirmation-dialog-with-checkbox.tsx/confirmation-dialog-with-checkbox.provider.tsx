@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { createContext, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
@@ -11,22 +11,19 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@ui-components/dialog'
+import { ConfirmationDialogWithCheckboxContext } from './confirmation-dialog-with-checkbox.context'
 
-type Props = {
+export type Props = {
     title: string
     description: string
     checkboxLabel: string
     confirmButton: string
 }
 
-type Result = {
+export type Result = {
     confirmed: boolean
     checked: boolean
 }
-
-export const ConfirmationDialogWithCheckboxContext = createContext<(props: Props) => Promise<Result>>(
-    () => new Promise((resolve) => resolve({ confirmed: false, checked: false }))
-)
 
 export function ConfirmationDialogWithCheckboxProvider({ children }: { children: ReactNode }) {
     const [state, setState] = useState({
@@ -53,7 +50,7 @@ export function ConfirmationDialogWithCheckboxProvider({ children }: { children:
     )
 
     return (
-        <ConfirmationDialogWithCheckboxContext.Provider value={confirm}>
+        <ConfirmationDialogWithCheckboxContext value={confirm}>
             {children}
             <Dialog open={state.open} onOpenChange={() => fn.current({ confirmed: false, checked: state.isChecked })}>
                 <DialogContent className="twp max-w-md">
@@ -87,6 +84,6 @@ export function ConfirmationDialogWithCheckboxProvider({ children }: { children:
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        </ConfirmationDialogWithCheckboxContext.Provider>
+        </ConfirmationDialogWithCheckboxContext>
     )
 }

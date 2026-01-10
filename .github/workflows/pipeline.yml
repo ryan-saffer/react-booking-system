@@ -78,7 +78,7 @@ jobs:
         working-directory: server
 
       - name: Install dependencies (client)
-        run: npm ci
+        run: npm ci && npm i --no-save @rollup/rollup-linux-x64-gnu@4.53.3
         working-directory: client
 
       - name: Run client tests

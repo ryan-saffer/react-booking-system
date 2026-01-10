@@ -16,9 +16,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@ui-component
 import { Input } from '@ui-components/input'
 import { ScrollArea } from '@ui-components/scroll-area'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { InvitationTemplates } from './constants'
+
+import { useMutation } from "@tanstack/react-query";
 
 type Params = {
     id: string
@@ -175,13 +177,14 @@ type TForm = {
 }
 
 function PartyDetails({ viewUsed }: { viewUsed: 'sidebar' | 'drawer' | 'scroll' }) {
+    const trpc = useTRPC();
     const { id } = useParams<Params>()
 
     const [submitting, setSubmitting] = useState(false)
     const [openDialog, setOpenDialog] = useState(false)
 
     const form = useForm<TForm>({ defaultValues: { name: '', email: '' } })
-    const createDiscountCodeMutation = trpc.holidayPrograms.createDiscountCodeFromInvitation.useMutation()
+    const createDiscountCodeMutation = useMutation(trpc.holidayPrograms.createDiscountCodeFromInvitation.mutationOptions())
 
     const onSubmit = async (values: TForm) => {
         setSubmitting(true)

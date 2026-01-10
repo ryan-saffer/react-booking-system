@@ -1,7 +1,7 @@
 import { Button, Descriptions, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { Employee } from 'fizz-kidz'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
@@ -58,84 +58,6 @@ const EmployeeTable = () => {
     const { employees, loading } = useEmployees()
     const [expandedRows, setExpandedRows] = useState<string[]>([])
 
-    const columns = useMemo<ColumnsType<Employee>>(
-        () => [
-            {
-                key: 'created',
-                title: 'Created',
-                render: (employee: Employee) => new Date(employee.created).toLocaleDateString(),
-                sorter: {
-                    compare: (first, second) => first.created - second.created,
-                    multiple: 3,
-                },
-            },
-            {
-                key: 'firstName',
-                dataIndex: 'firstName',
-                title: 'First Name',
-                sorter: {
-                    compare: (first, second) => first.firstName.localeCompare(second.firstName),
-                    multiple: 1,
-                },
-            },
-            {
-                key: 'lastName',
-                dataIndex: 'lastName',
-                title: 'Last Name',
-            },
-            {
-                key: 'contract',
-                title: 'Contract Status',
-                render: (employee: Employee) => (
-                    <Tag color={employee.contract.signed ? 'green' : 'orange'}>
-                        {employee.contract.signed ? 'Signed' : 'Awaiting Signature'}
-                    </Tag>
-                ),
-            },
-            {
-                key: 'wwcc',
-                title: 'WWCC Status',
-                render: (employee: Employee) => {
-                    if (employee.status === 'form-sent') {
-                        return <Tag color="red">Not provided</Tag>
-                    } else {
-                        return (
-                            <Tag color={employee.wwcc.status === 'I have a WWCC' ? 'green' : 'orange'}>
-                                {employee.wwcc.status === 'I have a WWCC' ? 'Provided' : 'Applied'}
-                            </Tag>
-                        )
-                    }
-                },
-            },
-            {
-                key: 'status',
-                title: 'Onboarding Status',
-                render: (employee: Employee) => renderBadge(employee.status),
-                sorter: {
-                    compare: (first, second) => first.status.localeCompare(second.status),
-                    multiple: 2,
-                },
-            },
-            {
-                key: 'action',
-                title: 'Actions',
-                render: (employee: Employee) => (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        <DeleteEmployeeButton employee={employee} />
-                        {employee.status === 'verification' && <EmployeeVerificationButton employee={employee} />}
-                        {employee.status !== 'form-sent' &&
-                            employee.wwcc.status === 'I have applied for a WWCC and have an application number' && (
-                                <EmployeeWWCCButton employee={employee} />
-                            )}
-                    </div>
-                ),
-            },
-        ],
-        []
-    )
-
-    // const data = useMemo(() => employees.map((employee) => ({ key: employee.id, employee })), [employees])
-
     const renderBadge = (status: Employee['status']) => {
         switch (status) {
             case 'form-sent':
@@ -152,6 +74,79 @@ const EmployeeTable = () => {
             }
         }
     }
+
+    const columns: ColumnsType<Employee> = [
+        {
+            key: 'created',
+            title: 'Created',
+            render: (employee: Employee) => new Date(employee.created).toLocaleDateString(),
+            sorter: {
+                compare: (first, second) => first.created - second.created,
+                multiple: 3,
+            },
+        },
+        {
+            key: 'firstName',
+            dataIndex: 'firstName',
+            title: 'First Name',
+            sorter: {
+                compare: (first, second) => first.firstName.localeCompare(second.firstName),
+                multiple: 1,
+            },
+        },
+        {
+            key: 'lastName',
+            dataIndex: 'lastName',
+            title: 'Last Name',
+        },
+        {
+            key: 'contract',
+            title: 'Contract Status',
+            render: (employee: Employee) => (
+                <Tag color={employee.contract.signed ? 'green' : 'orange'}>
+                    {employee.contract.signed ? 'Signed' : 'Awaiting Signature'}
+                </Tag>
+            ),
+        },
+        {
+            key: 'wwcc',
+            title: 'WWCC Status',
+            render: (employee: Employee) => {
+                if (employee.status === 'form-sent') {
+                    return <Tag color="red">Not provided</Tag>
+                } else {
+                    return (
+                        <Tag color={employee.wwcc.status === 'I have a WWCC' ? 'green' : 'orange'}>
+                            {employee.wwcc.status === 'I have a WWCC' ? 'Provided' : 'Applied'}
+                        </Tag>
+                    )
+                }
+            },
+        },
+        {
+            key: 'status',
+            title: 'Onboarding Status',
+            render: (employee: Employee) => renderBadge(employee.status),
+            sorter: {
+                compare: (first, second) => first.status.localeCompare(second.status),
+                multiple: 2,
+            },
+        },
+        {
+            key: 'action',
+            title: 'Actions',
+            render: (employee: Employee) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <DeleteEmployeeButton employee={employee} />
+                    {employee.status === 'verification' && <EmployeeVerificationButton employee={employee} />}
+                    {employee.status !== 'form-sent' &&
+                        employee.wwcc.status === 'I have applied for a WWCC and have an application number' && (
+                            <EmployeeWWCCButton employee={employee} />
+                        )}
+                </div>
+            ),
+        },
+    ]
 
     if (loading) return <Loader style={{ marginTop: '4rem' }} />
 

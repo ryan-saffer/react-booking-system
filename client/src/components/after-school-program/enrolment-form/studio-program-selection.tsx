@@ -7,26 +7,32 @@ import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { Separator } from '@ui-components/separator'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useEnrolmentForm } from './form-schema'
 import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
+import { useQuery } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
+
 export function StudioProgramSelection() {
+    const trpc = useTRPC()
     const form = useEnrolmentForm()
 
-    const studio = form.watch('studio')
+    const studio = useWatch({ control: form.control, name: 'studio' })
 
-    const { data, isLoading, isSuccess } = trpc.acuity.getAppointmentTypes.useQuery(
-        {
-            category:
-                import.meta.env.VITE_ENV === 'prod'
-                    ? [`science-${studio!}` as const, `art-${studio!}` as const]
-                    : ['test-after-school-in-studio'],
-            availableToBook: true,
-        },
-        { enabled: !!studio, staleTime: Infinity }
+    const { data, isPending, isSuccess } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions(
+            {
+                category:
+                    import.meta.env.VITE_ENV === 'prod'
+                        ? [`science-${studio!}` as const, `art-${studio!}` as const]
+                        : ['test-after-school-in-studio'],
+                availableToBook: true,
+            },
+            { enabled: !!studio, staleTime: Infinity }
+        )
     )
 
     const { selectedProgram, selectProgram } = useSelectedProgram()
@@ -98,7 +104,7 @@ export function StudioProgramSelection() {
     return (
         <>
             <h3 className="text-lg font-medium">Select program:</h3>
-            {isLoading && <Loader />}
+            {isPending && <Loader />}
             {isSuccess && data.length > 0 && (
                 <>
                     {import.meta.env.VITE_ENV === 'prod' ? (

@@ -32,7 +32,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { capitalise } from '../../../../../utilities/stringUtilities'
 import type { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
@@ -44,6 +44,8 @@ import EditFormButtons from '../../../shared/edit-form-buttons'
 import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 import type { ExistingBookingFormFields } from './types'
+
+import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'index'
 
@@ -63,20 +65,21 @@ interface ExistingBookingFormProps extends ConfirmationDialogProps, ErrorDialogP
     booking: WithId<FirestoreBooking>
 }
 
-const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
+const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
     booking,
     displayError,
     showConfirmationDialog,
 }) => {
+    const trpc = useTRPC()
     const [formValues, setFormValues] = useState<ExistingBookingFormFields>(getEmptyValues())
 
     useEffect(() => {
         setFormValues(mapFirestoreBookingToFormValues(booking))
     }, [booking])
 
-    const updateBookingMutation = trpc.parties.updatePartyBooking.useMutation()
-    const deleteBookingMutation = trpc.parties.deletePartyBooking.useMutation()
-    const getPartyFormUrl = trpc.parties.getPartyFormUrl.useMutation()
+    const updateBookingMutation = useMutation(trpc.parties.updatePartyBooking.mutationOptions())
+    const deleteBookingMutation = useMutation(trpc.parties.deletePartyBooking.mutationOptions())
+    const getPartyFormUrl = useMutation(trpc.parties.getPartyFormUrl.mutationOptions())
 
     const { setDate } = useDateNavigation()
 
@@ -898,7 +901,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             label="Questions"
                             fullWidth
                             multiline
-                            rows={1}
+                            rows={6}
                             size="small"
                             variant={editing || formValues[FormBookingFields.questions].value ? 'outlined' : 'filled'}
                             disabled={!editing}
@@ -917,7 +920,7 @@ const _ExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                             label="Fun Facts"
                             fullWidth
                             multiline
-                            rows={1}
+                            rows={6}
                             size="small"
                             variant={editing || formValues[FormBookingFields.funFacts].value ? 'outlined' : 'filled'}
                             disabled={!editing}
@@ -969,4 +972,4 @@ function createUniqueId(field: string, id: string) {
     return `${field}-${id}`
 }
 
-export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(_ExistingBookingForm))
+export const ExistingBookingForm = WithConfirmationDialog(WithErrorDialog(InnerExistingBookingForm))

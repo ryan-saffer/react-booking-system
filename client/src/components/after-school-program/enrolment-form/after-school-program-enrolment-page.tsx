@@ -1,6 +1,6 @@
 import { CheckCircle, ChevronLeft } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import type { z } from 'zod'
@@ -11,7 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Form } from '@ui-components/form'
 import { Separator } from '@ui-components/separator'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { EnrolmentForm } from './enrolment-form'
 import { formSchema } from './form-schema'
@@ -19,7 +19,10 @@ import { SchoolProgramSelection } from './school-program-selection'
 import { StudioProgramSelection } from './studio-program-selection'
 import { useSelectedProgram } from './use-selected-program'
 
+import { useMutation } from '@tanstack/react-query'
+
 export function AfterSchoolProgramEnrolmentPage() {
+    const trpc = useTRPC()
     const [searchParams] = useSearchParams()
     const inStudio = searchParams.get('type') === 'studio' // otherwise at a school
 
@@ -60,8 +63,8 @@ export function AfterSchoolProgramEnrolmentPage() {
         },
     })
 
-    const selectedStudio = form.watch('studio')
-    const selectedProgramType = form.watch('programType')
+    const selectedStudio = useWatch({ control: form.control, name: 'studio' })
+    const selectedProgramType = useWatch({ control: form.control, name: 'programType' })
 
     const showBackButton = (inStudio && !!selectedStudio) || (!inStudio && !!selectedProgramType)
 
@@ -69,15 +72,15 @@ export function AfterSchoolProgramEnrolmentPage() {
 
     const {
         mutateAsync: enrol,
-        isLoading: submittingMain,
+        isPending: submittingMain,
         isSuccess: isSuccessMain,
-    } = trpc.afterSchoolProgram.scheduleAfterSchoolEnrolment.useMutation()
+    } = useMutation(trpc.afterSchoolProgram.scheduleAfterSchoolEnrolment.mutationOptions())
 
     const {
         mutateAsync: joinWaitList,
-        isLoading: submittingWaitlist,
+        isPending: submittingWaitlist,
         isSuccess: isSuccessWaitlist,
-    } = trpc.afterSchoolProgram.joinWaitList.useMutation()
+    } = useMutation(trpc.afterSchoolProgram.joinWaitList.mutationOptions())
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!selectedProgram) {

@@ -14,7 +14,9 @@ import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import { capitalise } from '@utils/stringUtilities'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useQuery } from '@tanstack/react-query'
 
 const PREFIX = 'HolidayProgramSelection'
 
@@ -82,6 +84,7 @@ const Root = styled('div')(({ theme }) => ({
 }))
 
 export const HolidayProgramSelectionPage = () => {
+    const trpc = useTRPC()
     const [searchParams] = useSearchParams()
     const appointmentTypeId = parseInt(searchParams.get('id') || '0') as AcuityConstants.AppointmentTypeValue
 
@@ -101,16 +104,18 @@ export const HolidayProgramSelectionPage = () => {
 
     const {
         data: classes,
-        isLoading,
+        isPending,
         isSuccess,
-    } = trpc.acuity.classAvailability.useQuery({
-        appointmentTypeIds:
-            import.meta.env.VITE_ENV === 'prod'
-                ? [appointmentTypeId]
-                : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
-        includeUnavailable: true,
-        minDate: nowRef.current,
-    })
+    } = useQuery(
+        trpc.acuity.classAvailability.queryOptions({
+            appointmentTypeIds:
+                import.meta.env.VITE_ENV === 'prod'
+                    ? [appointmentTypeId]
+                    : [AcuityConstants.AppointmentTypes.TEST_HOLIDAY_PROGRAM],
+            includeUnavailable: true,
+            minDate: nowRef.current,
+        })
+    )
 
     useEffect(() => {
         if (currentOrg !== 'master' && isSuccess) {
@@ -163,7 +168,7 @@ export const HolidayProgramSelectionPage = () => {
                 <h1 className="lilita text-2xl">{renderProgramTitle()}</h1>
                 <Paper className={cssClasses.paper}>
                     <div className={cssClasses.main}>
-                        {isLoading ? (
+                        {isPending ? (
                             <Skeleton height={80} />
                         ) : (
                             <>

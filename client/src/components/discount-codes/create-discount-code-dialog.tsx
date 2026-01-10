@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import type { DiscountCode, WithoutId } from 'fizz-kidz'
 import { CalendarIcon, DollarSign, Loader2, Percent } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '@ui-components/button'
@@ -20,7 +20,9 @@ import { Input } from '@ui-components/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
+
+import { useMutation } from '@tanstack/react-query'
 
 type NumberOrString<T> = {
     [P in keyof T]: T[P] extends number ? T[P] | string : T[P]
@@ -28,6 +30,7 @@ type NumberOrString<T> = {
 type TForm = WithoutId<Omit<DiscountCode, 'numberOfUses'>>
 
 export function NewCodeDialog({ open, close }: { open: boolean; close: () => void }) {
+    const trpc = useTRPC()
     const form = useForm<NumberOrString<TForm>>({
         defaultValues: {
             code: '',
@@ -38,7 +41,11 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
         },
     })
 
-    const { mutateAsync: createDiscount, isLoading } = trpc.holidayPrograms.createDiscountCode.useMutation()
+    const discountType = useWatch({ control: form.control, name: 'discountType' })
+
+    const { mutateAsync: createDiscount, isPending } = useMutation(
+        trpc.holidayPrograms.createDiscountCode.mutationOptions()
+    )
 
     const onSubmit = async (values: NumberOrString<TForm>) => {
         const discountAmount =
@@ -144,7 +151,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                     <FormLabel>Discount Amount</FormLabel>
                                     <FormControl>
                                         <div className="relative">
-                                            {form.watch('discountType') === 'percentage' ? (
+                                            {discountType === 'percentage' ? (
                                                 <Percent className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
                                             ) : (
                                                 <DollarSign className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
@@ -160,7 +167,7 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                         </div>
                                     </FormControl>
                                     <FormDescription>
-                                        {form.watch('discountType') === 'percentage'
+                                        {discountType === 'percentage'
                                             ? 'The percentage off (0-100).'
                                             : 'The amount off in dollars.'}
                                     </FormDescription>
@@ -194,15 +201,15 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="twp w-auto p-0" align="start">
+                                        <PopoverContent className="twp w-auto overflow-hidden p-0" align="start">
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
+                                                captionLayout="dropdown"
                                                 onSelect={(e) => {
                                                     field.onChange(e)
                                                     setIsCalendarOpen(false)
                                                 }}
-                                                initialFocus
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -229,8 +236,8 @@ export function NewCodeDialog({ open, close }: { open: boolean; close: () => voi
                             )}
                         />
                         <DialogFooter>
-                            <Button className="mt-4 min-w-48" type="submit" disabled={isLoading}>
-                                {isLoading ? <Loader2 className="animate-spin" /> : 'Create discount code'}
+                            <Button className="mt-4 min-w-48" type="submit" disabled={isPending}>
+                                {isPending ? <Loader2 className="animate-spin" /> : 'Create discount code'}
                             </Button>
                         </DialogFooter>
                     </form>

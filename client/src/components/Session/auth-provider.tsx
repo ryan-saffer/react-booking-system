@@ -4,17 +4,20 @@ import { useEffect, useState } from 'react'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
 import AuthUserContext from './auth-user-context'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 import type { AuthUser } from 'fizz-kidz'
 
+import { useMutation } from '@tanstack/react-query'
+
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const trpc = useTRPC()
     const firebase = useFirebase()
     const cachedUser = localStorage.getItem('authUser')
     const [authUser, setAuthUser] = useState<(AuthUser & { jwt: string; uid: string }) | null>(
         cachedUser ? JSON.parse(cachedUser) : null
     )
 
-    const { mutateAsync: createUser } = trpc.auth.createUser.useMutation()
+    const { mutateAsync: createUser } = useMutation(trpc.auth.createUser.mutationOptions())
 
     useEffect(() => {
         let unsubDb = () => {}
@@ -75,5 +78,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    return <AuthUserContext.Provider value={authUser}>{children}</AuthUserContext.Provider>
+    return <AuthUserContext value={authUser}>{children}</AuthUserContext>
 }

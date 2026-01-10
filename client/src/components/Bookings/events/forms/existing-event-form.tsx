@@ -13,9 +13,11 @@ import { combineDateAndTime } from '@utils/dateUtils'
 
 import type { Form } from './base-event-form'
 import BaseEventForm from './base-event-form'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 import { Grid, TextField, Typography, styled } from '@mui/material'
 import { toast } from 'sonner'
+
+import { useMutation } from '@tanstack/react-query'
 
 type Props = {
     event: Event
@@ -36,14 +38,15 @@ const Root = styled('div')({
     },
 })
 
-const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
+const InnerExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, displayError }) => {
+    const trpc = useTRPC()
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false)
 
     const disabled = !editing || loading
 
-    const updateEventMutation = trpc.events.updateEvent.useMutation()
-    const deleteEventMutation = trpc.events.deleteEvent.useMutation()
+    const updateEventMutation = useMutation(trpc.events.updateEvent.mutationOptions())
+    const deleteEventMutation = useMutation(trpc.events.deleteEvent.mutationOptions())
 
     const { setDate } = useDateNavigation()
 
@@ -305,4 +308,4 @@ const _ExistingEventForm: React.FC<Props> = ({ event, showConfirmationDialog, di
     )
 }
 
-export const ExistingEventForm = WithConfirmationDialog(WithErrorDialog(_ExistingEventForm))
+export const ExistingEventForm = WithConfirmationDialog(WithErrorDialog(InnerExistingEventForm))

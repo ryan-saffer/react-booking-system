@@ -3,10 +3,12 @@ import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
 import { styled } from '@mui/material/styles'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import Loader from '../../../Shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
+
+import { useQuery } from '@tanstack/react-query'
 
 const PREFIX = 'InvoiceDetails'
 
@@ -26,18 +28,21 @@ type Props = {
 }
 
 const InvoiceDetails: React.FC<Props> = ({ appointment }) => {
-    const { data, isLoading, isSuccess, isError } = trpc.afterSchoolProgram.retrieveInvoiceStatuses.useQuery(
-        { appointmentIds: [appointment.id] },
-        {
-            enabled: appointment.invoiceId !== '',
-            initialData: { [appointment.id]: { status: 'NOT_SENT' } },
-        }
+    const trpc = useTRPC()
+    const { data, isPending, isSuccess, isError } = useQuery(
+        trpc.afterSchoolProgram.retrieveInvoiceStatuses.queryOptions(
+            { appointmentIds: [appointment.id] },
+            {
+                enabled: appointment.invoiceId !== '',
+                initialData: { [appointment.id]: { status: 'NOT_SENT' } },
+            }
+        )
     )
 
     return (
         <StyledCard className={classes.card} title="🧾 Invoice Status">
             {(() => {
-                if (isLoading) {
+                if (isPending) {
                     return <Loader />
                 }
 

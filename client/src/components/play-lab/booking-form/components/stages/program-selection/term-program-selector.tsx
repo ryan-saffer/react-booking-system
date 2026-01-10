@@ -2,19 +2,22 @@ import { parseISO } from 'date-fns'
 import type { AcuityTypes } from 'fizz-kidz'
 import { AlertCircle, ChevronLeft, MessageCircleWarning } from 'lucide-react'
 import { DateTime } from 'luxon'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
 import { cn } from '@utils/tailwind'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
 import { ContinueButton } from './continue-button'
+
+import { useQuery } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
 
 /**
  * Renders the list of appointment types.
@@ -23,22 +26,24 @@ import { ContinueButton } from './continue-button'
  * If so, it will render a 'Continue' button. Otherwise it will show a message that the term is full.
  */
 export function TermProgramSelector() {
+    const trpc = useTRPC()
     const form = useBookingForm()
     const { formStage } = useFormStage()
 
-    const appointmentTypeId = form.watch('appointmentTypeId')
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
+    const bookingType = useWatch({ control: form.control, name: 'bookingType' })
 
-    const { data, isLoading, isSuccess, isError } = trpc.acuity.getAppointmentTypes.useQuery({
-        category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
-        availableToBook: false,
-    })
-
-    const bookingType = form.watch('bookingType')
+    const { data, isPending, isSuccess, isError } = useQuery(
+        trpc.acuity.getAppointmentTypes.queryOptions({
+            category: import.meta.env.VITE_ENV === 'prod' ? ['play-lab'] : ['play-lab-test'],
+            availableToBook: false,
+        })
+    )
 
     if (formStage !== 'program-selection') return null
     if (!bookingType || bookingType === 'casual') return null
 
-    if (isLoading) return <Loader />
+    if (isPending) return <Loader />
 
     if (isError)
         return (
@@ -100,19 +105,23 @@ function ReturnButton() {
  * Checks that classes exist, and that all the classes have a spot available.
  */
 function ContinueOrError() {
+    const trpc = useTRPC()
     const form = useBookingForm()
 
     const setSelectedClasses = useCart((store) => store.setSelectedClasses)
 
-    const studio = form.watch('studio')
-    const appointmentTypeId = form.watch('appointmentTypeId')
-    const numberOfKids = form.watch('children').length
+    const studio = useWatch({ control: form.control, name: 'studio' })
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
+    const watchedChildren = useWatch({ control: form.control, name: 'children' })
+    const numberOfKids = watchedChildren.length
 
-    const now = useRef(Date.now())
+    const [now] = useState(() => Date.now())
 
-    const { data, isLoading, isSuccess, isError } = trpc.acuity.classAvailability.useQuery(
-        { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true, minDate: now.current },
-        { enabled: !!appointmentTypeId, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
+    const { data, isPending, isSuccess, isError } = useQuery(
+        trpc.acuity.classAvailability.queryOptions(
+            { appointmentTypeIds: [appointmentTypeId!], includeUnavailable: true, minDate: now },
+            { enabled: !!appointmentTypeId, select: (data) => data.map((it) => ({ ...it, time: parseISO(it.time) })) }
+        )
     )
 
     const filteredClasses = useMemo(
@@ -130,7 +139,7 @@ function ContinueOrError() {
 
     if (!studio) return null
 
-    if (isLoading) return <Loader className="mt-4" />
+    if (isPending) return <Loader className="mt-4" />
     if (isError)
         return (
             <Alert className="mt-4" variant="destructive">
@@ -217,7 +226,7 @@ function ContinueOrError() {
 
 function ProgramCard({ program, selected = false }: { program: AcuityTypes.Api.AppointmentType; selected?: boolean }) {
     const form = useBookingForm()
-    const appointmentTypeId = form.watch('appointmentTypeId')
+    const appointmentTypeId = useWatch({ control: form.control, name: 'appointmentTypeId' })
     const { name, day, time, begins, ages } = JSON.parse(program.description)
 
     function handleCardClick() {

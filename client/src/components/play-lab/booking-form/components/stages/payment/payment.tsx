@@ -10,7 +10,7 @@ import { SQUARE_APPLICATION_ID } from '@constants/square'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
-import { trpc } from '@utils/trpc'
+import { useTRPC } from '@utils/trpc'
 
 import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
@@ -18,7 +18,11 @@ import { useFormStage } from '../../../state/form-stage-store'
 import { DiscountInput } from './discount-input'
 import { GiftCardInput } from './gift-card-input'
 
+import { useMutation } from '@tanstack/react-query'
+import { useWatch } from 'react-hook-form'
+
 export function Payment() {
+    const trpc = useTRPC()
     //#region Variables
     const form = useBookingForm()
     const formStage = useFormStage((store) => store.formStage)
@@ -34,8 +38,8 @@ export function Payment() {
         removeDiscount,
     } = useCart()
 
-    const children = form.watch('children')
-    const studio = form.watch('studio')
+    const children = useWatch({ control: form.control, name: 'children' })
+    const studio = useWatch({ control: form.control, name: 'studio' })
 
     const squareLocationId = studio ? getSquareLocationId(studio) : ''
 
@@ -43,7 +47,7 @@ export function Payment() {
 
     const idempotencyKey = useRef(crypto.randomUUID())
 
-    const { mutateAsync, isLoading, isError, error, reset } = trpc.playLab.book.useMutation()
+    const { mutateAsync, isPending, isError, error, reset } = useMutation(trpc.playLab.book.mutationOptions())
     //#endregion
 
     //#region Effects
@@ -179,7 +183,7 @@ export function Payment() {
     //#region Rendering
     if (formStage !== 'payment') return null
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <>
                 <p className="mt-4 text-center">Processing payment...</p>
@@ -281,9 +285,9 @@ export function Payment() {
                 key={walletKey}
                 applicationId={SQUARE_APPLICATION_ID}
                 locationId={squareLocationId}
-                cardTokenizeResponseReceived={async ({ status, token }, buyerVerification) => {
-                    if (status === 'OK' && token && !isLoading) {
-                        await book(token, buyerVerification?.token || '')
+                cardTokenizeResponseReceived={async (result, buyerVerification) => {
+                    if (result.status === 'OK' && result.token && !isPending) {
+                        await book(result.token, buyerVerification?.token || '')
                     } else {
                         toast.error('There was an error processing your payment')
                     }
