@@ -3,7 +3,7 @@ import type { InvitationsV2 } from 'fizz-kidz'
 import { CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import type { DateTime } from 'luxon'
 import { Fragment, useEffect, useState } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -100,6 +100,8 @@ export function RsvpForm({
         name: 'children',
     })
 
+    const watchedChildren = useWatch({ control: form.control, name: 'children' })
+
     useEffect(() => {
         form.setFocus('parentName')
     }, [form])
@@ -167,7 +169,7 @@ export function RsvpForm({
                     />
                     <SectionBreak title="Children Details" />
                     {children.map((child, idx) => {
-                        const watchChild = form.watch('children')[idx]
+                        const watchChild = watchedChildren[idx]
                         return (
                             <Fragment key={idx}>
                                 {children.length > 1 && (
@@ -316,8 +318,7 @@ export function RsvpForm({
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    Please enter {form.watch('children')[idx].name || 'the child'}'s
-                                                    allergies here
+                                                    Please enter {watchChild.name || 'the child'}'s allergies here
                                                 </FormLabel>
                                                 <FormDescription>
                                                     This information is for the host's planning. Fizz Kidz doesn't
