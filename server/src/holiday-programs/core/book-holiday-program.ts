@@ -183,24 +183,28 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         // write additional info to spreadsheet to contact parent
         const additionaNeedsLineItems = input.payment.lineItems.filter((it) => it.childAdditionalInfo !== '')
 
-        if (additionaNeedsLineItems.length > 0) {
-            const sheetsClient = await SheetsClient.getInstance()
-            await sheetsClient.addRowToSheet(
-                'holidayProgramAdditionalNeeds',
-                additionaNeedsLineItems.map((item) => [
-                    appointments[0].calendar,
-                    item.time,
-                    input.parentFirstName,
-                    input.parentLastName,
-                    input.parentEmail,
-                    input.parentPhone,
-                    item.childName,
-                    Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0),
-                    item.childAllergies,
-                    item.childAdditionalInfo,
-                ]),
-                'Additional Needs'
-            )
+        try {
+            if (additionaNeedsLineItems.length > 0) {
+                const sheetsClient = await SheetsClient.getInstance()
+                await sheetsClient.addRowToSheet(
+                    'holidayProgramAdditionalNeeds',
+                    additionaNeedsLineItems.map((item) => [
+                        appointments[0].calendar,
+                        item.time,
+                        input.parentFirstName,
+                        input.parentLastName,
+                        input.parentEmail,
+                        input.parentPhone,
+                        item.childName,
+                        Math.abs(DateTime.fromISO(item.childDob).diffNow('years').years).toFixed(0),
+                        item.childAllergies,
+                        item.childAdditionalInfo,
+                    ]),
+                    'Additional Needs'
+                )
+            }
+        } catch (err) {
+            logError(`Error writing to holiday program additional needs spreadsheet`, err, { input })
         }
 
         // MARL: Cconfirmation email
