@@ -514,38 +514,38 @@ export class TimesheetRow {
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Balwyn'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Balwyn'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Balwyn'
                         case 'cheltenham':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Cheltenham'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Cheltenham'
                         case 'essendon':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Essendon'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Essendon'
                         case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Kingsville'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Kingsville'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Kingsville'
                         case 'malvern':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Malvern'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Malvern'
                         case 'head-office':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR 16&17yo COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
-                                ? 'CGS 16&17yo COH - Mon to Sat - Head Office'
-                                : 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
+                                  ? 'CGS 16&17yo COH - Mon to Sat - Head Office'
+                                  : 'NON-CGS 16&17yo COH - Mon to Sat - Head Office'
                         default: {
                             assertNever(location)
                             throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -557,38 +557,38 @@ export class TimesheetRow {
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Balwyn'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Balwyn'
-                                : 'NON-CGS COH - Mon to Sat - Balwyn'
+                                  ? 'CGS COH - Mon to Sat - Balwyn'
+                                  : 'NON-CGS COH - Mon to Sat - Balwyn'
                         case 'cheltenham':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Cheltenham'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Cheltenham'
-                                : 'NON-CGS COH - Mon to Sat - Cheltenham'
+                                  ? 'CGS COH - Mon to Sat - Cheltenham'
+                                  : 'NON-CGS COH - Mon to Sat - Cheltenham'
                         case 'essendon':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Essendon'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Essendon'
-                                : 'NON-CGS COH - Mon to Sat - Essendon'
+                                  ? 'CGS COH - Mon to Sat - Essendon'
+                                  : 'NON-CGS COH - Mon to Sat - Essendon'
                         case 'kingsville':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Kingsville'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Kingsville'
-                                : 'NON-CGS COH - Mon to Sat - Kingsville'
+                                  ? 'CGS COH - Mon to Sat - Kingsville'
+                                  : 'NON-CGS COH - Mon to Sat - Kingsville'
                         case 'malvern':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Malvern'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Malvern'
-                                : 'NON-CGS COH - Mon to Sat - Malvern'
+                                  ? 'CGS COH - Mon to Sat - Malvern'
+                                  : 'NON-CGS COH - Mon to Sat - Malvern'
                         case 'head-office':
                             return isSupervisorShift(this.position)
                                 ? 'SUPERVISOR COH - Mon to Sat - Head Office'
                                 : this._isCOGSShift()
-                                ? 'CGS COH - Mon to Sat - Head Office'
-                                : 'NON-CGS COH - Mon to Sat - Head Office'
+                                  ? 'CGS COH - Mon to Sat - Head Office'
+                                  : 'NON-CGS COH - Mon to Sat - Head Office'
                         default: {
                             assertNever(location)
                             throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -601,38 +601,38 @@ export class TimesheetRow {
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Balwyn'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Balwyn'
-                            : 'NON-CGS COH - Sunday - Balwyn'
+                              ? 'CGS COH - Sunday - Balwyn'
+                              : 'NON-CGS COH - Sunday - Balwyn'
                     case 'cheltenham':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Cheltenham'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Cheltenham'
-                            : 'NON-CGS COH - Sunday - Cheltenham'
+                              ? 'CGS COH - Sunday - Cheltenham'
+                              : 'NON-CGS COH - Sunday - Cheltenham'
                     case 'essendon':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Essendon'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Essendon'
-                            : 'NON-CGS COH - Sunday - Essendon'
+                              ? 'CGS COH - Sunday - Essendon'
+                              : 'NON-CGS COH - Sunday - Essendon'
                     case 'kingsville':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Kingsville'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Kingsville'
-                            : 'NON-CGS COH - Sunday - Kingsville'
+                              ? 'CGS COH - Sunday - Kingsville'
+                              : 'NON-CGS COH - Sunday - Kingsville'
                     case 'malvern':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Malvern'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Malvern'
-                            : 'NON-CGS COH - Sunday - Malvern'
+                              ? 'CGS COH - Sunday - Malvern'
+                              : 'NON-CGS COH - Sunday - Malvern'
                     case 'head-office':
                         return isSupervisorShift(this.position)
                             ? 'SUPERVISOR COH - Sunday - Head Office'
                             : this._isCOGSShift()
-                            ? 'CGS COH - Sunday - Head Office'
-                            : 'NON-CGS COH - Sunday - Head Office'
+                              ? 'CGS COH - Sunday - Head Office'
+                              : 'NON-CGS COH - Sunday - Head Office'
                     default: {
                         assertNever(location)
                         throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -818,38 +818,38 @@ export class TimesheetRow {
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Balwyn'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Balwyn'
                 case 'cheltenham':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Chelt'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Cheltenham'
                 case 'essendon':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Essend'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Essendon'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Essendon'
                 case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Kings'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Kingsville'
                 case 'malvern':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - Malvern'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Malvern'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - Malvern'
                 case 'head-office':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Mon to Sat - HO'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
-                        : 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
+                          ? 'CGS OT - First 3 Hrs - Mon to Sat - Head Office'
+                          : 'NON-CGS OT - First 3 Hrs - Mon to Sat - HO'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -861,38 +861,38 @@ export class TimesheetRow {
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Balwyn'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Balwyn'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Balwyn'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Balwyn'
                 case 'cheltenham':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Cheltenham'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Cheltenham'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Cheltenham'
                 case 'essendon':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Essendon'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Essendon'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Essendon'
                 case 'kingsville':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Kingsville'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Kingsville'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Kingsville'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Kingsville'
                 case 'malvern':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Malvern'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Malvern'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Malvern'
                 case 'head-office':
                     return isSupervisorShift(this.position)
                         ? 'SUPERVISOR OT - First 3 Hrs - Sunday - Head Office'
                         : this._isCOGSShift()
-                        ? 'CGS OT - First 3 Hrs - Sunday - Head Office'
-                        : 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
+                          ? 'CGS OT - First 3 Hrs - Sunday - Head Office'
+                          : 'NON-CGS OT - First 3 Hrs - Sunday - Head Office'
                 default: {
                     assertNever(location)
                     throw new Error(`Unrecognised location processing payroll: ${location}`)
@@ -907,38 +907,38 @@ export class TimesheetRow {
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Balwyn'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Balwyn'
-                    : 'NON-CGS OT - After 3 Hrs - Balwyn'
+                      ? 'CGS OT - After 3 Hrs - Balwyn'
+                      : 'NON-CGS OT - After 3 Hrs - Balwyn'
             case 'cheltenham':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Cheltenham'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Cheltenham'
-                    : 'NON-CGS OT - After 3 Hrs - Cheltenham'
+                      ? 'CGS OT - After 3 Hrs - Cheltenham'
+                      : 'NON-CGS OT - After 3 Hrs - Cheltenham'
             case 'essendon':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Essendon'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Essendon'
-                    : 'NON-CGS OT - After 3 Hrs - Essendon'
+                      ? 'CGS OT - After 3 Hrs - Essendon'
+                      : 'NON-CGS OT - After 3 Hrs - Essendon'
             case 'kingsville':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Kingsville'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Kingsville'
-                    : 'NON-CGS OT - After 3 Hrs - Kingsville'
+                      ? 'CGS OT - After 3 Hrs - Kingsville'
+                      : 'NON-CGS OT - After 3 Hrs - Kingsville'
             case 'malvern':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Malvern'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Malvern'
-                    : 'NON-CGS OT - After 3 Hrs - Malvern'
+                      ? 'CGS OT - After 3 Hrs - Malvern'
+                      : 'NON-CGS OT - After 3 Hrs - Malvern'
             case 'head-office':
                 return isSupervisorShift(this.position)
                     ? 'SUPERVISOR OT - After 3 Hrs - Head Office'
                     : this._isCOGSShift()
-                    ? 'CGS OT - After 3 Hrs - Head Office'
-                    : 'NON-CGS OT - After 3 Hrs - Head Office'
+                      ? 'CGS OT - After 3 Hrs - Head Office'
+                      : 'NON-CGS OT - After 3 Hrs - Head Office'
         }
     }
 }
@@ -1455,12 +1455,12 @@ export const SlingPositionMap: Record<string, SlingPosition> = Object.fromEntrie
 )
 
 export const SlingLocationToId: Record<SlingLocation, number> = {
-    ['balwyn']: 4809521,
-    ['cheltenham']: 11315826,
-    ['essendon']: 4895739,
-    ['kingsville']: 22982854,
-    ['malvern']: 4809537,
-    ['head-office']: 5557282,
+    balwyn: 4809521,
+    cheltenham: 11315826,
+    essendon: 4895739,
+    kingsville: 22982854,
+    malvern: 4809537,
+    'head-office': 5557282,
 }
 
 export const SlingLocationsMap: Record<string, SlingLocation> = Object.fromEntries(

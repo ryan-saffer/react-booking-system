@@ -57,7 +57,7 @@ export const Payroll = () => {
     const generateTimesheetsMutation = useMutation(trpc.staff.generateTimesheets.mutationOptions())
 
     const onChange: RangePickerProps['onChange'] = async (_, format) => {
-        setSelectedDates(format)
+        setSelectedDates(format ?? ['', ''])
     }
 
     const generateTimesheets = async () => {

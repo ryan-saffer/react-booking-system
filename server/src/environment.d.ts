@@ -23,6 +23,8 @@ declare global {
             MASTER_XERO_CLIENT_SECRET: string
             BALWYN_XERO_CLIENT_ID: string
             BALWYN_XERO_CLIENT_SECRET: string
+            KINGSVILLE_XERO_CLIENT_ID: string
+            KINGSVILLE_XERO_CLIENT_SECRET: string
         }
     }
 }

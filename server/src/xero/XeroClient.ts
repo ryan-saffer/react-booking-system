@@ -12,6 +12,10 @@ const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: strin
         clientId: process.env.BALWYN_XERO_CLIENT_ID!,
         clientSecret: process.env.BALWYN_XERO_CLIENT_SECRET!,
     },
+    kingsville: {
+        clientId: process.env.KINGSVILLE_XERO_CLIENT_ID,
+        clientSecret: process.env.KINGSVILLE_XERO_CLIENT_SECRET,
+    },
 }
 
 export class XeroClient {
