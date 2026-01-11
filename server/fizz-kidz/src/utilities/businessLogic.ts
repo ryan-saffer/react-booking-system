@@ -3,7 +3,7 @@ import { type StudioOrTest } from 'fizz-kidz/src/core/studio'
 import type { Booking } from '../partyBookings/booking'
 import { capitalise } from './stringUtilities'
 
-export function getLocationAddress(location: Studio) {
+export function getStudioAddress(location: Studio) {
     switch (location) {
         case 'balwyn':
             return '184 Whitehorse Rd, Balwyn VIC 3103'
@@ -54,20 +54,24 @@ export function getPartyEndDate(start: Date, partyLength: Booking['partyLength']
     return endDate
 }
 
-export function getApplicationDomain(environment: 'prod' | 'dev') {
+export function getApplicationDomain(environment: 'prod' | 'dev', useEmulator: boolean) {
+    if (useEmulator) {
+        return 'http://localhost:3000'
+    }
     return environment === 'prod' ? 'https://bookings.fizzkidz.com.au' : 'https://dev.fizzkidz.com.au'
 }
 
-export function getCloudFunctionsDomain(env: 'prod' | 'dev') {
-    return env === 'prod'
-        ? 'https://australia-southeast1-bookings-prod.cloudfunctions.net'
-        : 'https://australia-southeast1-booking-system-6435d.cloudfunctions.net'
-}
+export function getCloudFunctionsDomain(env: 'prod' | 'dev', useEmulator: boolean) {
+    if (useEmulator) {
+        return env === 'prod'
+            ? 'http://127.0.0.1:5001/bookings-prod/australia-southeast1/api/api'
+            : 'http://127.0.0.1:5001/booking-system-6435d/australia-southeast1/api/api'
+    }
 
-export function getFunctionEmulatorDomain(env: 'prod' | 'dev', includeHost: boolean = true) {
-    return env === 'prod'
-        ? `${includeHost ? 'http://127.0.0.1:5001/' : ''}bookings-prod/australia-southeast1`
-        : `${includeHost ? 'http://127.0.0.1:5001/' : ''}booking-system-6435d/australia-southeast1`
+    return `${getApplicationDomain(env, false)}/api`
+    // return env === 'prod'
+    //     ? 'https://australia-southeast1-bookings-prod.cloudfunctions.net/api/api'
+    //     : 'https://australia-southeast1-booking-system-6435d.cloudfunctions.net/api/api'
 }
 
 export function getPartyCreationCount(type: Booking['type'], partyLength: '1' | '1.5' | '2') {
@@ -143,5 +147,5 @@ export function studioNameAndAddress(studio: StudioOrTest) {
         return 'TEST'
     }
 
-    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getStudioAddress(studio)}`
 }

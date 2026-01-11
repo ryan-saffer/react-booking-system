@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             // once created, it will fire this snapshot again, and will then correctly be found
                             const newUser = {
                                 uid: authUser.uid,
-                                email: authUser.email!,
+                                email: authUser.email!, // all login options must include an email, so this will exist
                                 imageUrl: authUser.photoURL,
                                 accountType: 'customer',
                                 firstname: authUser.displayName || '',
@@ -61,7 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             localStorage.setItem('authUser', JSON.stringify({ jwt }))
 
                             await createUser(newUser)
-                            location.reload()
                         }
                     },
                     (error) => console.error(error)

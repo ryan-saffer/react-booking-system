@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink, createTRPCClient } from '@trpc/client'
 import { useEmulators } from '@components/Firebase/firebase'
-import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
+import { getCloudFunctionsDomain } from 'fizz-kidz'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AuthProvider } from '@components/Session/auth-provider'
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
@@ -53,16 +53,14 @@ const antdTheme: ThemeConfig = {
 function InnerRoot() {
     const firebase = useFirebase()
 
-    const domain = useEmulators
-        ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-        : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
+    const domain = getCloudFunctionsDomain(import.meta.env.VITE_ENV, useEmulators)
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
         createTRPCClient<AppRouter>({
             links: [
                 httpBatchLink({
-                    url: `${domain}/api/api/trpc`, // double '/api' since not using hosting redirect
+                    url: `${domain}/trpc`,
                     async headers() {
                         // first try refresh the users token - this means when returning to the app
                         // after a while, it will refresh the token and work nicely.

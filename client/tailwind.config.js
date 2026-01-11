@@ -58,6 +58,18 @@ export default {
                     DEFAULT: 'hsl(var(--card))',
                     foreground: 'hsl(var(--card-foreground))',
                 },
+                fizz: {
+                    purple: {
+                        dark: '#9B3EEA',
+                    },
+                    yellow: {
+                        DEFAULT: '#FFDC5D',
+                    },
+                    blue: {
+                        DEFAULT: '#02D7F7',
+                        hover: '#02c2de'
+                    },
+                },
             },
             borderRadius: {
                 lg: 'var(--radius)',

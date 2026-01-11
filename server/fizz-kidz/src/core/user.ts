@@ -2,7 +2,7 @@ import type { Role } from './role'
 import type { StudioOrMaster } from './studio'
 import type { PartialRecord } from '..'
 
-type BaseAuthUser = {
+type BaseUser = {
     uid: string
     email: string
     imageUrl: string | null
@@ -10,13 +10,13 @@ type BaseAuthUser = {
     lastname?: string
 }
 
-export type StaffAuthUser = BaseAuthUser & {
+export type StaffUser = BaseUser & {
     roles?: PartialRecord<StudioOrMaster, Role>
     accountType: 'staff'
 }
 
-export type CustomerAuthUser = BaseAuthUser & {
+export type CustomerUser = BaseUser & {
     accountType: 'customer'
 }
 
-export type AuthUser = StaffAuthUser | CustomerAuthUser
+export type AuthUser = StaffUser | CustomerUser

@@ -200,7 +200,9 @@ export default async function scheduleAfterSchoolProgram(
                 parentName: input.parent.firstName,
                 childName: input.child.firstName,
                 className: input.className,
-                portalUrl: `${getApplicationDomain(env)}/parent-portal/${appointment.id}`,
+                portalUrl: `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/parent-portal/${
+                    appointment.id
+                }`,
             })
             appointment.emails.portalLinkEmailSent = true
             await newDoc.set(appointment, { merge: true })

@@ -2,20 +2,19 @@ import fs from 'fs'
 import path from 'path'
 
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
-import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
+import { addOrdinalSuffix, getStudioAddress } from 'fizz-kidz'
 import fsPromise from 'fs/promises'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
 import type { Browser } from 'puppeteer'
 import puppeteer from 'puppeteer'
 
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import chromium from '@sparticuz/chromium'
-
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { StorageClient } from '../../firebase/StorageClient'
-import { projectId } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
 
 export async function generateInvitation(input: GenerateInvitation) {
     // serialise back into a date
@@ -48,7 +47,7 @@ export async function generateInvitation(input: GenerateInvitation) {
             childAge: addOrdinalSuffix(input.childAge),
             date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
             rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
-            address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
+            address: input.$type === 'studio' ? getStudioAddress(input.studio) : input.address,
         })
 
         if (!process.env.FUNCTIONS_EMULATOR) {

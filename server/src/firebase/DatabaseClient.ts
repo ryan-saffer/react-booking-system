@@ -11,6 +11,8 @@ import type {
     WithoutId,
     StudioOrMaster,
     AuthUser,
+    InvitationsV2,
+    Rsvp,
 } from 'fizz-kidz'
 import type { Document } from './FirestoreRefs'
 import { FirestoreRefs } from './FirestoreRefs'
@@ -88,12 +90,39 @@ class Client {
         return this.#getDocument(FirestoreRefs.partyBooking(bookingId))
     }
 
+    async getPartyBookingByInvitationId(invitationId: string) {
+        const partiesRef = await FirestoreRefs.partyBookings()
+        const snap = await partiesRef.where('invitationId', '==', invitationId).get()
+        if (snap.size == 0) {
+            throw new Error(`Unable to find booking with invitation id: '${invitationId}'`)
+        }
+        if (snap.size > 1) {
+            throw new Error(`Multiple bookings found with invitation id: '${invitationId}'`)
+        }
+
+        const doc = snap.docs[0]
+        return {
+            id: doc.id,
+            booking: doc.data(),
+        }
+    }
+
     updatePartyBooking(bookingId: string, booking: Partial<Booking>) {
         return this.#updateDocument(FirestoreRefs.partyBooking(bookingId), booking)
     }
 
     async deletePartyBooking(bookingId: string) {
-        return (await FirestoreRefs.partyBooking(bookingId)).delete()
+        // check for rsvps, and delete the collection if they exist
+        const rsvpsRef = await FirestoreRefs.rsvps(bookingId)
+        const rsvpsSnap = await rsvpsRef.get()
+        const deletePromises = rsvpsSnap.docs.map(async (doc) => {
+            const rsvpRef = await FirestoreRefs.rsvp(bookingId, doc.id)
+            return rsvpRef.delete()
+        })
+        await Promise.all(deletePromises)
+
+        const partyRef = await FirestoreRefs.partyBooking(bookingId)
+        await partyRef.delete()
     }
 
     getAfterSchoolEnrolment(appointmentId: string) {
@@ -236,6 +265,23 @@ class Client {
             },
             ref
         )
+    }
+
+    async createInvitationV2(invitation: InvitationsV2.Invitation) {
+        return this.#createDocument(invitation, (await FirestoreRefs.invitationsV2()).doc(invitation.id))
+    }
+
+    getInvitationV2(invitationId: string) {
+        return this.#getDocument(FirestoreRefs.invitationV2(invitationId))
+    }
+
+    async deleteInvitationV2(invitationId: string) {
+        return (await FirestoreRefs.invitationV2(invitationId)).delete()
+    }
+
+    async addRsvpToParty(bookingId: string, rsvp: WithoutId<Rsvp>) {
+        const rsvpRef = (await FirestoreRefs.rsvps(bookingId)).doc()
+        return this.#createDocument(rsvp, rsvpRef)
     }
 
     async addGuestToInvitation(person: Invitation['claimedDiscountCode'][number], invitationId: string) {

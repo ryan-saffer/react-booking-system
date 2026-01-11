@@ -10,6 +10,7 @@ import {
     STUDIOS,
     TAKE_HOME_BAGS,
     Utilities,
+    getRsvpUrl,
 } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import type { ChangeEvent } from 'react'
@@ -940,7 +941,8 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 onDelete={() => {
                     showConfirmationDialog({
                         dialogTitle: 'Delete Booking',
-                        dialogContent: 'Are you sure you want to delete this booking?',
+                        dialogContent:
+                            "This will also delete all invitations and RSVP's associated with this booking, and is irreversible. Are you sure you want to continue?",
                         confirmationButtonText: 'Delete',
                         onConfirm: handleDeleteBooking,
                     })
@@ -960,6 +962,15 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                                 toast.error('Unable to get party form link.')
                             }
                             setLoading(false)
+                        },
+                    },
+                    {
+                        label: 'Get invitation link',
+                        action: async () => {
+                            navigator.clipboard.writeText(
+                                getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id)
+                            )
+                            toast.success('Invitation link copied to clipboard')
                         },
                     },
                 ]}

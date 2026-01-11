@@ -11,7 +11,10 @@
         "prefix": ""
     },
     "aliases": {
-        "components": "src/ui-components",
-        "utils": "@utils/tailwind"
+        "components": "@ui-components",
+        "utils": "@utils/tailwind",
+        "ui": "src/ui-components/ui",
+        "lib": "@utils",
+        "hooks": "@hooks"
     }
 }

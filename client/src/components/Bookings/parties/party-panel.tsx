@@ -1,5 +1,5 @@
 import dateFormat from 'dateformat'
-import type { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
+import { getRsvpUrl, type Booking, type FirestoreBooking, type WithId } from 'fizz-kidz'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Grid } from '@mui/material'
@@ -8,8 +8,10 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
+import { Button } from '@ui-components/button'
 
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
+import { UsersRound } from 'lucide-react'
 
 const PREFIX = 'BookingPanel'
 
@@ -68,15 +70,34 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
         <StyledAccordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={classes.summary}>
-                    <div className={classes.accordionHeading}>
-                        <Typography className={classes.heading}>
-                            {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
-                            {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
-                        </Typography>
-                        <Typography className={classes.secondaryHeading}>
-                            {booking.parentFirstName} {booking.parentLastName} - {booking.childName}
-                            's {booking.childAge}th
-                        </Typography>
+                    <div className="twp flex items-center gap-12">
+                        <div className={classes.accordionHeading}>
+                            <Typography className={classes.heading}>
+                                {dateFormat(booking.dateTime.toDate(), 'h:MM TT')} -{' '}
+                                {dateFormat(getEndDate(booking.dateTime.toDate(), booking.partyLength), 'h:MM TT')}
+                            </Typography>
+                            <Typography className={classes.secondaryHeading}>
+                                {booking.parentFirstName} {booking.parentLastName} - {booking.childName}
+                                's {booking.childAge}th
+                            </Typography>
+                        </div>
+                        {booking.invitationId && (
+                            <Button
+                                className="twp hidden sm:inline-flex"
+                                variant="darkPurple"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    window.open(
+                                        getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id),
+                                        '_blank'
+                                    )
+                                }}
+                            >
+                                <UsersRound className="mr-2 h-4 w-4" />
+                                View RSVP's
+                            </Button>
+                        )}
                     </div>
                     <div className="mr-2 flex flex-col flex-wrap justify-end gap-1 sm:flex-row">
                         {booking.oldPrices && <CustomChip label="Old Prices" color="#FFD6A7" />}
@@ -93,6 +114,23 @@ const PartyPanel = ({ booking }: { booking: WithId<FirestoreBooking> }) => {
             <AccordionDetails>
                 <Grid container spacing={3}>
                     <Grid item xs>
+                        {booking.invitationId && (
+                            <Button
+                                className="twp mb-4 w-full sm:hidden"
+                                variant="darkPurple"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    window.open(
+                                        getRsvpUrl(import.meta.env.VITE_ENV, import.meta.env.DEV, booking.id),
+                                        '_blank'
+                                    )
+                                }}
+                            >
+                                <UsersRound className="mr-2 h-4 w-4" />
+                                View RSVP's
+                            </Button>
+                        )}
                         <ExistingBookingForm booking={booking} />
                     </Grid>
                 </Grid>

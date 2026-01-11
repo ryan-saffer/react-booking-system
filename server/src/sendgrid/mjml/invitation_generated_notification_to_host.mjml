@@ -1,0 +1,99 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Helvetica Neue', Arial, sans-serif" />
+            <mj-text font-size="15px" color="#475569" line-height="1.6" />
+            <mj-section padding="0px" />
+            <mj-column padding="0px" />
+        </mj-attributes>
+        <mj-style>
+            .card { border: 1px solid #E2E8F0; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 25px
+            rgba(83, 38, 129, 0.08); }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#F7F1FF" width="600px">
+        <mj-wrapper full-width="full-width" background-color="#F7F1FF">
+            <mj-section padding-top="24px" padding-bottom="0" padding-left="12px" padding-right="12px">
+                <mj-column width="100%" vertical-align="middle">
+                    <mj-image
+                        align="center"
+                        src="https://fizzkidz.com.au/images/logo-horizontal.png"
+                        alt="Fizz Kidz"
+                        width="140px"
+                        padding="0 0 12px 0"
+                    />
+                </mj-column>
+            </mj-section>
+
+            <mj-section css-class="card" padding="0 16px 24px 16px">
+                <mj-column width="100%">
+                    <mj-text
+                        align="center"
+                        color="#9B3EEA"
+                        font-size="13px"
+                        font-weight="700"
+                        text-transform="uppercase"
+                        letter-spacing="0.08em"
+                        padding-top="24px"
+                    >
+                        Invitation Ready
+                    </mj-text>
+                    <mj-text align="center" font-size="24px" font-weight="700" color="#0f172a" padding-bottom="12px">
+                        Your invitation has been created!
+                    </mj-text>
+                    <mj-text align="center" padding-bottom="10px">
+                        Hey {{parentName}}, your invitation is live and ready to share. Track RSVPs, share the link, or
+                        download a print-ready copy below - guests can always RSVP by scanning the QR code.
+                    </mj-text>
+
+                    <mj-button
+                        href="{{invitationLink}}"
+                        background-color="#9B3EEA"
+                        color="#ffffff"
+                        font-size="16px"
+                        font-weight="700"
+                        border-radius="14px"
+                        padding="10px 24px"
+                        inner-padding="12px 22px"
+                        align="center"
+                    >
+                        Open your invitation dashboard
+                    </mj-button>
+
+                    <mj-divider border-color="#E2E8F0" padding="16px 0" border-width="1px" />
+
+                    <mj-text font-weight="700" color="#0f172a" padding-bottom="8px" align="center">
+                        Share it your way
+                    </mj-text>
+                    <mj-text padding="0 8px 12px 8px">
+                        • Send the link so parents can RSVP online.<br />
+                        • Download and print the invite - the invite has a QR code so guests can easily scan it to
+                        RSVP.<br />
+                        • Check in anytime to see who's coming.
+                    </mj-text>
+                    <mj-text font-size="14px" font-weight="700" padding="0 12px"> A note about allergies </mj-text>
+                    <mj-text padding="0 12px 8px" color="#475569">
+                        Allergy notes are for your planning. Fizz Kidz doesn't monitor RSVP's - please contact us
+                        directly if you need us to accommodate anything.
+                    </mj-text>
+
+                    <mj-divider border-color="#E2E8F0" padding="8px 0 16px 0" border-width="1px" />
+
+                    <mj-text align="center" color="#9B3EEA" font-size="14px" font-weight="700" padding-bottom="6px">
+                        Managing RSVPs
+                    </mj-text>
+                    <mj-text align="center" padding="0 12px">
+                        To manage RSVPs, make sure you're signed in with the same account you used to create this
+                        invitation.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding="0 0 24px 0">
+                <mj-column>
+                    <mj-spacer height="8px" />
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>
