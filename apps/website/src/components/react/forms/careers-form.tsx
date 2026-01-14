@@ -206,7 +206,7 @@ function CareersForm() {
                 <SelectContent>
                   <SelectItem value="area-manager">Area Manager</SelectItem>
                   <SelectItem value="social-media">
-                    Social Media Talent
+                    Social Media & Content Creator
                   </SelectItem>
                   <SelectItem value="manager">Studio Manager</SelectItem>
                   <SelectItem value="supervisor">Studio Supervisor</SelectItem>
