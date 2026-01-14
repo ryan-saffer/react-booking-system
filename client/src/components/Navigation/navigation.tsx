@@ -88,11 +88,7 @@ const usefulLinks: NavigationItem[] = [
         accent: '#00c2e3',
         accentSoft: 'rgba(0, 194, 227, 0.16)',
         tag: 'External',
-        onClick: () =>
-            window.open(
-                'https://docs.google.com/forms/d/e/1FAIpQLSecOuuZ-k6j5z04aurXcgHrrak6I91wwePK57mVqlvyaib9qQ/viewform',
-                '_blank'
-            ),
+        onClick: () => window.open('https://pyornlcz.paperform.co', '_blank'),
     },
     {
         title: 'Behaviour Management Plan',
@@ -211,7 +207,7 @@ export const Navigation = () => {
 
 function Section({ title, subtitle, items }: { title: string; subtitle?: string; items: NavigationItem[] }) {
     return (
-        <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white p-4 shadow-[0_14px_32px_rgba(15,23,42,0.1)] sm:bg-white/90 sm:backdrop-blur sm:p-5">
+        <section className="relative overflow-hidden rounded-3xl border border-white/70 bg-white p-4 shadow-[0_14px_32px_rgba(15,23,42,0.1)] sm:bg-white/90 sm:p-5 sm:backdrop-blur">
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
                 <div className="flex flex-col">
                     <h2 className="lilita m-0 text-xl text-slate-900 sm:text-2xl">{title}</h2>

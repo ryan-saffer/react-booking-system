@@ -17,7 +17,13 @@ import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-
 const app = express()
 const apiRouter = express.Router()
 
-const ERRORS_TO_IGNORE: AppErrorCode[] = ['PRECONDITION_FAILED', 'UNAUTHORIZED', 'CLASS_FULL', 'PAYMENT_METHOD_INVALID']
+const ERRORS_TO_IGNORE: AppErrorCode[] = [
+    'PRECONDITION_FAILED',
+    'UNAUTHORIZED',
+    'CLASS_FULL',
+    'PAYMENT_METHOD_INVALID',
+    'GIFT_CARD_NOT_FOUND',
+]
 
 // TRPC
 apiRouter.use(
