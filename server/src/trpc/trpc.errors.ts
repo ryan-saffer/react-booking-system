@@ -10,11 +10,19 @@ export function getErrorCode(error: Error | undefined, defaultCode: TRPC_ERROR_C
     if (error instanceof GiftCardInactiveError) {
         return 'GIFT_CARD_INACTIVE'
     }
+    if (error instanceof GiftCardNotFoundError) {
+        return 'GIFT_CARD_NOT_FOUND'
+    }
     return defaultCode
 }
 
 // MARK: Custom errors
-export type AppErrorCode = TRPC_ERROR_CODE_KEY | 'PAYMENT_METHOD_INVALID' | 'CLASS_FULL' | 'GIFT_CARD_INACTIVE'
+export type AppErrorCode =
+    | TRPC_ERROR_CODE_KEY
+    | 'PAYMENT_METHOD_INVALID'
+    | 'CLASS_FULL'
+    | 'GIFT_CARD_INACTIVE'
+    | 'GIFT_CARD_NOT_FOUND'
 
 /**
  * This class just exists to ensure only custom errors can be thrown by throwCustomTrpcError()
@@ -50,5 +58,12 @@ export class GiftCardInactiveError extends CustomTrpcError {
     constructor(message?: string) {
         super(message ?? 'The provided gift card is not active and cannot be used')
         this.name = 'GiftCardInactiveError'
+    }
+}
+
+export class GiftCardNotFoundError extends CustomTrpcError {
+    constructor(message?: string) {
+        super(message ?? 'The porvided gift card could not be found')
+        this.name = 'GiftCardNotFoundError'
     }
 }
