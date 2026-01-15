@@ -73,6 +73,8 @@ export const CustomerBookingPage = () => {
         mutationKey: trpc.holidayPrograms.book.mutationKey(),
     })
 
+    const calculateTotal = useCart((store) => store.calculateTotal)
+
     useEffect(() => {
         // whenever store selection changes, clear all selected classes
         data?.forEach((klass) => {
@@ -134,6 +136,7 @@ export const CustomerBookingPage = () => {
                         values.children = children.filter((child: any) => child && child.childName !== undefined)
                     }
                     setFormValues(values)
+                    calculateTotal(values.children?.length || 0)
                 }}
                 layout="vertical"
             >

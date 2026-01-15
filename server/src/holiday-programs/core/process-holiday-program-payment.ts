@@ -72,11 +72,12 @@ export async function processHolidayProgramPayment(input: HolidayProgramBookingP
         )
 
     let recieptUrl: string | undefined = undefined
-    let amountToPay = BigInt(input.payment.amount)
+    const orderTotal = order?.totalMoney?.amount ?? BigInt(input.payment.amount)
+    let amountToPay = orderTotal
     let giftCardPayment = undefined
 
     // if its free, simply process the payment
-    if (order?.totalMoney?.amount === BigInt(0)) {
+    if (orderTotal === BigInt(0)) {
         await square.orders.pay({ orderId: order!.id!, paymentIds: [], idempotencyKey: input.idempotencyKey })
         return {
             orderId: order!.id!,
