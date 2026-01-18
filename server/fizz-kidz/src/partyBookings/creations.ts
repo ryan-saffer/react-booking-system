@@ -11,7 +11,7 @@ const GLAM_CREATIONS = {
     lipBalm: 'Sparkling Lip-Balm',
     unicornSoap: 'Unicorn Soap',
     rainbowBathBombs: 'Rainbow Bath Bombs',
-    unicornBathCrumble: 'Unicorn Bath Crumble',
+    unicornBathCrumble: 'Unicorn Fizz Crumble',
     glitterHairGel: 'Glitter Hair Gel',
 } as const
 
@@ -73,7 +73,7 @@ const SAFARI_CREATIONS = {
 const UNICORN_CREATIONS = {
     fairyWands: 'Fairy Wands',
     lipBalm: 'Sparkling Lip-Balm',
-    unicornBathCrumble: 'Unicorn Bath Crumble',
+    unicornBathCrumble: 'Unicorn Fizz Crumble',
     unicornSoap: 'Unicorn Soap',
     unicornBathBombs: 'Unicorn Bath Bombs',
     unicornCloudSlime: 'Unicorn Cloud Slime',
