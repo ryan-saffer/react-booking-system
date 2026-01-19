@@ -18,12 +18,12 @@ const GLAM_CREATIONS = {
 const SCIENCE_CREATIONS = {
     jellySoap: 'Jelly Soap',
     dinosaurBathBombs: 'Dinosaur Bath Bombs',
+    dinosaurSoap: 'Dinosaur Soap',
     fluffySlime: 'Fluffy Slime',
     bugsInBathBombs: 'Bugs in Bath Bombs',
     volcanoes: 'Bubbling Volcanoes',
     dinosaurFossils: 'Dinosaur Fossils',
     monsterBrains: 'Monster Brains',
-    stringSlime: 'String Slime',
     monsterSlime: 'Monster Slime',
 } as const
 
@@ -136,6 +136,7 @@ const DEPRECATED_CREATIONS = {
     perfume: 'Shining Perfume',
     rainbowSoap: 'Rainbow Soap',
     soap: 'Sparkling Soap',
+    stringSlime: 'String Slime',
     sugarScrubLipBalm: 'Sugar Lip Scrub',
     unicornBathCrystals: 'Unicorn Bath Crystals',
     unicornBathShimmer: 'Unicorn Bath Shimmer',
