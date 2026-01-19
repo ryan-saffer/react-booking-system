@@ -105,7 +105,7 @@ const DEMON_HUNTERS_CREATIONS = {
     hendrixGlitterShine: 'Huntrix Glitter Shine',
     wondersticks: 'Wondersticks',
     moonBeamBracelets: 'Moon Beam Bracelets',
-    squishiePockets: 'Squishy Pockets',
+    squishiePockets: 'Squishy Kitty Pockets',
     starSlayClips: 'Star Slay Clips',
 }
 
