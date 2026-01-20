@@ -10,6 +10,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@ui-components/alert-dialog'
+import { useAuth } from '@components/Hooks/context/useAuth'
 
 type VersionPayload = {
     version?: string
@@ -42,6 +43,8 @@ export function AppUpdatePrompt({ pollIntervalMs = 5 * 60_000 }: { pollIntervalM
 
     const [latest, setLatest] = useState<VersionPayload | null>(null)
     const [open, setOpen] = useState(false)
+
+    const auth = useAuth()
 
     const updateAvailable = useMemo(() => {
         return Boolean(latest?.version && latest.version !== currentVersion)
@@ -103,16 +106,20 @@ export function AppUpdatePrompt({ pollIntervalMs = 5 * 60_000 }: { pollIntervalM
         }
     }, [updateAvailable])
 
-    if (!updateAvailable) {
-        return null
-    }
-
     const handleRefresh = () => {
         const url = new URL(window.location.href)
         url.searchParams.set('v', latest?.version ?? `${Date.now()}`)
 
         // Replace rather than reload to help bypass any cached HTML on iOS.
         window.location.replace(url.toString())
+    }
+
+    if (auth?.accountType === 'customer') {
+        return null
+    }
+
+    if (!updateAvailable) {
+        return null
     }
 
     return (
