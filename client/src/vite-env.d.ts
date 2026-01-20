@@ -4,6 +4,9 @@
 interface ImportMetaEnv {
     readonly VITE_ENV: 'prod' | 'dev'
 
+    readonly VITE_APP_VERSION: string
+    readonly VITE_APP_BUILT_AT: string
+
     readonly VITE_FIREBASE_API_KEY: string
     readonly VITE_FIREBASE_AUTH_DOMAIN: string
     readonly VITE_FIREBASE_DATABASE_URL: string
