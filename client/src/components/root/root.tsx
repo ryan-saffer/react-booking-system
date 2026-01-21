@@ -2,6 +2,7 @@ import mixpanel from 'mixpanel-browser'
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
+import { AppUpdatePrompt } from '@components/root/app-update-prompt'
 import { MixpanelContext } from '@components/Mixpanel/MixpanelContext'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material/styles'
 import { ConfigProvider, type ThemeConfig } from 'antd'
@@ -100,6 +101,7 @@ function InnerRoot() {
                                             <ConfirmationDialogProvider>
                                                 <ConfirmationDialogWithCheckboxProvider>
                                                     <ScrollRestoration />
+                                                    <AppUpdatePrompt />
                                                     <Toaster richColors />
                                                     <Outlet />
                                                 </ConfirmationDialogWithCheckboxProvider>
