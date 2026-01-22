@@ -1,14 +1,15 @@
+import { styled } from '@mui/material/styles'
+import { useQuery } from '@tanstack/react-query'
 import { Card, Typography } from 'antd'
-import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
-import { styled } from '@mui/material/styles'
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
+
 import { useTRPC } from '@utils/trpc'
 
-import Loader from '../../../Shared/Loader'
 import InvoiceStatistic from './InvoiceStatistic'
+import Loader from '../../../Shared/Loader'
 
-import { useQuery } from '@tanstack/react-query'
 
 const PREFIX = 'InvoiceDetails'
 

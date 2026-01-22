@@ -1,9 +1,10 @@
 import { FieldValue } from 'firebase-admin/firestore'
+
 import type { AuthUser, Role, StaffAuthUser, StudioOrMaster } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { authenticatedProcedure, router } from '../../../trpc/trpc'
-import { addUserToStudio } from '../../core/add-user-to-studio'
+import { addUserToStudio } from '@/auth/core/add-user-to-studio'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { router, authenticatedProcedure } from '@/trpc/trpc'
 
 export const authRouter = router({
     createUser: authenticatedProcedure

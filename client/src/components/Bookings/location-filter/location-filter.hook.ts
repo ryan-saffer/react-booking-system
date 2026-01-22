@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+
 import { FilterContext } from './location-filter.context'
 
 export function useLocationFilter() {

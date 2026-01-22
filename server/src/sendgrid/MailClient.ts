@@ -4,11 +4,12 @@ import path from 'path'
 import { logger } from 'firebase-functions/v2'
 import Mustache from 'mustache'
 
-import type { MailService } from '@sendgrid/mail'
 
 import { env } from '../init'
-import type { ClientStatus } from '../utilities/types'
+
 import type { Emails } from './types'
+import type { ClientStatus } from '../utilities/types'
+import type { MailService } from '@sendgrid/mail'
 
 type Options = {
     /**

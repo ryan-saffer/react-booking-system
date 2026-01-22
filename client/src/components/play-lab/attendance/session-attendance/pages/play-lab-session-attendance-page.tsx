@@ -1,10 +1,12 @@
-import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import * as Accordion from '@radix-ui/react-accordion'
+import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
-import * as Accordion from '@radix-ui/react-accordion'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Skeleton } from '@ui-components/skeleton'
@@ -15,7 +17,6 @@ import { ChildExpandedDetails } from '../components/child-expanded-details'
 import { ChildRow } from '../components/child-row'
 import { useParams } from '../hooks/use-params'
 
-import { useQuery } from '@tanstack/react-query'
 
 export function PlayLabSessionAttendancePage() {
     const trpc = useTRPC()

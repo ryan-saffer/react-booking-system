@@ -1,6 +1,6 @@
+import { useMutation } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import type { InvitationOption, Studio } from 'fizz-kidz'
-import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
+import { getDownloadURL, ref } from 'firebase/storage'
 import { CalendarIcon, Copy, ExternalLink, Loader2, Mail, MessageCircleMore } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
@@ -10,8 +10,10 @@ import { Link, useLocation } from 'react-router-dom'
 import { WhatsappIcon, WhatsappShareButton } from 'react-share'
 import { Toaster, toast } from 'sonner'
 
+import { STUDIOS, capitalise, getApplicationDomain } from 'fizz-kidz'
+import type { InvitationOption, Studio } from 'fizz-kidz'
+
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { getDownloadURL, ref } from 'firebase/storage'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@ui-components/dialog'
@@ -29,7 +31,6 @@ import { useTRPC } from '@utils/trpc'
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
 
-import { useMutation } from '@tanstack/react-query'
 
 type TForm = {
     childName: string

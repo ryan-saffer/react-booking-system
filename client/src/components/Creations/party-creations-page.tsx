@@ -1,13 +1,14 @@
+import { useQuery } from '@tanstack/react-query'
 import Markdown from 'react-markdown'
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
-
-import { markdownComponents } from './markdown-components'
-import { useTRPC } from '@utils/trpc'
-import Loader from '@components/Shared/Loader'
 import type { CreationInstructions } from 'fizz-kidz'
 
-import { useQuery } from '@tanstack/react-query'
+import Loader from '@components/Shared/Loader'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
+import { useTRPC } from '@utils/trpc'
+
+import { markdownComponents } from './markdown-components'
+
 
 export const PartyCreationsPage = () => {
     const trpc = useTRPC()

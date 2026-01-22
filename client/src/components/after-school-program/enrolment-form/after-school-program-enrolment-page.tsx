@@ -1,12 +1,13 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { CheckCircle, ChevronLeft } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import type { z } from 'zod'
+
 
 import Root from '@components/Shared/Root'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Form } from '@ui-components/form'
@@ -19,7 +20,8 @@ import { SchoolProgramSelection } from './school-program-selection'
 import { StudioProgramSelection } from './studio-program-selection'
 import { useSelectedProgram } from './use-selected-program'
 
-import { useMutation } from '@tanstack/react-query'
+import type { z } from 'zod'
+
 
 export function AfterSchoolProgramEnrolmentPage() {
     const trpc = useTRPC()

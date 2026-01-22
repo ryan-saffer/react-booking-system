@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { useAuth } from '@components/Hooks/context/useAuth'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,7 +11,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@ui-components/alert-dialog'
-import { useAuth } from '@components/Hooks/context/useAuth'
 
 type VersionPayload = {
     version?: string

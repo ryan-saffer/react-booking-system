@@ -1,7 +1,8 @@
 import { logger } from 'firebase-functions/v2'
+import { DateTime } from 'luxon'
+
 import type { IncursionEvent } from 'fizz-kidz'
 import { ModuleNameMap } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'

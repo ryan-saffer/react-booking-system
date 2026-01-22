@@ -1,6 +1,7 @@
+import { AcuityConstants, AcuityUtilities, type AcuityTypes } from 'fizz-kidz'
+
 import { Badge } from '@ui-components/badge'
 import { cn } from '@utils/tailwind'
-import { AcuityConstants, AcuityUtilities, type AcuityTypes } from 'fizz-kidz'
 
 export function ChildExpandedDetails({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
     const childAge = AcuityUtilities.retrieveFormAndField(

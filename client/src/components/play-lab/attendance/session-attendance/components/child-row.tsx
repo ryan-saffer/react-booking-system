@@ -1,6 +1,9 @@
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { ChevronRightIcon, EllipsisVertical, Loader2, LogIn, LogOut } from 'lucide-react'
+
 import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import type { AcuityTypes } from 'fizz-kidz'
-import { ChevronRightIcon, EllipsisVertical, Loader2, LogIn, LogOut } from 'lucide-react'
 
 import { Badge } from '@ui-components/badge'
 import { Button } from '@ui-components/button'
@@ -11,8 +14,6 @@ import { useTRPC } from '@utils/trpc'
 
 import { useParams } from '../hooks/use-params'
 
-import { useMutation } from '@tanstack/react-query'
-import { useQueryClient } from '@tanstack/react-query'
 
 export function ChildRow({ appointment }: { appointment: AcuityTypes.Api.Appointment }) {
     const trpc = useTRPC()

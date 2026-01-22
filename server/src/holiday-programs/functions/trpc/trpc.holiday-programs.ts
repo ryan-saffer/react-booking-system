@@ -1,3 +1,4 @@
+import { checkGiftCardBalance } from '@/gift-cards/check-gift-card-balance'
 import { type HolidayProgramBookingProps, bookHolidayProgram } from '@/holiday-programs/core/book-holiday-program'
 import { checkDiscountCode } from '@/holiday-programs/core/discount-codes/check-discount-code'
 import {
@@ -8,7 +9,6 @@ import {
     type CreateDiscountCodeFromInvitation,
     createDiscountCodeFromInvitation,
 } from '@/holiday-programs/core/discount-codes/create-discount-code-from-invitation'
-import { checkGiftCardBalance } from '@/gift-cards/check-gift-card-balance'
 import { publicProcedure, authenticatedProcedure, router } from '@/trpc/trpc'
 
 export const holidayProgramsRouter = router({

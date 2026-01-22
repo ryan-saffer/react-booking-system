@@ -1,10 +1,10 @@
+import { ref as firebaseRef, uploadBytesResumable } from 'firebase/storage'
 import { forwardRef, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Progress } from '@ui-components/progress'
 import { cn } from '@utils/tailwind'
-import { ref as firebaseRef, uploadBytesResumable } from 'firebase/storage'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     onSuccess: (file: File) => void

@@ -1,27 +1,15 @@
 {
     "root": true,
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "../eslint.shared.cjs"],
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
+    "plugins": ["@typescript-eslint", "import"],
     "rules": {
         "no-extra-semi": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["off"],
-        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-extra-semi": "off",
-        "@typescript-eslint/no-shadow": ["error"],
-        // turn off the built-in duplicate check
-        "no-duplicate-imports": "off",
-        "import/no-duplicates": "off",
-        // auto-separate value imports from type imports
-        "@typescript-eslint/consistent-type-imports": [
-            "error",
-            {
-                "prefer": "type-imports",
-                "fixStyle": "separate-type-imports"
-            }
-        ]
+        "@typescript-eslint/no-shadow": ["error"]
     }
 }

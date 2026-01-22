@@ -1,6 +1,6 @@
+import type { ClientStatus } from '../utilities/types'
 import type { Firestore } from 'firebase-admin/firestore'
 
-import type { ClientStatus } from '../utilities/types'
 
 export class FirestoreClient {
     private static instance: FirestoreClient

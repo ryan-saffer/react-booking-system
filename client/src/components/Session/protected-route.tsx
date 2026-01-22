@@ -1,11 +1,13 @@
-import type { Permission } from 'fizz-kidz'
-import type { ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
+
+import type { Permission } from 'fizz-kidz'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 
 import Unauthorised from './Unauthorised'
 import { useOrg } from './use-org'
+
+import type { ReactNode } from 'react'
 
 export function ProtectedRoute({ permission, children }: { permission: Permission; children: ReactNode }) {
     const authUser = useAuth()

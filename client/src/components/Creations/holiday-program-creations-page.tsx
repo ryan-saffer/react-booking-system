@@ -1,12 +1,12 @@
+import { useQuery } from '@tanstack/react-query'
 import Markdown from 'react-markdown'
 
+import Loader from '@components/Shared/Loader'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui-components/accordion'
+import { useTRPC } from '@utils/trpc'
 
 import { markdownComponents } from './markdown-components'
-import { useTRPC } from '@utils/trpc'
-import Loader from '@components/Shared/Loader'
 
-import { useQuery } from '@tanstack/react-query'
 
 export const HolidayCreationsPage = () => {
     const trpc = useTRPC()

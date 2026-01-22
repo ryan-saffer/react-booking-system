@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import { useCallback, useRef, useState } from 'react'
 
 import {
@@ -11,7 +10,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@ui-components/alert-dialog'
+
 import { ConfirmationDialogContext } from './confirmation-dialog.context'
+
+import type { ReactNode } from 'react'
 
 export type Props = { title: string; description: string }
 

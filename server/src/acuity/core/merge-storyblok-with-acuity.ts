@@ -1,4 +1,5 @@
 import type { AcuityTypes } from 'fizz-kidz'
+
 import { StoryblokClient, type HolidayProgramWeek } from '../../storyblok/storyblok-client'
 
 /**

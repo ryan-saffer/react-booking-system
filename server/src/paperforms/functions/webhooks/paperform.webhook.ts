@@ -1,5 +1,6 @@
 import express from 'express'
 import { logger } from 'firebase-functions/v2'
+
 import { assertNever, type PubSubFunctions } from 'fizz-kidz'
 
 import { logError, publishToPubSub } from '@/utilities'

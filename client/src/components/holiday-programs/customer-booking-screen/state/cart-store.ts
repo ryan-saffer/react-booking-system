@@ -1,5 +1,6 @@
-import type { AcuityTypes, DiscountCode, GiftCard, StudioOrTest } from 'fizz-kidz'
 import { create } from 'zustand'
+
+import type { AcuityTypes, DiscountCode, GiftCard, StudioOrTest } from 'fizz-kidz'
 
 type Class = AcuityTypes.Client.Class
 

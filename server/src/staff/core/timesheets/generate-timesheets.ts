@@ -4,12 +4,16 @@ import os from 'os'
 import path from 'path'
 
 import { logger } from 'firebase-functions/v2'
-import { isFranchise, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
 import { DateTime } from 'luxon'
-import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
-import type { Rate } from './timesheets.types'
-import type { TimesheetRow } from './timesheets.utils'
+import { isFranchise, type FranchiseOrMaster, type GenerateTimesheetsParams } from 'fizz-kidz'
+
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
+import { SlingClient } from '@/sling/sling-client'
+import { throwTrpcError } from '@/utilities'
+import { XeroClient } from '@/xero/XeroClient'
+
 import {
     createTimesheetRows,
     getWeeks,
@@ -17,11 +21,10 @@ import {
     isYoungerThan18,
     SlingLocationsMap,
 } from './timesheets.utils'
-import { StorageClient } from '@/firebase/StorageClient'
-import { projectId } from '@/init'
-import { SlingClient } from '@/sling/sling-client'
-import { throwTrpcError } from '@/utilities'
-import { XeroClient } from '@/xero/XeroClient'
+
+import type { Rate } from './timesheets.types'
+import type { TimesheetRow } from './timesheets.utils'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 const OVERTIME_START = 38
 

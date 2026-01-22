@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import { useCallback, useRef, useState } from 'react'
 
 import { Button } from '@ui-components/button'
@@ -11,7 +10,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@ui-components/dialog'
+
 import { ConfirmationDialogWithCheckboxContext } from './confirmation-dialog-with-checkbox.context'
+
+import type { ReactNode } from 'react'
 
 export type Props = {
     title: string

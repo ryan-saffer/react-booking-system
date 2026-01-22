@@ -1,16 +1,19 @@
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
+import { styled } from '@mui/material/styles'
 import { Button } from 'antd'
-import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
-import { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useMemo, useState } from 'react'
 
-import { LoginOutlined, LogoutOutlined } from '@ant-design/icons'
-import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
-import { styled } from '@mui/material/styles'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
 
-import type { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+
+
 import { BREAKPOINT_MD } from './EnrolmentTable'
 import SignatureDialog from './SignatureDialog'
+
+import type { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 
 const PREFIX = 'ActionButton'
 

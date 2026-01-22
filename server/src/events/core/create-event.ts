@@ -1,11 +1,12 @@
-import type { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
-import { ModuleIncursionMap, ModuleNameMap } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { CalendarClient } from '../../google/CalendarClient'
-import { MailClient } from '../../sendgrid/MailClient'
-import { throwTrpcError } from '../../utilities'
+import type { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
+import { ModuleIncursionMap, ModuleNameMap } from 'fizz-kidz'
+
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { CalendarClient } from '@/google/CalendarClient'
+import { MailClient } from '@/sendgrid/MailClient'
+import { throwTrpcError } from '@/utilities'
 
 export type CreateEvent = {
     event: WithoutId<DistributiveOmit<Event, 'eventId' | 'startTime' | 'endTime' | 'calendarEventId'>>

@@ -1,10 +1,11 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
 import dateFormat from 'dateformat'
-import type { Event } from 'fizz-kidz'
 import { SquareArrowOutUpRight } from 'lucide-react'
 import React from 'react'
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material'
+import type { Event } from 'fizz-kidz'
+
 
 import { ExistingEventForm } from './forms/existing-event-form'
 

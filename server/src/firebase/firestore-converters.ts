@@ -1,5 +1,6 @@
-import type { QueryDocumentSnapshot } from 'firebase-admin/firestore'
 import { Timestamp } from 'firebase-admin/firestore'
+
+import type { QueryDocumentSnapshot } from 'firebase-admin/firestore'
 
 function convertTimestamps<T extends object>(input: T): T {
     const data = input as any

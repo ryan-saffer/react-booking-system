@@ -1,18 +1,18 @@
+import { styled } from '@mui/material/styles'
 import { Divider, Result, Typography } from 'antd'
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import useFetchAfterSchoolProgramEnrolment from '@components/Hooks/api/use-fetch-after-school-program-enrolment'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
-import { styled } from '@mui/material/styles'
 
-import Loader from '../../Shared/Loader'
 import ClassManager from './ClassManager/ClassManager'
 import EnrolmentSummary from './EnrolmentSummary/EnrolmentSummary'
 import PickupPeople from './PickupPeople/PickupPeople'
+import Loader from '../../Shared/Loader'
 
 const PREFIX = 'ParentPortal'
 

@@ -1,10 +1,14 @@
 import { Button, Modal, Typography } from 'antd'
-import type { Employee } from 'fizz-kidz'
-import type { MouseEvent } from 'react'
+import { doc, updateDoc } from 'firebase/firestore'
 import { useState } from 'react'
 
+import type { Employee } from 'fizz-kidz'
+
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { doc, updateDoc } from 'firebase/firestore'
+
+import type { MouseEvent } from 'react'
+
+
 
 export const EmployeeWWCCButton = ({ employee }: { employee: Employee }) => {
     const firebase = useFirebase()

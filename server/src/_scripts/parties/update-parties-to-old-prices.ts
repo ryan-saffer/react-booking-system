@@ -1,6 +1,6 @@
 import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreClient } from '../../firebase/FirestoreClient'
 import { timestampConverter } from '../../firebase/firestore-converters'
+import { FirestoreClient } from '../../firebase/FirestoreClient'
 
 /**
  * Update all bookings in firestore to set { oldPrices: true }

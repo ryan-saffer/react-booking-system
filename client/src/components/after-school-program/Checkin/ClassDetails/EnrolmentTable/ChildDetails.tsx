@@ -1,17 +1,20 @@
-import type { MenuProps } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { styled } from '@mui/material/styles'
 import { Button, Descriptions, Dropdown, Space, Tag, Typography } from 'antd'
-import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
-import { AcuityConstants } from 'fizz-kidz'
 import React, { useMemo, useState } from 'react'
 
-import { DownOutlined } from '@ant-design/icons'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
+
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
-import { styled } from '@mui/material/styles'
 import { formatMobileNumber } from '@utils/stringUtilities'
 
-import type { MenuItemType } from 'antd/es/menu/interface'
-import type { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
 import { BREAKPOINT_LG } from './EnrolmentTable'
+
+import type { SetAppointmentLabel, UpdateEnrolment } from './EnrolmentTable'
+import type { MenuProps } from 'antd'
+import type { MenuItemType } from 'antd/es/menu/interface'
+
 
 const PREFIX = 'ChildDetails'
 

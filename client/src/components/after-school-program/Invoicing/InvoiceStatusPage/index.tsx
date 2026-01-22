@@ -1,17 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
 import { Result } from 'antd'
-import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
+
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import SkeletonRows from '@components/Shared/SkeletonRows'
 import { useTRPC } from '@utils/trpc'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+
 
 import { EnrolmentsTable } from './EnrolmentsTable/EnrolmentsTable'
 
-import { useQuery } from "@tanstack/react-query";
 
 export const AfterSchoolProgramInvoicing: React.FC = () => {
     const trpc = useTRPC();

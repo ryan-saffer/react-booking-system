@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@ui-components/table'
-import { PRICING_STRUCTURE } from '../../../state/cart-store'
 import { cn } from '@utils/tailwind'
+
+import { PRICING_STRUCTURE } from '../../../state/cart-store'
 
 const formatCurrency = (value: number) => {
     const hasCents = !Number.isInteger(value)

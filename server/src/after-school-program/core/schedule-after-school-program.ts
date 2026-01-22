@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { AcuityTypes, AfterSchoolEnrolment, ScheduleAfterSchoolEnrolmentParams, Studio } from 'fizz-kidz'
 import { AcuityConstants, AcuityUtilities, capitalise, getApplicationDomain, studioNameAndAddress } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'

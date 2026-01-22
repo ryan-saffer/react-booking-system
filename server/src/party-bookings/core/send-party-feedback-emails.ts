@@ -1,7 +1,8 @@
 import { logger } from 'firebase-functions/v2'
+import { DateTime } from 'luxon'
+
 import type { Booking } from 'fizz-kidz'
 import { getReviewUrl } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { MailClient } from '../../sendgrid/MailClient'

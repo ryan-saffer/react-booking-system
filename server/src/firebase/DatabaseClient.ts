@@ -1,3 +1,5 @@
+import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
+
 import type {
     AfterSchoolEnrolment,
     Booking,
@@ -12,13 +14,14 @@ import type {
     StudioOrMaster,
     AuthUser,
 } from 'fizz-kidz'
-import type { Document } from './FirestoreRefs'
-import { FirestoreRefs } from './FirestoreRefs'
-import type { Query } from 'firebase-admin/firestore'
-import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
+
+import { midnight } from '@/utilities'
+
+import { FirestoreRefs, type Document } from './FirestoreRefs'
+
 import type { CreateEvent } from '../events/core/create-event'
+import type { Query } from 'firebase-admin/firestore'
 import type { DateTime } from 'luxon'
-import { midnight } from '../utilities'
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -130,8 +133,8 @@ class Client {
         return this.#getDocuments(slotsRef) as T extends 'standard'
             ? Promise<Event[]>
             : T extends 'incursion'
-            ? Promise<IncursionEvent[]>
-            : never
+              ? Promise<IncursionEvent[]>
+              : never
     }
 
     /**

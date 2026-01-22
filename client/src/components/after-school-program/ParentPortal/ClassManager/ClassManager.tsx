@@ -1,15 +1,16 @@
+import { useQuery } from '@tanstack/react-query'
 import { List, Result, Row, Typography } from 'antd'
-import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
+
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
 
 import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { useTRPC } from '@utils/trpc'
 
-import Loader from '../../../Shared/Loader'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'
+import Loader from '../../../Shared/Loader'
 
-import { useQuery } from '@tanstack/react-query'
 
 type Props = {
     appointment: AfterSchoolEnrolment

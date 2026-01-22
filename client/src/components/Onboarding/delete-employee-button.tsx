@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
-import type { MouseEvent } from 'react'
 import { Button, Modal, Typography } from 'antd'
-import type { Employee } from 'fizz-kidz'
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { deleteDoc, doc } from 'firebase/firestore'
+import React, { useState } from 'react'
+
+import type { Employee } from 'fizz-kidz'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+
+import type { MouseEvent } from 'react'
+
 
 type Props = { employee: Employee }
 

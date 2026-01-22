@@ -1,4 +1,5 @@
 import type { PubSubFunctions } from 'fizz-kidz'
+
 import { handleIncursionFormSubmission } from '@/events/core/handle-incursion-form-submission'
 import { handleOnboardingFormSubmission } from '@/staff/core/onboarding/handle-onboarding-form-submission'
 import { logError } from '@/utilities'

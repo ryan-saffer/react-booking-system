@@ -1,9 +1,11 @@
-import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
+import { doc, getDoc } from 'firebase/firestore'
 import { useContext, useEffect, useState } from 'react'
+
+import type { AfterSchoolEnrolment, Service } from 'fizz-kidz'
 
 import type Firebase from '@components/Firebase'
 import { FirebaseContext } from '@components/Firebase'
-import { doc, getDoc } from 'firebase/firestore'
+
 
 const useFetchAfterSchoolProgramEnrolment = (id: string) => {
     const firebase = useContext(FirebaseContext) as Firebase

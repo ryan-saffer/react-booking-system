@@ -1,13 +1,15 @@
-import type { Role } from 'fizz-kidz'
-import { ROLES } from 'fizz-kidz'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { ROLES } from 'fizz-kidz'
+import type { Role } from 'fizz-kidz'
+
 import { useOrg } from '@components/Session/use-org'
 import { getRoleDisplayValue } from '@constants/roles'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@ui-components/button'
 import {
     Dialog,
@@ -23,7 +25,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getOrgName } from '@utils/studioUtils'
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from '@tanstack/react-query'
 
 const formSchema = z.object({
     firstname: z.string().min(1, { message: 'First name cannot be empty.' }),

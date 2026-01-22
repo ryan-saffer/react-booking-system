@@ -1,13 +1,14 @@
-import dateFormat from 'dateformat'
-import type { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Grid } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import dateFormat from 'dateformat'
+
+import type { Booking, FirestoreBooking, WithId } from 'fizz-kidz'
 
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
 

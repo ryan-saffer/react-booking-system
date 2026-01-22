@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
 
-import type { SelectChangeEvent } from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -8,6 +6,9 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import React, { useState } from 'react'
+
+import type { SelectChangeEvent } from '@mui/material'
 
 /**
  * Higher-order-component that provides a confirmation dialog.

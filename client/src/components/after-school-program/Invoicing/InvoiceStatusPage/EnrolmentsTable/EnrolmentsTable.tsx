@@ -1,24 +1,27 @@
-import type { MenuProps } from 'antd'
+import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { styled } from '@mui/material/styles'
+import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button, Dropdown, Space, Table, Tag } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { CheckCircleOutlined, CloseCircleOutlined, DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+
+
 import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
-import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { useConfirmWithCheckbox } from '@components/Hooks/confirmation-dialog-with-checkbox.tsx/use-confirmation-dialog-with-checkbox'
-import { styled } from '@mui/material/styles'
+import useErrorDialog from '@components/Hooks/UseErrorDialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
 import { useTRPC } from '@utils/trpc'
 
 import EnrolmentDetails from './EnrolmentDetails'
 import InvoiceStatusCell from './InvoiceStatusCell'
 
-import { useQuery } from '@tanstack/react-query'
-import { useMutation } from '@tanstack/react-query'
-import { useQueryClient } from '@tanstack/react-query'
+
+import type { MenuProps } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
 
 const PREFIX = 'EnrolmentsTable'
 

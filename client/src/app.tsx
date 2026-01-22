@@ -4,13 +4,13 @@ import '/fonts/Gotham-Light.otf'
 import { Suspense, lazy } from 'react'
 import { Navigate, RouterProvider, createBrowserRouter, useSearchParams } from 'react-router-dom'
 
+import { NotFound404 } from '@components/root/404.js'
+import { DashboardLayout } from '@components/root/dashboard-layout.js'
+import { Root } from '@components/root/root.js'
 import { ProtectedRoute } from '@components/Session/protected-route.js'
 import { SignedIn } from '@components/Session/signed-in.js'
 import { SignedOut } from '@components/Session/signed-out.js'
 import Loader from '@components/Shared/Loader.js'
-import { NotFound404 } from '@components/root/404.js'
-import { DashboardLayout } from '@components/root/dashboard-layout.js'
-import { Root } from '@components/root/root.js'
 
 /**
  * Lazy load all pages. This enables much cleaner code splitting, particularly for parents booking in
