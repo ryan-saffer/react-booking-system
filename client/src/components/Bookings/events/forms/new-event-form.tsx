@@ -9,19 +9,14 @@ import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
 
 import type { Studio, ScienceModule } from 'fizz-kidz'
 
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { useTRPC } from '@utils/trpc'
 
 import BaseEventForm from './base-event-form'
-import WithErrorDialog from '../../../Dialogs/ErrorDialog'
 
 import type { Form } from './base-event-form'
-import type { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
-
-
-
-
-
 
 const PREFIX = 'NewEventForm'
 

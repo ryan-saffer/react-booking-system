@@ -13,13 +13,13 @@ import {
     getPictureOfStudioUrl,
 } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { CalendarClient } from '../../google/CalendarClient'
-import { env } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
-import { MailClient } from '../../sendgrid/MailClient'
-import { logError, throwTrpcError } from '../../utilities'
-import { ZohoClient } from '../../zoho/zoho-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { CalendarClient } from '@/google/CalendarClient'
+import { env } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { throwTrpcError, logError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 export async function createPartyBooking(_booking: Booking) {
     const booking = {

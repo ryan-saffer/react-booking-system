@@ -2,14 +2,14 @@ import { DateTime } from 'luxon'
 
 import type { DiscountCode, WithoutId } from 'fizz-kidz'
 
-import { generateDiscountCode } from './generate-discount-code'
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { MixpanelClient } from '../../../mixpanel/mixpanel-client'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { logError } from '../../../utilities'
-import { ZohoClient } from '../../../zoho/zoho-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import type { MixpanelEvent } from '@/mixpanel/mixpanel-client'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { MailClient } from '@/sendgrid/MailClient'
+import { logError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
-import type { MixpanelEvent } from '../../../mixpanel/mixpanel-client'
+import { generateDiscountCode } from './generate-discount-code'
 
 export type CreateDiscountCodeFromInvitation = WithoutId<
     Omit<

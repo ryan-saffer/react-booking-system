@@ -2,7 +2,6 @@ import fs from 'fs'
 import fsPromise from 'fs/promises'
 import path from 'path'
 
-
 import chromium from '@sparticuz/chromium'
 import { DateTime } from 'luxon'
 import Mustache from 'mustache'
@@ -11,11 +10,11 @@ import puppeteer from 'puppeteer'
 import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../firebase/FirestoreRefs'
-import { StorageClient } from '../../firebase/StorageClient'
-import { projectId } from '../../init'
-import { MixpanelClient } from '../../mixpanel/mixpanel-client'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { StorageClient } from '@/firebase/StorageClient'
+import { projectId } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 import type { Browser } from 'puppeteer'
 

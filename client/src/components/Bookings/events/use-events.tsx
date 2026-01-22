@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react'
 import type { Event, IncursionEvent, Service, StandardEvent, Studio } from 'fizz-kidz'
 import { STUDIOS } from 'fizz-kidz'
 
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
 import { convertTimestamps } from '@utils/firebase/converters'
 
-
-import useFirebase from '../../Hooks/context/UseFirebase'
 import { useDateNavigation } from '../date-navigation/date-navigation.hooks'
 
 export function useEvents<T extends Event['$type']>(

@@ -22,7 +22,6 @@ import { useCart } from '../../state/cart-store'
 
 import type { Form } from '../../pages/customer-booking-page'
 
-
 type Props = {
     form: Form
     handleBookingSuccess: () => void

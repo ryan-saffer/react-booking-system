@@ -6,13 +6,11 @@ import { onMessagePublished as fireOnMessagePublished } from 'firebase-functions
 
 import type { PubSubFunctions } from 'fizz-kidz'
 
+import { PubSubClient } from '@/firebase/PubSubClient'
 import type { CustomTrpcError } from '@/trpc/trpc.errors'
-
-import { PubSubClient } from '../firebase/PubSubClient'
 
 import type { TRPC_ERROR_CODE_KEY } from '@trpc/server'
 import type { DateTime } from 'luxon'
-
 
 export function onMessagePublished<T extends keyof PubSubFunctions>(topic: T, fn: (data: PubSubFunctions[T]) => void) {
     return fireOnMessagePublished({ topic, region: 'australia-southeast1', concurrency: 1, maxInstances: 1 }, (event) =>

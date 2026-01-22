@@ -30,22 +30,22 @@ import {
     STUDIOS,
     TAKE_HOME_BAGS,
     Utilities,
+    capitalise,
 } from 'fizz-kidz'
 import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
 
+import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
+import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
+import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
+import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { useTRPC } from '@utils/trpc'
 
-import { capitalise } from '../../../../../utilities/stringUtilities'
-import WithConfirmationDialog from '../../../../Dialogs/ConfirmationDialog'
-import WithErrorDialog from '../../../../Dialogs/ErrorDialog'
-import { useDateNavigation } from '../../../date-navigation/date-navigation.hooks'
-import EditFormButtons from '../../../shared/edit-form-buttons'
 import { getEmptyValues, mapFirestoreBookingToFormValues, mapFormToBooking } from '../utilities'
 import { validateFormOnChange, validateFormOnSubmit } from '../validation'
 
 import type { ExistingBookingFormFields } from './types'
-import type { ConfirmationDialogProps } from '../../../../Dialogs/ConfirmationDialog'
-import type { ErrorDialogProps } from '../../../../Dialogs/ErrorDialog'
 import type { ChangeEvent } from 'react'
 
 const PREFIX = 'index'

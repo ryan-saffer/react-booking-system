@@ -1,11 +1,11 @@
 import type { Employee, InitiateEmployeeProps } from 'fizz-kidz'
 import { getLocationAddress } from 'fizz-kidz'
 
-import { ESignatureClient } from '../../../esignatures.io/core/ESignaturesClient'
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { FirestoreRefs } from '../../../firebase/FirestoreRefs'
-import { MailClient } from '../../../sendgrid/MailClient'
-import { throwTrpcError } from '../../../utilities'
+import { ESignatureClient } from '@/esignatures.io/core/ESignaturesClient'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { MailClient } from '@/sendgrid/MailClient'
+import { throwTrpcError } from '@/utilities'
 
 export async function initiateOnboarding(input: InitiateEmployeeProps) {
     const employeeRef = (await FirestoreRefs.employees()).doc()

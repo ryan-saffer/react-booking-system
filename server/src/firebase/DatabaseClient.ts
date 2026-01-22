@@ -15,14 +15,13 @@ import type {
     AuthUser,
 } from 'fizz-kidz'
 
-import { FirestoreRefs } from './FirestoreRefs'
-import { midnight } from '../utilities'
+import { midnight } from '@/utilities'
 
-import type { Document } from './FirestoreRefs'
+import { FirestoreRefs, type Document } from './FirestoreRefs'
+
 import type { CreateEvent } from '../events/core/create-event'
 import type { Query } from 'firebase-admin/firestore'
 import type { DateTime } from 'luxon'
-
 
 type CreateDocOptions<T> = {
     ref?: Document<T>
@@ -134,8 +133,8 @@ class Client {
         return this.#getDocuments(slotsRef) as T extends 'standard'
             ? Promise<Event[]>
             : T extends 'incursion'
-            ? Promise<IncursionEvent[]>
-            : never
+              ? Promise<IncursionEvent[]>
+              : never
     }
 
     /**

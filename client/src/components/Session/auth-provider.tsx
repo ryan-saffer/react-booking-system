@@ -12,11 +12,6 @@ import AuthUserContext from './auth-user-context'
 
 import type { ReactNode } from 'react'
 
-
-
-
-
-
 export function AuthProvider({ children }: { children: ReactNode }) {
     const trpc = useTRPC()
     const firebase = useFirebase()

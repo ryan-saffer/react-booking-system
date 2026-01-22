@@ -4,11 +4,10 @@ import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
 import { getQuestionValue } from 'fizz-kidz'
 
+import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { DriveClient } from '@/google/DriveClient'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError } from '@/utilities'
-
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
 
 const CURRENT_STAFF_FOLDER_ID = '11CgIoNzfcAcvY2ciz65LPsc3Jw_xjKba'
 // const STAFF_ORDINARY_HOURS_RATE_ID =
