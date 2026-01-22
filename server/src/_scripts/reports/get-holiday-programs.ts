@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { Studio } from 'fizz-kidz'
 import { AcuityConstants } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 

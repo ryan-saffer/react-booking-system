@@ -4,7 +4,7 @@ import {
     type InvoiceStatusMap,
     type SendInvoiceParams,
 } from 'fizz-kidz'
-import type { InvoiceStatus } from 'square/api'
+
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
@@ -12,6 +12,8 @@ import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
 
 import { sendInvoice } from './send-invoice'
+
+import type { InvoiceStatus } from 'square/api'
 
 export async function sendInvoices(input: SendInvoiceParams[]) {
     const invoiceStatusMap: InvoiceStatusMap = {}

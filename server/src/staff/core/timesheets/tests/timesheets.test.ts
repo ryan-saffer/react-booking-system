@@ -1,7 +1,7 @@
 import { strictEqual, throws } from 'assert'
 
 import { DateTime } from 'luxon'
-import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+
 
 import type { Timesheet } from '@/sling/sling.types'
 
@@ -19,6 +19,8 @@ import {
     isSupervisorShift,
     type SlingLocation,
 } from '../timesheets.utils'
+
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 const olderThan18 = DateTime.fromObject({ year: 2000, day: 30, month: 5 })
 const youngerThan18 = DateTime.fromObject({ year: 2015, day: 1, month: 1 })

@@ -1,7 +1,8 @@
 import { logger } from 'firebase-functions/v2'
+
 import type { InvitationOption } from 'fizz-kidz'
 import { type Studio, type StudioOrTest } from 'fizz-kidz'
-import type { Mixpanel } from 'mixpanel'
+
 import type { ClientStatus } from '../utilities/types'
 import type {
     ContactFormLocationOption,
@@ -9,6 +10,7 @@ import type {
     Form,
     ReferenceOption,
 } from '../website/core/website-form-types'
+import type { Mixpanel } from 'mixpanel'
 
 export class MixpanelClient {
     private static instance: MixpanelClient

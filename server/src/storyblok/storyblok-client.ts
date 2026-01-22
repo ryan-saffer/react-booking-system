@@ -1,8 +1,11 @@
-import type Client from 'storyblok-js-client'
+import type { CreationInstructions } from 'fizz-kidz'
 
 import { env } from '../init'
+
 import type { ClientStatus } from '../utilities/types'
-import type { CreationInstructions } from 'fizz-kidz'
+import type Client from 'storyblok-js-client'
+
+
 
 export type HolidayProgramWeek = {
     title: string

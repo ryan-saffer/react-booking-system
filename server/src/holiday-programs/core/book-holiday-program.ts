@@ -1,9 +1,10 @@
 import { FieldValue } from 'firebase-admin/firestore'
 import { logger } from 'firebase-functions/v2'
-import type { DiscountCode } from 'fizz-kidz'
-import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { Status } from 'google-gax'
 import { DateTime } from 'luxon'
+
+import type { DiscountCode } from 'fizz-kidz'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'

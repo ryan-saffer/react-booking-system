@@ -1,9 +1,10 @@
+import { DateTime } from 'luxon'
+
 import type { IncursionEvent, IncursionForm, PaperFormResponse } from 'fizz-kidz'
 import { getQuestionValue } from 'fizz-kidz'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { MailClient } from '../../sendgrid/MailClient'
-import { DateTime } from 'luxon'
 
 export async function handleIncursionFormSubmission(response: PaperFormResponse<IncursionForm>) {
     const eventId = getQuestionValue(response, 'id')

@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { DistributiveOmit, Event, WithoutId } from 'fizz-kidz'
 import { ModuleIncursionMap, ModuleNameMap } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../../firebase/DatabaseClient'
 import { CalendarClient } from '../../google/CalendarClient'

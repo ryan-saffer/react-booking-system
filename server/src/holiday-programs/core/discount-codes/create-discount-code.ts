@@ -1,8 +1,8 @@
 import type { DiscountCode, WithoutId } from 'fizz-kidz'
 
+import { checkDiscountCode } from './check-discount-code'
 import { DatabaseClient } from '../../../firebase/DatabaseClient'
 import { throwTrpcError } from '../../../utilities'
-import { checkDiscountCode } from './check-discount-code'
 
 export type CreateDiscountCode = WithoutId<Omit<DiscountCode, 'numberOfUses'>>
 /**

@@ -1,13 +1,13 @@
 import '../load-env'
 
-import { AcuityConstants, AcuityUtilities, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import prompts from 'prompts'
 
-import { updateSlingWages } from '@/sling/update-sling-wages'
+import { AcuityConstants, AcuityUtilities, STUDIOS } from 'fizz-kidz'
 
+import { updateSlingWages } from '@/sling/update-sling-wages'
 import { SquareClient } from '@/square/core/square-client'
-import type { Order } from 'square/api'
+
 import { getAfterSchoolProgramAnaphylaxisPlanSignedUrl } from './after-school-program/get-after-school-program-anaphylaxis-plan-signed-url'
 import { getAllUsers } from './auth/get-all-users'
 import { deleteEvents } from './events/delete-events'
@@ -24,7 +24,10 @@ import { getEvents } from './reports/get-events'
 import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
-;(async () => {
+;
+
+import type { Order } from 'square/api'
+(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',

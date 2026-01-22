@@ -1,6 +1,7 @@
 import { logger } from 'firebase-functions/v2'
-import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
+
+import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from 'fizz-kidz'
 
 import { OrdindayEarningsRateMap } from '@/staff/core/timesheets/generate-timesheets'
 import {
@@ -11,10 +12,12 @@ import {
 } from '@/staff/core/timesheets/timesheets.utils'
 import { logError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
-import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
+
 
 import { SlingClient } from './sling-client'
+
 import type { UpdateWagesBody } from './sling.types'
+import type { Employee } from 'xero-node/dist/gen/model/payroll-au/employee'
 
 /**
  * Iterates all active Sling users with an employee ID, and

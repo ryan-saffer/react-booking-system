@@ -1,5 +1,6 @@
 import express from 'express'
 import { logger } from 'firebase-functions/v2'
+
 import { AcuityConstants } from 'fizz-kidz'
 
 import { checkInToCrm } from '@/holiday-programs/core/check-in-to-crm'

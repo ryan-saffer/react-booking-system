@@ -1,9 +1,10 @@
-import type { Booking } from 'fizz-kidz'
-import type { Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 
-import { FirestoreClient } from '../../firebase/FirestoreClient'
+import type { Booking } from 'fizz-kidz'
+import type { Studio } from 'fizz-kidz'
+
 import { timestampConverter } from '../../firebase/firestore-converters'
+import { FirestoreClient } from '../../firebase/FirestoreClient'
 
 /**
  * Get all party bookings between from and to.

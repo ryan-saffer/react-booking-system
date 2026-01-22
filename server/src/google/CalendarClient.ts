@@ -1,10 +1,12 @@
 import type { Studio } from 'fizz-kidz'
-import type { calendar_v3 } from 'googleapis'
+
 
 import { env } from '../init'
 import { withExponentialBackoff } from '../utilities'
-import type { ClientStatus } from '../utilities/types'
 import { getOAuth2Client } from './google-oauth'
+
+import type { ClientStatus } from '../utilities/types'
+import type { calendar_v3 } from 'googleapis'
 
 type Event = {
     title: string

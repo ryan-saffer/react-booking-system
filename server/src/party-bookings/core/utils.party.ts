@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { Addition, BaseBooking, Booking } from 'fizz-kidz'
 import { ADDITIONS, CREATIONS } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []

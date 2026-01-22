@@ -1,8 +1,8 @@
+import * as trpcExpress from '@trpc/server/adapters/express'
 import express from 'express'
 import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-import * as trpcExpress from '@trpc/server/adapters/express'
 
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'

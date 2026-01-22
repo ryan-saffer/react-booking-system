@@ -1,3 +1,5 @@
+import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
+
 import type {
     AfterSchoolEnrolment,
     Booking,
@@ -12,13 +14,15 @@ import type {
     StudioOrMaster,
     AuthUser,
 } from 'fizz-kidz'
-import type { Document } from './FirestoreRefs'
+
 import { FirestoreRefs } from './FirestoreRefs'
-import type { Query } from 'firebase-admin/firestore'
-import { Timestamp, type DocumentReference, FieldValue } from 'firebase-admin/firestore'
-import type { CreateEvent } from '../events/core/create-event'
-import type { DateTime } from 'luxon'
 import { midnight } from '../utilities'
+
+import type { Document } from './FirestoreRefs'
+import type { CreateEvent } from '../events/core/create-event'
+import type { Query } from 'firebase-admin/firestore'
+import type { DateTime } from 'luxon'
+
 
 type CreateDocOptions<T> = {
     ref?: Document<T>

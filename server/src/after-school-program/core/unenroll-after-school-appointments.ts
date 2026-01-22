@@ -1,5 +1,5 @@
 import type { AfterSchoolEnrolment, UnenrollAfterSchoolParams } from 'fizz-kidz'
-import type { InvoiceStatus } from 'square/api'
+
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -7,6 +7,8 @@ import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
+
+import type { InvoiceStatus } from 'square/api'
 
 export async function unenrollAfterSchoolAppointments(input: UnenrollAfterSchoolParams) {
     await Promise.all(
