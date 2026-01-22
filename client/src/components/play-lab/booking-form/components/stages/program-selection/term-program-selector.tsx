@@ -7,7 +7,7 @@ import { useWatch } from 'react-hook-form'
 
 import type { AcuityTypes } from 'fizz-kidz'
 
-import { useCart } from '@components/holiday-programs/customer-booking-screen/state/cart-store'
+import { useCart } from '@components/play-lab/booking-form/state/cart-store'
 import { useBookingForm } from '@components/play-lab/booking-form/state/form-schema'
 import { useFormStage } from '@components/play-lab/booking-form/state/form-stage-store'
 import Loader from '@components/Shared/Loader'
