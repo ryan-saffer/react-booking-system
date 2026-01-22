@@ -1,14 +1,15 @@
+import { LeftOutlined } from '@ant-design/icons'
+import { useIsMutating } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Form as AntdForm, Button, Card, Modal, Steps, Typography } from 'antd'
-import type dayjs from 'dayjs'
-import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants } from 'fizz-kidz'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { LeftOutlined } from '@ant-design/icons'
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants } from 'fizz-kidz'
+
 import Loader from '@components/Shared/Loader'
 import Root from '@components/Shared/Root'
-import { useIsMutating } from '@tanstack/react-query'
 import { useTRPC } from '@utils/trpc'
 
 import Step1 from '../components/step-1/step-1'
@@ -16,7 +17,8 @@ import { Step2 } from '../components/step-2/step-2'
 import Step3 from '../components/step-3/step-3'
 import { useCart } from '../state/cart-store'
 
-import { useQuery } from '@tanstack/react-query'
+
+import type dayjs from 'dayjs'
 
 export type Form = {
     parentFirstName: string

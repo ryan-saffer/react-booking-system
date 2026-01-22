@@ -1,11 +1,14 @@
-import type { Permission, StudioOrMaster } from 'fizz-kidz'
-import { ObjectKeys } from 'fizz-kidz'
-import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
+
+import { ObjectKeys } from 'fizz-kidz'
+import type { Permission, StudioOrMaster } from 'fizz-kidz'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
 import { checkRoleForPermission } from '@constants/permissions'
+
 import { OrgContext } from './org.context'
+
+import type { ReactNode } from 'react'
 
 export function OrgProvider({ children }: { children: ReactNode }) {
     const user = useAuth()

@@ -1,15 +1,21 @@
-import type { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
-
-import useFirebase from '@components/Hooks/context/UseFirebase'
-
-import AuthUserContext from './auth-user-context'
-import { useTRPC } from '@utils/trpc'
-import type { AuthUser } from 'fizz-kidz'
+import { useMutation } from '@tanstack/react-query'
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
 
-import { useMutation } from '@tanstack/react-query'
+import type { AuthUser } from 'fizz-kidz'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
+import { useTRPC } from '@utils/trpc'
+
+import AuthUserContext from './auth-user-context'
+
+import type { ReactNode } from 'react'
+
+
+
+
+
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const trpc = useTRPC()

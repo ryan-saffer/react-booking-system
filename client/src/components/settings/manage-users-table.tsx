@@ -1,14 +1,5 @@
-import type { Role, StaffAuthUser } from 'fizz-kidz'
-import { ROLES } from 'fizz-kidz'
-import { ArrowUpDown, Loader2, MoreHorizontal } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
-
-import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
-import { useAuth } from '@components/Hooks/context/useAuth'
-import { useOrg } from '@components/Session/use-org'
-import { getRoleDisplayValue } from '@constants/roles'
-import type { Row, SortingState } from '@tanstack/react-table'
+import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import {
     createColumnHelper,
     flexRender,
@@ -16,6 +7,17 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
+import { ArrowUpDown, Loader2, MoreHorizontal } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
+import { ROLES } from 'fizz-kidz'
+import type { Role, StaffAuthUser } from 'fizz-kidz'
+
+import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
+import { useAuth } from '@components/Hooks/context/useAuth'
+import { useOrg } from '@components/Session/use-org'
+import { getRoleDisplayValue } from '@constants/roles'
 import { Button } from '@ui-components/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui-components/select'
@@ -26,8 +28,8 @@ import { useTRPC } from '@utils/trpc'
 
 import { NewUserDialog } from './new-user-dialog'
 
-import { useQuery } from '@tanstack/react-query'
-import { useMutation } from '@tanstack/react-query'
+import type { Row, SortingState } from '@tanstack/react-table'
+
 
 const columnHelper = createColumnHelper<StaffAuthUser>()
 

@@ -1,10 +1,12 @@
+import { collectionGroup, getDocs, query, where } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+
 import type { Event, IncursionEvent, Service, StandardEvent, Studio } from 'fizz-kidz'
 import { STUDIOS } from 'fizz-kidz'
-import { useEffect, useState } from 'react'
 
 import { useOrg } from '@components/Session/use-org'
 import { convertTimestamps } from '@utils/firebase/converters'
-import { collectionGroup, getDocs, query, where } from 'firebase/firestore'
+
 
 import useFirebase from '../../Hooks/context/UseFirebase'
 import { useDateNavigation } from '../date-navigation/date-navigation.hooks'

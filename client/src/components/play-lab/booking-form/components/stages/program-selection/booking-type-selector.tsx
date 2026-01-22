@@ -1,12 +1,13 @@
+import { useWatch } from 'react-hook-form'
+
+import { Button } from '@ui-components/button'
 import { FormField, FormItem, FormLabel } from '@ui-components/form'
 import { cn } from '@utils/tailwind'
 
-import { useCart } from '../../../state/cart-store'
-import { useFormStage } from '../../../state/form-stage-store'
-import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
 import { PricingStructure } from './pricing-structure'
-import { Button } from '@ui-components/button'
-import { useWatch } from 'react-hook-form'
+import { useCart } from '../../../state/cart-store'
+import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 
 export function BookingTypeSelector() {
     const form = useBookingForm()

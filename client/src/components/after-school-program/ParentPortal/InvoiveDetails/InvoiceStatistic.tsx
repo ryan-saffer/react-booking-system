@@ -1,6 +1,7 @@
 import { Button, Statistic } from 'antd'
-import type { ExistingInvoice } from 'fizz-kidz'
 import React from 'react'
+
+import type { ExistingInvoice } from 'fizz-kidz'
 
 type Props = {
     invoice: ExistingInvoice

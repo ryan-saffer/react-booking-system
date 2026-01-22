@@ -98,6 +98,7 @@
         "babel-plugin-react-compiler": "^1.0.0",
         "concurrently": "^8.2.1",
         "eslint": "^8.45.0",
+        "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-react-refresh": "^0.4.26",
         "postcss": "^8.4.35",

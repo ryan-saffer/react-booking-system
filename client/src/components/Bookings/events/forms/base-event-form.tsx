@@ -1,9 +1,3 @@
-import type { Event, ScienceModule, Studio } from 'fizz-kidz'
-import { ModuleNameMap, ObjectKeys, STUDIOS } from 'fizz-kidz'
-import type { DateTime } from 'luxon'
-import React from 'react'
-import type { Control, UseFieldArrayReturn } from 'react-hook-form'
-import { Controller, useFormContext } from 'react-hook-form'
 
 import AddIcon from '@mui/icons-material/Add'
 import LaunchIcon from '@mui/icons-material/Launch'
@@ -24,8 +18,16 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import React from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
+
+import { ModuleNameMap, ObjectKeys, STUDIOS } from 'fizz-kidz'
+import type { Event, ScienceModule, Studio } from 'fizz-kidz'
 
 import { capitalise } from '../../../../utilities/stringUtilities'
+
+import type { DateTime } from 'luxon'
+import type { Control, UseFieldArrayReturn } from 'react-hook-form'
 
 const PREFIX = 'EventForm'
 

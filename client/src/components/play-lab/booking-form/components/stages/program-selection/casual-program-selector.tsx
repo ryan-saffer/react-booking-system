@@ -1,27 +1,27 @@
+import { useQuery } from '@tanstack/react-query'
 import { isSameDay, parseISO } from 'date-fns'
 import { AlertCircle, ArrowRight, CheckCircleIcon, ChevronLeft, MessageCircleWarning, RefreshCcw } from 'lucide-react'
+import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
+import { useWatch } from 'react-hook-form'
+
+import { addOrdinalSuffix, type AcuityTypes } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
+import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
+import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
+import { Checkbox } from '@ui-components/checkbox'
+import { Separator } from '@ui-components/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
-import { TERM_LENGTH, useCart, type LocalAcuityClass } from '../../../state/cart-store'
-import { useFormStage } from '../../../state/form-stage-store'
-import { useBookingForm } from '../../../state/form-schema'
 import { ContinueButton } from './continue-button'
-import { Separator } from '@ui-components/separator'
-import { Button } from '@ui-components/button'
-import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui-components/tabs'
-import { addOrdinalSuffix, type AcuityTypes } from 'fizz-kidz'
-import { Checkbox } from '@ui-components/checkbox'
-import { DateTime } from 'luxon'
 import { PricingStructure } from './pricing-structure'
-
-import { useQuery } from '@tanstack/react-query'
-import { useWatch } from 'react-hook-form'
+import { TERM_LENGTH, useCart, type LocalAcuityClass } from '../../../state/cart-store'
+import { useBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
 
 export function CasualProgramSelector() {
     const trpc = useTRPC()

@@ -1,8 +1,11 @@
+import { useQuery } from '@tanstack/react-query'
 import { parseISO } from 'date-fns'
-import type { AcuityTypes } from 'fizz-kidz'
 import { AlertCircle, ChevronLeft, MessageCircleWarning } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useMemo, useState } from 'react'
+import { useWatch } from 'react-hook-form'
+
+import type { AcuityTypes } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -11,13 +14,11 @@ import { Checkbox } from '@ui-components/checkbox'
 import { cn } from '@utils/tailwind'
 import { useTRPC } from '@utils/trpc'
 
+import { ContinueButton } from './continue-button'
 import { useCart } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
-import { ContinueButton } from './continue-button'
 
-import { useQuery } from '@tanstack/react-query'
-import { useWatch } from 'react-hook-form'
 
 /**
  * Renders the list of appointment types.

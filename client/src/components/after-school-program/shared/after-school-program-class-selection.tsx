@@ -1,19 +1,21 @@
-import type { AcuityTypes, Studio } from 'fizz-kidz'
-import { STUDIOS, isFranchise } from 'fizz-kidz'
+import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
 import { DateTime } from 'luxon'
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { STUDIOS, isFranchise } from 'fizz-kidz'
+import type { AcuityTypes, Studio } from 'fizz-kidz'
+
 import { useOrg } from '@components/Session/use-org'
-import type { SelectChangeEvent } from '@mui/material'
-import { Button, FormControl, MenuItem, Paper, Select, Skeleton, Typography } from '@mui/material'
 import { Label } from '@ui-components/label'
 import { Switch } from '@ui-components/switch'
 import { useTRPC } from '@utils/trpc'
 
 import styles from './after-school-program-class-selection.module.css'
 
-import { useQuery } from '@tanstack/react-query'
+import type { SelectChangeEvent } from '@mui/material'
+
 
 const PREV_CLASSES_CACHE_KEY = 'show-previous-classes'
 

@@ -1,6 +1,11 @@
+import { DateCalendar } from '@mui/x-date-pickers'
+import { format } from 'date-fns'
+import { CalendarIcon, CircleX, Plus } from 'lucide-react'
+import { Fragment, useState } from 'react'
+import { useFieldArray, useWatch } from 'react-hook-form'
+
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
 import { useCart } from '@components/holiday-programs/customer-booking-screen/state/cart-store'
-import { DateCalendar } from '@mui/x-date-pickers'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,10 +27,7 @@ import { Separator } from '@ui-components/separator'
 import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
-import { format } from 'date-fns'
-import { CalendarIcon, CircleX, Plus } from 'lucide-react'
-import { Fragment, useState } from 'react'
-import { useFieldArray, useWatch } from 'react-hook-form'
+
 
 import { CancellationPolicy } from './cancellation-policy'
 import { TermsAndConditions } from './terms-and-conditions'

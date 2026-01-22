@@ -1,16 +1,17 @@
+import { useMutation } from "@tanstack/react-query";
 import { Switch, Typography } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 
-import type { WithErrorModal } from '@components/Hooks/UseErrorDialog'
+import { AcuityConstants } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
+import type { WithErrorModal } from '@components/Hooks/UseErrorDialog'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from "@tanstack/react-query";
 
 type Props = {
     appointment: AcuityTypes.Api.Appointment

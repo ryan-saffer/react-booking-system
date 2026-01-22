@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { Booking, FirestoreBooking, FormBooking } from 'fizz-kidz'
 import { Utilities } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import type { ExistingBookingFormFields } from './ExistingBookingForm/types'
 

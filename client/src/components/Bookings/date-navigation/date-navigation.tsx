@@ -1,11 +1,4 @@
-import { STUDIOS, capitalise } from 'fizz-kidz'
-import { CalendarPlus } from 'lucide-react'
-import { DateTime } from 'luxon'
-import type { FC, PropsWithChildren } from 'react'
-import { useState } from 'react'
 
-import { useOrg } from '@components/Session/use-org'
-import { useStickyNavbar } from '@components/root/use-sticky-navbar'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import NavigateBefore from '@mui/icons-material/NavigateBefore'
 import NavigateNext from '@mui/icons-material/NavigateNext'
@@ -24,11 +17,21 @@ import {
 import { styled } from '@mui/material/styles'
 import { MobileDatePicker } from '@mui/x-date-pickers'
 import { StaticDatePicker } from '@mui/x-date-pickers'
+import { CalendarPlus } from 'lucide-react'
+import { DateTime } from 'luxon'
+import { useState } from 'react'
+
+import { STUDIOS, capitalise } from 'fizz-kidz'
+
+import { useStickyNavbar } from '@components/root/use-sticky-navbar'
+import { useOrg } from '@components/Session/use-org'
 import { Button as MyButton } from '@ui-components/button'
 
-import type { LocationFilter } from '../location-filter/location-filter.context'
-import { useLocationFilter } from '../location-filter/location-filter.hook'
 import { DateNavigationContext } from './date-navigation.context'
+import { useLocationFilter } from '../location-filter/location-filter.hook'
+
+import type { LocationFilter } from '../location-filter/location-filter.context'
+import type { FC, PropsWithChildren } from 'react'
 
 const PREFIX = 'BookingsPage'
 

@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { CheckCircle } from 'lucide-react'
 import { useState } from 'react'
@@ -7,7 +8,6 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'

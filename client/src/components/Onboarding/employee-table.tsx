@@ -1,17 +1,20 @@
+import { styled } from '@mui/material/styles'
 import { Button, Descriptions, Table, Tag } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import type { Employee } from 'fizz-kidz'
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
+
+import type { Employee } from 'fizz-kidz'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
 import Loader from '@components/Shared/Loader'
-import { styled } from '@mui/material/styles'
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+
 
 import { DeleteEmployeeButton } from './delete-employee-button'
 import EmployeeVerificationButton from './employee-verification-button'
 import { EmployeeWWCCButton } from './employee-wwcc-button'
+
+import type { ColumnsType } from 'antd/es/table'
 
 const PREFIX = 'EmployeeTable'
 

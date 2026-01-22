@@ -1,5 +1,6 @@
-import type { AcuityTypes, GiftCard } from 'fizz-kidz'
 import { create } from 'zustand'
+
+import type { AcuityTypes, GiftCard } from 'fizz-kidz'
 
 export type LocalAcuityClass = Omit<AcuityTypes.Api.Class, 'time'> & { time: Date; image?: string }
 

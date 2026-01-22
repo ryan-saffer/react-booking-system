@@ -1,3 +1,6 @@
+import { useMediaQuery } from '@mui/material'
+import { DialogDescription } from '@radix-ui/react-dialog'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
     BookOpenText,
     Calendar,
@@ -10,16 +13,15 @@ import {
     TicketPercent,
     Users,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 
 import { useOrg } from '@components/Session/use-org'
-import { useMediaQuery } from '@mui/material'
 import { Drawer, DrawerContent, DrawerTitle } from '@ui-components/drawer'
 import { ScrollArea } from '@ui-components/scroll-area'
 import { cn } from '@utils/tailwind'
-import { DialogDescription } from '@radix-ui/react-dialog'
+
+import type { ReactNode } from 'react'
+
 
 export function DashboardDrawer({
     drawerOpen,

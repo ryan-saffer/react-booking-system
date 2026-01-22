@@ -1,18 +1,19 @@
-import type { AcuityTypes } from 'fizz-kidz'
+import { Divider } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
+
+import type { AcuityTypes } from 'fizz-kidz'
 
 import useMixpanel from '@components/Hooks/context/UseMixpanel'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import * as logo from '@drawables/fizz-logo.png'
-import { Divider } from '@mui/material'
-import { styled } from '@mui/material/styles'
 import { useTRPC } from '@utils/trpc'
 
 import Footer from './Footer'
 import Loading from './Loading'
 import { Error as ErrorResult, Success } from './Result'
 
-import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'EnrolmentPage'
 

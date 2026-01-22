@@ -1,9 +1,10 @@
+import { styled } from '@mui/material/styles'
 import { Card, Col, Row } from 'antd'
-import type { AfterSchoolEnrolment } from 'fizz-kidz'
 import React from 'react'
 
+import type { AfterSchoolEnrolment } from 'fizz-kidz'
+
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
-import { styled } from '@mui/material/styles'
 
 import InvoiceDetails from '../InvoiveDetails/InvoiceDetails'
 

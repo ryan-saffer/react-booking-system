@@ -1,4 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
 import { MessageCircleWarning } from 'lucide-react'
+import { useWatch } from 'react-hook-form'
 
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
@@ -9,8 +11,6 @@ import { useEnrolmentForm } from './form-schema'
 import { ProgramCard } from './program-card'
 import { useSelectedProgram } from './use-selected-program'
 
-import { useQuery } from '@tanstack/react-query'
-import { useWatch } from 'react-hook-form'
 
 const PROGRAMS = [
     {

@@ -1,20 +1,22 @@
+import { styled } from '@mui/material/styles'
+import { useMutation } from "@tanstack/react-query";
 import { Card, Result } from 'antd'
-import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
+
 import useFirebase from '@components/Hooks/context/UseFirebase'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import SkeletonRows from '@components/Shared/SkeletonRows'
-import { styled } from '@mui/material/styles'
 import { useTRPC } from '@utils/trpc'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+
 
 import { getEnrolment } from './ClassDetails.utils'
 import EnrolmentTable from './EnrolmentTable/EnrolmentTable'
 
-import { useMutation } from "@tanstack/react-query";
 
 const PREFIX = 'AfterSchoolProgramCheckinClassDetails'
 

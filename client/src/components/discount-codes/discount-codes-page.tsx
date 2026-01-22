@@ -1,12 +1,4 @@
-import { format } from 'date-fns'
-import type { DiscountCode, Service } from 'fizz-kidz'
-import { ArrowUpDown, CalendarIcon, MoreHorizontal } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Toaster, toast } from 'sonner'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
-import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
-import type { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import {
     flexRender,
     getCoreRowModel,
@@ -15,6 +7,15 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
+import { ArrowUpDown, CalendarIcon, MoreHorizontal } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Toaster, toast } from 'sonner'
+
+import type { DiscountCode, Service } from 'fizz-kidz'
+
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui-components/dropdown-menu'
@@ -26,6 +27,8 @@ import { timestampConverter } from '@utils/firebase/converters'
 import { cn } from '@utils/tailwind'
 
 import { NewCodeDialog } from './create-discount-code-dialog'
+
+import type { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table'
 
 export const DiscountCodesPage = () => {
     const firebase = useFirebase()

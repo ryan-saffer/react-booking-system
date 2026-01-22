@@ -1,17 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@ui-components/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@ui-components/form'
 import { Input } from '@ui-components/input'
 import { Separator } from '@ui-components/separator'
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from '@tanstack/react-query'
 
 const FormSchema = z.object({
     firstname: z.string().min(3, { message: 'First name must be at least 3 characters long.' }),

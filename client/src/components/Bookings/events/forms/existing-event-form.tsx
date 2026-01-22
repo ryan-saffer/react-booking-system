@@ -1,23 +1,25 @@
+import { Grid, TextField, Typography, styled } from '@mui/material'
+import { useMutation } from '@tanstack/react-query'
+import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 import { useForm, FormProvider, Controller } from 'react-hook-form'
-import { DateTime } from 'luxon'
+import { toast } from 'sonner'
+
 import type { Event } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
+import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
 import type { ConfirmationDialogProps } from '@components/Dialogs/ConfirmationDialog'
 import WithConfirmationDialog from '@components/Dialogs/ConfirmationDialog'
 import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
-import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
 import { combineDateAndTime } from '@utils/dateUtils'
+import { useTRPC } from '@utils/trpc'
+
+import BaseEventForm from './base-event-form'
 
 import type { Form } from './base-event-form'
-import BaseEventForm from './base-event-form'
-import { useTRPC } from '@utils/trpc'
-import { Grid, TextField, Typography, styled } from '@mui/material'
-import { toast } from 'sonner'
 
-import { useMutation } from '@tanstack/react-query'
 
 type Props = {
     event: Event

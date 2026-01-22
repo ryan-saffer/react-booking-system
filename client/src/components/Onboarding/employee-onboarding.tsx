@@ -1,8 +1,8 @@
+import { PlusOutlined } from '@ant-design/icons'
+import { styled } from '@mui/material/styles'
 import { Button, Layout, Typography } from 'antd'
 import { useState } from 'react'
 
-import { PlusOutlined } from '@ant-design/icons'
-import { styled } from '@mui/material/styles'
 
 import EmployeeTable from './employee-table'
 import NewEmployeeForm from './new-employee-form'

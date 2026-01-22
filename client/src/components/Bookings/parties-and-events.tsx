@@ -1,10 +1,11 @@
-import type { FirestoreBooking, StandardEvent, WithId } from 'fizz-kidz'
-import { ObjectKeys, capitalise } from 'fizz-kidz'
+import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 
+import type { FirestoreBooking, StandardEvent, WithId } from 'fizz-kidz'
+import { ObjectKeys, capitalise } from 'fizz-kidz'
+
 import { useOrg } from '@components/Session/use-org'
-import { Grid, Skeleton, Stack, Typography } from '@mui/material'
 import { getOrgName } from '@utils/studioUtils'
 
 import EventPanel from './events/event-panel'

@@ -1,8 +1,9 @@
+import { useMutation } from '@tanstack/react-query'
 import { Table, Tag, Typography } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
+import React, { useMemo, useState } from 'react'
+
 import type { AcuityTypes, AfterSchoolEnrolment } from 'fizz-kidz'
 import { AcuityConstants } from 'fizz-kidz'
-import React, { useMemo, useState } from 'react'
 
 import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import { useTRPC } from '@utils/trpc'
@@ -11,9 +12,10 @@ import { getEnrolment } from '../ClassDetails.utils'
 import ActionButton from './ActionButton'
 import ChildDetails from './ChildDetails'
 import styles from './EnrolmentTable.module.css'
-import type { EnrolmentsMap } from '..'
 
-import { useMutation } from '@tanstack/react-query'
+import type { EnrolmentsMap } from '..'
+import type { ColumnsType } from 'antd/es/table'
+
 
 export const BREAKPOINT_MD = 420
 export const BREAKPOINT_LG = 540

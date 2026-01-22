@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -9,7 +10,6 @@ import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from '@tanstack/react-query'
 
 export function GiftCardInput() {
     const trpc = useTRPC()
