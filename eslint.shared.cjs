@@ -15,6 +15,8 @@ module.exports = {
             },
         ],
 
+        '@typescript-eslint/no-explicit-any': 'off',
+
         // Import ordering: externals -> fizz-kidz -> internal aliases -> locals
         'import/order': [
             'error',
