@@ -1,6 +1,6 @@
+import * as ProgressPrimitive from '@radix-ui/react-progress'
 import * as React from 'react'
 
-import * as ProgressPrimitive from '@radix-ui/react-progress'
 import { cn } from '@utils/tailwind'
 
 const Progress = React.forwardRef<

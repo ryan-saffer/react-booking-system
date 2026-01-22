@@ -1,8 +1,9 @@
 import { Alert, Button, Card, Checkbox, Form, Select } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants, STUDIOS } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import React, { useMemo } from 'react'
+
+import type { AcuityTypes } from 'fizz-kidz'
+import { AcuityConstants, STUDIOS } from 'fizz-kidz'
 
 import { capitalise } from '@utils/stringUtilities'
 

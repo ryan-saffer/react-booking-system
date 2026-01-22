@@ -1,5 +1,6 @@
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
+
 import dotenv from 'dotenv'
 
 // Decide which env file to load inside server/ based on project/environment.

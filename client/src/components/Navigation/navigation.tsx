@@ -1,5 +1,4 @@
 import { ArrowRight } from 'lucide-react'
-import type { MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useAuth } from '@components/Hooks/context/useAuth'
@@ -13,6 +12,8 @@ import jonah from '@drawables/jonah.webp'
 import kingsville from '@drawables/kingsville.webp'
 import parties from '@drawables/parties.webp'
 import { getOrgName } from '@utils/studioUtils'
+
+import type { MouseEvent } from 'react'
 
 type NavigationItem = {
     title: string

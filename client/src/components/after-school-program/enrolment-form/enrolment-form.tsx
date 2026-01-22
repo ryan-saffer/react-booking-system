@@ -1,12 +1,12 @@
+import { DateCalendar } from '@mui/x-date-pickers'
+import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
-import type { DateTime } from 'luxon'
 import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray, useWatch } from 'react-hook-form'
 
-import Loader from '@components/Shared/Loader'
 import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
-import { DateCalendar } from '@mui/x-date-pickers'
+import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
 import { Checkbox } from '@ui-components/checkbox'
@@ -27,7 +27,8 @@ import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
 
-import { useQuery } from '@tanstack/react-query'
+import type { DateTime } from 'luxon'
+
 
 export function EnrolmentForm({ submitting }: { submitting: boolean }) {
     const trpc = useTRPC()

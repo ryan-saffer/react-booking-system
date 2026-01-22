@@ -1,14 +1,15 @@
+import { styled } from '@mui/material/styles'
 import { Card, Collapse, Empty } from 'antd'
-import type { AcuityTypes } from 'fizz-kidz'
-import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
+import { AcuityConstants, AcuityUtilities } from 'fizz-kidz'
+import type { AcuityTypes } from 'fizz-kidz'
+
 import useFetchAppointments from '@components/Hooks/api/UseFetchAppointments'
+import useWindowDimensions from '@components/Hooks/UseWindowDimensions'
 import SkeletonRows from '@components/Shared/SkeletonRows'
-import { styled } from '@mui/material/styles'
 
 import ChildExpansionPanel from './ChildExpansionPanel'
 

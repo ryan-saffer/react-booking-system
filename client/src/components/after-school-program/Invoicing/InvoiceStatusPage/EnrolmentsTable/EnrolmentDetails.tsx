@@ -1,8 +1,9 @@
+import { styled } from '@mui/material/styles'
 import { Button, Descriptions } from 'antd'
-import type { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
 import React from 'react'
 
-import { styled } from '@mui/material/styles'
+import type { AfterSchoolEnrolment, InvoiceStatusMap } from 'fizz-kidz'
+
 import { getBaseUrl } from '@utils/firebase/env'
 
 const PREFIX = 'EnrolmentDetails'

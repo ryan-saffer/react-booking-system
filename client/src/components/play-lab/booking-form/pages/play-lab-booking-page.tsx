@@ -1,7 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import Root from '@components/Shared/Root'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@ui-components/form'
 import { Separator } from '@ui-components/separator'
 
@@ -14,8 +14,9 @@ import { CasualProgramSelector } from '../components/stages/program-selection/ca
 import { StudioSelector } from '../components/stages/program-selection/studio-selector'
 // import { TermProgramSelector } from '../components/stages/program-selection/term-program-selector'
 import { Success } from '../components/stages/success/sucess'
-import type { PlayLabBookingForm } from '../state/form-schema'
 import { formSchema } from '../state/form-schema'
+
+import type { PlayLabBookingForm } from '../state/form-schema'
 
 export function PlayLabBookingPage() {
     const form = useForm<PlayLabBookingForm>({

@@ -1,4 +1,7 @@
+import { randomUUID } from 'crypto'
+
 import express from 'express'
+
 import {
     getCloudFunctionsDomain,
     getFunctionEmulatorDomain,
@@ -20,7 +23,7 @@ import { handlePartyFormSubmissionV3 } from '@/party-bookings/core/handle-party-
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { logError } from '@/utilities'
-import { randomUUID } from 'crypto'
+
 import type { InventoryChange } from 'square/api'
 
 const SUCCESS_REDIRECT = 'https://fizzkidz.com.au/form-result?result=success'

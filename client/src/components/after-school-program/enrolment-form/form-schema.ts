@@ -1,6 +1,7 @@
-import type { Studio } from 'fizz-kidz'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
+
+import type { Studio } from 'fizz-kidz'
 
 const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
 export const GRADES = ['Prep', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'] as const

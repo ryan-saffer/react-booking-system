@@ -1,11 +1,11 @@
+import { DateCalendar } from '@mui/x-date-pickers'
 import { format } from 'date-fns'
 import { CalendarIcon, CircleX, Plus } from 'lucide-react'
-import type { DateTime } from 'luxon'
 import { Fragment, useState } from 'react'
 import { useFieldArray, useWatch } from 'react-hook-form'
 
 import { getChildNumber } from '@components/after-school-program/enrolment-form/utils.booking-form'
-import { DateCalendar } from '@mui/x-date-pickers'
+import { useCart } from '@components/holiday-programs/customer-booking-screen/state/cart-store'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -28,11 +28,13 @@ import { Textarea } from '@ui-components/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui-components/tooltip'
 import { cn } from '@utils/tailwind'
 
-import { useCart } from '../../../state/cart-store'
-import { useBookingForm } from '../../../state/form-schema'
-import { useFormStage } from '../../../state/form-stage-store'
+
 import { CancellationPolicy } from './cancellation-policy'
 import { TermsAndConditions } from './terms-and-conditions'
+import { useBookingForm, type PlayLabBookingForm } from '../../../state/form-schema'
+import { useFormStage } from '../../../state/form-stage-store'
+
+import type { DateTime } from 'luxon'
 
 export function CustomerDetails() {
     const form = useBookingForm()
@@ -64,7 +66,17 @@ export function CustomerDetails() {
         if (foundFullClass) {
             setShowNotEnoughSpotsDialog(true)
         } else {
-            append({ firstName: '', lastName: '' } as any, { shouldFocus: true })
+            append(
+                {
+                    firstName: '',
+                    lastName: '',
+                    dob: new Date(),
+                    hasAllergies: false,
+                } satisfies PlayLabBookingForm['children'][number],
+                {
+                    shouldFocus: true,
+                }
+            )
             calculateTotal(form.getValues().children.length)
         }
     }
@@ -138,7 +150,7 @@ export function CustomerDetails() {
             />
             <SectionBreak title={`${children.length > 1 ? 'Children' : 'Child'} Details`} />
             {children.map((child, idx) => {
-                const watchedChild = watchedChildren[idx]
+                const watchedChild = watchedChildren[idx] ?? form.getValues(`children.${idx}`)
                 return (
                     <Fragment key={child.id}>
                         {children.length > 1 && (

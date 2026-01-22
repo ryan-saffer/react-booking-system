@@ -1,8 +1,8 @@
 import { LogOut, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useAuth } from '@components/Hooks/context/useAuth'
+import useFirebase from '@components/Hooks/context/UseFirebase'
 import { Button } from '@ui-components/button'
 import {
     DropdownMenu,

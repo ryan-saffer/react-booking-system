@@ -1,6 +1,7 @@
+import { useAuth } from '@components/Hooks/context/useAuth'
+
 import type { ReactNode } from 'react'
 
-import { useAuth } from '@components/Hooks/context/useAuth'
 
 export function SignedOut({ children }: { children: ReactNode }) {
     const user = useAuth()

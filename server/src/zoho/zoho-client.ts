@@ -1,6 +1,7 @@
+import { DateTime } from 'luxon'
+
 import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
 import { DatabaseClient } from '../firebase/DatabaseClient'
 

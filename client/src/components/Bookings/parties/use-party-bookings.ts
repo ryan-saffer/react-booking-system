@@ -1,12 +1,14 @@
-import type { FirestoreBooking, Service, Studio, WithId } from 'fizz-kidz'
-import { STUDIOS } from 'fizz-kidz'
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import { useEffect, useRef, useState } from 'react'
+
+import type { FirestoreBooking, Service, Studio, WithId } from 'fizz-kidz'
+import { STUDIOS } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import useFirebase from '@components/Hooks/context/UseFirebase'
 import { useOrg } from '@components/Session/use-org'
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+
 
 import { useLocationFilter } from '../location-filter/location-filter.hook'
 

@@ -1,7 +1,8 @@
 import type { FranchiseOrMaster, StudioOrMaster } from 'fizz-kidz'
-import type { XeroClient as TXeroClient } from 'xero-node'
 
 import type { ClientStatus } from '../utilities/types'
+import type { XeroClient as TXeroClient } from 'xero-node'
+
 
 const ENV_MAP: Record<FranchiseOrMaster, { clientId: string; clientSecret: string }> = {
     master: {

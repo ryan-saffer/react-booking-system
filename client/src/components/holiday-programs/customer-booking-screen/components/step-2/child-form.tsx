@@ -1,9 +1,11 @@
 import { DatePicker, Form, Input, Select } from 'antd'
 import dayjs from 'dayjs'
-import { AcuityConstants } from 'fizz-kidz'
 import React, { useState } from 'react'
 
+import { AcuityConstants } from 'fizz-kidz'
+
 import { SimpleTextRule } from '@utils/formUtils'
+
 import { useCart } from '../../state/cart-store'
 
 const { TextArea } = Input

@@ -1,25 +1,26 @@
+import { styled } from '@mui/material/styles'
+import { useMutation } from '@tanstack/react-query'
 import { Button } from 'antd'
-import type { DiscountCode } from 'fizz-kidz'
-import { getSquareLocationId } from 'fizz-kidz'
 import { AlertCircle, CheckCircle } from 'lucide-react'
 import { DateTime } from 'luxon'
 import React, { useEffect, useRef } from 'react'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
 
+import { getSquareLocationId } from 'fizz-kidz'
+import type { DiscountCode } from 'fizz-kidz'
+
 import Loader from '@components/Shared/Loader'
 import { SQUARE_APPLICATION_ID } from '@constants/square'
-import { styled } from '@mui/material/styles'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { useTRPC } from '@utils/trpc'
 
-import type { Form } from '../../pages/customer-booking-page'
-import { useCart } from '../../state/cart-store'
 import BookingSummary from './booking-summary'
 import DiscountInput from './discount-input'
 import { GiftCardInput } from './gift-card-input'
+import { useCart } from '../../state/cart-store'
 
-import { useMutation } from '@tanstack/react-query'
+import type { Form } from '../../pages/customer-booking-page'
 
 type Props = {
     form: Form

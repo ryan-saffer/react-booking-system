@@ -1,11 +1,11 @@
+import { TRPCError } from '@trpc/server'
 import { getAuth } from 'firebase-admin/auth'
+
 import type { Role, StaffAuthUser, StudioOrMaster } from 'fizz-kidz'
 import { ObjectKeys } from 'fizz-kidz'
 
-import { TRPCError } from '@trpc/server'
-
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { MailClient } from '../../sendgrid/MailClient'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MailClient } from '@/sendgrid/MailClient'
 
 export async function addUserToStudio({
     firstname,

@@ -1,7 +1,7 @@
-import { ObjectKeys } from 'fizz-kidz'
-import type { RefObject } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
+
+import { ObjectKeys } from 'fizz-kidz'
 
 import frame from '@drawables/frame.webp'
 import { Separator } from '@ui-components/separator'
@@ -9,6 +9,8 @@ import { cn } from '@utils/tailwind'
 
 import { InvitationTemplates } from './constants'
 import { Navbar } from './navbar'
+
+import type { RefObject } from 'react'
 
 const Invitations = ObjectKeys(InvitationTemplates).map((name) => ({
     name,

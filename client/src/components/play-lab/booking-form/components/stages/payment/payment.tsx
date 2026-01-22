@@ -1,9 +1,12 @@
-import { getSquareLocationId } from 'fizz-kidz'
+import { useMutation } from '@tanstack/react-query'
 import { AlertCircle, PartyPopper, XIcon, CreditCard as CreditCardIcon } from 'lucide-react'
 import { DateTime } from 'luxon'
 import { useEffect, useRef } from 'react'
+import { useWatch } from 'react-hook-form'
 import { ApplePay, CreditCard, GooglePay, PaymentForm } from 'react-square-web-payments-sdk'
 import { toast } from 'sonner'
+
+import { getSquareLocationId } from 'fizz-kidz'
 
 import Loader from '@components/Shared/Loader'
 import { SQUARE_APPLICATION_ID } from '@constants/square'
@@ -12,14 +15,12 @@ import { Button } from '@ui-components/button'
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@ui-components/table'
 import { useTRPC } from '@utils/trpc'
 
+import { DiscountInput } from './discount-input'
+import { GiftCardInput } from './gift-card-input'
 import { useCart, type LocalAcuityClass } from '../../../state/cart-store'
 import { useBookingForm } from '../../../state/form-schema'
 import { useFormStage } from '../../../state/form-stage-store'
-import { DiscountInput } from './discount-input'
-import { GiftCardInput } from './gift-card-input'
 
-import { useMutation } from '@tanstack/react-query'
-import { useWatch } from 'react-hook-form'
 
 export function Payment() {
     const trpc = useTRPC()

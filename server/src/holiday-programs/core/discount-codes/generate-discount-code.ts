@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 
-import { generateRandomString } from '../../../utilities/stringUtils'
+import { generateRandomString } from '@/utilities/stringUtils'
+
 import { createDiscountCode } from './create-discount-code'
 
 /**

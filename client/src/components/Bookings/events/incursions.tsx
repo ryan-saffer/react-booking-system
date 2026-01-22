@@ -1,9 +1,9 @@
 import { Skeleton, Stack, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { useMemo } from 'react'
 
 import EventPanel from './event-panel'
 import { useEvents } from './use-events'
-import { useMemo } from 'react'
 
 const PREFIX = 'Events'
 

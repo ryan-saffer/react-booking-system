@@ -1,4 +1,3 @@
-import type { FieldValue, CollectionGroup } from 'firebase-admin/firestore'
 import type {
     AfterSchoolEnrolment,
     AuthUser,
@@ -12,6 +11,8 @@ import type {
 } from 'fizz-kidz'
 
 import { FirestoreClient } from './FirestoreClient'
+
+import type { FieldValue, CollectionGroup } from 'firebase-admin/firestore'
 
 export type Collection<T> = FirebaseFirestore.CollectionReference<T>
 export type Document<T> = FirebaseFirestore.DocumentReference<T>

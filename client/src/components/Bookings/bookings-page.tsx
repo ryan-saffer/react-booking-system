@@ -1,6 +1,6 @@
+import { Chip } from '@mui/material'
 import { useState } from 'react'
 
-import { Chip } from '@mui/material'
 
 import { DateNavigation } from './date-navigation/date-navigation'
 import Incursions from './events/incursions'

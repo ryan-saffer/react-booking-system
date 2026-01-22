@@ -1,10 +1,13 @@
-import type { AcuityTypes } from 'fizz-kidz'
-import type { Dispatch, SetStateAction } from 'react'
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from 'react'
+
+import type { AcuityTypes } from 'fizz-kidz'
 
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from "@tanstack/react-query";
+import type { Dispatch, SetStateAction } from 'react'
+
+
 
 interface UseFetchAppointmentsProps {
     setLoading: Dispatch<SetStateAction<boolean>>

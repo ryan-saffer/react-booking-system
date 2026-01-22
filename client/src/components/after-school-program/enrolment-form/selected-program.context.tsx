@@ -1,5 +1,6 @@
-import type { AcuityTypes } from 'fizz-kidz'
 import { createContext } from 'react'
+
+import type { AcuityTypes } from 'fizz-kidz'
 
 export type NullableProgram = AcuityTypes.Api.AppointmentType | null
 

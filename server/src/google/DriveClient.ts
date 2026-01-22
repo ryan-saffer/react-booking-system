@@ -2,13 +2,14 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import { Readable } from 'stream'
-
-import type { drive_v3 } from 'googleapis'
 import { finished } from 'stream/promises'
-import type { ReadableStream } from 'stream/web'
+
+import { getOAuth2Client } from './google-oauth'
 
 import type { ClientStatus } from '../utilities/types'
-import { getOAuth2Client } from './google-oauth'
+import type { drive_v3 } from 'googleapis'
+import type { ReadableStream } from 'stream/web'
+
 
 export class DriveClient {
     private static instance: DriveClient

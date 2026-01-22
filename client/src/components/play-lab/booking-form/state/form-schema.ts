@@ -1,7 +1,8 @@
-import type { Studio } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import { useFormContext } from 'react-hook-form'
 import { z } from 'zod'
+
+import type { Studio } from 'fizz-kidz'
 
 import { useCart } from './cart-store'
 

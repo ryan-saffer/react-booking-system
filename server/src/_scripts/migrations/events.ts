@@ -1,8 +1,9 @@
-import type { IncursionEvent, Studio } from 'fizz-kidz'
 import fs from 'fs/promises'
 
-import { eventsRouter } from '../../events/functions/trpc/trpc.events'
-import { CalendarClient } from '../../google/CalendarClient'
+import type { IncursionEvent, Studio } from 'fizz-kidz'
+
+import { eventsRouter } from '@/events/functions/trpc/trpc.events'
+import { CalendarClient } from '@/google/CalendarClient'
 
 export async function groupEventsByContactEmail() {
     try {

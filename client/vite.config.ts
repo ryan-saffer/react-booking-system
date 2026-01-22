@@ -1,11 +1,11 @@
 import { execSync } from 'node:child_process'
 import path from 'path'
 
+import { sentryVitePlugin } from '@sentry/vite-plugin'
+import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
 
-import { sentryVitePlugin } from '@sentry/vite-plugin'
-import react from '@vitejs/plugin-react'
 
 function resolveAppVersion(env: Record<string, string>) {
     const builtAt = new Date().toISOString()

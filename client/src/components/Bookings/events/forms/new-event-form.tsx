@@ -1,19 +1,22 @@
-import { Checkbox, CircularProgress, Fab, FormControlLabel, Grid, TextField, Typography, styled } from '@mui/material'
-import React, { useState } from 'react'
-import SaveIcon from '@mui/icons-material/Save'
 import CheckIcon from '@mui/icons-material/Check'
+import SaveIcon from '@mui/icons-material/Save'
+import { Checkbox, CircularProgress, Fab, FormControlLabel, Grid, TextField, Typography, styled } from '@mui/material'
 import { green } from '@mui/material/colors'
-import type { ErrorDialogProps } from '../../../Dialogs/ErrorDialog'
-import WithErrorDialog from '../../../Dialogs/ErrorDialog'
-import type { Form } from './base-event-form'
-import BaseEventForm from './base-event-form'
+import { useMutation } from '@tanstack/react-query'
+import { DateTime } from 'luxon'
+import React, { useState } from 'react'
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
+
+import type { Studio, ScienceModule } from 'fizz-kidz'
+
+import type { ErrorDialogProps } from '@components/Dialogs/ErrorDialog'
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { combineDateAndTime } from '@utils/dateUtils'
 import { useTRPC } from '@utils/trpc'
-import type { Studio, ScienceModule } from 'fizz-kidz'
-import { DateTime } from 'luxon'
 
-import { useMutation } from '@tanstack/react-query'
+import BaseEventForm from './base-event-form'
+
+import type { Form } from './base-event-form'
 
 const PREFIX = 'NewEventForm'
 
