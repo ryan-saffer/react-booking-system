@@ -112,4 +112,19 @@ export class FirestoreRefs {
     static async paymentIdempotencyKey(key: string) {
         return (await this.paymentIdempotencyKeys()).doc(key)
     }
+
+    static async partyFormSubmissionProcessing() {
+        return (await FirestoreClient.getInstance()).collection('partyFormSubmissionProcessing') as Collection<{
+            submissionId: string
+            bookingId: string
+            status: 'processing' | 'completed' | 'failed'
+            createdAt: FieldValue
+            updatedAt: FieldValue
+            error?: string
+        }>
+    }
+
+    static async partyFormSubmissionProcessingDoc(submissionId: string) {
+        return (await this.partyFormSubmissionProcessing()).doc(submissionId)
+    }
 }

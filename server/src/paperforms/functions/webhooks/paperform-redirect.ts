@@ -158,9 +158,7 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
 /**
  * Route for handling post-checkout redirect
  *
- * TODO:
- * It's important that this route is idempotent, since it could get triggered at any point with the same query params.
- * To achieve this, ensure that this submissionId has not been processed before.
+ * This route is idempotent based on submissionId.
  */
 partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     const submissionId = req.query.submissionId
@@ -186,12 +184,28 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
         return
     }
 
+    const bookingId = responses.getFieldValue('id')
+
+    // Redirect URLs are not guaranteed to be called exactly once (refresh/back button/timeouts/etc),
+    // so we need to guard against processing the same Paperform submission multiple times.
+    try {
+        const claim = await DatabaseClient.claimPartyFormSubmissionProcessing(submissionId, bookingId)
+        if (!claim.shouldProcess) {
+            res.redirect(303, claim.status === 'failed' ? ERROR_REDIRECT : SUCCESS_REDIRECT)
+            return
+        }
+    } catch (err) {
+        logError('Error claiming party form submission processing lock', err, { submissionId, bookingId })
+        res.redirect(303, ERROR_REDIRECT)
+        return
+    }
+
     // Square automatically removes tracked inventory quantities.
     // Since these are ordered through the supplier, we don't want to change the inventory levels - so adjust it back here.
     const takeHomeBags = responses.getFieldValue('take_home_bags')
     const products = responses.getFieldValue('products')
     if (takeHomeBags.length > 0 || products.length > 0) {
-        const booking = await DatabaseClient.getPartyBooking(responses.getFieldValue('id'))
+        const booking = await DatabaseClient.getPartyBooking(bookingId)
         const locationId = getSquareLocationId(env === 'prod' ? booking.location : 'test')
         const square = await SquareClient.getInstance()
         const takeHomeBagChanges: InventoryChange[] = takeHomeBags.map((item) => ({
@@ -223,7 +237,7 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
             })
         } catch (err) {
             logError('Error adjusting inventory for square item during party form payment', err, {
-                bookingId: responses.getFieldValue('id'),
+                bookingId,
                 submissionId,
             })
         }
@@ -232,9 +246,23 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
     // Handle the complete form submission (mapping, database updates, emails, etc.)
     try {
         await handlePartyFormSubmissionV3(responses)
-        res.redirect(303, SUCCESS_REDIRECT)
-    } catch {
+    } catch (err) {
+        try {
+            await DatabaseClient.failPartyFormSubmissionProcessing(submissionId, err)
+        } catch (innerErr) {
+            logError('Error marking party form submission processing as failed', innerErr, { submissionId, bookingId })
+        }
         res.redirect(303, ERROR_REDIRECT)
+        return
     }
+
+    try {
+        await DatabaseClient.completePartyFormSubmissionProcessing(submissionId)
+    } catch (err) {
+        // Processing already completed; this is only used to prevent duplicate runs.
+        logError('Error marking party form submission processing as completed', err, { submissionId, bookingId })
+    }
+
+    res.redirect(303, SUCCESS_REDIRECT)
     return
 })
