@@ -92,7 +92,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                             })),
                         },
                         {
-                            bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'],
+                            bcc: ['programs@fizzkidz.com.au'],
                         }
                     )
                     break
@@ -114,7 +114,7 @@ export async function createEvent({ event, slots, sendConfirmationEmail, emailMe
                             module: ModuleNameMap[event.module],
                             price: event.price,
                         },
-                        { bcc: ['programs@fizzkidz.com.au', 'bonnie@fizzkidz.com.au'] }
+                        { bcc: ['programs@fizzkidz.com.au'] }
                     )
                     break
                 }

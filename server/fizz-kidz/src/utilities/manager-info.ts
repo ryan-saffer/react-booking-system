@@ -61,9 +61,9 @@ export function getManager(
             }
         case 'kingsville':
             return {
-                name: 'Kym',
+                name: 'Kate',
                 email: 'kingsville@fizzkidz.com.au',
-                mobile: '0411 549 756',
+                mobile: '0421 017 080',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',

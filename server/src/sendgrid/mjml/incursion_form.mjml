@@ -33,7 +33,7 @@
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px"> Hi {{ contactName }}, </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        Bonnie here! We are very excited to run the Fizz Kidz {{ incursionName }} at {{ organisation }}.
+                        Lami here! We are very excited to run the Fizz Kidz {{ incursionName }} at {{ organisation }}.
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
@@ -77,7 +77,7 @@
                     <mj-text color="#637381" font-size="16px">
                         We can't wait for the science adventure to begin!
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px"> Bonnie and the Fizz Kidz team. </mj-text>
+                    <mj-text color="#637381" font-size="16px"> Lami and the Fizz Kidz team. </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>

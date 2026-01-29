@@ -355,7 +355,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                     cakeMessage: mappedBooking.cake.message,
                 },
                 {
-                    bcc: [manager.email, 'bonnie@fizzkidz.com.au'],
+                    bcc: [manager.email],
                 }
             )
         } catch (err) {
@@ -393,9 +393,6 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                         })),
                     }),
                     newTakeHomeBags: takeHomeBags,
-                },
-                {
-                    bcc: ['bonnie@fizzkidz.com.au'],
                 }
             )
         } catch (err) {
