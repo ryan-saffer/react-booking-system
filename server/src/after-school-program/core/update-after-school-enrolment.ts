@@ -14,7 +14,7 @@ export async function updateAfterSchoolEnrolment(input: UpdateAfterSchoolEnrolme
             const mailClient = await MailClient.getInstance()
             await mailClient.sendEmail(
                 'notContinuingNotification',
-                'bonnie@fizzkidz.com.au',
+                'bookings@fizzkidz.com.au',
                 {
                     parentName: `${existingEnrolment.parent.firstName} ${existingEnrolment.parent.lastName}`,
                     parentEmail: existingEnrolment.parent.email,
