@@ -5,7 +5,6 @@ import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray, useWatch } from 'react-hook-form'
 
-import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
@@ -23,6 +22,7 @@ import { useTRPC } from '@utils/trpc'
 
 import { FileUploadInput } from './file-upload-input'
 import { GRADES, useEnrolmentForm } from './form-schema'
+import TermsAndConditions from './terms-and-conditions'
 import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
@@ -549,10 +549,10 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                 grade: '' as unknown as NonNullable<
                                     AfterSchoolForm['main']
                                 >['children'][number]['grade'],
-                                hasAllergies: false,
-                                needsSupport: false,
-                                permissionToPhotograph: true,
-                            } satisfies NonNullable<AfterSchoolForm['main']>['children'][number],
+                                hasAllergies: undefined as unknown as boolean,
+                                needsSupport: undefined as unknown as boolean,
+                                permissionToPhotograph: undefined as unknown as boolean,
+                            },
                             {
                                 shouldFocus: true,
                             }
