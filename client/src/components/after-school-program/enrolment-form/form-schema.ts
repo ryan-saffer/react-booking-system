@@ -146,6 +146,8 @@ export const formSchema = z.object({
         .optional(),
 })
 
+export type AfterSchoolForm = z.infer<typeof formSchema>
+
 export function useEnrolmentForm() {
-    return useFormContext<z.infer<typeof formSchema>>()
+    return useFormContext<AfterSchoolForm>()
 }

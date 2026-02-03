@@ -5,7 +5,6 @@ import { AlertCircle, CalendarIcon, CircleX, Loader2, Plus } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
 import { useFieldArray, useWatch } from 'react-hook-form'
 
-import TermsAndConditions from '@components/after-school-program/enrolment-form/terms-and-conditions'
 import Loader from '@components/Shared/Loader'
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Button } from '@ui-components/button'
@@ -23,12 +22,13 @@ import { useTRPC } from '@utils/trpc'
 
 import { FileUploadInput } from './file-upload-input'
 import { GRADES, useEnrolmentForm } from './form-schema'
+import TermsAndConditions from './terms-and-conditions'
 import { useSelectedProgram } from './use-selected-program'
 import { getChildNumber } from './utils.booking-form'
 import { WaitingListForm } from './waiting-list-form'
 
+import type { AfterSchoolForm } from './form-schema'
 import type { DateTime } from 'luxon'
-
 
 export function EnrolmentForm({ submitting }: { submitting: boolean }) {
     const trpc = useTRPC()
@@ -201,190 +201,139 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                     )}
                 />
                 <SectionBreak title={`${children.length > 1 ? 'Children' : 'Child'} Details`} />
-                {children.map((child, idx) => (
-                    <Fragment key={child.id}>
-                        {children.length > 1 && (
-                            <div className="flex items-center gap-2">
-                                <h3 className="text-lg font-medium">{getChildNumber(idx + 1)}</h3>
-                                <TooltipProvider delayDuration={150}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 w-8 p-0"
-                                                type="button"
-                                                onClick={() => removeChild(idx)}
-                                            >
-                                                <CircleX className="h-4 w-4" color="#E16A92" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Remove child</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </div>
-                        )}
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.firstName` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Child First Name</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.lastName` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Child Last Name</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.dob` as const}
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Date of birth</FormLabel>
-                                    <Popover
-                                        open={openCalendars[child.id]}
-                                        onOpenChange={(open) =>
-                                            setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
-                                        }
-                                    >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
+                {children.map((child, idx) => {
+                    const watchedChild = watchedChildren?.[idx] ?? form.getValues(`main.children.${idx}`)
+
+                    return (
+                        <Fragment key={child.id}>
+                            {children.length > 1 && (
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-lg font-medium">{getChildNumber(idx + 1)}</h3>
+                                    <TooltipProvider delayDuration={150}>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
                                                 <Button
-                                                    variant={'outline'}
-                                                    className={cn(
-                                                        'w-[240px] pl-3 text-left font-normal',
-                                                        !field.value && 'text-muted-foreground'
-                                                    )}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-8 w-8 p-0"
+                                                    type="button"
+                                                    onClick={() => removeChild(idx)}
                                                 >
-                                                    {field.value ? (
-                                                        format(field.value, 'PPP')
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    <CircleX className="h-4 w-4" color="#E16A92" />
                                                 </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <DateCalendar
-                                                openTo="year"
-                                                onChange={(datetime: DateTime | null, state) => {
-                                                    if (datetime && state === 'finish') {
-                                                        field.onChange(datetime.toJSDate())
-                                                        setOpenCalendars((prev) => ({ ...prev, [child.id]: false }))
-                                                    }
-                                                }}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Remove child</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </div>
                             )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.grade` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Child Grade</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a grade" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {GRADES.map((grade) => (
-                                                    <SelectItem key={grade} value={grade}>
-                                                        {grade}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.hasAllergies` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Does {watchedChildren?.[idx].firstName || 'this child'} have any allergies?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes</SelectItem>
-                                                <SelectItem value="no">No</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {watchedChildren?.[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
-                                name={`main.children.${idx}.allergies` as const}
+                                name={`main.children.${idx}.firstName` as const}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>
-                                            Please enter {watchedChildren?.[idx].firstName || 'the child'}'s allergies
-                                            here
-                                        </FormLabel>
+                                        <FormLabel>Child First Name</FormLabel>
                                         <FormControl>
-                                            <Textarea {...field} />
+                                            <Input {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                        )}
-                        {watchedChildren?.[idx].hasAllergies && (
                             <FormField
                                 control={form.control}
-                                name={`main.children.${idx}.isAnaphylactic` as const}
+                                name={`main.children.${idx}.lastName` as const}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Child Last Name</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`main.children.${idx}.dob` as const}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Date of birth</FormLabel>
+                                        <Popover
+                                            open={openCalendars[child.id]}
+                                            onOpenChange={(open) =>
+                                                setOpenCalendars((prev) => ({ ...prev, [child.id]: open }))
+                                            }
+                                        >
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={'outline'}
+                                                        className={cn(
+                                                            'w-[240px] pl-3 text-left font-normal',
+                                                            !field.value && 'text-muted-foreground'
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, 'PPP')
+                                                        ) : (
+                                                            <span>Pick a date</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <DateCalendar
+                                                    openTo="year"
+                                                    onChange={(datetime: DateTime | null, state) => {
+                                                        if (datetime && state === 'finish') {
+                                                            field.onChange(datetime.toJSDate())
+                                                            setOpenCalendars((prev) => ({ ...prev, [child.id]: false }))
+                                                        }
+                                                    }}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`main.children.${idx}.grade` as const}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Child Grade</FormLabel>
+                                        <FormControl>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a grade" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {GRADES.map((grade) => (
+                                                        <SelectItem key={grade} value={grade}>
+                                                            {grade}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name={`main.children.${idx}.hasAllergies` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Is {watchedChildren?.[idx].firstName || 'this child'} anaphylactic?
+                                            Does {watchedChild?.firstName || 'this child'} have any allergies?
                                         </FormLabel>
                                         <FormControl>
                                             <Select
@@ -413,132 +362,202 @@ export function EnrolmentForm({ submitting }: { submitting: boolean }) {
                                     </FormItem>
                                 )}
                             />
-                        )}
-                        {watchedChildren?.[idx].isAnaphylactic && (
-                            <FormField
-                                control={form.control}
-                                name={`main.children.${idx}.anaphylaxisPlan` as const}
-                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                render={({ field: { value, onChange, ...fieldProps } }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Please upload {watchedChildren?.[idx].firstName || 'the child'}
-                                            's anaphylaxis plan
-                                        </FormLabel>
-                                        <FormControl>
-                                            <FileUploadInput
-                                                {...fieldProps}
-                                                onSuccess={(file) => {
-                                                    console.log('FILED CHANGED')
-                                                    console.log(file.name)
-                                                    onChange(file)
-                                                }}
-                                                accept=".pdf"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        )}
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.needsSupport` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        Does {watchedChildren?.[idx].firstName || 'your child'} need extra support for
-                                        learning difficulties, disabilites or additional learning needs?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
+                            {watchedChild?.hasAllergies && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.allergies` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Please enter {watchedChild?.firstName || 'the child'}'s allergies here
+                                            </FormLabel>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
+                                                <Textarea {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes</SelectItem>
-                                                <SelectItem value="no">No</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
-                        />
-                        {watchedChildren?.[idx].needsSupport && (
+                            {watchedChild?.hasAllergies && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.isAnaphylactic` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Is {watchedChild?.firstName || 'this child'} anaphylactic?
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Select
+                                                    onValueChange={(value) => {
+                                                        if (value === 'yes') {
+                                                            field.onChange(true)
+                                                        }
+                                                        if (value === 'no') {
+                                                            field.onChange(false)
+                                                        }
+                                                    }}
+                                                    defaultValue={''}
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Please select" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="yes">Yes</SelectItem>
+                                                        <SelectItem value="no">No</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+                            {watchedChild?.isAnaphylactic && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.anaphylaxisPlan` as const}
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    render={({ field: { value, onChange, ...fieldProps } }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Please upload {watchedChild?.firstName || 'the child'}
+                                                's anaphylaxis plan
+                                            </FormLabel>
+                                            <FormControl>
+                                                <FileUploadInput
+                                                    {...fieldProps}
+                                                    onSuccess={(file) => {
+                                                        console.log('FILED CHANGED')
+                                                        console.log(file.name)
+                                                        onChange(file)
+                                                    }}
+                                                    accept=".pdf"
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
                             <FormField
                                 control={form.control}
-                                name={`main.children.${idx}.support` as const}
+                                name={`main.children.${idx}.needsSupport` as const}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            How best can we support {watchedChildren?.[idx].firstName || 'your child'}?
+                                            Does {watchedChild?.firstName || 'your child'} need extra support for
+                                            learning difficulties, disabilites or additional learning needs?
                                         </FormLabel>
                                         <FormControl>
-                                            <Textarea {...field} />
+                                            <Select
+                                                onValueChange={(value) => {
+                                                    if (value === 'yes') {
+                                                        field.onChange(true)
+                                                    }
+                                                    if (value === 'no') {
+                                                        field.onChange(false)
+                                                    }
+                                                }}
+                                                defaultValue={''}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Please select" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="yes">Yes</SelectItem>
+                                                    <SelectItem value="no">No</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                        )}
-                        <FormField
-                            control={form.control}
-                            name={`main.children.${idx}.permissionToPhotograph` as const}
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>
-                                        We love to show other parents the cool things that we do by taking pictures and
-                                        videos. Do you give permission for{' '}
-                                        {watchedChildren?.[idx].firstName || 'your child'} to be in our marketing
-                                        content?
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Select
-                                            onValueChange={(value) => {
-                                                if (value === 'yes') {
-                                                    field.onChange(true)
-                                                }
-                                                if (value === 'no') {
-                                                    field.onChange(false)
-                                                }
-                                            }}
-                                            defaultValue={''}
-                                        >
+                            {watchedChild?.needsSupport && (
+                                <FormField
+                                    control={form.control}
+                                    name={`main.children.${idx}.support` as const}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                How best can we support {watchedChild?.firstName || 'your child'}?
+                                            </FormLabel>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Please select" />
-                                                </SelectTrigger>
+                                                <Textarea {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="yes">Yes - I give permission</SelectItem>
-                                                <SelectItem value="no">No - I don't give permission</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             )}
-                        />
-                    </Fragment>
-                ))}
+                            <FormField
+                                control={form.control}
+                                name={`main.children.${idx}.permissionToPhotograph` as const}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            We love to show other parents the cool things that we do by taking pictures
+                                            and videos. Do you give permission for{' '}
+                                            {watchedChild?.firstName || 'your child'} to be in our marketing content?
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={(value) => {
+                                                    if (value === 'yes') {
+                                                        field.onChange(true)
+                                                    }
+                                                    if (value === 'no') {
+                                                        field.onChange(false)
+                                                    }
+                                                }}
+                                                defaultValue={''}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Please select" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="yes">Yes - I give permission</SelectItem>
+                                                    <SelectItem value="no">No - I don't give permission</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </Fragment>
+                    )
+                })}
                 <Button
                     className="border-2 border-dashed bg-slate-50"
                     type="button"
                     variant="outline"
-                    onClick={() => appendChild({ firstName: '', lastName: '' } as any, { shouldFocus: true })}
+                    onClick={() =>
+                        appendChild(
+                            {
+                                firstName: '',
+                                lastName: '',
+                                dob: undefined as unknown as Date,
+                                grade: '' as unknown as NonNullable<
+                                    AfterSchoolForm['main']
+                                >['children'][number]['grade'],
+                                hasAllergies: undefined as unknown as boolean,
+                                needsSupport: undefined as unknown as boolean,
+                                permissionToPhotograph: undefined as unknown as boolean,
+                            },
+                            {
+                                shouldFocus: true,
+                            }
+                        )
+                    }
                 >
                     {form.getValues('main.children')?.length === 0 ? 'Add Child' : 'Enrol Another Child'}
                     <Plus className="ml-2 h-4 w-4" />
