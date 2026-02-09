@@ -4,7 +4,6 @@ import path from 'path'
 import { logger } from 'firebase-functions/v2'
 import Mustache from 'mustache'
 
-
 import { env } from '../init'
 
 import type { Emails } from './types'
@@ -229,7 +228,7 @@ export class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Fizz Kidz Booking Confirmation',
-                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'event_booking_confirmation.mjml',
                     useMjml: true,
@@ -243,7 +242,7 @@ export class MailClient {
                             email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Fizz Kidz Booking Confirmation',
-                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'incursion_booking_confirmation.mjml',
                     useMjml: true,
@@ -257,7 +256,7 @@ export class MailClient {
                             email: 'program@fizzkidz.com.au',
                         },
                         subject: subject || 'Science incursion is coming up!',
-                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'incursion_form.mjml',
                     useMjml: true,
@@ -268,10 +267,10 @@ export class MailClient {
                         to,
                         from: {
                             name: 'Fizz Kidz',
-                            email: 'programs@fizzkidz.com.au',
+                            email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Submission Recieved',
-                        replyTo: replyTo || 'programs@fizzkidz.com.au',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'incursion_form_completed.mjml',
                     useMjml: true,
