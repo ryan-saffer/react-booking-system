@@ -43,7 +43,7 @@ export function getManager(
             }
         case 'cheltenham':
             return {
-                name: 'Lami',
+                name: 'Olivia',
                 email: 'cheltenham@fizzkidz.com.au',
                 mobile: '0431 379 953',
                 subjectPronoun: 'she',
@@ -52,9 +52,9 @@ export function getManager(
             }
         case 'essendon':
             return {
-                name: 'Kym',
+                name: 'Chloe',
                 email: 'essendon@fizzkidz.com.au',
-                mobile: '0411 549 756',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
@@ -70,9 +70,9 @@ export function getManager(
             }
         case 'malvern':
             return {
-                name: 'Ginny',
+                name: 'Lou',
                 email: 'malvern@fizzkidz.com.au',
-                mobile: '0423 077 262',
+                mobile: '0431 379 953',
                 subjectPronoun: 'she',
                 objectPronoun: 'her',
                 possesiveAdjective: 'her',
