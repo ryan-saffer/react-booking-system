@@ -26,7 +26,6 @@ import { getCakeFormUrl } from './utils.party'
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
         ..._booking,
-        createdAt: Timestamp.now(),
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 

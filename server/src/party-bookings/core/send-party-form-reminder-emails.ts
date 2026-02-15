@@ -27,7 +27,6 @@ export async function sendPartyFormReminderEmails() {
             const firestoreBooking = snap.data()
             const booking = {
                 ...firestoreBooking,
-                createdAt: firestoreBooking.createdAt.toDate(),
                 dateTime: firestoreBooking.dateTime.toDate(),
             } satisfies Booking
 
