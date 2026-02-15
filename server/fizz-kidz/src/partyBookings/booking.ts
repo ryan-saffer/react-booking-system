@@ -55,13 +55,11 @@ export interface FormBooking extends BaseBooking {
 
 // combines dateTime into single date
 export interface Booking extends BaseBooking {
-    createdAt: Date
     dateTime: Date
 }
 
 // used when retrieving from firestore, where dateTime is a firestore Timestamp
 export interface FirestoreBooking extends BaseBooking {
-    createdAt: firestore.Timestamp
     dateTime: firestore.Timestamp
 }
 
@@ -122,7 +120,6 @@ export const FormBookingFields: FormBookingKeys = {
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
 
 export const BookingFields: BookingKeys = {
-    createdAt: 'createdAt',
     parentFirstName: 'parentFirstName',
     parentLastName: 'parentLastName',
     parentEmail: 'parentEmail',

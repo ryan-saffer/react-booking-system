@@ -28,7 +28,6 @@ export async function sendPartyForms() {
             const firestoreBooking = documentSnapshot.data()
             const booking = {
                 ...firestoreBooking,
-                createdAt: firestoreBooking.createdAt.toDate(),
                 dateTime: firestoreBooking.dateTime.toDate(),
             } satisfies Booking
 
