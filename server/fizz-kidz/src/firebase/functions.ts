@@ -4,6 +4,7 @@ export interface PubSubFunctions {
     background:
         | { name: 'sendIncursionForms' }
         | { name: 'sendGuestsEmail' }
+        | { name: 'sendCakeForms' }
         | { name: 'sendPartyFormReminderEmails' }
         | { name: 'sendPartyForms' }
         | { name: 'sendPartyFeedbackEmails' }

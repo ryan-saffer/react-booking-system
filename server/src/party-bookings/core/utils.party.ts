@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
 
-import type { Addition, BaseBooking, Booking } from 'fizz-kidz'
-import { ADDITIONS, CREATIONS } from 'fizz-kidz'
+import type { Addition, BaseBooking } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, getCloudFunctionsDomain } from 'fizz-kidz'
+
+import { env } from '@/init'
 
 export function getBookingCreations(booking: BaseBooking) {
     const result: string[] = []
@@ -33,23 +35,18 @@ export function isAddition(key: string): key is Addition {
     return Object.keys(key).includes(key)
 }
 
-export function getPrefilledFormUrl(bookingId: string, booking: Booking) {
-    let url = `https://pdf4im1b.paperform.co/?location=${
-        booking.type === 'studio' ? booking.location : 'mobile'
-    }&id=${bookingId}`
-    const encodedParams: { [key: string]: string } = {
-        parent_first_name: encodeURIComponent(booking.parentFirstName),
-        parent_last_name: encodeURIComponent(booking.parentLastName),
-        child_name: encodeURIComponent(booking.childName),
-        child_age: encodeURIComponent(booking.childAge),
-        food_package: booking.includesFood
-            ? encodeURIComponent('Include the food package')
-            : encodeURIComponent('I will self-cater the party'),
-    }
+export function getPartyFormUrl(bookingId: string) {
+    return `${getCloudFunctionsDomain(
+        env,
+        process.env.FUNCTIONS_EMULATOR === 'true'
+    )}/api/api/webhooks/party-form?id=${bookingId}`
+}
 
-    Object.keys(encodedParams).forEach((key) => (url += `&${key}=${encodedParams[key]}`))
-
-    return url
+export function getCakeFormUrl(bookingId: string, useEmulator?: boolean) {
+    return `${getCloudFunctionsDomain(
+        env,
+        useEmulator ?? process.env.FUNCTIONS_EMULATOR === 'true'
+    )}/api/api/webhooks/cake-form?id=${bookingId}`
 }
 
 const DAYS_OF_THE_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const

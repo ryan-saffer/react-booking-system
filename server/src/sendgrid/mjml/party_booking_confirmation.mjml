@@ -10,9 +10,21 @@
                 font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
             ></mj-text>
         </mj-attributes>
-        <mj-style inline="inline"> .text-link { color: #5e6ebf } </mj-style>
-        <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
-        <mj-style> .btn-block a { display: block !important; } </mj-style>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+        <mj-style>
+            .btn-block a {
+                display: block !important;
+            }
+        </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
         <mj-section background-color="#eec73b" padding-bottom="0px">
@@ -96,11 +108,11 @@
                     Contact
                 </mj-text>
                 <mj-text color="#637381" font-size="14px" padding-top="0">
-                    Going forward, your best point of contact is our wonderful {{#isMobile}}mobile
-                    party{{/isMobile}}{{^isMobile}}{{ location }} studio{{/isMobile}} manager, {{ managerName }}. {{
-                    managerSubjectPronoun }} will oversee the planning and running of {{ childName }}'s fabulous party!
-                    You can contact {{ managerName }} on {{ managerMobile }} or email {{ managerObjectPronoun }} at {{
-                    managerEmail }}. You can also just reply to this email directly :)
+                    Going forward, your best point of contact is our wonderful {{#isMobile}}mobile party{{/isMobile
+                    }}{{^isMobile}}{{ location }} studio{{/isMobile}} manager, {{ managerName }}.
+                    {{ managerSubjectPronoun }} will oversee the planning and running of {{ childName }}'s fabulous
+                    party! You can contact {{ managerName }} on {{ managerMobile }} or email
+                    {{ managerObjectPronoun }} at {{ managerEmail }}. You can also just reply to this email directly :)
                 </mj-text>
             </mj-column>
 
@@ -108,12 +120,37 @@
                 <mj-text color="#637381" font-size="14px">
                     <b style="color: #212b35">A week before the party</b>
                     {{ managerName }} will email you a personalised online party form, where you can tell us the number
-                    of guests attending as well as pick your creations and order additional food. {{#canOrderCake}}<br /><br />This
-                    form will also include an option to
-                    <b style="color: #212b35">order an ice-cream cake and lolly/gift bags directly through us!</b> If
-                    you choose to do this, the cake will be ready for you at the party when you arrive.{{/canOrderCake}}
+                    of guests attending as well as pick your creations and order additional food.
                 </mj-text>
                 {{#canOrderCake}}
+                <mj-text
+                    color="#212b35"
+                    font-size="12px"
+                    text-transform="uppercase"
+                    font-weight="bold"
+                    padding-bottom="0"
+                    >Ice-cream Birthday Cakes + Take-Home Bags</mj-text
+                >
+                <mj-text color="#637381" font-size="14px">
+                    Order an ice-cream cake and take-home bags directly through us! If you choose to do this, the cake
+                    will be ready for you at the party when you arrive.
+                </mj-text>
+                {{/canOrderCake}}
+                {{#canOrderCake}}
+                <mj-button
+                    css-class="btn-block"
+                    background-color="#4BC5D9"
+                    padding="20px"
+                    align="center"
+                    color="#ffffff"
+                    font-size="17px"
+                    font-weight="bold"
+                    href="{{ cakeFormUrl }}"
+                    css-class="btn-block"
+                    border="1px #4BC5D9 solid"
+                >
+                    Order now ↗️
+                </mj-button>
                 <mj-image src="https://www.fizzkidz.com.au/emails/party-perks.jpg" />
                 {{/canOrderCake}}
             </mj-column>
@@ -181,7 +218,7 @@
                 </mj-text>
                 <mj-text color="#637381" font-size="14px"
                     >Fizz Kidz parties are special, and your guests should know that too! Use our invitation generator
-                    to create a personalised invitation to share with {{childName}}'s friends!</mj-text
+                    to create a personalised invitation to share with {{ childName }}'s friends!</mj-text
                 >
                 <mj-button
                     css-class="btn-block"
@@ -217,7 +254,9 @@
                             >
                             We highly recommend giving this a read over :)
                         </li>
-                        <li><a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a></li>
+                        <li>
+                            <a href="{{studioPhotoUrl}}">Here is a photo of the {{ location }} studio.</a>
+                        </li>
                     </ul>
                 </mj-text>
                 {{/isMobile}}

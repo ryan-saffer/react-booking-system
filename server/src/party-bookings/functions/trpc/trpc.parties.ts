@@ -1,12 +1,11 @@
 import type { Booking, GenerateInvitation, Studio } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../../firebase/DatabaseClient'
-import { authenticatedProcedure, publicProcedure, router } from '../../../trpc/trpc'
-import { createPartyBooking } from '../../core/create-party-booking'
-import { deletePartyBooking } from '../../core/delete-party-booking'
-import { generateInvitation } from '../../core/generate-invitation'
-import { updatePartyBooking } from '../../core/update-party-booking'
-import { getPrefilledFormUrl } from '../../core/utils.party'
+import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
+import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
+import { generateInvitation } from '@/party-bookings/core/generate-invitation'
+import { updatePartyBooking } from '@/party-bookings/core/update-party-booking'
+import { getPartyFormUrl, getCakeFormUrl } from '@/party-bookings/core/utils.party'
+import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
@@ -24,10 +23,10 @@ export const partiesRouter = router({
         .mutation(({ input }) => deletePartyBooking(input)),
     getPartyFormUrl: authenticatedProcedure
         .input((input: unknown) => input as { bookingId: string })
-        .mutation(async ({ input }) => {
-            const booking = await DatabaseClient.getPartyBooking(input.bookingId)
-            return getPrefilledFormUrl(input.bookingId, booking)
-        }),
+        .mutation(({ input }) => getPartyFormUrl(input.bookingId)),
+    getCakeFormUrl: authenticatedProcedure
+        .input((input: unknown) => input as { bookingId: string })
+        .mutation(({ input }) => getCakeFormUrl(input.bookingId)),
     generateInvitation: publicProcedure
         .input((input: unknown) => input as GenerateInvitation)
         .mutation(({ input }) => generateInvitation(input)),

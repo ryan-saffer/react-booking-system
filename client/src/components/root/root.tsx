@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { Outlet, ScrollRestoration } from 'react-router-dom'
 import { Toaster } from 'sonner'
 
-import { getCloudFunctionsDomain, getFunctionEmulatorDomain } from 'fizz-kidz'
+import { getCloudFunctionsDomain } from 'fizz-kidz'
 
 import { useEmulators } from '@components/Firebase/firebase'
 import { FirebaseProvider } from '@components/Firebase/firebase-provider'
@@ -56,9 +56,7 @@ const antdTheme: ThemeConfig = {
 function InnerRoot() {
     const firebase = useFirebase()
 
-    const domain = useEmulators
-        ? getFunctionEmulatorDomain(import.meta.env.VITE_ENV)
-        : getCloudFunctionsDomain(import.meta.env.VITE_ENV)
+    const domain = getCloudFunctionsDomain(import.meta.env.VITE_ENV, useEmulators)
 
     const [queryClient] = useState(() => new QueryClient())
     const [trpcClient] = useState(() =>
