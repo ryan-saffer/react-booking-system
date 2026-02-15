@@ -2,6 +2,7 @@ import { assertNever, type PubSubFunctions } from 'fizz-kidz'
 
 import { sendIncursionForms } from './events/core/send-incursion-forms'
 import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
+import { sendCakeForms } from './party-bookings/core/send-cake-form'
 import { sendGuestsEmail } from './party-bookings/core/send-guests-email'
 import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedback-emails'
 import { sendPartyFormReminderEmails } from './party-bookings/core/send-party-form-reminder-emails'
@@ -24,6 +25,10 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'sendPartyFormReminderEmails':
             // 8:30am every Monday
             await sendPartyFormReminderEmails()
+            break
+        case 'sendCakeForms':
+            // 8:30am every Tuesday
+            await sendCakeForms()
             break
         case 'sendPartyForms':
             // 8:30am every Tuesday

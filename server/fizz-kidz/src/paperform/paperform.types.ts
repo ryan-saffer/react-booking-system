@@ -6,6 +6,7 @@ export type PFFile = { url: string; name: string; type: string }
 export type PartyFormV3 = {
     id: string
     location: string
+    party_or_cake_form: 'party' | 'cake'
     parent_first_name: string
     parent_last_name: string
     child_name: string

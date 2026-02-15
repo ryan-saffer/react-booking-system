@@ -110,6 +110,13 @@ export type Emails = {
         invitationsUrl: string
         includesFood: boolean
         canOrderCake: boolean
+        cakeFormUrl: string
+    }
+
+    cakeForm: {
+        parentName: string
+        childName: string
+        prefilledFormUrl: string
     }
 
     partyForm: {
@@ -243,6 +250,23 @@ export type Emails = {
         }
     }
 
+    cakeFormConfirmation: {
+        parentName: string
+        // for parent confirmation, merge take home bags and products
+        hasTakeHomeBags: boolean
+        takeHomeBags: { name: string; quantity: string }[]
+        managerName: string
+        managerMobile: string
+        cake?: {
+            selection: string
+            size: string
+            flavours: string
+            served: string
+            candles: string
+            message?: string
+        }
+    }
+
     partyFeedback: {
         parentName: string
         childName: string
@@ -274,6 +298,7 @@ export type Emails = {
         mobile: string
         email: string
         newTakeHomeBags: { name: string; quantity: string }[]
+        hasExistingTakeHomeBags: boolean
         oldTakeHomeBags?: { name: string; quantity: string }[]
     }
 
