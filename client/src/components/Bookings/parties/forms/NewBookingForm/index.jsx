@@ -1,9 +1,5 @@
 import 'typeface-roboto'
 
-import { FormBookingFields, STUDIOS } from 'fizz-kidz'
-import { DateTime } from 'luxon'
-import { useState } from 'react'
-
 import CheckIcon from '@mui/icons-material/Check'
 import SaveIcon from '@mui/icons-material/Save'
 import {
@@ -23,13 +19,17 @@ import {
 import { green } from '@mui/material/colors'
 import { styled } from '@mui/material/styles'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { useMutation } from '@tanstack/react-query'
+import { DateTime } from 'luxon'
+import { useState } from 'react'
+
+import { FormBookingFields, STUDIOS } from 'fizz-kidz'
+
+import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { capitalise } from '@utils/stringUtilities'
 import { useTRPC } from '@utils/trpc'
-import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 
 import { errorFound, validateFormOnChange, validateFormOnSubmit } from '../validation'
-
-import { useMutation } from '@tanstack/react-query'
 
 const PREFIX = 'index'
 

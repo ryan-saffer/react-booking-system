@@ -4,10 +4,12 @@ import path from 'path'
 import { logger } from 'firebase-functions/v2'
 import Mustache from 'mustache'
 
-import { env } from '../init'
+import { assertNever } from 'fizz-kidz'
+
+import { env } from '@/init'
+import type { ClientStatus } from '@/utilities/types'
 
 import type { Emails } from './types'
-import type { ClientStatus } from '../utilities/types'
 import type { MailService } from '@sendgrid/mail'
 
 type Options = {
@@ -290,6 +292,20 @@ export class MailClient {
                     template: 'party_booking_confirmation.mjml',
                     useMjml: true,
                 }
+            case 'cakeForm':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Time to Order Your Childs Birthday Cake 🎉',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'cake_form.mjml',
+                    useMjml: true,
+                }
             case 'partyForm':
                 return {
                     emailInfo: {
@@ -386,6 +402,20 @@ export class MailClient {
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
                     },
                     template: 'party_form_completed.mjml',
+                    useMjml: true,
+                }
+            case 'cakeFormConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: from || {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Order Received',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'cake_form_completed.mjml',
                     useMjml: true,
                 }
             case 'partyFeedback':
@@ -753,8 +783,8 @@ export class MailClient {
                     useMjml: true,
                 }
             default: {
-                const exhaustiveCheck: never = email
-                throw new Error(`Unrecognised email template: ${exhaustiveCheck}`)
+                assertNever(email)
+                throw new Error(`Unrecognised email template: ${email}`)
             }
         }
     }

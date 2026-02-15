@@ -28,7 +28,11 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
     let mappedBooking: Partial<Booking> = {}
     try {
         mappedBooking = formMapper.mapToBooking(existingBooking.type, existingBooking.location)
-        mappedBooking.partyFormFilledIn = true
+        if (responses.getFieldValue('party_or_cake_form') !== 'cake') {
+            // TODO: should be "=== 'party'", but waiting to phase out hardcoded form link.
+            // safe to change in March 2025
+            mappedBooking.partyFormFilledIn = true
+        }
     } catch (err) {
         logError('error handling party form submission', err, { responses })
         return
@@ -386,12 +390,15 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
                     studio: `${capitalise(fullBooking.location)} - ${getLocationAddress(fullBooking.location)}`,
                     mobile: fullBooking.parentMobile,
                     email: fullBooking.parentEmail,
-                    ...(existingBooking.takeHomeBags && {
-                        oldTakeHomeBags: ObjectKeys(existingBooking.takeHomeBags).map((key) => ({
-                            name: TAKE_HOME_BAGS[key].displayValue,
-                            quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
-                        })),
-                    }),
+                    ...(existingBooking.takeHomeBags
+                        ? {
+                              hasExistingTakeHomeBags: true,
+                              oldTakeHomeBags: ObjectKeys(existingBooking.takeHomeBags).map((key) => ({
+                                  name: TAKE_HOME_BAGS[key].displayValue,
+                                  quantity: existingBooking.takeHomeBags?.[key]?.toString() || '0',
+                              })),
+                          }
+                        : { hasExistingTakeHomeBags: false }),
                     newTakeHomeBags: takeHomeBags,
                 }
             )
@@ -406,45 +413,74 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         }
     }
 
-    try {
-        await mailClient.sendEmail(
-            'partyFormConfirmation',
-            fullBooking.parentEmail,
-            {
-                parentName: fullBooking.parentFirstName,
-                numberOfChildren: fullBooking.numberOfChildren,
-                creations,
-                isTyeDyeParty: creations.find((it) => it.includes('Tie Dye')) !== undefined,
-                hasAdditions: additions.length !== 0,
-                additions,
-                isMobile: fullBooking.type === 'mobile',
-                hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
-                managerName: manager.name,
-                managerMobile: manager.mobile,
-                includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
-                hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
-                takeHomeBags: [...takeHomeBags, ...products],
-                ...(fullBooking.cake && {
-                    cake: {
-                        selection: fullBooking.cake.selection,
-                        size: fullBooking.cake.size,
-                        flavours: fullBooking.cake.flavours.join(', '),
-                        served: fullBooking.cake.served,
-                        candles: fullBooking.cake.candles,
-                        message: fullBooking.cake.message,
-                    },
-                }),
-            },
-            {
-                from: {
-                    name: 'Fizz Kidz',
-                    email: manager.email,
+    if (responses.getFieldValue('party_or_cake_form') !== 'cake') {
+        try {
+            await mailClient.sendEmail(
+                'partyFormConfirmation',
+                fullBooking.parentEmail,
+                {
+                    parentName: fullBooking.parentFirstName,
+                    numberOfChildren: fullBooking.numberOfChildren,
+                    creations,
+                    isTyeDyeParty: creations.find((it) => it.includes('Tie Dye')) !== undefined,
+                    hasAdditions: additions.length !== 0,
+                    additions,
+                    isMobile: fullBooking.type === 'mobile',
+                    hasQuestions: fullBooking.questions !== '' || fullBooking.questions !== undefined,
+                    managerName: manager.name,
+                    managerMobile: manager.mobile,
+                    includesFood: fullBooking.type === 'studio' && fullBooking.includesFood,
+                    hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
+                    takeHomeBags: [...takeHomeBags, ...products],
+                    ...(fullBooking.cake && {
+                        cake: {
+                            selection: fullBooking.cake.selection,
+                            size: fullBooking.cake.size,
+                            flavours: fullBooking.cake.flavours.join(', '),
+                            served: fullBooking.cake.served,
+                            candles: fullBooking.cake.candles,
+                            message: fullBooking.cake.message,
+                        },
+                    }),
                 },
-                replyTo: manager.email,
+                {
+                    from: {
+                        name: 'Fizz Kidz',
+                        email: manager.email,
+                    },
+                    replyTo: manager.email,
+                }
+            )
+        } catch (err) {
+            logError(`error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`, err)
+        }
+    } else {
+        // only send cake form confirmation if they actually chose something
+        if (mappedBooking.cake || orderedTakeHomeBags || orderedProducts)
+            try {
+                await mailClient.sendEmail('cakeFormConfirmation', fullBooking.parentEmail, {
+                    parentName: fullBooking.parentFirstName,
+                    hasTakeHomeBags: takeHomeBags.length > 0 || products.length > 0,
+                    takeHomeBags: [...takeHomeBags, ...products],
+                    managerName: manager.name,
+                    managerMobile: manager.mobile,
+                    ...(fullBooking.cake && {
+                        cake: {
+                            selection: fullBooking.cake.selection,
+                            size: fullBooking.cake.size,
+                            flavours: fullBooking.cake.flavours.join(', '),
+                            served: fullBooking.cake.served,
+                            candles: fullBooking.cake.candles,
+                            message: fullBooking.cake.message,
+                        },
+                    }),
+                })
+            } catch (err) {
+                logError(
+                    `error sending cake form confirmation email for booking with id: '${formMapper.bookingId}'`,
+                    err
+                )
             }
-        )
-    } catch (err) {
-        logError(`error sending party form confirmation email for booking with id: '${formMapper.bookingId}'`, err)
     }
 
     // analytics

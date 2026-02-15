@@ -1,0 +1,121 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Trebuchet MS', 'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+            <mj-text
+                font-weight="400"
+                font-size="16px"
+                color="#000000"
+                line-height="24px"
+                font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+            ></mj-text>
+        </mj-attributes>
+        <mj-style inline="inline">
+            .text-link {
+                color: #5e6ebf;
+            }
+        </mj-style>
+        <mj-style inline="inline">
+            .footer-link {
+                color: #888888;
+            }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#E7E7E7" width="600px">
+        <mj-section background-color="#4bc5d9" padding-bottom="0px">
+            <mj-column width="100%">
+                <mj-spacer height="30px" />
+                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
+                    Order Received!
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="#ffffff" padding-top="0">
+            <mj-column>
+                <mj-image src="https://imgur.com/OoZZZLR.png" width="600px" alt="" padding="0" />
+            </mj-column>
+        </mj-section>
+        <mj-wrapper padding-top="0" padding-bottom="0">
+            <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        Thank you for filling out the party cake form. Below is a summary of what you have ordered:
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    {{#hasTakeHomeBags}}
+                    <mj-text
+                        color="#212b35"
+                        font-size="12px"
+                        text-transform="uppercase"
+                        font-weight="bold"
+                        padding-bottom="0"
+                    >
+                        Take-Home Goodies
+                    </mj-text>
+                    <mj-text color="#637381" font-size="14px" padding-top="0">
+                        <ul>
+                            {{#takeHomeBags}}
+                            <li>{{ name }} x {{ quantity }}</li>
+                            {{/takeHomeBags}}
+                        </ul>
+                    </mj-text>
+                    {{/hasTakeHomeBags}} {{#cake}}
+                    <mj-text
+                        color="#212b35"
+                        font-size="12px"
+                        text-transform="uppercase"
+                        font-weight="bold"
+                        padding-bottom="0"
+                        padding-top="0"
+                    >
+                        Cake
+                    </mj-text>
+                    <mj-text color="#637381" font-size="14px" padding-top="0"
+                        >{{ cake.selection }}, {{ cake.size }}. {{ cake.flavours }}. {{ cake.served }}.
+                        {{ cake.candles }}.</mj-text
+                    >
+                    {{ #cake.message }}
+                    <mj-text color="#637381" font-size="14px" padding-top="0">Message: "{{ cake.message }}"</mj-text>
+                    {{ /cake.message }}
+                </mj-column>
+                {{/cake}}
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        If anything here is incorrect, or anything changes, please let us know.
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text color="#637381" font-size="16px">
+                        As a reminder, we will be sending you the party form one week before your party. This is where
+                        you can tell us how many children will be attending and pick your creations.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px">
+                        If you have any questions in the lead up to your childs party, please feel free email to me, or
+                        call me on {{ managerMobile }}.
+                    </mj-text>
+                    <mj-text color="#637381" font-size="16px"> We look forward to seeing you then! </mj-text>
+                    <mj-text color="#637381" font-size="16px"> Kind regards, </mj-text>
+                    <mj-text color="#637381" font-size="16px"> {{ managerName }} and the Fizz Kidz team </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <mj-wrapper full-width="full-width">
+            <mj-section padding-top="0">
+                <mj-group>
+                    <mj-column width="100%" padding-right="0">
+                        <mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+                            <a class="footer-link" href="mailto:bookings@fizzkidz.com.au">bookings@fizzkidz.com.au</a
+                            >&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;<a
+                                class="footer-link"
+                                href="https://www.fizzkidz.com.au"
+                                >www.fizzkidz.com.au</a
+                            >
+                        </mj-text>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

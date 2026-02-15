@@ -21,9 +21,12 @@ import { MailClient } from '@/sendgrid/MailClient'
 import { throwTrpcError, logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
+import { getCakeFormUrl } from './utils.party'
+
 export async function createPartyBooking(_booking: Booking) {
     const booking = {
         ..._booking,
+        createdAt: Timestamp.now(),
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -93,6 +96,7 @@ export async function createPartyBooking(_booking: Booking) {
     ]
 
     const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
+    const cakeFormUrl = getCakeFormUrl(bookingId)
 
     const manager = getManager(booking.location)
 
@@ -128,7 +132,8 @@ export async function createPartyBooking(_booking: Booking) {
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
                     invitationsUrl,
                     includesFood: booking.includesFood,
-                    canOrderCake: booking.type === 'studio' && booking.location !== 'cheltenham',
+                    canOrderCake: booking.type === 'studio',
+                    cakeFormUrl,
                 },
                 { replyTo: manager.email }
             )

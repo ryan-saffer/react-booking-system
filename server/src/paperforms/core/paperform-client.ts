@@ -95,6 +95,7 @@ export class PaperformSubmission<T extends PaperForm> {
 const PARTY_FORM_V3_FIELD_MAPPING: Record<keyof PartyFormV3, string> = {
     id: 'aedj8',
     location: 'ntbn',
+    party_or_cake_form: '4o1f1',
     parent_first_name: 'cdj2g',
     parent_last_name: '5jmo6',
     child_name: 'bt3f3',

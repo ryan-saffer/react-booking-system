@@ -17,17 +17,15 @@ import {
 } from './migrations/after-school-program'
 import { deleteFromLegacy, groupEventsByContactEmail, migrateLegacyEvents } from './migrations/events'
 import { addFoodPackageToAllParties } from './migrations/parties-self-catering'
-import { generatePartyFormUrl } from './parties/generate-form'
 import { getSelfCateredPartiesByNotes } from './parties/get-self-catered-parties-by-notes'
 import { updatePartiesToOldPrices } from './parties/update-parties-to-old-prices'
 import { getEvents } from './reports/get-events'
 import { getHolidayPrograms } from './reports/get-holiday-programs'
 import { getParties } from './reports/get-parties'
 import { getPlayLabPrograms } from './reports/get-play-lab'
-;
 
 import type { Order } from 'square/api'
-(async () => {
+;(async () => {
     const { script } = await prompts({
         type: 'select',
         name: 'script',
@@ -60,10 +58,6 @@ import type { Order } from 'square/api'
             {
                 title: 'Update all bookings to old prices',
                 value: 'updatePartiesToOldPrices',
-            },
-            {
-                title: 'Generate party form URL',
-                value: 'generatePartyFormUrl',
             },
             { title: 'Sign after school program anaphylaxis plan', value: 'signAnaphylaxisPlan' },
             {
@@ -98,15 +92,6 @@ import type { Order } from 'square/api'
             },
         ],
     })
-
-    if (script === 'generatePartyFormUrl') {
-        const { bookingId } = await prompts({
-            type: 'text',
-            name: 'bookingId',
-            message: 'Please enter the booking id:',
-        })
-        await generatePartyFormUrl(bookingId)
-    }
     if (script === 'legacyEventsGrouping') {
         await groupEventsByContactEmail()
     }
