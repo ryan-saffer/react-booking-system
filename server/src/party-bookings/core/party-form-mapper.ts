@@ -1,15 +1,15 @@
 import { logger } from 'firebase-functions/v2'
 
 import type { Booking, Studio } from 'fizz-kidz'
-import { ADDITIONS, CREATIONS, getKeyByValue, ObjectEntries, type PartyFormV3, STUDIOS } from 'fizz-kidz'
+import { ADDITIONS, CREATIONS, getKeyByValue, ObjectEntries, type PartyForm, STUDIOS } from 'fizz-kidz'
 
 import type { PaperformSubmission } from '@/paperforms/core/paperform-client'
 
-export class PartyFormMapperV3 {
-    responses: PaperformSubmission<PartyFormV3>
+export class PartyFormMapper {
+    responses: PaperformSubmission<PartyForm>
     bookingId: string
 
-    constructor(responses: PaperformSubmission<PartyFormV3>) {
+    constructor(responses: PaperformSubmission<PartyForm>) {
         this.responses = responses
         this.bookingId = this.responses.getFieldValue('id')
     }

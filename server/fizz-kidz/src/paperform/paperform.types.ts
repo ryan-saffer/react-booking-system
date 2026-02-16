@@ -3,7 +3,7 @@ import type { WWCC } from '..'
 export type PFProduct = { SKU: string; quantity: number }
 export type PFFile = { url: string; name: string; type: string }
 
-export type PartyFormV3 = {
+export type PartyForm = {
     id: string
     location: string
     party_or_cake_form: 'party' | 'cake'

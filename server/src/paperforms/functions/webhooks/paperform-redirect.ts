@@ -13,7 +13,7 @@ import {
     ObjectKeys,
     PRODUCTS,
     TAKE_HOME_BAGS,
-    type PartyFormV3,
+    type PartyForm,
     type ProductType,
     type TakeHomeBagType,
 } from 'fizz-kidz'
@@ -21,7 +21,7 @@ import {
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { PaperformClient, type PaperformSubmission } from '@/paperforms/core/paperform-client'
-import { handlePartyFormSubmissionV3 } from '@/party-bookings/core/handle-party-form-submission-v3'
+import { handlePartyFormSubmission } from '@/party-bookings/core/handle-party-form-submission'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { logError } from '@/utilities'
@@ -83,9 +83,9 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
 
     const paperformClient = new PaperformClient()
 
-    let responses: PaperformSubmission<PartyFormV3>
+    let responses: PaperformSubmission<PartyForm>
     try {
-        responses = await paperformClient.getPartyFormSubmissionV3(submissionId)
+        responses = await paperformClient.getPartyFormSubmission(submissionId)
     } catch (err) {
         logError(
             `party form submitted for checkout but there was an error fetching paperform submission with id: ${submissionId}`,
@@ -211,9 +211,9 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
 
     const paperformClient = new PaperformClient()
 
-    let responses: PaperformSubmission<PartyFormV3>
+    let responses: PaperformSubmission<PartyForm>
     try {
-        responses = await paperformClient.getPartyFormSubmissionV3(submissionId)
+        responses = await paperformClient.getPartyFormSubmission(submissionId)
     } catch (err) {
         logError(
             `party form submitted for completion but there was an error fetching paperform submission with id: ${submissionId}`,
@@ -284,7 +284,7 @@ partyFormRedirect.get('/party-form/form-complete', async (req, res) => {
 
     // Handle the complete form submission (mapping, database updates, emails, etc.)
     try {
-        await handlePartyFormSubmissionV3(responses)
+        await handlePartyFormSubmission(responses)
     } catch (err) {
         try {
             await DatabaseClient.failPartyFormSubmissionProcessing(submissionId, err)

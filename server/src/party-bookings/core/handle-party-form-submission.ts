@@ -8,7 +8,7 @@ import {
     ObjectKeys,
     PRODUCTS,
     TAKE_HOME_BAGS,
-    type PartyFormV3,
+    type PartyForm,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -18,11 +18,11 @@ import type { PaperformSubmission } from '@/paperforms/core/paperform-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError, throwFunctionsError } from '@/utilities'
 
-import { PartyFormMapperV3 } from './party-form-mapper-v3'
+import { PartyFormMapper } from './party-form-mapper'
 import { getBookingCreations, getBookingAdditions } from './utils.party'
 
-export async function handlePartyFormSubmissionV3(responses: PaperformSubmission<PartyFormV3>) {
-    const formMapper = new PartyFormMapperV3(responses)
+export async function handlePartyFormSubmission(responses: PaperformSubmission<PartyForm>) {
+    const formMapper = new PartyFormMapper(responses)
     const existingBooking = await DatabaseClient.getPartyBooking(formMapper.bookingId)
 
     let mappedBooking: Partial<Booking> = {}

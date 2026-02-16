@@ -1,9 +1,9 @@
-import type { PartyFormV3 } from '../paperform'
+import type { PartyForm } from '../paperform'
 import type { ProductType } from '../partyBookings/products'
 import type { TakeHomeBagType } from '../partyBookings/take-home-bags'
 import { assertNever } from '../utilities/assert-never'
 
-export function mapCakeSizeToSquareVariation(env: 'prod' | 'dev', size: PartyFormV3['cake_size']) {
+export function mapCakeSizeToSquareVariation(env: 'prod' | 'dev', size: PartyForm['cake_size']) {
     if (env === 'prod') {
         switch (size) {
             case 'small_cake':
@@ -33,7 +33,7 @@ export function mapCakeSizeToSquareVariation(env: 'prod' | 'dev', size: PartyFor
     }
 }
 
-export function mapServingMethodToSquareVariation(env: 'prod' | 'dev', serving: PartyFormV3['cake_served']) {
+export function mapServingMethodToSquareVariation(env: 'prod' | 'dev', serving: PartyForm['cake_served']) {
     if (env === 'prod') {
         switch (serving) {
             case 'cup':
@@ -63,7 +63,7 @@ export function mapServingMethodToSquareVariation(env: 'prod' | 'dev', serving: 
     }
 }
 
-export function mapCandleToSquareVariation(env: 'prod' | 'dev', candles: PartyFormV3['cake_candles']) {
+export function mapCandleToSquareVariation(env: 'prod' | 'dev', candles: PartyForm['cake_candles']) {
     if (env === 'prod') {
         switch (candles) {
             case 'include_candles':
