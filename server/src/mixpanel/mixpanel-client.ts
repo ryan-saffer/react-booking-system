@@ -122,6 +122,7 @@ export type MixpanelEvent = {
         cakeCandles?: string
         takeHomeOrdered: boolean
         takeHomeItems: { name: string; quantity: string }[]
+        partyOrCakeForm: "party" | "cake"
     }
     'after-school-program-enrolment': {
         distinct_id: string

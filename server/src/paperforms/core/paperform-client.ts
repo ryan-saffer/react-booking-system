@@ -1,4 +1,4 @@
-import type { PaperForm, PartyFormV3 } from 'fizz-kidz'
+import type { PaperForm, PartyForm } from 'fizz-kidz'
 
 type GetSubmissionResponse = {
     results: {
@@ -33,8 +33,8 @@ export class PaperformClient {
         return new PaperformSubmission<T>(json, fieldMapping)
     }
 
-    getPartyFormSubmissionV3(submissionId: string) {
-        return this.#getFormSubmission<PartyFormV3>(submissionId, PARTY_FORM_V3_FIELD_MAPPING)
+    getPartyFormSubmission(submissionId: string) {
+        return this.#getFormSubmission<PartyForm>(submissionId, PARTY_FORM_FIELD_MAPPING)
     }
 }
 
@@ -92,7 +92,7 @@ export class PaperformSubmission<T extends PaperForm> {
  *
  * This maps the custom keys (legacy) to the actual keys. It's useful to know which field you are accessing from the form.
  */
-const PARTY_FORM_V3_FIELD_MAPPING: Record<keyof PartyFormV3, string> = {
+const PARTY_FORM_FIELD_MAPPING: Record<keyof PartyForm, string> = {
     id: 'aedj8',
     location: 'ntbn',
     party_or_cake_form: '4o1f1',
