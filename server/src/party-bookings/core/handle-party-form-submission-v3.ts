@@ -487,6 +487,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
     const mixpanel = await MixpanelClient.getInstance()
     const additionsWithoutPrices = formMapper.getAdditionDisplayValues(false)
     const additionsWithoutPartyPacks = additionsWithoutPrices.filter((addition) => !addition.includes('Party Pack'))
+    const partyOrCakeForm = responses.getFieldValue('party_or_cake_form')
     await mixpanel.track('birthday-party-form-completed', {
         distinct_id: fullBooking.parentEmail,
         type: fullBooking.type,
@@ -505,6 +506,7 @@ export async function handlePartyFormSubmissionV3(responses: PaperformSubmission
         }),
         takeHomeOrdered: orderedTakeHomeBags || orderedProducts,
         takeHomeItems: [...takeHomeBags, ...products],
+        partyOrCakeForm,
     })
 }
 
