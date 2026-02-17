@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import { FirestoreRefs } from '../../firebase/FirestoreRefs'
 import { MailClient } from '../../sendgrid/MailClient'
 
@@ -7,10 +9,18 @@ export async function remindAboutWwcc() {
         .where('wwcc.status', '==', 'I have applied for a WWCC and have an application number')
         .get()
 
-    const employees = snap.docs.map((doc) => {
-        const employee = doc.data()
-        return `${employee.firstName} ${employee.lastName}`
-    })
+    // only remind about employees older than 18
+    const employees = snap.docs
+        .map((doc) => {
+            return doc.data()
+        })
+        .filter((employee) => {
+            if (employee.status === 'form-sent') return false
+            const dob = DateTime.fromISO(employee.dob)
+            const cutoff = DateTime.now().minus({ years: 18 })
+            return dob > cutoff
+        })
+        .map((employee) => `${employee.firstName} ${employee.lastName}`)
 
     if (employees.length > 0) {
         const mailClient = await MailClient.getInstance()

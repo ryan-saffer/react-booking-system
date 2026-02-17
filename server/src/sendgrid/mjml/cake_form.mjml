@@ -25,9 +25,6 @@
         <mj-section background-color="#4bc5d9" padding-bottom="0px">
             <mj-column width="100%">
                 <mj-spacer height="30px" />
-                <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    It's Cake Time! 🎂
-                </mj-text>
             </mj-column>
         </mj-section>
         <mj-section background-color="#ffffff" padding-top="0">
