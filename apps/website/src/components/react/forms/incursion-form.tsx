@@ -75,6 +75,10 @@ function IncursionForm() {
         method: "POST",
         mode: "no-cors",
       });
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "lead_submit",
+      });
     } catch (err) {
       console.error(err);
       toast.error(

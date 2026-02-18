@@ -127,6 +127,9 @@ function ContactUsForm() {
         method: "POST",
         mode: "no-cors",
       });
+      window.dataLayer.push({
+        event: "lead_submit",
+      });
     } catch (err) {
       console.error({ err });
       toast.error(
