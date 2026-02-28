@@ -1,4 +1,5 @@
 import { logger } from 'firebase-functions/v2'
+import { drive } from 'googleapis/build/src/apis/drive'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 
 import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
@@ -106,6 +107,27 @@ export async function handleOnboardingFormSubmission(data: PaperFormResponse<Onb
                 url,
                 `WWCC - ${employee.firstName} ${employee.lastName}`,
                 mimeType,
+                folderId!
+            )
+        }
+
+        // CPR / First Aid / Food Safety
+        const cprFirstAid = getQuestionValue(data, 'cprFirstAid')
+        if (cprFirstAid) {
+            await driveClient.uploadFileFromUrl(
+                cprFirstAid.url,
+                `CPR / First Aid Certificate - ${employee.firstName} ${employee.lastName}`,
+                cprFirstAid.type,
+                folderId!
+            )
+        }
+
+        const foodSafety = getQuestionValue(data, 'foodSafety')
+        if (foodSafety) {
+            await driveClient.uploadFileFromUrl(
+                foodSafety.url,
+                `Food Safety Certificate - ${employee.firstName} ${employee.lastName}`,
+                foodSafety.type,
                 folderId!
             )
         }
