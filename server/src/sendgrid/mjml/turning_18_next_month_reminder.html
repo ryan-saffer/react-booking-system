@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+    <head>
+        <base target="_top" />
+    </head>
+
+    <body>
+        This email is to let you know about employees who are turning 18 soon.<br /><br />
+
+        Make sure these employees have a valid Working With Childrens Check before they turn 18 or they cannot work
+        until they have one! The following employees are turning 18 in {{month}}:
+
+        <ul>
+            {{#employees}}
+            <li>{{.}}</li>
+            {{/employees}}
+        </ul>
+    </body>
+</html>

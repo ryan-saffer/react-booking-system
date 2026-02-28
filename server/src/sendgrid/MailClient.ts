@@ -474,6 +474,20 @@ export class MailClient {
                     template: 'wwcc_reminder.html',
                     useMjml: false,
                 }
+            case 'turning18NextMonthReminder':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz Portal',
+                            email: 'people@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Employees turning 18 next month',
+                        replyTo: replyTo || 'people@fizzkidz.com.au',
+                    },
+                    template: 'turning_18_next_month_reminder.html',
+                    useMjml: false,
+                }
             case 'createDiscountCode':
                 return {
                     emailInfo: {
