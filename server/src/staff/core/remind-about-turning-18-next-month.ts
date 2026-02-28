@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon'
+import { EmployeeStatus } from 'xero-node/dist/gen/model/payroll-au/employeeStatus'
 
 import { capitalise, FRANCHISE_STUDIOS, type FranchiseOrMaster } from 'fizz-kidz'
 
@@ -57,6 +58,8 @@ function getEmployeeTurning18(
     studio: FranchiseOrMaster,
     targetMonth: DateTime
 ): EmployeeTurning18 | null {
+    if (employee.status === EmployeeStatus.TERMINATED) return null
+
     const dob = DateTime.fromJSDate(new Date(employee.dateOfBirth)).startOf('day')
     if (!dob.isValid) return null
 
