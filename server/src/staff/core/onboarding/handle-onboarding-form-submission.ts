@@ -1,5 +1,4 @@
 import { logger } from 'firebase-functions/v2'
-import { drive } from 'googleapis/build/src/apis/drive'
 import { State } from 'xero-node/dist/gen/model/payroll-au/state'
 
 import type { Employee, OnboardingForm, PaperFormResponse, WWCC } from 'fizz-kidz'
