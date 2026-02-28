@@ -8,6 +8,7 @@ import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedba
 import { sendPartyFormReminderEmails } from './party-bookings/core/send-party-form-reminder-emails'
 import { sendPartyForms } from './party-bookings/core/send-party-forms'
 import { updateSlingWages } from './sling/update-sling-wages'
+import { remindAboutTurning18NextMonth } from './staff/core/remind-about-turning-18-next-month'
 import { remindAboutWwcc } from './staff/core/remind-about-wwcc'
 import { onMessagePublished, logError } from './utilities'
 
@@ -41,6 +42,10 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'remindAboutWwcc':
             // 1st and 15th of every month at 8:30am
             await remindAboutWwcc()
+            break
+        case 'remindAboutTurning18NextMonth':
+            // 15th of every month at 8:30am
+            await remindAboutTurning18NextMonth()
             break
         case 'updateSlingWages':
             // 6:00am every Friday

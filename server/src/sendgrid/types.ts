@@ -356,6 +356,11 @@ export type Emails = {
         employees: string[]
     }
 
+    turning18NextMonthReminder: {
+        month: string
+        employees: string[]
+    }
+
     accountInvite: {
         firstname: string
         resetLink: string
