@@ -65,6 +65,8 @@ export type OnboardingForm = {
     wwccPhoto: PFFile
     wwccCardNumber: string
     wwccApplicationNumber: string
+    cprFirstAid: PFFile | null
+    foodSafety: PFFile | null
     tfnForm: PFFile
     bankAccountName: string
     bsb: string
