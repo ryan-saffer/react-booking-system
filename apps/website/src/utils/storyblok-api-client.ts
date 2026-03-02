@@ -40,6 +40,7 @@ class StoryblokClient {
     const { data } = await this.storyblokApi.get("cdn/stories", {
       starts_with: "holiday_programs",
       version: status,
+      cv: Date.now(),
     });
 
     return data.stories
