@@ -11,6 +11,7 @@ export type Form = {
         enquiry: string
         reference: ReferenceOption
         referenceOther?: string
+        partyTheme: PartyTheme
     }
     contact: {
         name: string
@@ -20,6 +21,7 @@ export type Form = {
         location?: ContactFormLocationOption
         suburb?: string
         preferredDateAndTime?: string
+        partyTheme?: PartyTheme
         enquiry: string
         reference: ReferenceOption
         referenceOther?: string
@@ -84,6 +86,18 @@ export type ContactFormServiceOption =
 
 export type ReferenceOption = 'google' | 'instagram' | 'word-of-mouth' | 'attended-fizz' | 'other'
 
+export type PartyTheme =
+    | 'glam'
+    | 'fluid-bears'
+    | 'kpop'
+    | 'safari'
+    | 'science'
+    | 'slime'
+    | 'swiftie'
+    | 'tie-dye'
+    | 'own'
+    | 'mix'
+
 export type ContactFormLocationOption = `${Studio}` | 'at-home' | 'other'
 
 type IncursionFormModuleOption =
@@ -125,6 +139,19 @@ export const LocationDisplayValueMap: Record<ContactFormLocationOption, string> 
     kingsville: 'Kingsville Studio',
     malvern: 'Malvern Studio',
     'at-home': 'At Home',
+}
+
+export const PartyThemeDisplayValueMap: Record<PartyTheme, string> = {
+    glam: 'Glam Party',
+    'fluid-bears': 'Fluid Bears Party',
+    kpop: 'Kpop Demon Hunters Party',
+    safari: 'Safari Party',
+    science: 'Science Party',
+    slime: 'Slime Party',
+    swiftie: 'Swiftie Party',
+    'tie-dye': 'Tie-Dye Party',
+    own: 'Own Theme',
+    mix: 'A Mix of the Above',
 }
 
 export const ReferenceDisplayValueMap: Record<ReferenceOption, string> = {

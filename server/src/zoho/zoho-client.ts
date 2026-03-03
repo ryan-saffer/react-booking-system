@@ -3,6 +3,13 @@ import { DateTime } from 'luxon'
 import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise } from 'fizz-kidz'
 
+import {
+    PartyThemeDisplayValueMap,
+    ReferenceDisplayValueMap,
+    type PartyTheme,
+    type ReferenceOption,
+} from '@/website/core/website-form-types'
+
 import { DatabaseClient } from '../firebase/DatabaseClient'
 
 type BaseProps = {
@@ -73,7 +80,9 @@ export class ZohoClient {
      * 2) If 401, refresh token (synchronously if needed) and retry once.
      */
     async #request(
-        props: { endpoint: string; method: 'GET' } | { endpoint: string; method: 'POST'; data: Record<string, any>[] },
+        props:
+            | { endpoint: string; method: 'GET' }
+            | { endpoint: string; method: 'POST' | 'PUT'; data: Record<string, any>[] },
         retryCount = 1
     ): Promise<any> {
         const doFetch = () =>
@@ -82,7 +91,7 @@ export class ZohoClient {
                     Authorization: `Zoho-oauthtoken ${this.#accessToken}`,
                 },
                 method: props.method,
-                ...(props.method === 'POST' && {
+                ...((props.method === 'POST' || props.method === 'PUT') && {
                     body: JSON.stringify({ data: props.data }),
                 }),
             })
@@ -218,7 +227,7 @@ export class ZohoClient {
     ) {
         const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
 
-        await this.#request({
+        const result = await this.#request({
             endpoint: 'Contacts/upsert',
             method: 'POST',
             data: [
@@ -238,6 +247,12 @@ export class ZohoClient {
                 },
             ],
         })
+
+        if (result?.data?.[0]?.code === 'SUCCESS') {
+            return result.data[0].details.id as string
+        } else {
+            throw new Error(`Unable to upsert contact in Zoho: ${firstName} ${lastName} - ${email}`)
+        }
     }
 
     addBirthdayPartyContact(props: WithBaseProps<{ type: Booking['type']; studio: Studio; partyDate: Date }>) {
@@ -408,5 +423,64 @@ export class ZohoClient {
                 },
             ],
         })
+    }
+
+    async createBirthdayPartyDeal(
+        props: WithBaseProps<{
+            contactId: string
+            preferredDateAndTime: string
+            type: Booking['type'] | 'other'
+            studio: Studio | ''
+            suburb?: string
+            reference: ReferenceOption
+            partyTheme: PartyTheme
+            enquiry: string
+        }>
+    ) {
+        const result = await this.#request({
+            endpoint: 'Deals',
+            method: 'POST',
+            data: [
+                {
+                    Deal_Name: `Birthday Party - ${props.firstName}${props.lastName ? ' ' + props.lastName : ''}`,
+                    Service: 'Birthday Party',
+                    Pipeline: 'Birthday Party Pipeline',
+                    Contact_Name: {
+                        id: props.contactId,
+                    },
+                    Stage: 'New Enquiry',
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Preferred_Date_And_Time: props.preferredDateAndTime,
+                    Customer_Type: 'B2C',
+                    Party_Type:
+                        props.type === 'studio' ? 'Fizz Kidz Studio' : props.type === 'mobile' ? 'Mobile' : 'Other',
+                    Branch: props.studio ? capitalise(props.studio) : '',
+                    Suburb: props.suburb || '',
+                    Owner: '76392000000333090', // Lami
+                    Closing_Date: DateTime.now().plus({ weeks: 3 }).setZone('Australia/Melbourne').toISODate(),
+                    Lead_Source: ReferenceDisplayValueMap[props.reference],
+                    Party_Theme: PartyThemeDisplayValueMap[props.partyTheme],
+                    Description: props.enquiry,
+                },
+            ],
+        })
+
+        // write the zoho id back, so when booking in the portal we can link it to the deal easily
+        if (result?.data?.[0]?.code === 'SUCCESS') {
+            return this.#request({
+                endpoint: 'Deals',
+                method: 'PUT',
+                data: [
+                    {
+                        id: result.data[0].details.id,
+                        Zoho_Deal_Id: result.data[0].details.id,
+                    },
+                ],
+            })
+        } else {
+            throw new Error(
+                `Unable to create birthday party deal in Zoho: ${props.firstName} ${props.lastName} - ${props.email}`
+            )
+        }
     }
 }
