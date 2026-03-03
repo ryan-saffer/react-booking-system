@@ -165,57 +165,65 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     }
                 )
 
-                if (service === 'other') break
-                if (service === 'party' && formData.partyTheme) {
-                    const contactId = await zohoClient.addBasicB2CContact({
-                        firstName,
-                        lastName,
-                        email: formData.email,
-                        mobile: formData.contactNumber,
-                        ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
-                    })
-                    await zohoClient.createBirthdayPartyDeal({
-                        firstName,
-                        lastName: lastName || '',
-                        email: formData.email,
-                        mobile: formData.contactNumber,
-                        contactId,
-                        preferredDateAndTime: formData.preferredDateAndTime || '',
-                        type:
-                            formData.location === 'at-home'
-                                ? 'mobile'
-                                : formData.location === 'other'
-                                  ? 'other'
-                                  : 'studio',
-                        studio:
-                            formData.location === 'at-home' || formData.location === 'other'
-                                ? ''
-                                : formData.location || '',
-                        suburb: formData.suburb,
-                        reference: formData.reference,
-                        partyTheme: formData.partyTheme,
-                        enquiry: formData.enquiry,
-                    })
-                }
-                if (service === 'holiday-program' || service === 'after-school-program') {
-                    await zohoClient.addBasicB2CContact({
-                        firstName,
-                        lastName,
-                        email: formData.email,
-                        mobile: formData.contactNumber,
-                        ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
-                    })
-                } else if (service === 'activation' || service === 'incursion') {
-                    await zohoClient.addBasicB2BContact({
-                        firstName,
-                        lastName,
-                        email: formData.email,
-                        mobile: formData.contactNumber,
-                        service: service === 'activation' ? 'activation_event' : 'incursion',
-                    })
-                } else {
-                    // we still want the user to see a success here, so only log the error
-                    logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
+                switch (true) {
+                    case service === 'other':
+                        break
+                    case service === 'party' && formData.partyTheme !== undefined: {
+                        const contactId = await zohoClient.addBasicB2CContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
+                        })
+                        await zohoClient.createBirthdayPartyDeal({
+                            firstName,
+                            lastName: lastName || '',
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            contactId,
+                            preferredDateAndTime: formData.preferredDateAndTime || '',
+                            type:
+                                formData.location === 'at-home'
+                                    ? 'mobile'
+                                    : formData.location === 'other'
+                                      ? 'other'
+                                      : 'studio',
+                            studio:
+                                formData.location === 'at-home' || formData.location === 'other'
+                                    ? ''
+                                    : formData.location || '',
+                            suburb: formData.suburb,
+                            reference: formData.reference,
+                            partyTheme: formData.partyTheme,
+                            enquiry: formData.enquiry,
+                        })
+                        break
+                    }
+                    case service === 'holiday-program' || service === 'after-school-program': {
+                        await zohoClient.addBasicB2CContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
+                        })
+                        break
+                    }
+                    case service === 'activation' || service === 'incursion': {
+                        await zohoClient.addBasicB2BContact({
+                            firstName,
+                            lastName,
+                            email: formData.email,
+                            mobile: formData.contactNumber,
+                            service: service === 'activation' ? 'activation_event' : 'incursion',
+                        })
+                        break
+                    }
+                    default: {
+                        // we still want the user to see a success here, so only log the error
+                        logError(`Unrecognised service when submitting website 'contact' form: '${service}'`)
+                    }
                 }
 
                 await mixpanelClient.track('website-enquiry', {
