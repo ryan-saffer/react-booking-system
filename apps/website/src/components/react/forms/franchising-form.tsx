@@ -19,6 +19,7 @@ import {
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
+import { assertNoCorsRequestSucceeded } from "@/utils/no-cors-response";
 import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
@@ -69,11 +70,12 @@ function FranchisingForm() {
     setLoading(true);
 
     try {
-      await fetch(`${FORM_WEBHOOK}?formId=franchising`, {
+      const response = await fetch(`${FORM_WEBHOOK}?formId=franchising`, {
         body: JSON.stringify(values),
         method: "POST",
         mode: "no-cors",
       });
+      assertNoCorsRequestSucceeded(response);
     } catch (err) {
       console.error({ err });
       toast.error(

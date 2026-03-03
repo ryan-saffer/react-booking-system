@@ -20,6 +20,7 @@ import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { LoaderCircle } from "lucide-react";
+import { assertNoCorsRequestSucceeded } from "@/utils/no-cors-response";
 import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
 import { UploadButton } from "@/utils/uploadthing";
@@ -110,11 +111,12 @@ function CareersForm() {
     setLoading(true);
 
     try {
-      await fetch(`${FORM_WEBHOOK}?formId=careers`, {
+      const response = await fetch(`${FORM_WEBHOOK}?formId=careers`, {
         body: JSON.stringify({ resume: file, ...values }),
         method: "POST",
         mode: "no-cors",
       });
+      assertNoCorsRequestSucceeded(response);
     } catch (err) {
       console.error(err);
       toast.error(
