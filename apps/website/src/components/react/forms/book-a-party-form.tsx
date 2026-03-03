@@ -21,6 +21,7 @@ import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
+import { assertNoCorsRequestSucceeded } from "@/utils/no-cors-response";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -50,6 +51,21 @@ const formSchema = z
     preferredDateAndTime: z
       .string()
       .min(1, "Please enter your preferred date and time"),
+    partyTheme: z
+      .enum([
+        "glam",
+        "fluid-bears",
+        "kpop",
+        "safari",
+        "science",
+        "slime",
+        "swiftie",
+        "tie-dye",
+        "own",
+        "mix",
+      ])
+      .optional()
+      .refine((it) => !!it, "Please select your preferred party theme"),
     enquiry: z.string().min(1, "Please enter an enquiry"),
     reference: z
       .enum(["google", "instagram", "word-of-mouth", "attended-fizz", "other"])
@@ -88,16 +104,17 @@ function BookAPartyForm() {
   });
 
   const [loading, setLoading] = useState(false);
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
     try {
-      await fetch(`${FORM_WEBHOOK}?formId=party`, {
+      const response = await fetch(`${FORM_WEBHOOK}?formId=party`, {
         body: JSON.stringify(values),
         method: "POST",
         mode: "no-cors",
       });
+      assertNoCorsRequestSucceeded(response);
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: "lead_submit",
@@ -238,6 +255,35 @@ function BookAPartyForm() {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="partyTheme"
+          render={({ field }) => (
+            <FormItem>
+              <SelectForm
+                label="Which party theme are you interested in?"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <SelectValue />
+                <SelectContent>
+                  <SelectItem value="glam">Glam Party</SelectItem>
+                  <SelectItem value="fluid-bears">Fluid Bears Party</SelectItem>
+                  <SelectItem value="kpop">Kpop Demon Hunters Party</SelectItem>
+                  <SelectItem value="safari">Safari Party</SelectItem>
+                  <SelectItem value="science">Science Party</SelectItem>
+                  <SelectItem value="slime">Slime Party</SelectItem>
+                  <SelectItem value="swiftie">Swiftie Party</SelectItem>
+                  <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
+                  <SelectItem value="own">My own theme</SelectItem>
+                  <SelectItem value="mix">A mix of the above</SelectItem>
+                </SelectContent>
+              </SelectForm>
               <FormMessage />
             </FormItem>
           )}

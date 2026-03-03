@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
+import { assertNoCorsRequestSucceeded } from "@/utils/no-cors-response";
 import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
@@ -53,11 +54,12 @@ function ActivationsForm() {
     setLoading(true);
 
     try {
-      await fetch(`${FORM_WEBHOOK}?formId=event`, {
+      const response = await fetch(`${FORM_WEBHOOK}?formId=event`, {
         body: JSON.stringify(values),
         method: "POST",
         mode: "no-cors",
       });
+      assertNoCorsRequestSucceeded(response);
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: "lead_submit",

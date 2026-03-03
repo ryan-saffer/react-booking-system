@@ -19,6 +19,7 @@ import {
 import { Button } from "../ui/button";
 import { FORM_WEBHOOK } from "@/utils/constants";
 import { Input } from "../ui/input";
+import { assertNoCorsRequestSucceeded } from "@/utils/no-cors-response";
 import { Textarea } from "../ui/textarea";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
@@ -60,6 +61,20 @@ const formSchema = z
       .optional(),
     suburb: z.string().optional(),
     preferredDateAndTime: z.string().optional(),
+    partyTheme: z
+      .enum([
+        "glam",
+        "fluid-bears",
+        "kpop",
+        "safari",
+        "science",
+        "slime",
+        "swiftie",
+        "tie-dye",
+        "own",
+        "mix",
+      ])
+      .optional(),
     enquiry: z.string().min(1, "Please enter an enquiry"),
     reference: z
       .enum(["google", "instagram", "word-of-mouth", "attended-fizz", "other"])
@@ -85,6 +100,13 @@ const formSchema = z
           code: z.ZodIssueCode.custom,
           message: "Please enter your preferred date and time",
           path: ["preferredDateAndTime"],
+        });
+      }
+      if (!val.partyTheme) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please select your preferred party theme",
+          path: ["partyTheme"],
         });
       }
     }
@@ -122,11 +144,12 @@ function ContactUsForm() {
     setLoading(true);
 
     try {
-      await fetch(`${FORM_WEBHOOK}?formId=contact`, {
+      const response = await fetch(`${FORM_WEBHOOK}?formId=contact`, {
         body: JSON.stringify(values),
         method: "POST",
         mode: "no-cors",
       });
+      assertNoCorsRequestSucceeded(response);
       window.dataLayer.push({
         event: "lead_submit",
       });
@@ -300,6 +323,41 @@ function ContactUsForm() {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {form.watch("service") === "party" && (
+          <FormField
+            control={form.control}
+            name="partyTheme"
+            render={({ field }) => (
+              <FormItem>
+                <SelectForm
+                  label="Which party theme are you interested in?"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  value={field.value}
+                >
+                  <SelectValue />
+                  <SelectContent>
+                    <SelectItem value="glam">Glam Party</SelectItem>
+                    <SelectItem value="fluid-bears">
+                      Fluid Bears Party
+                    </SelectItem>
+                    <SelectItem value="kpop">
+                      Kpop Demon Hunters Party
+                    </SelectItem>
+                    <SelectItem value="safari">Safari Party</SelectItem>
+                    <SelectItem value="science">Science Party</SelectItem>
+                    <SelectItem value="slime">Slime Party</SelectItem>
+                    <SelectItem value="swiftie">Swiftie Party</SelectItem>
+                    <SelectItem value="tie-dye">Tie-Dye Party</SelectItem>
+                    <SelectItem value="own">My own theme</SelectItem>
+                    <SelectItem value="mix">A mix of the above</SelectItem>
+                  </SelectContent>
+                </SelectForm>
                 <FormMessage />
               </FormItem>
             )}
