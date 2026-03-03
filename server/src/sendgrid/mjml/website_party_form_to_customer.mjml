@@ -90,6 +90,11 @@
                         </tr>
 
                         <tr>
+                            <td><strong>Preferred Party Theme:</strong></td>
+                            <td>{{partyTheme}}</td>
+                        </tr>
+
+                        <tr>
                             <td><strong>Enquiry:</strong></td>
                             <td>{{enquiry}}</td>
                         </tr>

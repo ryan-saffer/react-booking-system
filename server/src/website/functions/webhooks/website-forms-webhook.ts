@@ -14,6 +14,7 @@ import {
     ModuleDisplayValueMap,
     RoleDisplayValueMap,
     FranchisingInterestDisplayValueMap,
+    PartyThemeDisplayValueMap,
 } from '@/website/core/website-form-types'
 import { ZohoClient } from '@/zoho/zoho-client'
 
@@ -41,6 +42,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         location: LocationDisplayValueMap[formData.location],
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        partyTheme: PartyThemeDisplayValueMap[formData.partyTheme],
                         enquiry: formData.enquiry,
                         reference:
                             formData.reference === 'other' && formData.referenceOther
@@ -62,6 +64,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         location: LocationDisplayValueMap[formData.location],
                         suburb: formData.suburb,
                         preferredDateAndTime: formData.preferredDateAndTime,
+                        partyTheme: PartyThemeDisplayValueMap[formData.partyTheme],
                         enquiry: formData.enquiry,
                         reference:
                             formData.reference === 'other' && formData.referenceOther
@@ -75,12 +78,27 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 )
 
                 const [firstName, lastName] = formData.name.split(' ')
-                await zohoClient.addBasicB2CContact({
+                const contactId = await zohoClient.addBasicB2CContact({
                     firstName,
                     lastName: lastName || '',
                     email: formData.email,
                     studio: PartyFormLocationMap[formData.location],
                     mobile: formData.contactNumber,
+                })
+                await zohoClient.createBirthdayPartyDeal({
+                    firstName,
+                    lastName: lastName || '',
+                    email: formData.email,
+                    mobile: formData.contactNumber,
+                    contactId,
+                    preferredDateAndTime: formData.preferredDateAndTime,
+                    type:
+                        formData.location === 'at-home' ? 'mobile' : formData.location === 'other' ? 'other' : 'studio',
+                    studio: formData.location === 'at-home' || formData.location === 'other' ? '' : formData.location,
+                    suburb: formData.suburb,
+                    reference: formData.reference,
+                    partyTheme: formData.partyTheme,
+                    enquiry: formData.enquiry,
                 })
 
                 await mixpanelClient.track('website-enquiry', {
@@ -89,6 +107,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     service: 'party',
                     location: formData.location,
                     reference: formData.reference,
+                    partyTheme: PartyThemeDisplayValueMap[formData.partyTheme],
                     ...(formData.reference === 'other' &&
                         formData.referenceOther && { referenceOther: formData.referenceOther }),
                 })
@@ -147,7 +166,38 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 )
 
                 if (service === 'other') break
-                if (service === 'party' || service === 'holiday-program' || service === 'after-school-program') {
+                if (service === 'party' && formData.partyTheme) {
+                    const contactId = await zohoClient.addBasicB2CContact({
+                        firstName,
+                        lastName,
+                        email: formData.email,
+                        mobile: formData.contactNumber,
+                        ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
+                    })
+                    await zohoClient.createBirthdayPartyDeal({
+                        firstName,
+                        lastName: lastName || '',
+                        email: formData.email,
+                        mobile: formData.contactNumber,
+                        contactId,
+                        preferredDateAndTime: formData.preferredDateAndTime || '',
+                        type:
+                            formData.location === 'at-home'
+                                ? 'mobile'
+                                : formData.location === 'other'
+                                  ? 'other'
+                                  : 'studio',
+                        studio:
+                            formData.location === 'at-home' || formData.location === 'other'
+                                ? ''
+                                : formData.location || '',
+                        suburb: formData.suburb,
+                        reference: formData.reference,
+                        partyTheme: formData.partyTheme,
+                        enquiry: formData.enquiry,
+                    })
+                }
+                if (service === 'holiday-program' || service === 'after-school-program') {
                     await zohoClient.addBasicB2CContact({
                         firstName,
                         lastName,
@@ -174,6 +224,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     service,
                     location: formData.location,
                     reference: formData.reference,
+                    ...(formData.partyTheme && { partyTheme: PartyThemeDisplayValueMap[formData.partyTheme] }),
                     ...(formData.reference === 'other' &&
                         formData.referenceOther && { referenceOther: formData.referenceOther }),
                 })
