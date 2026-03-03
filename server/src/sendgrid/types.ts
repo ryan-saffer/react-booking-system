@@ -464,6 +464,7 @@ export type Emails = {
         location: string
         suburb?: string
         preferredDateAndTime: string
+        partyTheme: string
         enquiry: string
         reference: string
     }
@@ -475,6 +476,7 @@ export type Emails = {
         location: string
         suburb?: string
         preferredDateAndTime: string
+        partyTheme: string
         enquiry: string
         reference: string
     }

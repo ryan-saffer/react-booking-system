@@ -65,7 +65,7 @@ export type MixpanelEvent = {
         distinct_id: string
         invitationId: string
         view: // used the sidebar on desktop
-        | 'sidebar'
+            | 'sidebar'
             // used the mobile drawer
             | 'drawer'
             // used the section just sitting under the invite on mobile (no drawer)
@@ -82,6 +82,7 @@ export type MixpanelEvent = {
         location?: ContactFormLocationOption
         reference?: ReferenceOption
         referenceOther?: string
+        partyTheme?: string
     }
     'holiday-program-checkout-reached': {
         distinct_id: string
@@ -122,7 +123,7 @@ export type MixpanelEvent = {
         cakeCandles?: string
         takeHomeOrdered: boolean
         takeHomeItems: { name: string; quantity: string }[]
-        partyOrCakeForm: "party" | "cake"
+        partyOrCakeForm: 'party' | 'cake'
     }
     'after-school-program-enrolment': {
         distinct_id: string
