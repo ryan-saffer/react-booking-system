@@ -442,7 +442,7 @@ export class ZohoClient {
             method: 'POST',
             data: [
                 {
-                    Deal_Name: `Birthday Party - ${props.firstName}${props.lastName ? ' ' + props.lastName : ''}`,
+                    Deal_Name: `${props.firstName}${props.lastName ? ' ' + props.lastName : ''}`,
                     Service: 'Birthday Party',
                     Pipeline: 'Birthday Party Pipeline',
                     Contact_Name: {
