@@ -32,6 +32,31 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
             case 'party': {
                 const formData = JSON.parse(req.body) as Form['party']
 
+                const [firstName, lastName] = formData.name.split(' ')
+                const contactId = await zohoClient.addBasicB2CContact({
+                    firstName,
+                    lastName: lastName || '',
+                    email: formData.email,
+                    studio: PartyFormLocationMap[formData.location],
+                    mobile: formData.contactNumber,
+                })
+
+                await zohoClient.createBirthdayPartyDeal({
+                    firstName,
+                    lastName: lastName || '',
+                    email: formData.email,
+                    mobile: formData.contactNumber,
+                    contactId,
+                    preferredDateAndTime: formData.preferredDateAndTime,
+                    type:
+                        formData.location === 'at-home' ? 'mobile' : formData.location === 'other' ? 'other' : 'studio',
+                    studio: formData.location === 'at-home' || formData.location === 'other' ? '' : formData.location,
+                    suburb: formData.suburb,
+                    reference: formData.reference,
+                    partyTheme: formData.partyTheme,
+                    enquiry: formData.enquiry,
+                })
+
                 await mailClient.sendEmail(
                     'websitePartyFormToCustomer',
                     formData.email,
@@ -77,30 +102,6 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     }
                 )
 
-                const [firstName, lastName] = formData.name.split(' ')
-                const contactId = await zohoClient.addBasicB2CContact({
-                    firstName,
-                    lastName: lastName || '',
-                    email: formData.email,
-                    studio: PartyFormLocationMap[formData.location],
-                    mobile: formData.contactNumber,
-                })
-                await zohoClient.createBirthdayPartyDeal({
-                    firstName,
-                    lastName: lastName || '',
-                    email: formData.email,
-                    mobile: formData.contactNumber,
-                    contactId,
-                    preferredDateAndTime: formData.preferredDateAndTime,
-                    type:
-                        formData.location === 'at-home' ? 'mobile' : formData.location === 'other' ? 'other' : 'studio',
-                    studio: formData.location === 'at-home' || formData.location === 'other' ? '' : formData.location,
-                    suburb: formData.suburb,
-                    reference: formData.reference,
-                    partyTheme: formData.partyTheme,
-                    enquiry: formData.enquiry,
-                })
-
                 await mixpanelClient.track('website-enquiry', {
                     distinct_id: formData.email,
                     form: 'party',
@@ -120,50 +121,6 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                 const [firstName, lastName] = formData['name'].split(' ')
 
                 const service = formData.service
-
-                await mailClient.sendEmail(
-                    'websiteContactFormToCustomer',
-                    formData.email,
-                    {
-                        name: formData.name,
-                        email: formData.email,
-                        contactNumber: formData.contactNumber,
-                        service: ServiceDisplayValueMap[formData.service],
-                        enquiry: formData.enquiry,
-                        ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
-                        preferredDateAndTime: formData.preferredDateAndTime,
-                        suburb: formData.suburb,
-                        reference:
-                            formData.reference === 'other' && formData.referenceOther
-                                ? formData.referenceOther
-                                : ReferenceDisplayValueMap[formData.reference],
-                    },
-                    {
-                        bccBookings: false,
-                    }
-                )
-                await mailClient.sendEmail(
-                    'websiteContactFormToFizz',
-                    'bookings@fizzkidz.com.au',
-                    {
-                        name: formData.name,
-                        email: formData.email,
-                        contactNumber: formData.contactNumber,
-                        service: ServiceDisplayValueMap[formData.service],
-                        enquiry: formData.enquiry,
-                        ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
-                        preferredDateAndTime: formData.preferredDateAndTime,
-                        suburb: formData.suburb,
-                        reference:
-                            formData.reference === 'other' && formData.referenceOther
-                                ? formData.referenceOther
-                                : ReferenceDisplayValueMap[formData.reference],
-                    },
-                    {
-                        subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
-                        replyTo: formData.email,
-                    }
-                )
 
                 switch (true) {
                     case service === 'other':
@@ -226,6 +183,51 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     }
                 }
 
+                await mailClient.sendEmail(
+                    'websiteContactFormToCustomer',
+                    formData.email,
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        service: ServiceDisplayValueMap[formData.service],
+                        enquiry: formData.enquiry,
+                        ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        suburb: formData.suburb,
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
+                    },
+                    {
+                        bccBookings: false,
+                    }
+                )
+
+                await mailClient.sendEmail(
+                    'websiteContactFormToFizz',
+                    'bookings@fizzkidz.com.au',
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        contactNumber: formData.contactNumber,
+                        service: ServiceDisplayValueMap[formData.service],
+                        enquiry: formData.enquiry,
+                        ...(formData.location && { location: LocationDisplayValueMap[formData.location] }),
+                        preferredDateAndTime: formData.preferredDateAndTime,
+                        suburb: formData.suburb,
+                        reference:
+                            formData.reference === 'other' && formData.referenceOther
+                                ? formData.referenceOther
+                                : ReferenceDisplayValueMap[formData.reference],
+                    },
+                    {
+                        subject: `${ServiceDisplayValueMap[formData.service]} - ${formData.name}`,
+                        replyTo: formData.email,
+                    }
+                )
+
                 await mixpanelClient.track('website-enquiry', {
                     distinct_id: formData.email,
                     form: 'contact',
@@ -242,6 +244,15 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
 
             case 'event': {
                 const formData = JSON.parse(req.body) as Form['event']
+
+                const [firstName, lastName] = formData.name.split(' ')
+                await zohoClient.addBasicB2BContact({
+                    firstName,
+                    lastName,
+                    email: formData.email,
+                    service: 'activation_event',
+                    company: formData.company,
+                })
 
                 await mailClient.sendEmail(
                     'websiteEventFormToCustomer',
@@ -275,15 +286,6 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     }
                 )
 
-                const [firstName, lastName] = formData.name.split(' ')
-                await zohoClient.addBasicB2BContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    service: 'activation_event',
-                    company: formData.company,
-                })
-
                 await mixpanelClient.track('website-enquiry', {
                     distinct_id: formData.email,
                     form: 'event',
@@ -296,6 +298,16 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
 
             case 'incursion': {
                 const formData = JSON.parse(req.body) as Form['incursion']
+
+                const [firstName, lastName] = formData.name.split(' ')
+                await zohoClient.addBasicB2BContact({
+                    firstName,
+                    lastName,
+                    email: formData.email,
+                    mobile: formData.contactNumber,
+                    service: 'incursion',
+                    company: formData.school,
+                })
 
                 await mailClient.sendEmail(
                     'websiteIncurionFormToCustomer',
@@ -330,16 +342,6 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                         replyTo: formData.email,
                     }
                 )
-
-                const [firstName, lastName] = formData.name.split(' ')
-                await zohoClient.addBasicB2BContact({
-                    firstName,
-                    lastName,
-                    email: formData.email,
-                    mobile: formData.contactNumber,
-                    service: 'incursion',
-                    company: formData.school,
-                })
 
                 await mixpanelClient.track('website-enquiry', {
                     distinct_id: formData.email,
