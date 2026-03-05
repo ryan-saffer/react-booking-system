@@ -256,7 +256,7 @@ export class MailClient {
                         to,
                         from: {
                             name: 'Fizz Kidz',
-                            email: 'program@fizzkidz.com.au',
+                            email: 'bookings@fizzkidz.com.au',
                         },
                         subject: subject || 'Science incursion is coming up!',
                         replyTo: replyTo || 'bookings@fizzkidz.com.au',
