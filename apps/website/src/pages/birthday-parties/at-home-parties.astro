@@ -192,9 +192,14 @@ const { default: purpleDrop } = await import(
       <div class="flex flex-col gap-4 lg:flex-row">
         <Step title="1 hour party" color="#9044E2">
           <div slot="content">
-            <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
-              $39 per child
+            <p class="mb-2 font-lilita text-3xl text-[#9044E2]">$468</p>
+            <p class="mb-2 text-xl font-bold text-[#9044E2]">
+              Includes up to 12 children
             </p>
+            <p class="text-xl">
+              <span class="font-lilita text-2xl text-[#9044E2]">$39</span> per each
+              additional child
+            </p><div class="my-4 h-[2px] w-full bg-gray-200"></div>
             <StarBulletPoints
               content={[
                 "Each child makes two Fizz Kidz creations",
@@ -205,14 +210,18 @@ const { default: purpleDrop } = await import(
                 "Customised Party Invitations",
               ]}
             />
-            <p class="my-8 pl-12 italic">Minimum 12 children</p>
           </div>
         </Step>
         <Step title="1.5 hour party" color="#9044E2">
           <div slot="content">
-            <p class="mb-6 font-lilita text-3xl text-[#9044E2]">
-              $47 per child
+            <p class="mb-2 font-lilita text-3xl text-[#9044E2]">$564</p>
+            <p class="mb-2 text-xl font-bold text-[#9044E2]">
+              Includes up to 12 children
             </p>
+            <p class="text-xl">
+              <span class="font-lilita text-2xl text-[#9044E2]">$47</span> per each
+              additional child
+            </p><div class="my-4 h-[2px] w-full bg-gray-200"></div>
             <StarBulletPoints
               content={[
                 "Each child makes three Fizz Kidz creations",
@@ -223,16 +232,15 @@ const { default: purpleDrop } = await import(
                 "Customised Party Invitations",
               ]}
             />
-            <p class="my-8 pl-12 italic">Minimum 12 children</p>
           </div>
         </Step>
         <Step title="Travel Fee" color="#9044E2">
           <div slot="content">
             <StarBulletPoints
               content={[
-                "Zone 1: 0km - 10km = $70",
-                "Zone 2: 10 - 20km = $95",
-                "Zone 3: 20 - 30km = $110",
+                "Zone 1: Up to 10km = <span class='font-lilita text-[#9044E2] text-lg'>$70</span>",
+                "Zone 2: 10km - 20km = <span class='font-lilita text-[#9044E2] text-lg'>$95</span>",
+                "Zone 3: 20km- 30km = <span class='font-lilita text-[#9044E2] text-lg'>$110</span>",
                 "Zone 4: Currently not available",
               ]}
             />
