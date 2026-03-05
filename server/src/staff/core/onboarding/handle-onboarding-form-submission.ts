@@ -115,7 +115,7 @@ export async function handleOnboardingFormSubmission(data: PaperFormResponse<Onb
         if (cprFirstAid) {
             await driveClient.uploadFileFromUrl(
                 cprFirstAid.url,
-                `CPR / First Aid Certificate - ${employee.firstName} ${employee.lastName}`,
+                `CPR - First Aid Certificate - ${employee.firstName} ${employee.lastName}`,
                 cprFirstAid.type,
                 folderId!
             )
