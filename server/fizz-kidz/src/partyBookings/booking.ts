@@ -16,8 +16,10 @@ export interface BaseBooking extends AdditionKeyValues {
     parentLastName: string
     parentEmail: string
     parentMobile: string
+    zohoDealId?: string
     childName: string
     childAge: string
+    childBirthday?: string // ISO date string in Australia/Melbourne
     location: Studio
     type: 'studio' | 'mobile'
     partyLength: '1' | '1.5' | '2'
@@ -70,8 +72,10 @@ export const FormBookingFields: FormBookingKeys = {
     parentLastName: 'parentLastName',
     parentEmail: 'parentEmail',
     parentMobile: 'parentMobile',
+    zohoDealId: 'zohoDealId',
     childName: 'childName',
     childAge: 'childAge',
+    childBirthday: 'childBirthday',
     location: 'location',
     type: 'type',
     address: 'address',
@@ -124,8 +128,10 @@ export const BookingFields: BookingKeys = {
     parentLastName: 'parentLastName',
     parentEmail: 'parentEmail',
     parentMobile: 'parentMobile',
+    zohoDealId: 'zohoDealId',
     childName: 'childName',
     childAge: 'childAge',
+    childBirthday: 'childBirthday',
     location: 'location',
     type: 'type',
     address: 'address',

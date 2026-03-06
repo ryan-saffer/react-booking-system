@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon'
 
 import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
-import { capitalise } from 'fizz-kidz'
+import { capitalise, getApplicationDomain } from 'fizz-kidz'
 
+import { env } from '@/init'
 import {
     PartyThemeDisplayValueMap,
     ReferenceDisplayValueMap,
@@ -30,6 +31,8 @@ type Service =
     | 'Incursion'
     | 'Play Lab'
     | ''
+
+const CHILD_MODULE_NAME = 'Child'
 
 export class ZohoClient {
     // Current valid access token
@@ -82,7 +85,12 @@ export class ZohoClient {
     async #request(
         props:
             | { endpoint: string; method: 'GET' }
-            | { endpoint: string; method: 'POST' | 'PUT'; data: Record<string, any>[] },
+            | {
+                  endpoint: string
+                  method: 'POST' | 'PUT'
+                  data: Record<string, any>[]
+                  duplicate_check_fields?: string[]
+              },
         retryCount = 1
     ): Promise<any> {
         const doFetch = () =>
@@ -92,7 +100,7 @@ export class ZohoClient {
                 },
                 method: props.method,
                 ...((props.method === 'POST' || props.method === 'PUT') && {
-                    body: JSON.stringify({ data: props.data }),
+                    body: JSON.stringify({ data: props.data, duplicate_check_fields: props.duplicate_check_fields }),
                 }),
             })
 
@@ -119,6 +127,94 @@ export class ZohoClient {
         // Otherwise, throw the error body
         const errorBody = await result.json().catch(() => ({}))
         throw errorBody
+    }
+
+    async #upsertContact(
+        values: WithBaseProps<{
+            service: Service
+            customer_type: 'B2C' | 'B2B'
+            branch?: string
+            Party_Type?: 'Studio' | 'Mobile' | ''
+            Party_Date?: string
+            Company?: string
+            Child_Name_1?: string
+            Child_Birthday_1?: string // !! ISO date string
+            Child_Name_2?: string
+            Child_Birthday_2?: string // !! ISO date string
+            Child_Name_3?: string
+            Child_Birthday_3?: string // !! ISO date string
+            Child_Name_4?: string
+            Child_Birthday_4?: string // !! ISO date string
+            Child_Name_5?: string
+            Child_Birthday_5?: string // !! ISO date string
+            Recently_Booked_Party?: boolean
+            Holiday_Program_Date?: string // !! ISO date string
+            Holiday_Program_Checked_In?: boolean
+        }>
+    ) {
+        const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
+
+        const result = await this.#request({
+            endpoint: 'Contacts/upsert',
+            method: 'POST',
+            data: [
+                {
+                    First_Name: firstName,
+                    Last_Name: lastName || 'N/A',
+                    Phone: mobile || '',
+                    Email: email,
+                    Service: [service],
+                    Customer_Type: customer_type,
+                    Branch: [branch || ''],
+                    ...rest,
+                    $append_values: {
+                        Service: true,
+                        Branch: true,
+                    },
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code === 'SUCCESS') {
+            return result.data[0].details.id as string
+        } else {
+            throw new Error(`Unable to upsert contact in Zoho: ${firstName} ${lastName} - ${email}`)
+        }
+    }
+
+    /**
+     * Creates a child in Zoho, combining the parent zoho record id and the childs DOB as a unique key.
+     * This key is then used as an upsert check to determine whether to link to an existing child or create a new one.
+     **/
+    async #upsertChild(props: {
+        childName: string
+        parentContactId: string
+        childBirthdayISO?: string
+        partyDateISO?: string
+    }) {
+        const result = await this.#request({
+            method: 'POST',
+            endpoint: `${CHILD_MODULE_NAME}/upsert`,
+            data: [
+                {
+                    Name: props.childName,
+                    Child_Birthday: props.childBirthdayISO,
+                    Party_Date: props.partyDateISO || '',
+                    Parent: {
+                        id: props.parentContactId,
+                    },
+                    Unique_Child_Key: `${props.parentContactId}|${props.childBirthdayISO}`,
+                },
+            ],
+            duplicate_check_fields: ['Unique_Child_Key'],
+        })
+        if (result?.data?.[0]?.code === 'SUCCESS') {
+            return result.data[0].details.id as string
+        } else {
+            throw new Error(
+                `Unable to upsert child in Zoho: ${props.childName} with parent id: ${props.parentContactId}`
+            )
+        }
     }
 
     /**
@@ -200,59 +296,6 @@ export class ZohoClient {
             [`Child_Name_${freePosition}`]: childName,
             [`Child_Birthday_${freePosition}`]: childBirthday,
         })
-    }
-
-    async #upsertContact(
-        values: WithBaseProps<{
-            service: Service
-            customer_type: 'B2C' | 'B2B'
-            branch?: string
-            Party_Type?: 'Studio' | 'Mobile' | ''
-            Party_Date?: string
-            Company?: string
-            Child_Name_1?: string
-            Child_Birthday_1?: string // !! ISO date string
-            Child_Name_2?: string
-            Child_Birthday_2?: string // !! ISO date string
-            Child_Name_3?: string
-            Child_Birthday_3?: string // !! ISO date string
-            Child_Name_4?: string
-            Child_Birthday_4?: string // !! ISO date string
-            Child_Name_5?: string
-            Child_Birthday_5?: string // !! ISO date string
-            Recently_Booked_Party?: boolean
-            Holiday_Program_Date?: string // !! ISO date string
-            Holiday_Program_Checked_In?: boolean
-        }>
-    ) {
-        const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
-
-        const result = await this.#request({
-            endpoint: 'Contacts/upsert',
-            method: 'POST',
-            data: [
-                {
-                    First_Name: firstName,
-                    Last_Name: lastName || 'N/A',
-                    Phone: mobile || '',
-                    Email: email,
-                    Service: [service],
-                    Customer_Type: customer_type,
-                    Branch: [branch || ''],
-                    ...rest,
-                    $append_values: {
-                        Service: true,
-                        Branch: true,
-                    },
-                },
-            ],
-        })
-
-        if (result?.data?.[0]?.code === 'SUCCESS') {
-            return result.data[0].details.id as string
-        } else {
-            throw new Error(`Unable to upsert contact in Zoho: ${firstName} ${lastName} - ${email}`)
-        }
     }
 
     addBirthdayPartyContact(props: WithBaseProps<{ type: Booking['type']; studio: Studio; partyDate: Date }>) {
@@ -453,7 +496,7 @@ export class ZohoClient {
                     Preferred_Date_And_Time: props.preferredDateAndTime,
                     Customer_Type: 'B2C',
                     Party_Type:
-                        props.type === 'studio' ? 'Fizz Kidz Studio' : props.type === 'mobile' ? 'Mobile' : 'Other',
+                        props.type === 'studio' ? 'Fizz Kidz Studio' : props.type === 'mobile' ? 'At-Home' : 'Other',
                     Branch: props.studio ? capitalise(props.studio) : '',
                     Suburb: props.suburb || '',
                     Owner: '76392000000333090', // Lami
@@ -482,5 +525,66 @@ export class ZohoClient {
                 `Unable to create birthday party deal in Zoho: ${props.firstName} ${props.lastName} - ${props.email}`
             )
         }
+    }
+
+    async confirmBirthdayPartyDealAndLinkChild({
+        dealId,
+        parentContactId,
+        parentName,
+        type,
+        studio,
+        address,
+        childName,
+        childBirthdayISO,
+        partyDateISO,
+        bookingId,
+    }: {
+        dealId?: string
+        parentContactId: string
+        parentName: string
+        type: Booking['type'] | 'other'
+        studio: Studio
+        address: string
+        childName: string
+        childBirthdayISO?: string
+        partyDateISO: string
+        bookingId: string
+    }) {
+        const childId = await this.#upsertChild({
+            parentContactId,
+            childName,
+            childBirthdayISO: childBirthdayISO,
+            partyDateISO: DateTime.fromISO(partyDateISO).toFormat('yyyy-MM-dd'),
+        })
+
+        await this.#request({
+            endpoint: 'Deals/upsert',
+            method: 'POST',
+            data: [
+                {
+                    id: dealId || undefined,
+                    Stage: 'Confirmed Booking',
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Deal_Name: parentName,
+                    Service: 'Birthday Party',
+                    Pipeline: 'Birthday Party Pipeline',
+                    Contact_Name: {
+                        id: parentContactId,
+                    },
+                    Party_Type: type === 'studio' ? 'Fizz Kidz Studio' : type === 'mobile' ? 'At-Home' : 'Other',
+                    Branch: capitalise(studio),
+                    Address: address,
+                    Child: {
+                        id: childId,
+                    },
+                    Actual_Party_Date: DateTime.fromISO(partyDateISO, { zone: 'Australia/Melbourne' }).toISO({
+                        suppressMilliseconds: true,
+                        includeOffset: true,
+                    }),
+                    Booking_ID: bookingId,
+                    Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                },
+            ],
+        })
     }
 }

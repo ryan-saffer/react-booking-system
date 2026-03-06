@@ -107,13 +107,15 @@ export function validateFormOnSubmit(formValues) {
             field !== FormBookingFields.includesFood &&
             field !== FormBookingFields.numberOfChildren &&
             field !== FormBookingFields.notes &&
+            field !== 'childBirthday' &&
             field !== FormBookingFields.creation1 &&
             field !== FormBookingFields.creation2 &&
             field !== FormBookingFields.creation3 &&
             field !== FormBookingFields.cake &&
             field !== FormBookingFields.cakeFlavour &&
             field !== FormBookingFields.questions &&
-            field !== FormBookingFields.funFacts
+            field !== FormBookingFields.funFacts &&
+            field !== FormBookingFields.zohoDealId
         ) {
             formValues[field].error = formValues[field].value === '' || formValues[field].value === null
         }
@@ -155,7 +157,6 @@ export function errorFound(formValues) {
  * @return {boolean} whether or not the email is invalid
  */
 export function emailIsInvalid(email) {
-    // eslint-disable-next-line
     var re =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return !re.test(String(email).toLowerCase())

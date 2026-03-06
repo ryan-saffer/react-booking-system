@@ -90,6 +90,11 @@ const getEmptyValues = () => ({
         error: false,
         errorText: 'Mobile number cannot be empty',
     },
+    zohoDealId: {
+        value: '',
+        error: false,
+        errorText: '',
+    },
     childName: {
         value: '',
         error: false,
@@ -99,6 +104,11 @@ const getEmptyValues = () => ({
         value: '',
         error: false,
         errorText: 'Child age cannot be empty',
+    },
+    childBirthday: {
+        value: null,
+        error: false,
+        errorText: '',
     },
     date: {
         value: null,
@@ -152,6 +162,100 @@ const getEmptyValues = () => ({
     },
 })
 
+const VALID_BOOKING_TYPES = ['studio', 'mobile']
+
+const mapUrlTypeToBookingType = (type) => {
+    const normalizedType = type?.trim()?.toLowerCase()
+    if (!normalizedType) {
+        return undefined
+    }
+
+    if (normalizedType === 'fizz kidz studio') {
+        return 'studio'
+    }
+
+    if (normalizedType === 'at-home' || normalizedType === 'at home') {
+        return 'mobile'
+    }
+
+    if (VALID_BOOKING_TYPES.includes(normalizedType)) {
+        return normalizedType
+    }
+
+    return undefined
+}
+
+const splitParentName = (parentName) => {
+    const fullName = parentName?.trim().replace(/\s+/g, ' ')
+    if (!fullName) {
+        return {}
+    }
+
+    const [firstName, ...lastNameParts] = fullName.split(' ')
+    return {
+        parentFirstName: firstName,
+        parentLastName: lastNameParts.join(' '),
+    }
+}
+
+const getPrefilledValuesFromUrl = () => {
+    if (typeof window === 'undefined') {
+        return {}
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    const parentName = splitParentName(params.get('parentName'))
+    const prefilledValues = {
+        parentFirstName: parentName.parentFirstName,
+        parentLastName: parentName.parentLastName,
+        parentEmail: params.get('parentEmail')?.trim(),
+        parentMobile: params.get('parentMobile')?.trim(),
+        type: mapUrlTypeToBookingType(params.get('type')),
+        location: params.get('location')?.trim()?.toLowerCase(),
+        zohoDealId: params.get('zohoDealId')?.trim(),
+    }
+
+    if (!VALID_BOOKING_TYPES.includes(prefilledValues.type)) {
+        delete prefilledValues.type
+    }
+
+    if (!STUDIOS.includes(prefilledValues.location)) {
+        delete prefilledValues.location
+    }
+
+    Object.keys(prefilledValues).forEach((field) => {
+        if (!prefilledValues[field]) {
+            delete prefilledValues[field]
+        }
+    })
+
+    return prefilledValues
+}
+
+const getInitialValues = () => {
+    const initialValues = getEmptyValues()
+    const prefilledValues = getPrefilledValuesFromUrl()
+
+    Object.keys(prefilledValues).forEach((field) => {
+        if (initialValues[field]) {
+            initialValues[field].value = prefilledValues[field]
+        }
+    })
+
+    return initialValues
+}
+
+const toMelbourneISODate = (date) => {
+    return DateTime.fromObject(
+        {
+            day: date.getDate(),
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+        },
+        { zone: 'Australia/Melbourne' }
+    ).toISODate()
+}
+
 /**
  * Strips out the error and errorText fields, leaving only the field and value
  *
@@ -167,8 +271,17 @@ const mapFormToBooking = (formValues) => {
     // trim fields
     booking[FormBookingFields.parentFirstName] = booking[FormBookingFields.parentFirstName].trim()
     booking[FormBookingFields.parentLastName] = booking[FormBookingFields.parentLastName].trim()
+    booking[FormBookingFields.parentEmail] = booking[FormBookingFields.parentEmail].trim()
+    booking[FormBookingFields.parentMobile] = booking[FormBookingFields.parentMobile].trim()
+    booking.zohoDealId = booking.zohoDealId.trim()
     booking[FormBookingFields.childName] = booking[FormBookingFields.childName].trim()
     booking[FormBookingFields.childAge] = booking[FormBookingFields.childAge].trim()
+
+    if (booking.childBirthday) {
+        booking.childBirthday = toMelbourneISODate(booking.childBirthday)
+    } else {
+        delete booking.childBirthday
+    }
 
     // make sure 'includesFood' is set as a boolean (for mobile parties its value is '' at this point)
     booking[FormBookingFields.includesFood] = !!booking[FormBookingFields.includesFood]
@@ -195,7 +308,7 @@ const mapFormToBooking = (formValues) => {
 /** The booking form component */
 const InnerNewBookingForm = (props) => {
     const trpc = useTRPC()
-    const [formValues, setFormValues] = useState(getEmptyValues)
+    const [formValues, setFormValues] = useState(getInitialValues)
     const [valid, setValid] = useState(true)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -203,11 +316,11 @@ const InnerNewBookingForm = (props) => {
     const createBookingMutation = useMutation(trpc.parties.createPartyBooking.mutationOptions())
 
     const handleFormChange = (e, id) => {
-        const isDateOrTimeField = e instanceof DateTime
-        let field = isDateOrTimeField ? id : e.target.name
+        const isPickerField = typeof id === 'string'
+        let field = isPickerField ? id : e.target.name
         let value
-        if (isDateOrTimeField) {
-            value = e.toJSDate()
+        if (isPickerField) {
+            value = e ? e.toJSDate() : null
         } else if (field === 'sendConfirmationEmail') {
             value = e.target.checked
         } else {
@@ -319,6 +432,19 @@ const InnerNewBookingForm = (props) => {
                         onChange={handleFormChange}
                     />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        id="zohoDealId"
+                        name="zohoDealId"
+                        label="Zoho deal id (optional)"
+                        fullWidth
+                        variant="outlined"
+                        value={formValues.zohoDealId.value}
+                        error={formValues.zohoDealId.error}
+                        helperText={formValues.zohoDealId.error ? formValues.zohoDealId.errorText : ''}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
                 <Grid item xs={12}>
                     <Typography variant="h6">Child Details</Typography>
                 </Grid>
@@ -346,6 +472,24 @@ const InnerNewBookingForm = (props) => {
                         error={formValues.childAge.error}
                         helperText={formValues.childAge.error ? formValues.childAge.errorText : ''}
                         onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <DatePicker
+                        label="Child birthday (optional)"
+                        orientation="portrait"
+                        value={
+                            formValues.childBirthday.value ? DateTime.fromJSDate(formValues.childBirthday.value) : null
+                        }
+                        onChange={(e) => handleFormChange(e, 'childBirthday')}
+                        format="dd/LL/yyyy"
+                        slotProps={{
+                            textField: {
+                                error: formValues.childBirthday.error,
+                                helperText: formValues.childBirthday.error ? formValues.childBirthday.errorText : '',
+                                fullWidth: true,
+                            },
+                        }}
                     />
                 </Grid>
                 <Grid item xs={12}>
