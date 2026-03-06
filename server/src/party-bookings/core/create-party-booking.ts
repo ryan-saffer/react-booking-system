@@ -59,7 +59,7 @@ export async function createPartyBooking(_booking: Booking) {
 
     const zohoClient = new ZohoClient()
     try {
-        await zohoClient.addBirthdayPartyContact({
+        const zohoContactId = await zohoClient.addBirthdayPartyContact({
             firstName: booking.parentFirstName,
             lastName: booking.parentLastName,
             email: booking.parentEmail,
@@ -68,8 +68,21 @@ export async function createPartyBooking(_booking: Booking) {
             studio: booking.location,
             type: booking.type,
         })
+
+        await zohoClient.confirmBirthdayPartyDealAndLinkChild({
+            bookingId,
+            dealId: booking.zohoDealId,
+            parentContactId: zohoContactId,
+            partyDateISO: booking.dateTime.toDate().toISOString(),
+            parentName: booking.parentFirstName,
+            address: booking.type === 'mobile' ? booking.address : '',
+            studio: booking.location,
+            type: booking.type,
+            childName: booking.childName,
+            childBirthdayISO: booking.childBirthday,
+        })
     } catch (err) {
-        logError(`error adding contact to zoho: '${booking.parentEmail}'`, err)
+        logError('error creating zoho records during birthday party booking', err, { booking })
     }
 
     // create the personalised invite url

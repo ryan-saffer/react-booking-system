@@ -10,8 +10,27 @@ import { PartiesAndEvents } from './parties-and-events'
 
 type Tab = 'parties' | 'incursions'
 
+const PREFILL_QUERY_KEYS = [
+    'parentName',
+    'parentEmail',
+    'parentMobile',
+    'type',
+    'location',
+    'zohoDealId',
+]
+
+const hasPrefillQueryParams = (searchParams: URLSearchParams) => {
+    return PREFILL_QUERY_KEYS.some((key) => !!searchParams.get(key)?.trim())
+}
+
 export const BookingsPage = () => {
-    const [openNewBooking, setOpenNewBooking] = useState(false)
+    const [openNewBooking, setOpenNewBooking] = useState(() => {
+        if (typeof window === 'undefined') {
+            return false
+        }
+
+        return hasPrefillQueryParams(new URLSearchParams(window.location.search))
+    })
 
     const [selectedTab, setSelectedTab] = useState<Tab>('parties')
 
