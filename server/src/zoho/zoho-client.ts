@@ -468,7 +468,7 @@ export class ZohoClient {
         })
     }
 
-    async createBirthdayPartyDeal(
+    createBirthdayPartyDeal(
         props: WithBaseProps<{
             contactId: string
             preferredDateAndTime: string
@@ -480,7 +480,7 @@ export class ZohoClient {
             enquiry: string
         }>
     ) {
-        const result = await this.#request({
+        return this.#request({
             endpoint: 'Deals',
             method: 'POST',
             data: [
@@ -507,24 +507,6 @@ export class ZohoClient {
                 },
             ],
         })
-
-        // write the zoho id back, so when booking in the portal we can link it to the deal easily
-        if (result?.data?.[0]?.code === 'SUCCESS') {
-            return this.#request({
-                endpoint: 'Deals',
-                method: 'PUT',
-                data: [
-                    {
-                        id: result.data[0].details.id,
-                        Zoho_Deal_Id: result.data[0].details.id,
-                    },
-                ],
-            })
-        } else {
-            throw new Error(
-                `Unable to create birthday party deal in Zoho: ${props.firstName} ${props.lastName} - ${props.email}`
-            )
-        }
     }
 
     async confirmBirthdayPartyDealAndLinkChild({
@@ -557,7 +539,7 @@ export class ZohoClient {
             partyDateISO: DateTime.fromISO(partyDateISO).toFormat('yyyy-MM-dd'),
         })
 
-        await this.#request({
+        const result = await this.#request({
             endpoint: 'Deals/upsert',
             method: 'POST',
             data: [
@@ -583,6 +565,26 @@ export class ZohoClient {
                     }),
                     Booking_ID: bookingId,
                     Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                },
+            ],
+        })
+
+        if (result?.data?.[0]?.code === 'SUCCESS') {
+            return result.data[0].details.id as string
+        } else {
+            throw new Error(`${result.data[0].code} - ${result.data[0].message}`)
+        }
+    }
+
+    markPartyDealClosedLost(zohoDealId: string) {
+        return this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: zohoDealId,
+                    Stage: 'Lost Booking',
+                    Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
                 },
             ],
         })

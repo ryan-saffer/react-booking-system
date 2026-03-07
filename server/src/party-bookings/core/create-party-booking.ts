@@ -69,7 +69,7 @@ export async function createPartyBooking(_booking: Booking) {
             type: booking.type,
         })
 
-        await zohoClient.confirmBirthdayPartyDealAndLinkChild({
+        const zohoDealId = await zohoClient.confirmBirthdayPartyDealAndLinkChild({
             bookingId,
             dealId: booking.zohoDealId,
             parentContactId: zohoContactId,
@@ -81,6 +81,11 @@ export async function createPartyBooking(_booking: Booking) {
             childName: booking.childName,
             childBirthdayISO: booking.childBirthday,
         })
+
+        // if there wasn't an existing deal in zoho when the booking was created, write the id back into the database
+        if (!booking.zohoDealId) {
+            await DatabaseClient.updatePartyBooking(bookingId, { zohoDealId })
+        }
     } catch (err) {
         logError('error creating zoho records during birthday party booking', err, { booking })
     }
