@@ -576,6 +576,22 @@ export class ZohoClient {
         }
     }
 
+    updatePartyDetailEventDate(zohoDealId: string, partyDateISO: string) {
+        return this.#request({
+            endpoint: 'Deals',
+            method: 'PUT',
+            data: [
+                {
+                    id: zohoDealId,
+                    Actual_Party_Date: DateTime.fromISO(partyDateISO, { zone: 'Australia/Melbourne' }).toISO({
+                        suppressMilliseconds: true,
+                        includeOffset: true,
+                    }),
+                },
+            ],
+        })
+    }
+
     markPartyDealClosedLost(zohoDealId: string) {
         return this.#request({
             endpoint: 'Deals',

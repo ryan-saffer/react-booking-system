@@ -8,6 +8,7 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { env } from '@/init'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input
@@ -81,5 +82,14 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     { input }
                 )
             )
+
+        if (booking.zohoDealId) {
+            const zohoClient = new ZohoClient()
+            await zohoClient
+                .updatePartyDetailEventDate(booking.zohoDealId, booking.dateTime.toISOString())
+                .catch((err) =>
+                    logError('after updating party time, error updating event date in zoho deal', err, { booking })
+                )
+        }
     }
 }
