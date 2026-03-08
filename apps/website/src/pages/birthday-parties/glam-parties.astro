@@ -3,7 +3,7 @@ import PageIntro from "@/components/page-intro.astro";
 import Layout from "@/layout/Layout.astro";
 import PartyLayout from "@/layout/party-layout.astro";
 
-import bodyGlitter from "@/assets/images/pages/parties/body-glitter.jpg";
+import glamParties from "@/assets/images/pages/parties/glam-parties.jpg";
 
 import glitz from "@/assets/images/pages/parties/packages/glitz-and-glam.png";
 import GlitterFacePaint from "@/components/creations/glitter-face-paint.astro";
@@ -13,9 +13,9 @@ import UnicornSoap from "@/components/creations/unicorn-soap.astro";
 import RainbowBathBombs from "@/components/creations/rainbow-bath-bombs.astro";
 import SparklingLipBalm from "@/components/creations/sparkling-lip-balm.astro";
 import FairySlime from "@/components/creations/fairy-slime.astro";
-import GlitterSoap from "@/components/creations/glitter-soap.astro";
 import UnicornBathCrumble from "@/components/creations/unicorn-bath-crumble.astro";
 import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
+import TsBracelets from "@/components/creations/ts-bracelets.astro";
 ---
 
 <Layout
@@ -27,7 +27,7 @@ import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
       slot="intro"
       subtitle="Bring the glitter, sparkles and fun to your child's next party!"
       type="image"
-      image={bodyGlitter}
+      image={glamParties}
       imageAlt="hands holding colourful body glitter containers"
       actionButtonText="Book a party"
       actionButtonPath="/birthday-parties/book-a-party/#book"
@@ -40,11 +40,11 @@ import GlitterHairGel from "@/components/creations/glitter-hair-gel.astro";
       </span>
     </PageIntro>
     <Creations partyPackage="Glam" image={glitz} imageAlt="Three girls smiling">
-      <FairySlime slot="1" flippable={false} />
+      <SparklingLipBalm slot="1" flippable={false} />
       <GlitterFacePaint slot="2" flippable={false} />
       <RainbowBathSalts slot="3" flippable={false} />
-      <GlitterSoap slot="4" flippable={false} />
-      <SparklingLipBalm slot="5" flippable={false} />
+      <TsBracelets slot="4" flippable={false} />
+      <FairySlime slot="5" flippable={false} />
       <UnicornSoap slot="6" flippable={false} />
       <RainbowBathBombs slot="7" flippable={false} />
       <UnicornBathCrumble slot="8" flippable={false} />
