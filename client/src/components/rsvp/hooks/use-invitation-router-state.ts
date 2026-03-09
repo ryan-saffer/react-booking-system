@@ -1,6 +1,7 @@
-import type { InvitationsV2 } from 'fizz-kidz'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import type { InvitationsV2 } from 'fizz-kidz'
 
 import { useRouterState } from '@components/Hooks/use-router-state'
 

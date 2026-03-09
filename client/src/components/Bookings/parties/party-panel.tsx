@@ -6,13 +6,13 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import dateFormat from 'dateformat'
+import { UsersRound } from 'lucide-react'
 
 import { getRsvpUrl, type Booking, type FirestoreBooking, type WithId } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 
 import { ExistingBookingForm } from './forms/ExistingBookingForm'
-import { UsersRound } from 'lucide-react'
 
 const PREFIX = 'BookingPanel'
 

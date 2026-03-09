@@ -1,7 +1,8 @@
-import { getCloudFunctionsDomain } from 'fizz-kidz'
 import { Copy, Download, Mail, MessageCircleMore, PartyPopper, Sparkles } from 'lucide-react'
 import { WhatsappShareButton } from 'react-share'
 import { toast } from 'sonner'
+
+import { getCloudFunctionsDomain } from 'fizz-kidz'
 
 import { WhatsappIcon } from '@drawables/icons/whatsapp'
 import { Button } from '@ui-components/button'

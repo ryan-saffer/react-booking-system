@@ -1,6 +1,8 @@
 import type { InvitationsV2 } from 'fizz-kidz'
-import type { ReactNode } from 'react'
+
 import { InvitationContext } from './invitation.context'
+
+import type { ReactNode } from 'react'
 
 export function InvitationProvider({
     invitation,

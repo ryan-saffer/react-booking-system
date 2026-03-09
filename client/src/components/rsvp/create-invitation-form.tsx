@@ -1,9 +1,9 @@
 import { format } from 'date-fns'
-import type { InvitationsV2 } from 'fizz-kidz'
 import { CalendarIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+
+import type { InvitationsV2 } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 import { Calendar } from '@ui-components/calendar'
@@ -13,6 +13,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@ui-components/popover'
 import { Switch } from '@ui-components/switch'
 import { capitalise } from '@utils/stringUtilities'
 import { cn } from '@utils/tailwind'
+
+import type { ReactNode } from 'react'
 
 export function CreateInvitationForm({
     defaultValues,

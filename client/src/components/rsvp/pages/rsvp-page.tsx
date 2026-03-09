@@ -1,9 +1,10 @@
 import { format } from 'date-fns'
-import type { InvitationsV2 } from 'fizz-kidz'
-import { capitalise, getStudioAddress } from 'fizz-kidz'
 import { CheckCircle2, Clock, MapPin, PartyPopper, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
+
+import { capitalise, getStudioAddress } from 'fizz-kidz'
+import type { InvitationsV2 } from 'fizz-kidz'
 
 import { useRouterState } from '@components/Hooks/use-router-state'
 import { Button } from '@ui-components/button'

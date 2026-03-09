@@ -1,11 +1,11 @@
 import { capitalise, getRsvpUrl, getStudioAddress, type Rsvp, type WithoutId } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { env } from '@/init'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
-import { env } from '@/init'
-import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 
 export type RsvpProps = WithoutId<Rsvp> & {
     bookingId: string

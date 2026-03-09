@@ -1,7 +1,8 @@
-import type { Rsvp, RsvpStatus } from 'fizz-kidz'
+import { createColumnHelper } from '@tanstack/react-table'
 import { ChevronRight, EllipsisVertical, Trash2 } from 'lucide-react'
 
-import { createColumnHelper } from '@tanstack/react-table'
+import type { Rsvp, RsvpStatus } from 'fizz-kidz'
+
 import { Badge } from '@ui-components/badge'
 import { Button } from '@ui-components/button'
 import {
@@ -70,7 +71,10 @@ export function createColumns({
             header: () => <div>Has allergies?</div>,
             cell: (rsvp) =>
                 rsvp.getValue() && (
-                    <Badge className="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700" variant="outline">
+                    <Badge
+                        className="rounded-full border border-amber-100 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700"
+                        variant="outline"
+                    >
                         Allergies
                     </Badge>
                 ),

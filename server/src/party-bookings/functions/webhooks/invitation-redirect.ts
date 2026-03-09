@@ -1,4 +1,5 @@
 import express from 'express'
+
 import { getApplicationDomain } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'

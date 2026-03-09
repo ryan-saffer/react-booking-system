@@ -2,7 +2,7 @@ import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
 
 import type { Booking } from 'fizz-kidz'
-import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import { capitalise, getStudioAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { MailClient } from '@/sendgrid/MailClient'
@@ -64,7 +64,7 @@ async function sendForm(bookingId: string, booking: Booking) {
             endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                 zone: 'Australia/Melbourne',
             }).toLocaleString(DateTime.TIME_SIMPLE),
-            address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+            address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
             location: capitalise(booking.location),
             prefilledFormUrl,
             managerName: manager.name,

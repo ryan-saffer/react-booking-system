@@ -7,7 +7,7 @@ import { DateTime } from 'luxon'
 import Mustache from 'mustache'
 import puppeteer from 'puppeteer'
 
-import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
+import { addOrdinalSuffix, getStudioAddress } from 'fizz-kidz'
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -49,7 +49,7 @@ export async function generateInvitation(input: GenerateInvitation) {
             childAge: addOrdinalSuffix(input.childAge),
             date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
             rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
-            address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
+            address: input.$type === 'studio' ? getStudioAddress(input.studio) : input.address,
         })
 
         if (!process.env.FUNCTIONS_EMULATOR) {

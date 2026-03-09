@@ -1,6 +1,7 @@
+import { CalendarDays, MapPin, PartyPopper, Sparkles } from 'lucide-react'
+
 import type { InvitationsV2 } from 'fizz-kidz'
 import { capitalise, getStudioAddress } from 'fizz-kidz'
-import { CalendarDays, MapPin, PartyPopper, Sparkles } from 'lucide-react'
 
 export function Result({
     rsvp,

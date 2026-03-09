@@ -1,14 +1,16 @@
 import fs from 'fs'
 import path from 'path'
 
-import type { PNGStream } from 'canvas'
 import { createCanvas, loadImage, registerFont } from 'canvas'
-import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
-import { ObjectKeys, getCloudFunctionsDomain, getStudioAddress } from 'fizz-kidz'
 import { DateTime } from 'luxon'
 import QRCode from 'qrcode'
 
+import type { InvitationsV2, WithoutUid } from 'fizz-kidz'
+import { ObjectKeys, getCloudFunctionsDomain, getStudioAddress } from 'fizz-kidz'
+
 import { env } from '@/init'
+
+import type { PNGStream } from 'canvas'
 
 export class InvitationImageGenerator {
     #invitation: WithoutUid<InvitationsV2.Invitation>

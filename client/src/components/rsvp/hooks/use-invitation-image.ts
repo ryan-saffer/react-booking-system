@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
 import { getDownloadURL, ref } from 'firebase/storage'
+import { useEffect, useState } from 'react'
 
 import useFirebase from '@components/Hooks/context/UseFirebase'
 
@@ -18,10 +18,7 @@ export function useInvitationImage(invitationId: string, isTemp: boolean) {
     useEffect(() => {
         async function getUrl() {
             const url = await getDownloadURL(
-                ref(
-                    firebase.storage,
-                    `invitations-v2/${isTemp ? 'temp/' : ''}${invitationId}/invitation.png`
-                )
+                ref(firebase.storage, `invitations-v2/${isTemp ? 'temp/' : ''}${invitationId}/invitation.png`)
             )
             setInvitationUrl(url)
         }

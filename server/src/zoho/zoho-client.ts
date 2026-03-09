@@ -576,7 +576,7 @@ export class ZohoClient {
                         includeOffset: true,
                     }),
                     Booking_ID: bookingId,
-                    Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                    Booking_URL: `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/dashboard/bookings?id=${bookingId}`,
                 },
             ],
         })

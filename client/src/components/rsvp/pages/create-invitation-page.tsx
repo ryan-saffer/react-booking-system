@@ -1,12 +1,14 @@
-import { capitalise } from 'fizz-kidz'
 import { CalendarDays, CheckCircle2, MapPin, PartyPopper, Send, Share2, Sparkles, User } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+
+import { capitalise } from 'fizz-kidz'
 
 import { Button } from '@ui-components/button'
 
 import { Navbar } from '../navbar'
 import { hasRequiredState } from '../utils/has-required-state'
+
+import type { ReactNode } from 'react'
 
 // http://localhost:3000/invitation/v2?parentName=Ryan&parentMobile=0413892120&childName=Marlee&bookingId=0GSCAS0KUU7b2YffTXPR&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&$type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z
 // http://localhost:3000/invitation/v2?parentName=Ryan&parentMobile=0413892120&childName=Marlee&bookingId=1t29Q2jfALbvD4R4xpul&childAge=5&date=2024-10-06T06%3A56%3A38.673Z&time=10am&$type=studio&studio=essendon&rsvpDate=2024-10-06T06%3A56%3A38.673Z

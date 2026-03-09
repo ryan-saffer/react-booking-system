@@ -1,6 +1,7 @@
-import type { InvitationsV2, Rsvp, Service } from 'fizz-kidz'
-import { useEffect, useState } from 'react'
 import { collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+
+import type { InvitationsV2, Rsvp, Service } from 'fizz-kidz'
 
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import useFirebase from '@components/Hooks/context/UseFirebase'

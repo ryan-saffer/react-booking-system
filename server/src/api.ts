@@ -3,17 +3,16 @@ import express from 'express'
 import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
 import { env } from './init'
 import { partyFormRedirect } from './paperforms/functions/webhooks/paperform-redirect'
 import { paperformWebhook } from './paperforms/functions/webhooks/paperform.webhook'
+import { invitationRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
 import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
 import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
 import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
-import { invitationRedirect } from './party-bookings/functions/webhooks/invitation-redirect'
 
 const app = express()
 const apiRouter = express.Router()

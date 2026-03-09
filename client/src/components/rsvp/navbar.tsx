@@ -1,11 +1,11 @@
+import { useMutation } from '@tanstack/react-query'
+
 import { useConfirm } from '@components/Hooks/confirmation-dialog.tsx/use-confirmation-dialog'
 import { Button } from '@ui-components/button'
 import { useTRPC } from '@utils/trpc'
 
-import { useMutation } from "@tanstack/react-query";
-
 export const Navbar = (props: { showResetButton?: false } | { showResetButton: true; invitationId: string }) => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const confirm = useConfirm()
 
     const { mutateAsync: resetInvitation } = useMutation(trpc.parties.resetInvitation.mutationOptions())

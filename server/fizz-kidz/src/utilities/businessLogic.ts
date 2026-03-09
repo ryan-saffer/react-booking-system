@@ -5,7 +5,7 @@ import { capitalise } from './stringUtilities'
 import type { Booking } from '../partyBookings/booking'
 import type { Studio } from 'fizz-kidz/src/core/studio'
 
-export function getLocationAddress(location: Studio) {
+export function getStudioAddress(location: Studio) {
     switch (location) {
         case 'balwyn':
             return '184 Whitehorse Rd, Balwyn VIC 3103'
@@ -147,5 +147,5 @@ export function studioNameAndAddress(studio: StudioOrTest) {
         return 'TEST'
     }
 
-    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getLocationAddress(studio)}`
+    return `Fizz Kidz ${capitalise(studio)}\nStudio<br>${getStudioAddress(studio)}`
 }

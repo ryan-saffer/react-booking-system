@@ -1,12 +1,12 @@
 import { getRsvpUrl, type InvitationsV2 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
-import { env } from '@/init'
 
 export async function linkInvitation(invitation: InvitationsV2.Invitation) {
     invitation.date = new Date(invitation.date)
