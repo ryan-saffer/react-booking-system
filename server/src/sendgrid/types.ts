@@ -107,6 +107,7 @@ export type Emails = {
         managerObjectPronoun: string
         numberOfKidsAllowed: string[]
         studioPhotoUrl: string
+        useRsvpSystem: boolean
         invitationsUrl: string
         includesFood: boolean
         canOrderCake: boolean
@@ -312,6 +313,41 @@ export type Emails = {
         newTakeHomeBags: { name: string; quantity: string }[]
         hasExistingTakeHomeBags: boolean
         oldTakeHomeBags?: { name: string; quantity: string }[]
+    }
+
+    // PARTY RSVPS
+    invitationCreated: {
+        parentName: string
+        invitationLink: string
+    }
+
+    rsvpToParty: {
+        parentName: string
+        children: {
+            childName: string
+            isAttending: boolean
+            allergies?: string
+        }[]
+        attending: boolean // if any child is attending set this to true
+        hostName: string
+        hostPhone: string
+        date: string
+        time: string
+        isMobile: boolean
+        studio: string
+        address: string
+    }
+
+    rsvpNotificationToHost: {
+        parentName: string
+        childrenNames: string
+        children: {
+            childName: string
+            isAttending: boolean
+            allergies?: string
+        }[]
+        birthdayChildName: string
+        invitationUrl: string
     }
 
     // EVENTS

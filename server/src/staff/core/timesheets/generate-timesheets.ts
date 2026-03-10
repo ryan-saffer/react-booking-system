@@ -11,7 +11,7 @@ import { isFranchise, type FranchiseOrMaster, type GenerateTimesheetsParams } fr
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
 import { SlingClient } from '@/sling/sling-client'
-import { throwTrpcError } from '@/utilities'
+import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 
 import {
@@ -196,7 +196,7 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         const destination = `payroll/${filename}`
 
         // if running locally, signing a url isn't possible, so use a download token instead
-        const downloadToken = process.env.FUNCTIONS_EMULATOR ? randomUUID() : null
+        const downloadToken = isUsingEmulator() ? randomUUID() : null
 
         const [file] = await storage.bucket(bucketName).upload(tempFilePath, {
             destination,

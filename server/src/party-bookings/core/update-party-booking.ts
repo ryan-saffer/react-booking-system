@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
 import type { Booking } from 'fizz-kidz'
-import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import { capitalise, getStudioAddress, getManager, getPartyEndDate } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
@@ -29,7 +29,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             { eventType: 'party-bookings', type: booking.type, location: booking.location },
             {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                 start: booking.dateTime,
                 end: getPartyEndDate(booking.dateTime, booking.partyLength),
             }
@@ -66,7 +66,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString(DateTime.TIME_SIMPLE),
-                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     managerName: manager.name,

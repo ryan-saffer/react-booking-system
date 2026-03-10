@@ -1,5 +1,5 @@
 import type { Employee, InitiateEmployeeProps } from 'fizz-kidz'
-import { getLocationAddress } from 'fizz-kidz'
+import { getStudioAddress } from 'fizz-kidz'
 
 import { ESignatureClient } from '@/esignatures.io/core/ESignaturesClient'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -20,7 +20,7 @@ export async function initiateOnboarding(input: InitiateEmployeeProps) {
             mobile: input.mobile,
             templateVariables: {
                 name: `${input.firstName} ${input.lastName}`,
-                address: getLocationAddress(input.location),
+                address: getStudioAddress(input.location),
                 position: input.position,
                 commencementDate: input.commencementDate,
                 normalRate: input.normalRate,

@@ -1,11 +1,9 @@
-
 import { initTRPC } from '@trpc/server'
 import { getAuth } from 'firebase-admin/auth'
 import { logger } from 'firebase-functions/v2'
 
-
 import { AcuityClient } from '../acuity/core/acuity-client'
-import { throwTrpcError } from '../utilities'
+import { isUsingEmulator, throwTrpcError } from '../utilities'
 import { getErrorCode } from './trpc.errors'
 
 import type * as trpcExpress from '@trpc/server/adapters/express'
@@ -42,7 +40,7 @@ const isAuthenticated = middleware(async ({ ctx, next }) => {
 
 const logging = middleware(async ({ next, path, getRawInput }) => {
     const input = await getRawInput()
-    if (process.env.FUNCTIONS_EMULATOR) {
+    if (isUsingEmulator()) {
         console.log(`- - - - ${path} - - - -`)
         console.log(input)
         console.log('- - - - - - - - - - - - - - - - - - - -')

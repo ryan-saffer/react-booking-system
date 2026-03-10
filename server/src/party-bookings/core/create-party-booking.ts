@@ -1,16 +1,17 @@
 import { Timestamp } from 'firebase-admin/firestore'
 import { DateTime } from 'luxon'
 
-import type { Booking, FirestoreBooking } from 'fizz-kidz'
+import type { FirestoreBooking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
-    getLocationAddress,
+    getStudioAddress,
     getManager,
     getNumberOfKidsAllowed,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
+    getRsvpUrl,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -18,14 +19,17 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
-import { throwTrpcError, logError } from '@/utilities'
+import { throwTrpcError, logError, isUsingEmulator } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { getCakeFormUrl } from './utils.party'
 
-export async function createPartyBooking(_booking: Booking) {
+import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
+
+export async function createPartyBooking(_booking: CreatePartyBooking) {
+    const { useRsvpSystem, ...rest } = _booking
     const booking = {
-        ..._booking,
+        ...rest,
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -46,8 +50,8 @@ export async function createPartyBooking(_booking: Booking) {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
                 start: booking.dateTime.toDate(),
                 end,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
-                description: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
+                description: `${getApplicationDomain(env, isUsingEmulator())}/dashboard/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
@@ -112,8 +116,11 @@ export async function createPartyBooking(_booking: Booking) {
         `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
     ]
 
-    const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
     const cakeFormUrl = getCakeFormUrl(bookingId)
+    // only use the new rsvp system if it was chosen during booking
+    const invitationsUrl = useRsvpSystem
+        ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+        : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 
@@ -136,7 +143,7 @@ export async function createPartyBooking(_booking: Booking) {
                     endTime: DateTime.fromJSDate(end, { zone: 'Australia/Melbourne' }).toLocaleString(
                         DateTime.TIME_SIMPLE
                     ),
-                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
@@ -147,6 +154,7 @@ export async function createPartyBooking(_booking: Booking) {
                     managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
+                    useRsvpSystem,
                     invitationsUrl,
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
@@ -155,11 +163,7 @@ export async function createPartyBooking(_booking: Booking) {
                 { replyTo: manager.email }
             )
         } catch (err) {
-            throwTrpcError(
-                'INTERNAL_SERVER_ERROR',
-                'party booked successfully, but unable to send confirmation email',
-                err
-            )
+            logError('party booked successfully, but unable to send confirmation email', err, { _booking })
         }
     }
 
@@ -173,5 +177,6 @@ export async function createPartyBooking(_booking: Booking) {
         type: booking.type,
         childAge: booking.childAge,
         date: booking.dateTime.toDate().toISOString(),
+        useRsvpSystem,
     })
 }

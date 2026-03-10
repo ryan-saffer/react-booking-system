@@ -336,6 +336,16 @@ export function getEmptyValues(): ExistingBookingFormFields {
             error: false,
             errorText: '',
         },
+        invitationId: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
+        invitationOwnerUid: {
+            value: undefined,
+            error: false,
+            errorText: '',
+        },
     }
 }
 
@@ -390,5 +400,7 @@ function getEmptyDomainBooking(): FormBooking {
         cake: undefined,
         takeHomeBags: undefined,
         products: undefined,
+        invitationId: undefined,
+        invitationOwnerUid: undefined,
     }
 }
