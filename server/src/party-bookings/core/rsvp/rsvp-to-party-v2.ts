@@ -4,7 +4,7 @@ import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
-import { logError } from '@/utilities'
+import { isUsingEmulator, logError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 export type RsvpProps = WithoutId<Rsvp> & {
@@ -70,7 +70,7 @@ export async function rsvpToParty(input: RsvpProps) {
                     isAttending: child.rsvp === 'attending',
                     allergies: child.allergies,
                 })),
-                invitationUrl: getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', invitation.bookingId),
+                invitationUrl: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
             })
         } catch (err) {
             logError(`Error sending RSVP notification to host '${booking.parentEmail}'`, err, { input })

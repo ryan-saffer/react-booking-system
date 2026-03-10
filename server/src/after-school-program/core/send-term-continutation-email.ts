@@ -1,10 +1,10 @@
 import type { AfterSchoolEnrolment, SendTermContinuationEmailsParams } from 'fizz-kidz'
 import { getApplicationDomain } from 'fizz-kidz'
 
-import { DatabaseClient } from '../../firebase/DatabaseClient'
-import { env } from '../../init'
-import { MailClient } from '../../sendgrid/MailClient'
-import { throwTrpcError } from '../../utilities'
+import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { env } from '@/init'
+import { MailClient } from '@/sendgrid/MailClient'
+import { isUsingEmulator, throwTrpcError } from '@/utilities'
 
 export async function sendTermContinutationEmails(input: SendTermContinuationEmailsParams) {
     const results = await Promise.allSettled(
@@ -18,10 +18,7 @@ export async function sendTermContinutationEmails(input: SendTermContinuationEma
             const encodedContinueQueryParams = Buffer.from(continueQueryParams).toString('base64')
             const encodedUnenrollQueryParams = Buffer.from(unenrollQueryParams).toString('base64')
 
-            const baseUrl = `${getApplicationDomain(
-                env,
-                process.env.FUNCTIONS_EMULATOR === 'true'
-            )}/after-school-program-enrolment`
+            const baseUrl = `${getApplicationDomain(env, isUsingEmulator())}/after-school-program-enrolment`
 
             try {
                 const mailClient = await MailClient.getInstance()

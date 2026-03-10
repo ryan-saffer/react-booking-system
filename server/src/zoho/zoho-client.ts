@@ -4,6 +4,7 @@ import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise, getApplicationDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
+import { isUsingEmulator } from '@/utilities'
 import {
     PartyThemeDisplayValueMap,
     ReferenceDisplayValueMap,
@@ -576,7 +577,7 @@ export class ZohoClient {
                         includeOffset: true,
                     }),
                     Booking_ID: bookingId,
-                    Booking_URL: `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/dashboard/bookings?id=${bookingId}`,
+                    Booking_URL: `${getApplicationDomain(env, isUsingEmulator())}/dashboard/bookings?id=${bookingId}`,
                 },
             ],
         })

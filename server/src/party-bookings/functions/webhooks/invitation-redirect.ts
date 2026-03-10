@@ -5,6 +5,7 @@ import { getApplicationDomain } from 'fizz-kidz'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { generateInvitationUrl } from '@/party-bookings/core/rsvp/generate-invitation-url'
+import { isUsingEmulator } from '@/utilities'
 
 export const invitationRedirect = express.Router()
 
@@ -24,7 +25,7 @@ invitationRedirect.get('/invitation/:id', async (req, res) => {
     if (booking.invitationId) {
         res.redirect(
             303,
-            `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitation/v2/${
+            `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2/${
                 booking.invitationId
             }`
         )

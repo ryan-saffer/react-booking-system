@@ -4,6 +4,7 @@ import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
+import { isUsingEmulator } from '@/utilities'
 
 import { deleteInvitationV2 } from './delete-invitation-v2'
 import { moveInvitation } from './move-invitation-v2'
@@ -51,7 +52,7 @@ export async function linkInvitation(invitation: InvitationsV2.Invitation) {
         const mailClient = await MailClient.getInstance()
         await mailClient.sendEmail('invitationCreated', booking.parentEmail, {
             parentName: invitation.parentName,
-            invitationLink: getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', invitation.bookingId),
+            invitationLink: getRsvpUrl(env, isUsingEmulator(), invitation.bookingId),
         })
 
         // tracking - only track in the case its the first time its being linked to a booking

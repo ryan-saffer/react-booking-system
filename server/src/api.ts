@@ -12,6 +12,7 @@ import { invitationRedirect } from './party-bookings/functions/webhooks/invitati
 import { createContext } from './trpc/trpc'
 import { appRouter } from './trpc/trpc.app-router'
 import { getErrorCode, type AppErrorCode } from './trpc/trpc.errors'
+import { isUsingEmulator } from './utilities'
 import { websiteFormsWebhook } from './website/functions/webhooks/website-forms-webhook'
 
 const app = express()
@@ -52,7 +53,7 @@ apiRouter.use(
 // WEBHOOKS
 const webhooks = express.Router()
 webhooks.use((req, _, next) => {
-    if (process.env.FUNCTIONS_EMULATOR) {
+    if (isUsingEmulator()) {
         console.log(`- - - - ${req.path} - - - -`)
         console.log(req.body)
         console.log('- - - - - - - - - - - - - - - - - - - -')

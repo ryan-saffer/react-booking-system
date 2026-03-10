@@ -19,7 +19,7 @@ import { CalendarClient } from '@/google/CalendarClient'
 import { env } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
-import { throwTrpcError, logError } from '@/utilities'
+import { throwTrpcError, logError, isUsingEmulator } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { getCakeFormUrl } from './utils.party'
@@ -51,10 +51,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                 start: booking.dateTime.toDate(),
                 end,
                 location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
-                description: `${getApplicationDomain(
-                    env,
-                    process.env.FUNCTIONS_EMULATOR === 'true'
-                )}/dashboard/bookings?id=${bookingId}`,
+                description: `${getApplicationDomain(env, isUsingEmulator())}/dashboard/bookings?id=${bookingId}`,
             }
         )
     } catch (err) {
@@ -122,8 +119,8 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
     const cakeFormUrl = getCakeFormUrl(bookingId)
     // only use the new rsvp system if it was chosen during booking
     const invitationsUrl = useRsvpSystem
-        ? getRsvpUrl(env, process.env.FUNCTIONS_EMULATOR === 'true', bookingId)
-        : `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitations?${params.join('&')}`
+        ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+        : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 
     const manager = getManager(booking.location)
 

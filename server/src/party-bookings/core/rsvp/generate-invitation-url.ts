@@ -4,6 +4,7 @@ import { ObjectKeys, getApplicationDomain, getPartyEndDate } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { env } from '@/init'
+import { isUsingEmulator } from '@/utilities'
 
 /**
  * Generates a URL for a parent to create their invitation.
@@ -34,7 +35,7 @@ export async function generateInvitationUrl(bookingId: string) {
         rsvpDate: DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO(),
     }
 
-    let url = `${getApplicationDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')}/invitation/v2?`
+    let url = `${getApplicationDomain(env, isUsingEmulator())}/invitation/v2?`
 
     ObjectKeys(params).forEach((param) => (url += `${param}=${encodeURIComponent(params[param])}&`))
 
