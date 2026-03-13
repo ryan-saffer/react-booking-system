@@ -11,7 +11,6 @@ import { isFranchise, type GenerateTimesheetsResponse, type Service } from 'fizz
 import { useOrg } from '@components/Session/use-org'
 import { useTRPC } from '@utils/trpc'
 
-
 import type { RangePickerProps } from 'antd/es/date-picker'
 
 const PREFIX = 'Payroll'
@@ -202,19 +201,43 @@ export const Payroll = () => {
                             <Alert title="All employees successfully found in Xero." type="success" showIcon />
                         )}
                         <Divider orientation="horizontal">Employee Birthdays</Divider>
-                        {timesheetsService.result.employeesWithBirthday.length !== 0 ? (
+                        {timesheetsService.result.employeesWithBirthdayWhoWorked.length !== 0 ||
+                        timesheetsService.result.employeesWithBirthdayWhoDidNotWork.length !== 0 ? (
                             <div className={`${classes.flexCol} ${classes['gap-16']}`}>
                                 <Alert
                                     description={
                                         <>
-                                            <Paragraph>
-                                                The following employees have birthdays during this pay cycle:
-                                            </Paragraph>
-                                            <ul>
-                                                {timesheetsService.result.employeesWithBirthday.map((employee, idx) => (
-                                                    <li key={idx}>{employee}</li>
-                                                ))}
-                                            </ul>
+                                            {timesheetsService.result.employeesWithBirthdayWhoWorked.length !== 0 && (
+                                                <>
+                                                    <Paragraph>
+                                                        The following employees have birthdays during this pay cycle and
+                                                        worked shifts in this period:
+                                                    </Paragraph>
+                                                    <ul>
+                                                        {timesheetsService.result.employeesWithBirthdayWhoWorked.map(
+                                                            (employee, idx) => (
+                                                                <li key={idx}>{employee}</li>
+                                                            )
+                                                        )}
+                                                    </ul>{' '}
+                                                </>
+                                            )}
+                                            {timesheetsService.result.employeesWithBirthdayWhoDidNotWork.length !==
+                                                0 && (
+                                                <>
+                                                    <Paragraph>
+                                                        The following employees have birthdays during this pay cycle but
+                                                        did not work shifts in this period:
+                                                    </Paragraph>
+                                                    <ul>
+                                                        {timesheetsService.result.employeesWithBirthdayWhoDidNotWork.map(
+                                                            (employee, idx) => (
+                                                                <li key={`${employee}-${idx}`}>{employee}</li>
+                                                            )
+                                                        )}
+                                                    </ul>{' '}
+                                                </>
+                                            )}
                                         </>
                                     }
                                     type="warning"
@@ -258,7 +281,7 @@ export const Payroll = () => {
                                 </Collapse>
                             </div>
                         ) : (
-                            <Alert title="No birthdays during this pay cycle." type="success" showIcon />
+                            <Alert title="No employee birthdays during this pay cycle." type="success" showIcon />
                         )}
                         <Divider orientation="horizontal">Superannuation</Divider>
                         {timesheetsService.result.employeesUnder18Over30Hrs.length > 0 ? (

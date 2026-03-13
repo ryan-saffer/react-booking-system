@@ -9,6 +9,7 @@ export type GenerateTimesheetsParams = {
 export type GenerateTimesheetsResponse = {
     url: string
     skippedEmployees: string[]
-    employeesWithBirthday: string[]
+    employeesWithBirthdayWhoWorked: string[]
+    employeesWithBirthdayWhoDidNotWork: string[]
     employeesUnder18Over30Hrs: string[]
 }
