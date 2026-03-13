@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { EmployeeStatus } from 'xero-node/dist/gen/model/payroll-au/employeeStatus'
+import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 
 import { isNotNull, type FranchiseOrMaster } from 'fizz-kidz'
 
@@ -12,6 +13,9 @@ export type EmployeeBirthday = {
     studio: FranchiseOrMaster
 }
 
+/*
+ * Given xero employees, returns CASUAL employees who had a birthday within the range
+ */
 export function getEmployeesWithBirthdayDuringRange({
     employees,
     studio,
@@ -24,11 +28,15 @@ export function getEmployeesWithBirthdayDuringRange({
     end: DateTime
 }) {
     return employees
+        .filter((employee) => employee.taxDeclaration?.employmentBasis === EmploymentBasis.CASUAL)
         .map((employee) => parseEmployeeBirthday(employee, studio))
         .filter(isNotNull)
         .filter(({ dob }) => hasBirthdayDuring(dob, start, end))
 }
 
+/*
+ * Given xero employees and a month, returns CASUAL employees who turn 18 in that month
+ */
 export function getEmployeesTurning18InMonth({
     employees,
     studio,
@@ -42,6 +50,7 @@ export function getEmployeesTurning18InMonth({
     const end = targetMonth.endOf('month')
 
     return employees
+        .filter((employee) => employee.taxDeclaration?.employmentBasis === EmploymentBasis.CASUAL)
         .map((employee) => parseEmployeeBirthday(employee, studio))
         .filter(isNotNull)
         .filter(({ dob }) => didTurn18DuringRange(dob, start, end))

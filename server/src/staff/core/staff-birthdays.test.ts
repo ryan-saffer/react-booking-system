@@ -1,6 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 
 import { DateTime } from 'luxon'
+import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 import { EmployeeStatus } from 'xero-node/dist/gen/model/payroll-au/employeeStatus'
 
 import {
@@ -19,6 +20,9 @@ function createEmployee(overrides: Partial<Employee> = {}): Employee {
         lastName: 'Smith',
         dateOfBirth: '2008-05-10T14:30:00.000Z',
         status: EmployeeStatus.ACTIVE,
+        taxDeclaration: {
+            employmentBasis: EmploymentBasis.CASUAL,
+        },
         ...overrides,
     } as Employee
 }
@@ -68,6 +72,13 @@ describe('Staff birthdays', () => {
                 createEmployee({ employeeID: 'employee-1', firstName: 'Ava', lastName: 'Jones', dateOfBirth: '2008-12-28' }),
                 createEmployee({ employeeID: 'employee-2', firstName: 'Noah', lastName: 'Brown', dateOfBirth: '2010-01-02' }),
                 createEmployee({ employeeID: 'employee-3', firstName: 'Mia', lastName: 'Green', dateOfBirth: '2009-01-10' }),
+                createEmployee({
+                    employeeID: 'employee-4',
+                    firstName: 'Parker',
+                    lastName: 'Fulltime',
+                    dateOfBirth: '2008-12-29',
+                    taxDeclaration: { employmentBasis: EmploymentBasis.FULLTIME },
+                }),
             ]
 
             const result = getEmployeesWithBirthdayDuringRange({
@@ -110,6 +121,20 @@ describe('Staff birthdays', () => {
                     createEmployee({ employeeID: 'terminated-employee', status: EmployeeStatus.TERMINATED, dateOfBirth: '2008-05-15' }),
                     createEmployee({ employeeID: 'invalid-dob', dateOfBirth: 'not-a-date' }),
                     createEmployee({ employeeID: 'blank-name', firstName: ' ', lastName: ' ' }),
+                    createEmployee({
+                        employeeID: 'part-time-employee',
+                        firstName: 'Part',
+                        lastName: 'Timer',
+                        dateOfBirth: '2008-05-15',
+                        taxDeclaration: { employmentBasis: EmploymentBasis.PARTTIME },
+                    }),
+                    createEmployee({
+                        employeeID: 'missing-basis',
+                        firstName: 'No',
+                        lastName: 'Basis',
+                        dateOfBirth: '2008-05-15',
+                        taxDeclaration: undefined,
+                    }),
                 ],
                 studio: 'master',
                 start: DateTime.fromISO('2026-05-01T00:00:00.000Z'),
@@ -131,6 +156,27 @@ describe('Staff birthdays', () => {
                     createEmployee({ employeeID: 'turning-18-end', firstName: 'Blake', lastName: 'End', dateOfBirth: '2008-05-31' }),
                     createEmployee({ employeeID: 'wrong-month', firstName: 'Casey', lastName: 'June', dateOfBirth: '2008-06-01' }),
                     createEmployee({ employeeID: 'terminated', firstName: 'Dana', lastName: 'Terminated', dateOfBirth: '2008-05-20', status: EmployeeStatus.TERMINATED }),
+                    createEmployee({
+                        employeeID: 'full-time',
+                        firstName: 'Frankie',
+                        lastName: 'Fulltime',
+                        dateOfBirth: '2008-05-20',
+                        taxDeclaration: { employmentBasis: EmploymentBasis.FULLTIME },
+                    }),
+                    createEmployee({
+                        employeeID: 'part-time',
+                        firstName: 'Pat',
+                        lastName: 'Parttime',
+                        dateOfBirth: '2008-05-21',
+                        taxDeclaration: { employmentBasis: EmploymentBasis.PARTTIME },
+                    }),
+                    createEmployee({
+                        employeeID: 'missing-basis',
+                        firstName: 'Morgan',
+                        lastName: 'NoBasis',
+                        dateOfBirth: '2008-05-22',
+                        taxDeclaration: undefined,
+                    }),
                 ],
                 studio: 'kingsville',
                 targetMonth: DateTime.fromISO('2026-05-15T12:00:00.000Z'),
