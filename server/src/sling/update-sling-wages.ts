@@ -1,5 +1,6 @@
 import { logger } from 'firebase-functions/v2'
 import { DateTime } from 'luxon'
+import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 
 import { ObjectKeys, isFranchise, type FranchiseOrMaster, type FranchiseStudio, type Studio } from 'fizz-kidz'
 
@@ -12,7 +13,6 @@ import {
 } from '@/staff/core/timesheets/timesheets.utils'
 import { logError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
-
 
 import { SlingClient } from './sling-client'
 
@@ -68,6 +68,11 @@ export async function updateSlingWages() {
             logger.warn(
                 `unable to find sling user in xero for the ${studio} studio: ${slingUser.legalName} ${slingUser.lastname} - ${slingUser.email}`
             )
+            continue
+        }
+
+        // if the employee is not casual, do not include them
+        if (xeroUser.taxDeclaration?.employmentBasis !== EmploymentBasis.CASUAL) {
             continue
         }
 
