@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { List, Result, Row, Typography } from 'antd'
+import { List, Result, Typography } from 'antd'
 import React from 'react'
 
 import type { AfterSchoolEnrolment } from 'fizz-kidz'
@@ -10,7 +10,6 @@ import { useTRPC } from '@utils/trpc'
 import AppointmentRow from './AppointmentRow'
 import styles from './ClassManager.module.css'
 import Loader from '../../../Shared/Loader'
-
 
 type Props = {
     appointment: AfterSchoolEnrolment
@@ -43,17 +42,17 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
     if (appointments) {
         return (
             <>
-                <Row className={styles.row}>
-                    <Typography.Text className={styles.heading}>
+                <div className="flex flex-col items-center justify-center">
+                    <Typography.Text className="text-center">
                         If {appointment.child.firstName} cannot attend on a given week,{' '}
                         <strong>let us know by toggling off that week.</strong> Otherwise, we will search for{' '}
                         {appointment.child.firstName} far and wide!
                     </Typography.Text>
-                    <Typography.Text style={{ marginTop: 12 }} className={styles.heading} italic>
+                    <Typography.Text className="mt-4 text-center" italic>
                         ℹ️ Please note, we do not offer credits or refunds for missed weeks.
                     </Typography.Text>
                     <List
-                        className={styles.list}
+                        className="mt-4 w-full max-w-[1000px] border-none shadow-[0px_7px_29px_0px_rgba(100,100,111,0.15)]"
                         size="large"
                         header={
                             <div className={styles.listHeader}>
@@ -67,7 +66,7 @@ const ClassManager: React.FC<Props> = ({ appointment }) => {
                         ))}
                         renderItem={(item) => <List.Item>{item}</List.Item>}
                     />
-                </Row>
+                </div>
                 <ErrorModal />
             </>
         )

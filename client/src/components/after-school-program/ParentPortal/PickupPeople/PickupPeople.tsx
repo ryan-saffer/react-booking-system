@@ -1,6 +1,6 @@
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { useMutation } from "@tanstack/react-query";
-import { Button, Card, Form, Input, Row, Tooltip, Typography, message } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Card, Form, Input, Tooltip, Typography, message } from 'antd'
 import React, { useState } from 'react'
 
 import type { AfterSchoolEnrolment } from 'fizz-kidz'
@@ -14,7 +14,6 @@ import { useTRPC } from '@utils/trpc'
 
 import styles from './PickupPeople.module.css'
 
-
 const { useForm } = Form
 
 const BREAKPOINT = 430
@@ -24,7 +23,7 @@ type Props = {
 }
 
 const PickupPeople: React.FC<Props> = ({ appointment }) => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
@@ -75,15 +74,13 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
     }
 
     return (
-        <Row className={styles.row}>
-            <Typography.Text style={{ width: 1000 }}>
+        <div className="flex flex-col items-center">
+            <Typography.Text className="text-center">
                 Only the people listed here will be allowed to pickup your child from the program.
             </Typography.Text>
-            <Typography.Text style={{ width: 1000, margin: '12px 0' }}>
-                You do not need to list yourself.
-            </Typography.Text>
+            <Typography.Text className="mt-2 text-center">You do not need to list yourself.</Typography.Text>
             <Card
-                className={styles.card}
+                className="mt-4 w-full max-w-[1000px]"
                 title="Pickup People"
                 extra={
                     !editing && (
@@ -174,7 +171,7 @@ const PickupPeople: React.FC<Props> = ({ appointment }) => {
                 </Form>
                 <ErrorModal />
             </Card>
-        </Row>
+        </div>
     )
 }
 
