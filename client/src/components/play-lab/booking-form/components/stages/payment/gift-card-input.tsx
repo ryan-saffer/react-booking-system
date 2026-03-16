@@ -10,19 +10,24 @@ import { Input } from '@ui-components/input'
 import { Label } from '@ui-components/label'
 import { useTRPC } from '@utils/trpc'
 
-
 export function GiftCardInput() {
     const trpc = useTRPC()
     const form = useBookingForm()
     const applyGiftCard = useCart((store) => store.applyGiftCard)
 
     const [giftCardNumber, setGiftCardNumber] = useState('')
+    const [error, setError] = useState('')
 
-    const {
-        mutateAsync: checkGiftCardBalance,
-        isPending,
-        error,
-    } = useMutation(trpc.playLab.checkGiftCardBalance.mutationOptions())
+    const { mutateAsync: checkGiftCardBalance, isPending } = useMutation({
+        ...trpc.playLab.checkGiftCardBalance.mutationOptions(),
+        onError: (error) => {
+            if (error.data?.code === 'GIFT_CARD_NOT_FOUND') {
+                setError('Gift card not found.')
+            } else {
+                setError(error.message)
+            }
+        },
+    })
 
     async function validateGiftCard() {
         const cleanedNumber = giftCardNumber.replace(/[\s-]/g, '')
@@ -70,7 +75,7 @@ export function GiftCardInput() {
                     {isPending ? <Loader2 className="animate-spin" /> : 'Apply gift card'}
                 </Button>
             </div>
-            {error && <p className="text-sm text-red-500">{error.message}</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
         </div>
     )
 }
