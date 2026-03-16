@@ -1,6 +1,6 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
-import { Button, Input, Popover } from 'antd'
+import { Button, Input, Popover, Typography } from 'antd'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -8,17 +8,25 @@ import { useTRPC } from '@utils/trpc'
 
 import { useCart } from '../../state/cart-store'
 
-
 export function GiftCardInput({ numberOfKids }: { numberOfKids: number }) {
     const trpc = useTRPC()
     const applyGiftCard = useCart((store) => store.applyGiftCard)
     const clearGiftCard = useCart((store) => store.clearGiftCard)
 
     const [giftCardNumber, setGiftCardNumber] = useState('')
+    const [error, setError] = useState('')
 
-    const { mutateAsync: checkGiftCardBalance, isPending: isCheckingGiftCard } = useMutation(
-        trpc.holidayPrograms.checkGiftCardBalance.mutationOptions()
-    )
+    const { mutateAsync: checkGiftCardBalance, isPending: isCheckingGiftCard } = useMutation({
+        ...trpc.holidayPrograms.checkGiftCardBalance.mutationOptions(),
+        onError: (error) => {
+            if (error.data?.code === 'GIFT_CARD_NOT_FOUND') {
+                setError('Gift card not found.')
+            } else {
+                setError(error.message)
+            }
+            clearGiftCard(numberOfKids)
+        },
+    })
 
     async function handleGiftCardApply() {
         const cleanedNumber = giftCardNumber.replace(/[\s-]/g, '')
@@ -27,28 +35,19 @@ export function GiftCardInput({ numberOfKids }: { numberOfKids: number }) {
             return
         }
 
-        try {
-            const result = await checkGiftCardBalance({ giftCardNumber: cleanedNumber })
-            applyGiftCard(
-                {
-                    id: result.giftCardId,
-                    balanceAppliedCents: 0,
-                    balanceRemainingCents: result.balanceCents,
-                    state: result.state,
-                    last4: result.last4,
-                },
-                numberOfKids
-            )
-            toast.success(`Gift card ending in ${result.last4} applied.`)
-            setGiftCardNumber('')
-        } catch (err) {
-            clearGiftCard(numberOfKids)
-            if (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string') {
-                toast.error(err.message)
-            } else {
-                toast.error('Unable to check gift card balance')
-            }
-        }
+        const result = await checkGiftCardBalance({ giftCardNumber: cleanedNumber })
+        applyGiftCard(
+            {
+                id: result.giftCardId,
+                balanceAppliedCents: 0,
+                balanceRemainingCents: result.balanceCents,
+                state: result.state,
+                last4: result.last4,
+            },
+            numberOfKids
+        )
+        toast.success(`Gift card ending in ${result.last4} applied.`)
+        setGiftCardNumber('')
     }
 
     return (
@@ -62,20 +61,15 @@ export function GiftCardInput({ numberOfKids }: { numberOfKids: number }) {
                     enterButton="Apply"
                     onChange={(e) => {
                         setGiftCardNumber(e.target.value)
+                        setError('')
                     }}
                     onSearch={handleGiftCardApply}
                     placeholder="Apply Fizz Kidz gift card.."
                 />
-                <Popover
-                    title="Gift Cards"
-                    content={
-                        <>
-                            <p>Enter the number shown on your physical or e-gift card.</p>
-                        </>
-                    }
-                >
+                <Popover title="Gift Cards" content={<p>Enter the number shown on your physical or e-gift card.</p>}>
                     <Button style={{ width: '10%' }} type="link" icon={<InfoCircleOutlined />} />
                 </Popover>
+                {error && <Typography.Text type="danger">{error}</Typography.Text>}
             </>
         </div>
     )

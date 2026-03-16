@@ -3,7 +3,6 @@ import express from 'express'
 import { logger } from 'firebase-functions/v2'
 import { onRequest } from 'firebase-functions/v2/https'
 
-
 import { acuityWebhook } from './acuity/functions/acuity.webhook'
 import { esignaturesWebhook } from './esignatures.io/functions/esignatures.webhook'
 import { env } from './init'
@@ -23,6 +22,7 @@ const ERRORS_TO_IGNORE: AppErrorCode[] = [
     'CLASS_FULL',
     'PAYMENT_METHOD_INVALID',
     'GIFT_CARD_NOT_FOUND',
+    'GIFT_CARD_INACTIVE',
 ]
 
 // TRPC
