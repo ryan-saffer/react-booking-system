@@ -78,8 +78,7 @@ export async function createPartyBooking(_booking: Booking) {
             address: booking.type === 'mobile' ? booking.address : '',
             studio: booking.location,
             type: booking.type,
-            childName: booking.childName,
-            childBirthdayISO: booking.childBirthday,
+            children: booking.children!,
         })
 
         // if there wasn't an existing deal in zoho when the booking was created, write the id back into the database
