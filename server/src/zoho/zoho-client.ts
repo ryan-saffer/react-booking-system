@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
+import type { Booking, PartyLostReason, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise, getApplicationDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
@@ -592,7 +592,7 @@ export class ZohoClient {
         })
     }
 
-    markPartyDealClosedLost(zohoDealId: string) {
+    markPartyDealClosedLost(zohoDealId: string, lostReason: PartyLostReason, lostReasonOther: string | undefined) {
         return this.#request({
             endpoint: 'Deals',
             method: 'PUT',
@@ -601,6 +601,8 @@ export class ZohoClient {
                     id: zohoDealId,
                     Stage: 'Lost Booking',
                     Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Reason_For_Loss__s: lostReason,
+                    Other_Reason: lostReasonOther,
                 },
             ],
         })
