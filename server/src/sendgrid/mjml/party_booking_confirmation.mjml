@@ -31,7 +31,7 @@
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    {{ childName }}'s party is booked in!
+                    {{header}}
                 </mj-text>
             </mj-column>
         </mj-section>
@@ -44,8 +44,7 @@
             <mj-column width="100%">
                 <mj-text color="#637381" font-size="16px"> Hi {{ parentName }}, </mj-text>
                 <mj-text color="#637381" font-size="16px">
-                    We're delighted to confirm {{ childName }}'s {{ childAge }}th Birthday Party at Fizz Kidz! We're so
-                    excited.
+                    {{ openingLine }}
                 </mj-text>
             </mj-column>
 

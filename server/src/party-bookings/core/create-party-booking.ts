@@ -124,6 +124,8 @@ export async function createPartyBooking(_booking: Booking) {
                 'partyBookingConfirmation',
                 booking.parentEmail,
                 {
+                    header: `${booking.childName}'s party is booked in!`,
+                    openingLine: `We're delighted to confirm ${booking.childName}'s ${booking.childAge}th Birthday Party at Fizz Kidz! We're so excited.`,
                     parentName: booking.parentFirstName,
                     childName: booking.childName,
                     childAge: booking.childAge,

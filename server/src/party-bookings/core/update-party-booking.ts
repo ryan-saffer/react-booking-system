@@ -1,7 +1,16 @@
 import { DateTime } from 'luxon'
 
 import type { Booking } from 'fizz-kidz'
-import { capitalise, getLocationAddress, getManager, getPartyEndDate } from 'fizz-kidz'
+import {
+    capitalise,
+    getApplicationDomain,
+    getLocationAddress,
+    getManager,
+    getNumberOfKidsAllowed,
+    getPartyCreationCount,
+    getPartyEndDate,
+    getPictureOfStudioUrl,
+} from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
@@ -9,6 +18,8 @@ import { env } from '@/init'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
+
+import { getCakeFormUrl } from './utils.party'
 
 export async function updatePartyBooking(input: { bookingId: string; booking: Booking }) {
     const { bookingId, booking } = input
@@ -49,29 +60,66 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
     if (!isSameTime || !isSameLength) {
         const manager = getManager(booking.location, env)
         const mailClient = await MailClient.getInstance()
+
+        const startTime = `${DateTime.fromJSDate(booking.dateTime, {
+            zone: 'Australia/Melbourne',
+        }).toFormat('h:mm a')} - ${DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
+            zone: 'Australia/Melbourne',
+        }).toFormat('h:mm a')}`
+
+        const params = [
+            `childName=${encodeURIComponent(booking.childName)}`,
+            `childAge=${encodeURIComponent(booking.childAge)}`,
+            `date=${encodeURIComponent(booking.dateTime.toISOString())}`,
+            `time=${encodeURIComponent(startTime)}`,
+            `type=${encodeURIComponent(booking.type)}`,
+            `studio=${encodeURIComponent(booking.location)}`,
+            `address=${encodeURIComponent(booking.address)}`,
+            `rsvpName=${encodeURIComponent(booking.parentFirstName)}`,
+            `rsvpDate=${encodeURIComponent(
+                DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO()
+            )}`,
+            `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
+        ]
+
+        const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
         await mailClient
             .sendEmail(
-                'partyTimeUpdated',
+                'partyBookingConfirmation',
                 booking.parentEmail,
                 {
+                    header: `${booking.childName}'s party time has been updated`,
+                    openingLine: `We've updated the time for ${booking.childName}'s ${booking.childAge}th birthday party. Here is the updated date and time:`,
                     parentName: booking.parentFirstName,
                     childName: booking.childName,
                     childAge: booking.childAge,
-                    startDate: DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).toLocaleString(
-                        DateTime.DATE_HUGE
-                    ),
-                    startTime: DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).toLocaleString(
-                        DateTime.TIME_SIMPLE
-                    ),
+                    startDate: DateTime.fromJSDate(booking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString(DateTime.DATE_HUGE),
+                    startTime: DateTime.fromJSDate(booking.dateTime, {
+                        zone: 'Australia/Melbourne',
+                    }).toLocaleString(DateTime.TIME_SIMPLE),
                     endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString(DateTime.TIME_SIMPLE),
                     address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
+                    creationCount: getPartyCreationCount(booking.type, booking.partyLength),
                     managerName: manager.name,
+                    managerEmail: manager.email,
+                    managerMobile: manager.mobile,
+                    managerObjectPronoun: manager.objectPronoun,
+                    managerSubjectPronoun: capitalise(manager.subjectPronoun),
+                    numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
+                    studioPhotoUrl: getPictureOfStudioUrl(booking.location),
+                    invitationsUrl,
+                    includesFood: booking.includesFood,
+                    canOrderCake: booking.type === 'studio',
+                    cakeFormUrl: getCakeFormUrl(bookingId),
                 },
                 {
+                    subject: 'Your party booking has been updated',
                     replyTo: manager.email,
                 }
             )
