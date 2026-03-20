@@ -27,9 +27,8 @@ import { getCakeFormUrl } from './utils.party'
 import type { CreatePartyBooking } from '../functions/trpc/trpc.parties'
 
 export async function createPartyBooking(_booking: CreatePartyBooking) {
-    const { useRsvpSystem, ...rest } = _booking
     const booking = {
-        ...rest,
+        ..._booking,
         dateTime: Timestamp.fromDate(new Date(_booking.dateTime)),
     } satisfies FirestoreBooking
 
@@ -117,7 +116,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
 
     const cakeFormUrl = getCakeFormUrl(bookingId)
     // only use the new rsvp system if it was chosen during booking
-    const invitationsUrl = useRsvpSystem
+    const invitationsUrl = booking.useRsvpSystem
         ? getRsvpUrl(env, isUsingEmulator(), bookingId)
         : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
 

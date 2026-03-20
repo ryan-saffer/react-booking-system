@@ -10,6 +10,7 @@ import {
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
+    getRsvpUrl,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -82,7 +83,10 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
         ]
 
-        const invitationsUrl = `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
+        const invitationsUrl = booking.useRsvpSystem
+            ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+            : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
+
         await mailClient
             .sendEmail(
                 'partyBookingConfirmation',
@@ -117,6 +121,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
                     cakeFormUrl: getCakeFormUrl(bookingId),
+                    useRsvpSystem: booking.useRsvpSystem,
                 },
                 {
                     subject: 'Your party booking has been updated',

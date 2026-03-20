@@ -54,10 +54,15 @@ export type BaseBooking = AdditionKeyValues & {
     products?: Partial<Record<ProductType, number>>
 } & (
         | {
+              useRsvpSystem: false
               invitationId: undefined
               invitationOwnerUid: undefined // needed for security rules on the rsvps collection
           }
-        | { invitationId: string; invitationOwnerUid: string }
+        | {
+              useRsvpSystem: true
+              invitationId: string
+              invitationOwnerUid: string
+          }
     )
 
 // separates date and time into separate values, for better use in forms
@@ -129,6 +134,7 @@ export const FormBookingFields: FormBookingKeys = {
     unicornFizzPartyPack: 'unicornFizzPartyPack',
     takeHomeBags: 'takeHomeBags',
     products: 'products',
+    useRsvpSystem: 'useRsvpSystem',
     invitationId: 'invitationId',
     invitationOwnerUid: 'invitationOwnerUid',
 }
@@ -185,6 +191,7 @@ export const BookingFields: BookingKeys = {
     unicornFizzPartyPack: 'unicornFizzPartyPack',
     takeHomeBags: 'takeHomeBags',
     products: 'products',
+    useRsvpSystem: 'useRsvpSystem',
     invitationId: 'invitationId',
     invitationOwnerUid: 'invitationOwnerUid',
 }
