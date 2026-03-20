@@ -677,7 +677,11 @@ const InnerNewBookingForm = (props) => {
                                         variant="outlined"
                                         value={child.age}
                                         error={child.errors.age}
-                                        helperText={child.errors.age ? 'Child age cannot be empty' : ''}
+                                        helperText={
+                                            child.errors.age
+                                                ? 'Child age cannot be empty'
+                                                : 'Make sure this is how old the child will be turning'
+                                        }
                                         onChange={(e) => handleChildChange(index, 'age', e.target.value)}
                                     />
                                 </Grid>
