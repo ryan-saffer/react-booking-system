@@ -183,12 +183,12 @@ export const PARTY_LOST_REASONS = [
     'Lack of Response',
     'Competition',
     'Price',
-    'Date Unavailable',
-    'Location Unavailable',
+    'Date/Location Unavailable',
     'Exceeds Capacity',
     'Change of Plans',
     'Schedule Conflict',
     'Below Minimum Age Requirement',
+    'Outside Zone Coverage',
     'Other',
 ] as const
 
