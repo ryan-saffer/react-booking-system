@@ -171,7 +171,7 @@
             Invitation & RSVP Tracking
           </mj-text>
 
-          <mj-text color="#637381" font-size="14px">Fizz Kidz parties are special, and your guests should know that too! Use our invitation and RSVP
+          <mj-text>Fizz Kidz parties are special, and your guests should know that too! Use our invitation and RSVP
             tracking tool to create a personalised invitation to share with {{childName}}'s friends.</mj-text>
 
           <mj-button css-class="btn-block" background-color="#4BC5D9" padding="20px" align="center" color="#ffffff" font-size="17px" font-weight="bold" href="{{ invitationsUrl }}" css-class="btn-block" border="1px #4BC5D9 solid">
