@@ -399,7 +399,6 @@ const mapFormToBooking = (formValues, children) => {
     booking[FormBookingFields.parentMobile] = booking[FormBookingFields.parentMobile].trim()
     booking.zohoDealId = booking.zohoDealId.trim()
     booking.children = mappedChildren
-    booking.numberOfChildren = `${mappedChildren.length}`
 
     // child name and age are derived from the children
     booking[FormBookingFields.childName] = combineStrings(mappedChildren.map((child) => child.name))
