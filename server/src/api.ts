@@ -24,6 +24,7 @@ const ERRORS_TO_IGNORE: AppErrorCode[] = [
     'CLASS_FULL',
     'PAYMENT_METHOD_INVALID',
     'GIFT_CARD_NOT_FOUND',
+    'GIFT_CARD_INACTIVE',
 ]
 
 // TRPC

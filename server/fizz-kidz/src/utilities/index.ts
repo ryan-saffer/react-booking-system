@@ -40,6 +40,10 @@ export function getKeyByValue<T extends Record<string, string>>(obj: T, value: s
     return Object.entries(obj).find(([, v]) => v === value)?.[0] as keyof T | undefined
 }
 
+export function isNotNull<T>(value: T | null): value is T {
+    return value !== null
+}
+
 export * from './businessLogic'
 export * from './manager-info'
 export * from './stringUtilities'

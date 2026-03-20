@@ -21,7 +21,11 @@ export async function deletePartyBooking(props: DeletePartyBooking) {
     if (existingBooking.zohoDealId) {
         try {
             const zohoClient = new ZohoClient()
-            await zohoClient.markPartyDealClosedLost(existingBooking.zohoDealId)
+            await zohoClient.markPartyDealClosedLost(
+                existingBooking.zohoDealId,
+                props.lostReason,
+                props.lostReasonOtherDetails
+            )
         } catch (err) {
             logError('Error marking party booking as closed lost while deleting', err, props)
         }

@@ -19,7 +19,12 @@ export type BaseBooking = AdditionKeyValues & {
     zohoDealId?: string
     childName: string
     childAge: string
-    childBirthday?: string // ISO date string in Australia/Melbourne
+    // only captured when booking for CRM purposes. The bookings childName and childAge will derive from these children.
+    children?: {
+        name: string
+        age: string
+        birthday: string // ISO date string in Australia/Melbourne
+    }[]
     location: Studio
     type: 'studio' | 'mobile'
     partyLength: '1' | '1.5' | '2'
@@ -81,7 +86,6 @@ export const FormBookingFields: FormBookingKeys = {
     zohoDealId: 'zohoDealId',
     childName: 'childName',
     childAge: 'childAge',
-    childBirthday: 'childBirthday',
     location: 'location',
     type: 'type',
     address: 'address',
@@ -139,7 +143,6 @@ export const BookingFields: BookingKeys = {
     zohoDealId: 'zohoDealId',
     childName: 'childName',
     childAge: 'childAge',
-    childBirthday: 'childBirthday',
     location: 'location',
     type: 'type',
     address: 'address',
@@ -185,3 +188,18 @@ export const BookingFields: BookingKeys = {
     invitationId: 'invitationId',
     invitationOwnerUid: 'invitationOwnerUid',
 }
+
+export const PARTY_LOST_REASONS = [
+    'Lack of Response',
+    'Competition',
+    'Price',
+    'Date/Location Unavailable',
+    'Exceeds Capacity',
+    'Change of Plans',
+    'Schedule Conflict',
+    'Below Minimum Age Requirement',
+    'Outside Zone Coverage',
+    'Other',
+] as const
+
+export type PartyLostReason = (typeof PARTY_LOST_REASONS)[number]

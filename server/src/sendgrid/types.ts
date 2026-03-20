@@ -90,6 +90,8 @@ export type Emails = {
 
     // BIRTHDAY PARTIES
     partyBookingConfirmation: {
+        header: string
+        openingLine: string
         parentName: string
         childName: string
         childAge: string
@@ -114,18 +116,6 @@ export type Emails = {
         cakeFormUrl: string
     }
 
-    partyTimeUpdated: {
-        parentName: string
-        childName: string
-        childAge: string
-        startDate: string
-        startTime: string
-        endTime: string
-        address: string
-        location: string
-        isMobile: boolean
-        managerName: string
-    }
     cakeForm: {
         parentName: string
         childName: string

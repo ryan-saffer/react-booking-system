@@ -42,3 +42,22 @@ export function generateRandomString(length: number = 20) {
 
     return result
 }
+
+/**
+ * Returns strings like 'Stacey, Lucia & Mia'
+ */
+export function combineStrings(inputs: string[]) {
+    if (inputs.length === 0) {
+        return ''
+    }
+
+    if (inputs.length === 1) {
+        return inputs[0]
+    }
+
+    if (inputs.length === 2) {
+        return `${inputs[0]} & ${inputs[1]}`
+    }
+
+    return `${inputs.slice(0, -1).join(', ')} & ${inputs[inputs.length - 1]}`
+}

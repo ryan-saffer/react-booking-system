@@ -14,13 +14,8 @@ import { SlingClient } from '@/sling/sling-client'
 import { isUsingEmulator, throwTrpcError } from '@/utilities'
 import { XeroClient } from '@/xero/XeroClient'
 
-import {
-    createTimesheetRows,
-    getWeeks,
-    hasBirthdayDuring,
-    isYoungerThan18,
-    SlingLocationsMap,
-} from './timesheets.utils'
+import { didTurn18DuringRange, getEmployeesWithBirthdayDuringRange } from '../staff-birthdays'
+import { createTimesheetRows, getWeeks, isYoungerThan18, SlingLocationsMap } from './timesheets.utils'
 
 import type { Rate } from './timesheets.types'
 import type { TimesheetRow } from './timesheets.utils'
@@ -81,6 +76,20 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
 
         const xeroUsers = (await xero.payrollAUApi.getEmployees('')).body.employees
 
+        // all employees who had a birthday during the pay run
+        const employeesWithBirthdayDuringPayrun = getEmployeesWithBirthdayDuringRange({
+            employees: xeroUsers || [],
+            studio,
+            start: startDate,
+            end: endDate,
+        })
+
+        const employeesWithBirthdayDuringPayrunMap = new Map(
+            employeesWithBirthdayDuringPayrun.map((employee) => [employee.employeeId, employee])
+        )
+
+        const employeesWithBirthdayWhoWorkedSet = new Set<string>()
+
         // to keep track of all rows
         let rows: TimesheetRow[] = []
 
@@ -88,7 +97,7 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         const skippedUsers: string[] = []
 
         // keeps track of users who have a birthday during the pay period
-        const employeesWithBirthday: string[] = []
+        const employeesWithBirthdayWhoWorked: string[] = []
 
         // keeps track of users who are under 18, but worked for more than 30 hrs in a single week (in order to be paid super)
         const employeesUnder18Over30Hrs: string[] = []
@@ -125,12 +134,19 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
                     continue
                 }
 
-                // calculate if the user has a birthday during this fortnight
                 const dob = DateTime.fromJSDate(new Date(xeroUser.dateOfBirth))
-                const hasBirthdayDuringPayrun = hasBirthdayDuring(dob, startDate, endDate)
+                const hasBirthdayDuringPayrun = Boolean(
+                    xeroUser.employeeID && employeesWithBirthdayDuringPayrunMap.has(xeroUser.employeeID)
+                )
                 if (hasBirthdayDuringPayrun) {
-                    employeesWithBirthday.push(
-                        `${xeroUser.firstName} ${xeroUser.lastName} - ${dob.toLocaleString(DateTime.DATE_SHORT)}`
+                    employeesWithBirthdayWhoWorkedSet.add(xeroUser.employeeID!)
+                    employeesWithBirthdayWhoWorked.push(
+                        formatBirthdayEmployeeLabel({
+                            fullName: `${xeroUser.firstName} ${xeroUser.lastName}`,
+                            dob,
+                            start: startDate,
+                            end: endDate,
+                        })
                     )
                 }
 
@@ -229,7 +245,17 @@ export async function generateTimesheets({ startDateInput, endDateInput, studio 
         return {
             url: downloadUrl,
             skippedEmployees: [...new Set(skippedUsers)],
-            employeesWithBirthday: [...new Set(employeesWithBirthday)],
+            employeesWithBirthdayWhoWorked: [...new Set(employeesWithBirthdayWhoWorked)],
+            employeesWithBirthdayWhoDidNotWork: employeesWithBirthdayDuringPayrun
+                .filter((employee) => !employeesWithBirthdayWhoWorkedSet.has(employee.employeeId))
+                .map((employee) =>
+                    formatBirthdayEmployeeLabel({
+                        fullName: employee.fullName,
+                        dob: employee.dob,
+                        start: startDate,
+                        end: endDate,
+                    })
+                ),
             employeesUnder18Over30Hrs: [...new Set(employeesUnder18Over30Hrs)],
         }
     } catch (err) {
@@ -246,4 +272,21 @@ async function getAndCacheXeroUser(userId: string, cache: XeroUserCache, studio:
     const employee = (await xero.payrollAUApi.getEmployee('', userId)).body.employees?.[0]!
     cache[userId] = employee
     return employee
+}
+
+function formatBirthdayEmployeeLabel({
+    fullName,
+    dob,
+    start,
+    end,
+}: {
+    fullName: string
+    dob: DateTime
+    start: DateTime
+    end: DateTime
+}) {
+    const turned18DuringPayPeriod = didTurn18DuringRange(dob, start, end)
+    const prefix = turned18DuringPayPeriod ? '[⚠️ Turned 18] ' : ''
+
+    return `${prefix}${fullName} - ${dob.toLocaleString(DateTime.DATE_SHORT)}`
 }

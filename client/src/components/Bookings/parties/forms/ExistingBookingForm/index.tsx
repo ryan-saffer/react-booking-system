@@ -25,6 +25,7 @@ import {
     CREATIONS,
     FormBookingFields,
     ObjectKeys,
+    PARTY_LOST_REASONS,
     PRODUCTS,
     PROD_ADDITIONS,
     STUDIOS,
@@ -33,7 +34,7 @@ import {
     capitalise,
     getRsvpUrl,
 } from 'fizz-kidz'
-import type { FirestoreBooking, FormBooking, WithId } from 'fizz-kidz'
+import type { FirestoreBooking, FormBooking, PartyLostReason, WithId } from 'fizz-kidz'
 
 import { useDateNavigation } from '@components/Bookings/date-navigation/date-navigation.hooks'
 import EditFormButtons from '@components/Bookings/shared/edit-form-buttons'
@@ -224,7 +225,7 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
         }
     }
 
-    const handleDeleteBooking = async () => {
+    const handleDeleteBooking = async (lostReason: PartyLostReason, confirmationResult?: string) => {
         setLoading(true)
         try {
             await deleteBookingMutation.mutateAsync({
@@ -232,6 +233,8 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                 eventId: booking.eventId!,
                 location: booking.location,
                 type: booking.type,
+                lostReason,
+                lostReasonOtherDetails: confirmationResult,
             })
             setLoading(false)
             setEditing(false)
@@ -946,7 +949,17 @@ const InnerExistingBookingForm: React.FC<ExistingBookingFormProps> = ({
                         dialogContent:
                             "This will also delete all invitations and RSVP's associated with this booking, and is irreversible. Are you sure you want to continue?",
                         confirmationButtonText: 'Delete',
-                        onConfirm: handleDeleteBooking,
+                        listItems: {
+                            items: PARTY_LOST_REASONS.map((reason) => ({ key: reason, value: reason })),
+                            title: 'Lost reason',
+                        },
+                        conditionalTextField: {
+                            triggerValue: 'Other',
+                            label: 'Other reason',
+                        },
+
+                        onConfirm: (lostReason, confirmationResult) =>
+                            handleDeleteBooking(lostReason as PartyLostReason, confirmationResult),
                     })
                 }}
                 onSave={handleSubmit}

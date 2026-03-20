@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query'
 import { Switch, Typography } from 'antd'
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
@@ -12,13 +12,12 @@ import type { WithErrorModal } from '@components/Hooks/UseErrorDialog'
 import { MixpanelEvents } from '@components/Mixpanel/Events'
 import { useTRPC } from '@utils/trpc'
 
-
 type Props = {
     appointment: AcuityTypes.Api.Appointment
 } & WithErrorModal
 
 const AppointmnetRow: React.FC<Props> = ({ appointment, showError }) => {
-    const trpc = useTRPC();
+    const trpc = useTRPC()
     const firebase = useFirebase()
     const mixpanel = useMixpanel()
 
