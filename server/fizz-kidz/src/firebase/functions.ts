@@ -17,4 +17,5 @@ export interface PubSubFunctions {
               form: 'onboarding'
               data: { formData: PaperFormResponse<OnboardingForm>; pdfUrl: string }
           }
+        | { name: 'cleanUpStaleInvitations' }
 }

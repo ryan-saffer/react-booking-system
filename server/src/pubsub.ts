@@ -2,6 +2,7 @@ import { assertNever, type PubSubFunctions } from 'fizz-kidz'
 
 import { sendIncursionForms } from './events/core/send-incursion-forms'
 import { handlePaperformSubmission } from './paperforms/functions/pubsub/paperform.pubsub'
+import { cleanUpStaleInvitations } from './party-bookings/core/rsvp/clean-up-stale-invitations'
 import { sendCakeForms } from './party-bookings/core/send-cake-form'
 import { sendGuestsEmail } from './party-bookings/core/send-guests-email'
 import { sendPartyFeedbackEmails } from './party-bookings/core/send-party-feedback-emails'
@@ -54,6 +55,10 @@ export const pubsub = onMessagePublished('background', async (input: PubSubFunct
         case 'paperformSubmission':
             // triggered by paperform webhook
             await handlePaperformSubmission(input)
+            break
+        case 'cleanUpStaleInvitations':
+            // 1st of each month at 3:00am
+            await cleanUpStaleInvitations()
             break
         default:
             assertNever(name)

@@ -7,7 +7,7 @@ import { DateTime } from 'luxon'
 import Mustache from 'mustache'
 import puppeteer from 'puppeteer'
 
-import { addOrdinalSuffix, getLocationAddress } from 'fizz-kidz'
+import { addOrdinalSuffix, getStudioAddress } from 'fizz-kidz'
 import type { GenerateInvitation, InvitationOption } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
@@ -15,6 +15,7 @@ import { FirestoreRefs } from '@/firebase/FirestoreRefs'
 import { StorageClient } from '@/firebase/StorageClient'
 import { projectId } from '@/init'
 import { MixpanelClient } from '@/mixpanel/mixpanel-client'
+import { isUsingEmulator } from '@/utilities'
 
 import type { Browser } from 'puppeteer'
 
@@ -26,7 +27,7 @@ export async function generateInvitation(input: GenerateInvitation) {
     let browser: Browser | null = null
 
     try {
-        if (process.env.FUNCTIONS_EMULATOR) {
+        if (isUsingEmulator()) {
             browser = await puppeteer.launch()
         } else {
             browser = await puppeteer.launch({
@@ -49,10 +50,10 @@ export async function generateInvitation(input: GenerateInvitation) {
             childAge: addOrdinalSuffix(input.childAge),
             date: DateTime.fromJSDate(input.date, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
             rsvpDate: DateTime.fromJSDate(input.rsvpDate, { zone: 'Australia/Melbourne' }).toFormat('dd/LL/yyyy'),
-            address: input.$type === 'studio' ? getLocationAddress(input.studio) : input.address,
+            address: input.$type === 'studio' ? getStudioAddress(input.studio) : input.address,
         })
 
-        if (!process.env.FUNCTIONS_EMULATOR) {
+        if (!isUsingEmulator()) {
             page.setViewport({
                 height: 1096,
                 width: 793,

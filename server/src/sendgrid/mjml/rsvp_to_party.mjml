@@ -1,0 +1,152 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Helvetica Neue', Arial, sans-serif" />
+            <mj-text font-size="15px" color="#475569" line-height="1.6" />
+            <mj-section padding="0px" />
+            <mj-column padding="0px" />
+        </mj-attributes>
+        <mj-style>
+            .pill { border-radius: 999px; padding: 8px 14px; font-size: 12px; font-weight: 700; } .card { border: 1px
+            solid #E2E8F0; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 25px rgba(83, 38, 129, 0.08); }
+            .list-row { border-bottom: 1px solid #E2E8F0; padding: 10px 0; } .list-row:last-child { border-bottom: none;
+            }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#F7F1FF" width="600px">
+        <mj-wrapper full-width="full-width" background-color="#F7F1FF">
+            <mj-section padding-top="24px" padding-bottom="0">
+                <mj-column width="100%" vertical-align="middle">
+                    <mj-image
+                        align="center"
+                        src="https://fizzkidz.com.au/images/logo-horizontal.png"
+                        alt="Fizz Kidz"
+                        width="140px"
+                        padding="0 0 12px 0"
+                    />
+                </mj-column>
+            </mj-section>
+
+            <mj-section css-class="card" padding="0 16px 24px 16px">
+                <mj-column width="100%">
+                    <mj-text
+                        align="center"
+                        color="#9B3EEA"
+                        font-size="13px"
+                        font-weight="700"
+                        text-transform="uppercase"
+                        letter-spacing="0.08em"
+                        padding-top="24px"
+                    >
+                        RSVP Confirmation
+                    </mj-text>
+                    <mj-text align="center" font-size="24px" font-weight="700" color="#0f172a" padding-bottom="12px">
+                        {{#attending}}Thanks for your RSVP! We can't wait to see you there.{{/attending}}
+                        {{^attending}}Thanks for your RSVP! We're sorry you're unable to make it.{{/attending}}
+                    </mj-text>
+                    <mj-text align="center" padding-bottom="10px">
+                        Below are the party details and your responses. If you need to update anything, please contact
+                        your party host.
+                    </mj-text>
+
+                    <mj-divider border-color="#E2E8F0" padding="12px 0" border-width="1px" />
+
+                    <mj-text font-weight="700" color="#0f172a" padding-bottom="8px" align="center"
+                        >Party Details</mj-text
+                    >
+                </mj-column>
+                <mj-column width="50%">
+                    <mj-text font-size="12px" text-transform="uppercase">
+                        <strong>Where</strong>
+                    </mj-text>
+                    <mj-text padding-top="0">
+                        {{^isMobile}} Fizz Kidz {{ studio }}
+                        <br />
+                        {{/isMobile}} {{ address }}
+                    </mj-text>
+                </mj-column>
+                <mj-column width="50%">
+                    <mj-text font-size="12px" text-transform="uppercase">
+                        <strong>When</strong>
+                    </mj-text>
+                    <mj-text padding-top="0">
+                        {{ date }}
+                        <br />
+                        {{ time }}
+                    </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-divider border-color="#E2E8F0" padding="16px 0 8px 0" border-width="1px" />
+                    <mj-text font-weight="700" color="#0f172a" padding-bottom="8px" align="center">Your RSVP</mj-text>
+                    <mj-text padding="2px 0 2px 24px"><strong>Parent:</strong> {{parentName}}</mj-text>
+
+                    <mj-table font-size="14px" color="#0f172a" cellpadding="0" cellspacing="0" width="100%">
+                        <tr style="border-bottom: 1px solid #e2e8f0">
+                            <th align="left" style="padding: 8px 4px; width: 26%">Child</th>
+                            <th align="left" style="padding: 8px 4px; width: 22%">RSVP</th>
+                            <th align="left" style="padding: 8px 4px; width: 52%">Allergies</th>
+                        </tr>
+                        {{#children}}
+                        <tr class="list-row">
+                            <td style="padding: 8px 4px; font-weight: 600; word-break: break-word">{{childName}}</td>
+                            <td style="padding: 8px 4px">
+                                {{#isAttending}}
+                                <span
+                                    style="
+                                        display: inline-block;
+                                        padding: 6px 12px;
+                                        border-radius: 999px;
+                                        background: #ecfdf3;
+                                        color: #15803d;
+                                        font-weight: 700;
+                                        white-space: nowrap;
+                                    "
+                                    >Attending</span
+                                >
+                                {{/isAttending}} {{^isAttending}}
+                                <span
+                                    style="
+                                        display: inline-block;
+                                        padding: 6px 12px;
+                                        border-radius: 999px;
+                                        background: #fef2f2;
+                                        color: #b91c1c;
+                                        font-weight: 700;
+                                        white-space: nowrap;
+                                    "
+                                    >Not attending</span
+                                >
+                                {{/isAttending}}
+                            </td>
+                            <td
+                                style="
+                                    padding: 8px 4px;
+                                    color: #475569;
+                                    word-break: break-word;
+                                    overflow-wrap: anywhere;
+                                "
+                            >
+                                {{#allergies}}{{allergies}}{{/allergies}}{{^allergies}}None{{/allergies}}
+                            </td>
+                        </tr>
+                        {{/children}}
+                    </mj-table>
+
+                    <mj-text
+                        >Please bear in mind that this information is for the host's planning. Fizz Kidz doesn't monitor
+                        these RSVPs - your host will handle any allergy arrangements directly.</mj-text
+                    >
+                    <mj-divider border-color="#E2E8F0" padding="16px 0 8px 0" border-width="1px" />
+
+                    <mj-text font-weight="700" color="#0f172a" padding="6px 24px">Need to make a change?</mj-text>
+                    <mj-text padding="0 24px">Reach out to your party host:</mj-text>
+                    <mj-text padding="0 24px">{{hostName}} - {{hostPhone}}</mj-text>
+
+                    <mj-text align="center" color="#9B3EEA" font-size="14px" font-weight="700" padding-top="24px">
+                        We're excited to celebrate soon!
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

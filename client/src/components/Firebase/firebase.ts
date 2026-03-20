@@ -1,13 +1,17 @@
 import { getApp, getApps, initializeApp } from 'firebase/app'
 import {
+    type AuthCredential,
     GoogleAuthProvider,
     type Auth,
     createUserWithEmailAndPassword,
     getAuth,
+    linkWithPopup,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
+    signInWithCredential as signInWithCredentialFn,
     signInWithPopup,
     signOut,
+    signInAnonymously,
 } from 'firebase/auth'
 import { type Firestore, getFirestore } from 'firebase/firestore'
 import { connectFunctionsEmulator, type Functions, getFunctions } from 'firebase/functions'
@@ -59,6 +63,13 @@ class Firebase {
         await signOut(this.auth)
         localStorage.removeItem('authUser')
     }
+
+    signInAnonymously = () => signInAnonymously(this.auth)
+
+    linkWithGoogle = () =>
+        this.auth.currentUser ? linkWithPopup(this.auth.currentUser, this.googleProvider) : undefined
+
+    signInWithCredential = (credential: AuthCredential) => signInWithCredentialFn(this.auth, credential)
 
     resetPassword = (email: string) => sendPasswordResetEmail(this.auth, email)
 }

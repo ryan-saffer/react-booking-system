@@ -1,0 +1,127 @@
+<mjml>
+    <mj-head>
+        <mj-attributes>
+            <mj-all font-family="'Helvetica Neue', Arial, sans-serif" />
+            <mj-text font-size="15px" color="#475569" line-height="1.6" />
+            <mj-section padding="0px" />
+            <mj-column padding="0px" />
+        </mj-attributes>
+        <mj-style>
+            .list-row { border-bottom: 1px solid #E2E8F0; padding: 10px 0; } .list-row:last-child { border-bottom: none;
+            }
+        </mj-style>
+    </mj-head>
+    <mj-body background-color="#F7F1FF" width="600px">
+        <mj-wrapper full-width="full-width" background-color="#F7F1FF">
+            <mj-section padding="20px 12px 0 12px">
+                <mj-column width="100%" vertical-align="middle">
+                    <mj-image
+                        align="center"
+                        src="https://fizzkidz.com.au/images/logo-horizontal.png"
+                        alt="Fizz Kidz"
+                        width="140px"
+                        padding="0 0 12px 0"
+                    />
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding="0 12px 24px 12px">
+                <mj-column
+                    padding="20px"
+                    border="1px solid #E2E8F0"
+                    border-radius="20px"
+                    background-color="#ffffff"
+                    css-class="card"
+                >
+                    <mj-text
+                        align="center"
+                        color="#9B3EEA"
+                        font-size="13px"
+                        font-weight="700"
+                        text-transform="uppercase"
+                        letter-spacing="0.08em"
+                    >
+                        New RSVP Received
+                    </mj-text>
+                    <mj-text align="center" font-size="22px" font-weight="700" color="#0f172a" padding-bottom="12px">
+                        {{parentName}} just replied for {{childrenNames}}
+                    </mj-text>
+                    <mj-text align="center" padding-bottom="10px">
+                        Here's the latest update for {{birthdayChildName}}'s party. If you need to adjust their RSVP,
+                        you can
+                        <a href="{{invitationUrl}}">manage it here.</a>
+                    </mj-text>
+
+                    <mj-divider border-color="#E2E8F0" padding="12px 0" border-width="1px" />
+
+                    <mj-text font-weight="700" color="#0f172a" padding="0 0 8px 24px">Guest Responses</mj-text>
+                    <mj-table font-size="14px" color="#0f172a" cellpadding="0" cellspacing="0" width="100%">
+                        <tr style="border-bottom: 1px solid #e2e8f0">
+                            <th align="left" style="padding: 8px 4px; width: 26%">Child</th>
+                            <th align="left" style="padding: 8px 4px; width: 22%">RSVP</th>
+                            <th align="left" style="padding: 8px 4px; width: 52%">Allergies / Notes</th>
+                        </tr>
+                        {{#children}}
+                        <tr class="list-row">
+                            <td style="padding: 8px 4px; font-weight: 600; word-break: break-word">{{childName}}</td>
+                            <td style="padding: 8px 4px">
+                                {{#isAttending}}
+                                <span
+                                    style="
+                                        display: inline-block;
+                                        padding: 6px 12px;
+                                        border-radius: 999px;
+                                        background: #ecfdf3;
+                                        color: #15803d;
+                                        font-weight: 700;
+                                        white-space: nowrap;
+                                    "
+                                    >Attending</span
+                                >
+                                {{/isAttending}} {{^isAttending}}
+                                <span
+                                    style="
+                                        display: inline-block;
+                                        padding: 6px 12px;
+                                        border-radius: 999px;
+                                        background: #fef2f2;
+                                        color: #b91c1c;
+                                        font-weight: 700;
+                                        white-space: nowrap;
+                                    "
+                                    >Not attending</span
+                                >
+                                {{/isAttending}}
+                            </td>
+                            <td
+                                style="
+                                    padding: 8px 4px;
+                                    color: #475569;
+                                    word-break: break-word;
+                                    overflow-wrap: anywhere;
+                                "
+                            >
+                                {{#allergies}}{{allergies}}{{/allergies}}{{^allergies}}None{{/allergies}}
+                            </td>
+                        </tr>
+                        {{/children}}
+                    </mj-table>
+
+                    <mj-text padding="0 0 12px 0px" align="center"
+                        ><a href="{{ invitationUrl }}">Click to view and manage all RSVP's.</a></mj-text
+                    >
+                    <mj-text align="center" color="#9B3EEA" font-size="12px" font-weight="700" padding-top="6px">
+                        We'll keep you updated as guests reply.<br />
+                        You can adjust this setting on the RSVP management page.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <mj-section padding="0 0 24px 0">
+                <mj-column>
+                    <mj-spacer height="8px" />
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+    </mj-body>
+</mjml>

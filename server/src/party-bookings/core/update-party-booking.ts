@@ -4,19 +4,20 @@ import type { Booking } from 'fizz-kidz'
 import {
     capitalise,
     getApplicationDomain,
-    getLocationAddress,
+    getStudioAddress,
     getManager,
     getNumberOfKidsAllowed,
     getPartyCreationCount,
     getPartyEndDate,
     getPictureOfStudioUrl,
+    getRsvpUrl,
 } from 'fizz-kidz'
 
 import { DatabaseClient } from '@/firebase/DatabaseClient'
 import { CalendarClient } from '@/google/CalendarClient'
 import { env } from '@/init'
 import { MailClient } from '@/sendgrid/MailClient'
-import { logError, throwTrpcError } from '@/utilities'
+import { isUsingEmulator, logError, throwTrpcError } from '@/utilities'
 import { ZohoClient } from '@/zoho/zoho-client'
 
 import { getCakeFormUrl } from './utils.party'
@@ -40,7 +41,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             { eventType: 'party-bookings', type: booking.type, location: booking.location },
             {
                 title: `${booking.parentFirstName} / ${booking.childName} ${booking.childAge}th ${booking.parentMobile}`,
-                location: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                location: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                 start: booking.dateTime,
                 end: getPartyEndDate(booking.dateTime, booking.partyLength),
             }
@@ -82,7 +83,10 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
         ]
 
-        const invitationsUrl = `${getApplicationDomain(env)}/invitations?${params.join('&')}`
+        const invitationsUrl = booking.useRsvpSystem
+            ? getRsvpUrl(env, isUsingEmulator(), bookingId)
+            : `${getApplicationDomain(env, isUsingEmulator())}/invitations?${params.join('&')}`
+
         await mailClient
             .sendEmail(
                 'partyBookingConfirmation',
@@ -102,7 +106,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString(DateTime.TIME_SIMPLE),
-                    address: booking.type === 'mobile' ? booking.address : getLocationAddress(booking.location),
+                    address: booking.type === 'mobile' ? booking.address : getStudioAddress(booking.location),
                     location: capitalise(booking.location),
                     isMobile: booking.type === 'mobile',
                     creationCount: getPartyCreationCount(booking.type, booking.partyLength),
@@ -117,6 +121,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
                     cakeFormUrl: getCakeFormUrl(bookingId),
+                    useRsvpSystem: booking.useRsvpSystem || false,
                 },
                 {
                     subject: 'Your party booking has been updated',

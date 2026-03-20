@@ -24,7 +24,7 @@ import { PaperformClient, type PaperformSubmission } from '@/paperforms/core/pap
 import { handlePartyFormSubmission } from '@/party-bookings/core/handle-party-form-submission'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
-import { logError } from '@/utilities'
+import { isUsingEmulator, logError } from '@/utilities'
 
 import type { InventoryChange } from 'square/api'
 
@@ -105,13 +105,13 @@ partyFormRedirect.get('/party-form/payment-link', async (req, res) => {
     const takeHomeBags = responses.getFieldValue('take_home_bags')
     const products = responses.getFieldValue('products')
 
-    const host = getCloudFunctionsDomain(env, process.env.FUNCTIONS_EMULATOR === 'true')
+    const host = getCloudFunctionsDomain(env, isUsingEmulator())
 
     const orderedCake = cake !== 'I will bring my own cake'
 
     if (!orderedCake && takeHomeBags.length === 0 && products.length === 0) {
         // should not be in checkout flow. redirect to form-complete.
-        res.redirect(303, `${host}/api/api/webhooks/party-form/form-complete?submissionId=${submissionId}`)
+        res.redirect(303, `${host}/webhooks/party-form/form-complete?submissionId=${submissionId}`)
         return
     }
 

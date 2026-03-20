@@ -10,7 +10,7 @@ import type { TakeHomeBagType } from './take-home-bags'
 
 type AdditionKeyValues = Record<Addition, boolean>
 
-export interface BaseBooking extends AdditionKeyValues {
+export type BaseBooking = AdditionKeyValues & {
     eventId?: string
     parentFirstName: string
     parentLastName: string
@@ -52,21 +52,31 @@ export interface BaseBooking extends AdditionKeyValues {
     }
     takeHomeBags?: Partial<Record<TakeHomeBagType, number>>
     products?: Partial<Record<ProductType, number>>
-}
+    useRsvpSystem: boolean | undefined
+} & (
+        | {
+              invitationId: undefined
+              invitationOwnerUid: undefined // needed for security rules on the rsvps collection
+          }
+        | {
+              invitationId: string
+              invitationOwnerUid: string
+          }
+    )
 
 // separates date and time into separate values, for better use in forms
-export interface FormBooking extends BaseBooking {
+export type FormBooking = BaseBooking & {
     date: Date
     time: Date
 }
 
 // combines dateTime into single date
-export interface Booking extends BaseBooking {
+export type Booking = BaseBooking & {
     dateTime: Date
 }
 
 // used when retrieving from firestore, where dateTime is a firestore Timestamp
-export interface FirestoreBooking extends BaseBooking {
+export type FirestoreBooking = BaseBooking & {
     dateTime: firestore.Timestamp
 }
 
@@ -123,6 +133,9 @@ export const FormBookingFields: FormBookingKeys = {
     unicornFizzPartyPack: 'unicornFizzPartyPack',
     takeHomeBags: 'takeHomeBags',
     products: 'products',
+    useRsvpSystem: 'useRsvpSystem',
+    invitationId: 'invitationId',
+    invitationOwnerUid: 'invitationOwnerUid',
 }
 
 type BookingKeys = { [K in keyof FirestoreBooking]: K }
@@ -177,6 +190,9 @@ export const BookingFields: BookingKeys = {
     unicornFizzPartyPack: 'unicornFizzPartyPack',
     takeHomeBags: 'takeHomeBags',
     products: 'products',
+    useRsvpSystem: 'useRsvpSystem',
+    invitationId: 'invitationId',
+    invitationOwnerUid: 'invitationOwnerUid',
 }
 
 export const PARTY_LOST_REASONS = [
