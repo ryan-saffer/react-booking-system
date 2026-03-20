@@ -154,7 +154,7 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
                     managerSubjectPronoun: capitalise(manager.subjectPronoun),
                     numberOfKidsAllowed: getNumberOfKidsAllowed(booking.location),
                     studioPhotoUrl: getPictureOfStudioUrl(booking.location),
-                    useRsvpSystem,
+                    useRsvpSystem: booking.useRsvpSystem || false,
                     invitationsUrl,
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
@@ -177,6 +177,6 @@ export async function createPartyBooking(_booking: CreatePartyBooking) {
         type: booking.type,
         childAge: booking.childAge,
         date: booking.dateTime.toDate().toISOString(),
-        useRsvpSystem,
+        useRsvpSystem: booking.useRsvpSystem || false,
     })
 }

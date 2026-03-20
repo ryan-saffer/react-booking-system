@@ -52,14 +52,13 @@ export type BaseBooking = AdditionKeyValues & {
     }
     takeHomeBags?: Partial<Record<TakeHomeBagType, number>>
     products?: Partial<Record<ProductType, number>>
+    useRsvpSystem: boolean | undefined
 } & (
         | {
-              useRsvpSystem: false
               invitationId: undefined
               invitationOwnerUid: undefined // needed for security rules on the rsvps collection
           }
         | {
-              useRsvpSystem: true
               invitationId: string
               invitationOwnerUid: string
           }

@@ -121,7 +121,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     includesFood: booking.includesFood,
                     canOrderCake: booking.type === 'studio',
                     cakeFormUrl: getCakeFormUrl(bookingId),
-                    useRsvpSystem: booking.useRsvpSystem,
+                    useRsvpSystem: booking.useRsvpSystem || false,
                 },
                 {
                     subject: 'Your party booking has been updated',
