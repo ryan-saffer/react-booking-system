@@ -22,7 +22,7 @@
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
-                    Party Enquiry recieved!
+                    Party Enquiry received!
                 </mj-text>
             </mj-column>
         </mj-section>

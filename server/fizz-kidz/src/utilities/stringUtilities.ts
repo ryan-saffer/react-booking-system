@@ -23,3 +23,19 @@ export function addOrdinalSuffix(input: string) {
     const suffix = suffixes[lastDigit] || suffixes[0]
     return `${input}${suffix}`
 }
+
+export function combineStrings(inputs: string[]) {
+    if (inputs.length === 0) {
+        return ''
+    }
+
+    if (inputs.length === 1) {
+        return inputs[0]
+    }
+
+    if (inputs.length === 2) {
+        return `${inputs[0]} & ${inputs[1]}`
+    }
+
+    return `${inputs.slice(0, -1).join(', ')} & ${inputs[inputs.length - 1]}`
+}

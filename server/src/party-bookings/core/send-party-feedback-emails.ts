@@ -30,11 +30,16 @@ export async function sendPartyFeedbackEmails() {
                 dateTime: firestoreBooking.dateTime.toDate(),
             } satisfies Booking
 
-            return mailClient.sendEmail('partyFeedback', booking.parentEmail, {
-                parentName: booking.parentFirstName,
-                childName: booking.childName,
-                reviewUrl: getReviewUrl(booking.location),
-            })
+            return mailClient.sendEmail(
+                'partyFeedback',
+                booking.parentEmail,
+                {
+                    parentName: booking.parentFirstName,
+                    childName: booking.childName,
+                    reviewUrl: getReviewUrl(booking.location),
+                },
+                { subject: `Did ${booking.childName} have fun yesterday? 🎉` }
+            )
         })
     )
 

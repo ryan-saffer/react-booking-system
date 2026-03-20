@@ -1,4 +1,4 @@
-import type { Booking, GenerateInvitation, Studio } from 'fizz-kidz'
+import type { Booking, GenerateInvitation, PartyLostReason, Studio } from 'fizz-kidz'
 
 import { createPartyBooking } from '@/party-bookings/core/create-party-booking'
 import { deletePartyBooking } from '@/party-bookings/core/delete-party-booking'
@@ -9,7 +9,14 @@ import { router, authenticatedProcedure, publicProcedure } from '@/trpc/trpc'
 
 export type CreatePartyBooking = Booking
 export type UpdatePartyBooking = { bookingId: string; booking: Booking }
-export type DeletePartyBooking = { bookingId: string; eventId: string; location: Studio; type: Booking['type'] }
+export type DeletePartyBooking = {
+    bookingId: string
+    eventId: string
+    location: Studio
+    type: Booking['type']
+    lostReason: PartyLostReason
+    lostReasonOtherDetails: string | undefined
+}
 
 export const partiesRouter = router({
     createPartyBooking: authenticatedProcedure

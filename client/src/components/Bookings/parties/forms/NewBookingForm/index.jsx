@@ -3,6 +3,7 @@ import 'typeface-roboto'
 import CheckIcon from '@mui/icons-material/Check'
 import SaveIcon from '@mui/icons-material/Save'
 import {
+    Button,
     Checkbox,
     CircularProgress,
     Fab,
@@ -23,7 +24,7 @@ import { useMutation } from '@tanstack/react-query'
 import { DateTime } from 'luxon'
 import { useState } from 'react'
 
-import { FormBookingFields, STUDIOS } from 'fizz-kidz'
+import { FormBookingFields, STUDIOS, combineStrings } from 'fizz-kidz'
 
 import WithErrorDialog from '@components/Dialogs/ErrorDialog'
 import { capitalise } from '@utils/stringUtilities'
@@ -35,6 +36,9 @@ const PREFIX = 'index'
 
 const classes = {
     confirmationEmailCheckbox: `${PREFIX}-confirmationEmailCheckbox`,
+    childActions: `${PREFIX}-childActions`,
+    childSection: `${PREFIX}-childSection`,
+    childSectionHeader: `${PREFIX}-childSectionHeader`,
     saveButtonDiv: `${PREFIX}-saveButtonDiv`,
     saveButton: `${PREFIX}-saveButton`,
     progress: `${PREFIX}-progress`,
@@ -44,6 +48,25 @@ const classes = {
 const Root = styled('div')(({ theme }) => ({
     [`& .${classes.confirmationEmailCheckbox}`]: {
         float: 'right',
+    },
+
+    [`& .${classes.childActions}`]: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+    },
+
+    [`& .${classes.childSection}`]: {
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: theme.shape.borderRadius,
+        padding: theme.spacing(2),
+    },
+
+    [`& .${classes.childSectionHeader}`]: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
 
     [`& .${classes.saveButtonDiv}`]: {
@@ -164,6 +187,105 @@ const getEmptyValues = () => ({
 
 const VALID_BOOKING_TYPES = ['studio', 'mobile']
 
+let childId = 0
+
+const createEmptyChild = () => ({
+    id: `child-${childId++}`,
+    name: '',
+    age: '',
+    birthday: null,
+    errors: {
+        name: false,
+        age: false,
+        birthday: false,
+    },
+})
+
+const validateChildField = (field, value) => {
+    if (field === 'birthday') {
+        return value === null
+    }
+
+    return value.trim() === ''
+}
+
+const validateChildrenOnSubmit = (children) => {
+    let hasErrors = false
+
+    const validatedChildren = children.map((child) => {
+        const errors = {
+            name: validateChildField('name', child.name),
+            age: validateChildField('age', child.age),
+            birthday: validateChildField('birthday', child.birthday),
+        }
+
+        if (errors.name || errors.age || errors.birthday) {
+            hasErrors = true
+        }
+
+        return {
+            ...child,
+            errors,
+        }
+    })
+
+    return { children: validatedChildren, hasErrors }
+}
+
+const childrenHaveErrors = (children) =>
+    children.some((child) => child.errors.name || child.errors.age || child.errors.birthday)
+
+const getAgeFromBirthday = (birthday) => {
+    if (!birthday) {
+        return ''
+    }
+
+    const today = DateTime.now().setZone('Australia/Melbourne').startOf('day')
+    const birthdayDate = DateTime.fromJSDate(birthday, { zone: 'Australia/Melbourne' }).startOf('day')
+
+    if (birthdayDate > today) {
+        return ''
+    }
+
+    let age = today.year - birthdayDate.year
+
+    if (today < birthdayDate.plus({ years: age })) {
+        age -= 1
+    }
+
+    return `${age + 1}`
+}
+
+const syncLegacyChildFields = (formValues, children) => {
+    const firstChild = children[0]
+
+    return {
+        ...formValues,
+        childName: {
+            ...formValues.childName,
+            value: firstChild?.name || '',
+            error: false,
+        },
+        childAge: {
+            ...formValues.childAge,
+            value: firstChild?.age || '',
+            error: false,
+        },
+        childBirthday: {
+            ...formValues.childBirthday,
+            value: firstChild?.birthday || null,
+            error: false,
+        },
+    }
+}
+
+const mapChildrenToBooking = (children) =>
+    children.map((child) => ({
+        name: child.name.trim(),
+        age: child.age.trim(),
+        birthday: toMelbourneISODate(child.birthday),
+    }))
+
 const mapUrlTypeToBookingType = (type) => {
     const normalizedType = type?.trim()?.toLowerCase()
     if (!normalizedType) {
@@ -262,11 +384,13 @@ const toMelbourneISODate = (date) => {
  * @param {object} formValues - the form values as an object
  * @return {object} the booking ready to be written to firestore
  */
-const mapFormToBooking = (formValues) => {
+const mapFormToBooking = (formValues, children) => {
     var booking = {}
     for (let field in formValues) {
         booking[field] = formValues[field].value
     }
+
+    const mappedChildren = mapChildrenToBooking(children)
 
     // trim fields
     booking[FormBookingFields.parentFirstName] = booking[FormBookingFields.parentFirstName].trim()
@@ -274,14 +398,12 @@ const mapFormToBooking = (formValues) => {
     booking[FormBookingFields.parentEmail] = booking[FormBookingFields.parentEmail].trim()
     booking[FormBookingFields.parentMobile] = booking[FormBookingFields.parentMobile].trim()
     booking.zohoDealId = booking.zohoDealId.trim()
-    booking[FormBookingFields.childName] = booking[FormBookingFields.childName].trim()
-    booking[FormBookingFields.childAge] = booking[FormBookingFields.childAge].trim()
+    booking.children = mappedChildren
+    booking.numberOfChildren = `${mappedChildren.length}`
 
-    if (booking.childBirthday) {
-        booking.childBirthday = toMelbourneISODate(booking.childBirthday)
-    } else {
-        delete booking.childBirthday
-    }
+    // child name and age are derived from the children
+    booking[FormBookingFields.childName] = combineStrings(mappedChildren.map((child) => child.name))
+    booking[FormBookingFields.childAge] = combineStrings(mappedChildren.map((child) => child.age))
 
     // make sure 'includesFood' is set as a boolean (for mobile parties its value is '' at this point)
     booking[FormBookingFields.includesFood] = !!booking[FormBookingFields.includesFood]
@@ -309,11 +431,59 @@ const mapFormToBooking = (formValues) => {
 const InnerNewBookingForm = (props) => {
     const trpc = useTRPC()
     const [formValues, setFormValues] = useState(getInitialValues)
+    const [children, setChildren] = useState(() => [createEmptyChild()])
     const [valid, setValid] = useState(true)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
 
     const createBookingMutation = useMutation(trpc.parties.createPartyBooking.mutationOptions())
+
+    const updateValidity = (nextFormValues, nextChildren) => {
+        setValid(!errorFound(nextFormValues) && !childrenHaveErrors(nextChildren))
+    }
+
+    const handleChildChange = (index, field, value) => {
+        const nextChildren = children.map((child, childIndex) => {
+            if (childIndex !== index) {
+                return child
+            }
+
+            const nextAge = field === 'birthday' ? getAgeFromBirthday(value) : child.age
+
+            return {
+                ...child,
+                [field]: value,
+                ...(field === 'birthday' ? { age: nextAge } : {}),
+                errors: {
+                    ...child.errors,
+                    ...(field === 'birthday' ? { age: validateChildField('age', nextAge) } : {}),
+                    [field]: validateChildField(field, value),
+                },
+            }
+        })
+
+        const nextFormValues = syncLegacyChildFields(formValues, nextChildren)
+
+        setChildren(nextChildren)
+        setFormValues(nextFormValues)
+        updateValidity(nextFormValues, nextChildren)
+    }
+
+    const addChild = () => {
+        const nextChildren = [...children, createEmptyChild()]
+        const nextFormValues = syncLegacyChildFields(formValues, nextChildren)
+        setChildren(nextChildren)
+        setFormValues(nextFormValues)
+        updateValidity(nextFormValues, nextChildren)
+    }
+
+    const removeChild = (index) => {
+        const nextChildren = children.filter((_, childIndex) => childIndex !== index)
+        const nextFormValues = syncLegacyChildFields(formValues, nextChildren)
+        setChildren(nextChildren)
+        setFormValues(nextFormValues)
+        updateValidity(nextFormValues, nextChildren)
+    }
 
     const handleFormChange = (e, id) => {
         const isPickerField = typeof id === 'string'
@@ -339,23 +509,29 @@ const InnerNewBookingForm = (props) => {
             tmpValues.includesFood.error = false
         }
 
-        setValid(!errorFound(tmpValues))
+        updateValidity(tmpValues, children)
         setFormValues(tmpValues)
     }
 
     const handleSubmit = async () => {
-        var tmpFormValues = { ...formValues }
+        var tmpFormValues = syncLegacyChildFields(formValues, children)
+        const validatedChildren = validateChildrenOnSubmit(children)
         tmpFormValues = validateFormOnSubmit(tmpFormValues)
+
+        setChildren(validatedChildren.children)
+
         // if there is an error (fields are empty), update the values and return
-        if (tmpFormValues) {
+        if (tmpFormValues || validatedChildren.hasErrors) {
             setValid(false)
-            setFormValues(tmpFormValues)
+            if (tmpFormValues) {
+                setFormValues(tmpFormValues)
+            }
             return
         }
 
         // everything looks good, lets write to firebase and create calendar/send confirmation email
         setLoading(true)
-        var booking = mapFormToBooking(formValues)
+        var booking = mapFormToBooking(formValues, children)
 
         try {
             await createBookingMutation.mutateAsync(booking)
@@ -448,49 +624,77 @@ const InnerNewBookingForm = (props) => {
                 <Grid item xs={12}>
                     <Typography variant="h6">Child Details</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        id="childName"
-                        name="childName"
-                        label="Child name"
-                        fullWidth
-                        variant="outlined"
-                        value={formValues.childName.value}
-                        error={formValues.childName.error}
-                        helperText={formValues.childName.error ? formValues.childName.errorText : ''}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        id="childAge"
-                        name="childAge"
-                        label="Child age"
-                        fullWidth
-                        variant="outlined"
-                        value={formValues.childAge.value}
-                        error={formValues.childAge.error}
-                        helperText={formValues.childAge.error ? formValues.childAge.errorText : ''}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <DatePicker
-                        label="Child birthday (optional)"
-                        orientation="portrait"
-                        value={
-                            formValues.childBirthday.value ? DateTime.fromJSDate(formValues.childBirthday.value) : null
-                        }
-                        onChange={(e) => handleFormChange(e, 'childBirthday')}
-                        format="dd/LL/yyyy"
-                        slotProps={{
-                            textField: {
-                                error: formValues.childBirthday.error,
-                                helperText: formValues.childBirthday.error ? formValues.childBirthday.errorText : '',
-                                fullWidth: true,
-                            },
-                        }}
-                    />
+                {children.map((child, index) => (
+                    <Grid item xs={12} key={child.id}>
+                        <div className={classes.childSection}>
+                            <div className={classes.childSectionHeader}>
+                                <Typography variant="subtitle1">Child {index + 1}</Typography>
+                                {children.length > 1 && (
+                                    <Button color="secondary" type="button" onClick={() => removeChild(index)}>
+                                        Remove child
+                                    </Button>
+                                )}
+                            </div>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id={`childName-${child.id}`}
+                                        label="Child name"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={child.name}
+                                        error={child.errors.name}
+                                        helperText={child.errors.name ? 'Child name cannot be empty' : ''}
+                                        onChange={(e) => handleChildChange(index, 'name', e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <DatePicker
+                                        label="Child birthday"
+                                        orientation="portrait"
+                                        maxDate={DateTime.now().setZone('Australia/Melbourne')}
+                                        value={child.birthday ? DateTime.fromJSDate(child.birthday) : null}
+                                        onChange={(value) =>
+                                            handleChildChange(index, 'birthday', value ? value.toJSDate() : null)
+                                        }
+                                        format="dd/LL/yyyy"
+                                        slotProps={{
+                                            textField: {
+                                                error: child.errors.birthday,
+                                                helperText: child.errors.birthday
+                                                    ? 'Child birthday cannot be empty'
+                                                    : '',
+                                                fullWidth: true,
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id={`childAge-${child.id}`}
+                                        label="Child age"
+                                        fullWidth
+                                        variant="outlined"
+                                        value={child.age}
+                                        error={child.errors.age}
+                                        helperText={
+                                            child.errors.age
+                                                ? 'Child age cannot be empty'
+                                                : 'Make sure this is how old the child will be turning'
+                                        }
+                                        onChange={(e) => handleChildChange(index, 'age', e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </div>
+                    </Grid>
+                ))}
+                <Grid item xs={12}>
+                    <div className={classes.childActions}>
+                        <Button variant="outlined" color="secondary" type="button" onClick={addChild}>
+                            Add another child
+                        </Button>
+                    </div>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant="h6">Date, Time & Location</Typography>

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 
-import type { Booking, Studio, StudioOrTest } from 'fizz-kidz'
+import type { Booking, PartyLostReason, Studio, StudioOrTest } from 'fizz-kidz'
 import { capitalise, getApplicationDomain } from 'fizz-kidz'
 
 import { env } from '@/init'
@@ -186,12 +186,7 @@ export class ZohoClient {
      * Creates a child in Zoho, combining the parent zoho record id and the childs DOB as a unique key.
      * This key is then used as an upsert check to determine whether to link to an existing child or create a new one.
      **/
-    async #upsertChild(props: {
-        childName: string
-        parentContactId: string
-        childBirthdayISO?: string
-        partyDateISO?: string
-    }) {
+    async #upsertChild(props: { childName: string; parentContactId: string; childBirthdayISO?: string }) {
         const result = await this.#request({
             method: 'POST',
             endpoint: `${CHILD_MODULE_NAME}/upsert`,
@@ -199,7 +194,6 @@ export class ZohoClient {
                 {
                     Name: props.childName,
                     Child_Birthday: props.childBirthdayISO,
-                    Party_Date: props.partyDateISO || '',
                     Parent: {
                         id: props.parentContactId,
                     },
@@ -516,8 +510,7 @@ export class ZohoClient {
         type,
         studio,
         address,
-        childName,
-        childBirthdayISO,
+        children,
         partyDateISO,
         bookingId,
     }: {
@@ -527,17 +520,15 @@ export class ZohoClient {
         type: Booking['type'] | 'other'
         studio: Studio
         address: string
-        childName: string
-        childBirthdayISO?: string
+        children: Booking['children']
         partyDateISO: string
         bookingId: string
     }) {
-        const childId = await this.#upsertChild({
-            parentContactId,
-            childName,
-            childBirthdayISO: childBirthdayISO,
-            partyDateISO: DateTime.fromISO(partyDateISO).toFormat('yyyy-MM-dd'),
-        })
+        const childIds = await Promise.all(
+            children!.map((child) =>
+                this.#upsertChild({ parentContactId, childName: child.name, childBirthdayISO: child.birthday })
+            )
+        )
 
         const result = await this.#request({
             endpoint: 'Deals/upsert',
@@ -556,9 +547,9 @@ export class ZohoClient {
                     Party_Type: type === 'studio' ? 'Fizz Kidz Studio' : type === 'mobile' ? 'At-Home' : 'Other',
                     Branch: capitalise(studio),
                     Address: address,
-                    Child: {
-                        id: childId,
-                    },
+                    Children: childIds.map((childId) => ({
+                        Children: { id: childId },
+                    })),
                     Actual_Party_Date: DateTime.fromISO(partyDateISO, { zone: 'Australia/Melbourne' }).toISO({
                         suppressMilliseconds: true,
                         includeOffset: true,
@@ -567,6 +558,7 @@ export class ZohoClient {
                     Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
                 },
             ],
+            duplicate_check_fields: ['Booking_ID'],
         })
 
         if (result?.data?.[0]?.code === 'SUCCESS') {
@@ -592,7 +584,7 @@ export class ZohoClient {
         })
     }
 
-    markPartyDealClosedLost(zohoDealId: string) {
+    markPartyDealClosedLost(zohoDealId: string, lostReason: PartyLostReason, lostReasonOther: string | undefined) {
         return this.#request({
             endpoint: 'Deals',
             method: 'PUT',
@@ -601,6 +593,8 @@ export class ZohoClient {
                     id: zohoDealId,
                     Stage: 'Lost Booking',
                     Stage_Entry_Date: DateTime.now().setZone('Australia/Melbourne').toISODate(),
+                    Reason_For_Loss__s: lostReason,
+                    Other_Reason: lostReasonOther,
                 },
             ],
         })
