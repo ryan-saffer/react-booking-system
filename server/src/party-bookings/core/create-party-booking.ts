@@ -78,8 +78,7 @@ export async function createPartyBooking(_booking: Booking) {
             address: booking.type === 'mobile' ? booking.address : '',
             studio: booking.location,
             type: booking.type,
-            childName: booking.childName,
-            childBirthdayISO: booking.childBirthday,
+            children: booking.children!,
         })
 
         // if there wasn't an existing deal in zoho when the booking was created, write the id back into the database
@@ -124,6 +123,8 @@ export async function createPartyBooking(_booking: Booking) {
                 'partyBookingConfirmation',
                 booking.parentEmail,
                 {
+                    header: `${booking.childName}'s party is booked in!`,
+                    openingLine: `We're delighted to confirm <strong>${booking.childName}'s ${booking.childAge}th Birthday Party at Fizz Kidz!</strong> We're so excited to celebrate with you.`,
                     parentName: booking.parentFirstName,
                     childName: booking.childName,
                     childAge: booking.childAge,

@@ -1,5 +1,4 @@
-
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -23,14 +22,25 @@ interface ShowDialogParams {
     dialogContent: string
     confirmationButtonText: string
     listItems?: ListItems
+    conditionalTextField?: ConditionalTextField
     onConfirm: ConfirmationCallback
 }
 
-type ConfirmationCallback = (selectedListItem: string) => void
+export interface ConfirmationResult {
+    selectedListItem: string
+    conditionalTextValue?: string
+}
+
+type ConfirmationCallback = (selectedListItem: string, confirmationResult?: string) => void
 
 export interface ListItems {
     title: string
     items: Array<{ key: string; value: string }>
+}
+
+interface ConditionalTextField {
+    triggerValue: string
+    label: string
 }
 
 // see https://stackoverflow.com/a/51084259
@@ -42,14 +52,20 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
         const [title, setTitle] = useState('')
         const [content, setContent] = useState('')
         const [listItems, setListItems] = useState<ListItems | null>(null)
+        const [conditionalTextField, setConditionalTextField] = useState<ConditionalTextField | null>(null)
         const [formError, setFormError] = useState(false)
         const [selectedListItem, setSelectedListItem] = useState('')
+        const [conditionalTextValue, setConditionalTextValue] = useState('')
+        const [conditionalTextError, setConditionalTextError] = useState(false)
         const [confirmButton, setConfirmButton] = useState('')
         const [confirmCallback, setConfirmCallback] = useState<ConfirmationCallback>(() => {})
 
         const reset = () => {
             setListItems(null)
+            setConditionalTextField(null)
             setSelectedListItem('')
+            setConditionalTextValue('')
+            setConditionalTextError(false)
             setFormError(false)
             setConfirmButton('')
             setConfirmCallback(() => {})
@@ -61,22 +77,37 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
             setConfirmButton(params.confirmationButtonText)
             setConfirmCallback(() => params.onConfirm)
             setSelectedListItem('')
+            setConditionalTextValue('')
+            setConditionalTextError(false)
             setFormError(false)
             setOpen(true)
             setListItems(params.listItems ?? null)
+            setConditionalTextField(params.conditionalTextField ?? null)
         }
 
         const handleListItemChange = (event: SelectChangeEvent<string>) => {
             setSelectedListItem(event.target.value)
             setFormError(false)
+            setConditionalTextValue('')
+            setConditionalTextError(false)
+        }
+
+        const handleConditionalTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+            setConditionalTextValue(event.target.value)
+            setConditionalTextError(false)
         }
 
         const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
+            const requiresConditionalText =
+                conditionalTextField !== null && selectedListItem === conditionalTextField.triggerValue
+
             if (listItems && !selectedListItem) {
                 setFormError(true)
+            } else if (requiresConditionalText && !conditionalTextValue.trim()) {
+                setConditionalTextError(true)
             } else {
-                confirmCallback(selectedListItem) // if listItems not provided, selectedListItem will be null here - but thats okay
+                confirmCallback(selectedListItem, requiresConditionalText ? conditionalTextValue.trim() : undefined)
                 setOpen(false)
                 reset()
             }
@@ -95,20 +126,35 @@ const WithConfirmationDialog = <P extends ConfirmationDialogProps>(
                     <DialogContent>
                         <DialogContentText>{content}</DialogContentText>
                         {listItems && (
-                            <FormControl className="mt-4 w-full" error={formError}>
-                                <InputLabel>{listItems.title}</InputLabel>
-                                <Select
-                                    value={selectedListItem}
-                                    onChange={handleListItemChange}
-                                    label={listItems.title}
-                                >
-                                    {listItems.items.map((item) => (
-                                        <MenuItem key={item.key} value={item.key}>
-                                            {item.value}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                            <>
+                                <FormControl className="mt-4 w-full" error={formError}>
+                                    <InputLabel>{listItems.title}</InputLabel>
+                                    <Select
+                                        value={selectedListItem}
+                                        onChange={handleListItemChange}
+                                        label={listItems.title}
+                                    >
+                                        {listItems.items.map((item) => (
+                                            <MenuItem key={item.key} value={item.key}>
+                                                {item.value}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                {conditionalTextField && selectedListItem === conditionalTextField.triggerValue && (
+                                    <TextField
+                                        className="mt-4 w-full"
+                                        multiline
+                                        rows={2}
+                                        label={conditionalTextField.label}
+                                        value={conditionalTextValue}
+                                        onChange={handleConditionalTextChange}
+                                        error={conditionalTextError}
+                                        helperText={conditionalTextError ? 'Please enter a reason.' : ''}
+                                        size="small"
+                                    />
+                                )}
+                            </>
                         )}
                     </DialogContent>
                     <DialogActions>

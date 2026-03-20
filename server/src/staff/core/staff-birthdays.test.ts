@@ -1,8 +1,8 @@
 import { deepStrictEqual, strictEqual } from 'assert'
 
 import { DateTime } from 'luxon'
-import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 import { EmployeeStatus } from 'xero-node/dist/gen/model/payroll-au/employeeStatus'
+import { EmploymentBasis } from 'xero-node/dist/gen/model/payroll-au/employmentBasis'
 
 import {
     didTurn18DuringRange,
@@ -46,11 +46,19 @@ describe('Staff birthdays', () => {
             const end = DateTime.fromObject({ year: 2026, month: 5, day: 31 }).endOf('day')
 
             strictEqual(
-                didTurn18DuringRange(DateTime.fromObject({ year: 2008, month: 5, day: 10, hour: 8, minute: 15 }), start, end),
+                didTurn18DuringRange(
+                    DateTime.fromObject({ year: 2008, month: 5, day: 10, hour: 8, minute: 15 }),
+                    start,
+                    end
+                ),
                 true
             )
             strictEqual(
-                didTurn18DuringRange(DateTime.fromObject({ year: 2008, month: 5, day: 31, hour: 8, minute: 15 }), start, end),
+                didTurn18DuringRange(
+                    DateTime.fromObject({ year: 2008, month: 5, day: 31, hour: 8, minute: 15 }),
+                    start,
+                    end
+                ),
                 true
             )
         })
@@ -60,7 +68,11 @@ describe('Staff birthdays', () => {
             const end = DateTime.fromObject({ year: 2026, month: 5, day: 31 }).endOf('day')
 
             strictEqual(
-                didTurn18DuringRange(DateTime.fromObject({ year: 2008, month: 6, day: 1, hour: 8, minute: 15 }), start, end),
+                didTurn18DuringRange(
+                    DateTime.fromObject({ year: 2008, month: 6, day: 1, hour: 8, minute: 15 }),
+                    start,
+                    end
+                ),
                 false
             )
         })
@@ -69,9 +81,24 @@ describe('Staff birthdays', () => {
     describe('getEmployeesWithBirthdayDuringRange', () => {
         it('should return employees whose birthdays fall within the range across calendar years', () => {
             const employees = [
-                createEmployee({ employeeID: 'employee-1', firstName: 'Ava', lastName: 'Jones', dateOfBirth: '2008-12-28' }),
-                createEmployee({ employeeID: 'employee-2', firstName: 'Noah', lastName: 'Brown', dateOfBirth: '2010-01-02' }),
-                createEmployee({ employeeID: 'employee-3', firstName: 'Mia', lastName: 'Green', dateOfBirth: '2009-01-10' }),
+                createEmployee({
+                    employeeID: 'employee-1',
+                    firstName: 'Ava',
+                    lastName: 'Jones',
+                    dateOfBirth: '2008-12-28',
+                }),
+                createEmployee({
+                    employeeID: 'employee-2',
+                    firstName: 'Noah',
+                    lastName: 'Brown',
+                    dateOfBirth: '2010-01-02',
+                }),
+                createEmployee({
+                    employeeID: 'employee-3',
+                    firstName: 'Mia',
+                    lastName: 'Green',
+                    dateOfBirth: '2009-01-10',
+                }),
                 createEmployee({
                     employeeID: 'employee-4',
                     firstName: 'Parker',
@@ -116,9 +143,23 @@ describe('Staff birthdays', () => {
         it('should filter out employees that cannot be parsed before checking birthdays', () => {
             const result = getEmployeesWithBirthdayDuringRange({
                 employees: [
-                    createEmployee({ employeeID: 'valid-employee', firstName: 'Valid', lastName: 'Person', dateOfBirth: '2008-05-15' }),
-                    createEmployee({ employeeID: undefined, firstName: 'Missing', lastName: 'Id', dateOfBirth: '2008-05-15' }),
-                    createEmployee({ employeeID: 'terminated-employee', status: EmployeeStatus.TERMINATED, dateOfBirth: '2008-05-15' }),
+                    createEmployee({
+                        employeeID: 'valid-employee',
+                        firstName: 'Valid',
+                        lastName: 'Person',
+                        dateOfBirth: '2008-05-15',
+                    }),
+                    createEmployee({
+                        employeeID: undefined,
+                        firstName: 'Missing',
+                        lastName: 'Id',
+                        dateOfBirth: '2008-05-15',
+                    }),
+                    createEmployee({
+                        employeeID: 'terminated-employee',
+                        status: EmployeeStatus.TERMINATED,
+                        dateOfBirth: '2008-05-15',
+                    }),
                     createEmployee({ employeeID: 'invalid-dob', dateOfBirth: 'not-a-date' }),
                     createEmployee({ employeeID: 'blank-name', firstName: ' ', lastName: ' ' }),
                     createEmployee({
@@ -152,10 +193,31 @@ describe('Staff birthdays', () => {
         it('should return employees turning 18 in the target month with their eighteenth birthday', () => {
             const result = getEmployeesTurning18InMonth({
                 employees: [
-                    createEmployee({ employeeID: 'turning-18-start', firstName: 'Alex', lastName: 'Start', dateOfBirth: '2008-05-01' }),
-                    createEmployee({ employeeID: 'turning-18-end', firstName: 'Blake', lastName: 'End', dateOfBirth: '2008-05-31' }),
-                    createEmployee({ employeeID: 'wrong-month', firstName: 'Casey', lastName: 'June', dateOfBirth: '2008-06-01' }),
-                    createEmployee({ employeeID: 'terminated', firstName: 'Dana', lastName: 'Terminated', dateOfBirth: '2008-05-20', status: EmployeeStatus.TERMINATED }),
+                    createEmployee({
+                        employeeID: 'turning-18-start',
+                        firstName: 'Alex',
+                        lastName: 'Start',
+                        dateOfBirth: '2008-05-01',
+                    }),
+                    createEmployee({
+                        employeeID: 'turning-18-end',
+                        firstName: 'Blake',
+                        lastName: 'End',
+                        dateOfBirth: '2008-05-31',
+                    }),
+                    createEmployee({
+                        employeeID: 'wrong-month',
+                        firstName: 'Casey',
+                        lastName: 'June',
+                        dateOfBirth: '2008-06-01',
+                    }),
+                    createEmployee({
+                        employeeID: 'terminated',
+                        firstName: 'Dana',
+                        lastName: 'Terminated',
+                        dateOfBirth: '2008-05-20',
+                        status: EmployeeStatus.TERMINATED,
+                    }),
                     createEmployee({
                         employeeID: 'full-time',
                         firstName: 'Frankie',
