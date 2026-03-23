@@ -80,7 +80,7 @@ export class MailClient {
                 ...(emailInfo.bcc || []),
                 ...options.bcc,
                 ...(options.bccBookings ? ['bookings@fizzkidz.com.au'] : []),
-                'lszcngs3_78g0kbqh@mails1.zohocrm.com.au', // zoho crm bcc dropbox
+                '8gvzc6g7_w0e8cp7c@mails1.zohocrm.com.au', // zoho crm bcc dropbox
             ]
         }
 
