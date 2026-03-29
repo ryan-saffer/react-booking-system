@@ -60,12 +60,19 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
     if (!isSameTime || !isSameLength) {
         const manager = getManager(booking.location, env)
         const mailClient = await MailClient.getInstance()
+        const bookingDateTime = DateTime.fromJSDate(booking.dateTime, {
+            zone: 'Australia/Melbourne',
+        })
 
-        const startTime = `${DateTime.fromJSDate(booking.dateTime, {
-            zone: 'Australia/Melbourne',
-        }).toFormat('h:mm a')} - ${DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
-            zone: 'Australia/Melbourne',
-        }).toFormat('h:mm a')}`
+        const startTime = `${bookingDateTime.toFormat('h:mm a')} - ${DateTime.fromJSDate(
+            getPartyEndDate(booking.dateTime, booking.partyLength),
+            {
+                zone: 'Australia/Melbourne',
+            }
+        ).toFormat('h:mm a')}`
+        const updatedBookingSubject = `Party booking updated for ${booking.childName} - ${bookingDateTime.toFormat(
+            "ccc d LLL 'at' h:mm a"
+        )}`
 
         const params = [
             `childName=${encodeURIComponent(booking.childName)}`,
@@ -76,9 +83,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
             `studio=${encodeURIComponent(booking.location)}`,
             `address=${encodeURIComponent(booking.address)}`,
             `rsvpName=${encodeURIComponent(booking.parentFirstName)}`,
-            `rsvpDate=${encodeURIComponent(
-                DateTime.fromJSDate(booking.dateTime, { zone: 'Australia/Melbourne' }).minus({ days: 14 }).toISO()
-            )}`,
+            `rsvpDate=${encodeURIComponent(bookingDateTime.minus({ days: 14 }).toISO())}`,
             `rsvpNumber=${encodeURIComponent(booking.parentMobile)}`,
         ]
 
@@ -93,12 +98,8 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     parentName: booking.parentFirstName,
                     childName: booking.childName,
                     childAge: booking.childAge,
-                    startDate: DateTime.fromJSDate(booking.dateTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.DATE_HUGE),
-                    startTime: DateTime.fromJSDate(booking.dateTime, {
-                        zone: 'Australia/Melbourne',
-                    }).toLocaleString(DateTime.TIME_SIMPLE),
+                    startDate: bookingDateTime.toLocaleString(DateTime.DATE_HUGE),
+                    startTime: bookingDateTime.toLocaleString(DateTime.TIME_SIMPLE),
                     endTime: DateTime.fromJSDate(getPartyEndDate(booking.dateTime, booking.partyLength), {
                         zone: 'Australia/Melbourne',
                     }).toLocaleString(DateTime.TIME_SIMPLE),
@@ -119,7 +120,7 @@ export async function updatePartyBooking(input: { bookingId: string; booking: Bo
                     cakeFormUrl: getCakeFormUrl(bookingId),
                 },
                 {
-                    subject: 'Your party booking has been updated',
+                    subject: updatedBookingSubject,
                     replyTo: manager.email,
                 }
             )
