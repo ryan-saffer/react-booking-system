@@ -129,6 +129,17 @@ export class ZohoClient {
         throw errorBody
     }
 
+    #toDateTimeISO(date: string) {
+        return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISO({
+            suppressMilliseconds: true,
+            includeOffset: true,
+        })
+    }
+
+    #toDateISO(date: string) {
+        return DateTime.fromISO(date, { zone: 'Australia/Melbourne' }).toISODate()
+    }
+
     async #upsertContact(
         values: WithBaseProps<{
             service: Service
@@ -186,18 +197,19 @@ export class ZohoClient {
      * Creates a child in Zoho, combining the parent zoho record id and the childs DOB as a unique key.
      * This key is then used as an upsert check to determine whether to link to an existing child or create a new one.
      **/
-    async #upsertChild(props: { childName: string; parentContactId: string; childBirthdayISO?: string }) {
+    async #upsertChild(props: { childName: string; parentContactId: string; childBirthdayISO: string }) {
+        const childBirthday = this.#toDateISO(props.childBirthdayISO)
         const result = await this.#request({
             method: 'POST',
             endpoint: `${CHILD_MODULE_NAME}/upsert`,
             data: [
                 {
                     Name: props.childName,
-                    Child_Birthday: props.childBirthdayISO,
+                    Child_Birthday: childBirthday,
                     Parent: {
                         id: props.parentContactId,
                     },
-                    Unique_Child_Key: `${props.parentContactId}|${props.childBirthdayISO}`,
+                    Unique_Child_Key: `${props.parentContactId}|${childBirthday}`,
                 },
             ],
             duplicate_check_fields: ['Unique_Child_Key'],
@@ -228,67 +240,12 @@ export class ZohoClient {
             Holiday_Program_Date?: string
         }>
     ) {
-        const { childName, childBirthdayISO, ...rest } = values
+        const parentContactId = await this.#upsertContact(values)
 
-        const childBirthday = childBirthdayISO.split('T')[0]
-
-        const searchResult = await this.#request({
-            endpoint: `Contacts/search?email=${encodeURIComponent(values.email)})`,
-            method: 'GET',
-        })
-
-        if (!searchResult) {
-            // customer does not exist in zoho, so add them as new with the child
-            console.log('Customer does not exist in zoho - Adding new!')
-            return this.#upsertContact({ ...rest, Child_Birthday_1: childBirthday, Child_Name_1: childName })
-        }
-
-        console.log('Customer found in zoho!')
-
-        // otherwise, get the existing customer (safe to do first entry since no duplicate emails allowed in zoho)
-        const existingContact = searchResult.data[0]
-
-        const availableFields = {
-            // used to know which slot to put the child if they are new.
-            child1: true,
-            child2: true,
-            child3: true,
-            child4: true,
-            child5: true,
-        }
-
-        // search through all 5 children fields in zoho, to see if this child is already added against this parent.
-        // do this by comparing against the childs birthday.
-        // if no match found, we can add this child into zoho, otherwise don't.
-        for (let i = 1; i < 6; i++) {
-            if (existingContact[`Child_Birthday_${i}`]) {
-                availableFields[`child${i}` as keyof typeof availableFields] = false
-
-                if (childBirthday === existingContact[`Child_Birthday_${i}`]) {
-                    // this child already is stored in zoho, so we can just upsert the contact. no need to include the child details
-                    console.log('Child with matching birthday found in zoho - just upsert without child details!')
-                    return this.#upsertContact(rest)
-                }
-            }
-        }
-
-        // if we reach this point, no match was found for this child.
-        // upsert the contact with the child details, but only in a free slot.
-        const freePosition = Object.values(availableFields).findIndex((it) => it === true) + 1
-
-        if (freePosition === 0) {
-            // there is no free position (since findIndex returns -1).
-            // in this case, unfortunately ignore the child details, since this parent already has 5 children
-            console.log("Child is new, but there is no room for them in zoho... so can't add them!")
-            return this.#upsertContact(rest)
-        }
-
-        // and finally, upsert the contact with the child details into the free spot
-        console.log(`Adding child into position ${freePosition}.`)
-        return this.#upsertContact({
-            ...rest,
-            [`Child_Name_${freePosition}`]: childName,
-            [`Child_Birthday_${freePosition}`]: childBirthday,
+        await this.#upsertChild({
+            childName: values.childName,
+            childBirthdayISO: values.childBirthdayISO,
+            parentContactId,
         })
     }
 
@@ -550,10 +507,7 @@ export class ZohoClient {
                     Children: childIds.map((childId) => ({
                         Children: { id: childId },
                     })),
-                    Actual_Party_Date: DateTime.fromISO(partyDateISO, { zone: 'Australia/Melbourne' }).toISO({
-                        suppressMilliseconds: true,
-                        includeOffset: true,
-                    }),
+                    Actual_Party_Date: this.#toDateTimeISO(partyDateISO),
                     Booking_ID: bookingId,
                     Booking_URL: `${getApplicationDomain(env)}/dashboard/bookings?id=${bookingId}`,
                 },
@@ -575,10 +529,7 @@ export class ZohoClient {
             data: [
                 {
                     id: zohoDealId,
-                    Actual_Party_Date: DateTime.fromISO(partyDateISO, { zone: 'Australia/Melbourne' }).toISO({
-                        suppressMilliseconds: true,
-                        includeOffset: true,
-                    }),
+                    Actual_Party_Date: this.#toDateTimeISO(partyDateISO),
                 },
             ],
         })
