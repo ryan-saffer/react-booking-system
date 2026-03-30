@@ -158,26 +158,25 @@ export async function bookHolidayProgram(input: HolidayProgramBookingProps) {
         const firstProgram = [...input.payment.lineItems].sort((a, b) => (a.time < b.time ? -1 : 1))[0]
 
         // MARK: CRM
-        if (input.joinMailingList) {
-            const zoho = new ZohoClient()
-            try {
-                for (const line of input.payment.lineItems) {
-                    await zoho.addHolidayProgramContact({
-                        firstName: input.parentFirstName,
-                        lastName: input.parentLastName,
-                        email: input.parentEmail,
-                        mobile: input.parentPhone,
-                        studio: AcuityUtilities.getStudioByCalendarId(line.calendarId),
-                        childName: line.childName,
-                        childBirthdayISO: line.childDob,
-                        holidayProgramDateISO: firstProgram.time.split('T')[0],
-                    })
-                }
-            } catch (err) {
-                logError(`unable to add holiday program booking to zoho with parent email: ${input.parentEmail}`, err, {
-                    input,
+        const zoho = new ZohoClient()
+        try {
+            for (const line of input.payment.lineItems) {
+                await zoho.addHolidayProgramContact({
+                    firstName: input.parentFirstName,
+                    lastName: input.parentLastName,
+                    email: input.parentEmail,
+                    mobile: input.parentPhone,
+                    studio: AcuityUtilities.getStudioByCalendarId(line.calendarId),
+                    childName: line.childName,
+                    childBirthdayISO: line.childDob,
+                    holidayProgramDateISO: firstProgram.time.split('T')[0],
+                    optOutOfMarketing: !input.joinMailingList,
                 })
             }
+        } catch (err) {
+            logError(`unable to add holiday program booking to zoho with parent email: ${input.parentEmail}`, err, {
+                input,
+            })
         }
 
         // MARK: Additional needs spreadsheet
