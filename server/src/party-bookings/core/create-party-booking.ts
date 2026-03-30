@@ -67,6 +67,7 @@ export async function createPartyBooking(_booking: Booking) {
             partyDate: booking.dateTime.toDate(),
             studio: booking.location,
             type: booking.type,
+            optOutOfMarketing: false,
         })
 
         const zohoDealId = await zohoClient.confirmBirthdayPartyDealAndLinkChild({

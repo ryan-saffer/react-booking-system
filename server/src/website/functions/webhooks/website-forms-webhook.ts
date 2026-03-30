@@ -39,6 +39,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     email: formData.email,
                     studio: PartyFormLocationMap[formData.location],
                     mobile: formData.contactNumber,
+                    optOutOfMarketing: false,
                 })
 
                 await zohoClient.createBirthdayPartyDeal({
@@ -131,6 +132,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                             lastName,
                             email: formData.email,
                             mobile: formData.contactNumber,
+                            optOutOfMarketing: false,
                             ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
                         })
                         await zohoClient.createBirthdayPartyDeal({
@@ -163,6 +165,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                             lastName,
                             email: formData.email,
                             mobile: formData.contactNumber,
+                            optOutOfMarketing: false,
                             ...(formData.location && { studio: ContactFormLocationMap[formData.location] }),
                         })
                         break
@@ -410,6 +413,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     firstName,
                     lastName,
                     email: formData.email,
+                    optOutOfMarketing: false,
                 })
 
                 await mixpanelClient.track('website-enquiry', {
@@ -428,6 +432,7 @@ websiteFormsWebhook.post('/website-forms', async (req, res) => {
                     firstName,
                     lastName,
                     email: formData.email,
+                    optOutOfMarketing: false,
                 })
                 await mixpanelClient.track('holiday-program-website-discount', {
                     name: formData.name,

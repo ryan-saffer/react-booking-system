@@ -142,6 +142,7 @@ export class ZohoClient {
 
     async #upsertContact(
         values: WithBaseProps<{
+            optOutOfMarketing?: boolean
             service: Service
             customer_type: 'B2C' | 'B2B'
             branch?: string
@@ -163,7 +164,8 @@ export class ZohoClient {
             Holiday_Program_Checked_In?: boolean
         }>
     ) {
-        const { firstName, lastName, email, mobile, service, customer_type, branch, ...rest } = values
+        const { firstName, lastName, email, mobile, service, customer_type, branch, optOutOfMarketing, ...rest } =
+            values
 
         const result = await this.#request({
             endpoint: 'Contacts/upsert',
@@ -177,6 +179,7 @@ export class ZohoClient {
                     Service: [service],
                     Customer_Type: customer_type,
                     Branch: [branch || ''],
+                    Marketing_Campaign_Opt_Out: !!optOutOfMarketing,
                     ...rest,
                     $append_values: {
                         Service: true,
@@ -197,7 +200,12 @@ export class ZohoClient {
      * Creates a child in Zoho, combining the parent zoho record id and the childs DOB as a unique key.
      * This key is then used as an upsert check to determine whether to link to an existing child or create a new one.
      **/
-    async #upsertChild(props: { childName: string; parentContactId: string; childBirthdayISO: string }) {
+    async #upsertChild(props: {
+        childName: string
+        parentContactId: string
+        childBirthdayISO: string
+        optOutOfMarketing: boolean
+    }) {
         const childBirthday = this.#toDateISO(props.childBirthdayISO)
         const result = await this.#request({
             method: 'POST',
@@ -209,6 +217,7 @@ export class ZohoClient {
                     Parent: {
                         id: props.parentContactId,
                     },
+                    Marketing_Campaign_Opt_Out: props.optOutOfMarketing,
                     Unique_Child_Key: `${props.parentContactId}|${childBirthday}`,
                 },
             ],
@@ -238,6 +247,7 @@ export class ZohoClient {
             Party_Date?: string
             Company?: string
             Holiday_Program_Date?: string
+            optOutOfMarketing: boolean
         }>
     ) {
         const parentContactId = await this.#upsertContact(values)
@@ -246,10 +256,13 @@ export class ZohoClient {
             childName: values.childName,
             childBirthdayISO: values.childBirthdayISO,
             parentContactId,
+            optOutOfMarketing: values.optOutOfMarketing,
         })
     }
 
-    addBirthdayPartyContact(props: WithBaseProps<{ type: Booking['type']; studio: Studio; partyDate: Date }>) {
+    addBirthdayPartyContact(
+        props: WithBaseProps<{ type: Booking['type']; studio: Studio; partyDate: Date; optOutOfMarketing: boolean }>
+    ) {
         const { type, studio, partyDate, ...baseProps } = props
 
         return this.#upsertContact({
@@ -278,9 +291,10 @@ export class ZohoClient {
             childName: string
             childBirthdayISO: string // ISO string,
             holidayProgramDateISO: string // ISO string
+            optOutOfMarketing: boolean
         }>
     ) {
-        const { studio, childName, childBirthdayISO, holidayProgramDateISO, ...baseProps } = props
+        const { studio, childName, childBirthdayISO, holidayProgramDateISO, optOutOfMarketing, ...baseProps } = props
 
         // need to check if this parent already has a holiday program date.
         // if not, add the date in, otherwise don't include it.
@@ -298,6 +312,7 @@ export class ZohoClient {
                 childName,
                 childBirthdayISO,
                 Holiday_Program_Date: holidayProgramDateISO,
+                optOutOfMarketing,
                 ...baseProps,
             })
         }
@@ -311,6 +326,7 @@ export class ZohoClient {
             customer_type: 'B2C',
             childName,
             childBirthdayISO,
+            optOutOfMarketing,
             ...(existingDate ? {} : { Holiday_Program_Date: holidayProgramDateISO }), // if they already have a date, no need to overwrite it
             ...baseProps,
         })
@@ -321,6 +337,7 @@ export class ZohoClient {
             studio: StudioOrTest
             childName: string
             childBirthdayISO: string // ISO string,
+            optOutOfMarketing: boolean
         }>
     ) {
         const { studio, childName, childBirthdayISO, ...baseProps } = props
@@ -364,7 +381,9 @@ export class ZohoClient {
         }
     }
 
-    addAfterSchoolProgramContact(props: WithBaseProps<{ childName: string; childBirthdayISO: string }>) {
+    addAfterSchoolProgramContact(
+        props: WithBaseProps<{ childName: string; childBirthdayISO: string; optOutOfMarketing: boolean }>
+    ) {
         return this.#addParentWithChild({
             service: 'After School Program',
             customer_type: 'B2C',
@@ -372,7 +391,7 @@ export class ZohoClient {
         })
     }
 
-    addBasicB2CContact(props: WithBaseProps<{ studio?: Studio | undefined }>) {
+    addBasicB2CContact(props: WithBaseProps<{ studio?: Studio | undefined; optOutOfMarketing: boolean }>) {
         const { studio, ...baseProps } = props
         return this.#upsertContact({
             service: '',
@@ -390,17 +409,19 @@ export class ZohoClient {
                 service: service === 'incursion' ? 'Incursion' : 'Activation / Event',
                 customer_type: 'B2B',
                 Company: company || '',
+                optOutOfMarketing: false,
                 ...baseProps,
             }),
             this.createLead({
                 company: company || '',
                 source: 'Website Form',
+                optOutOfMarketing: false,
                 ...baseProps,
             }),
         ])
     }
 
-    createLead(props: WithBaseProps<{ company: string; source: string }>) {
+    createLead(props: WithBaseProps<{ company: string; source: string; optOutOfMarketing: boolean }>) {
         return this.#request({
             endpoint: 'Leads',
             method: 'POST',
@@ -414,6 +435,7 @@ export class ZohoClient {
                     Owner: '76392000000333090', // Lami
                     Lead_Source: props.source,
                     Lead_Status: 'New Lead',
+                    Marketing_Campaign_Opt_Out: props.optOutOfMarketing,
                 },
             ],
         })
@@ -483,7 +505,12 @@ export class ZohoClient {
     }) {
         const childIds = await Promise.all(
             children!.map((child) =>
-                this.#upsertChild({ parentContactId, childName: child.name, childBirthdayISO: child.birthday })
+                this.#upsertChild({
+                    parentContactId,
+                    childName: child.name,
+                    childBirthdayISO: child.birthday,
+                    optOutOfMarketing: false,
+                })
             )
         )
 
