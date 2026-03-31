@@ -179,7 +179,9 @@ export class ZohoClient {
                     Service: [service],
                     Customer_Type: customer_type,
                     Branch: [branch || ''],
-                    Marketing_Campaign_Opt_Out: !!optOutOfMarketing,
+                    ...(optOutOfMarketing !== undefined
+                        ? { Marketing_Campaign_Opt_Out: optOutOfMarketing }
+                        : {}),
                     ...rest,
                     $append_values: {
                         Service: true,
