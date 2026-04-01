@@ -179,9 +179,7 @@ export class ZohoClient {
                     Service: [service],
                     Customer_Type: customer_type,
                     Branch: [branch || ''],
-                    ...(optOutOfMarketing !== undefined
-                        ? { Marketing_Campaign_Opt_Out: optOutOfMarketing }
-                        : {}),
+                    ...(optOutOfMarketing !== undefined ? { Marketing_Campaign_Opt_Out: optOutOfMarketing } : {}),
                     ...rest,
                     $append_values: {
                         Service: true,
@@ -207,6 +205,7 @@ export class ZohoClient {
         parentContactId: string
         childBirthdayISO: string
         optOutOfMarketing: boolean
+        partyDate?: string
     }) {
         const childBirthday = this.#toDateISO(props.childBirthdayISO)
         const result = await this.#request({
@@ -221,6 +220,7 @@ export class ZohoClient {
                     },
                     Marketing_Campaign_Opt_Out: props.optOutOfMarketing,
                     Unique_Child_Key: `${props.parentContactId}|${childBirthday}`,
+                    ...(props.partyDate ? { Party_Date: this.#toDateISO(props.partyDate) } : {}),
                 },
             ],
             duplicate_check_fields: ['Unique_Child_Key'],
@@ -259,6 +259,7 @@ export class ZohoClient {
             childBirthdayISO: values.childBirthdayISO,
             parentContactId,
             optOutOfMarketing: values.optOutOfMarketing,
+            partyDate: values.Party_Date,
         })
     }
 
@@ -512,6 +513,7 @@ export class ZohoClient {
                     childName: child.name,
                     childBirthdayISO: child.birthday,
                     optOutOfMarketing: false,
+                    partyDate: partyDateISO,
                 })
             )
         )
