@@ -102,15 +102,15 @@ export function getNumberOfKidsAllowed(location: Studio) {
 export function getPictureOfStudioUrl(location: Studio) {
     switch (location) {
         case 'balwyn':
-            return 'https://drive.google.com/file/d/14mqrG74qkbE43FGqexGS1_zfb11mOONy/view?usp=sharing'
+            return 'https://www.fizzkidz.com.au/images/studios/balwyn.jpg'
         case 'cheltenham':
-            return 'https://drive.google.com/file/d/1PLiZZEqr2yGBd-ipLixzfLkh5FkrO1oG/view?usp=sharing'
+            return 'https://www.fizzkidz.com.au/images/studios/cheltenham.jpg'
         case 'essendon':
-            return 'https://drive.google.com/file/d/1nOwuD1K43bveRc_UGQLeiw7uvXX6Fw2g/view?usp=sharing'
+            return 'https://www.fizzkidz.com.au/images/studios/essendon.jpg'
         case 'kingsville':
-            return 'https://drive.google.com/file/d/1aP9aFANjEhiaal8l7rjouWZhdUPfv5ts/view?usp=sharing'
+            return 'https://www.fizzkidz.com.au/images/studios/kingsville.jpg'
         case 'malvern':
-            return 'https://drive.google.com/file/d/1rqxePd3Xj846UO_czIpq_8JFw6jPeWZh/view?usp=sharing'
+            return 'https://www.fizzkidz.com.au/images/studios/malvern.jpg'
         default: {
             const exhaustiveCheck: never = location
             throw new Error(`Unhandled location: '${exhaustiveCheck}`)
