@@ -5,8 +5,6 @@ import { env } from '../init'
 import type { ClientStatus } from '../utilities/types'
 import type Client from 'storyblok-js-client'
 
-
-
 export type HolidayProgramWeek = {
     title: string
     dates: string
@@ -109,7 +107,7 @@ export class StoryblokClient {
 
     async getHolidayProgramCreations(): Promise<CreationInstructions[]> {
         const { data } = await this.#storyblok.get('cdn/stories', {
-            starts_with: 'creation_instructions/holiday_program_creations',
+            starts_with: 'creation_instructions/holiday_program_creations/live',
             version: env === 'prod' ? 'published' : 'draft',
             per_page: 100,
             cv: Date.now(),
