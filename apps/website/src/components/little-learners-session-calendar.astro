@@ -1,5 +1,6 @@
 ---
 import calendarIconSvg from "@/assets/images/pages/little-learners/schedule-icons/calendar.svg?raw";
+import clockIconSvg from "@/assets/images/pages/little-learners/schedule-icons/clock.svg?raw";
 import LittleLearnersTimeSlot from "@/components/little-learners-time-slot.astro";
 
 type SlotIcon =
@@ -12,11 +13,13 @@ type SlotIcon =
   | "pickup";
 
 type Props = {
-  day: string;
-  timeRange: string;
+  day?: string;
+  title?: string;
+  timeRange?: string;
   headerStart: string;
   headerEnd: string;
   calendarColor: string;
+  headerIcon?: "calendar" | "clock";
   slots: readonly {
     time: string;
     title: string;
@@ -26,12 +29,28 @@ type Props = {
   }[];
 };
 
-const { day, timeRange, headerStart, headerEnd, calendarColor, slots } =
-  Astro.props;
+const {
+  day,
+  title,
+  timeRange,
+  headerStart,
+  headerEnd,
+  calendarColor,
+  headerIcon = "calendar",
+  slots,
+} = Astro.props;
 
 const calendarIconMarkup = calendarIconSvg
   .replace("<svg ", '<svg class="h-full w-full" ')
   .replaceAll("#8F44E1", calendarColor);
+
+const clockIconMarkup = clockIconSvg.replace(
+  "<svg ",
+  '<svg class="h-full w-full" '
+);
+const headerIconMarkup =
+  headerIcon === "clock" ? clockIconMarkup : calendarIconMarkup;
+const displayTitle = title ?? (day ? `${day} Sessions` : "Sessions");
 ---
 
 <div
@@ -45,9 +64,10 @@ const calendarIconMarkup = calendarIconSvg
   >
     <div
       class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white md:h-24 md:w-24"
+      style={{ color: calendarColor }}
     >
       <div class="h-10 w-10 md:h-12 md:w-12">
-        <Fragment set:html={calendarIconMarkup} />
+        <Fragment set:html={headerIconMarkup} />
       </div>
     </div>
 
@@ -55,13 +75,15 @@ const calendarIconMarkup = calendarIconSvg
       <p
         class="font-gotham text-xl font-bold leading-none text-white md:text-[2rem]"
       >
-        {day} Sessions
+        {displayTitle}
       </p>
-      <div
-        class="mt-3 inline-flex rounded-full bg-white/15 px-5 py-2 font-gotham text-base font-bold text-white md:px-7 md:text-[1.5rem]"
-      >
-        {timeRange}
-      </div>
+      {
+        timeRange && (
+          <div class="mt-3 inline-flex rounded-full bg-white/15 px-5 py-2 font-gotham text-base font-bold text-white md:px-7 md:text-[1.5rem]">
+            {timeRange}
+          </div>
+        )
+      }
     </div>
   </div>
 

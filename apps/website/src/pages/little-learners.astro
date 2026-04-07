@@ -1,17 +1,26 @@
 ---
-import { Image } from "astro:assets";
-import { ArrowRight, CalendarDays } from "lucide-react";
+import { getImage, Image } from "astro:assets";
+import { ArrowRight, CalendarDays, Clock3 } from "lucide-react";
 
 import { Button } from "@/components/react/ui/button";
+import atom from "@/assets/svg/atom.svg";
+import blueAtom from "@/assets/svg/blue-atom.svg";
 import pinkAtom from "@/assets/svg/pink-atom.svg";
 import pinkGreenDots from "@/assets/svg/pink-green-dots.svg";
+import pinkGreenWhite from "@/assets/svg/pink-green-white.svg";
+import purpleScience from "@/assets/svg/purple-science.svg";
 import smallShapes from "@/assets/svg/small-shapes.svg";
 import check from "@/assets/images/pages/franchising/check.png";
 import clouds from "@/assets/images/pages/franchising/clouds.png";
 import graphic10 from "@/assets/images/pages/franchising/graphics/graphic10.png";
 import graphic12 from "@/assets/images/pages/franchising/graphics/graphic12.png";
 import graphic15 from "@/assets/images/pages/franchising/graphics/graphic15.png";
+import waveSeparatorSvg from "@/assets/images/pages/gift-cards/wave-separator.svg?raw";
+import whiteSlime from "@/assets/images/pages/gift-cards/white-slime.svg";
+import playLabImage from "@/assets/images/pages/franchising/play-lab.jpg";
 import purpleCurve from "@/assets/images/pages/franchising/purple-curve.png";
+import calendarHeaderIcon from "@/assets/images/pages/little-learners/schedule-icons/calendar.svg";
+import littleLearnersHero from "@/assets/images/pages/little-learners/little-learners-hero.png";
 import sessionIcon1 from "@/assets/images/pages/little-learners/session-icons/1.svg";
 import sessionIcon2 from "@/assets/images/pages/little-learners/session-icons/2.svg";
 import sessionIcon3 from "@/assets/images/pages/little-learners/session-icons/3.svg";
@@ -29,6 +38,7 @@ import Layout from "@/layout/Layout.astro";
 import PrimaryButton from "@/components/primary-button.astro";
 import Values from "@/components/values.astro";
 import FaqAccordion from "@/components/react/faq-accordion";
+import ImageCarousel from "@/components/react/image-carousel";
 import faq from "@/assets/images/pages/parties/faq.png";
 
 const sessionSlots = [
@@ -81,12 +91,178 @@ const sessionSlots = [
     icon: "pickup",
   },
 ] as const;
+
+const funStep1Optimised = await getImage({ src: step1, format: "webp" });
+const funStep2Optimised = await getImage({ src: step2, format: "webp" });
+const funStep3Optimised = await getImage({ src: step3, format: "webp" });
+const funSchoolsOptimised = await getImage({ src: schools, format: "webp" });
+const funPlayLabOptimised = await getImage({
+  src: playLabImage,
+  format: "webp",
+});
+
+const funCarouselImages = [
+  {
+    image: funStep1Optimised,
+    alt: "Child enjoying a science activity during a Fizz Kidz session",
+  },
+  {
+    image: funStep2Optimised,
+    alt: "Children exploring a science activity together",
+  },
+  {
+    image: funStep3Optimised,
+    alt: "Child drawing during a Fizz Kidz learning activity",
+  },
+  {
+    image: funSchoolsOptimised,
+    alt: "Children smiling during a Fizz Kidz session",
+  },
+  {
+    image: funPlayLabOptimised,
+    alt: "Child participating in a Play Lab activity",
+  },
+];
+
+const heroBackground = "#7FCFE4";
+const heroWaveMarkup = waveSeparatorSvg
+  .replace("<svg ", '<svg class="-mb-1 block h-auto w-full" ')
+  .replace(/<path d="M853 31\.4025[\s\S]*?fill="#00C7DD"\/>/, "");
 ---
 
 <Layout
   title="Browse and book programs and activites for toddlers aged 18 months to 5 years. | Fizz Kidz"
   description="Sparking creativity and curiosity with fun, hands-on science, art, and craft experiences for kids aged 18 months to 5 years!"
 >
+  <style lang="css">
+    :global(header) {
+      box-shadow: none !important;
+      transition: box-shadow 150ms ease;
+    }
+    :global(body.scrolled header) {
+      box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+    }
+  </style>
+  <script is:inline>
+    const toggleHeaderShadow = () => {
+      document.body.classList.toggle("scrolled", window.scrollY > 10);
+    };
+    window.addEventListener("scroll", toggleHeaderShadow, { passive: true });
+    toggleHeaderShadow();
+  </script>
+
+  <section
+    class="relative overflow-hidden"
+    style={{ backgroundColor: heroBackground }}
+  >
+    <Image
+      src={whiteSlime}
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute left-0 right-0 z-50 w-full"
+    />
+
+    <Image
+      src={pinkGreenWhite}
+      alt=""
+      aria-hidden="true"
+      class="absolute left-[5%] top-[70px] hidden w-16 xl:block"
+    />
+    <Image
+      src={pinkAtom}
+      alt=""
+      aria-hidden="true"
+      class="absolute left-1/2 top-[40px] hidden w-16 -translate-x-1/2 xl:block"
+    />
+    <Image
+      src={purpleScience}
+      alt=""
+      aria-hidden="true"
+      class="absolute right-[11%] top-[40px] hidden w-14 xl:block"
+    />
+    <div
+      class="absolute right-[27%] top-[160px] hidden h-14 w-14 rounded-full bg-[#FFF142] xl:block"
+    >
+    </div>
+    <Image
+      src={atom}
+      alt=""
+      aria-hidden="true"
+      class="absolute bottom-[210px] left-[42%] hidden w-20 xl:block"
+    />
+    <Image
+      src={graphic10}
+      alt=""
+      aria-hidden="true"
+      class="absolute bottom-[215px] left-[2%] hidden w-16 xl:block"
+    />
+
+    <Container
+      class="relative z-10 mx-auto mt-24 py-16 lg:min-h-[860px] lg:py-24 xl:min-h-[920px]"
+    >
+      <div class="w-full lg:w-[65%]">
+        <p class="font-gotham text-lg font-medium text-white md:text-xl">
+          <a href="/" class="transition hover:underline">Home</a> &gt; Little Learners
+        </p>
+
+        <h1
+          class="mt-6 max-w-[900px] font-lilita text-4xl uppercase leading-[0.95] text-[#8F44E1] md:text-6xl xl:text-[4.75rem]"
+        >
+          <span class="block whitespace-nowrap">Fizz Kidz weekday</span>
+          <span class="block whitespace-nowrap">pre-school programs</span>
+        </h1>
+
+        <p
+          class="mt-4 max-w-[660px] font-lilita text-2xl uppercase leading-tight text-white sm:mt-8 md:text-4xl"
+        >
+          A term based program, delivered weekly for children aged 3 to 6 years.
+        </p>
+
+        <p
+          class="mt-4 max-w-[670px] font-gotham text-lg leading-relaxed text-white sm:mt-8 md:text-2xl md:leading-relaxed"
+        >
+          Build confidence and school readiness through engaging, hands-on art
+          and science experiences.
+        </p>
+
+        <a
+          href="https://bookings.fizzkidz.com.au/play-lab-booking"
+          target="_blank"
+        >
+          <Button
+            className="mt-10 rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-lg uppercase text-[#8F44E1] hover:bg-[#FFD115]/90 md:text-xl"
+          >
+            Book a free trial
+            <span
+              class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#8F44E1] text-white md:h-8 md:w-8"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Button>
+        </a>
+      </div>
+    </Container>
+
+    <div
+      class="pointer-events-none absolute bottom-0 right-[4%] z-10 hidden w-[42%] max-w-[760px] lg:block xl:right-[6%] xl:w-[40%]"
+    >
+      <Image
+        src={littleLearnersHero}
+        alt=""
+        aria-hidden="true"
+        class="block w-full object-contain"
+        width={900}
+        loading="eager"
+      />
+    </div>
+
+    <div class="relative z-20">
+      <Fragment set:html={heroWaveMarkup} />
+    </div>
+  </section>
+
   <section class="relative overflow-hidden">
     <Image
       src={graphic12}
@@ -106,7 +282,10 @@ const sessionSlots = [
       aria-hidden="true"
       class="absolute -right-4 top-1/2 hidden w-20 -translate-y-1/2 rotate-[20deg] min-[1400px]:block"
     />
-    <div class="absolute left-[52%] top-0 hidden h-10 w-10 rounded-full border-[7px] border-[#4BE06C] min-[1400px]:block"></div>
+    <div
+      class="absolute left-[52%] top-0 hidden h-10 w-10 rounded-full border-[7px] border-[#4BE06C] min-[1400px]:block"
+    >
+    </div>
 
     <Container class="py-16 md:py-24">
       <h1
@@ -189,7 +368,7 @@ const sessionSlots = [
 
               <div
                 class:list={[
-                  "absolute bottom-0 left-1/2 flex h-20 w-20 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full font-gotham text-5xl font-extrabold text-white",
+                  "absolute left-1/2 top-0 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full font-gotham text-5xl font-extrabold text-white",
                   card.numberColor,
                 ]}
               >
@@ -201,7 +380,7 @@ const sessionSlots = [
       </div>
 
       <div
-        class="mt-36 rounded-[1.75rem] bg-[#FFE7C0] px-6 py-6 text-center md:px-10"
+        class="mt-20 rounded-[1.75rem] bg-[#FFE7C0] px-6 py-6 text-center md:px-10 lg:mt-36"
       >
         <p class="font-lilita text-2xl uppercase leading-tight md:text-3xl">
           <span class="mr-3 inline-block">👉</span>Spots are limited to keep
@@ -211,7 +390,149 @@ const sessionSlots = [
     </Container>
   </section>
 
-  <section id="session-timetable" class="relative overflow-hidden">
+  <section
+    id="session-timetable"
+    class="relative overflow-hidden py-16 md:py-24"
+    style={{ backgroundColor: "rgba(143, 68, 225, 0.12)" }}
+  >
+    <Image
+      src={graphic12}
+      alt=""
+      aria-hidden="true"
+      class="absolute right-[2.5%] top-[4%] hidden w-20 min-[1400px]:block"
+    />
+    <Image
+      src={graphic10}
+      alt=""
+      aria-hidden="true"
+      class="absolute bottom-[6%] right-[2%] hidden w-20 rotate-[18deg] min-[1400px]:block"
+    />
+    <Image
+      src={blueAtom}
+      alt=""
+      aria-hidden="true"
+      class="absolute bottom-[22%] left-[1.5%] hidden w-16 min-[1400px]:block"
+    />
+
+    <Container>
+      <h2
+        class="text-center font-lilita text-4xl uppercase leading-none md:text-6xl"
+      >
+        Weekly timetable
+      </h2>
+      <p
+        class="mt-6 text-center font-gotham text-lg text-[#5F5F5F] md:text-2xl"
+      >
+        Predictable weekly structure designed for routine and confidence
+      </p>
+
+      <div class="mt-16 grid gap-8 xl:grid-cols-2">
+        <div
+          class="flex h-full flex-col overflow-hidden rounded-[2rem] bg-white shadow-[0_0_32px_rgba(143,68,225,0.08)]"
+        >
+          <div
+            class="flex items-center gap-5 bg-gradient-to-r from-[#A15BFF] to-[#863BEF] p-5 md:p-8"
+          >
+            <div
+              class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white md:h-24 md:w-24"
+            >
+              <Image
+                src={calendarHeaderIcon}
+                alt=""
+                aria-hidden="true"
+                class="h-10 w-10 md:h-12 md:w-12"
+              />
+            </div>
+            <p class="font-gotham text-xl font-bold text-white md:text-[2rem]">
+              Weekly Timetable
+            </p>
+          </div>
+
+          <div class="flex flex-1 flex-col space-y-6 p-4 md:p-6">
+            {
+              [
+                {
+                  image: step2,
+                  alt: "Children exploring a science activity together",
+                  title: "Wednesday Sessions",
+                  cardColor: "#DFF8FF",
+                  borderColor: "#52D6F0",
+                  pillColor: "#11C6E8",
+                },
+                {
+                  image: schools,
+                  alt: "Children taking part in a Fizz Kidz session",
+                  title: "Thursday Sessions",
+                  cardColor: "#FBE4F2",
+                  borderColor: "#F06AB1",
+                  pillColor: "#F14EA1",
+                },
+              ].map((dayCard) => (
+                <div
+                  class="rounded-[1.4rem] border-r-[4px] p-3 md:p-4"
+                  style={{
+                    backgroundColor: dayCard.cardColor,
+                    borderColor: dayCard.borderColor,
+                  }}
+                >
+                  <div class="flex items-center gap-4 md:gap-6">
+                    <Image
+                      src={dayCard.image}
+                      alt={dayCard.alt}
+                      class="h-28 w-28 rounded-[1rem] object-cover md:h-32 md:w-32"
+                    />
+
+                    <div class="min-w-0">
+                      <p class="font-gotham text-2xl font-semibold text-black">
+                        {dayCard.title}
+                      </p>
+
+                      <div
+                        class="mt-4 inline-flex items-center gap-2 rounded-full px-5 py-3 font-gotham text-lg font-semibold text-white"
+                        style={{ backgroundColor: dayCard.pillColor }}
+                      >
+                        <Clock3 className="h-4 w-4 text-white md:h-5 md:w-5" />
+                        <span>9:00 AM - 11:30 AM</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          <div class="mt-auto px-4 pb-4 md:px-6 md:pb-6">
+            <a
+              href="https://bookings.fizzkidz.com.au/play-lab-booking"
+              target="_blank"
+            >
+              <Button
+                className="w-full rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-xl uppercase text-[#8F44E1] hover:bg-[#FFD115]/90 md:text-2xl"
+              >
+                Book a free trial
+                <span
+                  class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#8F44E1] text-white md:h-8 md:w-8"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </Button>
+            </a>
+          </div>
+        </div>
+
+        <LittleLearnersSessionCalendar
+          title="Daily Session Structure"
+          headerIcon="clock"
+          headerStart="#FF67B4"
+          headerEnd="#F53F98"
+          calendarColor="#FF5EA8"
+          slots={sessionSlots}
+        />
+      </div>
+    </Container>
+  </section>
+
+  <section class="relative overflow-hidden bg-white py-16 md:py-24">
     <Image
       src={graphic12}
       alt=""
@@ -219,58 +540,20 @@ const sessionSlots = [
       class="absolute left-[4%] top-[10%] hidden w-20 min-[1400px]:block"
     />
     <Image
-      src={graphic10}
+      src={smallShapes}
       alt=""
       aria-hidden="true"
-      class="absolute right-[3%] top-[16%] hidden w-20 rotate-[18deg] min-[1400px]:block"
+      class="absolute bottom-[4%] right-[3%] hidden w-24 min-[1400px]:block"
     />
-    <Image
-      src={pinkAtom}
-      alt=""
-      aria-hidden="true"
-      class="absolute bottom-[6%] left-[5%] hidden w-16 min-[1400px]:block"
-    />
-    <div class="absolute right-[10%] top-[6%] hidden h-16 w-16 rounded-full border-[10px] border-[#4BE06C] min-[1400px]:block"></div>
 
-    <Container class="pb-16 pt-20 md:pb-24 md:pt-28">
+    <Container>
       <h2
         class="text-center font-lilita text-4xl uppercase leading-none md:text-6xl"
       >
-        Same structured session <span class="text-[#45D3F3]">each week</span>
+        Checkout the fun
       </h2>
-      <p
-        class="mt-6 text-center font-gotham text-lg text-[#5F5F5F] md:text-2xl"
-      >
-        designed for routine and confidence
-      </p>
 
-      <div class="mt-16 grid gap-8 xl:grid-cols-2">
-        {
-          [
-            {
-              day: "Wednesday",
-              headerStart: "#A15BFF",
-              headerEnd: "#863BEF",
-              calendarColor: "#9C59F8",
-            },
-            {
-              day: "Thursday",
-              headerStart: "#FF67B4",
-              headerEnd: "#F53F98",
-              calendarColor: "#FF5EA8",
-            },
-          ].map((calendar) => (
-            <LittleLearnersSessionCalendar
-              day={calendar.day}
-              timeRange="9:00 AM - 11:30 AM"
-              headerStart={calendar.headerStart}
-              headerEnd={calendar.headerEnd}
-              calendarColor={calendar.calendarColor}
-              slots={sessionSlots}
-            />
-          ))
-        }
-      </div>
+      <ImageCarousel images={funCarouselImages} client:visible />
     </Container>
   </section>
 
