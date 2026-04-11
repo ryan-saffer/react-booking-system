@@ -10,7 +10,7 @@ import type {
     IncursionEvent,
     DiscountCode,
     Invitation,
-    LittleLearnersEnrolment,
+    PreschoolProgramEnrolment,
     WithoutId,
     StudioOrMaster,
     AuthUser,
@@ -109,12 +109,12 @@ class Client {
         return this.#updateDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId), data)
     }
 
-    getLittleLearnersEnrolment(enrolmentId: string) {
-        return this.#getDocument(FirestoreRefs.littleLearnersEnrolment(enrolmentId))
+    getPreschoolProgramEnrolment(enrolmentId: string) {
+        return this.#getDocument(FirestoreRefs.preschoolProgramEnrolment(enrolmentId))
     }
 
-    async getLittleLearnersEnrolments(appointmentTypeId: number, options?: { includeInactive?: boolean }) {
-        const collection = await FirestoreRefs.littleLearnersEnrolments()
+    async getPreschoolProgramEnrolments(appointmentTypeId: number, options?: { includeInactive?: boolean }) {
+        const collection = await FirestoreRefs.preschoolProgramEnrolments()
         const enrolments = await this.#getDocuments(collection.where('appointmentTypeId', '==', appointmentTypeId))
 
         if (options?.includeInactive) {
@@ -124,12 +124,12 @@ class Client {
         return enrolments.filter((enrolment) => enrolment.status === 'active')
     }
 
-    updateLittleLearnersEnrolment(enrolmentId: string, data: RecursivePartial<LittleLearnersEnrolment>) {
-        return this.#updateDocument(FirestoreRefs.littleLearnersEnrolment(enrolmentId), data)
+    updatePreschoolProgramEnrolment(enrolmentId: string, data: RecursivePartial<PreschoolProgramEnrolment>) {
+        return this.#updateDocument(FirestoreRefs.preschoolProgramEnrolment(enrolmentId), data)
     }
 
-    async deleteLittleLearnersEnrolment(enrolmentId: string) {
-        return (await FirestoreRefs.littleLearnersEnrolment(enrolmentId)).delete()
+    async deletePreschoolProgramEnrolment(enrolmentId: string) {
+        return (await FirestoreRefs.preschoolProgramEnrolment(enrolmentId)).delete()
     }
 
     async createEventBooking(event: CreateEvent['event'], slots: CreateEvent['slots']) {

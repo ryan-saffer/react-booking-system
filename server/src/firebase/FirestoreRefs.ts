@@ -7,7 +7,7 @@ import type {
     Event,
     FirestoreBooking,
     Invitation,
-    LittleLearnersEnrolment,
+    PreschoolProgramEnrolment,
     ZohoAccessToken,
 } from 'fizz-kidz'
 
@@ -37,14 +37,14 @@ export class FirestoreRefs {
         return (await this.afterSchoolEnrolments()).doc(appointmentId)
     }
 
-    static async littleLearnersEnrolments() {
+    static async preschoolProgramEnrolments() {
         return (await FirestoreClient.getInstance()).collection(
-            'littleLearnersEnrolments'
-        ) as Collection<LittleLearnersEnrolment>
+            'preschoolProgramEnrolments'
+        ) as Collection<PreschoolProgramEnrolment>
     }
 
-    static async littleLearnersEnrolment(enrolmentId: string) {
-        return (await this.littleLearnersEnrolments()).doc(enrolmentId)
+    static async preschoolProgramEnrolment(enrolmentId: string) {
+        return (await this.preschoolProgramEnrolments()).doc(enrolmentId)
     }
 
     static async events() {

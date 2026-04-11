@@ -75,30 +75,32 @@ const AfterSchoolProgramEnrolmentPage = lazy(() =>
         (module) => ({ default: module.AfterSchoolProgramEnrolmentPage })
     )
 )
-const LittleLearnersEnrolmentPage = lazy(() =>
-    import('./components/little-learners/booking-form/pages/little-learners-enrolment-page.js').then((module) => ({
-        default: module.LittleLearnersEnrolmentPage,
+const PreschoolProgramEnrolmentPage = lazy(() =>
+    import('./components/preschool-program/booking-form/pages/preschool-program-enrolment-page.js').then((module) => ({
+        default: module.PreschoolProgramEnrolmentPage,
     }))
 )
-const LittleLearnersSessionSelectorPage = lazy(() =>
-    import('./components/little-learners/attendance/session-selector/little-learners-session-selector-page.js').then(
-        (module) => ({ default: module.LittleLearnersSessionSelectorPage })
-    )
-)
-const LittleLearnersSessionAttendancePage = lazy(() =>
+const PreschoolProgramSessionSelectorPage = lazy(() =>
     import(
-        './components/little-learners/attendance/session-attendance/pages/little-learners-session-attendance-page.js'
-    ).then((module) => ({ default: module.LittleLearnersSessionAttendancePage }))
+        './components/preschool-program/attendance/session-selector/preschool-program-session-selector-page.js'
+    ).then((module) => ({ default: module.PreschoolProgramSessionSelectorPage }))
 )
-const LittleLearnersInvoicingPage = lazy(() =>
-    import('./components/little-learners/invoicing/pages/little-learners-invoicing-page.js').then((module) => ({
-        default: module.LittleLearnersInvoicingPage,
+const PreschoolProgramSessionAttendancePage = lazy(() =>
+    import(
+        './components/preschool-program/attendance/session-attendance/pages/preschool-program-session-attendance-page.js'
+    ).then((module) => ({ default: module.PreschoolProgramSessionAttendancePage }))
+)
+const PreschoolProgramInvoicingPage = lazy(() =>
+    import('./components/preschool-program/invoicing/pages/preschool-program-invoicing-page.js').then((module) => ({
+        default: module.PreschoolProgramInvoicingPage,
     }))
 )
-const LittleLearnersInvoiceStatusPage = lazy(() =>
-    import('./components/little-learners/invoicing/pages/little-learners-invoice-status-page.js').then((module) => ({
-        default: module.LittleLearnersInvoiceStatusPage,
-    }))
+const PreschoolProgramInvoiceStatusPage = lazy(() =>
+    import('./components/preschool-program/invoicing/pages/preschool-program-invoice-status-page.js').then(
+        (module) => ({
+            default: module.PreschoolProgramInvoiceStatusPage,
+        })
+    )
 )
 const SelectedProgramProvider = lazy(() =>
     import('./components/after-school-program/enrolment-form/selected-program.provider.js').then((module) => ({
@@ -370,14 +372,14 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
-                        path: 'little-learners',
+                        path: 'preschool-program',
                         children: [
                             {
                                 path: '',
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="bookings:read">
-                                            <LittleLearnersSessionSelectorPage />
+                                            <PreschoolProgramSessionSelectorPage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
@@ -387,7 +389,7 @@ const router = createBrowserRouter([
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="bookings:read">
-                                            <LittleLearnersSessionAttendancePage />
+                                            <PreschoolProgramSessionAttendancePage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
@@ -395,14 +397,14 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
-                        path: 'little-learners-invoicing',
+                        path: 'preschool-program-invoicing',
                         children: [
                             {
                                 index: true,
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="admin">
-                                            <LittleLearnersInvoicingPage />
+                                            <PreschoolProgramInvoicingPage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
@@ -412,7 +414,7 @@ const router = createBrowserRouter([
                                 Component: () => (
                                     <Suspense fallback={<Loader fullScreen />}>
                                         <ProtectedRoute permission="admin">
-                                            <LittleLearnersInvoiceStatusPage />
+                                            <PreschoolProgramInvoiceStatusPage />
                                         </ProtectedRoute>
                                     </Suspense>
                                 ),
@@ -535,10 +537,10 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'little-learners-enrolment-form',
+                path: 'preschool-program-enrolment-form',
                 Component: () => (
                     <Suspense fallback={<Loader fullScreen />}>
-                        <LittleLearnersEnrolmentPage />
+                        <PreschoolProgramEnrolmentPage />
                     </Suspense>
                 ),
             },
