@@ -34,6 +34,8 @@ export type GetAppointmentTypesParams = {
         | 'art-malvern'
         | 'art-cheltenham'
         | 'art-kingsville'
+        | 'little-learners'
+        | 'little-learners-test'
         | 'play-lab-test'
         | 'play-lab'
     >

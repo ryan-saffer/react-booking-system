@@ -10,6 +10,7 @@ import type {
     IncursionEvent,
     DiscountCode,
     Invitation,
+    LittleLearnersEnrolment,
     WithoutId,
     StudioOrMaster,
     AuthUser,
@@ -106,6 +107,29 @@ class Client {
 
     updateAfterSchoolEnrolment(appointmentId: string, data: RecursivePartial<AfterSchoolEnrolment>) {
         return this.#updateDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId), data)
+    }
+
+    getLittleLearnersEnrolment(enrolmentId: string) {
+        return this.#getDocument(FirestoreRefs.littleLearnersEnrolment(enrolmentId))
+    }
+
+    async getLittleLearnersEnrolments(appointmentTypeId: number, options?: { includeInactive?: boolean }) {
+        const collection = await FirestoreRefs.littleLearnersEnrolments()
+        const enrolments = await this.#getDocuments(collection.where('appointmentTypeId', '==', appointmentTypeId))
+
+        if (options?.includeInactive) {
+            return enrolments
+        }
+
+        return enrolments.filter((enrolment) => enrolment.status === 'active')
+    }
+
+    updateLittleLearnersEnrolment(enrolmentId: string, data: RecursivePartial<LittleLearnersEnrolment>) {
+        return this.#updateDocument(FirestoreRefs.littleLearnersEnrolment(enrolmentId), data)
+    }
+
+    async deleteLittleLearnersEnrolment(enrolmentId: string) {
+        return (await FirestoreRefs.littleLearnersEnrolment(enrolmentId)).delete()
     }
 
     async createEventBooking(event: CreateEvent['event'], slots: CreateEvent['slots']) {

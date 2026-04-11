@@ -75,6 +75,31 @@ const AfterSchoolProgramEnrolmentPage = lazy(() =>
         (module) => ({ default: module.AfterSchoolProgramEnrolmentPage })
     )
 )
+const LittleLearnersEnrolmentPage = lazy(() =>
+    import('./components/little-learners/booking-form/pages/little-learners-enrolment-page.js').then((module) => ({
+        default: module.LittleLearnersEnrolmentPage,
+    }))
+)
+const LittleLearnersSessionSelectorPage = lazy(() =>
+    import('./components/little-learners/attendance/session-selector/little-learners-session-selector-page.js').then(
+        (module) => ({ default: module.LittleLearnersSessionSelectorPage })
+    )
+)
+const LittleLearnersSessionAttendancePage = lazy(() =>
+    import(
+        './components/little-learners/attendance/session-attendance/pages/little-learners-session-attendance-page.js'
+    ).then((module) => ({ default: module.LittleLearnersSessionAttendancePage }))
+)
+const LittleLearnersInvoicingPage = lazy(() =>
+    import('./components/little-learners/invoicing/pages/little-learners-invoicing-page.js').then((module) => ({
+        default: module.LittleLearnersInvoicingPage,
+    }))
+)
+const LittleLearnersInvoiceStatusPage = lazy(() =>
+    import('./components/little-learners/invoicing/pages/little-learners-invoice-status-page.js').then((module) => ({
+        default: module.LittleLearnersInvoiceStatusPage,
+    }))
+)
 const SelectedProgramProvider = lazy(() =>
     import('./components/after-school-program/enrolment-form/selected-program.provider.js').then((module) => ({
         default: module.SelectedProgramProvider,
@@ -345,6 +370,56 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
+                        path: 'little-learners',
+                        children: [
+                            {
+                                path: '',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <LittleLearnersSessionSelectorPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ':appointmentTypeId',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <LittleLearnersSessionAttendancePage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'little-learners-invoicing',
+                        children: [
+                            {
+                                index: true,
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="admin">
+                                            <LittleLearnersInvoicingPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: 'program',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="admin">
+                                            <LittleLearnersInvoiceStatusPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
                         path: 'payroll',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
@@ -456,6 +531,14 @@ const router = createBrowserRouter([
                         <SelectedProgramProvider>
                             <AfterSchoolProgramEnrolmentPage />
                         </SelectedProgramProvider>
+                    </Suspense>
+                ),
+            },
+            {
+                path: 'little-learners-enrolment-form',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <LittleLearnersEnrolmentPage />
                     </Suspense>
                 ),
             },
