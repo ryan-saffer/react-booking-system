@@ -3,37 +3,39 @@ import { getImage, Image } from "astro:assets";
 import { ArrowRight, CalendarDays, Clock3 } from "lucide-react";
 
 import { Button } from "@/components/react/ui/button";
-import atom from "@/assets/svg/atom.svg";
 import blueAtom from "@/assets/svg/blue-atom.svg";
 import pinkAtom from "@/assets/svg/pink-atom.svg";
 import pinkGreenDots from "@/assets/svg/pink-green-dots.svg";
-import pinkGreenWhite from "@/assets/svg/pink-green-white.svg";
-import purpleScience from "@/assets/svg/purple-science.svg";
 import smallShapes from "@/assets/svg/small-shapes.svg";
 import check from "@/assets/images/pages/franchising/check.png";
 import clouds from "@/assets/images/pages/franchising/clouds.png";
 import graphic10 from "@/assets/images/pages/franchising/graphics/graphic10.png";
 import graphic12 from "@/assets/images/pages/franchising/graphics/graphic12.png";
 import graphic15 from "@/assets/images/pages/franchising/graphics/graphic15.png";
-import waveSeparatorSvg from "@/assets/images/pages/gift-cards/wave-separator.svg?raw";
-import whiteSlime from "@/assets/images/pages/gift-cards/white-slime.svg";
+import holidayPrograms from "@/assets/images/pages/holiday-programs/holiday-programs.png";
 import playLabImage from "@/assets/images/pages/franchising/play-lab.jpg";
 import purpleCurve from "@/assets/images/pages/franchising/purple-curve.png";
 import calendarHeaderIcon from "@/assets/images/pages/little-learners/schedule-icons/calendar.svg";
-import littleLearnersHero from "@/assets/images/pages/little-learners/little-learners-hero.png";
 import sessionIcon1 from "@/assets/images/pages/little-learners/session-icons/1.svg";
 import sessionIcon2 from "@/assets/images/pages/little-learners/session-icons/2.svg";
 import sessionIcon3 from "@/assets/images/pages/little-learners/session-icons/3.svg";
 import sessionIcon4 from "@/assets/images/pages/little-learners/session-icons/4.svg";
 import sessionIcon5 from "@/assets/images/pages/little-learners/session-icons/5.svg";
-import step1 from "@/assets/images/pages/franchising/step-1.jpg";
-import step2 from "@/assets/images/pages/franchising/step-2.jpg";
-import step3 from "@/assets/images/pages/franchising/step-3.jpg";
+import step1 from "@/assets/images/pages/little-learners/1.jpg";
+import step2 from "@/assets/images/pages/little-learners/2.jpg";
+import step3 from "@/assets/images/pages/little-learners/3.jpg";
+import carousel1 from "@/assets/images/pages/little-learners/carousel1.jpg";
+import carousel2 from "@/assets/images/pages/little-learners/carousel2.jpg";
+import carousel3 from "@/assets/images/pages/little-learners/carousel3.jpg";
+import wednesday from "@/assets/images/pages/little-learners/wednesday.jpg";
+import thursday from "@/assets/images/pages/little-learners/thursday.jpg";
 import schools from "@/assets/images/pages/franchising/schools.jpg";
 import yellowBlob from "@/assets/images/blobs/yellow-blob.png";
 import Container from "@/components/container.astro";
 import LittleLearnersKidsHero from "@/components/image-clips/little-learners-kids-hero.astro";
 import LittleLearnersSessionCalendar from "@/components/little-learners-session-calendar.astro";
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
 import PrimaryButton from "@/components/primary-button.astro";
 import Values from "@/components/values.astro";
@@ -51,10 +53,10 @@ const sessionSlots = [
   },
   {
     time: "9:15 AM",
-    title: "Creative Craft",
-    subtitle: "Guided Project",
-    color: "#FFA252",
-    icon: "craft",
+    title: "Science & Sensory Play",
+    subtitle: "Hands-On Exploration",
+    color: "#54DB9D",
+    icon: "science",
   },
   {
     time: "10:00 AM",
@@ -64,10 +66,10 @@ const sessionSlots = [
   },
   {
     time: "10:15 AM",
-    title: "Science & Sensory Play",
-    subtitle: "Hands-On Exploration",
-    color: "#54DB9D",
-    icon: "science",
+    title: "Creative Craft",
+    subtitle: "Guided Project",
+    color: "#FFA252",
+    icon: "craft",
   },
   {
     time: "11:00 AM",
@@ -92,9 +94,9 @@ const sessionSlots = [
   },
 ] as const;
 
-const funStep1Optimised = await getImage({ src: step1, format: "webp" });
-const funStep2Optimised = await getImage({ src: step2, format: "webp" });
-const funStep3Optimised = await getImage({ src: step3, format: "webp" });
+const carousel1Optimised = await getImage({ src: carousel1, format: "webp" });
+const carousel2Optimised = await getImage({ src: carousel2, format: "webp" });
+const carousel3Optimised = await getImage({ src: carousel3, format: "webp" });
 const funSchoolsOptimised = await getImage({ src: schools, format: "webp" });
 const funPlayLabOptimised = await getImage({
   src: playLabImage,
@@ -103,15 +105,15 @@ const funPlayLabOptimised = await getImage({
 
 const funCarouselImages = [
   {
-    image: funStep1Optimised,
+    image: carousel1Optimised,
     alt: "Child enjoying a science activity during a Fizz Kidz session",
   },
   {
-    image: funStep2Optimised,
+    image: carousel2Optimised,
     alt: "Children exploring a science activity together",
   },
   {
-    image: funStep3Optimised,
+    image: carousel3Optimised,
     alt: "Child drawing during a Fizz Kidz learning activity",
   },
   {
@@ -123,145 +125,52 @@ const funCarouselImages = [
     alt: "Child participating in a Play Lab activity",
   },
 ];
-
-const heroBackground = "#7FCFE4";
-const heroWaveMarkup = waveSeparatorSvg
-  .replace("<svg ", '<svg class="-mb-1 block h-auto w-full" ')
-  .replace(/<path d="M853 31\.4025[\s\S]*?fill="#00C7DD"\/>/, "");
 ---
 
 <Layout
   title="Browse and book programs and activites for toddlers aged 18 months to 5 years. | Fizz Kidz"
   description="Sparking creativity and curiosity with fun, hands-on science, art, and craft experiences for kids aged 18 months to 5 years!"
 >
-  <style lang="css">
-    :global(header) {
-      box-shadow: none !important;
-      transition: box-shadow 150ms ease;
-    }
-    :global(body.scrolled header) {
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
-    }
-  </style>
-  <script is:inline>
-    const toggleHeaderShadow = () => {
-      document.body.classList.toggle("scrolled", window.scrollY > 10);
-    };
-    window.addEventListener("scroll", toggleHeaderShadow, { passive: true });
-    toggleHeaderShadow();
-  </script>
-
-  <section
-    class="relative overflow-hidden"
-    style={{ backgroundColor: heroBackground }}
-  >
-    <Image
-      src={whiteSlime}
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute left-0 right-0 z-50 w-full"
+  <Container class="mb-40 pt-4">
+    <BreadcrumbWrapper
+      client:idle
+      items={[
+        {
+          type: "dropdown",
+          title: "Little Learners",
+          items: [
+            {
+              type: "link",
+              title: "Birthday Parties",
+              path: "/birthday-parties/",
+              isNew: false,
+            },
+            {
+              type: "link",
+              title: "Holiday Programs",
+              path: "/holiday-programs/",
+              isNew: false,
+            },
+          ],
+        },
+      ]}
     />
-
-    <Image
-      src={pinkGreenWhite}
-      alt=""
-      aria-hidden="true"
-      class="absolute left-[5%] top-[70px] hidden w-16 xl:block"
-    />
-    <Image
-      src={pinkAtom}
-      alt=""
-      aria-hidden="true"
-      class="absolute left-1/2 top-[40px] hidden w-16 -translate-x-1/2 xl:block"
-    />
-    <Image
-      src={purpleScience}
-      alt=""
-      aria-hidden="true"
-      class="absolute right-[11%] top-[40px] hidden w-14 xl:block"
-    />
-    <div
-      class="absolute right-[27%] top-[160px] hidden h-14 w-14 rounded-full bg-[#FFF142] xl:block"
+    <PageIntro
+      subtitle="A term based program, delivered weekly for children aged 3 to 6 years."
+      color="purple"
+      actionButtonText="Book a free trial"
+      actionButtonPath="https://bookings.fizzkidz.com.au/play-lab-booking"
+      type="image"
+      image={holidayPrograms}
+      imageAlt="Holiday Programs"
     >
-    </div>
-    <Image
-      src={atom}
-      alt=""
-      aria-hidden="true"
-      class="absolute bottom-[210px] left-[42%] hidden w-20 xl:block"
-    />
-    <Image
-      src={graphic10}
-      alt=""
-      aria-hidden="true"
-      class="absolute bottom-[215px] left-[2%] hidden w-16 xl:block"
-    />
-
-    <Container
-      class="relative z-10 mx-auto mt-24 py-16 lg:min-h-[860px] lg:py-24 xl:min-h-[920px]"
-    >
-      <div class="w-full lg:w-[65%]">
-        <p class="font-gotham text-lg font-medium text-white md:text-xl">
-          <a href="/" class="transition hover:underline">Home</a> &gt; Little Learners
-        </p>
-
-        <h1
-          class="mt-6 max-w-[900px] font-lilita text-4xl uppercase leading-[0.95] text-[#8F44E1] md:text-6xl xl:text-[4.75rem]"
-        >
-          <span class="block whitespace-nowrap">Fizz Kidz weekday</span>
-          <span class="block whitespace-nowrap">pre-school programs</span>
-        </h1>
-
-        <p
-          class="mt-4 max-w-[660px] font-lilita text-2xl uppercase leading-tight text-white sm:mt-8 md:text-4xl"
-        >
-          A term based program, delivered weekly for children aged 3 to 6 years.
-        </p>
-
-        <p
-          class="mt-4 max-w-[670px] font-gotham text-lg leading-relaxed text-white sm:mt-8 md:text-2xl md:leading-relaxed"
-        >
-          Build confidence and school readiness through engaging, hands-on art
-          and science experiences.
-        </p>
-
-        <a
-          href="https://bookings.fizzkidz.com.au/play-lab-booking"
-          target="_blank"
-        >
-          <Button
-            className="mt-10 rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-lg uppercase text-[#8F44E1] hover:bg-[#FFD115]/90 md:text-xl"
-          >
-            Book a free trial
-            <span
-              class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#8F44E1] text-white md:h-8 md:w-8"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </span>
-          </Button>
-        </a>
-      </div>
-    </Container>
-
-    <div
-      class="pointer-events-none absolute bottom-0 right-[4%] z-10 hidden w-[42%] max-w-[760px] lg:block xl:right-[6%] xl:w-[40%]"
-    >
-      <Image
-        src={littleLearnersHero}
-        alt=""
-        aria-hidden="true"
-        class="block w-full object-contain"
-        width={900}
-        loading="eager"
-      />
-    </div>
-
-    <div class="relative z-20">
-      <Fragment set:html={heroWaveMarkup} />
-    </div>
-  </section>
+      <span slot="title">Fizz Kidz Weekday Pre-School Programs</span>
+      <span slot="content"
+        >Build confidence and school readiness through engaging, hands-on art
+        and science experiences.</span
+      >
+    </PageIntro>
+  </Container>
 
   <section class="relative overflow-hidden">
     <Image
@@ -380,12 +289,13 @@ const heroWaveMarkup = waveSeparatorSvg
       </div>
 
       <div
-        class="mt-20 rounded-[1.75rem] bg-[#FFE7C0] px-6 py-6 text-center md:px-10 lg:mt-36"
+        class="mt-4 rounded-[1.75rem] bg-[#FFE7C0] px-6 py-6 text-center md:px-10 lg:mt-36"
       >
-        <p class="font-lilita text-2xl uppercase leading-tight md:text-3xl">
-          <span class="mr-3 inline-block">👉</span>Spots are limited to keep
-          sessions small and supportive
-        </p>
+        <a href="https://todo.com">
+          <p class="font-lilita text-2xl uppercase leading-tight md:text-3xl">
+            Enrol for a Free Trial!
+          </p></a
+        >
       </div>
     </Container>
   </section>
@@ -452,7 +362,7 @@ const heroWaveMarkup = waveSeparatorSvg
             {
               [
                 {
-                  image: step2,
+                  image: wednesday,
                   alt: "Children exploring a science activity together",
                   title: "Wednesday Sessions",
                   cardColor: "#DFF8FF",
@@ -460,7 +370,7 @@ const heroWaveMarkup = waveSeparatorSvg
                   pillColor: "#11C6E8",
                 },
                 {
-                  image: schools,
+                  image: thursday,
                   alt: "Children taking part in a Fizz Kidz session",
                   title: "Thursday Sessions",
                   cardColor: "#FBE4F2",
@@ -598,7 +508,7 @@ const heroWaveMarkup = waveSeparatorSvg
 
             <div class="relative overflow-hidden rounded-[2rem] bg-white">
               <Image
-                src={step3}
+                src={wednesday}
                 alt="Child painting during a little learners activity"
                 class="w-full rounded-[1.6rem] object-cover"
                 width={900}
@@ -735,7 +645,7 @@ const heroWaveMarkup = waveSeparatorSvg
               class="h-[60vw] max-h-[420px] w-[60vw] max-w-[420px] overflow-hidden rounded-full border-[10px] border-[#F6BA33] bg-white md:border-[14px]"
             >
               <Image
-                src={step1}
+                src={step3}
                 alt="Children enjoying a Play Lab craft activity"
                 class="h-full w-full object-cover"
                 width={900}
