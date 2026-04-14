@@ -5,8 +5,10 @@ import { AcuityConstants, studioNameAndAddress } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { logError, throwTrpcError } from '@/utilities'
+import { ZohoClient } from '@/zoho/zoho-client'
 
 import { resolveCalendarStudio } from './resolve-calendar-studio'
 
@@ -85,6 +87,22 @@ export async function createPreschoolProgramEnrolment(input: CreatePreschoolProg
     await newDoc.set(enrolment)
 
     try {
+        const zohoClient = new ZohoClient()
+        await zohoClient.addPreschoolProgramContact({
+            firstName: input.parent.firstName,
+            lastName: input.parent.lastName,
+            email: input.parent.email,
+            mobile: input.parent.phone,
+            studio,
+            childName: input.child.firstName,
+            childBirthdayISO: input.child.dob,
+            optOutOfMarketing: !input.joinMailingList,
+        })
+    } catch (err) {
+        logError(`unable to add Preschool Program enrolment to zoho with id: ${enrolment.id}`, err)
+    }
+
+    try {
         const mailClient = await MailClient.getInstance()
         await mailClient.sendEmail('preschoolProgramBookingConfirmation', input.parent.email, {
             parentName: input.parent.firstName,
@@ -108,6 +126,17 @@ export async function createPreschoolProgramEnrolment(input: CreatePreschoolProg
     } catch (err) {
         logError(`unable to send Preschool Program booking confirmation for enrolment with id: '${enrolment.id}'`, err)
     }
+
+    const mixpanel = await MixpanelClient.getInstance()
+    await mixpanel.track('preschool-program-enrolment', {
+        distinct_id: input.parent.email,
+        appointmentTypeId: input.appointmentTypeId,
+        calendarId: input.calendarId,
+        location: studio,
+        childAge: Math.abs(DateTime.fromISO(input.child.dob).diffNow('years').years).toFixed(0),
+        className: input.className,
+        numberOfWeeks: appointments.length,
+    })
 
     return enrolment
 }

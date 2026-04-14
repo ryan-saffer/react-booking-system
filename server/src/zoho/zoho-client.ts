@@ -25,6 +25,7 @@ type WithBaseProps<T> = BaseProps & T
 type Service =
     | 'Birthday Party'
     | 'Holiday Program'
+    | 'Preschool Program'
     | 'Birthday Party Guest'
     | 'After School Program'
     | 'Activation / Event'
@@ -391,6 +392,24 @@ export class ZohoClient {
             service: 'After School Program',
             customer_type: 'B2C',
             ...props,
+        })
+    }
+
+    addPreschoolProgramContact(
+        props: WithBaseProps<{
+            studio: StudioOrTest
+            childName: string
+            childBirthdayISO: string
+            optOutOfMarketing: boolean
+        }>
+    ) {
+        const { studio, ...baseProps } = props
+
+        return this.#addParentWithChild({
+            service: 'Preschool Program',
+            branch: capitalise(studio),
+            customer_type: 'B2C',
+            ...baseProps,
         })
     }
 

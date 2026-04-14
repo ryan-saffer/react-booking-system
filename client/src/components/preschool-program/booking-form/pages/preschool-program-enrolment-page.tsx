@@ -174,8 +174,8 @@ export function PreschoolProgramEnrolmentPage() {
                                 <CheckCircle className="h-4 w-4" />
                                 <AlertTitle className="font-semibold">Enrolment submitted</AlertTitle>
                                 <AlertDescription className="font-medium">
-                                    Booking confirmed! You should have a confirmation email with the details. After your
-                                    free trial, we will be in touch to know if you want to continue with the term.
+                                    You should have a confirmation email with the details. After your free trial, we
+                                    will be in touch to know if you want to continue with the term.
                                 </AlertDescription>
                             </Alert>
                         ) : formStage === 'form' && selectedProgram ? (

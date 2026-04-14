@@ -1,7 +1,10 @@
+import { DateTime } from 'luxon'
+
 import type { UnenrollPreschoolProgramParams } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MixpanelClient } from '@/mixpanel/mixpanel-client'
 import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
 import { logError, throwTrpcError } from '@/utilities'
@@ -70,6 +73,17 @@ export async function unenrollPreschoolProgram(input: UnenrollPreschoolProgramPa
                     err
                 )
             }
+
+            const mixpanel = await MixpanelClient.getInstance()
+            await mixpanel.track('preschool-program-unenrolment', {
+                distinct_id: enrolment.parent.email,
+                appointmentTypeId: enrolment.appointmentTypeId,
+                calendarId: enrolment.calendarId,
+                location: enrolment.studio,
+                childAge: Math.abs(DateTime.fromISO(enrolment.child.dob).diffNow('years').years).toFixed(0),
+                className: enrolment.className,
+                numberOfWeeks: enrolment.appointments.length,
+            })
         })
     )
 }
