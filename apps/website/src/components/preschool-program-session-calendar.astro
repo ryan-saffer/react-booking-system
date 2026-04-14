@@ -1,7 +1,7 @@
 ---
-import calendarIconSvg from "@/assets/images/pages/little-learners/schedule-icons/calendar.svg?raw";
-import clockIconSvg from "@/assets/images/pages/little-learners/schedule-icons/clock.svg?raw";
-import LittleLearnersTimeSlot from "@/components/little-learners-time-slot.astro";
+import calendarIconSvg from "@/assets/images/pages/preschool-program/schedule-icons/calendar.svg?raw";
+import clockIconSvg from "@/assets/images/pages/preschool-program/schedule-icons/clock.svg?raw";
+import PreschoolProgramTimeSlot from "@/components/preschool-program-time-slot.astro";
 
 type SlotIcon =
   | "welcome"
@@ -91,7 +91,7 @@ const displayTitle = title ?? (day ? `${day} Sessions` : "Sessions");
     <div>
       {
         slots.map((slot, index) => (
-          <LittleLearnersTimeSlot
+          <PreschoolProgramTimeSlot
             time={slot.time}
             title={slot.title}
             subtitle={slot.subtitle}

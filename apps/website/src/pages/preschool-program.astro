@@ -15,25 +15,25 @@ import graphic15 from "@/assets/images/pages/franchising/graphics/graphic15.png"
 import holidayPrograms from "@/assets/images/pages/holiday-programs/holiday-programs.png";
 import playLabImage from "@/assets/images/pages/franchising/play-lab.jpg";
 import purpleCurve from "@/assets/images/pages/franchising/purple-curve.png";
-import calendarHeaderIcon from "@/assets/images/pages/little-learners/schedule-icons/calendar.svg";
-import sessionIcon1 from "@/assets/images/pages/little-learners/session-icons/1.svg";
-import sessionIcon2 from "@/assets/images/pages/little-learners/session-icons/2.svg";
-import sessionIcon3 from "@/assets/images/pages/little-learners/session-icons/3.svg";
-import sessionIcon4 from "@/assets/images/pages/little-learners/session-icons/4.svg";
-import sessionIcon5 from "@/assets/images/pages/little-learners/session-icons/5.svg";
-import step1 from "@/assets/images/pages/little-learners/1.jpg";
-import step2 from "@/assets/images/pages/little-learners/2.jpg";
-import step3 from "@/assets/images/pages/little-learners/3.jpg";
-import carousel1 from "@/assets/images/pages/little-learners/carousel1.jpg";
-import carousel2 from "@/assets/images/pages/little-learners/carousel2.jpg";
-import carousel3 from "@/assets/images/pages/little-learners/carousel3.jpg";
-import wednesday from "@/assets/images/pages/little-learners/wednesday.jpg";
-import thursday from "@/assets/images/pages/little-learners/thursday.jpg";
+import calendarHeaderIcon from "@/assets/images/pages/preschool-program/schedule-icons/calendar.svg";
+import sessionIcon1 from "@/assets/images/pages/preschool-program/session-icons/1.svg";
+import sessionIcon2 from "@/assets/images/pages/preschool-program/session-icons/2.svg";
+import sessionIcon3 from "@/assets/images/pages/preschool-program/session-icons/3.svg";
+import sessionIcon4 from "@/assets/images/pages/preschool-program/session-icons/4.svg";
+import sessionIcon5 from "@/assets/images/pages/preschool-program/session-icons/5.svg";
+import step1 from "@/assets/images/pages/preschool-program/1.jpg";
+import step2 from "@/assets/images/pages/preschool-program/2.jpg";
+import step3 from "@/assets/images/pages/preschool-program/3.jpg";
+import carousel1 from "@/assets/images/pages/preschool-program/carousel1.jpg";
+import carousel2 from "@/assets/images/pages/preschool-program/carousel2.jpg";
+import carousel3 from "@/assets/images/pages/preschool-program/carousel3.jpg";
+import wednesday from "@/assets/images/pages/preschool-program/wednesday.jpg";
+import thursday from "@/assets/images/pages/preschool-program/thursday.jpg";
 import schools from "@/assets/images/pages/franchising/schools.jpg";
 import yellowBlob from "@/assets/images/blobs/yellow-blob.png";
 import Container from "@/components/container.astro";
-import LittleLearnersKidsHero from "@/components/image-clips/little-learners-kids-hero.astro";
-import LittleLearnersSessionCalendar from "@/components/little-learners-session-calendar.astro";
+import PreschoolProgramKidsHero from "@/components/image-clips/preschool-program-kids-hero.astro";
+import PreschoolProgramSessionCalendar from "@/components/preschool-program-session-calendar.astro";
 import PageIntro from "@/components/page-intro.astro";
 import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
 import Layout from "@/layout/Layout.astro";
@@ -98,7 +98,7 @@ const carousel1Optimised = await getImage({ src: carousel1, format: "webp" });
 const carousel2Optimised = await getImage({ src: carousel2, format: "webp" });
 const carousel3Optimised = await getImage({ src: carousel3, format: "webp" });
 const funSchoolsOptimised = await getImage({ src: schools, format: "webp" });
-const funPlayLabOptimised = await getImage({
+const funProgramOptimised = await getImage({
   src: playLabImage,
   format: "webp",
 });
@@ -121,15 +121,15 @@ const funCarouselImages = [
     alt: "Children smiling during a Fizz Kidz session",
   },
   {
-    image: funPlayLabOptimised,
-    alt: "Child participating in a Play Lab activity",
+    image: funProgramOptimised,
+    alt: "Child participating in a Preschool Program activity",
   },
 ];
 ---
 
 <Layout
-  title="Browse and book programs and activites for toddlers aged 18 months to 5 years. | Fizz Kidz"
-  description="Sparking creativity and curiosity with fun, hands-on science, art, and craft experiences for kids aged 18 months to 5 years!"
+  title="Browse and book the Preschool Program for children aged 3 to 6 years. | Fizz Kidz"
+  description="Build confidence and school readiness with the Fizz Kidz Preschool Program for children aged 3 to 6 years."
 >
   <Container class="mb-40 pt-4">
     <BreadcrumbWrapper
@@ -137,7 +137,7 @@ const funCarouselImages = [
       items={[
         {
           type: "dropdown",
-          title: "Little Learners",
+          title: "Preschool Program",
           items: [
             {
               type: "link",
@@ -164,7 +164,7 @@ const funCarouselImages = [
       image={holidayPrograms}
       imageAlt="Holiday Programs"
     >
-      <span slot="title">Fizz Kidz Weekday Pre-School Programs</span>
+      <span slot="title">Fizz Kidz Preschool Program</span>
       <span slot="content"
         >Build confidence and school readiness through engaging, hands-on art
         and science experiences.</span
@@ -430,7 +430,7 @@ const funCarouselImages = [
           </div>
         </div>
 
-        <LittleLearnersSessionCalendar
+        <PreschoolProgramSessionCalendar
           title="Daily Session Structure"
           headerIcon="clock"
           headerStart="#FF67B4"
@@ -509,7 +509,7 @@ const funCarouselImages = [
             <div class="relative overflow-hidden rounded-[2rem] bg-white">
               <Image
                 src={wednesday}
-                alt="Child painting during a little learners activity"
+                alt="Child painting during a Preschool Program activity"
                 class="w-full rounded-[1.6rem] object-cover"
                 width={900}
               />
@@ -598,7 +598,9 @@ const funCarouselImages = [
       <div class="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-20">
         <div class="w-full lg:w-1/2">
           <h2 class="font-lilita text-4xl uppercase leading-none md:text-6xl">
-            Why parents love<br /><span class="text-[#45D3F3]">play lab</span>
+            Why parents love<br /><span class="text-[#45D3F3]"
+              >Preschool Program</span
+            >
             <span class="ml-3 text-[#F24DA2]">&#9829;</span>
           </h2>
 
@@ -646,7 +648,7 @@ const funCarouselImages = [
             >
               <Image
                 src={step3}
-                alt="Children enjoying a Play Lab craft activity"
+                alt="Children enjoying a Preschool Program craft activity"
                 class="h-full w-full object-cover"
                 width={900}
               />
@@ -854,7 +856,7 @@ const funCarouselImages = [
         </div>
 
         <div class="w-full lg:w-[54%]">
-          <LittleLearnersKidsHero
+          <PreschoolProgramKidsHero
             img={schools}
             alt="Children smiling during a Fizz Kidz session"
             objectPosition="50% 30%"
@@ -884,14 +886,14 @@ const funCarouselImages = [
                   "You can book online through our website, or contact us directly and we'll help you find a time that works best for you and your child.",
               },
               {
-                question: "What age group is Play Lab for?",
+                question: "What age group is the Preschool Program for?",
                 answer:
-                  "Play Lab is designed for children aged 1 to 5 years old. Activities are thoughtfully adapted to suit each developmental stage, so everyone can enjoy and benefit from the session — from curious toddlers to creative preschoolers.",
+                  "The Preschool Program is designed for children aged 3 to 6 years old. Activities are thoughtfully adapted to suit each developmental stage, so children can build confidence, creativity, and school readiness in every session.",
               },
               {
                 question: "Do I stay with my child during the session?",
                 answer:
-                  "If your child is under 4 years old, yes. For this age group Play Lab is a caregiver-and-child program. You'll share in the fun, support their exploration, and make special memories together - without the clean-up! Children aged 4-5 years old are very welcome to attend independently, our team provides gentle guidance and lots of support throughout the session.",
+                  "No, the Preschool Program is designed as a drop-off program. During your free trial, you'll have a chance to meet the team, explore the environment, and see how your child settles into the session.",
               },
               {
                 question: "What types of activities do you run?",
@@ -900,13 +902,13 @@ const funCarouselImages = [
               },
               {
                 question: "How long is each session?",
-                answer: "Each Play Lab session runs for 60 minutes.",
+                answer: "Each Preschool Program session runs from 9:00 AM to 11:30 AM.",
               },
               {
                 question:
                   "My child has special needs. Is this program appropriate?",
                 answer:
-                  "Absolutely. We welcome all children and are passionate about creating an inclusive, supportive environment for every child. We encourage you to call us as we'd love to chat about how we can best support your child in the Play Lab space.",
+                  "Absolutely. We welcome all children and are passionate about creating an inclusive, supportive environment for every child. We encourage you to call us so we can chat about how best to support your child in the Preschool Program.",
               },
             ]}
           />
