@@ -1,12 +1,12 @@
 import { MessageCircleWarning } from 'lucide-react'
 
+import { capitalise } from 'fizz-kidz'
 import type { AcuityTypes } from 'fizz-kidz'
 
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@ui-components/card'
 
 import { useEnrolmentStore } from '../state/enrolment-store'
-import { getProgramDescriptionLines } from '../utils/program-description'
 
 type Props = {
     programs: AcuityTypes.Api.AppointmentType[]
@@ -24,38 +24,37 @@ export function ProgramSelection({ programs }: Props) {
 
             {programs.length > 0 ? (
                 programs.map((program) => {
-                    const details = getProgramDescriptionLines(program)
+                    const { time, dates, term } = JSON.parse(program.description)
 
                     return (
                         <Card
                             key={program.id}
                             onClick={() => setSelectedProgram(program)}
-                            className="cursor-pointer border-slate-200 shadow-sm transition hover:bg-slate-50"
+                            className="cursor-pointer border-violet-100 bg-violet-50/30 shadow-sm transition hover:border-violet-200 hover:bg-violet-50/60 hover:shadow-md"
                         >
-                            <CardHeader>
-                                <CardTitle className="text-lg font-medium">{program.name}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex gap-4">
-                                <div className="flex-1 space-y-2">
-                                    {details.length > 0 ? (
-                                        details.map((line) => (
-                                            <p key={line} className="text-sm text-muted-foreground">
-                                                {line}
-                                            </p>
-                                        ))
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground">
-                                            Select this program to continue.
-                                        </p>
-                                    )}
+                            <CardHeader className="space-y-3 pb-3">
+                                <div className="flex items-start justify-between gap-4 border-b border-violet-100 pb-3">
+                                    <div>
+                                        <CardTitle className="text-base font-medium">
+                                            Preschool Program - {term}
+                                        </CardTitle>
+                                        <p className="mt-2 text-lg font-bold  ">{time}</p>
+                                    </div>
+                                    <p className="rounded-full bg-white px-3 py-1 text-sm font-medium  shadow-sm">
+                                        {capitalise(selectedStudio)}
+                                    </p>
                                 </div>
-                                {program.image ? (
-                                    <img
-                                        src={program.image}
-                                        alt={program.name}
-                                        className="h-20 w-20 rounded-md object-cover"
-                                    />
-                                ) : null}
+                            </CardHeader>
+                            <CardContent className="space-y-2 pt-0 text-sm text-slate-600">
+                                <p>
+                                    <span className="font-medium"> {dates}</span>
+                                </p>
+                                <p>
+                                    <span className="font-medium">Studio: </span>
+                                    {capitalise(selectedStudio)}
+                                </p>
+
+                                <p>Select this program to continue.</p>
                             </CardContent>
                         </Card>
                     )
