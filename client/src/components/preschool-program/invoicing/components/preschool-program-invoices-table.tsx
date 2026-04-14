@@ -245,6 +245,7 @@ export function PreschoolProgramInvoicesTable() {
                                     <TableHead className="w-12">
                                         <Checkbox
                                             checked={allSelected}
+                                            disabled={actionsLoading}
                                             onCheckedChange={(checked) => toggleAllRows(checked === true)}
                                         />
                                     </TableHead>
@@ -269,12 +270,16 @@ export function PreschoolProgramInvoicesTable() {
                                     return (
                                         <TableRow
                                             key={enrolment.id}
-                                            className="cursor-pointer"
-                                            onClick={() => toggleRowSelection(enrolment.id)}
+                                            className={actionsLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
+                                            onClick={() => {
+                                                if (actionsLoading) return
+                                                toggleRowSelection(enrolment.id)
+                                            }}
                                         >
                                             <TableCell onClick={(event) => event.stopPropagation()}>
                                                 <Checkbox
                                                     checked={selectedIds.includes(enrolment.id)}
+                                                    disabled={actionsLoading}
                                                     onCheckedChange={(checked) =>
                                                         toggleRow(enrolment.id, checked === true)
                                                     }

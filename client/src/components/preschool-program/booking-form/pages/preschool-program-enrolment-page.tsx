@@ -174,8 +174,8 @@ export function PreschoolProgramEnrolmentPage() {
                                 <CheckCircle className="h-4 w-4" />
                                 <AlertTitle className="font-semibold">Enrolment submitted</AlertTitle>
                                 <AlertDescription className="font-medium">
-                                    Your place has been reserved for the term. Our team will handle the next steps from
-                                    here.
+                                    Booking confirmed! You should have a confirmation email with the details. After your
+                                    free trial, we will be in touch to know if you want to continue with the term.
                                 </AlertDescription>
                             </Alert>
                         ) : formStage === 'form' && selectedProgram ? (
@@ -197,7 +197,8 @@ export function PreschoolProgramEnrolmentPage() {
                                     <Alert variant="destructive">
                                         <AlertTitle>Unable to load this term</AlertTitle>
                                         <AlertDescription>
-                                            There was a problem checking the Preschool Program sessions.
+                                            There was a problem checking the Preschool Program sessions. Please try
+                                            again later.
                                         </AlertDescription>
                                     </Alert>
                                 ) : loadedClasses && !termHasAvailability ? (

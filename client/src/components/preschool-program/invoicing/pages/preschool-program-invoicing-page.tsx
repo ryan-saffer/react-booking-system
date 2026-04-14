@@ -18,6 +18,8 @@ import { resolveCalendarStudio } from '../../booking-form/utils/resolve-calendar
 const PRESCHOOL_PROGRAM_CATEGORIES: Array<'preschool-program' | 'preschool-program-test'> =
     import.meta.env.VITE_ENV === 'prod' ? ['preschool-program'] : ['preschool-program-test']
 
+const isProdEnv = import.meta.env.VITE_ENV === 'prod'
+
 export function PreschoolProgramInvoicingPage() {
     const { currentOrg } = useOrg()
 
@@ -30,7 +32,7 @@ function PreschoolProgramInvoicingPageContent({ currentOrg }: { currentOrg: Retu
 
     const showStudioSelector = currentOrg === 'master'
     const [selectedStudio, setSelectedStudio] = useState<StudioOrTest | null>(
-        currentOrg === 'master' ? null : currentOrg
+        currentOrg === 'master' ? null : isProdEnv ? currentOrg : 'test'
     )
     const [selectedAppointmentTypeId, setSelectedAppointmentTypeId] = useState<string | null>(null)
 
@@ -49,6 +51,8 @@ function PreschoolProgramInvoicingPageContent({ currentOrg }: { currentOrg: Retu
             { enabled: !!appointmentTypesQuery.data }
         )
     )
+
+    console.log({ appointmentTypes: appointmentTypesQuery.data, classes: classesQuery.data })
 
     const availableStudios = useMemo(() => {
         if (!classesQuery.data) return []

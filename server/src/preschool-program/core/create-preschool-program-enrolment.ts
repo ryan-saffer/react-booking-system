@@ -1,9 +1,12 @@
+import { DateTime } from 'luxon'
+
 import type { CreatePreschoolProgramEnrolmentParams, PreschoolProgramEnrolment } from 'fizz-kidz'
-import { AcuityConstants } from 'fizz-kidz'
+import { AcuityConstants, studioNameAndAddress } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { FirestoreRefs } from '@/firebase/FirestoreRefs'
-import { throwTrpcError } from '@/utilities'
+import { MailClient } from '@/sendgrid/MailClient'
+import { logError, throwTrpcError } from '@/utilities'
 
 import { resolveCalendarStudio } from './resolve-calendar-studio'
 
@@ -80,6 +83,31 @@ export async function createPreschoolProgramEnrolment(input: CreatePreschoolProg
     }
 
     await newDoc.set(enrolment)
+
+    try {
+        const mailClient = await MailClient.getInstance()
+        await mailClient.sendEmail('preschoolProgramBookingConfirmation', input.parent.email, {
+            parentName: input.parent.firstName,
+            childName: input.child.firstName,
+            className: input.className,
+            location: studioNameAndAddress(studio),
+            appointmentTimes: appointments
+                .slice()
+                .sort(
+                    (a, b) =>
+                        DateTime.fromISO(a.datetime, { setZone: true }).toMillis() -
+                        DateTime.fromISO(b.datetime, { setZone: true }).toMillis()
+                )
+                .map((appointment) => {
+                    const startTime = DateTime.fromISO(appointment.datetime, { setZone: true })
+                    return `${startTime.toFormat('cccc, LLL dd, h:mm a')} - ${startTime
+                        .plus({ minutes: parseInt(appointment.duration, 10) })
+                        .toFormat('h:mm a')}`
+                }),
+        })
+    } catch (err) {
+        logError(`unable to send Preschool Program booking confirmation for enrolment with id: '${enrolment.id}'`, err)
+    }
 
     return enrolment
 }

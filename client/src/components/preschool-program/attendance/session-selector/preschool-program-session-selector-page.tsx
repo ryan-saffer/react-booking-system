@@ -23,6 +23,8 @@ import type { ReactNode } from 'react'
 const PRESCHOOL_PROGRAM_CATEGORIES: Array<'preschool-program' | 'preschool-program-test'> =
     import.meta.env.VITE_ENV === 'prod' ? ['preschool-program'] : ['preschool-program-test']
 
+const isProdEnv = import.meta.env.VITE_ENV === 'prod'
+
 function Root({ children }: { children: ReactNode }) {
     return (
         <div className="twp mx-4 my-4 flex max-w-3xl flex-col gap-4 rounded-md border p-8 pt-4 md:mx-auto">
@@ -49,7 +51,7 @@ function PreschoolProgramSessionSelectorPageContent({
     const showStudioSelector = currentOrg === 'master'
 
     const [selectedStudio, setSelectedStudio] = useState<StudioOrTest | null>(
-        currentOrg === 'master' ? null : currentOrg
+        currentOrg === 'master' ? null : isProdEnv ? currentOrg : 'test'
     )
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<string | null>(null)
     const [selectedClass, setSelectedClass] = useState<string | null>(null)

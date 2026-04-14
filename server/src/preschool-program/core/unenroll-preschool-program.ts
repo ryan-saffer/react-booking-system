@@ -2,8 +2,9 @@ import type { UnenrollPreschoolProgramParams } from 'fizz-kidz'
 
 import { AcuityClient } from '@/acuity/core/acuity-client'
 import { DatabaseClient } from '@/firebase/DatabaseClient'
+import { MailClient } from '@/sendgrid/MailClient'
 import { SquareClient } from '@/square/core/square-client'
-import { throwTrpcError } from '@/utilities'
+import { logError, throwTrpcError } from '@/utilities'
 
 import type { InvoiceStatus } from 'square/api'
 
@@ -55,6 +56,20 @@ export async function unenrollPreschoolProgram(input: UnenrollPreschoolProgramPa
             }
 
             await DatabaseClient.deletePreschoolProgramEnrolment(enrolmentId)
+
+            try {
+                const mailClient = await MailClient.getInstance()
+                await mailClient.sendEmail('preschoolProgramUnenrolmentConfirmation', enrolment.parent.email, {
+                    parentName: enrolment.parent.firstName,
+                    childName: enrolment.child.firstName,
+                    className: enrolment.className,
+                })
+            } catch (err) {
+                logError(
+                    `Preschool Program enrolment with id ${enrolmentId} was cancelled successfully, however the confirmation email could not be sent`,
+                    err
+                )
+            }
         })
     )
 }
