@@ -63,7 +63,8 @@ export async function sendPreschoolProgramInvoices(input: SendPreschoolProgramIn
                     }
                 }
 
-                const amount = invoiceData.numberOfWeeks * parseFloat(enrolment.price) * 100
+                const unitPriceInCents = Math.round(Number(enrolment.price) * 100)
+                const amount = invoiceData.numberOfWeeks * unitPriceInCents
 
                 const invoice = await sendPreschoolProgramInvoice({
                     firstName: enrolment.parent.firstName,
