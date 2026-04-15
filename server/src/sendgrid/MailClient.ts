@@ -797,6 +797,34 @@ export class MailClient {
                     template: 'play_lab_cancellation.mjml',
                     useMjml: true,
                 }
+            case 'preschoolProgramBookingConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Booking Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_booking_confirmation.mjml',
+                    useMjml: true,
+                }
+            case 'preschoolProgramUnenrolmentConfirmation':
+                return {
+                    emailInfo: {
+                        to,
+                        from: {
+                            name: 'Fizz Kidz',
+                            email: 'bookings@fizzkidz.com.au',
+                        },
+                        subject: subject || 'Preschool Program Unenrolment Confirmation',
+                        replyTo: replyTo || 'bookings@fizzkidz.com.au',
+                    },
+                    template: 'preschool_program_unenrolment_confirmation.mjml',
+                    useMjml: true,
+                }
             default: {
                 assertNever(email)
                 throw new Error(`Unrecognised email template: ${email}`)

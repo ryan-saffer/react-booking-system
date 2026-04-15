@@ -10,6 +10,7 @@ import type {
     IncursionEvent,
     DiscountCode,
     Invitation,
+    PreschoolProgramEnrolment,
     WithoutId,
     StudioOrMaster,
     AuthUser,
@@ -106,6 +107,29 @@ class Client {
 
     updateAfterSchoolEnrolment(appointmentId: string, data: RecursivePartial<AfterSchoolEnrolment>) {
         return this.#updateDocument(FirestoreRefs.afterSchoolEnrolment(appointmentId), data)
+    }
+
+    getPreschoolProgramEnrolment(enrolmentId: string) {
+        return this.#getDocument(FirestoreRefs.preschoolProgramEnrolment(enrolmentId))
+    }
+
+    async getPreschoolProgramEnrolments(appointmentTypeId: number, options?: { includeInactive?: boolean }) {
+        const collection = await FirestoreRefs.preschoolProgramEnrolments()
+        const enrolments = await this.#getDocuments(collection.where('appointmentTypeId', '==', appointmentTypeId))
+
+        if (options?.includeInactive) {
+            return enrolments
+        }
+
+        return enrolments.filter((enrolment) => enrolment.status === 'active')
+    }
+
+    updatePreschoolProgramEnrolment(enrolmentId: string, data: RecursivePartial<PreschoolProgramEnrolment>) {
+        return this.#updateDocument(FirestoreRefs.preschoolProgramEnrolment(enrolmentId), data)
+    }
+
+    async deletePreschoolProgramEnrolment(enrolmentId: string) {
+        return (await FirestoreRefs.preschoolProgramEnrolment(enrolmentId)).delete()
     }
 
     async createEventBooking(event: CreateEvent['event'], slots: CreateEvent['slots']) {

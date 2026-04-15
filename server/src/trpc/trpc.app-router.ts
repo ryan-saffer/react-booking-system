@@ -6,6 +6,7 @@ import { eventsRouter } from '@/events/functions/trpc/trpc.events'
 import { holidayProgramsRouter } from '@/holiday-programs/functions/trpc/trpc.holiday-programs'
 import { partiesRouter } from '@/party-bookings/functions/trpc/trpc.parties'
 import { playLabRouter } from '@/play-lab/functions/trpc/trpc.play-lab'
+import { preschoolProgramRouter } from '@/preschool-program/functions/trpc/trpc.preschool-program'
 import { staffRouter } from '@/staff/functions/trpc/trpc.staffRouter'
 
 import { router } from './trpc'
@@ -16,6 +17,7 @@ export const appRouter = router({
     acuity: acuityRouter,
     holidayPrograms: holidayProgramsRouter,
     afterSchoolProgram: afterSchoolProgramRouter,
+    preschoolProgram: preschoolProgramRouter,
     staff: staffRouter,
     auth: authRouter,
     playLab: playLabRouter,
