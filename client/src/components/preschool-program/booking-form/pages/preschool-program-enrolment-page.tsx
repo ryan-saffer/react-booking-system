@@ -164,7 +164,7 @@ export function PreschoolProgramEnrolmentPage() {
             <div className="w-full">
                 <h1 className="text-center text-2xl">Preschool Program Enrolment Form</h1>
                 <p className="mt-2 text-center text-sm text-muted-foreground">
-                    Book your free trial session. If your child loves it (and we're sure they will!), You can enrol for
+                    Book your free trial session. If your child loves it (and we're sure they will!), you can enrol for
                     the term.
                 </p>
                 <Separator className="my-4" />

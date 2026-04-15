@@ -14,7 +14,7 @@
         <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
-        <mj-section background-color="#8F44E1" padding-bottom="0px">
+        <mj-section background-color="#EEC73A" padding-bottom="0px">
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
@@ -30,12 +30,24 @@
         <mj-wrapper padding-top="0" padding-bottom="0">
             <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0">
                 <mj-column width="100%">
-                    <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
-                    <mj-text color="#637381" font-size="16px">
-                        {{childName}} is booked into the Fizz Kidz Preschool Program and we are excited to welcome them.
+                    <mj-text font-size="16px"> Hi {{parentName}}, </mj-text>
+                    <mj-text font-size="16px">
+                        Yay! {{childName}} is all booked into the Fizz Kidz Preschool Program and we can't wait to
+                        welcome them ✨
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px">
-                        We have reserved their place in the term and included the session details below.
+                    <mj-text font-size="16px">
+                        {{childName}}'s first session is completely free, a chance for them to come along, immerse
+                        themselves in the program, and enjoy everything the program has to offer 💫 After they attend,
+                        we'll check in to see if you'd like to continue for the rest of the term. If so, we'll send
+                        through the term invoice and enrol {{childName}} - nice and easy 😊
+                    </mj-text>
+                    <mj-text font-size="16px">
+                        If you do continue, your facilitator will be there each week to warmly welcome {{childName}}
+                        into the studio. You're welcome to drop off (if you like), and we'll make sure they have the
+                        best time, every single session ✨
+                    </mj-text>
+                    <mj-text font-size="16px">
+                        You'll find the term dates below for your reference.
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
@@ -48,7 +60,7 @@
                     >
                         Program
                     </mj-text>
-                    <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
+                    <mj-text text-transform="capitalize" font-size="14px" padding-top="0">
                         {{className}}
                     </mj-text>
                 </mj-column>
@@ -62,7 +74,7 @@
                     >
                         Location
                     </mj-text>
-                    <mj-text color="#637381" font-size="14px" padding-top="0" mj-class="pre-wrap">
+                    <mj-text font-size="14px" padding-top="0" mj-class="pre-wrap">
                         {{{location}}}
                     </mj-text>
                 </mj-column>
@@ -76,7 +88,7 @@
                     >
                         When
                     </mj-text>
-                    <mj-text color="#637381" font-size="14px" padding-top="0">
+                    <mj-text font-size="14px" padding-top="0">
                         <ul style="margin-bottom: 0px; padding-left: 24px">
                             {{#appointmentTimes}}
                             <li>{{.}}</li>
@@ -85,22 +97,24 @@
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
-                    <mj-text color="#637381" font-size="16px">
-                        Preschool Program is a weekly 2.5 hour drop-off program for children aged 3 to 6 years, with
-                        art, science, sensory play, creative craft, movement and story time in a calm, structured
-                        environment.
+                    <mj-text font-size="16px"> Some more details: </mj-text>
+                </mj-column>
+                <mj-column width="100%">
+                    <mj-text font-size="16px">
+                        Our Preschool Program is a weekly 2.5-hour drop-off filled with all the Fizz Kidz fun - think
+                        hands-on science, sensory play, creative craft, movement and story time, all in a calm and
+                        supportive environment designed for little learners.
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px">
-                        Your child's first session is free. After they attend, we will check in to see if you would like
-                        to continue for the rest of the term. If you do, we will send through the term invoice then.
-                    </mj-text>
-                    <mj-text color="#637381" font-size="16px">
+                    <mj-text font-size="16px">
                         You can read more about the program
-                        <a href="https://www.fizzkidz.com.au/preschool-program/">here</a>. If you have any questions,
-                        reply to this email or call us on <a href="tel:+61390598144">(03) 9059 8144</a>.
+                        <a href="https://www.fizzkidz.com.au/preschool-program/">here</a>, and if you have any questions
+                        at all, just reply to this email or give us a call on
+                        <a href="tel:+61390598144">(03) 9059 8144</a>.
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px"> We look forward to seeing you soon. </mj-text>
-                    <mj-text color="#637381" font-size="16px"> The Fizz Kidz team </mj-text>
+                    <mj-text font-size="16px">
+                        We can't wait to see {{childName}} in the studio soon!
+                    </mj-text>
+                    <mj-text font-size="16px"> The Fizz Kidz Team </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>
