@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon'
 
-import { env } from '@/init'
 import { getOrCreateCustomer } from '@/square/core/get-or-create-customer'
 import { SquareClient } from '@/square/core/square-client'
 import { throwTrpcError } from '@/utilities'
 
-export async function sendInvoice(input: {
+type Input = {
     firstName: string
     lastName: string
     email: string
@@ -13,9 +12,11 @@ export async function sendInvoice(input: {
     locationId: string
     referenceId: string
     amount: number
+    catalogObjectId: string
     daysUntilDue?: number
-    metadata?: Record<string, string>
-}) {
+}
+
+export async function sendPreschoolProgramInvoice(input: Input) {
     const {
         firstName,
         lastName,
@@ -24,13 +25,12 @@ export async function sendInvoice(input: {
         locationId,
         referenceId,
         amount,
+        catalogObjectId,
         daysUntilDue = 3,
-        metadata,
     } = input
-    // 1. get or create customer
+
     const customerId = await getOrCreateCustomer(firstName, lastName, email)
 
-    // 2. create invoice items
     const square = await SquareClient.getInstance()
     const { order } = await square.orders
         .create({
@@ -49,34 +49,36 @@ export async function sendInvoice(input: {
                             currency: 'AUD',
                             amount: BigInt(amount),
                         },
-                        catalogObjectId: env === 'prod' ? '263WT2LGSAT5VJJA6FDE2CHH' : 'DFP3SILGH6TGT5PDALWSUNOB', // after school program enrolment
+                        catalogObjectId,
                     },
                 ],
-                metadata,
             },
         })
-        .catch((error) =>
-            throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating order for after school program enrolment', error, {
+        .catch((error) => {
+            console.log(error)
+            throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating order for Preschool Program invoice', error, {
                 input,
             })
-        )
-
-    if (!order)
-        throwTrpcError('INTERNAL_SERVER_ERROR', 'creating order failed for after school program invoice', null, {
-            input,
         })
 
-    if (!order.id)
+    if (!order) {
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'creating order failed for Preschool Program invoice', null, {
+            input,
+        })
+    }
+
+    if (!order.id) {
         throwTrpcError(
             'INTERNAL_SERVER_ERROR',
-            'creating order returned no order id for after school program invoice',
+            'creating order returned no order id for Preschool Program invoice',
             null,
             {
                 input,
             }
         )
+    }
 
-    const invoiceNumber = buildAfterSchoolInvoiceNumber(referenceId, order.id)
+    const invoiceNumber = buildPreschoolProgramInvoiceNumber(referenceId, order.id)
 
     const { invoice } = await square.invoices
         .create({
@@ -91,15 +93,15 @@ export async function sendInvoice(input: {
                         reminders: [
                             {
                                 relativeScheduledDays: -3,
-                                message: 'Your after school program invoice is overdue',
+                                message: 'Your Preschool Program invoice is overdue',
                             },
                             {
                                 relativeScheduledDays: -7,
-                                message: 'Your after school program invoice is overdue',
+                                message: 'Your Preschool Program invoice is overdue',
                             },
                             {
                                 relativeScheduledDays: -14,
-                                message: 'Your after school program invoice is overdue',
+                                message: 'Your Preschool Program invoice is overdue',
                             },
                         ],
                     },
@@ -112,17 +114,19 @@ export async function sendInvoice(input: {
             },
         })
         .catch((error) => {
-            throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating invoice for after school enrolment', error, {
+            console.log(error)
+            throwTrpcError('INTERNAL_SERVER_ERROR', 'error creating invoice for Preschool Program enrolment', error, {
                 input,
                 orderId: order.id,
             })
         })
 
-    if (!invoice || !invoice.id || !(typeof invoice.version === 'number'))
-        throwTrpcError('INTERNAL_SERVER_ERROR', 'creating invoice failed for after school program', null, {
+    if (!invoice || !invoice.id || !(typeof invoice.version === 'number')) {
+        throwTrpcError('INTERNAL_SERVER_ERROR', 'creating invoice failed for Preschool Program', null, {
             input,
             orderId: order.id,
         })
+    }
 
     await square.invoices.publish({
         invoiceId: invoice.id,
@@ -132,6 +136,6 @@ export async function sendInvoice(input: {
     return invoice
 }
 
-function buildAfterSchoolInvoiceNumber(referenceId: string, orderId: string) {
-    return `ASP-${referenceId.slice(-6).toUpperCase()}-${orderId.slice(-6).toUpperCase()}`
+function buildPreschoolProgramInvoiceNumber(referenceId: string, orderId: string) {
+    return `PP-${referenceId.slice(-6).toUpperCase()}-${orderId.slice(-6).toUpperCase()}`
 }

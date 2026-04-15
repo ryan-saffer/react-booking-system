@@ -1,4 +1,5 @@
 // import { ObjectKeys } from '../utilities'
+import { StudioOrTest } from '../core/studio'
 import { ObjectKeys } from '../utilities'
 import { StoreCalendars, TestCalendarId } from './constants/Calendars'
 
@@ -14,7 +15,7 @@ export function retrieveFormAndField(client: any, formId: any, fieldId: any) {
     return retrieveFormField(retrieveForm(client, formId), fieldId)
 }
 
-export function getStudioByCalendarId(id: number) {
+export function getStudioByCalendarId(id: number): StudioOrTest {
     if (id === TestCalendarId) return 'test'
     const keys = ObjectKeys(StoreCalendars)
     for (const key of keys) {

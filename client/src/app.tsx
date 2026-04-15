@@ -75,6 +75,33 @@ const AfterSchoolProgramEnrolmentPage = lazy(() =>
         (module) => ({ default: module.AfterSchoolProgramEnrolmentPage })
     )
 )
+const PreschoolProgramEnrolmentPage = lazy(() =>
+    import('./components/preschool-program/booking-form/pages/preschool-program-enrolment-page.js').then((module) => ({
+        default: module.PreschoolProgramEnrolmentPage,
+    }))
+)
+const PreschoolProgramSessionSelectorPage = lazy(() =>
+    import(
+        './components/preschool-program/attendance/session-selector/preschool-program-session-selector-page.js'
+    ).then((module) => ({ default: module.PreschoolProgramSessionSelectorPage }))
+)
+const PreschoolProgramSessionAttendancePage = lazy(() =>
+    import(
+        './components/preschool-program/attendance/session-attendance/pages/preschool-program-session-attendance-page.js'
+    ).then((module) => ({ default: module.PreschoolProgramSessionAttendancePage }))
+)
+const PreschoolProgramInvoicingPage = lazy(() =>
+    import('./components/preschool-program/invoicing/pages/preschool-program-invoicing-page.js').then((module) => ({
+        default: module.PreschoolProgramInvoicingPage,
+    }))
+)
+const PreschoolProgramInvoiceStatusPage = lazy(() =>
+    import('./components/preschool-program/invoicing/pages/preschool-program-invoice-status-page.js').then(
+        (module) => ({
+            default: module.PreschoolProgramInvoiceStatusPage,
+        })
+    )
+)
 const SelectedProgramProvider = lazy(() =>
     import('./components/after-school-program/enrolment-form/selected-program.provider.js').then((module) => ({
         default: module.SelectedProgramProvider,
@@ -345,6 +372,56 @@ const router = createBrowserRouter([
                         ],
                     },
                     {
+                        path: 'preschool-program',
+                        children: [
+                            {
+                                path: '',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PreschoolProgramSessionSelectorPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ':appointmentTypeId',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="bookings:read">
+                                            <PreschoolProgramSessionAttendancePage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
+                        path: 'preschool-program-invoicing',
+                        children: [
+                            {
+                                index: true,
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="admin">
+                                            <PreschoolProgramInvoicingPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: 'program',
+                                Component: () => (
+                                    <Suspense fallback={<Loader fullScreen />}>
+                                        <ProtectedRoute permission="admin">
+                                            <PreschoolProgramInvoiceStatusPage />
+                                        </ProtectedRoute>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
+                    },
+                    {
                         path: 'payroll',
                         Component: () => (
                             <Suspense fallback={<Loader fullScreen />}>
@@ -456,6 +533,14 @@ const router = createBrowserRouter([
                         <SelectedProgramProvider>
                             <AfterSchoolProgramEnrolmentPage />
                         </SelectedProgramProvider>
+                    </Suspense>
+                ),
+            },
+            {
+                path: 'preschool-program-enrolment-form',
+                Component: () => (
+                    <Suspense fallback={<Loader fullScreen />}>
+                        <PreschoolProgramEnrolmentPage />
                     </Suspense>
                 ),
             },
