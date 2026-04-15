@@ -1,0 +1,942 @@
+---
+import { getImage, Image } from "astro:assets";
+import { ArrowRight, CalendarDays, Clock3 } from "lucide-react";
+
+import { Button } from "@/components/react/ui/button";
+import blueAtom from "@/assets/svg/blue-atom.svg";
+import pinkAtom from "@/assets/svg/pink-atom.svg";
+import pinkGreenDots from "@/assets/svg/pink-green-dots.svg";
+import smallShapes from "@/assets/svg/small-shapes.svg";
+import check from "@/assets/images/pages/franchising/check.png";
+import clouds from "@/assets/images/pages/franchising/clouds.png";
+import graphic10 from "@/assets/images/pages/franchising/graphics/graphic10.png";
+import graphic12 from "@/assets/images/pages/franchising/graphics/graphic12.png";
+import graphic15 from "@/assets/images/pages/franchising/graphics/graphic15.png";
+import hero from "@/assets/images/pages/preschool-program/hero.jpg";
+import playLabImage from "@/assets/images/pages/franchising/play-lab.jpg";
+import purpleCurve from "@/assets/images/pages/franchising/purple-curve.png";
+import calendarHeaderIcon from "@/assets/images/pages/preschool-program/schedule-icons/calendar.svg";
+import sessionIcon1 from "@/assets/images/pages/preschool-program/session-icons/1.svg";
+import sessionIcon2 from "@/assets/images/pages/preschool-program/session-icons/2.svg";
+import sessionIcon3 from "@/assets/images/pages/preschool-program/session-icons/3.svg";
+import sessionIcon4 from "@/assets/images/pages/preschool-program/session-icons/4.svg";
+import sessionIcon5 from "@/assets/images/pages/preschool-program/session-icons/5.svg";
+import step1 from "@/assets/images/pages/preschool-program/1.jpg";
+import step2 from "@/assets/images/pages/preschool-program/2.jpg";
+import step3 from "@/assets/images/pages/preschool-program/3.jpg";
+import carousel1 from "@/assets/images/pages/preschool-program/carousel1.jpg";
+import carousel2 from "@/assets/images/pages/preschool-program/carousel2.jpg";
+import carousel3 from "@/assets/images/pages/preschool-program/carousel3.jpg";
+import wednesday from "@/assets/images/pages/preschool-program/wednesday.jpg";
+import thursday from "@/assets/images/pages/preschool-program/thursday.jpg";
+import schools from "@/assets/images/pages/franchising/schools.jpg";
+import yellowBlob from "@/assets/images/blobs/yellow-blob.png";
+import Container from "@/components/container.astro";
+import PreschoolProgramKidsHero from "@/components/image-clips/preschool-program-kids-hero.astro";
+import PreschoolProgramSessionCalendar from "@/components/preschool-program-session-calendar.astro";
+import PageIntro from "@/components/page-intro.astro";
+import { BreadcrumbWrapper } from "@/components/react/breadcrumb-wrapper";
+import Layout from "@/layout/Layout.astro";
+import PrimaryButton from "@/components/primary-button.astro";
+import Values from "@/components/values.astro";
+import FaqAccordion from "@/components/react/faq-accordion";
+import ImageCarousel from "@/components/react/image-carousel";
+import faq from "@/assets/images/pages/parties/faq.png";
+
+const sessionSlots = [
+  {
+    time: "9:00 AM",
+    title: "Welcome & Free Play",
+    subtitle: "Arrival & Settling In",
+    color: "#F6C546",
+    icon: "welcome",
+  },
+  {
+    time: "9:15 AM",
+    title: "Science & Sensory Play",
+    subtitle: "Hands-On Exploration",
+    color: "#54DB9D",
+    icon: "science",
+  },
+  {
+    time: "10:00 AM",
+    title: "Morning Tea Break",
+    color: "#7CB9FF",
+    icon: "tea",
+  },
+  {
+    time: "10:15 AM",
+    title: "Creative Craft",
+    subtitle: "Guided Project",
+    color: "#FFA252",
+    icon: "craft",
+  },
+  {
+    time: "11:00 AM",
+    title: "Movement & Dance",
+    subtitle: "Active Fun",
+    color: "#FF8FB8",
+    icon: "movement",
+  },
+  {
+    time: "11:20 AM",
+    title: "Story Time & Home Time Prep",
+    subtitle: "Pack Up & Reflection",
+    color: "#C8D556",
+    icon: "story",
+  },
+  {
+    time: "11:30 AM",
+    title: "Session Ends",
+    subtitle: "Pickup",
+    color: "#D3D3D3",
+    icon: "pickup",
+  },
+] as const;
+
+const carousel1Optimised = await getImage({ src: carousel1, format: "webp" });
+const carousel2Optimised = await getImage({ src: carousel2, format: "webp" });
+const carousel3Optimised = await getImage({ src: carousel3, format: "webp" });
+const funSchoolsOptimised = await getImage({ src: schools, format: "webp" });
+const funProgramOptimised = await getImage({
+  src: playLabImage,
+  format: "webp",
+});
+
+const funCarouselImages = [
+  {
+    image: carousel1Optimised,
+    alt: "Child enjoying a science activity during a Fizz Kidz session",
+  },
+  {
+    image: carousel2Optimised,
+    alt: "Children exploring a science activity together",
+  },
+  {
+    image: carousel3Optimised,
+    alt: "Child drawing during a Fizz Kidz learning activity",
+  },
+  {
+    image: funSchoolsOptimised,
+    alt: "Children smiling during a Fizz Kidz session",
+  },
+  {
+    image: funProgramOptimised,
+    alt: "Child participating in a Preschool Program activity",
+  },
+];
+---
+
+<Layout
+  title="Browse and book the Preschool Program for children aged 3 to 6 years. | Fizz Kidz"
+  description="Build confidence and school readiness with the Fizz Kidz Preschool Program for children aged 3 to 6 years."
+>
+  <Container class="mb:20 pt-4 md:mb-40">
+    <BreadcrumbWrapper
+      client:idle
+      items={[
+        {
+          type: "dropdown",
+          title: "Preschool Program",
+          items: [
+            {
+              type: "link",
+              title: "Birthday Parties",
+              path: "/birthday-parties/",
+              isNew: false,
+            },
+            {
+              type: "link",
+              title: "Holiday Programs",
+              path: "/holiday-programs/",
+              isNew: false,
+            },
+          ],
+        },
+      ]}
+    />
+    <PageIntro
+      subtitle="A term based program, delivered weekly for children aged 3 to 6 years."
+      color="purple"
+      actionButtonText="Book a free trial"
+      actionButtonPath="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+      type="image"
+      image={hero}
+      imageAlt="Holiday Programs"
+    >
+      <span slot="title">Fizz Kidz Preschool Program</span>
+      <span slot="content"
+        >Build confidence and school readiness through engaging, hands-on
+        purposeful <strong>art and science</strong> projects that encourage creativity,
+        exploration and problem solving skills.</span
+      >
+    </PageIntro>
+  </Container>
+
+  <section class="relative overflow-hidden">
+    <Image
+      src={graphic12}
+      alt=""
+      aria-hidden="true"
+      class="absolute left-[6%] top-[1%] hidden w-20 min-[1400px]:block"
+    />
+    <Image
+      src={pinkAtom}
+      alt=""
+      aria-hidden="true"
+      class="absolute -left-6 bottom-[10%] hidden w-20 min-[1400px]:block"
+    />
+    <Image
+      src={graphic10}
+      alt=""
+      aria-hidden="true"
+      class="absolute -right-4 top-1/2 hidden w-20 -translate-y-1/2 rotate-[20deg] min-[1400px]:block"
+    />
+    <div
+      class="absolute left-[52%] top-0 hidden h-10 w-10 rounded-full border-[7px] border-[#4BE06C] min-[1400px]:block"
+    >
+    </div>
+
+    <Container class="py-16 md:py-24">
+      <h1
+        class="text-center font-lilita text-4xl uppercase leading-none min-[480px]:text-5xl md:text-6xl"
+      >
+        Get started in <span class="text-nowrap text-[#FF4FB3]"
+          >3 simple steps</span
+        >
+      </h1>
+      <p
+        class="mx-auto mt-6 max-w-4xl text-center font-gotham text-lg text-[#5F5F5F] md:text-2xl"
+      >
+        Begin your journey with ease—follow these simple steps to discover,
+        experience, and join the program that fits you best.
+      </p>
+
+      <div class="mt-12 grid gap-8 xl:grid-cols-3">
+        {
+          [
+            {
+              image: step1,
+              alt: "Child wearing science goggles during a Fizz Kidz activity",
+              title: "Choose which day to attend",
+              points: [
+                "<strong>Each program is 2.5 hours, and costs $312 for the term ($39 per week)</strong>",
+                "A predictable weekly format, with new art, science and play experiences each session.",
+                "Same facilitators so your childs get to know them and feels comfortable.",
+              ],
+              number: "1",
+              numberColor: "bg-[#FFC61B]",
+            },
+            {
+              image: step2,
+              alt: "Child exploring a science activity with a microscope",
+              title: "Come for a free trial session",
+              points: [
+                "Meet your warm and engaging teachers and explore the environment",
+                "See how your child engages in a drop-off setting",
+                "Experience the supportive program structure - see timetable below.",
+              ],
+              number: "2",
+              numberColor: "bg-[#4BE06C]",
+            },
+            {
+              image: step3,
+              alt: "Child drawing during a Fizz Kidz learning activity",
+              title: "Enrol for the term",
+              points: [
+                "Small group sizes for personalised support",
+                "Weekly sessions that build confidence over time",
+                "Priority access to future programs and terms",
+              ],
+              number: "3",
+              numberColor: "bg-[#45D3F3]",
+            },
+          ].map((card) => (
+            <article class="relative rounded-[2rem] bg-white p-4 pb-16 shadow-[0_0_32px_rgba(143,68,225,0.08)] md:p-8 md:pb-20">
+              <Image
+                src={card.image}
+                alt={card.alt}
+                class="h-64 w-full rounded-[1.5rem] object-cover md:h-72"
+              />
+
+              <h2 class="mt-6 min-h-[3.75rem] font-lilita text-3xl leading-tight md:min-h-[5rem] md:text-4xl">
+                {card.title}
+              </h2>
+
+              <div class="mt-6 space-y-5">
+                {card.points.map((point) => (
+                  <div class="flex items-start gap-4">
+                    <Image
+                      src={check}
+                      alt="check"
+                      width={40}
+                      class="mt-1 w-8 shrink-0"
+                    />
+                    <p
+                      class="font-gotham text-lg leading-relaxed text-[#4F4F4F] md:text-xl"
+                      set:html={point}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div
+                class:list={[
+                  "absolute left-1/2 top-0 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full font-gotham text-5xl font-extrabold text-white",
+                  card.numberColor,
+                ]}
+              >
+                {card.number}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <a
+        href="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+        target="_blank"
+      >
+        <Button
+          className="mt-20 w-full rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-xl uppercase text-[#8F44E1] hover:bg-[#FFD115]/90 md:text-2xl"
+        >
+          Book a free trial
+          <span
+            class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#8F44E1] text-white md:h-8 md:w-8"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </span>
+        </Button>
+      </a>
+    </Container>
+
+    <section class="relative mt-12 overflow-hidden md:mt-20">
+      <Image src={purpleCurve} alt="" class="w-full" aria-hidden="true" />
+
+      <div class="relative bg-[#8F44E1] py-14 text-white md:py-24">
+        <Image
+          src={graphic12}
+          alt=""
+          aria-hidden="true"
+          class="absolute left-[4%] top-[10%] hidden w-24 min-[1400px]:block"
+        />
+        <Image
+          src={graphic10}
+          alt=""
+          aria-hidden="true"
+          class="absolute left-1/2 top-[8%] hidden w-20 -translate-x-1/2 min-[1400px]:block"
+        />
+        <Image
+          src={graphic15}
+          alt=""
+          aria-hidden="true"
+          class="absolute bottom-[8%] left-[42%] hidden w-20 min-[1400px]:block"
+        />
+        <div
+          class="absolute right-[7%] top-[10%] hidden h-20 w-20 rounded-full border-[14px] border-[#4BE06C] min-[1400px]:block"
+        >
+        </div>
+        <div
+          class="absolute bottom-[14%] right-[-1.5rem] hidden h-24 w-24 rounded-full bg-[#F24DA2] min-[1400px]:block"
+        >
+        </div>
+
+        <Container>
+          <div class="flex flex-col items-center gap-12 lg:flex-row lg:gap-20">
+            <div class="relative w-full max-w-[700px] lg:w-1/2 lg:max-w-none">
+              <div
+                class="absolute -left-3 -top-3 h-full w-full rounded-[2rem] border-[4px] border-white"
+              >
+              </div>
+
+              <div class="relative overflow-hidden rounded-[2rem] bg-white">
+                <Image
+                  src={wednesday}
+                  alt="Child painting during a Preschool Program activity"
+                  class="w-full rounded-[1.6rem] object-cover"
+                  width={900}
+                />
+              </div>
+            </div>
+
+            <div class="w-full lg:w-1/2">
+              <h2
+                class="font-lilita text-3xl uppercase leading-none sm:text-4xl md:text-5xl lg:text-6xl"
+              >
+                A program with <span class="text-[#FF9E43]">purpose</span>
+              </h2>
+
+              <p
+                class="mt-6 max-w-[760px] font-gotham text-lg leading-relaxed md:text-2xl"
+              >
+                The early years are a powerful time for growth. Through
+                structured guided activities, your child will:
+              </p>
+
+              <div
+                class="mt-8 space-y-6 font-gotham text-lg leading-relaxed md:mt-10 md:text-2xl"
+              >
+                {
+                  [
+                    <Fragment>
+                      Dive into immersive{" "}
+                      <span class="font-bold">
+                        art, science, and craft projects
+                      </span>{" "}
+                      that encourage imagination and real problem-solving skills
+                    </Fragment>,
+                    <Fragment>
+                      Create{" "}
+                      <span class="font-bold">
+                        meaningful take-home projects
+                      </span>{" "}
+                      that spark continued play, storytelling, and a strong
+                      sense of pride in their unique art expressions
+                    </Fragment>,
+                    <Fragment>
+                      <span class="font-bold">
+                        Express themselves confidently
+                      </span>{" "}
+                      while building friendships and practicing teamwork
+                    </Fragment>,
+                    <Fragment>
+                      Experience{" "}
+                      <span class="font-bold">small group programs</span> where
+                      every child is guided and encouraged
+                    </Fragment>,
+                  ].map((item) => (
+                    <div class="flex items-start gap-4">
+                      <span class="mt-2 text-xl md:text-2xl">•</span>
+                      <p>{item}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      <Image
+        src={purpleCurve}
+        alt=""
+        class="-mt-2 w-full rotate-180"
+        aria-hidden="true"
+      />
+    </section>
+
+    <section class="relative overflow-hidden bg-white py-16 md:py-24">
+      <Image
+        src={graphic12}
+        alt=""
+        aria-hidden="true"
+        class="absolute left-[4%] top-[10%] hidden w-20 min-[1400px]:block"
+      />
+      <Image
+        src={smallShapes}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-[4%] right-[3%] hidden w-24 min-[1400px]:block"
+      />
+
+      <Container>
+        <h2
+          class="text-center font-lilita text-4xl uppercase leading-none md:text-6xl"
+        >
+          Checkout the fun
+        </h2>
+
+        <ImageCarousel images={funCarouselImages} client:visible />
+      </Container>
+    </section>
+
+    <section
+      id="session-timetable"
+      class="relative overflow-hidden py-16 md:py-24"
+      style={{ backgroundColor: "rgba(143, 68, 225, 0.12)" }}
+    >
+      <Image
+        src={graphic12}
+        alt=""
+        aria-hidden="true"
+        class="absolute right-[2.5%] top-[4%] hidden w-20 min-[1400px]:block"
+      />
+      <Image
+        src={graphic10}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-[6%] right-[2%] hidden w-20 rotate-[18deg] min-[1400px]:block"
+      />
+      <Image
+        src={blueAtom}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-[22%] left-[1.5%] hidden w-16 min-[1400px]:block"
+      />
+
+      <Container>
+        <h2
+          class="text-center font-lilita text-4xl uppercase leading-none md:text-6xl"
+        >
+          Weekly timetable
+        </h2>
+        <p
+          class="mt-6 text-center font-gotham text-lg text-[#5F5F5F] md:text-2xl"
+        >
+          Predictable weekly structure designed for routine and confidence
+        </p>
+
+        <div class="mt-16 grid gap-8 xl:grid-cols-2">
+          <div
+            class="flex h-full flex-col overflow-hidden rounded-[2rem] bg-white shadow-[0_0_32px_rgba(143,68,225,0.08)]"
+          >
+            <div
+              class="flex items-center gap-5 bg-gradient-to-r from-[#A15BFF] to-[#863BEF] p-5 md:p-8"
+            >
+              <div
+                class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white md:h-24 md:w-24"
+              >
+                <Image
+                  src={calendarHeaderIcon}
+                  alt=""
+                  aria-hidden="true"
+                  class="h-10 w-10 md:h-12 md:w-12"
+                />
+              </div>
+              <p
+                class="font-gotham text-xl font-bold text-white md:text-[2rem]"
+              >
+                Weekly Timetable
+              </p>
+            </div>
+
+            <div class="flex flex-1 flex-col space-y-6 p-4 md:p-6">
+              {
+                [
+                  {
+                    image: wednesday,
+                    alt: "Children exploring a science activity together",
+                    title: "Wednesday Sessions",
+                    cardColor: "#DFF8FF",
+                    borderColor: "#52D6F0",
+                    pillColor: "#11C6E8",
+                  },
+                  {
+                    image: thursday,
+                    alt: "Children taking part in a Fizz Kidz session",
+                    title: "Thursday Sessions",
+                    cardColor: "#FBE4F2",
+                    borderColor: "#F06AB1",
+                    pillColor: "#F14EA1",
+                  },
+                ].map((dayCard) => (
+                  <div
+                    class="rounded-[1.4rem] border-r-[4px] p-3 md:p-4"
+                    style={{
+                      backgroundColor: dayCard.cardColor,
+                      borderColor: dayCard.borderColor,
+                    }}
+                  >
+                    <div class="flex items-center gap-4 md:gap-6">
+                      <Image
+                        src={dayCard.image}
+                        alt={dayCard.alt}
+                        class="h-28 w-28 rounded-[1rem] object-cover md:h-32 md:w-32"
+                      />
+
+                      <div class="min-w-0">
+                        <p class="font-gotham text-2xl font-semibold text-black">
+                          {dayCard.title}
+                        </p>
+
+                        <div
+                          class="mt-4 inline-flex items-center gap-2 rounded-full px-5 py-3 font-gotham text-lg font-semibold text-white"
+                          style={{ backgroundColor: dayCard.pillColor }}
+                        >
+                          <Clock3 className="h-4 w-4 text-white md:h-5 md:w-5" />
+                          <span>9:00 AM - 11:30 AM</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="mt-auto px-4 pb-4 md:px-6 md:pb-6">
+              <a
+                href="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+                target="_blank"
+              >
+                <Button
+                  className="w-full rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-xl uppercase text-[#8F44E1] hover:bg-[#FFD115]/90 md:text-2xl"
+                >
+                  Book a free trial
+                  <span
+                    class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#8F44E1] text-white md:h-8 md:w-8"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                </Button>
+              </a>
+            </div>
+          </div>
+
+          <PreschoolProgramSessionCalendar
+            title="Daily Session Structure"
+            headerIcon="clock"
+            headerStart="#FF67B4"
+            headerEnd="#F53F98"
+            calendarColor="#FF5EA8"
+            slots={sessionSlots}
+          />
+        </div>
+      </Container>
+    </section>
+
+    <section class="relative overflow-hidden bg-white pt-16 md:pt-24">
+      <Image
+        src={graphic15}
+        alt=""
+        aria-hidden="true"
+        class="absolute -left-8 top-28 hidden w-24 md:block"
+      />
+      <Image
+        src={graphic10}
+        alt=""
+        aria-hidden="true"
+        class="absolute right-6 top-10 hidden w-20 md:block"
+      />
+
+      <Container>
+        <div class="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-20">
+          <div class="w-full lg:w-1/2">
+            <h2 class="font-lilita text-4xl uppercase leading-none md:text-6xl">
+              Why parents love<br /><span class="text-[#45D3F3]"
+                >Preschool Program</span
+              >
+              <span class="ml-3 text-[#F24DA2]">&#9829;</span>
+            </h2>
+
+            <div class="mt-10 space-y-6">
+              {
+                [
+                  "Supports school readiness",
+                  "Builds confidence and independence",
+                  "Purposeful play where children develop real art, science and self-expression skills",
+                  "Led by qualified Early Childhood educators",
+                  "Small group sizes, every child is supported",
+                  "Calm, structured and nurturing environment",
+                  "Purposeful activities with real developmental outcomes",
+                  <Fragment>
+                    Most importantly,{" "}
+                    <span class="font-bold">kids love it!</span>
+                  </Fragment>,
+                ].map((item) => (
+                  <div class="flex items-start gap-4 md:gap-5">
+                    <Image
+                      src={check}
+                      alt="check"
+                      width={40}
+                      class="mt-1 w-8 shrink-0"
+                    />
+                    <p class="font-gotham text-lg leading-relaxed text-[#333333] md:text-2xl">
+                      {item}
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="relative w-full lg:w-1/2">
+            <Image
+              src={yellowBlob}
+              alt=""
+              aria-hidden="true"
+              class="mx-auto w-full max-w-[760px]"
+            />
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div
+                class="h-[60vw] max-h-[420px] w-[60vw] max-w-[420px] overflow-hidden rounded-full border-[10px] border-[#F6BA33] bg-white md:border-[14px]"
+              >
+                <Image
+                  src={step3}
+                  alt="Children enjoying a Preschool Program craft activity"
+                  class="h-full w-full object-cover"
+                  width={900}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Container>
+
+      <div class="relative -my-px mt-20 overflow-hidden bg-[#49B95E]">
+        <Image
+          src={clouds}
+          alt=""
+          class="block w-full rotate-180"
+          aria-hidden="true"
+        />
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden bg-[#49B95E] py-16 md:py-24">
+      <Image
+        src={graphic12}
+        alt=""
+        aria-hidden="true"
+        class="absolute left-[5%] top-[6%] hidden w-20 md:block"
+      />
+      <Image
+        src={graphic10}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-[10%] left-[4%] hidden w-20 md:block"
+      />
+      <Image
+        src={graphic15}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-[5%] left-1/2 hidden w-20 -translate-x-1/2 md:block"
+      />
+      <div
+        class="absolute right-[6%] top-[6%] hidden h-20 w-20 rounded-full border-[12px] border-[#4BE06C] md:block"
+      >
+      </div>
+      <div
+        class="absolute bottom-[18%] right-[-1.5rem] hidden h-24 w-24 rounded-full bg-[#F24DA2] md:block"
+      >
+      </div>
+
+      <Container>
+        <h2
+          class="text-center font-lilita text-4xl uppercase leading-none text-white md:text-6xl"
+        >
+          What happens in each session
+        </h2>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-2 xl:mt-16 xl:grid-cols-5">
+          {
+            [
+              {
+                icon: sessionIcon1,
+                title: "Creative Craft Activity",
+                description: "Builds focus, coordination and problem-solving",
+              },
+              {
+                icon: sessionIcon2,
+                title: "Science & Sensory Play",
+                description:
+                  "Hands-on exploration that supports brain development",
+              },
+              {
+                icon: sessionIcon3,
+                title: "Movement & Dance Breaks",
+                description: "Helps regulate energy and coordination",
+              },
+              {
+                icon: sessionIcon4,
+                title: "Imagination & Sensory Play",
+                description: "Encourages language and creativity",
+              },
+              {
+                icon: sessionIcon5,
+                title: "Take-Home Creation",
+                description: "Kids leave proud of what they've made",
+              },
+            ].map((card) => (
+              <article class="rounded-[2rem] border-[4px] border-white p-1">
+                <div class="flex h-full flex-col items-center rounded-[1.55rem] border-[3px] border-[#49B95E] bg-white px-6 py-10 text-center">
+                  <Image
+                    src={card.icon}
+                    alt=""
+                    aria-hidden="true"
+                    class="h-16 w-16"
+                  />
+                  <p class="mt-8 font-gotham text-2xl font-semibold leading-tight text-black">
+                    {card.title}
+                  </p>
+                  <p class="mt-3 font-gotham text-2xl leading-tight text-black">
+                    {card.description}
+                  </p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+
+        <div
+          class="my-24 flex flex-col items-center justify-center gap-4 sm:flex-row xl:mt-16"
+        >
+          <a
+             href="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+            target="_blank"
+          >
+            <Button
+              className="rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-xl uppercase text-black hover:bg-[#FFD115]/90"
+            >
+              Book Today
+              <ArrowRight className="ml-3 h-5 w-5" />
+            </Button>
+          </a>
+
+          <a href="#session-timetable">
+            <Button
+              className="rounded-[1.2rem] bg-[#FFD115] px-8 py-7 font-lilita text-xl uppercase text-black hover:bg-[#FFD115]/90"
+            >
+              View Timetable
+              <CalendarDays className="ml-3 h-5 w-5" />
+            </Button>
+          </a>
+        </div>
+      </Container>
+
+      <div class="absolute bottom-0 left-0 right-0 overflow-hidden">
+        <Image src={clouds} alt="" class="w-full" aria-hidden="true" />
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden bg-white py-16 md:py-24">
+      <Image
+        src={smallShapes}
+        alt=""
+        aria-hidden="true"
+        class="absolute left-0 top-0 hidden w-28 md:block"
+      />
+      <Image
+        src={pinkGreenDots}
+        alt=""
+        aria-hidden="true"
+        class="absolute right-[2%] top-12 hidden w-16 md:block"
+      />
+      <Image
+        src={pinkAtom}
+        alt=""
+        aria-hidden="true"
+        class="absolute bottom-0 right-[2%] hidden w-24 md:block"
+      />
+
+      <Container>
+        <div
+          class="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16 xl:gap-24"
+        >
+          <div class="w-full lg:w-[46%]">
+            <h2 class="font-lilita text-4xl uppercase leading-none md:text-6xl">
+              Designed for <span class="text-[#8F44E1]">kids 3-6</span>
+            </h2>
+
+            <div class="mt-10 space-y-6">
+              {
+                [
+                  "Calm, nurturing environments",
+                  "Short engaging activity blocks",
+                  "Small groups",
+                  "Balance of structure and free play",
+                  "Experienced facilitators",
+                ].map((item) => (
+                  <div class="flex items-start gap-4 md:gap-5">
+                    <Image
+                      src={check}
+                      alt="check"
+                      width={40}
+                      class="mt-1 w-8 shrink-0"
+                    />
+                    <p class="font-gotham text-lg font-semibold leading-relaxed text-black md:text-2xl">
+                      {item}
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+
+            <a
+              href="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+              target="_blank"
+              class="inline-block"
+            >
+              <Button
+                className="mt-10 rounded-[1.2rem] bg-[#8F44E1] px-8 py-7 font-lilita text-xl uppercase text-white hover:bg-[#8F44E1]/90"
+              >
+                Book Now
+                <span
+                  class="ml-3 flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#8F44E1]"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </Button>
+            </a>
+          </div>
+
+          <div class="w-full lg:w-[54%]">
+            <PreschoolProgramKidsHero
+              img={schools}
+              alt="Children smiling during a Fizz Kidz session"
+              objectPosition="50% 30%"
+            />
+          </div>
+        </div>
+      </Container>
+    </section>
+    <Container>
+      <section class="mt-12 md:mt-20">
+        <h6 class="mb-4 text-center font-lilita text-4xl md:text-5xl">
+          Frequently Asked Questions
+        </h6>
+        <div class="flex w-full flex-col items-center gap-8 md:flex-row">
+          <Image
+            class="hidden w-2/5 md:block"
+            src={faq}
+            alt="Three girls smiling"
+          />
+          <div class="w-full md:w-3/5">
+            <FaqAccordion
+              client:idle
+              items={[
+                {
+                  question: "How do I book a session?",
+                  answer:
+                    "You can book online through our website, or contact us directly and we'll help you find a time that works best for you and your child.",
+                },
+                {
+                  question: "What age group is the Preschool Program for?",
+                  answer:
+                    "The Preschool Program is designed for children aged 3 to 6 years old. Activities are thoughtfully adapted to suit each developmental stage, so children can build confidence, creativity, and school readiness in every session.",
+                },
+                {
+                  question: "Do I stay with my child during the session?",
+                  answer:
+                    "No, the Preschool Program is designed as a drop-off program. During your free trial, you'll have a chance to meet the team, explore the environment, and see how your child settles into the session.",
+                },
+                {
+                  question: "What types of activities do you run?",
+                  answer:
+                    "Each session includes a mix of art, science, sensory, and craft-based activities. For younger children, the focus is on exploration and play. For older children, we introduce elements of creative thinking, self-expression, and take-home projects.",
+                },
+                {
+                  question: "How long is each session?",
+                  answer:
+                    "Each Preschool Program session runs from 9:00 AM to 11:30 AM.",
+                },
+                {
+                  question:
+                    "My child has special needs. Is this program appropriate?",
+                  answer:
+                    "Absolutely. We welcome all children and are passionate about creating an inclusive, supportive environment for every child. We encourage you to call us so we can chat about how best to support your child in the Preschool Program.",
+                },
+              ]}
+            />
+          </div>
+        </div>
+        <div class="mt-12 flex w-full justify-center sm:mt-6">
+          <PrimaryButton
+            text="Book Today"
+            path="https://bookings.fizzkidz.com.au/preschool-program-enrolment-form"
+          />
+        </div>
+        <Values />
+      </section>
+    </Container>
+  </section>
+</Layout>

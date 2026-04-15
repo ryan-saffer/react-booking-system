@@ -115,8 +115,8 @@ export const menu = [
   },
   {
     type: "link",
-    title: "Play lab (1.5 - 5 yrs)",
-    path: "/play-lab",
+    title: "Preschool program",
+    path: "/preschool-program",
     isNew: false,
   },
   // {
