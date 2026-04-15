@@ -13,7 +13,7 @@
         <mj-style inline="inline"> .footer-link { color: #888888 } </mj-style>
     </mj-head>
     <mj-body background-color="#E7E7E7" width="600px">
-        <mj-section background-color="#8F44E1" padding-bottom="0px">
+        <mj-section background-color="#EEC73A" padding-bottom="0px">
             <mj-column width="100%">
                 <mj-spacer height="30px" />
                 <mj-text font-family="Trebuchet MS" color="white" align="center" font-size="30px" line-height="40px">
@@ -31,29 +31,17 @@
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px"> Hi {{parentName}}, </mj-text>
                     <mj-text color="#637381" font-size="16px">
-                        This email confirms that {{childName}} has been unenrolled from the Preschool Program term.
-                    </mj-text>
-                </mj-column>
-                <mj-column width="100%">
-                    <mj-text
-                        color="#212b35"
-                        font-size="12px"
-                        text-transform="uppercase"
-                        font-weight="bold"
-                        padding-bottom="0"
-                    >
-                        Program
-                    </mj-text>
-                    <mj-text text-transform="capitalize" color="#637381" font-size="14px" padding-top="0">
-                        {{className}}
+                        Just confirming that {{childName}} has now been unenrolled from our {{className}}
                     </mj-text>
                 </mj-column>
                 <mj-column width="100%">
                     <mj-text color="#637381" font-size="16px">
-                        If you have any questions, reply to this email or call us on
+                        If you would like {{childName}} to attend a causal session, feel free to reply to this email or
+                        give us a call on
                         <a href="tel:+61390598144">(03) 9059 8144</a>.
                     </mj-text>
-                    <mj-text color="#637381" font-size="16px"> The Fizz Kidz team </mj-text>
+                    <mj-text color="#637381" font-size="16px"> We hope to see you again soon! </mj-text>
+                    <mj-text color="#637381" font-size="16px"> The Fizz Kidz Team ✨ </mj-text>
                 </mj-column>
             </mj-section>
         </mj-wrapper>

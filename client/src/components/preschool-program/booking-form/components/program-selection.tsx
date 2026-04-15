@@ -1,10 +1,10 @@
-import { MessageCircleWarning } from 'lucide-react'
+import { CalendarRange, MapPin, MessageCircleWarning } from 'lucide-react'
 
 import { capitalise } from 'fizz-kidz'
 import type { AcuityTypes } from 'fizz-kidz'
 
 import { Alert, AlertDescription, AlertTitle } from '@ui-components/alert'
-import { Card, CardContent, CardHeader, CardTitle } from '@ui-components/card'
+import { Card, CardContent, CardHeader } from '@ui-components/card'
 
 import { useEnrolmentStore } from '../state/enrolment-store'
 
@@ -20,7 +20,10 @@ export function ProgramSelection({ programs }: Props) {
 
     return (
         <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-medium">Select your program</h2>
+            <h2 className="flex items-center text-lg font-medium">
+                <CalendarRange className="mr-2 h-5 w-5 text-violet-800" />
+                Select your program:
+            </h2>
 
             {programs.length > 0 ? (
                 programs.map((program) => {
@@ -35,10 +38,9 @@ export function ProgramSelection({ programs }: Props) {
                             <CardHeader className="space-y-3 pb-3">
                                 <div className="flex items-start justify-between gap-4 border-b border-violet-100 pb-3">
                                     <div>
-                                        <CardTitle className="text-base font-medium">
-                                            Preschool Program - {term}
-                                        </CardTitle>
-                                        <p className="mt-2 text-lg font-bold  ">{time}</p>
+                                        <p className="mt-2 text-lg font-bold">
+                                            {term}: {time}
+                                        </p>
                                     </div>
                                     <p className="rounded-full bg-white px-3 py-1 text-sm font-medium  shadow-sm">
                                         {capitalise(selectedStudio)}
@@ -46,15 +48,17 @@ export function ProgramSelection({ programs }: Props) {
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-2 pt-0 text-sm text-slate-600">
-                                <p>
+                                <p className="flex items-center">
+                                    <CalendarRange className="mr-2 h-4 w-4 text-violet-800" />
                                     <span className="font-medium"> {dates}</span>
                                 </p>
-                                <p>
+                                <p className="flex items-center">
+                                    <MapPin className="mr-2 h-4 w-4 text-violet-800" />
                                     <span className="font-medium">Studio: </span>
                                     {capitalise(selectedStudio)}
                                 </p>
 
-                                <p>Select this program to continue.</p>
+                                <p className="mt-1">Select this program to continue.</p>
                             </CardContent>
                         </Card>
                     )

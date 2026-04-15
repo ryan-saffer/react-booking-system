@@ -113,6 +113,14 @@ const adminItems: NavigationItem[] = [
         accentSoft: 'rgba(255, 79, 156, 0.14)',
     },
     {
+        title: 'Preschool Program Invoicing',
+        description: 'Send invoices and track payment status for Preschool Program enrolments.',
+        to: 'preschool-program-invoicing',
+        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=envelope&scale=70&backgroundColor=F6BA34',
+        accent: '#f6ba34',
+        accentSoft: 'rgba(246, 186, 52, 0.18)',
+    },
+    {
         title: 'Payroll',
         description: 'Generate timesheets ready for payroll.',
         to: 'payroll',
@@ -143,14 +151,6 @@ const adminItems: NavigationItem[] = [
         imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=map&scale=70&backgroundColor=F6BA34',
         accent: '#f6ba34',
         accentSoft: 'rgba(246, 186, 52, 0.18)',
-    },
-    {
-        title: 'Preschool Program Invoicing',
-        description: 'Send invoices and track payment status for Preschool Program enrolments.',
-        to: 'preschool-program-invoicing',
-        imgSrc: 'https://api.dicebear.com/7.x/icons/svg?icon=receipt&scale=70&backgroundColor=FF8CC6',
-        accent: '#ff7ab8',
-        accentSoft: 'rgba(255, 122, 184, 0.16)',
     },
 ]
 

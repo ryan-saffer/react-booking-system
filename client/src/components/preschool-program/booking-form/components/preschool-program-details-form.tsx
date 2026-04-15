@@ -53,11 +53,6 @@ export function PreschoolProgramDetailsForm({ submitting }: Props) {
 
     return (
         <>
-            <p className="text-sm text-slate-600">
-                This enrolment reserves your child&apos;s place across the term. If your family continues, invoicing can
-                be handled later by the team.
-            </p>
-
             <SectionBreak title="Parent Details" />
             <FormField
                 control={form.control}
