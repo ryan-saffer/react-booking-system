@@ -16,8 +16,8 @@ import { Separator } from '@ui-components/separator'
 import { useTRPC } from '@utils/trpc'
 
 import { PreschoolProgramDetailsForm } from '../components/preschool-program-details-form'
+import { ProgramCard } from '../components/program-card'
 import { ProgramSelection } from '../components/program-selection'
-import { SelectedProgramSummary } from '../components/selected-program-summary'
 import { StudioSelector } from '../components/studio-selector'
 import { useEnrolmentStore } from '../state/enrolment-store'
 import { defaultValues, formSchema } from '../state/form-schema'
@@ -191,7 +191,21 @@ export function PreschoolProgramEnrolmentPage() {
                                     <ChevronLeft className="mr-2 h-4 w-4" />
                                     Back
                                 </Button>
-                                <SelectedProgramSummary program={selectedProgram} sessionCount={sessionCount} />
+                                <ProgramCard
+                                    program={selectedProgram}
+                                    studio={selectedStudio || ''}
+                                    heading="Selected Program"
+                                    footer={
+                                        <>
+                                            {sessionCount > 0 ? (
+                                                <p>{sessionCount} sessions currently scheduled in this term.</p>
+                                            ) : null}
+                                            <p className="font-medium text-slate-800">
+                                                No payment is collected during enrolment.
+                                            </p>
+                                        </>
+                                    }
+                                />
                                 {loadingClasses ? (
                                     <Loader />
                                 ) : isClassesError ? (
