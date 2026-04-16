@@ -117,7 +117,7 @@ export const menu = [
     type: "link",
     title: "Preschool program",
     path: "/preschool-program",
-    isNew: false,
+    isNew: true,
   },
   // {
   //   type: "dropdown",
@@ -279,6 +279,7 @@ function NavigationMenu() {
                 key={menuItem.title}
                 title={menuItem.title}
                 path={menuItem.path}
+                isNew={menuItem.isNew}
               />
             );
           } else if (menuItem.type === "dropdown") {
